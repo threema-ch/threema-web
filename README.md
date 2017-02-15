@@ -37,6 +37,10 @@ Then open the URL in your browser:
 
     chromium http://localhost:9966
 
+*(Note that this setup should not be used in production. To run Threema
+Web on a server, please follow the instructions at
+[docs/self_hosting.md](docs/self_hosting.md).)*
+
 
 ## Testing
 
