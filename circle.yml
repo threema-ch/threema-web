@@ -1,0 +1,12 @@
+machine:
+  node:
+    version: v6.1.0
+
+compile:
+  override:
+    - npm rebuild node-sass
+    - npm run build
+
+test:
+  post:
+    - npm run lint
