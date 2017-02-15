@@ -53,7 +53,7 @@
         "CLOSE": "Schliessen",
         "SESSION_CLOSE": "Sitzung schliessen",
         "CONFIRM_CLOSE_BODY": "Wollen Sie die Sitzung wirklich schliessen?",
-        "SESSION_DELETE": "Sitzung Löschen",
+        "SESSION_DELETE": "Sitzung löschen",
         "CONFIRM_DELETE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich löschen?",
         "CONFIRM_DELETE_CLOSE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich schliessen und löschen?",
         "ERROR": "Fehler",
