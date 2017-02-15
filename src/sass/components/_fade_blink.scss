@@ -1,0 +1,10 @@
+.blink-fade {
+  animation: blinker 1.2s ease-in-out infinite alternate;
+}
+.blink-fast {
+  animation-duration: 0.8s;
+}
+.blink-slow {
+  animation-duration: 2s;
+}
+@keyframes blinker { to { opacity: 0.1; } }

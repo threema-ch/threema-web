@@ -1,0 +1,132 @@
+#welcome {
+    padding: 16px 32px;
+    line-height: 1.4em;
+
+    .state {
+        margin-top: 1em;
+
+        &.error {
+        color: $status-error;
+        }
+    }
+
+    h2 {
+        display: block;
+        margin-bottom: 20px;
+    }
+
+    &, input {
+        text-align: center;
+    }
+
+    md-input-container {
+        margin-left: 32px;
+        margin-right: 32px;
+    }
+
+    .scan {
+        .password-entry {
+            margin-top: 16px;
+        }
+
+        .instructions {
+            margin-bottom: 16px;
+        }
+
+        md-input-container {
+            margin-top: 12px;
+            margin-bottom: 0;
+        }
+
+        qrcode {
+            canvas {
+                max-width: 100%;
+            }
+        }
+    }
+
+    .unlock {
+        padding-top: 16px;
+
+        .password-entry {
+            margin-top: 32px;
+            margin-bottom: 48px;
+        }
+
+        md-input-container {
+            margin-top: 24px;
+            margin-bottom: 8px;
+        }
+
+        button {
+            margin-top: 0;
+            margin-left: 0;
+            margin-bottom: 32px;
+        }
+    }
+
+    .manual-start {
+        .illustration {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        ol {
+            width: 90%;
+            margin: 16px auto 0;
+            list-style-position: inside;
+
+            li {
+                margin-bottom: 4px;
+            }
+        }
+    }
+
+    .loading {
+        margin-top: 48px;
+
+        md-progress-circular {
+            margin: 0 auto;
+            svg path {
+                stroke-width: 12px !important;
+            }
+        }
+
+        .info {
+            height: 250px;
+            position: relative;
+            top: -250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            .percentage {
+                font-size: 4em;
+                margin-bottom: 8px;
+                line-height: 1em;
+                font-weight: 300;
+                vertical-align: center;
+            }
+        }
+
+        .troubleshoot {
+            $troubleshoot-height: 190px;
+            height: $troubleshoot-height;
+            width: 100%;
+            position: absolute;
+            bottom: -$troubleshoot-height - 32px;
+
+            h3 {
+                margin-bottom: 8px;
+            }
+
+            ul {
+                list-style-type: none;
+            }
+
+            .forget {
+                margin-top: 8px;
+            }
+        }
+    }
+
+}

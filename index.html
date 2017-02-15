@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<!--
+
+    Copyright © 2016-2017 Threema GmbH (https://threema.ch/).
+
+    This file is part of Threema Web.
+
+    Threema Web is free software: you can redistribute it and/or modify it
+    under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or (at
+    your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+    General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<html ng-app="3ema" ng-strict-di>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Threema Web</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
+    <link rel="shortcut icon" href="img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
+
+    <!-- Angular -->
+    <link rel="stylesheet" href="node_modules/angular/angular-csp.css?v=[[VERSION]]">
+
+    <!-- Third party stylesheets -->
+    <link rel="stylesheet" href="node_modules/angular-material/angular-material.min.css?v=[[VERSION]]">
+    <link rel="stylesheet" href="libs/emojione/emojione.sprites.32.css?v=[[VERSION]]">
+    <link rel="stylesheet" href="node_modules/croppie/croppie.css?v=[[VERSION]]">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="fonts/roboto.css?v=[[VERSION]]" type="text/css">
+    <link rel="stylesheet" href="fonts/material.css?v=[[VERSION]]" type="text/css">
+
+    <!-- Own stylesheets -->
+    <link rel="stylesheet" href="css/app.css?v=[[VERSION]]">
+</head>
+
+<body ng-controller="StatusController as ctrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
+    <img src="img/bg1.jpg?v=1" id="background-image" draggable="false"/>
+
+    <div id="main-wrapper" ng-cloak ng-class="{wide: ctrl.wide()}">
+        <header>
+            <h1 id="title">
+                <div id="logo" ng-include src="'img/logo.svg?v=[[VERSION]]'"></div>
+            </h1>
+        </header>
+
+        <div id="main">
+            <div id="status-bar">
+                <status-bar active="ctrl.expandStatusBar"></status-bar>
+            </div>
+            <div id="main-content" ui-view></div>
+        </div>
+        <div class="androidonly" ng-controller="AndroidOnlyController as ctrl" ng-show="ctrl.show">
+            <div><i class="material-icons md-24">android</i> <span translate>welcome.ANDROID_ONLY</span></div>
+        </div>
+        <footer>
+            <ul>
+                <li>Version [[VERSION]]</li>
+                <li><a
+                        href="https://threema.ch/threema-web"
+                        target="_blank"
+                        rel="noopener noreferrer" translate>welcome.MORE_ABOUT_WEB</a>
+                </li>
+            </ul>
+        </footer>
+    </div>
+
+    <!-- Angular core -->
+    <script src="node_modules/angular/angular.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-aria/angular-aria.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-animate/angular-animate.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-sanitize/angular-sanitize.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-route/angular-route.min.js?v=[[VERSION]]"></script>
+
+    <!-- Polyfills -->
+    <script src="node_modules/webrtc-adapter/out/adapter_no_edge.js?v=[[VERSION]]"></script>
+    <script src="node_modules/babel-es6-polyfill/browser-polyfill.min.js?v=[[VERSION]]"></script>
+
+    <!-- Various libraries -->
+    <script src="node_modules/qrcode-generator/js/qrcode.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-qrcode/angular-qrcode.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-material/angular-material.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-ui-router/release/angular-ui-router.min.js?v=[[VERSION]]"></script>
+    <script src="libs/emojione/emojione.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angularjs-scroll-glue/src/scrollglue.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-inview/angular-inview.js?v=[[VERSION]]"></script>
+
+    <!-- Translation -->
+    <script src="node_modules/messageformat/messageformat.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-translate/dist/angular-translate.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/angular-translate/dist/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.min.js?v=[[VERSION]]"></script>
+
+    <!-- Other -->
+    <script src="node_modules/msgpack-lite/dist/msgpack.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/tweetnacl/nacl-fast.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/file-saver/FileSaver.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/js-sha256/build/sha256.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/chunked-dc/dist/chunked-dc.es5.js?v=[[VERSION]]"></script>
+    <script src="node_modules/saltyrtc-client/dist/saltyrtc-client.es5.js?v=[[VERSION]]"></script>
+    <script src="node_modules/saltyrtc-task-webrtc/dist/saltyrtc-task-webrtc.es5.js?v=[[VERSION]]"></script>
+    <script src="node_modules/croppie/croppie.min.js?v=[[VERSION]]"></script>
+    <script src="node_modules/autolinker/dist/Autolinker.min.js?v=[[VERSION]]"></script>
+
+    <!-- App -->
+    <script src="dist/app.js?v=[[VERSION]]"></script>
+
+</body>
+</html>

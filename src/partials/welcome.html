@@ -1,0 +1,106 @@
+<div id="welcome">
+    <div class="center-block text-center welcome">
+        <div ng-if="(ctrl.state === 'connecting' || ctrl.state === 'waiting') && ctrl.mode === 'scan'" class="scan">
+            <p class="instructions" translate>welcome.PLEASE_SCAN</p>
+            <qrcode version="{{ ctrl.qrCode.version }}"
+                    id="connecting-code"
+                    error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"
+                    size="{{ ctrl.qrCode.size }}" data="{{ ctrl.qrCode.data }}"></qrcode>
+            <div class="password-entry">
+                <label>
+                    <p translate>welcome.CHOOSE_PASSWORD</p>
+                    <form autocomplete="off">
+                        <md-input-container md-no-float class="md-block">
+                            <input type="password"
+                                   ng-model="ctrl.password"
+                                   aria-label="Password"
+                                   translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}">
+                        </md-input-container>
+                    </form>
+                </label>
+            </div>
+        </div>
+
+        <div ng-if="(ctrl.state === 'connecting' || ctrl.state === 'waiting') && ctrl.mode === 'unlock'" class="unlock">
+            <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
+            <div class="password-entry">
+                <label>
+                    <p translate>welcome.ENTER_PASSWORD</p>
+                    <form ng-submit="ctrl.unlockConfirm()">
+                        <md-input-container md-no-float class="md-block">
+                            <input type="password"
+                                   ng-model="ctrl.password"
+                                   autofocus
+                                   aria-label="Password"
+                                   translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}">
+                        </md-input-container>
+                        <md-button type="submit" class="md-raised md-primary"><span translate>welcome.BTN_RECONNECT</span></md-button>
+                    </form>
+                    <p>
+                        <span translate>welcome.ALTERNATIVELY</span>
+                        <a href="#" ng-click="ctrl.deleteSession()" translate>welcome.FORGET_SESSION</a>.
+                    </p>
+                </label>
+            </div>
+        </div>
+
+        <div ng-if="ctrl.showLoadingIndicator">
+            <h2 class="instructions" translate>welcome.CONNECTING</h2>
+            <div class="loading">
+                <md-progress-circular md-mode="determinate" value="{{ ctrl.progress }}" md-diameter="250">
+                </md-progress-circular>
+                <div class="info">
+                    <p class="percentage">{{ ctrl.progress }}%</p>
+                    <p ng-if="ctrl.state === 'push'" translate>welcome.WAITING_FOR_PUSH</p>
+                    <p ng-if="ctrl.state === 'peer_handshake'" translate>welcome.CONNECTING_TO_APP</p>
+                    <p ng-if="ctrl.state === 'loading' || ctrl.state === 'done'" translate>welcome.LOADING_INITIAL_DATA</p>
+                    <div class="troubleshoot" ng-if="ctrl.slowConnect">
+                        <h3 translate>troubleshooting.SLOW_CONNECT</h3>
+                        <ul>
+                            <li>
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.PHONE_ONLINE</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'">
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.APP_STARTED</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'">
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'">
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.SESSION_DELETED</span>
+                            </li>
+                        </ul>
+                        <p class="forget" ng-if="ctrl.state === 'push'">
+                            <span translate>welcome.IF_YOU_WANT</span>
+                            <a href="#" ng-click="ctrl.deleteSession()" translate>welcome.FORGET_SESSION</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="manual-start" ng-if="ctrl.state === 'manual_start'">
+            <h2 class="instructions" translate>welcome.MANUAL_START</h2>
+            <p translate>welcome.MANUAL_START_TEXT1</p>
+            <i class="illustration material-icons md-dark md-96">phone_android</i>
+            <p translate>welcome.MANUAL_START_TEXT2</p>
+            <ol>
+                <li translate>welcome.MANUAL_START_STEP1</li>
+                <li translate>welcome.MANUAL_START_STEP2</li>
+                <li translate>welcome.MANUAL_START_STEP3</li>
+            </ol>
+        </div>
+
+        <div ng-if="ctrl.state === 'closed'">
+            <p class="state error">
+                <strong><span translate>common.ERROR</span>:</strong> <span translate>connecting.CONNECTION_CLOSED</span><br>
+                <span translate>welcome.PLEASE_RELOAD</span>
+            </p>
+        </div>
+
+    </div>
+</div>

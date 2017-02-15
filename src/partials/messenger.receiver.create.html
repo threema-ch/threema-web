@@ -1,0 +1,34 @@
+<div class="form">
+    <div id="receiver-detail-header" class="detail-header">
+        <div class="header-back-button" ng-click="ctrl.goBack()">
+            <img src="img/ic_arrow_left.svg" alt="Back">
+        </div>
+        <div class="header-details">
+            <h2>{{ctrl.controllerModel.subject}}</h2>
+        </div>
+
+        <div class="header-buttons">
+            <md-progress-circular
+                    class="md-accent"
+                    ng-show="ctrl.isSaving()"
+                    md-diameter="32"></md-progress-circular>
+            <md-button
+                    class="md-icon-button"
+                    ng-show="!ctrl.isSaving()"
+                    ng-disabled="!ctrl.controllerModel.isValid()"
+                    ng-click="ctrl.create()"
+                    translate-attr="{'aria-label': 'common.DONE'}">
+                <md-icon class="material-icons md-24 md-primary" ng-class="{'md-hue-1': !ctrl.controllerModel.isValid() || ctrl.isSaving()}">done</md-icon>
+            </md-button>
+        </div>
+    </div>
+    <div class="detail-content">
+        <div class="loading-overlay" ng-class="{'active': ctrl.isSaving()}">
+            <div>
+                <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+            </div>
+        </div>
+        <div ng-include src="'partials/messenger.receiver/' + ctrl.type + '.create.html'" class="form-content">
+        </div>
+    </div>
+</div>

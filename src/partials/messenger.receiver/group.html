@@ -1,0 +1,54 @@
+<div class="form-content">
+	<md-card class="two-row">
+		<div class="avatar">
+			<eee-avatar eee-type="'group'"
+						eee-receiver="ctrl.receiver"
+						eee-resolution="'high'"></eee-avatar>
+		</div>
+		<div>
+
+			<md-card-title>
+				<md-card-title-text>
+					<span class="md-headline" translate>messenger.GROUP_CREATOR</span>
+				</md-card-title-text>
+			</md-card-title>
+			<md-card-content>
+				<eee-contact-badge
+						eee-identity="ctrl.receiver.administrator"
+						eee-linked="true"></eee-contact-badge>
+			</md-card-content>
+
+			<md-card-title>
+				<md-card-title-text>
+					<span class="md-headline" translate>messenger.GROUP_MEMBERS</span>
+				</md-card-title-text>
+			</md-card-title>
+			<md-card-content>
+				<ul class="member-list">
+					<li ng-repeat="memberIdentity in ctrl.receiver.members">
+						<eee-contact-badge
+								eee-identity="memberIdentity"
+								eee-linked="true"></eee-contact-badge>
+					</li>
+				</ul>
+
+			</md-card-content>
+		</div>
+	</md-card>
+
+	<md-card>
+		<md-card-content>
+			<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+				<md-button ng-disabled="!ctrl.receiver.access.canSync" class="md-raised" ng-click="ctrl.controllerModel.sync($event)">
+					<span translate>messenger.GROUP_SYNC</span>
+				</md-button>
+				<md-button ng-disabled="!ctrl.receiver.access.canLeave" class="md-raised " ng-click="ctrl.controllerModel.leave($event)">
+					<span translate>messenger.GROUP_LEAVE</span>
+				</md-button>
+				<md-button ng-disabled="!ctrl.receiver.access.canDelete" class="md-raised md-warn" ng-click="ctrl.controllerModel.delete()">
+					<span translate>messenger.GROUP_DELETE</span>
+				</md-button>
+			</section>
+		</md-card-content>
+	</md-card>
+</div>

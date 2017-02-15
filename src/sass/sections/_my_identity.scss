@@ -1,0 +1,49 @@
+#my-identity {
+  background-color: #424242;
+  padding: 0 $main-padding 0 (2*$main-padding);
+  min-height: 68px;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  box-shadow: -2px 2px 4px -2px rgba(0,0,0,0.4);
+  z-index: 21;
+  align-items: center;
+  justify-content: center;
+
+  .my-identity-content {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text-shadow: 0.5px 0.5px 1px rgba(0,0,0,0.25);
+
+    .my-threema-information {
+      @include mouse-hand;
+      div {
+        /* hide nickname */
+        span {
+          font-size: 10pt;
+          text-shadow: none;
+          margin-bottom: ($main-padding/2);
+          display: none;
+        }
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        word-break: break-all;
+      }
+      .threema-id {
+        font-size: 16pt;
+      }
+    }
+  }
+}
+
+#my-threema-id-dialog {
+  qrcode {
+    canvas {
+      max-width: 50%;
+    }
+  }
+}

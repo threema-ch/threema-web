@@ -1,0 +1,48 @@
+<md-dialog aria-label="About">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>About</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon aria-label="Close dialog" class="material-icons md-24">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p>
+                    Threema Web &copy; 2016&ndash;2017 Threema GmbH.
+                    <span translate>about.ALL_RIGHTS_RESERVED</span>
+                </p>
+
+                <p>Download the Threema app here: <a href="https://threema.ch/">https://threema.ch/</a></p>
+
+                <h2>Open Source</h2>
+                <p translate>about.OPEN_SOURCE</p>
+                <p>
+                    <span translate>about.SOURCE_CODE</span>
+                    <a href="https://github.com/threema-ch/threema-web"
+                       target="_blank" rel="noopener noreferrer">https://github.com/threema-ch/threema-web</a>.
+                </p>
+
+                <h2 translate>about.LICENSES</h2>
+                <ul>
+                    <li translate>about.EMOJI_ART</li>
+                    <li>
+                        <span translate>about.LICENSE_LINK_BEFORE</span>
+                        <a href="https://github.com/threema-ch/threema-web/blob/master/LICENSE-3RD-PARTY.txt"
+                           target="_blank" rel="noopener noreferrer" translate>about.LICENSE_LINK_TEXT</a>
+                        <span translate>about.LICENSE_LINK_AFTER</span>
+                    </li>
+                </ul>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="ctrl.cancel()"><span translate>common.CLOSE</span></md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

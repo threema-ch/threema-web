@@ -1,0 +1,44 @@
+<!-- Non status messages -->
+<md-menu md-position-mode="target-right target" md-offset="0 45">
+    <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <i class="material-icons md-dark md-24">more_vert</i>
+    </md-button>
+    <md-menu-content width="1">
+        <md-menu-item ng-if="ctrl.access.ack">
+            <md-button ng-click="ctrl.ack(true)">
+                <md-icon aria-label="Acknowledge" class="material-icons md-24">thumb_up</md-icon>
+                <span translate>messenger.ACKNOWLEDGE</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="ctrl.access.dec">
+            <md-button ng-click="ctrl.ack(false)">
+            <md-icon aria-label="Decline" class="material-icons md-24">thumb_down</md-icon>
+            <span translate>messenger.DECLINE</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="ctrl.access.quote">
+            <md-button ng-click="ctrl.quote()">
+            <md-icon aria-label="Decline" class="material-icons md-24">format_quote</md-icon>
+            <span translate>messenger.QUOTE</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="ctrl.access.download">
+            <md-button ng-click="ctrl.download($event)">
+                <md-icon aria-label="Download" class="material-icons md-24">file_download</md-icon>
+                <span translate>messenger.DOWNLOAD</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="ctrl.access.copy">
+            <md-button ng-click="ctrl.copy($event)">
+                <md-icon aria-label="Copy" class="material-icons md-24">content_copy</md-icon>
+                <span translate>messenger.COPY</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="ctrl.access.delete">
+            <md-button ng-click="ctrl.delete($event)">
+            <md-icon aria-label="Delete" class="material-icons md-24">delete</md-icon>
+            <span translate>messenger.DELETE</span>
+            </md-button>
+        </md-menu-item>
+    </md-menu-content>
+</md-menu>

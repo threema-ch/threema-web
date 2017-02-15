@@ -1,0 +1,30 @@
+md-dialog {
+    min-width: 470px;
+    p {
+        margin-bottom: 16px;
+        line-height: 1.3em;
+        &:last-of-type {
+            margin-bottom: 0;
+        }
+    }
+    h2 {
+        font-size: 1.4em;
+        margin-top: 24px;
+        margin-bottom: 16px;
+    }
+    ul {
+        list-style-position: inside;
+        li {
+            line-height: 1.5em;
+        }
+    }
+}
+
+md-dialog.send-file-dialog {
+    md-input-container.input-caption {
+        margin-bottom: 0;
+    }
+    md-input-container.input-send-as-file {
+        margin-top: 0;
+    }
+}

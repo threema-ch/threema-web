@@ -1,0 +1,17 @@
+.avatar-editor {
+    $avatar-size: 250px;
+
+    &.is-dragover {
+        .avatar-editor-drag {
+            border-color: black !important;
+        }
+    }
+    .avatar-editor-drag {
+        margin: auto auto !important;
+        width: $avatar-size;
+        height: $avatar-size;
+        &:not(.has-image) {
+            border: 5px dotted gray;
+        }
+    }
+}

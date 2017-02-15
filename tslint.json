@@ -1,0 +1,14 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "file-header": [true, "This file is part of Threema Web."],
+        "interface-name": [true, "never-prefix"],
+        "max-classes-per-file": false,
+        "member-ordering": false,
+        "no-namespace": [true, "allow-declarations"],
+        "object-literal-shorthand": false,
+        "object-literal-sort-keys": false,
+        "only-arrow-functions": false,
+        "quotemark": [true, "single", "avoid-escape"]
+    }
+}

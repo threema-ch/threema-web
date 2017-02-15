@@ -1,0 +1,53 @@
+@media (max-width: 880px) {
+    /* Hide some of the navigation elements */
+    .conversation {
+        .message-date,
+        .nickname {
+            display: none;
+        }
+    }
+
+    //try to resize thumbnails
+
+    .message-body {
+        max-width: 70% !important;
+    }
+
+    #navigation {
+        min-width: 20px !important;
+    }
+
+    .thumbnail {
+        width: auto !important;
+        height: auto !important;
+    }
+
+}
+
+@media (max-width: 600px) {
+    #messenger {
+        &.show-detail {
+            #navigation {
+                flex: 0 !important;
+                display: none;
+                min-width: 0 !important;
+                max-width: none !important;
+            }
+
+            #detail {
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+@media (max-width: 400px) {
+    // no fixed height on very small screens
+    .message-body {
+        img {
+            height: auto !important;
+        }
+    }
+
+
+}

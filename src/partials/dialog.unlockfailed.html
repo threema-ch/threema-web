@@ -1,0 +1,26 @@
+<md-dialog aria-label="Unlocking failed">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>welcome.UNLOCK_FAILED_TITLE</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon aria-label="Close dialog" class="material-icons md-24">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p translate>welcome.UNLOCK_FAILED_TEXT</p>
+                <p translate>welcome.UNLOCK_FAILED_FORGOTTEN</p>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="ctrl.cancel()">
+                Close
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

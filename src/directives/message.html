@@ -1,0 +1,64 @@
+<!-- Non status messages -->
+<article ng-if="ctrl.isContactMessage"
+         class="message"
+         ng-class="{'message-in': !ctrl.message.isOutbox, 'message-out': ctrl.message.isOutbox}">
+
+    <eee-avatar
+            class="message-avatar"
+            ng-if="ctrl.showAvatar"
+            eee-type="'contact'"
+            eee-receiver="ctrl.contact"
+            eee-resolution="ctrl.resolution"
+            ui-sref="messenger.home.conversation({ type: 'contact', id: ctrl.contact.id })"></eee-avatar>
+
+    <div class="bubble-triangle"></div>
+    <section class="message-body" ng-class="ctrl.message.type + '-message-body'">
+        <eee-message-contact
+            ng-if="ctrl.showName"
+            class="message-name"
+            eee-contact="ctrl.contact"
+            eee-colored="true">
+        </eee-message-contact>
+
+        <eee-message-media
+            ng-if="ctrl.showMedia"
+            class="message-media"
+            eee-message="ctrl.message"
+            eee-receiver="ctrl.receiver">
+        </eee-message-media>
+
+        <eee-message-quote
+            ng-if="ctrl.showQuote"
+            class="message-quote"
+            eee-quote="ctrl.message.quote">
+        </eee-message-quote>
+        <eee-message-text
+            ng-if="ctrl.showText"
+            class="message-text"
+            eee-message="ctrl.message">
+        </eee-message-text>
+
+        <div class="message-info">
+            <span eee-message-meta eee-message="ctrl.message"></span>
+            <span eee-message-date class="message-date" eee-message="ctrl.message"></span>
+            <span eee-message-state ng-if="ctrl.showState" class="message-state" eee-message="ctrl.message"></span>
+        </div>
+
+    </section>
+
+    <div ng-include
+         class="message-menu"
+         src="'directives/message_menu.html'"></div>
+</article>
+
+<!-- Status messages -->
+<article ng-if="ctrl.isStatusMessage" class="message message-status">
+    <div ng-if="ctrl.message.statusType == 'text'" class="message-body">
+        <eee-message-text class="message-text" eee-message="ctrl.message"></eee-message-text>
+    </div>
+    <div ng-if="ctrl.message.statusType == 'firstUnreadMessage'" class="unread-separator">
+        <div class="line"></div>
+        <p class="text" translate>messenger.UNREAD_MESSAGES</p>
+        <div class="line"></div>
+    </div>
+</article>

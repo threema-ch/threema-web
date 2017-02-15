@@ -1,0 +1,23 @@
+# Vim
+*.swp
+
+# Jetbrains
+.idea/
+
+# Generated files
+js/
+dist/*.js
+dist/*.tar.gz
+public/css/*.css
+public/css/*.map
+release/
+
+# Node stuff
+node_modules/
+
+# Other
+.ackrc
+.rgignore
+
+#debug stuff
+npm-debug.log

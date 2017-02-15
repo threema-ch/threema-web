@@ -1,0 +1,118 @@
+/*
+ * Connection status
+ */
+
+#status-bar {
+    transition: all 1s ease-out;
+    height: 5px;
+}
+
+// Expanded status bar
+body {
+    &:not(.expanded) {
+        // Resize messenger
+        #messenger {
+            height: calc(100% - 5px) !important;
+        }
+    }
+    &.expanded {
+        &.status-warning,
+        &.status-error {
+            // Resize status bar if overlay is visible
+            #status-bar {
+                height: 50px;
+            }
+            // Resize messenger
+            #messenger {
+                height: calc(100% - 50px);
+            }
+            @media (max-width: 640px) {
+                #status-bar {
+                    height: 65px;
+                }
+                #messenger {
+                    height: calc(100% - 65px);
+                }
+            }
+            @media (max-width: 380px) {
+                #status-bar {
+                    height: 80px;
+                }
+                #messenger {
+                    height: calc(100% - 80px);
+                }
+            }
+        }
+    }
+}
+.status-ok {
+    #status-bar {
+        background-color: $status-ok;
+    }
+
+    #title .dot {
+        fill: $status-ok;
+    }
+}
+
+.status-warning {
+    //#main {
+    //    border-top: 5px solid $status-warning;
+    //}
+    #status-bar {
+        background-color: $status-warning;
+    }
+
+    #title .dot {
+        fill: $status-warning;
+    }
+}
+
+.status-error {
+    #status-bar {
+        background-color: $status-error;
+    }
+    #title .dot {
+        fill: $status-error;
+    }
+}
+
+#expanded-status-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    // Hide if inactive
+    &:not(.active) {
+        display: none;
+    }
+
+    // Loading indicator color
+    path {
+        stroke: white !important;
+    }
+
+    > div {
+        color: white;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+
+        margin: 8px;
+
+        &:first-of-type {
+            margin-left: 16px;
+        }
+
+        &:nth-last-of-type(2) {
+            flex-grow: 1;
+        }
+
+        .progress {
+            font-size: 32px;
+        }
+    }
+
+    h1 {
+        font-size: inherit;
+    }
+
+}

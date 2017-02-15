@@ -1,0 +1,31 @@
+footer {
+    height: $footer-height;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0.9em;
+    font-weight: 300;
+
+    ul {
+        display: block;
+
+        li {
+            display: inline;
+            white-space: nowrap;
+
+            &:not(:last-child):after {
+                content: " \25CF";
+                font-size: 10px;
+                position: relative;
+                top: -2px;
+                margin: 0 4px;
+            }
+
+            a {
+                color: white !important;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}

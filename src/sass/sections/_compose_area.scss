@@ -1,0 +1,90 @@
+#conversation #conversation-footer compose-area {
+    > div:first-child {
+        display: flex;
+        flex-direction: row;
+        margin: 0;
+
+        > div {
+            justify-content: center;
+            align-content: center;
+            margin: $main-padding $main-padding $main-padding 0;
+            &:first-child {
+                margin-left: $main-padding;
+            }
+
+            &:nth-of-type(2) {
+                border: 1px solid $border-grey;
+                border-radius: $material-radius;
+                background-color: $bright-background-color;
+                flex-grow: 1;
+                overflow-x: hidden;
+                overflow-y: auto;
+                // This is where the user enters text
+                div.compose {
+                    padding: $main-padding;
+                    top: 0;
+                    left: 0;
+                    outline: none;
+                    line-height: 1.3em;
+                    max-height: calc(1.3em * 5);
+                    min-height: 1.3em;
+
+                    img {
+                        vertical-align: middle;
+                        margin: -3px 1px;
+                    }
+                }
+            }
+            &:first-child,
+            &:last-child {
+                padding-top: $main-padding;
+                text-align: center;
+            }
+        }
+        // configure all triggers
+        .trigger {
+            opacity: 0.5;
+            &::selection {
+                background: white;
+            }
+            &.is-enabled {
+                @include mouse-hand;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+
+            &.is-active {
+                opacity: 1;
+            }
+            &:not(.is-enabled) {
+                opacity: 0.1;
+            }
+        }
+
+        .file-input {
+            position: absolute;
+        }
+    }
+
+    // On dragover
+    &.is-dragover div.compose {
+        border: 4px dashed lightgrey;
+        text-align: center;
+        line-height: $footer-height - 20px;
+        font-size: 1.4em;
+        font-weight: 300;
+    }
+
+    // Emoji picker window
+    .emoji-keyboard {
+        transform: scale(1);
+        &:not(.active) {
+            max-height: 0;
+            display: none;
+            .tab {
+                float: none;
+            }
+        }
+    }
+}

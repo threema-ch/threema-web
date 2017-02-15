@@ -1,0 +1,84 @@
+<div class="form-content">
+	<!-- information list card -->
+	<md-card class="two-row">
+		<div class="avatar">
+			<eee-avatar eee-type="'contact'"
+						eee-receiver="ctrl.receiver"
+						eee-resolution="'high'"></eee-avatar>
+		</div>
+		<md-card-content>
+			<dl class="key-values">
+				<dt>Threema ID</dt>
+				<dd>{{ctrl.receiver.id}}
+					<eee-verification-level
+							contact="ctrl.receiver">
+					</eee-verification-level></dd>
+
+				<dt><span translate>messenger.KEY_FINGERPRINT</span></dt>
+				<dd>{{ctrl.fingerPrint}}</dd>
+
+				<dt><span translate>messenger.FIRST_NAME</span></dt>
+				<dd>{{ctrl.receiver.firstName}}</dd>
+
+				<dt><span translate>messenger.LAST_NAME</span></dt>
+				<dd>{{ctrl.receiver.lastName}}</dd>
+			</dl>
+		</md-card-content>
+	</md-card>
+	<!-- system contact list card -->
+	<md-card ng-if="ctrl.hasSystemEmails || ctrl.hasSystemPhones">
+		<md-card-title>
+			<md-card-title-text>
+				<span class="md-headline" translate>messenger.SYSTEM_CONTACT</span>
+			</md-card-title-text>
+		</md-card-title>
+		<md-card-content>
+			<div class="two-row">
+				<div ng-if="ctrl.hasSystemEmails">
+					<dl class="key-values">
+						<dt ng-repeat-start="email in ctrl.receiver.systemContact.emails">{{email.label }}</dt>
+						<dd ng-repeat-end>{{ email.address }} </dd>
+					</dl>
+				</div>
+				<div ng-if="ctrl.hasSystemPhones">
+					<dl class="key-values">
+						<dt ng-repeat-start="phoneNumber in ctrl.receiver.systemContact.phoneNumbers">{{phoneNumber.label }}</dt>
+						<dd ng-repeat-end>{{ phoneNumber.number }} </dd>
+					</dl>
+				</div>
+			</div>
+		</md-card-content>
+	</md-card>
+
+	<!-- group card -->
+	<md-card ng-if="ctrl.showGroups">
+		<md-card-title>
+			<md-card-title-text>
+				<span class="md-headline" translate>messenger.MEMBER_OF_GROUPS</span>
+			</md-card-title-text>
+		</md-card-title>
+		<md-card-content>
+			<ul class="group-list">
+				<li ng-repeat="groupReceiver in ctrl.inGroups">
+					<eee-group-badge eee-group-receiver="groupReceiver" eee-contact-receiver="ctrl.receiver"/>
+				</li>
+			</ul>
+		</md-card-content>
+	</md-card>
+
+	<!-- distribution list card -->
+	<md-card ng-if="ctrl.showDistributionLists">
+		<md-card-title>
+			<md-card-title-text>
+				<span class="md-headline" translate>messenger.MEMBER_OF_DISTRIBUTION_LISTS</span>
+			</md-card-title-text>
+		</md-card-title>
+		<md-card-content>
+			<ul class="group-list">
+				<li ng-repeat="distributionListReceiver in ctrl.inDistributionLists">
+					<eee-distribution-list-badge eee-distribution-list-receiver="distributionListReceiver" eee-contact-receiver="ctrl.receiver"/>
+				</li>
+			</ul>
+		</md-card-content>
+	</md-card>
+</div>

@@ -1,0 +1,57 @@
+// Main entry point for all stylesheets.
+//
+// Structure inspired by:
+// - https://www.sitepoint.com/architecture-sass-project/
+// - http://vanseodesign.com/css/sass-directory-structures/
+
+// Base: Boilerplate content. It holds the styles every page of your site
+// should receive.
+@import "base/reset";
+@import "base/typography";
+@import "base/colors";
+
+// Helpers: Tools, helper files, variables, config files.
+@import "helpers/colors";
+@import "helpers/sizes";
+@import "helpers/mouse";
+@import "helpers/message_bubble";
+@import "helpers/texts";
+
+// Layouts: Macro layout files. Styles for major sections of the layout like a
+// header or footer and styles for a grid system would belong here.
+@import "layout/main";
+@import "layout/responsive";
+
+// Components: Micro layout files. Your styles for buttons and navigation and
+// similar page components.
+//@import "components/lists";
+@import "components/links";
+@import "components/scrollbars";
+@import "components/avatar";
+@import "components/verification_level";
+@import "components/typing_indicator";
+@import "components/fade_blink";
+@import "components/no_lastpass";
+@import "components/dialogs";
+@import "components/spinner";
+@import "components/message_media";
+@import "components/emoji_picker";
+@import "components/placeholder";
+@import "components/receiver_badge";
+@import "components/avatar_editor";
+@import "components/avatar_area";
+@import "components/drag_file";
+
+// Sections: Styles specific to individual pages or sections.
+// Nothing to see here yet!
+@import "sections/header";
+@import "sections/welcome";
+@import "sections/navigation";
+@import "sections/conversation";
+@import "sections/compose_area";
+@import "sections/footer";
+@import "sections/status_bar";
+@import "sections/my_identity";
+
+// Vendors: Third party code.
+// Nothing to see here yet!

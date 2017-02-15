@@ -1,0 +1,158 @@
+// Config variables
+
+$circle-size: 50px;
+$loading-ring-thickness: 5px;
+
+// Animations
+
+@keyframes file-download-rotater {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+// Styling
+
+.message-media {
+
+    .in-view-indicator {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    // Thumbnails (Images, GIFs, Locations, ...)
+    .thumbnail {
+        // For absolute positioning of children
+        position: relative;
+
+        // for big pictures
+        overflow: hidden;
+
+        // Make it clickable
+        @include mouse-hand;
+
+        // Show/hide logic
+        .loading-wrapper {
+            display: none;
+            &.active {
+                z-index: 10;
+                display: block;
+            }
+        }
+
+        // max size of a thumbnail
+
+        // Styling of loader
+        .loading-wrapper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.2);
+            .loading {
+                display: block;
+                position: absolute;
+                top: calc(50% - #{$circle-size/2} - 1em);
+                left: calc(50% - #{$circle-size/2});
+                width: $circle-size - 2 * $loading-ring-thickness;
+                height: $circle-size - 2 * $loading-ring-thickness;
+                border: $loading-ring-thickness solid rgba(255, 255, 255, 0.3);
+                border-left-color: lightgreen;
+                animation: file-download-rotater 1.1s infinite linear;
+                border-radius: 50%;
+            }
+            .loading-text {
+                display: block;
+                text-align: center;
+                width: 100%;
+                color: white;
+                height: 1em;
+                position: absolute;
+                top: calc(50% + #{$circle-size/2});
+            }
+        }
+
+        .overlay {
+            &.video, &.gif {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                i {
+                    line-height: $circle-size;
+                    font-size: $circle-size;
+                    position: absolute;
+                    top: calc(50% - #{$circle-size/2});
+                    left: calc(50% - #{$circle-size/2});
+                }
+            }
+        }
+    }
+
+    // File messages (Files, Audio, ...)
+    .file-message {
+        height: $circle-size;
+        @include mouse-hand;
+
+        .circle {
+            height: $circle-size;
+            width: $circle-size;
+            background-color: grey;
+            outline: none;
+            position: relative;
+            border-radius: $circle-size / 2;
+
+            display: flex;
+            i,
+            img {
+                color: white;
+                margin: auto auto;
+                position: relative;
+            }
+        }
+
+        // Loading indicator
+        .loading.active {
+            display: block;
+            width: $circle-size - 2 * $loading-ring-thickness;
+            height: $circle-size - 2 * $loading-ring-thickness;
+            border: $loading-ring-thickness solid rgba(0, 0, 0, 0.1);
+            border-left-color: lightgreen;
+            animation: file-download-rotater 1.1s infinite linear;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .message-text {
+            padding-top: 8px;
+        }
+
+        .info {
+            position: relative;
+            margin-left: $circle-size + 16px;
+            top: -$circle-size;
+            height: $circle-size;
+            line-height: $circle-size;
+            p {
+                margin: 0;
+                line-height: normal;
+                padding: 0;
+                font-size: 10pt;
+            }
+
+            p:first-child {
+                font-size: 100%;
+            }
+        }
+
+    }
+
+    img {
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,41 @@
+<div layout="column" layout-wrap layout-margin layout-align="center center">
+    <h3 class="md-headline" translate>messenger.RECEIVER_AVATAR</h3>
+
+    <avatar-area
+            load-avatar="ctrl.controllerModel.avatarController.loadAvatar"
+            on-change="ctrl.controllerModel.avatarController.onChangeAvatar"
+            color="ctrl.controllerModel.receiver.color"
+            enable-clear="false">
+    </avatar-area>
+</div>
+<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline" translate>messenger.GROUP_NAME</span>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <md-input-container class="md-block" >
+            <input
+                aria-label="group name"
+                translate-attr="{'aria-label': 'messenger.GROUP_NAME'}"
+                ng-model="ctrl.controllerModel.name"
+                ng-disabled="ctrl.isSaving()">
+        </md-input-container>
+    </md-card-content>
+</md-card>
+<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline" translate>messenger.GROUP_MEMBERS</span>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <ul class="member-list">
+            <member-list-editor
+                eee-members="ctrl.controllerModel.members",
+                eee-placeholder="ctrl.controllerModel.addContactPlaceholder"
+                eee-on-change="ctrl.controllerModel.onChangeMembers" />
+        </ul>
+    </md-card-content>
+</md-card>

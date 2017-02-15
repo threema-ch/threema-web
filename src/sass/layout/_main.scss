@@ -1,0 +1,328 @@
+#background-image {
+    min-height: 100%;
+    min-width: 1024px;
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#main-wrapper {
+    height: 100%;
+    margin: 0 auto;
+    //max-width: 1500px;
+    width: 98vw;
+    max-width: 450px;
+    max-height: 575px;
+    transition: max-width 0.8s ease-in-out;
+    height: calc(100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});
+    &.wide {
+        max-width: 1500px;
+        max-height: inherit;
+    }
+}
+
+#main {
+    border-radius: $material-radius;
+    width: 100%;
+    height: 100%;
+    box-shadow: $material-card-shadow;
+    overflow: hidden;
+}
+
+#main-wrapper {
+
+    // Set min height of messenger
+    &.wide #main {
+        min-height: 272px;
+    }
+
+    // Set min height of welcome screen
+    &:not(.wide) #main {
+        min-height: 560px;
+        height: auto;
+    }
+
+}
+
+#main-content {
+    width: 100%;
+    height: 100%;
+}
+
+#messenger {
+
+    transition: all 1s ease-out;
+    display: flex;
+    width: 100%;
+    // height calculation in _status_bar.scss
+    flex-direction: row;
+
+    #navigation {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #detail {
+        height: 100%;
+        &>div.ng-scope {
+            height: 100%;
+            background-color: #efebe9;
+
+            /**
+                Default style for the header in the detail
+             */
+            .detail-header {
+                box-shadow: 1px 2px 4px -2px rgba(0, 0, 0, 0.2);
+                background-color: $dark-background-color;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 0 $main-padding;
+                z-index: 18;
+                min-height: 68px;
+
+                > * {
+                    margin-left: 8px;
+                }
+
+                // back button
+                .header-back-button {
+                    @include mouse-hand;
+                    img {
+                        transition: all 0.8s;
+                        opacity: 0.8;
+                    }
+
+                    &:hover {
+                         img {
+                                opacity: 1;
+                                width: 105%;
+                         }
+                    }
+                }
+
+                .header-avatar {
+
+                }
+
+                .header-detail {
+                    display: flex;
+                    flex-direction: column;
+                    flex-grow: 1;
+                    overflow: hidden;
+                    > * {
+                        color: black;
+                        display: flex;
+                        line-height: 100%;
+                        flex-direction: row;
+                        flex-grow: 1;
+                        justify-content: space-between;
+
+                        &:first-child {
+                            font-weight: bold;
+                        }
+                    }
+                }
+
+                .header-buttons {
+                    flex: 1;
+                    text-align: right;
+
+                    /* loading indicator */
+                    md-progress-circular {
+                        display: inline-block;
+                    }
+                }
+            }
+
+            .detail-content {
+
+                ul {
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                    width: 100%;
+
+                    > li {
+                        margin-bottom: $main-padding;
+                    }
+                }
+            }
+
+            // editable or readonly detail content
+            > .form {
+                display: flex;
+                flex-direction: column;
+                height: 100%;
+
+                &.readonly {
+                    .form-header {
+                        overflow: hidden;
+                        height: 400px;
+                        eee-avatar {
+                            img {
+                                position: relative;
+                                top: calc(-100%);
+                                width: 100%;
+                                max-width: 100%;
+                                max-height: none;
+                                height: auto;
+                                border-radius: 0;
+                            }
+                        }
+                    }
+                }
+                .detail-content {
+                    flex-grow: 1;
+                    overflow: auto;
+
+                    .two-row {
+                        display: flex;
+                        flex-flow: row;
+
+                        &.div {
+                            >:first-child {
+                                border-right: 1px solid rgba(0,0,0,0.12);
+                                padding-right: 4*$main-padding;
+                                margin-right: 4*$main-padding;
+                            }
+                        }
+                        > * {
+                            flex: 1;
+
+                            //be sure the avatar has always the same height as width
+                            &.avatar {
+                                width: 50%;
+                                overflow: hidden;
+                                position: relative;
+                                &:before {
+                                    content: "";
+                                    display: block;
+                                    margin-top: 100%;
+                                }
+                                eee-avatar {
+                                    position: absolute;
+                                    top:0;
+                                    width: 100%;
+                                    img {
+                                        border-radius: 0;
+                                        width: 100%;
+                                        height: auto;
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .form-content {
+                        padding: $main-padding;
+                    }
+                    .loading-overlay {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    &:not(.show-detail) {
+        #navigation {
+            max-width: 100%;
+            flex: 1 6 100%;
+        }
+
+        #detail {
+            display: none;
+        }
+    }
+
+    &.show-detail {
+        #navigation {
+            max-width: 30%;
+            min-width: 200px;
+            flex: 1 6 30%;
+
+            border-right: 1px solid #ddd;
+        }
+
+        #detail {
+            flex: 3 1 70%;
+            max-width: 70%;
+        }
+    }
+
+}
+
+.material-icons {
+    &.as-button {
+        opacity: 0.5;
+        cursor: pointer;
+        &:hover {
+            opacity: 1;
+        }
+    }
+
+}
+
+.md-dialog-content {
+    &.center {
+        text-align: center;
+    }
+}
+
+input.threema-id {
+    text-transform: uppercase;
+}
+
+a.threema-action {
+    @include mouse-hand;
+}
+
+.androidonly {
+    width: 100%;
+    margin: 10px auto 0;
+    background-color: white;
+    text-align: center;
+    border-radius: $material-radius;
+    box-shadow: $material-card-shadow;
+    div {
+        padding: 16px;
+        line-height: 24px;
+        display: inline-flex;
+        vertical-align: middle;
+        align-items: center;
+        font-weight: 300;
+        i.material-icons {
+            margin-right: 8px;
+        }
+    }
+}
+
+
+//show dt as threema green subjects
+.key-values {
+    dt {
+        color: rgb(0,150,136);
+        padding-bottom: ($main-padding);
+    }
+
+    dd {
+        word-break: normal;
+        display: block;
+        margin-bottom: $main-padding*2;
+    }
+}
+
+
+//angular material extensions
+md-toast.md-center {
+    left: 50%;
+    transform: translate3d(-50%, 0, 0);
+}

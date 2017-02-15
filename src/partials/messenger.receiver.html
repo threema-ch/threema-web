@@ -1,0 +1,24 @@
+<div class="form readonly">
+    <div id="receiver-detail-header" class="detail-header">
+        <div class="header-back-button" ng-click="ctrl.goBack()">
+            <img src="img/ic_arrow_left.svg" alt="Back">
+        </div>
+        <div class="header-details">
+            <h2>{{ ctrl.receiver.displayName }}</h2>
+        </div>
+
+        <div class="header-buttons">
+            <md-button aria-label="chat" class="md-icon-button" ng-show="ctrl.controllerModel.canEdit()" ng-click="ctrl.edit()">
+                <md-icon class="material-icons md-24">mode_edit</md-icon>
+            </md-button>
+
+            <md-button aria-label="edit" class="md-icon-button" ng-click="ctrl.chat()">
+                <md-icon class="material-icons md-24">message</md-icon>
+            </md-button>
+        </div>
+    </div>
+    <div class="detail-content">
+        <div ng-include src="'partials/messenger.receiver/' + ctrl.receiver.type + '.html'" scroll-glue in-view-container>
+        </div>
+    </div>
+</div>

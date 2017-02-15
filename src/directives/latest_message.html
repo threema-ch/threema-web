@@ -1,0 +1,55 @@
+<div class="latest-message" ng-class="{'has-draft': ctrl.hasDraft(), 'is-typing': ctrl.isTyping(), 'is-hidden': ctrl.isHidden()}">
+
+    <!-- Typing indicator -->
+    <div class="left typing">
+        <span translate>messenger.IS_TYPING</span>
+    </div>
+
+    <!-- Left aligned message content -->
+    <div class="left no-draft no-typing no-hidden" ng-if="ctrl.message">
+
+        <!-- If this receiver is a group, show contact name that sent last message. -->
+        <span eee-message-contact
+              ng-if="ctrl.isGroup" eee-contact="ctrl.contact"></span>
+
+        <!-- For non-text-messages, show an icon. -->
+        <span eee-message-icon
+              ng-show="ctrl.showIcon" class="message-icon"
+              eee-message="ctrl.message"></span>
+
+        <!-- For text-messages, show message text excerpt. -->
+        <span eee-message-text class="message-text" eee-message="ctrl.message"
+            eee-multi-line="false"></span>
+
+    </div>
+    <div class="left hidden no-typing">
+        <span class="message-text" translate>messenger.PRIVATE</span>
+    </div>
+    <div class="left draft no-typing no-hidden">
+        <span class="message-text">{{ctrl.getDraft()}}</span>
+    </div>
+
+    <!-- Right aligned message metadata -->
+    <div class="right">
+        <span class="no-draft no-hidden">
+            <span eee-message-date
+                  class="message-date" eee-message="ctrl.message"></span>
+            <span eee-latest-message-state
+                  class="message-state"
+                  eee-message="ctrl.message"
+                  ng-show="!ctrl.defaultStatusIcon"></span>
+
+            <span class="message-state"
+                  ng-show="ctrl.defaultStatusIcon">
+                <i class="material-icons md-dark md-14">{{ ctrl.defaultStatusIcon }}</i>
+            </span>
+        </span>
+        <span class="draft no-hidden">
+            <span translate>messenger.DRAFT</span>
+        </span>
+
+
+
+    </div>
+
+</div>

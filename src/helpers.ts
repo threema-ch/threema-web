@@ -1,0 +1,244 @@
+/**
+ * This file is part of Threema Web.
+ *
+ * Threema Web is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * Convert an Uint8Array to a hex string.
+ *
+ * Example:
+ *
+ *   >>> u8aToHex(new Uint8Array([1, 255]))
+ *   "01ff"
+ */
+export function u8aToHex(array: Uint8Array): string {
+    const results: string[] = [];
+    array.forEach((arrayByte) => {
+        results.push(arrayByte.toString(16).replace(/^([\da-f])$/, '0$1'));
+    });
+    return results.join('');
+}
+
+/**
+ * Convert a hexadecimal string to a Uint8Array.
+ *
+ * Example:
+ *
+ *   >>> hexToU8a("01ff")
+ *   [1, 255]
+ */
+export function hexToU8a(hexstring: string): Uint8Array {
+    let array;
+    let i;
+    let j = 0;
+    let k;
+    let ref;
+
+    // If number of characters is odd, add padding
+    if (hexstring.length % 2 === 1) {
+        hexstring = '0' + hexstring;
+    }
+
+    array = new Uint8Array(hexstring.length / 2);
+    for (i = k = 0, ref = hexstring.length; k <= ref; i = k += 2) {
+        array[j++] = parseInt(hexstring.substr(i, 2), 16);
+    }
+    return array;
+}
+
+/**
+ * Generate a random string.
+ *
+ * Based on http://stackoverflow.com/a/1349426/284318.
+ */
+export function randomString(
+    length = 32,
+    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+): string {
+    let str = '';
+    for (let i = 0; i < length; i++) {
+        str += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return str;
+}
+
+/* tslint:disable */
+/**
+ * Convert a JS string to a UTF-8 "byte" array.
+ *
+ * Copyright 2008 The Closure Library Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS-IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * https://github.com/google/closure-library/commit/e877b1eac410c0d842bcda118689759512e0e26f
+ *
+ * @param {string} str 16-bit unicode string.
+ * @return {!Array<number>} UTF-8 byte array.
+ */
+export function stringToUtf8a(str: string): Uint8Array {
+    var out = [], p = 0;
+    for (var i = 0; i < str.length; i++) {
+        var c = str.charCodeAt(i);
+        if (c < 128) {
+            out[p++] = c;
+        } else if (c < 2048) {
+            out[p++] = (c >> 6) | 192;
+            out[p++] = (c & 63) | 128;
+        } else if (
+            ((c & 0xFC00) == 0xD800) && (i + 1) < str.length &&
+            ((str.charCodeAt(i + 1) & 0xFC00) == 0xDC00)) {
+                // Surrogate Pair
+                c = 0x10000 + ((c & 0x03FF) << 10) + (str.charCodeAt(++i) & 0x03FF);
+                out[p++] = (c >> 18) | 240;
+                out[p++] = ((c >> 12) & 63) | 128;
+                out[p++] = ((c >> 6) & 63) | 128;
+                out[p++] = (c & 63) | 128;
+            } else {
+                out[p++] = (c >> 12) | 224;
+                out[p++] = ((c >> 6) & 63) | 128;
+                out[p++] = (c & 63) | 128;
+            }
+    }
+    return Uint8Array.from(out);
+}
+
+/**
+ * Convert a UTF-8 byte array to JavaScript's 16-bit Unicode.
+ *
+ * Copyright 2008 The Closure Library Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS-IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * https://github.com/google/closure-library/commit/e877b1eac410c0d842bcda118689759512e0e26f
+ *
+ * @param {Uint8Array|Array<number>} bytes UTF-8 byte array.
+ * @return {string} 16-bit Unicode string.
+ */
+export function utf8aToString(bytes: Uint8Array): string {
+    var out = [], pos = 0, c = 0;
+    while (pos < bytes.length) {
+        var c1 = bytes[pos++];
+        if (c1 < 128) {
+            out[c++] = String.fromCharCode(c1);
+        } else if (c1 > 191 && c1 < 224) {
+            var c2 = bytes[pos++];
+            out[c++] = String.fromCharCode((c1 & 31) << 6 | c2 & 63);
+        } else if (c1 > 239 && c1 < 365) {
+            // Surrogate Pair
+            var c2 = bytes[pos++];
+            var c3 = bytes[pos++];
+            var c4 = bytes[pos++];
+            var u = ((c1 & 7) << 18 | (c2 & 63) << 12 | (c3 & 63) << 6 | c4 & 63) - 0x10000;
+            out[c++] = String.fromCharCode(0xD800 + (u >> 10));
+            out[c++] = String.fromCharCode(0xDC00 + (u & 1023));
+        } else {
+            var c2 = bytes[pos++];
+            var c3 = bytes[pos++];
+            out[c++] = String.fromCharCode((c1 & 15) << 12 | (c2 & 63) << 6 | c3 & 63);
+        }
+    }
+    return out.join('');
+}
+/* tslint:enable */
+
+/**
+ * Filter an array or object.
+ */
+export function filter(obj: Object | any[], callback: (arg: any) => boolean) {
+    if (obj instanceof Array) {
+        // Filter arrays using Array.filter
+        return (obj as any[]).filter(callback);
+    } else {
+        // Filter objects by iterating over them
+        // and selectively copying values
+        const out = {};
+        for (let key in Object.keys(obj)) { // tslint:disable-line:forin
+            const value = obj[key];
+            if (callback(value)) {
+                out[key] = value;
+            }
+        }
+        return out;
+    }
+}
+
+/**
+ * Check whether a variable is a string.
+ */
+export function isString(val: any): boolean {
+    return typeof val === 'string' || val instanceof String;
+}
+
+/**
+ * Throttle function.
+ *
+ * Taken from https://remysharp.com/2010/07/21/throttling-function-calls
+ */
+export function throttle(fn, threshold: number = 250, scope) {
+    let last;
+    let deferTimer;
+    return function() {
+        let context = scope || this;
+        let now = +(new Date());
+        let args = arguments;
+        if (last && now < last + threshold) {
+            // hold on to it
+            clearTimeout(deferTimer);
+            deferTimer = setTimeout(function() {
+                last = now;
+                fn.apply(context, args);
+            }, threshold);
+        } else {
+            last = now;
+            fn.apply(context, args);
+        }
+    };
+}
+
+/**
+ * Detect whether browser supports passive event listeners.
+ *
+ * Taken from https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
+ */
+export function supportsPassive() {
+    // Test via a getter in the options object to see if the passive property is accessed
+    let supportsPassive = false;
+    try {
+        const opts = Object.defineProperty({}, 'passive', {
+            get: () => supportsPassive = true,
+        });
+        window.addEventListener('test', null, opts);
+    } catch (e) { /* do nothing */ }
+}

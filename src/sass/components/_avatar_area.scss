@@ -1,0 +1,36 @@
+.avatar-area {
+    &.overview {
+        display: inline-block;
+        text-align: center;
+        $avatar-area_size: 250px;
+
+        > .avatar-image {
+            position: relative;
+            margin: auto;
+            width: $avatar-area_size;
+            height: $avatar-area_size;
+            background-color: rgb(198, 198, 198);
+
+            overflow: hidden;
+            border-radius: 50%;
+            img {
+                width: 100%;
+            }
+
+
+            .loading-element {
+                position: absolute;
+                display: none;
+                width: 100%;
+                margin-top: ($avatar-area_size/3);
+
+                &.active {
+                    display: block;
+                }
+            }
+        }
+    }
+    &.editor {
+
+    }
+}

@@ -1,0 +1,10 @@
+<md-card>
+	<md-card-content>
+		<md-input-container class="md-block" >
+			<label translate>messenger.ADD_CONTACT_THREEMA_ID</label>
+			<input class="threema-id"  minlength="8" ng-maxlength="8" maxlength="8" required md-no-asterisk
+			       ng-model="ctrl.controllerModel.identity"
+			       ng-disabled="ctrl.isSaving()">
+		</md-input-container>
+	</md-card-content>
+</md-card>

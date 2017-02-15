@@ -1,0 +1,173 @@
+<!-- My identity -->
+<div id="my-identity" ng-if="ctrl.showMyIdentity()">
+    <div class="my-identity-content" eee-my-identity
+            eee-identity="ctrl.getMyIdentity()"></div>
+
+    <md-menu md-position-mode="target-right target" md-offset="0 45">
+        <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+            <i class="material-icons md-light md-24">more_vert</i>
+        </md-button>
+        <md-menu-content width="4">
+            <md-menu-item>
+                <md-button ng-click="ctrl.closeSession()">
+                    <md-icon aria-label="Close session" class="material-icons md-24">exit_to_app</md-icon>
+                    <span translate>common.SESSION_CLOSE</span>
+                </md-button>
+            </md-menu-item>
+            <md-menu-item ng-if="ctrl.isPersistent()">
+                <md-button ng-click="ctrl.deleteSession()">
+                    <md-icon aria-label="Delete session" class="material-icons md-24">delete</md-icon>
+                    <span translate>common.SESSION_DELETE</span>
+                </md-button>
+            </md-menu-item>
+            <md-menu-item>
+                <md-button ng-click="ctrl.about()">
+                    <md-icon aria-label="About" class="material-icons md-24">info</md-icon>
+                    <span translate>messenger.ABOUT</span>
+                </md-button>
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
+</div>
+
+<!-- Header -->
+<div id="navigation-header">
+    <div class="main">
+        <md-nav-bar md-no-ink md-selected-nav-item="ctrl.activeTab" nav-bar-aria-label="navigation links">
+            <md-nav-item md-nav-click="" name="conversations">
+                <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.CONVERSATIONS">speaker_notes</i>
+            </md-nav-item>
+            <md-nav-item md-nav-click="" name="contacts">
+                <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.CONTACTS">person</i>
+            </md-nav-item>
+        </md-nav-bar>
+        <span flex></span>
+        <md-button aria-label="Search" class="md-icon-button" ng-click="ctrl.toggleSearch()">
+            <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.SEARCH">search</i>
+        </md-button>
+    </div>
+    <div class="search" searchbox searchbox-focus="ctrl.searchVisible">
+        <input type="text" ng-model="ctrl.searchText" translate translate-attr-placeholder="messenger.SEARCH" aria-label="Search" translate-attr-aria-label="messenger.SEARCH">
+    </div>
+</div>
+
+<!-- Conversations -->
+<div id="navigation-conversations" class="tab-content" ng-if="ctrl.activeTab == 'conversations'" in-view-container>
+    <p class="empty" ng-if="ctrl.conversations().length === 0" translate>messenger.NO_CONVERSATIONS_FOUND</p>
+    <ul>
+        <li ng-repeat="conversation in ctrl.conversations() | filter:ctrl.searchConversation"
+            ng-class="{'unread': conversation.unreadCount > 0,
+                'active': ctrl.isActive(conversation)}"
+            ui-sref="messenger.home.conversation({ type: conversation.type, id: conversation.id })"
+            class="conversation" ng-if="ctrl.isVisible(conversation)">
+
+            <section class="avatar-box">
+                <eee-avatar eee-type="conversation.type"
+                            eee-receiver="conversation.receiver"
+                            eee-resolution="'low'"></eee-avatar>
+            </section>
+
+            <section class="conversation-box">
+                <section class="receiver-box">
+                    <span ng-class="{'disabled': conversation.receiver.disabled === true}">
+                        {{ conversation.receiver.displayName }}
+                    </span>
+                    <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
+                        {{ conversation.unreadCount }}
+                    </span>
+                </section>
+
+                <section class="message-box">
+                    <eee-latest-message
+                        ng-show="!conversation.receiver.isTyping() && conversation.latestMessage"
+                        ng-class="latest-message-text"
+                        eee-type="conversation.type"
+                        eee-receiver="conversation.receiver"
+                        eee-message="conversation.latestMessage"></eee-latest-message>
+                </section>
+            </section>
+
+        </li>
+    </ul>
+</div>
+
+<!-- Contacts -->
+<div id="navigation-contacts" class="tab-content" ng-if="ctrl.activeTab == 'contacts'" in-view-container>
+    <p class="empty" ng-if="ctrl.contacts().length === 0" translate>messenger.NO_CONTACTS_FOUND</p>
+    <ul>
+        <li ng-repeat="contact in ctrl.contacts() | isNotMe | filter:ctrl.searchContact"
+            ui-sref="messenger.home.conversation({ type: 'contact', id: contact.id })"
+            class="contact"
+            ng-class="{'inactive': contact.state == 'INACTIVE'}">
+
+            <section class="avatar-box">
+                <eee-avatar eee-type="'contact'"
+                            eee-receiver="contact"
+                            eee-resolution="'low'"></eee-avatar>
+            </section>
+
+            <section class="left">
+                <div class="name">{{ contact.displayName }}</div>
+                <div class="identity">{{ contact.id }}</div>
+            </section>
+
+            <section class="right">
+                <div class="nickname">
+                    <span ng-show="contact.publicNickname && contact.verificationLevel < 2 && contact.publicNickname != contact.identity">
+                        ~{{ contact.publicNickname }}
+                    </span>
+                </div>
+                <div class="verification-level">
+                    <eee-verification-level
+                        contact="contact"
+                        ng-if="contact.verificationLevel">
+                    </eee-verification-level>
+                </div>
+            </section>
+        </li>
+    </ul>
+</div>
+
+<!-- FAB -->
+<div id="navigation-fab">
+    <md-fab-speed-dial md-direction="up" class="md-scale md-fab-bottom-right md-hover-full" ng-cloak>
+        <md-fab-trigger>
+            <md-button aria-label="menu" class="md-fab">
+                <md-icon aria-label="Add" class="material-icons md-24">add</md-icon>
+            </md-button>
+        </md-fab-trigger>
+
+        <md-fab-actions>
+            <md-button
+                    ng-click="ctrl.addContact()"
+                    translate-attr="{'aria-label': 'messenger.ADD_CONTACT'}"
+                    aria-label="Add Contact"
+                    class="md-fab md-raised md-mini fab-button-add-contact">
+                <md-tooltip md-direction="left" md-visible="tooltipVisible">
+                    <label translate>messenger.ADD_CONTACT</label>
+                </md-tooltip>
+                <md-icon class="material-icons md-24">person_add</md-icon>
+            </md-button>
+            <md-button
+                    ng-click="ctrl.createGroup()"
+                    translate-attr="{'aria-label': 'messenger.CREATE_GROUP'}"
+                    aria-label="Create Group"
+                    class="md-fab md-mini fab-button-add-group">
+                <md-tooltip md-direction="left" md-visible="tooltipVisible">
+                    <label translate>messenger.CREATE_GROUP</label>
+                </md-tooltip>
+                <md-icon class="material-icons md-24">group_add</md-icon>
+            </md-button>
+            <md-button
+                    ng-click="ctrl.createDistributionList()"
+                    translate-attr="{'aria-label': 'messenger.CREATE_DISTRIBUTION_LIST'}"
+                    aria-label="Create Distribution list"
+                    class="md-fab md-mini fab-button-add-distribution-list">
+                <md-tooltip md-direction="left" md-visible="tooltipVisible">
+                    <label translate>messenger.CREATE_DISTRIBUTION_LIST</label>
+                </md-tooltip>
+                <md-icon class="material-icons md-24">question_answer</md-icon>
+            </md-button>
+        </md-fab-actions>
+    </md-fab-speed-dial>
+</div>

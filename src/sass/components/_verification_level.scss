@@ -1,0 +1,48 @@
+/*
+ * Verification level.
+ */
+
+.verification-dots {
+
+   div {
+     display: inline-block;
+     height: 11px;
+     width: 11px;
+     border-radius: 50%;
+     background-color: #e0e0e0;
+     margin-right: 2px;
+   }
+
+  &.level1 {
+    div {
+      &:nth-of-type(1) {
+        background-color: $status-error;
+      }
+    }
+  }
+
+  &.level2 {
+    div {
+      &:nth-of-type(1),
+      &:nth-of-type(2) {
+        background-color: $status-warning;
+      }
+    }
+    &.work {
+      div {
+        &:nth-of-type(1),
+        &:nth-of-type(2) {
+          background-color: #3b84df;
+        }
+      }
+    }
+
+  }
+
+  &.level3 {
+    div {
+        background-color: $status-ok;
+    }
+  }
+
+}
