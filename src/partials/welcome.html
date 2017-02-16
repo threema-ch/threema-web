@@ -73,6 +73,14 @@
                                 <i class="material-icons md-dark md-14">help</i>
                                 <span translate>troubleshooting.SESSION_DELETED</span>
                             </li>
+                            <li ng-if="ctrl.state === 'peer_handshake'">
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.PLUGIN</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'peer_handshake'">
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.ADBLOCKER</span>
+                            </li>
                         </ul>
                         <p class="forget" ng-if="ctrl.state === 'push'">
                             <span translate>welcome.IF_YOU_WANT</span>

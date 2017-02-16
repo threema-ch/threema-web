@@ -1,7 +1,11 @@
 # Threema Web
 
-Threema Web is a web client for Threema. With Threema Web, you can use Threema
-on your Desktop without compromising security.
+[![Build status](https://circleci.com/gh/threema-ch/threema-web.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/threema-ch/threema-web)
+[![License](https://img.shields.io/github/license/threema-ch/threema-web.svg)](https://github.com/threema-ch/threema-web/blob/master/LICENSE.txt)
+
+Threema Web is a web client for Threema, a privacy-focussed end-to-end
+encrypted mobile messenger hosted and developed in Switzerland. With Threema
+Web, you can use Threema on your Desktop without compromising security.
 
 ![Screenshot](https://threema.ch/images/webclient_header.png)
 
@@ -32,6 +36,10 @@ Run the dev server:
 Then open the URL in your browser:
 
     chromium http://localhost:9966
+
+*(Note that this setup should not be used in production. To run Threema
+Web on a server, please follow the instructions at
+[docs/self_hosting.md](docs/self_hosting.md).)*
 
 
 ## Testing

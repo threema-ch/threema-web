@@ -46,7 +46,9 @@
         "APP_STARTED": "Is the Threema app started?",
         "SESSION_DELETED": "Did you delete this session on your phone?",
         "PHONE_ONLINE": "Is your phone connected to the internet?",
-        "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?"
+        "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?",
+        "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
+        "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?"
     },
     "common": {
         "YES": "Yes",
@@ -75,7 +77,7 @@
         "VERIFICATION_LEVEL1_EXPLAIN": "There is no guarantee that this person is who they claim they are.",
         "VERIFICATION_LEVEL2_WORK_EXPLAIN": "The identity of this person has been verified by your Threema Work administrator",
         "COMPOSE_MESSAGE_DRAGOVER": "Drop files to send",
-        "COMPOSE_MESSAGE": "Type a message or drop a files",
+        "COMPOSE_MESSAGE": "Type a message or drop a file",
         "UNREAD_MESSAGES": "Unread messages",
         "IS_TYPING": "is typing...",
         "SEARCH": "Search",
