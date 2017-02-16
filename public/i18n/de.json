@@ -45,7 +45,9 @@
         "APP_STARTED": "Ist die Threema-App gestartet?",
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
-        "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?"
+        "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?",
+        "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
+        "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?"
     },
     "common": {
         "YES": "Ja",
@@ -53,7 +55,7 @@
         "CLOSE": "Schliessen",
         "SESSION_CLOSE": "Sitzung schliessen",
         "CONFIRM_CLOSE_BODY": "Wollen Sie die Sitzung wirklich schliessen?",
-        "SESSION_DELETE": "Sitzung Löschen",
+        "SESSION_DELETE": "Sitzung löschen",
         "CONFIRM_DELETE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich löschen?",
         "CONFIRM_DELETE_CLOSE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich schliessen und löschen?",
         "ERROR": "Fehler",

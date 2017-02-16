@@ -46,7 +46,9 @@
         "APP_STARTED": "Is the Threema app started?",
         "SESSION_DELETED": "Did you delete this session on your phone?",
         "PHONE_ONLINE": "Is your phone connected to the internet?",
-        "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?"
+        "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?",
+        "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
+        "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?"
     },
     "common": {
         "YES": "Yes",
