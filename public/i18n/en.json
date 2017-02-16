@@ -75,7 +75,7 @@
         "VERIFICATION_LEVEL1_EXPLAIN": "There is no guarantee that this person is who they claim they are.",
         "VERIFICATION_LEVEL2_WORK_EXPLAIN": "The identity of this person has been verified by your Threema Work administrator",
         "COMPOSE_MESSAGE_DRAGOVER": "Drop files to send",
-        "COMPOSE_MESSAGE": "Type a message or drop a files",
+        "COMPOSE_MESSAGE": "Type a message or drop files",
         "UNREAD_MESSAGES": "Unread messages",
         "IS_TYPING": "is typing...",
         "SEARCH": "Search",
