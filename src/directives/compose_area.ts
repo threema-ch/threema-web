@@ -24,11 +24,13 @@ export default [
     '$timeout',
     '$translate',
     '$filter',
+    '$sanitize',
     '$log',
     function(browserService: threema.BrowserService,
              $window, $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $filter: ng.IFilterService,
+             $sanitize: ng.sanitize.ISanitizeService,
              $log: ng.ILogService) {
         return {
             restrict: 'EA',
@@ -230,21 +232,26 @@ export default [
 
                 function applyFilters(text: string): string {
                     const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
-                    return emojify(text, true);
+                    const parseNewLine = $filter('nlToBr') as (a: string, b?: boolean) => string;
+                    return parseNewLine(emojify(text, true), true);
                 }
 
                 // Handle pasting
-                // Source: http://stackoverflow.com/a/36846308/284318
                 function onPaste(ev: ClipboardEvent) {
                     ev.preventDefault();
                     const text = ev.clipboardData.getData('text/plain');
-                    let formatted = applyFilters(text);
 
-                    // replace newlines with html br
-                    const parseNewLine = $filter('writeNewLine') as (a: string, b?: boolean) => string;
-                    formatted = parseNewLine(formatted, true);
+                    // Apply filters (emojify, convert newline, etc)
+                    const formatted = applyFilters(text);
 
-                    document.execCommand('insertHTML', false, formatted);
+                    // Replace HTML formatting with ASCII counterparts
+                    const htmlToAsciiMarkup = $filter('htmlToAsciiMarkup') as (a: string) => string;
+
+                    // Sanitize
+                    const sanitized = $sanitize(htmlToAsciiMarkup(formatted));
+
+                    // Insert HTML
+                    document.execCommand('insertHTML', false, sanitized);
 
                     cleanupComposeContent();
                     updateView();

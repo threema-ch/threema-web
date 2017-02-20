@@ -34,7 +34,7 @@ export default [
             template: `
                 <div class="message-quote-content" ng-style="{'border-color': ctrl.contact.color}">
                     <span class="message-name" ng-style="{'color': ctrl.contact.color}">{{ ctrl.contact.displayName }}</span>
-                    <span class="message-quote" ng-bind-html="ctrl.text | escapeHtml | writeNewLine | emojify | linkify | markify"></span>
+                    <span class="message-quote" ng-bind-html="ctrl.text | escapeHtml | nlToBr | emojify | linkify | markify"></span>
                 </div>
             `,
         };

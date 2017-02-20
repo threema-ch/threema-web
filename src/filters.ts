@@ -32,14 +32,51 @@ angular.module('3ema.filters', [])
     };
     return (text) => (text !== undefined && text !== null ? text : '').replace(/[&<>"']/g, (m) => map[m]);
 })
-.filter('writeNewLine', function() {
+
+/**
+ * Convert newline characters with a <br> tag.
+ */
+.filter('nlToBr', function() {
     return (text, enabled: boolean) => {
         if (enabled) {
-            text = text.replace(/\n/g, '<br/>');
+            text = text.replace(/\n/g, '<br>');
         }
         return text;
     };
 })
+
+/**
+ * Replace formatting HTML with ASCII alternatives.
+ */
+.filter('htmlToAsciiMarkup', function() {
+    return (text) => {
+        let out = text
+
+        // Bold
+        .replace(/<b>/g, '*')
+        .replace(/<\/b>/g, '*')
+        .replace(/<strong>/g, '*')
+        .replace(/<\/strong>/g, '*')
+
+        // Italic
+        .replace(/<i>/g, '_')
+        .replace(/<\/i>/g, '_')
+        .replace(/<em>/g, '_')
+        .replace(/<\/em>/g, '_')
+
+        // Strikethrough
+        .replace(/<strike>/g, '~')
+        .replace(/<\/strike>/g, '~')
+        .replace(/<del>/g, '~')
+        .replace(/<\/del>/g, '~')
+        .replace(/<s>/g, '~')
+        .replace(/<\/s>/g, '~')
+
+        ;
+        return out;
+    };
+})
+
 /**
  * Convert links in text to <a> tags.
  */
