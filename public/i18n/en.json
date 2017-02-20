@@ -7,6 +7,7 @@
         "PLEASE_UNLOCK": "Reconnecting session",
         "WAITING": "Waiting for connection",
         "PLEASE_RELOAD": "Please reload the page to try again.",
+        "RELOAD": "Reload page",
         "PASSWORD": "Password",
         "CHOOSE_PASSWORD": "To stay logged in, please enter<br>a session password before scanning.",
         "UNLOCK_FAILED_TEXT": "You entered the wrong password, the session cannot be restored.",
