@@ -44,6 +44,7 @@ class WelcomeController {
     private $timeout: ng.ITimeoutService;
     private $interval: ng.IIntervalService;
     private $log: ng.ILogService;
+    private $window: ng.IWindowService;
 
     // Material design services
     private $mdDialog;
@@ -62,13 +63,13 @@ class WelcomeController {
     private password: string = '';
 
     public static $inject = [
-        '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$mdDialog', '$translate',
+        '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
         'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
         'BROWSER_MIN_VERSIONS', 'ControllerService',
     ];
     constructor($scope: ng.IScope, $state: ng.ui.IStateService, $stateParams: threema.WelcomeStateParams,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
-                $log: ng.ILogService, $mdDialog, $translate,
+                $log: ng.ILogService, $window: ng.IWindowService, $mdDialog, $translate,
                 webClientService: threema.WebClientService, TrustedKeyStore: TrustedKeyStoreService,
                 stateService: threema.StateService, pushService: threema.PushService,
                 browserService: threema.BrowserService,
@@ -81,6 +82,7 @@ class WelcomeController {
         this.$timeout = $timeout;
         this.$interval = $interval;
         this.$log = $log;
+        this.$window = $window;
         this.$mdDialog = $mdDialog;
         this.$translate = $translate;
 
@@ -361,6 +363,13 @@ class WelcomeController {
                 this.$timeout(() => this.$state.reload(), WelcomeController.REDIRECT_DELAY);
             },
         );
+    }
+
+    /**
+     * Reload the page.
+     */
+    public reload() {
+        this.$window.location.reload();
     }
 }
 

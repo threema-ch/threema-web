@@ -7,6 +7,7 @@
         "PLEASE_UNLOCK": "Verbindung wiederaufbauen",
         "WAITING": "Auf Verbindung warten",
         "PLEASE_RELOAD": "Bitte laden Sie die Seite neu.",
+        "RELOAD": "Seite neu laden",
         "PASSWORD": "Passwort",
         "CHOOSE_PASSWORD": "W\u00e4hlen Sie vor dem Scannen ein Passwort, <br> um sp\u00e4ter die gleiche Sitzung erneut herzustellen.",
         "UNLOCK_FAILED_TEXT": "Sie haben das falsche Passwort eingegeben. Die Verbindung kann nicht aufgebaut werden.",
