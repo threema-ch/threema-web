@@ -40,7 +40,10 @@ export default [
                 this.thumbnailDownloading = false;
                 this.downloaded = false;
                 this.timeout = null as ng.IPromise<void>;
-                this.isAnimGif = (this.message as threema.Message).type === 'file'
+                this.uploading = this.message.temporaryId !== undefined
+                    && this.message.temporaryId !== null;
+                this.isAnimGif = !this.uploading
+                    && (this.message as threema.Message).type === 'file'
                     && (this.message as threema.Message).file.type === 'image/gif';
                 // do not show thumbnail in file messages (except anim gif
                 // if a thumbnail in file messages are available, the thumbnail
@@ -48,6 +51,7 @@ export default [
                 this.showThumbnail = this.message.thumbnail !== undefined
                     && ((this.message as threema.Message).type !== 'file'
                         || this.isAnimGif);
+
                 this.thumbnail = null;
 
                 if (this.message.thumbnail !== undefined) {
