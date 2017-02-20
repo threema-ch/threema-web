@@ -119,7 +119,13 @@ class WelcomeController {
             this.showBrowserWarning();
         }
 
-        // clear cache
+        // Determine whether local storage is available
+        if (this.TrustedKeyStore.blocked === true) {
+            $log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
+            this.showLocalStorageWarning();
+        }
+
+        // Clear cache
         this.webClientService.clearCache();
 
         // Determine connection mode
@@ -236,7 +242,7 @@ class WelcomeController {
     }
 
     /**
-     * Show the "decryption failed" dialog.
+     * Show a browser warning dialog.
      */
     private showBrowserWarning(): void {
         const confirm = this.$mdDialog.confirm()
@@ -250,6 +256,17 @@ class WelcomeController {
             // Redirect to Threema website
             window.location.replace('https://threema.ch/');
         });
+    }
+
+    /**
+     * Show a dialog indicating that local storage is not available.
+     */
+    private showLocalStorageWarning(): void {
+        const confirm = this.$mdDialog.alert()
+            .title(this.$translate.instant('common.ERROR'))
+            .htmlContent(this.$translate.instant('welcome.LOCAL_STORAGE_MISSING_DETAILS'))
+            .ok(this.$translate.instant('common.OK'));
+        this.$mdDialog.show(confirm);
     }
 
     /**
