@@ -40,13 +40,26 @@ import {stringToUtf8a, utf8aToString} from '../helpers';
 export class TrustedKeyStoreService implements threema.TrustedKeyStoreService {
     private static STORAGE_KEY = 'trusted';
 
+    private logTag: string = '[TrustedKeyStoreService]';
+
     private $log: ng.ILogService;
-    private storage: Storage;
+    private storage: Storage = null;
+
+    public blocked = false;
 
     public static $inject = ['$log', '$window'];
     constructor($log: ng.ILogService, $window: ng.IWindowService) {
         this.$log = $log;
-        this.storage = $window.localStorage;
+
+        try {
+            if ($window.localStorage === null) {
+                this.blocked = true;
+            }
+            this.storage = $window.localStorage;
+        } catch (e) {
+            $log.warn(this.logTag, 'LocalStorage blocked:', e);
+            this.blocked = true;
+        }
     }
 
     /**
@@ -88,7 +101,7 @@ export class TrustedKeyStoreService implements threema.TrustedKeyStoreService {
         data.set(peerPublicKey, 64);
         data.set(token, 96);
         const encrypted: Uint8Array = nacl.secretbox(data, nonce, this.pwToKey(password));
-        this.$log.debug('Storing trusted key');
+        this.$log.debug(this.logTag, 'Storing trusted key');
         this.storage.setItem(TrustedKeyStoreService.STORAGE_KEY, u8aToHex(nonce) + ':' + u8aToHex(encrypted));
     }
 
@@ -136,7 +149,7 @@ export class TrustedKeyStoreService implements threema.TrustedKeyStoreService {
      * Delete any stored trusted keys.
      */
     public clearTrustedKey(): void {
-        this.$log.debug('Clearing trusted key');
+        this.$log.debug(this.logTag, 'Clearing trusted key');
         this.storage.removeItem(TrustedKeyStoreService.STORAGE_KEY);
     }
 }
