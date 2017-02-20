@@ -18,45 +18,105 @@
 export class StringService implements threema.StringService {
 
     /**
-     * Split a string into junks
-     * @param str
-     * @param length
-     * @param offset
+     * Split a string into chunks
+     * @param str the string to chunk
+     * @param length max length of a chuck
+     * @param offset searching for a separator in the given offset, 0 disable separator indexing
      */
     public chunk(str: string, length: number, offset: number = 10): string[] {
         if (str === undefined
             || str === null
-            || length === undefined
-            || str.trim().length === 0) {
+            || length === undefined) {
             return [];
         }
 
-        // split into word pieces
-        let pieces = str.trim().split(' ');
-        let junks = [];
-        let junkIndex = 0;
-        let junk = (piece: string) => {
-            if (junks.length - 1 < junkIndex) {
-                junks.push(piece);
-            } else {
-                junks[junkIndex] = (junks[junkIndex] + ' ' + piece).trim();
+        // trim first
+        str = str.trim();
+        if (str.length <= length) {
+            if (str.length === 0) {
+                return [];
             }
+            return [str];
+        }
+
+        let isValidPosition = (sub: string, i: number) => {
+            let code = sub.charCodeAt(i);
+
+            if (Number.isNaN(code)) {
+                return true;
+            }
+            if (code < 0xD800 || code > 0xDFFF) {
+                return true;
+            }
+
+            // High surrogate (could change last hex to 0xDB7F to treat high private
+            // surrogates as single characters)
+            if (0xD800 <= code && code <= 0xDBFF) {
+                if (sub.length <= (i + 1)) {
+                    return false;
+                }
+                let next = sub.charCodeAt(i + 1);
+                if (0xDC00 > next || next > 0xDFFF) {
+                    return false;
+                }
+                return true;
+            }
+            return true;
         };
 
-        // first iteration, split
-        pieces.forEach((p) => {
-            let nc = ((junks.length  > junkIndex ? junks[junkIndex] : '') + ' ' + p).trim();
+        let chunks = [];
+        // append a separator
+        let rest = str + ' ';
+        do {
+            let piece = rest.substring(0, length + (offset > 0 ? 1 : 0));
 
-            if (nc.length <= length) {
-                junk(p);
-            } else {
-                do  {
-                    junkIndex++;
-                    junk(p.substring(0, length));
-                    p = p.substring(length);
-                } while (p.length > 0);
+            // check if the splitted position is valid (not in breaking emoji)
+            if (!isValidPosition(piece, piece.length - 1)) {
+                piece = piece.substring(0, piece.length - 1);
             }
-        });
-        return junks;
+
+            if (piece.length > length) {
+                // if a offset defined...
+
+                if (offset > 0) {
+                    // ... search separator, backwards
+                    let offsetString = piece.substring(Math.min(0, piece.length - offset));
+
+                    // select the nearest neighbour separator
+                    let neighbourSeparator = Math.max(
+                            offsetString.lastIndexOf(' '),
+                            offsetString.lastIndexOf('\r'),
+                            offsetString.lastIndexOf('\n'),
+                            offsetString.lastIndexOf('\t'),
+                            offsetString.lastIndexOf('.'),
+                        ) + 1;
+
+                    if (neighbourSeparator > 0) {
+                        // cut to neighbour separator
+                        piece = piece.substring(0, piece.length
+                            - offsetString.length
+                            + neighbourSeparator);
+                    } else {
+
+                        // no valid separator found, cut
+                        piece = piece.substring(0, length);
+                    }
+                }
+            }
+
+            // trim piece
+            piece = piece.trim();
+
+            if (piece.length > 0) {
+                chunks.push(piece);
+                // cut and trim the rest
+                rest = rest.substring(piece.length).trim();
+            } else {
+                // abort, should not happen
+                rest = '';
+            }
+        } while (rest.length > 0);
+
+        return chunks;
     }
 }

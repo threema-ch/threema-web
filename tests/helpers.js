@@ -1,47 +1,97 @@
-
 describe('Helpers', function() {
-	let stringService;
+    let stringService;
 
-	beforeEach(function() {
-		// Load 3ema.services
-		module('3ema.services');
+    beforeEach(function() {
+        // Load 3ema.services
+        module('3ema.services');
 
-		// Inject the $filter function
-		inject(function(StringService) {
-			stringService = StringService;
-		});
+        // Inject the $filter function
+        inject(function(StringService) {
+            stringService = StringService;
+        });
 
-	});
+    });
 
     describe('chunkSplit', function() {
-        this.testPatterns = (cases, size) => {
+        this.testPatterns = (cases, size, offset) => {
             for (let testcase of cases) {
                 const input = testcase[0];
                 const expected = testcase[1];
-                expect(stringService.chunk(input, size)).toEqual(expected);
+                expect(stringService.chunk(input, size, offset)).toEqual(expected);
             }
         };
 
-        it('short chunks', () => {
-            this.testPatterns([
-                ['The quick brown fox jumps over the lazy dog',
-                    ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']],
-                ['Thequickbrownfoxjumpsoverthelazydog',
-                    ['Thequ' ,'ickbr', 'ownfo', 'xjump', 'sover', 'thela', 'zydog']],
-                ['T h e quick brown f o x jumps over the l a zzz y dog',
-                    ['T h e', 'quick', 'brown', 'f o x', 'jumps', 'over', 'the l', 'a zzz', 'y dog']]
-            ], 5);
-        });
+	    it('short chunks', () => {
+		    this.testPatterns([
+			    ['The quick brown fox jumps over the lazy dog',
+				    ['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog']],
+			    ['Thequickbrownfoxjumpsoverthelazydog',
+				    ['Thequ' ,'ickbr', 'ownfo', 'xjump', 'sover', 'thela', 'zydog']],
+			    ['T h e quick brown f o x jumps over the l a zzz y dog',
+				    ['T h e', 'quick', 'brown', 'f o x', 'jumps', 'over', 'the l', 'a zzz', 'y dog']]
+		    ], 5, 2);
+	    });
 
-        it('long chunks', () => {
-            this.testPatterns([
-                ['https://en.wikipedia.org/wiki/Pangram Thequickbrownfoxjumpsoverthelazydogandoverthelazycat',
-                    ['https://en.wikipedia.org/wiki/Pangram', 'Thequickbrownfoxjumpsoverthelazydogandov', 'erthelazycat']]
-            ], 40);
-            this.testPatterns([
-                ['see https://en.wikipedia.org/wiki/Pangram?long=parameter&activated=true Thequickbrownfoxjumpsoverthelazydogandoverthelazycat',
-                    ['see', 'https://en.wikipedia.org/wiki/Pangram?long=parameter&activated=true', 'Thequickbrownfoxjumpsoverthelazydogandoverthelazycat']]
-            ], 67);
-        });
+	    it('test special', () => {
+		    this.testPatterns([
+			    ['' ,[]],
+			    [null, []],
+		    ], 3, 0);
+	    });
+
+	    it('test emoji', () => {
+		    this.testPatterns([
+			    ['🐶🐶🐶🐶🐶', ['🐶', '🐶', '🐶', '🐶', '🐶']],
+			    ['emojis 😁 are awesome 😁', ['emo', 'jis', '😁', 'are', 'awe', 'som', 'e','😁']]
+		    ], 3, 0);
+	    });
+
+	    it('test emoji with separators', () => {
+		    this.testPatterns([
+			    ['The quick white 🐼. He jumped over the lazy 🐶.',
+				    ['The', 'quick', 'white', '🐼.', 'He', 'jumpe', 'd', 'over', 'the', 'lazy', '🐶.']],
+		    ], 5, 2);
+	    });
+
+	    it('short chunks (separator)', () => {
+		    this.testPatterns([
+			    ['The.quick.brown.fox.jumps. over.the.lazy.dog.',
+				    ['The.', 'quick.', 'brown.', 'fox.', 'jumps.', 'over.', 'the.', 'lazy.', 'dog.']],
+			    ['The quick brown fox: jumps over the lazy dog',
+				    ['The', 'quick', 'brown', 'fox:', 'jumps', 'over', 'the', 'lazy', 'dog']],
+			    ['The quick                         brown fox: jumps over the lazy dog',
+				    ['The', 'quick', 'brown', 'fox:', 'jumps', 'over', 'the', 'lazy', 'dog']],
+			    ['The quick                         brown fox: jumps\t\t\nover the lazy dog',
+				    ['The', 'quick', 'brown', 'fox:', 'jumps', 'over', 'the', 'lazy', 'dog']]
+		    ], 5, 2);
+	    });
+
+
+	    it('long chunks', () => {
+		    this.testPatterns([
+			    ['The quick brown fox jumps over the lazy dog. The lazy brown dog, jumps over the lazy fox',
+				    ['The quick brown fox','jumps over the lazy', 'dog. The lazy brown', 'dog, jumps over the', 'lazy fox']],
+                ['The quickbrown fox jumps over thelazydog. The lazybrowndog, jumps over the lazyfox',
+				    ['The quickbrown fox', 'jumps over', 'thelazydog. The', 'lazybrowndog, jumps', 'over the lazyfox']],
+		    ], 20, 10);
+	    });
+
+	    it('long chunks without offset', () => {
+		    this.testPatterns([
+			    ['The quick brown fox jumps over the lazy dog. The lazy brown dog, jumps over the lazy fox',
+				    ['The quick brown fox', 'jumps over the lazy', 'dog. The lazy brown', 'dog, jumps over the', 'lazy fox']],
+                ['The quickbrown fox jumps over thelazydog. The lazybrowndog, jumps over the lazyfox',
+				    ['The quickbrown fox j','umps over thelazydog','. The lazybrowndog,', 'jumps over the lazyf', 'ox']],
+		    ], 20, 0);
+	    });
+
+	    it('a lot of chunking, speed test', () => {
+	        for (let n = 0; n < 10000; n++) {
+		        this.testPatterns([
+			        ['The quick brown fox jumps over the lazy dog. The lazy brown dog, jumps over the lazy fox',
+				        ['The quick brown fox', 'jumps over the lazy', 'dog. The lazy brown', 'dog, jumps over the', 'lazy fox']],
+		        ], 20, 0);
+	        }
+	    });
     });
 });
