@@ -117,6 +117,7 @@ class ConversationController {
     private draft: string;
     private $translate: ng.translate.ITranslateService;
     private locked = false;
+    public maxTextLength: number;
     public isTyping = (): boolean => false;
 
     private uploading = {
@@ -161,6 +162,8 @@ class ConversationController {
 
         // Close any showing dialogs
         this.$mdDialog.cancel();
+
+        this.maxTextLength = this.webClientService.getMaxTextLength();
 
         // On every navigation event, close all dialogs.
         // Note: Deprecated. When migrating ui-router ($state),
@@ -275,99 +278,121 @@ class ConversationController {
      * Submit function for input field. Can contain text or file data.
      * Return whether sending was successful.
      */
-    public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): boolean => {
+    public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): Promise<any> => {
         // Validate whether a connection is available
-        if (this.stateService.state !== 'ok') {
-            // Invalid connection, show toast and abort
-            this.showError(this.$translate.instant('error.NO_CONNECTION'));
-            return false;
-        }
-        switch (type) {
-            case 'file':
-                // Determine file type
-                let showSendAsFileCheckbox = false;
-                for (let msg of contents) {
-                    const mime = (msg as threema.FileMessageData).fileType;
-                    if (this.mimeService.isImage(mime)
-                        || this.mimeService.isAudio(mime)
-                        || this.mimeService.isVideo(mime)) {
-                        showSendAsFileCheckbox = true;
-                        break;
+        return new Promise((resolve, reject) => {
+            if (this.stateService.state !== 'ok') {
+                // Invalid connection, show toast and abort
+                this.showError(this.$translate.instant('error.NO_CONNECTION'));
+                return reject();
+            }
+            let success = true;
+            let nextCallback = (index: number) => {
+                if (index === contents.length - 1) {
+                    if (success) {
+                        resolve();
+                    } else {
+                        reject();
                     }
                 }
+            };
 
-                // Eager translations
-                const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
-                    senderName: this.receiver.displayName,
-                });
-                const placeholder = this.$translate.instant('messenger.CONFIRM_FILE_CAPTION');
-                const confirmSendAsFile = this.$translate.instant('messenger.CONFIRM_SEND_AS_FILE');
-
-                // Show confirmation dialog
-                this.$mdDialog.show({
-                    clickOutsideToClose: false,
-                    controller: 'SendFileController',
-                    controllerAs: 'ctrl',
-                    // tslint:disable:max-line-length
-                    template: `
-                        <md-dialog class="send-file-dialog">
-                            <md-dialog-content class="md-dialog-content">
-                                <h2 class="md-title">${title}</h2>
-                                <md-input-container md-no-float class="input-caption md-prompt-input-container">
-                                    <input md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
-                                </md-input-container>
-                                <md-input-container md-no-float class="input-send-as-file md-prompt-input-container" ng-show="${showSendAsFileCheckbox}">
-                                    <md-checkbox ng-model="ctrl.sendAsFile" aria-label="${confirmSendAsFile}">
-                                        ${confirmSendAsFile}
-                                    </md-checkbox>
-                                </md-input-container>
-                            </md-dialog-content>
-                            <md-dialog-actions>
-                                <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.cancel()">
-                                    <span translate>common.CANCEL</span>
-                                </button>
-                                <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.send()">
-                                    <span translate>common.SEND</span>
-                                </button>
-                            </md-dialog-actions>
-                        </md-dialog>
-                    `,
-                    // tslint:enable:max-line-length
-                }).then((data) => {
-                    const caption = data.caption;
-                    const sendAsFile = data.sendAsFile;
-                    contents.forEach((msg: threema.FileMessageData) => {
-                        if (caption !== undefined && caption.length > 0) {
-                            msg.caption = caption;
+            switch (type) {
+                case 'file':
+                    // Determine file type
+                    let showSendAsFileCheckbox = false;
+                    for (let msg of contents) {
+                        const mime = (msg as threema.FileMessageData).fileType;
+                        if (this.mimeService.isImage(mime)
+                            || this.mimeService.isAudio(mime)
+                            || this.mimeService.isVideo(mime)) {
+                            showSendAsFileCheckbox = true;
+                            break;
                         }
-                        msg.sendAsFile = sendAsFile;
+                    }
+
+                    // Eager translations
+                    const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
+                        senderName: this.receiver.displayName,
+                    });
+                    const placeholder = this.$translate.instant('messenger.CONFIRM_FILE_CAPTION');
+                    const confirmSendAsFile = this.$translate.instant('messenger.CONFIRM_SEND_AS_FILE');
+
+                    // Show confirmation dialog
+                    this.$mdDialog.show({
+                        clickOutsideToClose: false,
+                        controller: 'SendFileController',
+                        controllerAs: 'ctrl',
+                        // tslint:disable:max-line-length
+                        template: `
+                            <md-dialog class="send-file-dialog">
+                                <md-dialog-content class="md-dialog-content">
+                                    <h2 class="md-title">${title}</h2>
+                                    <md-input-container md-no-float class="input-caption md-prompt-input-container">
+                                        <input md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
+                                    </md-input-container>
+                                    <md-input-container md-no-float class="input-send-as-file md-prompt-input-container" ng-show="${showSendAsFileCheckbox}">
+                                        <md-checkbox ng-model="ctrl.sendAsFile" aria-label="${confirmSendAsFile}">
+                                            ${confirmSendAsFile}
+                                        </md-checkbox>
+                                    </md-input-container>
+                                </md-dialog-content>
+                                <md-dialog-actions>
+                                    <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.cancel()">
+                                        <span translate>common.CANCEL</span>
+                                    </button>
+                                    <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.send()">
+                                        <span translate>common.SEND</span>
+                                    </button>
+                                </md-dialog-actions>
+                            </md-dialog>
+                        `,
+                        // tslint:enable:max-line-length
+                    }).then((data) => {
+                        const caption = data.caption;
+                        const sendAsFile = data.sendAsFile;
+                        contents.forEach((msg: threema.FileMessageData, index: number) => {
+                            if (caption !== undefined && caption.length > 0) {
+                                msg.caption = caption;
+                            }
+                            msg.sendAsFile = sendAsFile;
+                            this.webClientService.sendMessage(this.$stateParams, type, msg)
+                                .then(() => {
+                                    nextCallback(index);
+                                })
+                                .catch((error) => {
+                                    this.$log.error(error);
+                                    this.showError(error);
+                                    success = false;
+                                    nextCallback(index);
+                                });
+                        });
+                    }, angular.noop);
+                    break;
+                case 'text':
+                    // do not show confirmation, send directly
+                    contents.forEach((msg: threema.MessageData, index: number) => {
+                        msg.quote = this.webClientService.getQuote(this.receiver);
+                        // remove quote
+                        this.webClientService.setQuote(this.receiver);
+                        // send message
                         this.webClientService.sendMessage(this.$stateParams, type, msg)
+                            .then(() => {
+                                nextCallback(index);
+                            })
                             .catch((error) => {
                                 this.$log.error(error);
                                 this.showError(error);
+                                success = false;
+                                nextCallback(index);
                             });
                     });
-                }, angular.noop);
-                break;
-            case 'text':
-                // do not show confirmation, send directly
-                contents.forEach((msg) => {
-                    msg.quote = this.webClientService.getQuote(this.receiver);
-                    // remove quote
-                    this.webClientService.setQuote(this.receiver);
-                    // send message
-                    this.webClientService.sendMessage(this.$stateParams, type, msg)
-                        .catch((error) => {
-                            this.$log.error(error);
-                            this.showError(error);
-                        });
-                });
-
-                break;
-            default:
-                this.$log.warn('Invalid message type:', type);
-        }
-        return true;
+                    return;
+                default:
+                    this.$log.warn('Invalid message type:', type);
+                    reject();
+            }
+        });
     }
 
     /**

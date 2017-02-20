@@ -551,11 +551,16 @@ declare namespace threema {
         getDraft(receiver: Receiver): string;
         setPassword(password: string): void;
         clearCache(): void;
+        getMaxTextLength(): number;
     }
 
     interface ControllerService {
         setControllerName(name: string): void;
         getControllerName(): string;
+    }
+
+    interface StringService {
+        chunk(str: string, length: number, offset: number): string[];
     }
 
     namespace Container {

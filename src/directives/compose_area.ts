@@ -20,15 +20,19 @@
  */
 export default [
     'BrowserService',
+    'StringService',
     '$window',
     '$timeout',
     '$translate',
+    '$mdDialog',
     '$filter',
     '$sanitize',
     '$log',
     function(browserService: threema.BrowserService,
+             stringService: threema.StringService,
              $window, $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
+             $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
              $sanitize: ng.sanitize.ISanitizeService,
              $log: ng.ILogService) {
@@ -41,6 +45,7 @@ export default [
                 onTyping: '=',
                 draft: '=',
                 onUploading: '=',
+                maxTextLength: '=',
             },
             link(scope: any, element) {
                 // Logging
@@ -101,7 +106,7 @@ export default [
                 // Submit the text from the compose area.
                 //
                 // Emoji images are converted to their alt text in this process.
-                function submitText() {
+                function submitText(): Promise<any> {
                     let text = '';
                     for (let node of composeDiv[0].childNodes) {
                         switch (node.nodeType) {
@@ -121,15 +126,49 @@ export default [
                                 $log.warn(logTag, 'Unhandled node:', node);
                         }
                     }
-                    const textMessageData: threema.TextMessageData = {text: text.trim()};
-                    // send as array
-                    return scope.submit('text', [textMessageData]);
+                    return new Promise((resolve, reject) => {
+                        let submitTexts = (strings: string[]) => {
+                            let messages: threema.TextMessageData[] = [];
+                            strings.forEach((piece: string) => {
+                                messages.push({
+                                    text: piece,
+                                } as threema.TextMessageData);
+                            });
+                            scope.submit('text', messages)
+                                .then(() => {
+                                    resolve();
+                                })
+                                .catch((error) => {
+                                    reject(error);
+                                });
+                        };
+
+                        let fullText = text.trim();
+                        if (fullText.length > scope.maxTextLength) {
+                            let pieces: string[] = stringService.chunk(fullText, scope.maxTextLength, 20);
+                            let confirm = $mdDialog.confirm()
+                                .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
+                                .textContent($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_BODY', {
+                                    max: scope.maxTextLength,
+                                    count: pieces.length,
+                                }))
+                                .ok($translate.instant('common.YES'))
+                                .cancel($translate.instant('common.NO'));
+
+                            $mdDialog.show(confirm).then(function () {
+                                submitTexts(pieces);
+                            }, () => {
+                                reject();
+                            });
+                        } else {
+                            submitTexts([fullText]);
+                        }
+                    });
                 }
 
                 function sendText(): boolean {
                     if  (composeDiv[0].innerHTML.length > 0) {
-                        const submitted = submitText();
-                        if (submitted) {
+                        submitText().then(() => {
                             // Clear compose div
                             composeDiv[0].innerText = '';
 
@@ -137,10 +176,13 @@ export default [
                             scope.stopTyping();
 
                             scope.onTyping('');
-                        }
 
-                        updateView();
-                        return submitted;
+                            updateView();
+                        }).catch(() => {
+                            // do nothing
+                        });
+
+                        return true;
                     }
                     return false;
                 }
