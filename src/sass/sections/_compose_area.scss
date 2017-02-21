@@ -1,4 +1,5 @@
 #conversation #conversation-footer compose-area {
+
     > div:first-child {
         display: flex;
         flex-direction: row;
@@ -21,6 +22,12 @@
                 overflow-y: auto;
                 // This is where the user enters text
                 div.compose {
+                    // show placeholder if field is on focus
+                    &:empty:before{
+                        content: attr(data-placeholder);
+                        display: block;
+                        color: $active-placeholder-color;
+                    }
                     padding: $main-padding;
                     top: 0;
                     left: 0;
