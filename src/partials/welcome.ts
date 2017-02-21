@@ -47,8 +47,8 @@ class WelcomeController {
     private $window: ng.IWindowService;
 
     // Material design services
-    private $mdDialog;
-    private $translate: any;
+    private $mdDialog: ng.material.IDialogService;
+    private $translate: ng.translate.ITranslateService;
 
     // Custom services
     private webClientService: threema.WebClientService;
@@ -69,7 +69,8 @@ class WelcomeController {
     ];
     constructor($scope: ng.IScope, $state: ng.ui.IStateService, $stateParams: threema.WelcomeStateParams,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
-                $log: ng.ILogService, $window: ng.IWindowService, $mdDialog, $translate,
+                $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
+                $translate: ng.translate.ITranslateService,
                 webClientService: threema.WebClientService, TrustedKeyStore: TrustedKeyStoreService,
                 stateService: threema.StateService, pushService: threema.PushService,
                 browserService: threema.BrowserService,
@@ -245,16 +246,18 @@ class WelcomeController {
      * Show a browser warning dialog.
      */
     private showBrowserWarning(): void {
-        const confirm = this.$mdDialog.confirm()
-            .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
-            .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
-            .ok(this.$translate.instant('welcome.CONTINUE_ANYWAY'))
-            .cancel(this.$translate.instant('welcome.ABORT'));
-        this.$mdDialog.show(confirm).then(() => {
-            // do nothing
-        }, () => {
-            // Redirect to Threema website
-            window.location.replace('https://threema.ch/');
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.confirm()
+                .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
+                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
+                .ok(this.$translate.instant('welcome.CONTINUE_ANYWAY'))
+                .cancel(this.$translate.instant('welcome.ABORT'));
+            this.$mdDialog.show(confirm).then(() => {
+                // do nothing
+            }, () => {
+                // Redirect to Threema website
+                window.location.replace('https://threema.ch/');
+            });
         });
     }
 
