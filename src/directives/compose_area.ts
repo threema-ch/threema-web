@@ -129,23 +129,20 @@ export default [
                     return new Promise((resolve, reject) => {
                         let submitTexts = (strings: string[]) => {
                             let messages: threema.TextMessageData[] = [];
-                            strings.forEach((piece: string) => {
+                            for (let piece of strings) {
                                 messages.push({
                                     text: piece,
-                                } as threema.TextMessageData);
-                            });
-                            scope.submit('text', messages)
-                                .then(() => {
-                                    resolve();
-                                })
-                                .catch((error) => {
-                                    reject(error);
                                 });
+                            }
+
+                            scope.submit('text', messages)
+                                .then(resolve)
+                                .catch(reject);
                         };
 
                         let fullText = text.trim();
                         if (fullText.length > scope.maxTextLength) {
-                            let pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 20);
+                            let pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 50);
                             let confirm = $mdDialog.confirm()
                                 .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
                                 .textContent($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_BODY', {
@@ -180,6 +177,7 @@ export default [
                             updateView();
                         }).catch(() => {
                             // do nothing
+                            this.$log.warn('failed to submit text');
                         });
 
                         return true;
