@@ -70,7 +70,7 @@ export class StringService implements threema.StringService {
         do {
             let piece = rest.substring(0, length + (offset > 0 ? 1 : 0));
 
-            // check if the splitted position is valid (not in breaking emoji)
+            // check if the split-position is valid (not in breaking emoji)
             if (!isValidPosition(piece, piece.length - 1)) {
                 piece = piece.substring(0, piece.length - 1);
             }
@@ -117,6 +117,50 @@ export class StringService implements threema.StringService {
             }
         } while (rest.length > 0);
 
+        return chunks;
+    }
+
+    public byteChunk(str: string, byteLength: number, offset: number = null): string[] {
+        let chars = [...str];
+        let chunks = [''];
+        let currentChunkSize = 0;
+        let chunkIndex = 0;
+        let offsetChars = [' ', '\r', '\n', '\t', '.'];
+        let lastSeparator = -1;
+        chars.forEach ((charString: string) => {
+            let length = Buffer.byteLength(charString, 'utf8');
+            if (offset !== null) {
+                if (offsetChars.indexOf(charString) > -1) {
+                    lastSeparator = currentChunkSize + 1;
+                }
+            }
+            // console.log(charString, length);
+            if (currentChunkSize + length > byteLength) {
+                let appendNewChunk = true;
+                if (lastSeparator > -1) {
+                    // check if sepeator in offset
+                    if (currentChunkSize - lastSeparator <= offset
+                        && chunks.length >= 1) {
+                        // create new chunk with existing data
+                        chunks.push(chunks[chunkIndex].substr(lastSeparator).trim());
+                        // modify old chunk
+                        chunks[chunkIndex] = chunks[chunkIndex].substr(0, lastSeparator).trim();
+                        appendNewChunk = false;
+                        currentChunkSize -= lastSeparator;
+                        chunkIndex++;
+                        lastSeparator = -1;
+                    }
+                }
+                if (appendNewChunk) {
+                    chunkIndex++;
+                    currentChunkSize = 0;
+                    // create a new chunk
+                    chunks.push('');
+                }
+            }
+            chunks[chunkIndex] = (chunks[chunkIndex]  + charString);
+            currentChunkSize += length;
+        });
         return chunks;
     }
 }

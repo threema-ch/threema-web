@@ -560,7 +560,20 @@ declare namespace threema {
     }
 
     interface StringService {
+        /**
+         * create chunks of a string by counting the used chars
+         * @param str
+         * @param length
+         * @param offset
+         */
         chunk(str: string, length: number, offset: number): string[];
+        /**
+         * create chunks of a string by counting the used bytes
+         * @param str
+         * @param byteLength
+         * @param offset
+         */
+        byteChunk(str: string, byteLength: number, offset: number): string[];
     }
 
     namespace Container {

@@ -9,6 +9,7 @@
         "object-literal-shorthand": false,
         "object-literal-sort-keys": false,
         "only-arrow-functions": false,
-        "quotemark": [true, "single", "avoid-escape"]
+        "quotemark": [true, "single", "avoid-escape"],
+        "indent": [true, "spaces"]
     }
 }

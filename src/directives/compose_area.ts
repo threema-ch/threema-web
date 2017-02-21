@@ -145,7 +145,7 @@ export default [
 
                         let fullText = text.trim();
                         if (fullText.length > scope.maxTextLength) {
-                            let pieces: string[] = stringService.chunk(fullText, scope.maxTextLength, 20);
+                            let pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 20);
                             let confirm = $mdDialog.confirm()
                                 .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
                                 .textContent($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_BODY', {
