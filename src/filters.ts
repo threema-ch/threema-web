@@ -50,29 +50,20 @@ angular.module('3ema.filters', [])
  */
 .filter('htmlToAsciiMarkup', function() {
     return (text) => {
-        let out = text
-
-        // Bold
-        .replace(/<b>/g, '*')
-        .replace(/<\/b>/g, '*')
-        .replace(/<strong>/g, '*')
-        .replace(/<\/strong>/g, '*')
-
-        // Italic
-        .replace(/<i>/g, '_')
-        .replace(/<\/i>/g, '_')
-        .replace(/<em>/g, '_')
-        .replace(/<\/em>/g, '_')
-
-        // Strikethrough
-        .replace(/<strike>/g, '~')
-        .replace(/<\/strike>/g, '~')
-        .replace(/<del>/g, '~')
-        .replace(/<\/del>/g, '~')
-        .replace(/<s>/g, '~')
-        .replace(/<\/s>/g, '~')
-
-        ;
+        let tags = [
+            ['b', '*'],
+            ['strong', '*'],
+            ['i', '_'],
+            ['em', '_'],
+            ['strike', '~'],
+            ['del', '~'],
+            ['s', '~'],
+        ];
+        let out = text;
+        for (let tag of tags) {
+            out = out.replace(new RegExp('<\\s*' + tag[0] + '(\\s[^>]*|\\s*)>', 'gi'), tag[1]);
+            out = out.replace(new RegExp('<\\s*\/\\s*' + tag[0] + '\\s*>', 'gi'), tag[1]);
+        }
         return out;
     };
 })

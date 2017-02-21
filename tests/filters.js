@@ -108,6 +108,9 @@ describe('Filters', function() {
         it('converts bold text', () => {
             this.testPatterns([
                 ['<b>bold</b>', '*bold*'],
+                ['< 	b >bold</b>', '*bold*'],
+                ['<B>bold</b>', '*bold*'],
+                ['<b class="asdf">bold</b>', '*bold*'],
                 ['<strong>bold</strong>', '*bold*'],
                 ['<b><b>bold</b></b>', '**bold**'],
                 ['<b><strong>bold</strong></b>', '**bold**'],
@@ -117,6 +120,7 @@ describe('Filters', function() {
         it('converts italic text', () => {
             this.testPatterns([
                 ['<i>italic</i>', '_italic_'],
+                ['<i onclick="alert(1)">italic</i>', '_italic_'],
                 ['<em>italic</em>', '_italic_'],
                 ['<i><em>italic</em></i>', '__italic__'],
             ]);
@@ -126,8 +130,15 @@ describe('Filters', function() {
             this.testPatterns([
                 ['<strike>strikethrough</strike>', '~strikethrough~'],
                 ['<del>strikethrough</del>', '~strikethrough~'],
+                ['<del href="/">strikethrough</del>', '~strikethrough~'],
                 ['<s>strikethrough</s>', '~strikethrough~'],
                 ['<strike><del><s>strikethrough</s></del></strike>', '~~~strikethrough~~~'],
+            ]);
+        });
+
+        it('does not affect other tags', () => {
+            this.testPatterns([
+                ['<script>alert("pho soup time")</script>', '<script>alert("pho soup time")</script>'],
             ]);
         });
 
