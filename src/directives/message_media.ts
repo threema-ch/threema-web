@@ -17,12 +17,14 @@
 
 export default [
     'WebClientService',
+    'MessageService',
     '$rootScope',
     '$mdDialog',
     '$timeout',
     '$log',
     '$filter',
-    function(webClientService: threema.WebClientService, $rootScope: ng.IRootScopeService,
+    function(webClientService: threema.WebClientService, messageService: threema.MessageService,
+             $rootScope: ng.IRootScopeService,
              $mdDialog: ng.material.IDialogService,
              $timeout: ng.ITimeoutService, $log: ng.ILogService,
              $filter: ng.IFilterService) {
@@ -156,10 +158,8 @@ export default [
 
                                 switch (this.message.type) {
                                     case 'image':
-                                        saveAs(new Blob([buffer]), 'image.jpg');
-                                        break;
                                     case 'video':
-                                        saveAs(new Blob([buffer]), 'video.mpg');
+                                        saveAs(new Blob([buffer]), messageService.getFileName(message));
                                         break;
                                     case 'file':
                                         if (this.message.file.type === 'image/gif') {
@@ -168,7 +168,7 @@ export default [
                                             // hide thumbnail
                                             this.showThumbnail = false;
                                         } else {
-                                            saveAs(new Blob([buffer]), this.message.file.name);
+                                            saveAs(new Blob([buffer]), messageService.getFileName(message));
                                         }
                                         break;
                                     case 'audio':

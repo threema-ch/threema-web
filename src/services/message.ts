@@ -105,6 +105,48 @@ export class MessageService implements threema.MessageService {
     }
 
     /**
+     * return the filename of a message (image, audio, file)
+     * used for downloads
+     * @param message
+     * @returns filename string or null
+     */
+    public getFileName(message: threema.Message): string {
+        if (message === undefined) {
+            return null;
+        }
+
+        let getFileName = (prefix: string, postfix: string = null): string => {
+            return prefix
+                + '-' + message.id
+                + (postfix !== null ? '.' + postfix : '');
+        };
+
+        switch (message.type) {
+            case 'image':
+                return getFileName('image', 'jpg');
+            case 'video':
+                return getFileName('video', 'jpg');
+            case 'file':
+                if (message.file.type === 'image/gif') {
+                    return getFileName('animgif', 'gif');
+                }
+
+                if (message.file !== undefined) {
+                    return message.file.name;
+                }
+
+                // should not happen
+
+                return getFileName('file');
+            case 'audio':
+                return getFileName('audio', 'mp4');
+            default:
+                // ignore file types without a read file
+                return null;
+        }
+    }
+
+    /**
      * Create a message object with a temporaryId
      */
     public createTemporary(receiver: threema.Receiver, msgType: string,

@@ -109,17 +109,10 @@ export default [
 
                                 switch (this.message.type) {
                                     case 'image':
-                                        saveAs(new Blob([buffer]), 'image.jpg');
-                                        break;
                                     case 'video':
-                                        saveAs(new Blob([buffer]), 'video.mpg');
-                                        break;
                                     case 'file':
-                                        saveAs(new Blob([buffer]), this.message.file.name);
-                                        break;
                                     case 'audio':
-                                        // Show inline
-                                        saveAs(new Blob([buffer]), 'audio.ogg');
+                                        saveAs(new Blob([buffer]), messageService.getFileName(this.message));
                                         break;
                                     default:
                                         $log.warn('Ignored download request for message type', this.message.type);
