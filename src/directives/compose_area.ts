@@ -528,7 +528,7 @@ export default [
                         <i class="md-primary emoji-trigger trigger is-enabled material-icons">tag_faces</i>
                     </div>
                     <div>
-                        <div class="compose" contenteditable translate translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE"></div>
+                        <div class="compose" contenteditable translate translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE" autofocus></div>
                     </div>
                     <div>
                         <i class="md-primary send-trigger trigger material-icons">send</i>
