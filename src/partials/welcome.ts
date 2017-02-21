@@ -265,11 +265,13 @@ class WelcomeController {
      * Show a dialog indicating that local storage is not available.
      */
     private showLocalStorageWarning(): void {
-        const confirm = this.$mdDialog.alert()
-            .title(this.$translate.instant('common.ERROR'))
-            .htmlContent(this.$translate.instant('welcome.LOCAL_STORAGE_MISSING_DETAILS'))
-            .ok(this.$translate.instant('common.OK'));
-        this.$mdDialog.show(confirm);
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.alert()
+                .title(this.$translate.instant('common.ERROR'))
+                .htmlContent(this.$translate.instant('welcome.LOCAL_STORAGE_MISSING_DETAILS'))
+                .ok(this.$translate.instant('common.OK'));
+            this.$mdDialog.show(confirm);
+        });
     }
 
     /**
