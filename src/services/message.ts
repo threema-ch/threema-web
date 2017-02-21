@@ -38,7 +38,7 @@ export class MessageService implements threema.MessageService {
     public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess  {
         let access = new MessageAccess();
 
-        if (message !== undefined || receiver !== undefined || message.temporaryId === undefined) {
+        if (message !== undefined && receiver !== undefined && message.temporaryId === undefined) {
             access.quote =  (message.type === 'text')
                 || (message.type === 'location')
                 || (message.caption !== undefined);
@@ -69,7 +69,7 @@ export class MessageService implements threema.MessageService {
     }
 
     public showStatusIcon(message: threema.Message, receiver: threema.Receiver): boolean {
-        if (message !== null) {
+        if (message !== null && receiver !== null) {
 
             let messageState = message.state;
             // MessageState messageState = messageModel.getState();
@@ -77,8 +77,7 @@ export class MessageService implements threema.MessageService {
             // group message/distribution list message icons only on pending or failing states
             switch (receiver.type) {
                 case 'group':
-
-                    if (message.isOutbox && message.temporaryId === undefined && message.temporaryId === null) {
+                    if (message.isOutbox && (message.temporaryId === undefined || message.temporaryId === null)) {
                         return messageState === 'send-failed'
                             || messageState === 'sending'
                             || (messageState === 'pending' && message.type !== 'ballot');
@@ -96,6 +95,7 @@ export class MessageService implements threema.MessageService {
                             || messageState === 'sending'
                             || messageState === 'pending';
                     }
+
                     return true;
                 default:
                     return false;
@@ -111,32 +111,33 @@ export class MessageService implements threema.MessageService {
      * @returns filename string or null
      */
     public getFileName(message: threema.Message): string {
-        if (message === undefined) {
+        if (message === undefined
+            || message === null) {
             return null;
         }
 
-        let getFileName = (prefix: string, postfix: string = null): string => {
+        let getFileName = (prefix: string, postfix?: string): string => {
+            if (message.id === undefined) {
+                this.$log.warn('missing id on message model');
+                return null;
+            }
             return prefix
                 + '-' + message.id
-                + (postfix !== null ? '.' + postfix : '');
+                + (postfix !== undefined ? '.' + postfix : '');
         };
 
         switch (message.type) {
             case 'image':
                 return getFileName('image', 'jpg');
             case 'video':
-                return getFileName('video', 'jpg');
+                return getFileName('video', 'mpg');
             case 'file':
-                if (message.file.type === 'image/gif') {
-                    return getFileName('animgif', 'gif');
-                }
-
                 if (message.file !== undefined) {
                     return message.file.name;
                 }
 
                 // should not happen
-
+                this.$log.warn('file message without file object', message.id);
                 return getFileName('file');
             case 'audio':
                 return getFileName('audio', 'mp4');
