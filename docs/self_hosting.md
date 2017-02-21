@@ -39,7 +39,7 @@ Then, build the release version of Threema Web:
     npm install
     npm run dist
 
-Finally, unpack the `dist/release.tar.gz` archive to your web server directory.
+Finally, unpack the `dist/threema-web-[VERSION].tar.gz` archive to your web server directory.
 Make sure to serve Threema Web only via https. We also recommend to enable
 HSTS, HPKP, CSP and other available security mechanisms in your web server.
 

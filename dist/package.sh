@@ -28,15 +28,18 @@ if [ -e "release" ]; then
     done
 fi
 
+VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
+DIR="release/threema-web-$VERSION"
+
 echo "+ Create release directory..."
-mkdir -p release/{dist,partials,directives,node_modules,partials/messenger.receiver,files}
+mkdir -p $DIR/{dist,partials,directives,node_modules,partials/messenger.receiver,files}
 
 echo "+ Copy code..."
-cp -R index.html dist/ release/
-cp -R public/* release/
-cp -R src/partials/*.html release/partials/
-cp -R src/partials/messenger.receiver/*.html release/partials/messenger.receiver/
-cp -R src/directives/*.html release/directives/
+cp -R index.html dist/ $DIR/
+cp -R public/* $DIR/
+cp -R src/partials/*.html $DIR/partials/
+cp -R src/partials/messenger.receiver/*.html $DIR/partials/messenger.receiver/
+cp -R src/directives/*.html $DIR/directives/
 
 echo "+ Copy dependencies..."
 targets=(
@@ -73,18 +76,19 @@ targets=(
 )
 
 for target in "${targets[@]}"; do
-    install -D "node_modules/$target" "release/node_modules/$target"
+    install -D "node_modules/$target" "$DIR/node_modules/$target"
 done
 
 echo "+ Update version number..."
-VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
-sed -i "s/\[\[VERSION\]\]/${VERSION}/g" release/index.html release/dist/app.js
+sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/dist/app.js
 
 echo "+ Update permissions..."
-find release/ -type f -exec chmod 644 {} \;
-find release/ -type d -exec chmod 755 {} \;
+find $DIR/ -type f -exec chmod 644 {} \;
+find $DIR/ -type d -exec chmod 755 {} \;
 
 echo "+ Put everything in an archive..."
-tar cfz dist/release.tar.gz release/
+cd release
+tar cfz "../dist/threema-web-$VERSION.tar.gz" $(basename "$DIR")
+cd ..
 
 echo -e "\nDone."
