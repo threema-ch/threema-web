@@ -865,7 +865,7 @@ export class WebClientService implements threema.WebClientService {
                 // send message and handling error promise
                 this._sendCreatePromise(subType, args, message)
                     .catch((error) => {
-                        this.$log.error('error sending file', error);
+                        this.$log.error('error sending message', error);
                         // remove temporary message
                         this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
 
