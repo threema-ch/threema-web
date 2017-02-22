@@ -334,6 +334,7 @@ declare namespace threema {
         getAccess(message: Message, receiver: Receiver): MessageAccess;
         createTemporary(receiver: Receiver, type: string, messageData: MessageData): Message;
         showStatusIcon(message: Message, receiver: Receiver): boolean;
+        getFileName(message: Message): string;
     }
 
     interface MessageAccess {
