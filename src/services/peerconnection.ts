@@ -103,6 +103,8 @@ export class PeerConnectionHelper {
                     sdpMid: e.candidate.sdpMid,
                     sdpMLineIndex: e.candidate.sdpMLineIndex,
                 });
+            } else {
+                this.$log.debug(this.logTag, 'No more local ICE candidates');
             }
         };
         this.pc.onicecandidateerror = (e: RTCPeerConnectionIceErrorEvent) => {
