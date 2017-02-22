@@ -283,9 +283,12 @@ export default [
                             let fileName: string;
                             if ((blob as any).name) {
                                 fileName = (blob as any).name;
-                            } else {
+                            } else if (blob.type && blob.type.indexOf('/') !== -1) {
                                 const fileExt = blob.type.split(';')[0].split('/')[1];
                                 fileName = 'clipboard.' + fileExt;
+                            } else {
+                                $log.warn(logTag, 'Pasted file has an invalid MIME type: "' + blob.type + '"');
+                                return;
                             }
 
                             // Send data as file
