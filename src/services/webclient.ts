@@ -138,7 +138,7 @@ export class WebClientService implements threema.WebClientService {
     private startupPromise: ng.IDeferred<{}>; // TODO: deferred type
     private startupDone: boolean = false;
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
-    private initialized: threema.InitializationStep[] = [];
+    private initialized: Set<threema.InitializationStep> = new Set();
     private initializedThreshold = 3;
     private state: threema.StateService;
 
@@ -570,18 +570,18 @@ export class WebClientService implements threema.WebClientService {
 
     // Mark a component as initialized
     public registerInitializationStep(name: threema.InitializationStep) {
-        if (this.initialized.indexOf(name) > -1 ) {
-            this.$log.warn('initialization step ', name, ' already registered');
+        if (this.initialized.has(name) ) {
+            this.$log.warn(this.logTag, 'initialization step', name, 'already registered');
             return;
         }
 
-        this.initialized.push(name);
+        this.initialized.add(name);
 
         // check pending routines
         this.pendingInitializationStepRoutines = this.pendingInitializationStepRoutines.filter((routine) => {
             let isValid = true;
             for (let requiredStep of routine.requiredSteps) {
-                if (this.initialized.indexOf(requiredStep) === -1) {
+                if (!this.initialized.has(requiredStep)) {
                     isValid = false;
                     break;
                 }
@@ -593,7 +593,7 @@ export class WebClientService implements threema.WebClientService {
             return !isValid;
         });
 
-        if (this.initialized.length >= this.initializedThreshold) {
+        if (this.initialized.size >= this.initializedThreshold) {
             this.state.updateConnectionBuildupState('done');
             this.startupPromise.resolve();
             this.startupDone = true;
@@ -1197,8 +1197,9 @@ export class WebClientService implements threema.WebClientService {
      * Reset data fields.
      */
     private _resetFields(): void {
-        // Set initialization count back to 0
-        this.initialized = [];
+        // clear initialized steps
+        this.initialized.clear();
+        // clear step routines
         this.pendingInitializationStepRoutines = [];
 
         // Create container instances
@@ -2296,8 +2297,8 @@ export class WebClientService implements threema.WebClientService {
 
     private runAfterInitializationSteps(requiredSteps: threema.InitializationStep[], callback: any): void {
         for (let requiredStep of requiredSteps) {
-            if (this.initialized.indexOf(requiredStep) === -1) {
-                this.$log.debug('required step', requiredStep, 'not completed, add pending');
+            if (!this.initialized.has(requiredStep)) {
+                this.$log.debug(this.logTag, 'required step', requiredStep, 'not completed, add pending');
                 this.pendingInitializationStepRoutines.push({
                     requiredSteps: requiredSteps,
                     callback: callback,
