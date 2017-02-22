@@ -39,11 +39,18 @@ export default [
         return {
             restrict: 'EA',
             scope: {
+                // Callback to submit text or file data
                 submit: '=',
+
+                // Callbacks to update typing information
                 startTyping: '=',
                 stopTyping: '=',
                 onTyping: '=',
+
+                // Reference to drafts variable
                 draft: '=',
+
+                // Callback that is called when uploading files
                 onUploading: '=',
                 maxTextLength: '=',
             },
@@ -279,22 +286,81 @@ export default [
                 // Handle pasting
                 function onPaste(ev: ClipboardEvent) {
                     ev.preventDefault();
-                    const text = ev.clipboardData.getData('text/plain');
 
-                    // Apply filters (emojify, convert newline, etc)
-                    const formatted = applyFilters(text);
+                    // If no clipboard data is available, do nothing.
+                    if (!ev.clipboardData) {
+                        return;
+                    }
 
-                    // Replace HTML formatting with ASCII counterparts
-                    const htmlToAsciiMarkup = $filter('htmlToAsciiMarkup') as (a: string) => string;
+                    // Extract pasted items
+                    const items: DataTransferItemList = ev.clipboardData.items;
+                    if (!items) {
+                        return;
+                    }
 
-                    // Sanitize
-                    const sanitized = $sanitize(htmlToAsciiMarkup(formatted));
+                    // Find available types
+                    let fileIdx: number | null = null;
+                    let textIdx: number | null = null;
+                    for (let i = 0; i < items.length; i++) {
+                        if (items[i].type.indexOf('image/') !== -1 || items[i].type === 'application/x-moz-file') {
+                            fileIdx = i;
+                        } else if (items[i].type === 'text/plain') {
+                            textIdx = i;
+                        }
+                    }
 
-                    // Insert HTML
-                    document.execCommand('insertHTML', false, sanitized);
+                    // Handle pasting of files
+                    if (fileIdx !== null) {
+                        // Read clipboard data as blob
+                        const blob: Blob = items[fileIdx].getAsFile();
 
-                    cleanupComposeContent();
-                    updateView();
+                        // Convert blob to arraybuffer
+                        const reader = new FileReader();
+                        reader.onload = function() {
+                            let buffer: ArrayBuffer = this.result;
+
+                            // Construct file name
+                            let fileName: string;
+                            if ((blob as any).name) {
+                                fileName = (blob as any).name;
+                            } else if (blob.type && blob.type.match(/^[^;]*\//) !== null) {
+                                const fileExt = blob.type.split(';')[0].split('/')[1];
+                                fileName = 'clipboard.' + fileExt;
+                            } else {
+                                $log.warn(logTag, 'Pasted file has an invalid MIME type: "' + blob.type + '"');
+                                return;
+                            }
+
+                            // Send data as file
+                            const fileMessageData: threema.FileMessageData = {
+                                name: fileName,
+                                fileType: blob.type,
+                                size: blob.size,
+                                data: buffer,
+                            };
+                            scope.submit('file', [fileMessageData]);
+                        };
+                        reader.readAsArrayBuffer(blob);
+
+                    // Handle pasting of text
+                    } else if (textIdx !== null) {
+                        const text = ev.clipboardData.getData('text/plain');
+
+                        // Apply filters (emojify, convert newline, etc)
+                        const formatted = applyFilters(text);
+
+                        // Replace HTML formatting with ASCII counterparts
+                        const htmlToAsciiMarkup = $filter('htmlToAsciiMarkup') as (a: string) => string;
+
+                        // Sanitize
+                        const sanitized = $sanitize(htmlToAsciiMarkup(formatted));
+
+                        // Insert HTML
+                        document.execCommand('insertHTML', false, sanitized);
+
+                        cleanupComposeContent();
+                        updateView();
+                    }
                 }
 
                 // Translate placeholder texts
