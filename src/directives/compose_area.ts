@@ -283,7 +283,7 @@ export default [
                             let fileName: string;
                             if ((blob as any).name) {
                                 fileName = (blob as any).name;
-                            } else if (blob.type && blob.type.indexOf('/') !== -1) {
+                            } else if (blob.type && blob.type.match(/^[^;]*\//) !== null) {
                                 const fileExt = blob.type.split(';')[0].split('/')[1];
                                 fileName = 'clipboard.' + fileExt;
                             } else {
