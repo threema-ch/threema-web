@@ -137,7 +137,8 @@ export class WebClientService implements threema.WebClientService {
     // State handling
     private startupPromise: ng.IDeferred<{}>; // TODO: deferred type
     private startupDone: boolean = false;
-    private initialized = 0;
+    private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
+    private initialized: threema.InitializationStep[] = [];
     private initializedThreshold = 3;
     private state: threema.StateService;
 
@@ -568,9 +569,31 @@ export class WebClientService implements threema.WebClientService {
     }
 
     // Mark a component as initialized
-    public registerInitializationStep(name: string) {
-        this.initialized += 1;
-        if (this.initialized >= this.initializedThreshold) {
+    public registerInitializationStep(name: threema.InitializationStep) {
+        if (this.initialized.indexOf(name) > -1 ) {
+            this.$log.warn('initialization step ', name, ' already registered');
+            return;
+        }
+
+        this.initialized.push(name);
+
+        // check pending routines
+        this.pendingInitializationStepRoutines = this.pendingInitializationStepRoutines.filter((routine) => {
+            let isValid = true;
+            for (let requiredStep of routine.requiredSteps) {
+                if (this.initialized.indexOf(requiredStep) === -1) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) {
+                this.$log.log('run routine after initialisation', name, ' completed');
+                routine.callback();
+            }
+            return !isValid;
+        });
+
+        if (this.initialized.length >= this.initializedThreshold) {
             this.state.updateConnectionBuildupState('done');
             this.startupPromise.resolve();
             this.startupDone = true;
@@ -1175,7 +1198,8 @@ export class WebClientService implements threema.WebClientService {
      */
     private _resetFields(): void {
         // Set initialization count back to 0
-        this.initialized = 0;
+        this.initialized = [];
+        this.pendingInitializationStepRoutines = [];
 
         // Create container instances
         this.receivers = this.container.createReceivers();
@@ -1449,7 +1473,8 @@ export class WebClientService implements threema.WebClientService {
                         id: conversation.id,
                         type: conversation.type,
                     } as threema.Receiver);
-                    if (receiver.avatar === undefined) {
+                    if (receiver !== undefined
+                            && receiver.avatar === undefined) {
                         receiver.avatar = {
                             low: this.$filter('bufferToUrl')(conversation.avatar, 'image/png'),
                         };
@@ -2109,7 +2134,9 @@ export class WebClientService implements threema.WebClientService {
                 this._receiveResponseReceivers(message);
                 break;
             case WebClientService.SUB_TYPE_CONVERSATIONS:
-                this._receiveResponseConversations(message);
+                this.runAfterInitializationSteps(['receivers'], () => {
+                    this._receiveResponseConversations(message);
+                });
                 break;
             case WebClientService.SUB_TYPE_CONVERSATION:
                 this._receiveResponseConversation(message);
@@ -2265,6 +2292,21 @@ export class WebClientService implements threema.WebClientService {
             default:
                 this.$log.warn('Ignored message with type:', message.type);
         }
+    }
+
+    private runAfterInitializationSteps(requiredSteps: threema.InitializationStep[], callback: any): void {
+        for (let requiredStep of requiredSteps) {
+            if (this.initialized.indexOf(requiredStep) === -1) {
+                this.$log.debug('required step', requiredStep, 'not completed, add pending');
+                this.pendingInitializationStepRoutines.push({
+                    requiredSteps: requiredSteps,
+                    callback: callback,
+                } as threema.InitializationStepRoutine);
+                return;
+            }
+        }
+
+        callback();
     }
 
     private currentController: string;
