@@ -46,7 +46,7 @@ export class PeerConnectionHelper {
     constructor($log: ng.ILogService, $q: ng.IQService,
                 $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
                 webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
-                stunServer: RTCIceServer, turnServer: RTCIceServer) {
+                iceServers: RTCIceServer[]) {
         this.$log = $log;
         this.$log.info('Initialize WebRTC PeerConnection');
         this.$q = $q;
@@ -56,7 +56,7 @@ export class PeerConnectionHelper {
         this.webrtcTask = webrtcTask;
 
         // Set up peer connection
-        this.pc = new RTCPeerConnection({iceServers: [stunServer, turnServer]});
+        this.pc = new RTCPeerConnection({iceServers: iceServers});
         this.pc.onnegotiationneeded = (e: Event) => {
             this.$log.debug(this.logTag, 'RTCPeerConnection: negotiation needed');
             this.initiatorFlow().then(

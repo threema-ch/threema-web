@@ -463,8 +463,7 @@ declare namespace threema {
         SALTYRTC_HOST: string | null;
         SALTYRTC_HOST_PREFIX: string | null;
         SALTYRTC_HOST_SUFFIX: string | null;
-        SALTYRTC_STUN: RTCIceServer;
-        SALTYRTC_TURN: RTCIceServer;
+        ICE_SERVERS: RTCIceServer[];
         PUSH_URL: string;
     }
 
