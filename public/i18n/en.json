@@ -141,7 +141,9 @@
         "DRAFT": "Draft",
         "PRIVATE": "Private",
         "PRIVATE_CHAT": "Private chat",
-        "PRIVATE_CHAT_DESCRIPTION": "Private chat are not supported in Threema Web."
+        "PRIVATE_CHAT_DESCRIPTION": "Private chat are not supported in Threema Web.",
+        "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Split Message",
+        "MESSAGE_TOO_LONG_SPLIT_BODY": "No more than {max} characters can be sent per message, do you want to split it into {count} separate messages?"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
@@ -158,7 +160,8 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive voice messages.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive files.",
         "ERROR_OCCURRED": "An error occurred.",
-        "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web"
+        "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web",
+        "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters)."
     },
     "mimeTypes": {
         "android_apk": "Android package",

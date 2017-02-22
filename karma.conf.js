@@ -8,7 +8,8 @@ module.exports = function(config) {
             'dist/app.js',
             'tests/filters.js',
             'tests/qrcode.js',
-            'tests/service/message.js'
+            'tests/service/message.js',
+            'tests/helpers.js',
         ],
         customLaunchers: {
             Chromium_ci_gitlab: {

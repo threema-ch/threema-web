@@ -140,7 +140,9 @@
         "DRAFT": "Entwurf",
         "PRIVATE": "Privat",
         "PRIVATE_CHAT": "Private Unterhaltung",
-        "PRIVATE_CHAT_DESCRIPTION": "Private Unterhaltungen werden in Threema Web nicht unterstützt."
+        "PRIVATE_CHAT_DESCRIPTION": "Private Unterhaltungen werden in Threema Web nicht unterstützt.",
+        "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Nachricht aufteilen.",
+        "MESSAGE_TOO_LONG_SPLIT_BODY": "Es werden maximal {max} Zeichen pro Nachricht unterstützt, wollen Sie die Nachricht in {count} seperate Nachrichten aufteilen?"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
@@ -157,7 +159,8 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Sprachnachrichten erhalten.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
-        "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden"
+        "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",
+        "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen)."
     },
     "mimeTypes": {
         "android_apk": "Android-Paket",

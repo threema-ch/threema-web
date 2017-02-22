@@ -55,6 +55,8 @@ class WebClientDefault implements threema.WebClientDefault {
  */
 export class WebClientService implements threema.WebClientService {
     private static AVATAR_LOW_MAX_SIZE = 48;
+    private static MAX_TEXT_LENGTH = 3500;
+    private static MAX_FILE_SIZE = 15 * 1024 * 1024;
 
     private static TYPE_REQUEST = 'request';
     private static TYPE_RESPONSE = 'response';
@@ -775,13 +777,18 @@ export class WebClientService implements threema.WebClientService {
                     case 'text':
                         subType = WebClientService.SUB_TYPE_TEXT_MESSAGE;
                         // Ignore empty text messages
-                        if ((message as threema.TextMessageData).text.length === 0) {
+                        let textSize = (message as threema.TextMessageData).text.length;
+                        if (textSize === 0) {
                             return reject();
+                        } else if (textSize > WebClientService.MAX_TEXT_LENGTH) {
+                            return reject(this.$translate.instant('error.TEXT_TOO_LONG', {
+                                max: WebClientService.MAX_TEXT_LENGTH,
+                            }));
                         }
                         break;
                     case 'file':
                         // validate max file size of 20mb
-                        if ((message as threema.FileMessageData).size > 15 * 1024 * 1024) {
+                        if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE) {
                             return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
                         }
                         // determine feature required feature level
@@ -858,7 +865,7 @@ export class WebClientService implements threema.WebClientService {
                 // send message and handling error promise
                 this._sendCreatePromise(subType, args, message)
                     .catch((error) => {
-                        this.$log.error('error sending file', error);
+                        this.$log.error('error sending message', error);
                         // remove temporary message
                         this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
 
@@ -1882,6 +1889,14 @@ export class WebClientService implements threema.WebClientService {
     public clearCache(): void {
         this._resetFields();
         this.blobCache.clear();
+    }
+
+    /**
+     * Return the max text length
+     * @returns {number}
+     */
+    public getMaxTextLength(): number {
+        return WebClientService.MAX_TEXT_LENGTH;
     }
 
     /**
