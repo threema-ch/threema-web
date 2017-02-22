@@ -16,7 +16,7 @@
  */
 
 /// <reference types="saltyrtc-task-webrtc" />
-const SDPUtils = require('sdp');
+import * as SDPUtils from 'sdp';
 
 /**
  * Wrapper around the WebRTC PeerConnection.
@@ -250,12 +250,12 @@ export class PeerConnectionHelper {
      */
     private static censorCandidate(candidateInit: string): string {
         let candidate = SDPUtils.parseCandidate(candidateInit);
-        if (candidate.type != 'relay') {
+        if (candidate.type !== 'relay') {
             candidate.ip = '***';
             candidate.port = 1;
         }
         candidate.relatedAddress = '***';
         candidate.relatedPort = 2;
-        return SDPUtils.writeCandidate(candidate)
+        return SDPUtils.writeCandidate(candidate);
     }
 }
