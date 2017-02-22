@@ -30,8 +30,7 @@ First, adjust the configuration in `src/config.ts`:
 
 - Set `SELF_HOSTED` to `true`
 - If you host your own SaltyRTC server, adjust the `SALTYRTC_*` variables
-- If you host your own STUN / TURN server, adjust the `SALTYRTC_STUN` and
-  `SALTYRTC_TURN` variables
+- If you host your own STUN / TURN server, adjust the `ICE_SERVERS` variable
 
 Then, build the release version of Threema Web:
 

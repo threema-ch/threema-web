@@ -80,8 +80,7 @@ The configuration of Threema Web can be tweaked in `src/config.ts`:
 
 **ICE**
 
-- `SALTYRTC_STUN`: Configuration object for the WebRTC STUN server.
-- `SALTYRTC_TURN`: Configuration object for the WebRTC TURN server.
+- `ICE_SERVERS`: Configuration object for the WebRTC STUN and ICE servers.
 
 **Push**
 
