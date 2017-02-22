@@ -262,7 +262,7 @@ export default [
                     let fileIdx: number | null = null;
                     let textIdx: number | null = null;
                     for (let i = 0; i < items.length; i++) {
-                        if (items[i].type.indexOf("image/") !== -1 || items[i].type === 'application/x-moz-file') {
+                        if (items[i].type.indexOf('image/') !== -1 || items[i].type === 'application/x-moz-file') {
                             fileIdx = i;
                         } else if (items[i].type === 'text/plain') {
                             textIdx = i;
@@ -274,25 +274,24 @@ export default [
                         // Read clipboard data as blob
                         const blob: Blob = items[fileIdx].getAsFile();
 
-                        // Verify that this is an acceptable type
-                        const fileType = blob.type;
-                        if (fileType.indexOf("image/") === -1) {
-                            return;
-                        }
-
                         // Convert blob to arraybuffer
                         const reader = new FileReader();
                         reader.onload = function() {
                             let buffer: ArrayBuffer = this.result;
 
                             // Construct file name
-                            const fileExt = fileType.split(';')[0].split('/')[1];
-                            const fileName = 'clipboard.' + fileExt;
+                            let fileName: string;
+                            if ((blob as any).name) {
+                                fileName = (blob as any).name;
+                            } else {
+                                const fileExt = blob.type.split(';')[0].split('/')[1];
+                                fileName = 'clipboard.' + fileExt;
+                            }
 
                             // Send data as file
                             const fileMessageData: threema.FileMessageData = {
                                 name: fileName,
-                                fileType: fileType,
+                                fileType: blob.type,
                                 size: blob.size,
                                 data: buffer,
                             };
