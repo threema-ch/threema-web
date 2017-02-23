@@ -368,7 +368,7 @@ export class WebClientService implements threema.WebClientService {
         this.salty.once('state-change:task', () => {
             this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
                                                      this.$rootScope, this.webrtcTask,
-                                                     this.config.SALTYRTC_STUN, this.config.SALTYRTC_TURN);
+                                                     this.config.ICE_SERVERS);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {

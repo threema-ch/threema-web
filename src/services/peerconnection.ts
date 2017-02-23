@@ -16,6 +16,7 @@
  */
 
 /// <reference types="saltyrtc-task-webrtc" />
+import * as SDPUtils from 'sdp';
 
 /**
  * Wrapper around the WebRTC PeerConnection.
@@ -46,7 +47,7 @@ export class PeerConnectionHelper {
     constructor($log: ng.ILogService, $q: ng.IQService,
                 $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
                 webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
-                stunServer: RTCIceServer, turnServer: RTCIceServer) {
+                iceServers: RTCIceServer[]) {
         this.$log = $log;
         this.$log.info('Initialize WebRTC PeerConnection');
         this.$q = $q;
@@ -56,7 +57,7 @@ export class PeerConnectionHelper {
         this.webrtcTask = webrtcTask;
 
         // Set up peer connection
-        this.pc = new RTCPeerConnection({iceServers: [stunServer, turnServer]});
+        this.pc = new RTCPeerConnection({iceServers: iceServers});
         this.pc.onnegotiationneeded = (e: Event) => {
             this.$log.debug(this.logTag, 'RTCPeerConnection: negotiation needed');
             this.initiatorFlow().then(
@@ -95,6 +96,8 @@ export class PeerConnectionHelper {
         this.$log.debug(this.logTag, 'Setting up ICE candidate handling');
         this.pc.onicecandidate = (e: RTCPeerConnectionIceEvent) => {
             if (e.candidate) {
+                this.$log.debug(this.logTag, 'Gathered local ICE candidate:',
+                    PeerConnectionHelper.censorCandidate(e.candidate.candidate));
                 this.webrtcTask.sendCandidate({
                     candidate: e.candidate.candidate,
                     sdpMid: e.candidate.sdpMid,
@@ -135,6 +138,12 @@ export class PeerConnectionHelper {
         };
         this.webrtcTask.on('candidates', (e: saltyrtc.tasks.webrtc.CandidatesEvent) => {
             for (let candidateInit of e.data) {
+                if (candidateInit) {
+                    this.$log.debug(this.logTag, 'Adding remote ICE candidate:',
+                        PeerConnectionHelper.censorCandidate(candidateInit.candidate));
+                } else {
+                    this.$log.debug(this.logTag, 'No more remote ICE candidates');
+                }
                 this.pc.addIceCandidate(candidateInit);
             }
         });
@@ -232,5 +241,21 @@ export class PeerConnectionHelper {
                 resolve();
             }
         });
+    }
+
+    /**
+     * Censor an ICE candidate's address and port.
+     *
+     * Return the censored ICE candidate.
+     */
+    private static censorCandidate(candidateInit: string): string {
+        let candidate = SDPUtils.parseCandidate(candidateInit);
+        if (candidate.type !== 'relay') {
+            candidate.ip = '***';
+            candidate.port = 1;
+        }
+        candidate.relatedAddress = '***';
+        candidate.relatedPort = 2;
+        return SDPUtils.writeCandidate(candidate);
     }
 }
