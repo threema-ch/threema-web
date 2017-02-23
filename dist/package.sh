@@ -35,7 +35,8 @@ echo "+ Create release directory..."
 mkdir -p $DIR/{dist,partials,directives,node_modules,partials/messenger.receiver,files}
 
 echo "+ Copy code..."
-cp -R index.html dist/ $DIR/
+cp -R index.html $DIR/
+cp -R dist/app.js $DIR/dist/
 cp -R public/* $DIR/
 cp -R src/partials/*.html $DIR/partials/
 cp -R src/partials/messenger.receiver/*.html $DIR/partials/messenger.receiver/
