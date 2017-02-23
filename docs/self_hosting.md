@@ -34,8 +34,7 @@ First, adjust the configuration in `src/config.ts`:
 
 Then, build the release version of Threema Web:
 
-    npm config set production
-    npm install
+    npm install --production
     npm run dist
 
 Finally, unpack the `dist/threema-web-[VERSION].tar.gz` archive to your web server directory.
