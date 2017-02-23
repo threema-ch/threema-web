@@ -7,7 +7,7 @@ module.exports = function(config) {
             'node_modules/angular-mocks/angular-mocks.js',
             'dist/app.js',
             'tests/filters.js',
-            'tests/qrcode.js',
+            'tests/service/qrcode.js',
             'tests/service/message.js',
             'tests/helpers.js',
         ],
