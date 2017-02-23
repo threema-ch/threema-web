@@ -9,6 +9,7 @@ module.exports = function(config) {
             'tests/filters.js',
             'tests/service/qrcode.js',
             'tests/service/message.js',
+            'tests/service/webclient.js',
             'tests/helpers.js',
         ],
         customLaunchers: {

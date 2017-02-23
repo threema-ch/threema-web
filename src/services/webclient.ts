@@ -242,6 +242,7 @@ export class WebClientService implements threema.WebClientService {
         // Get default class
         this.defaults = new WebClientDefault();
 
+        // Initialize drafts
         this.drafts = this.container.createDrafts();
 
         // Setup fields
@@ -366,6 +367,12 @@ export class WebClientService implements threema.WebClientService {
         // Once the connection is established, initiate the peer connection
         // and start the handover.
         this.salty.once('state-change:task', () => {
+            // Firefox <53 does not yet support TLS. Skip it, to save allocations.
+            const browser = this.browserService.getBrowser();
+            if (browser.firefox && parseFloat(browser.version) < 53) {
+                this.skipIceTls();
+            }
+
             this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
                                                      this.$rootScope, this.webrtcTask,
                                                      this.config.ICE_SERVERS);
@@ -565,6 +572,24 @@ export class WebClientService implements threema.WebClientService {
         } else {
             this.$log.debug(this.logTag, 'Peer connection was null');
             redirectToWelcome();
+        }
+    }
+
+    /**
+     * Remove "turns:" servers from the ICE_SERVERS configuration
+     * if at least one "turn:" server with tcp transport is in the list.
+     */
+    public skipIceTls(): void {
+        this.$log.debug(this.logTag, 'Requested to remove TURNS server from ICE configuration');
+        const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
+        if (allUrls.some((url) => url.startsWith('turn:') && url.endsWith('=tcp'))) {
+            // There's at least one TURN server with TCP transport in the list
+            for (let server of this.config.ICE_SERVERS) {
+                // Remove TLS entries
+                server.urls = server.urls.filter((url) => !url.startsWith('turns:'));
+            }
+        } else {
+            this.$log.debug(this.logTag, 'No fallback TURN TCP server present, keeping TURNS server');
         }
     }
 
