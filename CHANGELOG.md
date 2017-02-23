@@ -13,11 +13,11 @@
 
 ### [v1.0.2][v1.0.2] (2017-02-21)
 
-* [feature] Add loading indicator when sending files (#29)
-* [feature] Add warning about browser plugins if PeerConnection setup fails (#46)
-* [feature] Add referrer policy tag to HTML (#49)
-* [feature] Add reload button to error page (#66)
-* [feature] Add warning message if browser blocks local storage (#67)
+* [feature] Add loading indicator when sending files ([#29][i29])
+* [feature] Add warning about browser plugins if PeerConnection setup fails ([#46][i46])
+* [feature] Add referrer policy tag to HTML ([#49][i49])
+* [feature] Add reload button to error page ([#66][i66])
+* [feature] Add warning message if browser blocks local storage ([#67][i67])
 * [bug] Fix pasting of HTML code that could lead to a potential XSS
   vulnerability (thanks [Frederik Braun](https://github.com/freddyb) for reporting)
 * [bug] Fix some translations
@@ -26,13 +26,17 @@
 
 First public release.
 
-
+[i29]: https://github.com/threema-ch/threema-web/issues/29
 [i38]: https://github.com/threema-ch/threema-web/issues/38
 [i41]: https://github.com/threema-ch/threema-web/issues/41
 [i43]: https://github.com/threema-ch/threema-web/issues/43
+[i46]: https://github.com/threema-ch/threema-web/issues/46
 [i48]: https://github.com/threema-ch/threema-web/issues/48
+[i49]: https://github.com/threema-ch/threema-web/issues/49
 [i57]: https://github.com/threema-ch/threema-web/issues/57
 [i61]: https://github.com/threema-ch/threema-web/issues/61
+[i66]: https://github.com/threema-ch/threema-web/issues/66
+[i67]: https://github.com/threema-ch/threema-web/issues/67
 [i69]: https://github.com/threema-ch/threema-web/issues/69
 [i79]: https://github.com/threema-ch/threema-web/issues/79
 [i82]: https://github.com/threema-ch/threema-web/issues/82
