@@ -367,8 +367,8 @@ class WelcomeController {
      * It must be initialized before calling this method.
      */
     private start() {
-        // Start
         this.webClientService.start().then(
+            // If connection buildup is done...
             () => {
                 // Pass password to webclient service
                 this.webClientService.setPassword(this.password);
@@ -379,6 +379,8 @@ class WelcomeController {
                 // Redirect to home
                 this.$timeout(() => this.$state.go('messenger.home'), WelcomeController.REDIRECT_DELAY);
             },
+
+            // If an error occurs...
             (error) => {
                 this.$log.error('Error state:', error);
                 // TODO: should probably show an error message instead
