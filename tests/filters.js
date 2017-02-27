@@ -16,16 +16,18 @@ describe('Filters', function() {
 
     });
 
+    function testPatterns(filterName, cases) {
+        const filter = $filter(filterName);
+        for (let testcase of cases) {
+            const input = testcase[0];
+            const expected = testcase[1];
+            expect(filter(input)).toEqual(expected);
+        };
+    };
+
     describe('markify', function() {
 
-        this.testPatterns = (cases) => {
-            const filter = $filter('markify');
-            for (let testcase of cases) {
-                const input = testcase[0];
-                const expected = testcase[1];
-                expect(filter(input)).toEqual(expected);
-            };
-        };
+        this.testPatterns = (cases) => testPatterns('markify', cases);
 
         it('detects bold text', () => {
             this.testPatterns([
@@ -98,14 +100,7 @@ describe('Filters', function() {
 
     describe('htmlToAsciiMarkup', function() {
 
-        this.testPatterns = (cases) => {
-            const filter = $filter('htmlToAsciiMarkup');
-            for (let testcase of cases) {
-                const input = testcase[0];
-                const expected = testcase[1];
-                expect(filter(input)).toEqual(expected);
-            };
-        };
+        this.testPatterns = (cases) => testPatterns('htmlToAsciiMarkup', cases);
 
         it('converts bold text', () => {
             this.testPatterns([
