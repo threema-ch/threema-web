@@ -87,6 +87,7 @@
         "CONTACTS": "Contacts",
         "NO_CONVERSATIONS_FOUND": "No conversations found.",
         "ABOUT": "About",
+        "SETTINGS": "Settings",
         "HELP": "Help",
         "NO_CONTACTS_FOUND": "No contacts found.",
         "ACKNOWLEDGE": "Agree",
@@ -189,5 +190,8 @@
         "LICENSE_LINK_BEFORE": "Licenses of used open source components can be found",
         "LICENSE_LINK_TEXT": "in the source code",
         "LICENSE_LINK_AFTER": ""
+    },
+    "settings": {
+        "APPEARANCE":"Appearance"
     }
 }

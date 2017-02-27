@@ -619,6 +619,13 @@ class NavigationController {
     }
 
     /**
+     * Show settings dialog.
+     */
+    public settings(ev): void {
+        this.showDialog('settings', ev);
+    }
+
+    /**
      * Return whether a trusted key is available.
      */
     public isPersistent(): boolean {

@@ -21,6 +21,9 @@ md-dialog {
     }
     md-dialog-content {
         line-height: 1.3em;
+        hr {
+            margin-top: -10px;
+        }
     }
 }
 
