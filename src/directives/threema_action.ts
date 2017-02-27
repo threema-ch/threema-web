@@ -24,7 +24,9 @@ export default [
             scope: {},
             link(scope, el, attrs) {
                 $timeout(() => {
-                    for (let node of el[0].childNodes) {
+                    for (let i = 0; i < el[0].childNodes.length; i++) {
+                        const node = el[0].childNodes[i];
+
                         if (node.nodeType === Node.ELEMENT_NODE
                             && (node as Element).tagName.toLowerCase() === 'a') {
 
