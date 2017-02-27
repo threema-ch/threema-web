@@ -178,8 +178,13 @@ angular.module('3ema.filters', [])
         return padLeft + left + ':' + padRight + right;
     };
 })
-.filter('bufferToUrl', ['$sce', function($sce) {
+.filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
+    const logTag = '[filters.bufferToUrl]';
     return function(buffer: ArrayBuffer, mimeType) {
+        if (!buffer) {
+            $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
+            return '';
+        }
         let binary = '';
         const bytes = new Uint8Array(buffer);
         const len = bytes.byteLength;
