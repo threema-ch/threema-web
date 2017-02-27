@@ -191,6 +191,9 @@
         "LICENSE_LINK_AFTER": "gefunden werden"
     },
     "settings": {
-        "APPEARANCE":"Erscheinungsbild"
+        "APPEARANCE":"Erscheinungsbild",
+        "THEME":"Theme",
+        "THEME_DARK":"Dunkel",
+        "THEME_BRIGHT":"Hell"
     }
 }

@@ -18,6 +18,7 @@
 import {ContactControllerModel} from '../controller_model/contact';
 import {supportsPassive, throttle} from '../helpers';
 import {ExecuteService} from '../services/execute';
+import {SettingsService} from '../services/settings';
 import {ControllerModelMode} from '../types/enums';
 
 abstract class DialogController {
@@ -77,6 +78,51 @@ class SendFileController extends DialogController {
     protected resumeFocusOnClose(): boolean {
         return true;
     }
+}
+
+/**
+ * Handle settings
+ */
+class SettingsController{
+
+    public static $inject = ['$mdDialog','SettingsService'];
+
+    public $mdDialog: ng.material.IDialogService;
+    public settingsService: threema.SettingsService;
+    public activeElement: HTMLElement | null;
+
+    private theme: string;
+
+    constructor($mdDialog: ng.material.IDialogService,settingsService: threema.SettingsService) {
+        this.$mdDialog = $mdDialog;
+        this.activeElement = document.activeElement as HTMLElement;
+        this.settingsService = settingsService;
+
+        this.theme = this.settingsService.getTheme();
+    }
+
+    public setTheme(name: string): void {
+        this.theme = name;
+        this.settingsService.setTheme(this.theme);
+    }
+
+    public cancel(): void {
+        this.$mdDialog.cancel();
+        this.done();
+    }
+
+    protected hide(data: any): void {
+        this.$mdDialog.hide(data);
+        this.done();
+    }
+
+    private done(): void {
+        if (this.activeElement !== null) {
+            // reset focus
+            this.activeElement.focus();
+        }
+    }
+
 }
 
 class ConversationController {
@@ -622,7 +668,15 @@ class NavigationController {
      * Show settings dialog.
      */
     public settings(ev): void {
-        this.showDialog('settings', ev);
+            this.$mdDialog.show({
+                controller: SettingsController,
+                controllerAs: 'ctrl',
+                templateUrl: 'partials/dialog.settings.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                fullscreen: true,
+            });
     }
 
     /**
@@ -1130,5 +1184,4 @@ angular.module('3ema.messenger', ['ngMaterial'])
 .controller('ReceiverDetailController', ReceiverDetailController)
 .controller('ReceiverEditController', ReceiverEditController)
 .controller('ReceiverCreateController', ReceiverCreateController)
-
 ;

@@ -89,7 +89,11 @@ angular.module('3ema', [
         .determinePreferredLanguage()
         .fallbackLanguage('en');
 }])
-
+// Dynamic Theme Loading
+.config(['$mdThemingProvider', '$provide', function($mdThemingProvider, $provide) {
+    $mdThemingProvider.generateThemesOnDemand(true);
+    $provide.value('themeProvider', $mdThemingProvider);
+}])
 // Configure theme
 .config(['$mdThemingProvider', ($mdThemingProvider) => {
     $mdThemingProvider.theme('default')
@@ -98,8 +102,16 @@ angular.module('3ema', [
         })
         .accentPalette('teal', {
             default: '500',
-        });
+        })
+    $mdThemingProvider.theme('dark')
+        .primaryPalette('grey', {
+             default: '800',
+        })
+        .accentPalette('teal', {
+            default: '500',
+        })
 }])
+
 
 // Optimizations: https://docs.angularjs.org/guide/production
 .config(['$compileProvider', ($compileProvider) => {
@@ -108,6 +120,8 @@ angular.module('3ema', [
     // Comment for now.
     // $compileProvider.debugInfoEnabled(false);
 }])
+
+
 
 // Add cache busting parameter to some HTTP requests
 .config(['$httpProvider', ($httpProvider: ng.IHttpProvider) => {

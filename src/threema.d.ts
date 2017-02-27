@@ -498,6 +498,11 @@ declare namespace threema {
         isBusinessContact(receiver: Receiver): boolean;
     }
 
+    interface SettingsService {
+        setTheme(name: string): void;
+        getTheme(): string;
+    }
+
     interface WebClientDefault {
         getAvatar(type: string, highResolution: boolean): string;
     }

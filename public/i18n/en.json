@@ -192,6 +192,9 @@
         "LICENSE_LINK_AFTER": ""
     },
     "settings": {
-        "APPEARANCE":"Appearance"
+        "APPEARANCE":"Appearance",
+        "THEME":"Theme",
+        "THEME_DARK":"Dark",
+        "THEME_BRIGHT":"Bright"
     }
 }
