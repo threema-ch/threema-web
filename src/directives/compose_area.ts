@@ -115,6 +115,7 @@ export default [
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
                     let text = '';
+                    // tslint:disable-next-line: prefer-for-of (see #98)
                     for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
                         const node = composeDiv[0].childNodes[i];
                         switch (node.nodeType) {

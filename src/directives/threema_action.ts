@@ -24,6 +24,7 @@ export default [
             scope: {},
             link(scope, el, attrs) {
                 $timeout(() => {
+                    // tslint:disable-next-line: prefer-for-of (see #98)
                     for (let i = 0; i < el[0].childNodes.length; i++) {
                         const node = el[0].childNodes[i];
 
