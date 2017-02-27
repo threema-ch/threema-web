@@ -30,7 +30,13 @@ angular.module('3ema.filters', [])
         '"': '&quot;',
         "'": '&#039;',
     };
-    return (text) => (text !== undefined && text !== null ? text : '').replace(/[&<>"']/g, (m) => map[m]);
+    return (text: string) => {
+        if (text === undefined || text === null) {
+            text = '';
+        }
+        const escaped = text.replace(/[&<>"']/g, (m) => map[m]);
+        return escaped;
+    };
 })
 
 /**

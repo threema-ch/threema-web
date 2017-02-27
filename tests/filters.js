@@ -107,7 +107,7 @@ describe('Filters', function() {
                 ['<b>bold</b>', '*bold*'],
                 ['< 	b >bold</b>', '*bold*'],
                 ['<B>bold</b>', '*bold*'],
-                ['<b class="asdf">bold</b>', '*bold*'],
+                ['<b class="gsdf">bold</b>', '*bold*'],
                 ['<strong>bold</strong>', '*bold*'],
                 ['<b><b>bold</b></b>', '**bold**'],
                 ['<b><strong>bold</strong></b>', '**bold**'],
@@ -146,4 +146,19 @@ describe('Filters', function() {
         });
 
     });
+
+    describe('escapeHtml', function() {
+
+        this.testPatterns = (cases) => testPatterns('escapeHtml', cases);
+
+        it('escapes html tags', () => {
+            this.testPatterns([
+                ['<h1>heading</h1>', '&lt;h1&gt;heading&lt;/h1&gt;'],
+                ['<b>< script >foo&ndash;</b>< script>', '&lt;b&gt;&lt; script &gt;foo&amp;ndash;&lt;/b&gt;&lt; script&gt;'],
+                ['<a href="/">a</a>', '&lt;a href=&quot;/&quot;&gt;a&lt;/a&gt;'],
+            ]);
+        });
+
+    });
+
 });
