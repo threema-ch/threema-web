@@ -2,6 +2,8 @@ describe('MessageService', function() {
 
     let messageService;
 
+    beforeAll(() => window.onbeforeunload = () => 'Ignoring page reload request');
+
     beforeEach(function() {
 
         // load threema services

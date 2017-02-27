@@ -2,6 +2,8 @@ describe('Filters', function() {
 
     let $filter;
 
+    beforeAll(() => window.onbeforeunload = () => 'Ignoring page reload request');
+
     beforeEach(function() {
 
         // Load 3ema.filters module

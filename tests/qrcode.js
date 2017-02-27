@@ -2,6 +2,8 @@ describe('QrCodeService', function() {
 
     let $service;
 
+    beforeAll(() => window.onbeforeunload = () => 'Ignoring page reload request');
+
     beforeEach(function() {
 
         module(($provide) => {
