@@ -49,7 +49,8 @@ export class PeerConnectionHelper {
                 webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
                 iceServers: RTCIceServer[]) {
         this.$log = $log;
-        this.$log.info('Initialize WebRTC PeerConnection');
+        this.$log.info(this.logTag, 'Initialize WebRTC PeerConnection');
+        this.$log.debug(this.logTag, 'ICE servers used:', [].concat(...iceServers.map((c) => c.urls)).join(', '));
         this.$q = $q;
         this.$timeout = $timeout;
         this.$rootScope = $rootScope;
