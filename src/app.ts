@@ -102,14 +102,14 @@ angular.module('3ema', [
         })
         .accentPalette('teal', {
             default: '500',
-        })
+        });
     $mdThemingProvider.theme('dark')
-        .primaryPalette('grey', {
+        .primaryPalette('red', {
              default: '800',
         })
-        .accentPalette('teal', {
+        .accentPalette('red', {
             default: '500',
-        })
+        }).dark();
 }])
 
 

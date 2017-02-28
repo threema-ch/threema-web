@@ -60,9 +60,7 @@ export class SettingsService implements threema.SettingsService {
         if(this.currentTheme=='Dark'){
                 this.$log.debug(this.logTag, 'Updating Theme to Dark');
                 //create new theme
-                this.themeProvider.theme('dark').primaryPalette('pink')
-                                                   .accentPalette('orange')
-                                                   .backgroundPalette('yellow');
+                this.themeProvider.theme('dark');
                 //reload the theme
                 this.$mdTheming.generateTheme('dark');
                 //optional - set the default to this new theme
@@ -70,9 +68,7 @@ export class SettingsService implements threema.SettingsService {
         }else{
                 this.$log.debug(this.logTag, 'Updating Theme to Bright');
                 //create new theme
-                this.themeProvider.theme('default').primaryPalette('grey')
-                                                   .accentPalette('red')
-                                                   .backgroundPalette('grey');
+                this.themeProvider.theme('default');
                 //reload the theme
                 this.$mdTheming.generateTheme('default');
                 //optional - set the default to this new theme
