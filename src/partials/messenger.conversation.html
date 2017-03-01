@@ -37,11 +37,9 @@
 
     <div id="conversation-chat" scroll-glue in-view-container ng-show="!ctrl.locked">
         <ul class="chat">
-            <li in-view="$inview && !ctrl.locked && ctrl.requestMessages()" class="load-more">
+            <li in-view="$inview && !ctrl.locked && ctrl.topOfChat()" class="load-more">
                 <div ng-if="ctrl.hasMoreMessages()" class="loading">
-                    <md-progress-circular
-                            class="md-primary"
-                            md-diameter="30"></md-progress-circular>
+                    <span></span>
                 </div>
             </li>
             <li ng-repeat="message in ctrl.messages" id="message-{{message.id}}">
