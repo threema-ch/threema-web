@@ -40,7 +40,7 @@ export default [
             }],
             template: `
                 <div id="expanded-status-bar" ng-class="{'active': ctrl.active}">
-                    <div>
+                    <div ng-if="ctrl.active">
                         <md-progress-circular class="md-accent" md-diameter="32"></md-progress-circular>
                     </div>
                     <div>
