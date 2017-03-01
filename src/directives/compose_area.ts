@@ -26,7 +26,6 @@ export default [
     '$translate',
     '$mdDialog',
     '$filter',
-    '$sanitize',
     '$log',
     function(browserService: threema.BrowserService,
              stringService: threema.StringService,
@@ -34,7 +33,6 @@ export default [
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
-             $sanitize: ng.sanitize.ISanitizeService,
              $log: ng.ILogService) {
         return {
             restrict: 'EA',
@@ -279,12 +277,6 @@ export default [
                     });
                 }
 
-                function applyFilters(text: string): string {
-                    const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
-                    const parseNewLine = $filter('nlToBr') as (a: string, b?: boolean) => string;
-                    return parseNewLine(emojify(text, true), true);
-                }
-
                 // Handle pasting
                 function onPaste(ev: ClipboardEvent) {
                     ev.preventDefault();
@@ -348,17 +340,19 @@ export default [
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
 
+                        // Look up some filter functions
+                        const escapeHtml = $filter('escapeHtml') as (a: string) => string;
+                        const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
+                        const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
+
+                        // Escape HTML markup
+                        const escaped = escapeHtml(text);
+
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = applyFilters(text);
+                        const formatted = nlToBr(emojify(escaped, true), true);
 
-                        // Replace HTML formatting with ASCII counterparts
-                        const htmlToAsciiMarkup = $filter('htmlToAsciiMarkup') as (a: string) => string;
-
-                        // Sanitize
-                        const sanitized = $sanitize(htmlToAsciiMarkup(formatted));
-
-                        // Insert HTML
-                        document.execCommand('insertHTML', false, sanitized);
+                        // Insert resulting HTML
+                        document.execCommand('insertHTML', false, formatted);
 
                         cleanupComposeContent();
                         updateView();
@@ -421,7 +415,7 @@ export default [
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
                     const emoji = this.textContent; // Unicode character
-                    const formatted = applyFilters(emoji);
+                    const formatted = ($filter('emojify') as any)(emoji, true);
 
                     // Firefox inserts a <br> after editing content editable fields.
                     // Remove the last <br> to fix this.
