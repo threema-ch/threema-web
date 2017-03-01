@@ -494,7 +494,9 @@ export class WebClientService implements threema.WebClientService {
                 .catch(() => this.$log.warn('Could not notify app!'))
                 .then(() => {
                     this.$log.debug('Requested app wakeup');
-                    this.state.updateConnectionBuildupState('push');
+                    this.$rootScope.$apply(() => {
+                        this.state.updateConnectionBuildupState('push');
+                    });
                 });
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug('Push service not available');
