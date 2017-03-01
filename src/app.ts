@@ -91,25 +91,29 @@ angular.module('3ema', [
 }])
 // Dynamic Theme Loading
 .config(['$mdThemingProvider', '$provide', function($mdThemingProvider, $provide) {
-    $mdThemingProvider.generateThemesOnDemand(true);
+    $mdThemingProvider.generateThemesOnDemand(false);
     $provide.value('themeProvider', $mdThemingProvider);
 }])
 // Configure theme
 .config(['$mdThemingProvider', ($mdThemingProvider) => {
-    $mdThemingProvider.theme('default')
+    $mdThemingProvider.theme('Bright')
         .primaryPalette('grey', {
              default: '800',
         })
         .accentPalette('teal', {
             default: '500',
+        }).backgroundPalette('grey', {
+           default: '50',
         });
-    $mdThemingProvider.theme('dark')
+    $mdThemingProvider.theme('Dark')
         .primaryPalette('red', {
              default: '800',
         })
         .accentPalette('red', {
             default: '500',
-        }).dark();
+        }).backgroundPalette('grey', {
+             default: '700',
+          }).dark();
 }])
 
 

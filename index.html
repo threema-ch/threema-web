@@ -56,13 +56,13 @@
             </h1>
         </header>
 
-        <div id="main">
+        <div id="main"  md-colors="{background: '{{ctrl.theme}}-background'}" >
             <div id="status-bar">
                 <status-bar active="ctrl.expandStatusBar"></status-bar>
             </div>
             <div id="main-content" ui-view></div>
         </div>
-        <div class="androidonly" ng-controller="AndroidOnlyController as ctrl" ng-show="ctrl.show">
+        <div class="androidonly" ng-controller="AndroidOnlyController as ctrl" ng-show="ctrl.show" md-colors="{background: '{{ctrl.theme}}-background'}">
             <div><i class="material-icons md-24">android</i> <span translate>welcome.ANDROID_ONLY</span></div>
         </div>
         <footer>

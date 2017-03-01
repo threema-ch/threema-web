@@ -60,19 +60,19 @@ export class SettingsService implements threema.SettingsService {
         if(this.currentTheme=='Dark'){
                 this.$log.debug(this.logTag, 'Updating Theme to Dark');
                 //create new theme
-                this.themeProvider.theme('dark');
+                this.themeProvider.theme('Dark');
                 //reload the theme
-                this.$mdTheming.generateTheme('dark');
+                this.$mdTheming.generateTheme('Dark');
                 //optional - set the default to this new theme
-                this.themeProvider.setDefaultTheme('dark');
-        }else{
+                this.themeProvider.setDefaultTheme('Dark');
+        }else if (this.currentTheme=='Bright'){
                 this.$log.debug(this.logTag, 'Updating Theme to Bright');
                 //create new theme
-                this.themeProvider.theme('default');
+                this.themeProvider.theme('Bright');
                 //reload the theme
-                this.$mdTheming.generateTheme('default');
+                this.$mdTheming.generateTheme('Bright');
                 //optional - set the default to this new theme
-                this.themeProvider.setDefaultTheme('default');
+                this.themeProvider.setDefaultTheme('Bright');
         }
     }
 

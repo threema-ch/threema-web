@@ -121,7 +121,7 @@ class SettingsController{
     private done(): void {
         if (this.activeElement !== null) {
             // reset focus
-            this.$window.location.reload();
+            //this.$window.location.reload();
             this.activeElement.focus();
         }
     }

@@ -21,12 +21,20 @@
 export class AndroidOnlyController {
     public show: boolean = false;
 
-    public static $inject = ['$rootScope'];
-    constructor($rootScope: ng.IRootScopeService) {
+    //Theme
+    private theme: string;
+
+    // Costom Services
+    private settingsService: threema.SettingsService;
+
+    public static $inject = ['$rootScope','SettingsService'];
+    constructor($rootScope: ng.IRootScopeService,settingsService: threema.SettingsService) {
         $rootScope.$on(
             '$stateChangeStart',
             (event, toState: ng.ui.IState, toParams, fromState: ng.ui.IState, fromParams) => {
                 this.show = toState.name === 'welcome';
+                this.settingsService=settingsService;
+                this.theme = settingsService.getTheme();
             },
         );
     }
