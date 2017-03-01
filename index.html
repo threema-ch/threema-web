@@ -49,6 +49,12 @@
 <body ng-controller="StatusController as ctrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
     <img src="img/bg1.jpg?v=1" id="background-image" draggable="false"/>
 
+    <noscript>
+        <img id="logo-noscript" src="img/logo.svg?v=[[VERSION]]"></img>
+        <h2>Error: JavaScript not supported</h2>
+        <p>Please enable JavaScript in your browser to be able to use Threema Web.</p>
+    </noscript>
+
     <div id="main-wrapper" ng-cloak ng-class="{wide: ctrl.wide()}">
         <header>
             <h1 id="title">
