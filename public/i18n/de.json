@@ -191,6 +191,7 @@
         "LICENSE_LINK_AFTER": "gefunden werden"
     },
     "settings": {
+        "SETTINGS":"Einstellungen",
         "APPEARANCE":"Erscheinungsbild",
         "THEME":"Theme",
         "THEME_DARK":"Dunkel",
