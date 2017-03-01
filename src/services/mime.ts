@@ -57,7 +57,7 @@ export class MimeService implements threema.MimeService {
         if (key === undefined || key.length === 0) {
             key = 'generic_am';
         }
-        return '/img/mime/ic_doc_' + key + '.png';
+        return 'img/mime/ic_doc_' + key + '.png';
     }
 
     private getKey(mimeType: string): string {
