@@ -79,9 +79,8 @@ export default [
             }],
             template: `
                 <div class="avatar" ng-class="ctrl.avatarClass()">
-                    <div class="avatar-loading" ng-show="ctrl.isLoading">
-                        <md-progress-circular class="md-accent" md-diameter="100">
-                        </md-progress-circular>
+                    <div class="avatar-loading" ng-if="ctrl.isLoading">
+                        <span></span>
                     </div>
                     <img class="avatar-default" ng-if="!ctrl.avatarExists()"
                          ng-class="ctrl.avatarClass()"
