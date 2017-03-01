@@ -41,7 +41,7 @@ export default [
             template: `
                 <div id="expanded-status-bar" ng-class="{'active': ctrl.active}">
                     <div ng-if="ctrl.active">
-                        <md-progress-circular class="md-accent" md-diameter="32"></md-progress-circular>
+                        <div class="loading"><span></span></div>
                     </div>
                     <div>
                         <h1 translate>connecting.CONNECTION_PROBLEMS</h1>

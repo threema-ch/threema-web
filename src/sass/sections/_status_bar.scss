@@ -88,8 +88,8 @@ body {
     }
 
     // Loading indicator color
-    path {
-        stroke: white !important;
+    .loading {
+        @include loading-spinner(26px, 3px, white, rgba(255, 255, 255, 0.2));
     }
 
     > div {
