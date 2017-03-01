@@ -339,13 +339,12 @@ export default [
                         const text = ev.clipboardData.getData('text/plain');
 
                         // Look up some filter functions
-                        const htmlToAsciiMarkup = $filter('htmlToAsciiMarkup') as (a: string) => string;
                         const escapeHtml = $filter('escapeHtml') as (a: string) => string;
                         const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
                         const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
 
                         // Escape HTML markup
-                        const escaped = escapeHtml(htmlToAsciiMarkup(text));
+                        const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
                         const formatted = nlToBr(emojify(escaped, true), true);

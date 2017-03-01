@@ -51,29 +51,6 @@ angular.module('3ema.filters', [])
 })
 
 /**
- * Replace formatting HTML with ASCII alternatives.
- */
-.filter('htmlToAsciiMarkup', function() {
-    return (text) => {
-        let tags = [
-            ['b', '*'],
-            ['strong', '*'],
-            ['i', '_'],
-            ['em', '_'],
-            ['strike', '~'],
-            ['del', '~'],
-            ['s', '~'],
-        ];
-        let out = text;
-        for (let tag of tags) {
-            out = out.replace(new RegExp('<\\s*' + tag[0] + '(\\s[^>]*|\\s*)>', 'gi'), tag[1]);
-            out = out.replace(new RegExp('<\\s*\/\\s*' + tag[0] + '\\s*>', 'gi'), tag[1]);
-        }
-        return out;
-    };
-})
-
-/**
  * Convert links in text to <a> tags.
  */
 .filter('linkify', function() {
