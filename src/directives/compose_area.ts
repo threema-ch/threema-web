@@ -115,7 +115,9 @@ export default [
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
                     let text = '';
-                    for (let node of composeDiv[0].childNodes) {
+                    // tslint:disable-next-line: prefer-for-of (see #98)
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
                         switch (node.nodeType) {
                             case Node.TEXT_NODE:
                                 text += node.nodeValue;
@@ -424,7 +426,9 @@ export default [
                     // Firefox inserts a <br> after editing content editable fields.
                     // Remove the last <br> to fix this.
                     let currentHTML = '';
-                    composeDiv[0].childNodes.forEach((node: Node|any, pos: number) => {
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
+
                         if (node.nodeType === node.TEXT_NODE) {
                             currentHTML += node.textContent;
                         } else if (node.nodeType === node.ELEMENT_NODE) {
@@ -433,12 +437,12 @@ export default [
                                 currentHTML += getOuterHtml(node);
                             } else if (tag === 'br') {
                                 // not not append br if the br is the LAST element
-                                if (pos < composeDiv[0].childNodes.length - 1) {
+                                if (i < composeDiv[0].childNodes.length - 1) {
                                     currentHTML += getOuterHtml(node);
                                 }
                             }
                         }
-                    });
+                    }
 
                     if (caretPosition !== null) {
                         currentHTML = currentHTML.substr(0, caretPosition.from)
@@ -576,8 +580,8 @@ export default [
                         sel.addRange(range);
                     };
 
-                    for (let nodeIndex = 0; nodeIndex < composeDiv[0].childNodes.length; nodeIndex++) {
-                        let node = composeDiv[0].childNodes[nodeIndex];
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
                         let size;
                         let offset;
                         switch (node.nodeType) {
@@ -596,7 +600,7 @@ export default [
                             // use this node
                             rangeAt(node, offset);
                             this.stop = true;
-                        } else if (nodeIndex === composeDiv[0].childNodes.length - 1) {
+                        } else if (i === composeDiv[0].childNodes.length - 1) {
                             rangeAt(node);
                         }
                         pos -= size;
