@@ -14,7 +14,10 @@
     }
 }
 
-@mixin loading-spinner($diameter, $thickness, $color-fg, $color-bg) {
+@mixin loading-spinner($diameter,
+                       $thickness: 5px,
+                       $color-fg: $material-grey-dark,
+                       $color-bg: rgba(0, 0, 0, 0.1)) {
     display: block;
     &>:first-child {
         display: block;
