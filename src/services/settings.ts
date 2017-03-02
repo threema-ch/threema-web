@@ -42,18 +42,11 @@ export class SettingsService implements threema.SettingsService {
         this.themeProvider = themeProvider;
         this.$mdTheming = $mdTheming;
 
-        try {
-            if (this.$window.localStorage === null) {
-                this.blocked = true;
-            }
-            this.storage = this.$window.localStorage;
-            // Load Initial Data from LocalStorage
-            this.currentTheme = this.retrieveUntrustedKeyValuePair('theme');
-            this.applyTheme();
-        } catch (e) {
-            this.$log.warn(this.logTag, 'LocalStorage blocked:', e);
-            this.blocked = true;
-        }
+        this.storage = this.$window.localStorage;
+        // Load Initial Data from LocalStorage
+        this.currentTheme = this.retrieveUntrustedKeyValuePair('theme');
+        this.applyTheme();
+
     }
 
     public applyTheme(): void{
