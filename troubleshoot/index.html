@@ -162,6 +162,7 @@
             function turnFail() {
                 switchTo('turn', 'no');
                 document.querySelector('#status-turn .results').classList.add('hidden');
+                document.querySelector('#status-turn .status-no .small').classList.remove('hidden');
             }
             var button = document.querySelector('#status-turn button');
             button.addEventListener('click', function(e) {
@@ -291,7 +292,7 @@
             </div>
             <div class="status status-no hidden">
                 <i class="material-icons md-36">error</i> <span class="text">No</span>
-                <p class="small">It looks like TURN traffic is being blocked by your firewall.<br>
+                <p class="small hidden">It looks like TURN traffic is being blocked by your firewall.<br>
                 Without TURN, connections can only be established if your computer<br>
                 and your phone are in the same network.</p>
             </div>
