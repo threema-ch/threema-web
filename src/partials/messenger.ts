@@ -92,7 +92,7 @@ class SettingsController {
     public settingsService: threema.SettingsService;
     public activeElement: HTMLElement | null;
 
-    private theme: string;
+    // Setting Variables
 
     constructor($mdDialog: ng.material.IDialogService , settingsService: threema.SettingsService,
                 $window: ng.IWindowService) {
@@ -102,14 +102,13 @@ class SettingsController {
         this.activeElement = document.activeElement as HTMLElement;
         this.settingsService = settingsService;
 
-        this.theme = this.settingsService.getTheme();
+        // Init Setting Variables
+
     }
 
-    public setTheme(name: string): void {
-        this.theme = name;
-        this.settingsService.setTheme(this.theme);
-    }
+    // SettingsServices Methods
 
+    // Dialog Methods
     public cancel(): void {
         this.$mdDialog.cancel();
         this.done();
@@ -679,7 +678,7 @@ class NavigationController {
                 templateUrl: 'partials/dialog.settings.html',
                 parent: angular.element(document.body),
                 targetEvent: ev,
-                clickOutsideToClose: false,
+                clickOutsideToClose: true,
                 fullscreen: true,
             });
     }

@@ -16,71 +16,41 @@
  */
 
 /**
- * The settings service can update the settings.
+ * The settings service can update variables for settings and persist them to local storage.
  */
 
 export class SettingsService implements threema.SettingsService {
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
-    private themeProvider: any;
-    private $mdTheming: any;
 
     private static STORAGE_KEY_PREFIX = 'settings-';
-
     private logTag: string = '[SettingsService]';
 
     private storage: Storage = null;
-
-    private currentTheme: string;
-
     public blocked = false;
 
-    public static $inject = ['$log', '$window', 'themeProvider', '$mdTheming'];
+    // Settings Variables
+
+    public static $inject = ['$log', '$window'];
     constructor($log: ng.ILogService, $window: ng.IWindowService, themeProvider, $mdTheming) {
         this.$log = $log;
         this.$window = $window;
-        this.themeProvider = themeProvider;
-        this.$mdTheming = $mdTheming;
 
         this.storage = this.$window.localStorage;
-        // Load Initial Data from LocalStorage
-        this.currentTheme = this.retrieveUntrustedKeyValuePair('theme');
-        this.applyTheme();
+
+        // Load Initial Data from LocalStorage to Settings Variables
+
     }
 
-    public applyTheme(): void {
-        if (this.currentTheme === 'Dark') {
-                this.$log.debug(this.logTag, 'Updating Theme to Dark');
-                // create new theme
-                this.themeProvider.theme('Dark');
-                // reload the theme
-                this.$mdTheming.generateTheme('Dark');
-                // optional - set the default to this new theme
-                this.themeProvider.setDefaultTheme('Dark');
-        } else if (this.currentTheme === 'Bright') {
-                this.$log.debug(this.logTag, 'Updating Theme to Bright');
-                this.themeProvider.theme('Bright');
-                this.$mdTheming.generateTheme('Bright');
-                this.themeProvider.setDefaultTheme('Bright');
-        }
-    }
+    // Settings Getters & Setters - also set them in ../threema.d.ts
 
-    public setTheme(name: string): void {
-        this.currentTheme = name;
-        this.applyTheme();
-        // Write Value To storage
-        this.storeUntrustedKeyValuePair('theme', name);
-    }
-
-    public getTheme(): string {
-        return this.currentTheme;
-    }
-
+    // Local Storage , store key-value pair
     private storeUntrustedKeyValuePair(Key: string, value: string): void {
         this.$log.debug(this.logTag, 'Storing unencrypted key-value pair for settings');
         this.storage.setItem(SettingsService.STORAGE_KEY_PREFIX + Key, value);
     }
 
+    // Local Storage , retrieve key-value pair
     private retrieveUntrustedKeyValuePair(Key: string): string {
         this.$log.debug(this.logTag, 'Retrieving unencrypted key-value pair for settings');
         if (this.hasUntrustedKeyValuePair(Key)) {

@@ -192,10 +192,6 @@
         "LICENSE_LINK_AFTER": ""
     },
     "settings": {
-        "SETTINGS":"Settings",
-        "APPEARANCE":"Appearance",
-        "THEME":"Theme",
-        "THEME_DARK":"Dark",
-        "THEME_BRIGHT":"Bright"
+        "SETTINGS":"Settings"
     }
 }

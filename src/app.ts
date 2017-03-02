@@ -89,32 +89,18 @@ angular.module('3ema', [
         .determinePreferredLanguage()
         .fallbackLanguage('en');
 }])
-// Dynamic Theme Loading
-.config(['$mdThemingProvider', '$provide', function($mdThemingProvider, $provide) {
-    $mdThemingProvider.generateThemesOnDemand(false);
-    $provide.value('themeProvider', $mdThemingProvider);
-}])
+
 // Configure theme
 .config(['$mdThemingProvider', ($mdThemingProvider) => {
-    $mdThemingProvider.theme('Bright')
+    $mdThemingProvider.theme('default')
         .primaryPalette('grey', {
              default: '800',
         })
         .accentPalette('teal', {
             default: '500',
-        }).backgroundPalette('grey', {
-           default: '50',
         });
-    $mdThemingProvider.theme('Dark')
-        .primaryPalette('red', {
-             default: '800',
-        })
-        .accentPalette('red', {
-            default: '500',
-        }).backgroundPalette('grey', {
-             default: '700',
-          }).dark();
 }])
+
 // Optimizations: https://docs.angularjs.org/guide/production
 .config(['$compileProvider', ($compileProvider) => {
     // Disable debug info for improved performance
@@ -122,6 +108,7 @@ angular.module('3ema', [
     // Comment for now.
     // $compileProvider.debugInfoEnabled(false);
 }])
+
 // Add cache busting parameter to some HTTP requests
 .config(['$httpProvider', ($httpProvider: ng.IHttpProvider) => {
     $httpProvider.interceptors.push(['CACHE_BUST', (CACHE_BUST: string) => {

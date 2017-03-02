@@ -499,8 +499,7 @@ declare namespace threema {
     }
 
     interface SettingsService {
-        setTheme(name: string): void;
-        getTheme(): string;
+
     }
 
     interface WebClientDefault {
