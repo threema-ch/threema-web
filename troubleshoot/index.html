@@ -103,7 +103,7 @@
             document.querySelector('#status-' + type + ' .status-yes').classList.add('hidden');
             document.querySelector('#status-' + type + ' .status-' + newStatus).classList.remove('hidden');
         }
-        function do_checks() {
+        function doChecks() {
             // Check for JS
             switchTo('js', 'yes');
 
@@ -140,9 +140,9 @@
         }
 
         if (document.readyState != 'loading') {
-            do_checks();
+            doChecks();
         } else {
-            document.addEventListener('DOMContentLoaded', do_checks);
+            document.addEventListener('DOMContentLoaded', doChecks);
         }
     </script>
 </head>
