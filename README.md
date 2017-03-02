@@ -7,6 +7,8 @@ Threema Web is a web client for Threema, a privacy-focussed end-to-end
 encrypted mobile messenger hosted and developed in Switzerland. With Threema
 Web, you can use Threema on your Desktop without compromising security.
 
+[https://web.threema.ch/](https://web.threema.ch/)
+
 ![Screenshot](https://threema.ch/images/webclient_header.png)
 
 Threema Web establishes a direct connection between Desktop and mobile device
