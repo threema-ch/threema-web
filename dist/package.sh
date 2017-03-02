@@ -59,6 +59,7 @@ targets=(
     saltyrtc-client/dist/saltyrtc-client.es5.js
     saltyrtc-task-webrtc/dist/saltyrtc-task-webrtc.es5.js
     webrtc-adapter/out/adapter_no_edge.js
+    webrtc-adapter/out/adapter.js
     qrcode-generator/js/qrcode.js
     angular-qrcode/angular-qrcode.js
     angularjs-scroll-glue/src/scrollglue.js

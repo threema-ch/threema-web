@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--
+
+    Copyright © 2016-2017 Threema GmbH (https://threema.ch/).
+
+    This file is part of Threema Web.
+
+    Threema Web is free software: you can redistribute it and/or modify it
+    under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or (at
+    your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+    General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex" />
+
+    <title>Threema Web Diagnostics</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="../img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
+    <link rel="shortcut icon" href="../img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="../fonts/roboto.css?v=[[VERSION]]" type="text/css">
+    <link rel="stylesheet" href="../fonts/material.css?v=[[VERSION]]" type="text/css">
+
+    <!-- Styling -->
+    <style>
+        body {
+            padding: 16px;
+            font-family: 'Roboto';
+        }
+
+        #background-image {
+            min-height: 100%;
+            min-width: 1024px;
+            width: 100%;
+            height: auto;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #wrapper {
+            background-color: white;
+            margin: 0 auto;
+            padding: 16px 32px 32px;
+            min-width: 400px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        #logo {
+            width: 300px;
+            color: white;
+            margin: 0px auto 16px;
+        }
+
+        h1 { margin-top: 0; font-weight: 500; }
+        h2 { font-weight: 300; }
+        p { font-weight: 300; }
+
+        .status span {
+            display: inline-block;
+            line-height: 36px;
+            vertical-align: top;
+        }
+
+        .status-yes i { color: #4caf50; }
+        .status-no i { color: #f44336; }
+        .status-unknown i { color: #0277BD; }
+
+        .hidden { display: none; }
+
+        .small { font-size: 0.8em; font-weight: 300; }
+
+        footer {
+            color: white;
+            font-weight: 300;
+            text-align: center;
+            padding-top: 16px;
+        }
+    </style>
+
+    <!-- JS -->
+    <script src="../node_modules/webrtc-adapter/out/adapter.js?v=[[VERSION]]"></script>
+    <script>
+        function switchTo(type, newStatus) {
+            var unknown = document.querySelector('#status-' + type + ' .status-unknown');
+            if (unknown) {
+                unknown.classList.add('hidden');
+            }
+            document.querySelector('#status-' + type + ' .status-no').classList.add('hidden');
+            document.querySelector('#status-' + type + ' .status-yes').classList.add('hidden');
+            document.querySelector('#status-' + type + ' .status-' + newStatus).classList.remove('hidden');
+        }
+        function doChecks() {
+            // Check for JS
+            switchTo('js', 'yes');
+
+            // Check for RTCPeerConnection
+            if (window.RTCPeerConnection) {
+                switchTo('pc', 'yes');
+            } else {
+                switchTo('pc', 'no');
+            }
+
+            // Check for RTCDataChannel
+            if (window.RTCPeerConnection && (new RTCPeerConnection()).createDataChannel) {
+                switchTo('dc', 'yes');
+            } else {
+                switchTo('dc', 'no');
+            }
+
+            // Check for LocalStorage
+            function localStorageAvailable(){
+                var test = 'test';
+                try {
+                    localStorage.setItem(test, test);
+                    localStorage.removeItem(test);
+                    return true;
+                } catch(e) {
+                    return false;
+                }
+            }
+            if (localStorageAvailable()) {
+                switchTo('ls', 'yes');
+            } else {
+                switchTo('ls', 'no');
+            }
+        }
+
+        if (document.readyState != 'loading') {
+            doChecks();
+        } else {
+            document.addEventListener('DOMContentLoaded', doChecks);
+        }
+    </script>
+</head>
+<body>
+    <img src="../img/bg1.jpg?v=[[VERSION]]" id="background-image" draggable="false" alt="" />
+
+    <header>
+        <div id="title">
+            <div id="logo">
+                <img src="../img/logo.svg?v=[[VERSION]]" alt="Logo">
+            </div>
+        </div>
+    </header>
+
+    <div id="wrapper">
+
+        <h1>Threema Web Diagnostics</h1>
+
+        <h2>Is JavaScript enabled?</h2>
+        <div id="status-js">
+            <div class="status status-no">
+                <i class="material-icons md-36">error</i> <span class="text">No</span>
+            </div>
+            <div class="status status-yes hidden">
+                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+            </div>
+        </div>
+
+        <h2>Is WebRTC available?</h2>
+        <div id="status-pc">
+            <div class="status status-unknown">
+                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+            </div>
+            <div class="status status-no hidden">
+                <i class="material-icons md-36">error</i> <span class="text">No</span>
+                <p class="small">RTCPeerConnection is a part of WebRTC.<br>Threema Web cannot work without it.</p>
+            </div>
+            <div class="status status-yes hidden">
+                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+            </div>
+        </div>
+
+        <h2>Are WebRTC DataChannels available?</h2>
+        <div id="status-dc">
+            <div class="status status-unknown">
+                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+            </div>
+            <div class="status status-no hidden">
+                <i class="material-icons md-36">error</i> <span class="text">No</span>
+                <p class="small">RTCDataChannel is a part of WebRTC.<br>Threema Web cannot work without it.</p>
+            </div>
+            <div class="status status-yes hidden">
+                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+            </div>
+        </div>
+
+        <h2>Is LocalStorage available?</h2>
+        <div id="status-ls">
+            <div class="status status-unknown">
+                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+            </div>
+            <div class="status status-no hidden">
+                <i class="material-icons md-36">error</i> <span class="text">No</span>
+                <p class="small">Without LocalStorage, persistent sessions and settings<br>cannot be stored in the browser.<br>
+                See the <a href="https://threema.ch/faq/web_browser_settings">FAQ</a> for information on how to fix this.</p>
+            </div>
+            <div class="status status-yes hidden">
+                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+            </div>
+        </div>
+    </div>
+    <footer>
+        &copy; 2017 Threema GmbH
+    </footer>
+</body>
+</html>
