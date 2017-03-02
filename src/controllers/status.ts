@@ -22,14 +22,10 @@
  *
  * Status updates should be done through the status service.
  */
-
-export class StatusController{
+export class StatusController {
 
     // State variable
     private state: threema.GlobalConnectionState = 'error';
-
-    //Theme
-    private theme: string;
 
     // Expanded status bar
     public expandStatusBar = false;
@@ -48,13 +44,12 @@ export class StatusController{
     private stateService: threema.StateService;
     private webClientService: threema.WebClientService;
     private controllerService: threema.ControllerService;
-    private settingsService: threema.SettingsService;
 
     public static $inject = ['$scope', '$timeout', '$log', '$state', 'StateService',
-        'WebClientService', 'ControllerService','SettingsService','SettingsService'];
+        'WebClientService', 'ControllerService','SettingsService'];
     constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: ng.ui.IStateService,
                 stateService: threema.StateService, webClientService: threema.WebClientService,
-                controllerService: threema.ControllerService,settingsService: threema.SettingsService) {
+                controllerService: threema.ControllerService) {
 
         // Angular services
         this.$timeout = $timeout;
@@ -65,9 +60,6 @@ export class StatusController{
         this.stateService = stateService;
         this.webClientService = webClientService;
         this.controllerService = controllerService;
-        this.settingsService = settingsService;
-
-        this.theme=settingsService.getTheme();
 
         // Watch state changes
         $scope.$watch(
