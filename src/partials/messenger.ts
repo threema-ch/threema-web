@@ -83,18 +83,20 @@ class SendFileController extends DialogController {
 /**
  * Handle settings
  */
-class SettingsController{
+class SettingsController {
 
-    public static $inject = ['$mdDialog','SettingsService','$window'];
+    public static $inject = ['$mdDialog', 'SettingsService', '$window'];
 
     public $mdDialog: ng.material.IDialogService;
-    public $window: ng.IWindowService
+    public $window: ng.IWindowService;
     public settingsService: threema.SettingsService;
     public activeElement: HTMLElement | null;
 
     private theme: string;
 
-    constructor($mdDialog: ng.material.IDialogService,settingsService: threema.SettingsService,$window: ng.IWindowService) {
+    constructor($mdDialog: ng.material.IDialogService , settingsService: threema.SettingsService,
+                $window: ng.IWindowService) {
+
         this.$mdDialog = $mdDialog;
         this.$window = $window;
         this.activeElement = document.activeElement as HTMLElement;
@@ -121,7 +123,7 @@ class SettingsController{
     private done(): void {
         if (this.activeElement !== null) {
             // reset focus
-            //this.$window.location.reload();
+            // this.$window.location.reload();
             this.activeElement.focus();
         }
     }

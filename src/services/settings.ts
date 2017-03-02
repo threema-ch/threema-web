@@ -16,8 +16,8 @@
  */
 
 /**
-* The settings service can update the settings.
-*/
+ * The settings service can update the settings.
+ */
 
 export class SettingsService implements threema.SettingsService {
     private $log: ng.ILogService;
@@ -35,8 +35,8 @@ export class SettingsService implements threema.SettingsService {
 
     public blocked = false;
 
-    public static $inject = ['$log', '$window','themeProvider','$mdTheming'];
-    constructor($log: ng.ILogService,$window: ng.IWindowService,themeProvider ,$mdTheming) {
+    public static $inject = ['$log', '$window', 'themeProvider', '$mdTheming'];
+    constructor($log: ng.ILogService, $window: ng.IWindowService, themeProvider, $mdTheming) {
         this.$log = $log;
         this.$window = $window;
         this.themeProvider = themeProvider;
@@ -46,25 +46,21 @@ export class SettingsService implements threema.SettingsService {
         // Load Initial Data from LocalStorage
         this.currentTheme = this.retrieveUntrustedKeyValuePair('theme');
         this.applyTheme();
-
     }
 
-    public applyTheme(): void{
-        if(this.currentTheme=='Dark'){
+    public applyTheme(): void {
+        if (this.currentTheme === 'Dark') {
                 this.$log.debug(this.logTag, 'Updating Theme to Dark');
-                //create new theme
+                // create new theme
                 this.themeProvider.theme('Dark');
-                //reload the theme
+                // reload the theme
                 this.$mdTheming.generateTheme('Dark');
-                //optional - set the default to this new theme
+                // optional - set the default to this new theme
                 this.themeProvider.setDefaultTheme('Dark');
-        }else if (this.currentTheme=='Bright'){
+        } else if (this.currentTheme === 'Bright') {
                 this.$log.debug(this.logTag, 'Updating Theme to Bright');
-                //create new theme
                 this.themeProvider.theme('Bright');
-                //reload the theme
                 this.$mdTheming.generateTheme('Bright');
-                //optional - set the default to this new theme
                 this.themeProvider.setDefaultTheme('Bright');
         }
     }
@@ -72,8 +68,8 @@ export class SettingsService implements threema.SettingsService {
     public setTheme(name: string): void {
         this.currentTheme = name;
         this.applyTheme();
-        //Write Value To storage
-        this.storeUntrustedKeyValuePair('theme',name);
+        // Write Value To storage
+        this.storeUntrustedKeyValuePair('theme', name);
     }
 
     public getTheme(): string {
@@ -82,16 +78,16 @@ export class SettingsService implements threema.SettingsService {
 
     private storeUntrustedKeyValuePair(Key: string, value: string): void {
         this.$log.debug(this.logTag, 'Storing unencrypted key-value pair for settings');
-        this.storage.setItem(SettingsService.STORAGE_KEY_PREFIX+Key, value);
+        this.storage.setItem(SettingsService.STORAGE_KEY_PREFIX + Key, value);
     }
 
     private retrieveUntrustedKeyValuePair(Key: string): string {
         this.$log.debug(this.logTag, 'Retrieving unencrypted key-value pair for settings');
-        if(this.hasUntrustedKeyValuePair(Key)){
-            return this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX+Key);
-        }else{
+        if (this.hasUntrustedKeyValuePair(Key)) {
+            return this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + Key);
+        } else {
             this.$log.debug(this.logTag, 'key-value not set, creating empty one');
-            this.storeUntrustedKeyValuePair(Key,"");
+            this.storeUntrustedKeyValuePair(Key, '');
         }
 
     }
@@ -100,7 +96,7 @@ export class SettingsService implements threema.SettingsService {
      * Return whether key-value pair is present in localstorage.
      */
     private hasUntrustedKeyValuePair(Key: string): boolean {
-        const item: string = this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX+Key);
+        const item: string = this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + Key);
         return item !== null;
     }
 

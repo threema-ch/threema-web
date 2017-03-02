@@ -115,8 +115,6 @@ angular.module('3ema', [
              default: '700',
           }).dark();
 }])
-
-
 // Optimizations: https://docs.angularjs.org/guide/production
 .config(['$compileProvider', ($compileProvider) => {
     // Disable debug info for improved performance
@@ -124,9 +122,6 @@ angular.module('3ema', [
     // Comment for now.
     // $compileProvider.debugInfoEnabled(false);
 }])
-
-
-
 // Add cache busting parameter to some HTTP requests
 .config(['$httpProvider', ($httpProvider: ng.IHttpProvider) => {
     $httpProvider.interceptors.push(['CACHE_BUST', (CACHE_BUST: string) => {
