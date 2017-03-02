@@ -15,11 +15,9 @@
 #main-wrapper {
     height: 100%;
     margin: 0 auto;
-    //max-width: 1500px;
     width: 98vw;
     max-width: 450px;
     max-height: 575px;
-    transition: max-width 0.8s ease-in-out;
     height: calc(100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});
     &.wide {
         max-width: 1500px;

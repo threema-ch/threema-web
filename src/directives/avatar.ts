@@ -78,7 +78,7 @@ export default [
                 };
             }],
             template: `
-                <div class="avatar" ng-class="ctrl.avatarClass()">
+                <div class="avatar" ng-class="ctrl.avatarClass()" ng-cloak>
                     <div class="avatar-loading" ng-if="ctrl.isLoading">
                         <span></span>
                     </div>
