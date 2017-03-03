@@ -3,6 +3,12 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.0.5][v1.0.5] (2017-03-03)
+
+* [feature] Add diagnostics/troubleshooting page ([#126][i126] / [#127][i127])
+* [bug] Fix bug resulting in slow initial load ([#120][i120])
+* [bug] Add meta description to index.html ([#124][i124])
+
 ### [v1.0.4][v1.0.4] (2017-03-01)
 
 * [feature] Enable support for TURN via TLS (except for FF <53) ([#43][i43] / [#109][i109])
@@ -63,6 +69,9 @@ First public release.
 [i109]: https://github.com/threema-ch/threema-web/issues/109
 [i117]: https://github.com/threema-ch/threema-web/issues/117
 [i119]: https://github.com/threema-ch/threema-web/issues/119
+[i124]: https://github.com/threema-ch/threema-web/issues/124
+[i126]: https://github.com/threema-ch/threema-web/issues/126
+[i127]: https://github.com/threema-ch/threema-web/issues/127
 
 [v1.0.4]: https://github.com/threema-ch/threema-web/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/threema-ch/threema-web/compare/v1.0.2...v1.0.3
