@@ -75,6 +75,7 @@ targets=(
     angular-translate/dist/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.min.js
     angular-inview/angular-inview.js
     angular-messages/angular-messages.min.js
+    sdp/sdp.js
 )
 
 for target in "${targets[@]}"; do
@@ -82,7 +83,7 @@ for target in "${targets[@]}"; do
 done
 
 echo "+ Update version number..."
-sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/dist/app.js
+sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html troubleshoot/index.html $DIR/dist/app.js
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;
