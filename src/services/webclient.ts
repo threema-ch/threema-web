@@ -494,7 +494,9 @@ export class WebClientService implements threema.WebClientService {
                 .catch(() => this.$log.warn('Could not notify app!'))
                 .then(() => {
                     this.$log.debug('Requested app wakeup');
-                    this.state.updateConnectionBuildupState('push');
+                    this.$rootScope.$apply(() => {
+                        this.state.updateConnectionBuildupState('push');
+                    });
                 });
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug('Push service not available');
@@ -1512,6 +1514,7 @@ export class WebClientService implements threema.WebClientService {
                 this.conversations.updateOrAdd(conversation);
             }
         }
+        this.updateUnreadCount();
         this.registerInitializationStep('conversations');
     }
 
@@ -1573,11 +1576,7 @@ export class WebClientService implements threema.WebClientService {
                 return;
         }
 
-        // Update unread count
-        const totalUnreadCount = this.conversations
-            .get()
-            .reduce((a: number, b: threema.Conversation) => a + b.unreadCount, 0);
-        this.titleService.updateUnreadCount(totalUnreadCount);
+        this.updateUnreadCount();
     }
 
     private _receiveResponseMessages(message: threema.WireMessage): void {
@@ -2342,5 +2341,15 @@ export class WebClientService implements threema.WebClientService {
 
     public getControllerName(): string {
         return this.currentController;
+    }
+
+    /**
+     * Update the unread count in the window title.
+     */
+    private updateUnreadCount(): void {
+        const totalUnreadCount = this.conversations
+            .get()
+            .reduce((a: number, b: threema.Conversation) => a + b.unreadCount, 0);
+        this.titleService.updateUnreadCount(totalUnreadCount);
     }
 }

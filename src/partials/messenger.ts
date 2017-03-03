@@ -494,6 +494,13 @@ class ConversationController {
         this.webClientService.sendMeIsTyping(this.$stateParams, false);
     }
 
+    /**
+     * User scrolled to the top of the chat.
+     */
+    public topOfChat(): void {
+        this.requestMessages();
+    }
+
     public requestMessages(): void {
         let refMsgId = this.webClientService.requestMessages(this.$stateParams);
 

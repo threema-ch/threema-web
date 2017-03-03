@@ -1,5 +1,18 @@
 # Threema Web Changelog
 
+This changelog lists the most important changes for each released version. For
+the full log, please refer to the git commit history.
+
+### [v1.0.4][v1.0.4] (2017-03-01)
+
+* [feature] Enable support for TURN via TLS (except for FF <53) ([#43][i43] / [#109][i109])
+* [feature] Add noscript warning ([#119][i119])
+* [bug] Fix compatibility bug for older browsers ([#64][i64])
+* [bug] Escape all pasted text in compose area ([#86][i86])
+* [bug] Update unread count in title on initial loading ([#93][i93])
+* [bug] Fix state transitions when restoring a session ([#102][i102])
+* [bug] Improve performance / reduce CPU load ([#117][i117] / [#20][i20] / [#39][i39])
+
 ### [v1.0.3][v1.0.3] (2017-02-23)
 
 * [feature] Autofocus on compose area when opening a conversation ([#41][i41])
@@ -26,8 +39,10 @@
 
 First public release.
 
+[i20]: https://github.com/threema-ch/threema-web/issues/20
 [i29]: https://github.com/threema-ch/threema-web/issues/29
 [i38]: https://github.com/threema-ch/threema-web/issues/38
+[i39]: https://github.com/threema-ch/threema-web/issues/39
 [i41]: https://github.com/threema-ch/threema-web/issues/41
 [i43]: https://github.com/threema-ch/threema-web/issues/43
 [i46]: https://github.com/threema-ch/threema-web/issues/46
@@ -35,12 +50,20 @@ First public release.
 [i49]: https://github.com/threema-ch/threema-web/issues/49
 [i57]: https://github.com/threema-ch/threema-web/issues/57
 [i61]: https://github.com/threema-ch/threema-web/issues/61
+[i64]: https://github.com/threema-ch/threema-web/issues/64
 [i66]: https://github.com/threema-ch/threema-web/issues/66
 [i67]: https://github.com/threema-ch/threema-web/issues/67
 [i69]: https://github.com/threema-ch/threema-web/issues/69
 [i79]: https://github.com/threema-ch/threema-web/issues/79
 [i82]: https://github.com/threema-ch/threema-web/issues/82
 [i83]: https://github.com/threema-ch/threema-web/issues/83
+[i86]: https://github.com/threema-ch/threema-web/issues/86
+[i93]: https://github.com/threema-ch/threema-web/issues/93
+[i102]: https://github.com/threema-ch/threema-web/issues/102
+[i109]: https://github.com/threema-ch/threema-web/issues/109
+[i117]: https://github.com/threema-ch/threema-web/issues/117
+[i119]: https://github.com/threema-ch/threema-web/issues/119
 
+[v1.0.4]: https://github.com/threema-ch/threema-web/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/threema-ch/threema-web/compare/v1.0.2...v1.0.3
 [v1.0.2]: https://github.com/threema-ch/threema-web/compare/v1.0.1...v1.0.2

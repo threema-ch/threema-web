@@ -30,7 +30,12 @@ angular.module('3ema.filters', [])
         '"': '&quot;',
         "'": '&#039;',
     };
-    return (text) => (text !== undefined && text !== null ? text : '').replace(/[&<>"']/g, (m) => map[m]);
+    return (text: string) => {
+        if (text === undefined || text === null) {
+            text = '';
+        }
+        return text.replace(/[&<>"']/g, (m) => map[m]);
+    };
 })
 
 /**
@@ -42,29 +47,6 @@ angular.module('3ema.filters', [])
             text = text.replace(/\n/g, '<br>');
         }
         return text;
-    };
-})
-
-/**
- * Replace formatting HTML with ASCII alternatives.
- */
-.filter('htmlToAsciiMarkup', function() {
-    return (text) => {
-        let tags = [
-            ['b', '*'],
-            ['strong', '*'],
-            ['i', '_'],
-            ['em', '_'],
-            ['strike', '~'],
-            ['del', '~'],
-            ['s', '~'],
-        ];
-        let out = text;
-        for (let tag of tags) {
-            out = out.replace(new RegExp('<\\s*' + tag[0] + '(\\s[^>]*|\\s*)>', 'gi'), tag[1]);
-            out = out.replace(new RegExp('<\\s*\/\\s*' + tag[0] + '\\s*>', 'gi'), tag[1]);
-        }
-        return out;
     };
 })
 

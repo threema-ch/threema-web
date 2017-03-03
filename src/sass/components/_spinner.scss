@@ -4,3 +4,28 @@
         margin: 0 auto;
     }
 }
+
+@keyframes rotater {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@mixin loading-spinner($diameter,
+                       $thickness: 5px,
+                       $color-fg: $material-grey-dark,
+                       $color-bg: rgba(0, 0, 0, 0.1)) {
+    display: block;
+    &>:first-child {
+        display: block;
+        width: $diameter;
+        height: $diameter;
+        border: $thickness solid $color-bg;
+        border-left-color: $color-fg;
+        animation: rotater 1.1s infinite linear;
+        border-radius: 50%;
+    }
+}

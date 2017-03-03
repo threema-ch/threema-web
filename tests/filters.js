@@ -16,16 +16,18 @@ describe('Filters', function() {
 
     });
 
+    function testPatterns(filterName, cases) {
+        const filter = $filter(filterName);
+        for (let testcase of cases) {
+            const input = testcase[0];
+            const expected = testcase[1];
+            expect(filter(input)).toEqual(expected);
+        };
+    };
+
     describe('markify', function() {
 
-        this.testPatterns = (cases) => {
-            const filter = $filter('markify');
-            for (let testcase of cases) {
-                const input = testcase[0];
-                const expected = testcase[1];
-                expect(filter(input)).toEqual(expected);
-            };
-        };
+        this.testPatterns = (cases) => testPatterns('markify', cases);
 
         it('detects bold text', () => {
             this.testPatterns([
@@ -96,59 +98,18 @@ describe('Filters', function() {
 
     });
 
-    describe('htmlToAsciiMarkup', function() {
+    describe('escapeHtml', function() {
 
-        this.testPatterns = (cases) => {
-            const filter = $filter('htmlToAsciiMarkup');
-            for (let testcase of cases) {
-                const input = testcase[0];
-                const expected = testcase[1];
-                expect(filter(input)).toEqual(expected);
-            };
-        };
+        this.testPatterns = (cases) => testPatterns('escapeHtml', cases);
 
-        it('converts bold text', () => {
+        it('escapes html tags', () => {
             this.testPatterns([
-                ['<b>bold</b>', '*bold*'],
-                ['< 	b >bold</b>', '*bold*'],
-                ['<B>bold</b>', '*bold*'],
-                ['<b class="asdf">bold</b>', '*bold*'],
-                ['<strong>bold</strong>', '*bold*'],
-                ['<b><b>bold</b></b>', '**bold**'],
-                ['<b><strong>bold</strong></b>', '**bold**'],
-            ]);
-        });
-
-        it('converts italic text', () => {
-            this.testPatterns([
-                ['<i>italic</i>', '_italic_'],
-                ['<i onclick="alert(1)">italic</i>', '_italic_'],
-                ['<em>italic</em>', '_italic_'],
-                ['<i><em>italic</em></i>', '__italic__'],
-            ]);
-        });
-
-        it('converts strikethrough text', () => {
-            this.testPatterns([
-                ['<strike>strikethrough</strike>', '~strikethrough~'],
-                ['<del>strikethrough</del>', '~strikethrough~'],
-                ['<del href="/">strikethrough</del>', '~strikethrough~'],
-                ['<s>strikethrough</s>', '~strikethrough~'],
-                ['<strike><del><s>strikethrough</s></del></strike>', '~~~strikethrough~~~'],
-            ]);
-        });
-
-        it('does not affect other tags', () => {
-            this.testPatterns([
-                ['<script>alert("pho soup time")</script>', '<script>alert("pho soup time")</script>'],
-            ]);
-        });
-
-        it('combination of all', () => {
-            this.testPatterns([
-                ['<b><em><del>foo</del></em></b>', '*_~foo~_*'],
+                ['<h1>heading</h1>', '&lt;h1&gt;heading&lt;/h1&gt;'],
+                ['<b>< script >foo&ndash;</b>< script>', '&lt;b&gt;&lt; script &gt;foo&amp;ndash;&lt;/b&gt;&lt; script&gt;'],
+                ['<a href="/">a</a>', '&lt;a href=&quot;/&quot;&gt;a&lt;/a&gt;'],
             ]);
         });
 
     });
+
 });

@@ -24,7 +24,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
+
     <title>Threema Web</title>
+    <meta name="description" content="Chat from your desktop with Threema Web and have full access to all chats, contacts and media files.">
 
     <!-- Favicon -->
     <link rel="icon" href="img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
@@ -48,6 +50,14 @@
 
 <body ng-controller="StatusController as ctrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
     <img src="img/bg1.jpg?v=1" id="background-image" draggable="false"/>
+
+    <noscript>
+        <img id="logo-noscript" src="img/logo.svg?v=[[VERSION]]"></img>
+        <div>
+            <h2>Error: JavaScript not supported</h2>
+            <p>Please enable JavaScript in your browser to be able to use Threema Web.</p>
+        </div>
+    </noscript>
 
     <div id="main-wrapper" ng-cloak ng-class="{wide: ctrl.wide()}">
         <header>

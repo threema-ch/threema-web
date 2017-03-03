@@ -26,7 +26,6 @@ export default [
     '$translate',
     '$mdDialog',
     '$filter',
-    '$sanitize',
     '$log',
     function(browserService: threema.BrowserService,
              stringService: threema.StringService,
@@ -34,7 +33,6 @@ export default [
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
-             $sanitize: ng.sanitize.ISanitizeService,
              $log: ng.ILogService) {
         return {
             restrict: 'EA',
@@ -115,7 +113,9 @@ export default [
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
                     let text = '';
-                    for (let node of composeDiv[0].childNodes) {
+                    // tslint:disable-next-line: prefer-for-of (see #98)
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
                         switch (node.nodeType) {
                             case Node.TEXT_NODE:
                                 text += node.nodeValue;
@@ -277,12 +277,6 @@ export default [
                     });
                 }
 
-                function applyFilters(text: string): string {
-                    const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
-                    const parseNewLine = $filter('nlToBr') as (a: string, b?: boolean) => string;
-                    return parseNewLine(emojify(text, true), true);
-                }
-
                 // Handle pasting
                 function onPaste(ev: ClipboardEvent) {
                     ev.preventDefault();
@@ -346,17 +340,19 @@ export default [
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
 
+                        // Look up some filter functions
+                        const escapeHtml = $filter('escapeHtml') as (a: string) => string;
+                        const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
+                        const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
+
+                        // Escape HTML markup
+                        const escaped = escapeHtml(text);
+
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = applyFilters(text);
+                        const formatted = nlToBr(emojify(escaped, true), true);
 
-                        // Replace HTML formatting with ASCII counterparts
-                        const htmlToAsciiMarkup = $filter('htmlToAsciiMarkup') as (a: string) => string;
-
-                        // Sanitize
-                        const sanitized = $sanitize(htmlToAsciiMarkup(formatted));
-
-                        // Insert HTML
-                        document.execCommand('insertHTML', false, sanitized);
+                        // Insert resulting HTML
+                        document.execCommand('insertHTML', false, formatted);
 
                         cleanupComposeContent();
                         updateView();
@@ -419,12 +415,14 @@ export default [
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
                     const emoji = this.textContent; // Unicode character
-                    const formatted = applyFilters(emoji);
+                    const formatted = ($filter('emojify') as any)(emoji, true);
 
                     // Firefox inserts a <br> after editing content editable fields.
                     // Remove the last <br> to fix this.
                     let currentHTML = '';
-                    composeDiv[0].childNodes.forEach((node: Node|any, pos: number) => {
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
+
                         if (node.nodeType === node.TEXT_NODE) {
                             currentHTML += node.textContent;
                         } else if (node.nodeType === node.ELEMENT_NODE) {
@@ -433,12 +431,12 @@ export default [
                                 currentHTML += getOuterHtml(node);
                             } else if (tag === 'br') {
                                 // not not append br if the br is the LAST element
-                                if (pos < composeDiv[0].childNodes.length - 1) {
+                                if (i < composeDiv[0].childNodes.length - 1) {
                                     currentHTML += getOuterHtml(node);
                                 }
                             }
                         }
-                    });
+                    }
 
                     if (caretPosition !== null) {
                         currentHTML = currentHTML.substr(0, caretPosition.from)
@@ -576,8 +574,8 @@ export default [
                         sel.addRange(range);
                     };
 
-                    for (let nodeIndex = 0; nodeIndex < composeDiv[0].childNodes.length; nodeIndex++) {
-                        let node = composeDiv[0].childNodes[nodeIndex];
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
                         let size;
                         let offset;
                         switch (node.nodeType) {
@@ -596,7 +594,7 @@ export default [
                             // use this node
                             rangeAt(node, offset);
                             this.stop = true;
-                        } else if (nodeIndex === composeDiv[0].childNodes.length - 1) {
+                        } else if (i === composeDiv[0].childNodes.length - 1) {
                             rangeAt(node);
                         }
                         pos -= size;
