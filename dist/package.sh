@@ -32,12 +32,13 @@ VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\)
 DIR="release/threema-web-$VERSION"
 
 echo "+ Create release directory..."
-mkdir -p $DIR/{dist,partials,directives,node_modules,partials/messenger.receiver,files}
+mkdir -p $DIR/{dist,partials,directives,node_modules,partials/messenger.receiver,troubleshoot}
 
 echo "+ Copy code..."
 cp -R index.html $DIR/
 cp -R dist/app.js $DIR/dist/
 cp -R public/* $DIR/
+cp -R troubleshoot/* $DIR/troubleshoot/
 cp -R src/partials/*.html $DIR/partials/
 cp -R src/partials/messenger.receiver/*.html $DIR/partials/messenger.receiver/
 cp -R src/directives/*.html $DIR/directives/
@@ -83,7 +84,7 @@ for target in "${targets[@]}"; do
 done
 
 echo "+ Update version number..."
-sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html troubleshoot/index.html $DIR/dist/app.js
+sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;
