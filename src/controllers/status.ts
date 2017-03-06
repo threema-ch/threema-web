@@ -46,7 +46,7 @@ export class StatusController {
     private controllerService: threema.ControllerService;
 
     public static $inject = ['$scope', '$timeout', '$log', '$state', 'StateService',
-        'WebClientService', 'ControllerService'];
+        'WebClientService', 'ControllerService', 'SettingsService'];
     constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: ng.ui.IStateService,
                 stateService: threema.StateService, webClientService: threema.WebClientService,
                 controllerService: threema.ControllerService) {
