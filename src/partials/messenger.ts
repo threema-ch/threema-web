@@ -69,7 +69,7 @@ class SendFileController extends DialogController {
     }
 
     public keypress($event: KeyboardEvent): void {
-        if ($event.charCode === 13) { // Enter
+        if ($event.key === 'Enter') { // see https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
             this.send();
         }
     }
