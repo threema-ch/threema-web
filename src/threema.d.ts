@@ -511,6 +511,10 @@ declare namespace threema {
         isBusinessContact(receiver: Receiver): boolean;
     }
 
+    interface SettingsService {
+
+    }
+
     interface WebClientDefault {
         getAvatar(type: string, highResolution: boolean): string;
     }
