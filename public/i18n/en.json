@@ -192,6 +192,10 @@
         "LICENSE_LINK_AFTER": ""
     },
     "settings": {
-        "SETTINGS":"Settings"
+        "SETTINGS": "Settings",
+        "notifications": {
+            "NOTIFICATIONS" : "Notifications",
+            "SHOW_NOTIFICATIONS" : "Show desktop notifications"
+        }
     }
 }

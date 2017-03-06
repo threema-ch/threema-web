@@ -16,25 +16,33 @@
  */
 
 import Receiver = threema.Receiver;
+import SettingsService = threema.SettingsService;
 export class NotificationService implements threema.NotificationService {
 
-    private logTag: string = '[NotificationService]';
+    private static SETTINGS_NOTIFICATIONS = 'notifications';
 
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
     private $state: ng.ui.IStateService;
 
+    private settingsService: SettingsService;
+
     // Whether user has granted notification permission
     private mayNotify: boolean = null;
+
+    // Whether user wants to receive desktop notifications
+    private desktopNotifications: boolean = null;
 
     // Cache notifications
     private notificationCache: any = {};
 
-    public static $inject = ['$log', '$window', '$state'];
-    constructor($log: ng.ILogService, $window: ng.IWindowService, $state: ng.ui.IStateService) {
+    public static $inject = ['$log', '$window', '$state', 'SettingsService'];
+
+    constructor($log: ng.ILogService, $window: ng.IWindowService, $state: ng.ui.IStateService, settingsService: SettingsService) {
         this.$log = $log;
         this.$window = $window;
         this.$state = $state;
+        this.settingsService = settingsService;
     }
 
     /**
@@ -45,31 +53,85 @@ export class NotificationService implements threema.NotificationService {
      * Notifications API is not available, the flag is set to null.
      */
     public requestNotificationPermission(): void {
+        /*        if (!('Notification' in this.$window)) {
+         // API not available
+         this.mayNotify = null;
+         } else {
+         const Notification = this.$window.Notification;
+         if (Notification.permission === 'granted') {
+         // Already granted
+         this.mayNotify = true;
+         } else if (Notification.permission === 'denied') {
+         // Not granted
+         this.mayNotify = false;
+         } else {*/
+        // Ask user
+        const Notification = this.$window.Notification;
+        Notification.requestPermission((result) => {
+            if (result === 'granted') {
+                this.mayNotify = true;
+                this.desktopNotifications = true;
+                this.settingsService.storeUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATIONS, "true");
+            } else {
+                this.mayNotify = false;
+                this.desktopNotifications = false;
+            }
+        });
+    }
+
+    public checkNotificationAPI(): void {
         if (!('Notification' in this.$window)) {
             // API not available
-            this.$log.warn(this.logTag, 'Notification API not available');
             this.mayNotify = null;
         } else {
             const Notification = this.$window.Notification;
             if (Notification.permission === 'granted') {
                 // Already granted
-                this.$log.debug(this.logTag, 'Notification permission granted');
                 this.mayNotify = true;
             } else if (Notification.permission === 'denied') {
                 // Not granted
-                this.$log.warn(this.logTag, 'Notification permission denied');
                 this.mayNotify = false;
-            } else {
-                // Ask user
-                this.$log.debug(this.logTag, 'Requesting notification permission');
-                Notification.requestPermission((result) => {
-                    if (result === 'granted') {
-                        this.mayNotify = true;
-                    } else {
-                        this.mayNotify = false;
-                    }
-                });
             }
+        }
+    }
+
+    public fetchSettings(): void {
+        console.info("Fetching notification settings...");
+        let notifications = this.settingsService.retrieveUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATIONS);
+        if (notifications.length > 0) {
+            if (notifications === 'true') {
+                // check permission because user may have revoked them
+                this.requestNotificationPermission();
+            } else if (notifications === 'false') {
+                // don´t ask for permissoin
+                this.desktopNotifications = false;
+            } else {
+                // neither true nor false was in local storage, so we have to ask the user if he wants notifications
+                this.requestNotificationPermission();
+            }
+        } else {
+            console.info("Preference not set. Requesting permission.");
+            this.requestNotificationPermission();
+        }
+
+    }
+
+    public getNotificationPermission(): boolean {
+        console.info("Notification Permission: " + this.mayNotify);
+        return this.mayNotify;
+    }
+
+    public getWantsNotifications(): boolean {
+        console.info("Wants notifications: " + this.mayNotify);
+        return this.desktopNotifications;
+    }
+
+    public setWantsNotifications(wantsNotifications: boolean): void {
+        if (wantsNotifications) {
+            this.requestNotificationPermission();
+        } else {
+            this.desktopNotifications = false;
+            this.settingsService.storeUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATIONS, "false");
         }
     }
 
@@ -87,7 +149,7 @@ export class NotificationService implements threema.NotificationService {
     public showNotification(tag: string, title: string, body: string,
                             avatar: string = '/img/threema-64x64.png', clickCallback: any): boolean {
         // Only show notifications if user granted permission to do so
-        if (this.mayNotify !== true) {
+        if (this.mayNotify !== true || this.desktopNotifications !== true) {
             return false;
         }
 
