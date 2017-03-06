@@ -191,6 +191,10 @@
         "LICENSE_LINK_AFTER": "gefunden werden"
     },
     "settings": {
-        "SETTINGS":"Einstellungen"
+        "SETTINGS":"Einstellungen",
+        "notifications": {
+            "NOTIFICATIONS" : "Benachrichtigungen",
+            "SHOW_NOTIFICATIONS" : "Desktopbenachrichtigungen anzeigen"
+        }
     }
 }

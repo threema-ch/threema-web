@@ -11,7 +11,12 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-
+                <section>
+                    <md-subheader class="md-primary"><span translate>settings.notifications.NOTIFICATIONS</span></md-subheader>
+                            <md-checkbox ng-disabled="ctrl.getNotificationPermission() == null" ng-model="ctrl.desktopNotifications" ng-change="ctrl.setWantsNotifications(ctrl.desktopNotifications)" layout-padding>
+                                <span translate>settings.notifications.SHOW_NOTIFICATIONS</span>
+                            </md-checkbox>
+                </section>
             </div>
         </md-dialog-content>
     </form>

@@ -84,20 +84,26 @@ class SendFileController extends DialogController {
  */
 class SettingsController {
 
-    public static $inject = ['$mdDialog', '$window', 'SettingsService'];
+    public static $inject = ['$mdDialog', '$window', 'SettingsService', 'NotificationService'];
 
     public $mdDialog: ng.material.IDialogService;
     public $window: ng.IWindowService;
     public settingsService: threema.SettingsService;
+    private notificationService: threema.NotificationService;
     public activeElement: HTMLElement | null;
+
+    private desktopNotifications: boolean;
 
     constructor($mdDialog: ng.material.IDialogService,
                 $window: ng.IWindowService,
-                settingsService: threema.SettingsService) {
+                settingsService: threema.SettingsService,
+                notificationService: threema.NotificationService) {
         this.$mdDialog = $mdDialog;
         this.$window = $window;
         this.settingsService = settingsService;
+        this.notificationService = notificationService;
         this.activeElement = document.activeElement as HTMLElement;
+        this.desktopNotifications = notificationService.getWantsNotifications();
     }
 
     public cancel(): void {
@@ -115,6 +121,15 @@ class SettingsController {
             // Reset focus
             this.activeElement.focus();
         }
+    }
+
+    public getNotificationPermission(): boolean{
+        return this.notificationService.getNotificationPermission();
+    }
+
+    public setWantsNotifications(desktopNotifications: boolean){
+        console.info("Requested change to " + desktopNotifications);
+        this.notificationService.setWantsNotifications(desktopNotifications);
     }
 
 }

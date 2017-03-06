@@ -343,7 +343,12 @@ declare namespace threema {
      * Notification service.
      */
     interface NotificationService {
+        getNotificationPermission(): boolean;
+        getWantsNotifications(): boolean;
+        setWantsNotifications(wantsNotifications: boolean): void;
         requestNotificationPermission(): void;
+        fetchSettings(): void;
+        checkNotificationAPI(): void;
         showNotification(id: string, title: string, body: string,
                          avatar: string | null, clickCallback: any | null): boolean;
         clearCache(tag: string): void;
