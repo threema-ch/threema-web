@@ -512,7 +512,8 @@ declare namespace threema {
     }
 
     interface SettingsService {
-
+        storeUntrustedKeyValuePair(key: string, value: string): void;
+        retrieveUntrustedKeyValuePair(key: string): string;
     }
 
     interface WebClientDefault {

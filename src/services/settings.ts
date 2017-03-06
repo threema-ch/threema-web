@@ -16,57 +16,51 @@
  */
 
 /**
- * The settings service can update variables for settings and persist them to local storage.
+ * The settings service can update variables for settings and persist them to
+ * LocalStorage.
  */
-
 export class SettingsService implements threema.SettingsService {
     private $log: ng.ILogService;
-    private $window: ng.IWindowService;
 
     private static STORAGE_KEY_PREFIX = 'settings-';
     private logTag: string = '[SettingsService]';
 
-    private storage: Storage = null;
-    public blocked = false;
-
-    // Settings Variables
+    private storage: Storage;
 
     public static $inject = ['$log', '$window'];
-    constructor($log: ng.ILogService, $window: ng.IWindowService, themeProvider, $mdTheming) {
+    constructor($log: ng.ILogService, $window: ng.IWindowService) {
         this.$log = $log;
-        this.$window = $window;
-
-        this.storage = this.$window.localStorage;
-
-        // Load Initial Data from LocalStorage to Settings Variables
-
-    }
-
-    // Settings Getters & Setters - also set them in ../threema.d.ts
-
-    // Local Storage , store key-value pair
-    private storeUntrustedKeyValuePair(Key: string, value: string): void {
-        this.$log.debug(this.logTag, 'Storing unencrypted key-value pair for settings');
-        this.storage.setItem(SettingsService.STORAGE_KEY_PREFIX + Key, value);
-    }
-
-    // Local Storage , retrieve key-value pair
-    private retrieveUntrustedKeyValuePair(Key: string): string {
-        this.$log.debug(this.logTag, 'Retrieving unencrypted key-value pair for settings');
-        if (this.hasUntrustedKeyValuePair(Key)) {
-            return this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + Key);
-        } else {
-            this.$log.debug(this.logTag, 'key-value not set, creating empty one');
-            this.storeUntrustedKeyValuePair(Key, '');
-        }
-
+        this.storage = $window.localStorage;
     }
 
     /**
-     * Return whether key-value pair is present in localstorage.
+     * Store settings key-value pair in LocalStorage.
      */
-    private hasUntrustedKeyValuePair(Key: string): boolean {
-        const item: string = this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + Key);
+    public storeUntrustedKeyValuePair(key: string, value: string): void {
+        this.$log.debug(this.logTag, 'Storing settings key:', key);
+        this.storage.setItem(SettingsService.STORAGE_KEY_PREFIX + key, value);
+    }
+
+    /**
+     * Retrieve settings key-value pair from LocalStorage.
+     */
+    public retrieveUntrustedKeyValuePair(key: string): string {
+        this.$log.debug(this.logTag, 'Retrieving settings key:', key);
+        if (this.hasUntrustedKeyValuePair(key)) {
+            return this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + key);
+        } else {
+            this.storeUntrustedKeyValuePair(key, '');
+            return '';
+        }
+    }
+
+    /**
+     * Return whether key-value pair is present in LocalStorage.
+     *
+     * Note that this will return `true` for empty values!
+     */
+    private hasUntrustedKeyValuePair(key: string): boolean {
+        const item: string = this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + key);
         return item !== null;
     }
 

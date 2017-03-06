@@ -18,7 +18,6 @@
 import {ContactControllerModel} from '../controller_model/contact';
 import {supportsPassive, throttle} from '../helpers';
 import {ExecuteService} from '../services/execute';
-import {SettingsService} from '../services/settings';
 import {ControllerModelMode} from '../types/enums';
 
 abstract class DialogController {
@@ -85,30 +84,22 @@ class SendFileController extends DialogController {
  */
 class SettingsController {
 
-    public static $inject = ['$mdDialog', 'SettingsService', '$window'];
+    public static $inject = ['$mdDialog', '$window', 'SettingsService'];
 
     public $mdDialog: ng.material.IDialogService;
     public $window: ng.IWindowService;
     public settingsService: threema.SettingsService;
     public activeElement: HTMLElement | null;
 
-    // Setting Variables
-
-    constructor($mdDialog: ng.material.IDialogService , settingsService: threema.SettingsService,
-                $window: ng.IWindowService) {
-
+    constructor($mdDialog: ng.material.IDialogService,
+                $window: ng.IWindowService,
+                settingsService: threema.SettingsService) {
         this.$mdDialog = $mdDialog;
         this.$window = $window;
-        this.activeElement = document.activeElement as HTMLElement;
         this.settingsService = settingsService;
-
-        // Init Setting Variables
-
+        this.activeElement = document.activeElement as HTMLElement;
     }
 
-    // SettingsServices Methods
-
-    // Dialog Methods
     public cancel(): void {
         this.$mdDialog.cancel();
         this.done();
@@ -121,8 +112,7 @@ class SettingsController {
 
     private done(): void {
         if (this.activeElement !== null) {
-            // reset focus
-            // this.$window.location.reload();
+            // Reset focus
             this.activeElement.focus();
         }
     }
@@ -679,15 +669,15 @@ class NavigationController {
      * Show settings dialog.
      */
     public settings(ev): void {
-            this.$mdDialog.show({
-                controller: SettingsController,
-                controllerAs: 'ctrl',
-                templateUrl: 'partials/dialog.settings.html',
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose: true,
-                fullscreen: true,
-            });
+        this.$mdDialog.show({
+            controller: SettingsController,
+            controllerAs: 'ctrl',
+            templateUrl: 'partials/dialog.settings.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: true,
+        });
     }
 
     /**
