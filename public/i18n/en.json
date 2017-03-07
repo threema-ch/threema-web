@@ -162,7 +162,10 @@
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive files.",
         "ERROR_OCCURRED": "An error occurred.",
         "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web",
-        "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters)."
+        "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters).",
+        "NOTIFICATION_PERMISSION_DENIED" : "Permission denied. You have to grant the permission for Threema Web manually.",
+        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE" : "Learn more.",
+        "API_NOT_AVAILABLE" : "Your browser does not support desktop notifications."
     },
     "mimeTypes": {
         "android_apk": "Android package",
@@ -195,7 +198,8 @@
         "SETTINGS": "Settings",
         "notifications": {
             "NOTIFICATIONS" : "Notifications",
-            "SHOW_NOTIFICATIONS" : "Show desktop notifications"
+            "SHOW_NOTIFICATIONS" : "Show desktop notifications",
+            "SHOW_PREVIEW" : "Show message preview"
         }
     }
 }
