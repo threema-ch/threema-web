@@ -19,7 +19,8 @@
                             <md-checkbox
                                     ng-disabled="!ctrl.notificationApiAvailable || ctrl.notificationPermission === false"
                                     ng-model="ctrl.desktopNotifications"
-                                    ng-change="ctrl.setWantsNotifications(ctrl.desktopNotifications)">
+                                    ng-change="ctrl.setWantsNotifications(ctrl.desktopNotifications)"
+                                    aria-label="Show desktop notifications">
                             </md-checkbox>
                             <p translate>settings.notifications.SHOW_NOTIFICATIONS</p>
                         </md-list-item>
@@ -27,7 +28,8 @@
                             <md-checkbox
                                     ng-disabled="!ctrl.desktopNotifications"
                                     ng-model="ctrl.notificationPreview"
-                                    ng-change="ctrl.setWantsPreview(ctrl.notificationPreview)">
+                                    ng-change="ctrl.setWantsPreview(ctrl.notificationPreview)"
+                                    aria-label="Show message preview">
                             </md-checkbox>
                             <span translate>settings.notifications.SHOW_PREVIEW</span>
                         </md-list-item>
@@ -38,7 +40,7 @@
                     </div>
                     <div ng-if="ctrl.notificationPermission === false && ctrl.notificationApiAvailable">
                         <span translate>error.NOTIFICATION_PERMISSION_DENIED</span>
-                        <a href="https://github.com/threema-ch/threema-web"
+                        <a href="https://threema.ch/de/faq/web_notifications"
                            target="_blank" rel="noopener noreferrer"><span translate>error.NOTIFICATION_PERMISSION_DENIED_LEARN_MORE</span></a>
                     </div>
                 </section>

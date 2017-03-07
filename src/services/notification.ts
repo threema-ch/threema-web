@@ -27,6 +27,7 @@ export class NotificationService implements threema.NotificationService {
     private $state: ng.ui.IStateService;
 
     private settingsService: SettingsService;
+    private logTag = '[Notification Service]';
 
     // Whether user has granted notification permission
     private notificationPermission: boolean = null;
@@ -42,7 +43,8 @@ export class NotificationService implements threema.NotificationService {
 
     public static $inject = ['$log', '$window', '$state', 'SettingsService'];
 
-    constructor($log: ng.ILogService, $window: ng.IWindowService, $state: ng.ui.IStateService, settingsService: SettingsService) {
+    constructor($log: ng.ILogService, $window: ng.IWindowService,
+                $state: ng.ui.IStateService, settingsService: SettingsService) {
         this.$log = $log;
         this.$window = $window;
         this.$state = $state;
@@ -58,7 +60,7 @@ export class NotificationService implements threema.NotificationService {
      */
     private requestNotificationPermission(): void {
         const Notification = this.$window.Notification;
-        console.info("Requesting notification permission...");
+        this.$log.debug(this.logTag, 'Requesting notification permission...');
         Notification.requestPermission((result) => {
             switch (result) {
                 case 'denied':
@@ -67,7 +69,7 @@ export class NotificationService implements threema.NotificationService {
                 case 'granted':
                     this.notificationPermission = true;
                     this.desktopNotifications = true;
-                    this.settingsService.storeUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATIONS, "true");
+                    this.storeSetting(NotificationService.SETTINGS_NOTIFICATIONS, 'true');
                     break;
                 case 'default':
                     this.desktopNotifications = false;
@@ -77,6 +79,7 @@ export class NotificationService implements threema.NotificationService {
                     this.notificationPermission = false;
                     break;
             }
+            this.$log.debug(this.logTag, 'Notification permission', this.notificationPermission);
         });
     }
 
@@ -89,9 +92,8 @@ export class NotificationService implements threema.NotificationService {
      * Default: Initially state on first visit
      */
     public checkNotificationAPI(): void {
-        console.info("Checking notification API...");
         this.notificationAPIAvailable = ('Notification' in this.$window);
-        console.log("The notification api is " + this.notificationAPIAvailable);
+        this.$log.debug(this.logTag, 'Notification API available:', this.notificationAPIAvailable);
         const Notification = this.$window.Notification;
         switch (Notification.permission) {
             // denied means the user must manually re-grant permission via browser settings
@@ -108,12 +110,13 @@ export class NotificationService implements threema.NotificationService {
                 this.notificationPermission = false;
                 break;
         }
+        this.$log.debug(this.logTag, 'Initial notificationPermission', this.notificationPermission);
     }
 
     public fetchSettings(): void {
-        console.info("Fetching notification settings...");
-        let notifications = this.settingsService.retrieveUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATIONS);
-        let preview = this.settingsService.retrieveUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
+        this.$log.debug(this.logTag, 'Fetching settings...');
+        let notifications = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATIONS);
+        let preview = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
         if (notifications.length > 0) {
             if (notifications === 'true') {
                 this.desktopNotifications = true;
@@ -127,7 +130,7 @@ export class NotificationService implements threema.NotificationService {
                 this.requestNotificationPermission();
             }
         } else {
-            console.info("Preference not set. Requesting permission.");
+            this.$log.debug(this.logTag, 'Notification preference not set');
             this.requestNotificationPermission();
         }
 
@@ -135,19 +138,17 @@ export class NotificationService implements threema.NotificationService {
             this.notificationPreview = false;
         } else {
             this.notificationPreview = true;
-            this.settingsService.storeUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, "true");
+            this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, 'true');
         }
 
 
     }
 
     public getNotificationPermission(): boolean {
-        console.info("Notification Permission: " + this.notificationPermission);
         return this.notificationPermission;
     }
 
     public getWantsNotifications(): boolean {
-        console.info("Wants notifications: " + this.desktopNotifications);
         return this.desktopNotifications;
     }
 
@@ -160,17 +161,27 @@ export class NotificationService implements threema.NotificationService {
     }
 
     public setWantsNotifications(wantsNotifications: boolean): void {
+        this.$log.debug(this.logTag, 'Requesting notification preference change to', wantsNotifications);
         if (wantsNotifications) {
             this.requestNotificationPermission();
         } else {
             this.desktopNotifications = false;
-            this.settingsService.storeUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATIONS, "false");
+            this.storeSetting(NotificationService.SETTINGS_NOTIFICATIONS, 'false');
         }
     }
 
     public setWantsPreview(wantsPreview: boolean): void {
+        this.$log.debug(this.logTag, 'Requesting preview preference change to', wantsPreview);
         this.notificationPreview = wantsPreview;
-        this.settingsService.storeUntrustedKeyValuePair(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, wantsPreview.toString());
+        this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, wantsPreview.toString());
+    }
+
+    private storeSetting(key: string, value: string): void {
+        this.settingsService.storeUntrustedKeyValuePair(key, value);
+    }
+
+    private retrieveSetting(key: string): string {
+        return this.settingsService.retrieveUntrustedKeyValuePair(key);
     }
 
     /**
@@ -193,6 +204,9 @@ export class NotificationService implements threema.NotificationService {
 
         if (!this.notificationPreview) {
             body = '';
+            if (this.notificationCache[tag]) {
+                this.clearCache(tag);
+            }
         }
 
         // If the cache is not empty, append old messages
