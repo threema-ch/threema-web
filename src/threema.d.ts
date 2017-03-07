@@ -347,6 +347,7 @@ declare namespace threema {
         showNotification(id: string, title: string, body: string,
                          avatar: string | null, clickCallback: any | null): boolean;
         clearCache(tag: string): void;
+        hideNotification(tag: string): boolean;
     }
 
     interface MessageService {
