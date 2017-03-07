@@ -140,8 +140,6 @@ export class NotificationService implements threema.NotificationService {
             this.notificationPreview = true;
             this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, 'true');
         }
-
-
     }
 
     public getNotificationPermission(): boolean {

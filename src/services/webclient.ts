@@ -407,8 +407,7 @@ export class WebClientService implements threema.WebClientService {
             this.$log.debug('Handover done');
 
             // Ask user for notification permission
-            this.$log.debug('Check notification permission...');
-            //this.notificationService.requestNotificationPermission();
+            this.$log.debug('Check notification API and fetch initial settings...');
             this.notificationService.checkNotificationAPI();
             this.notificationService.fetchSettings();
 
