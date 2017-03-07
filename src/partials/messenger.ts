@@ -93,6 +93,9 @@ class SettingsController {
     public activeElement: HTMLElement | null;
 
     private desktopNotifications: boolean;
+    private notificationApiAvailable: boolean;
+    private notificationPermission: boolean;
+    private notificationPreview: boolean;
 
     constructor($mdDialog: ng.material.IDialogService,
                 $window: ng.IWindowService,
@@ -104,6 +107,10 @@ class SettingsController {
         this.notificationService = notificationService;
         this.activeElement = document.activeElement as HTMLElement;
         this.desktopNotifications = notificationService.getWantsNotifications();
+        this.notificationApiAvailable = notificationService.isNotificationApiAvailable();
+        this.notificationPermission = notificationService.getNotificationPermission();
+        this.notificationPreview = notificationService.getWantsPreview();
+        console.info("init dialog complete");
     }
 
     public cancel(): void {
@@ -123,13 +130,18 @@ class SettingsController {
         }
     }
 
-    public getNotificationPermission(): boolean{
+/*    public getNotificationPermission(): boolean{
         return this.notificationService.getNotificationPermission();
-    }
+    }*/
 
     public setWantsNotifications(desktopNotifications: boolean){
         console.info("Requested change to " + desktopNotifications);
         this.notificationService.setWantsNotifications(desktopNotifications);
+    }
+
+    public setWantsPreview(notificationPreview: boolean){
+        console.info("Preview request change to " + notificationPreview);
+        this.notificationService.setWantsPreview(notificationPreview);
     }
 
 }
