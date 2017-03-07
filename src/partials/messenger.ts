@@ -110,7 +110,6 @@ class SettingsController {
         this.notificationApiAvailable = notificationService.isNotificationApiAvailable();
         this.notificationPermission = notificationService.getNotificationPermission();
         this.notificationPreview = notificationService.getWantsPreview();
-        console.info("init dialog complete");
     }
 
     public cancel(): void {
@@ -130,17 +129,11 @@ class SettingsController {
         }
     }
 
-/*    public getNotificationPermission(): boolean{
-        return this.notificationService.getNotificationPermission();
-    }*/
-
-    public setWantsNotifications(desktopNotifications: boolean){
-        console.info("Requested change to " + desktopNotifications);
+    public setWantsNotifications(desktopNotifications: boolean) {
         this.notificationService.setWantsNotifications(desktopNotifications);
     }
 
-    public setWantsPreview(notificationPreview: boolean){
-        console.info("Preview request change to " + notificationPreview);
+    public setWantsPreview(notificationPreview: boolean) {
         this.notificationService.setWantsPreview(notificationPreview);
     }
 

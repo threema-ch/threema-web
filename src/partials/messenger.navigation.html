@@ -1,7 +1,7 @@
 <!-- My identity -->
 <div id="my-identity" ng-if="ctrl.showMyIdentity()">
     <div class="my-identity-content" eee-my-identity
-            eee-identity="ctrl.getMyIdentity()"></div>
+         eee-identity="ctrl.getMyIdentity()"></div>
 
     <md-menu md-position-mode="target-right target" md-offset="0 45">
         <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
@@ -53,7 +53,8 @@
         </md-button>
     </div>
     <div class="search" searchbox searchbox-focus="ctrl.searchVisible">
-        <input type="text" ng-model="ctrl.searchText" translate translate-attr-placeholder="messenger.SEARCH" aria-label="Search" translate-attr-aria-label="messenger.SEARCH">
+        <input type="text" ng-model="ctrl.searchText" translate translate-attr-placeholder="messenger.SEARCH"
+               aria-label="Search" translate-attr-aria-label="messenger.SEARCH">
     </div>
 </div>
 
@@ -85,11 +86,11 @@
 
                 <section class="message-box">
                     <eee-latest-message
-                        ng-show="!conversation.receiver.isTyping() && conversation.latestMessage"
-                        ng-class="latest-message-text"
-                        eee-type="conversation.type"
-                        eee-receiver="conversation.receiver"
-                        eee-message="conversation.latestMessage"></eee-latest-message>
+                            ng-show="!conversation.receiver.isTyping() && conversation.latestMessage"
+                            ng-class="latest-message-text"
+                            eee-type="conversation.type"
+                            eee-receiver="conversation.receiver"
+                            eee-message="conversation.latestMessage"></eee-latest-message>
                 </section>
             </section>
 
@@ -125,8 +126,8 @@
                 </div>
                 <div class="verification-level">
                     <eee-verification-level
-                        contact="contact"
-                        ng-if="contact.verificationLevel">
+                            contact="contact"
+                            ng-if="contact.verificationLevel">
                     </eee-verification-level>
                 </div>
             </section>
