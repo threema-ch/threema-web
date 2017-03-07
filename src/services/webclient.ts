@@ -1543,21 +1543,20 @@ export class WebClientService implements threema.WebClientService {
                     for (let conversation of this.conversations.get()) {
                         if (this.receiverService.compare(conversation, data)) {
 
-                            // This is our conversation! If the unreadcount has increased,
-                            // we received a new message.
                             if (data.unreadCount > conversation.unreadCount) {
+                                // This is our conversation! If the unreadcount
+                                // has increased, we received a new message.
                                 this.onNewMessage(data.latestMessage, conversation);
-
-                            // Otherwise, if it has decreased, clear the notification cache.
                             } else if (data.unreadCount < conversation.unreadCount) {
-                                this.notificationService.clearCache(data.type + '-' + data.id);
+                                // Otherwise, if it has decreased, hide the notification.
+                                this.notificationService.hideNotification(data.type + '-' + data.id);
                             }
 
                             break;
                         }
                     }
                 } else {
-                    this.notificationService.clearCache(data.type + '-' + data.id);
+                    this.notificationService.hideNotification(data.type + '-' + data.id);
                 }
                 // we have to call update or add, we are not sure if this
                 // conversation is already fetched

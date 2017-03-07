@@ -263,6 +263,7 @@ export class NotificationService implements threema.NotificationService {
         }
 
         // Show notification
+        this.$log.debug(this.logTag, 'Showing notification', tag);
         const notification = new this.$window.Notification(title, {
             icon: avatar,
             body: body.trim(),
@@ -277,6 +278,7 @@ export class NotificationService implements threema.NotificationService {
             if (clickCallback !== undefined) {
                 clickCallback();
             }
+            this.$log.debug(this.logTag, 'Hiding notification', tag, 'on click');
             notification.close();
             this.clearCache(tag);
         };
@@ -285,6 +287,23 @@ export class NotificationService implements threema.NotificationService {
         this.notificationCache[tag] = notification;
 
         return true;
+    }
+
+    /**
+     * Hide the notification with the specified tag.
+     *
+     * Return whether the notification was hidden.
+     */
+    public hideNotification(tag: string): boolean {
+        const notification = this.notificationCache[tag];
+        if (notification !== undefined) {
+            this.$log.debug(this.logTag, 'Hiding notification', tag);
+            notification.close();
+            this.clearCache(tag);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
