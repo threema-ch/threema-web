@@ -34,6 +34,7 @@ export default [
             controller: [function() {
                 this.highResolution = this.resolution === 'high';
                 this.isLoading = this.highResolution;
+                this.backgroundColor = this.receiver.color;
                 let loadingPromise: ng.IPromise<any> = null;
                 this.avatarClass = () => {
                     return 'avatar-' + this.resolution + (this.isLoading ? ' is-loading' : '');
@@ -45,6 +46,8 @@ export default [
                         return false;
                     }
                     this.isLoading = false;
+                    // Reset background color
+                    this.backgroundColor = null;
                     return true;
                 };
 
@@ -97,7 +100,7 @@ export default [
                     </div>
                     <img
                          ng-class="ctrl.avatarClass()"
-                         ng-style="{ 'background-color': ctrl.receiver.color }"
+                         ng-style="{ 'background-color': ctrl.backgroundColor }"
                          ng-src="{{ ctrl.getAvatar() }}"
                          in-view="ctrl.requestAvatar($inview)"/>
                </div>
