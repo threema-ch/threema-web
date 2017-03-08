@@ -51,7 +51,7 @@ export default [
                 this.getAvatar = () => {
                     if (this.avatarExists()) {
                         return this.receiver.avatar[this.resolution];
-                    } else if(this.highResolution && this.receiver.avatar.low !== undefined) {
+                    } else if (this.highResolution && this.receiver.avatar.low !== undefined) {
                         return this.receiver.avatar.low;
                     }
                     return webClientService.defaults.getAvatar(this.type, this.highResolution);
@@ -64,7 +64,7 @@ export default [
                     }
 
                     if (inView) {
-                        if(loadingPromise === null) {
+                        if (loadingPromise === null) {
                             // Do not wait on high resolution avatar
                             let loadingTimeout = this.highResolution ? 0 : 500;
                             loadingPromise = $timeout(() => {
@@ -83,8 +83,7 @@ export default [
                                 });
                             }, loadingTimeout);
                         }
-                    }
-                    else if(loadingPromise !== null) {
+                    } else if (loadingPromise !== null) {
                         // Cancel pending avatar loading
                         $timeout.cancel(loadingPromise);
                         loadingPromise = null;
