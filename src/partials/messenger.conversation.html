@@ -21,7 +21,7 @@
                                     contact="ctrl.receiver"></eee-verification-level>
             </div>
             <div class="conversation-header-details-detail" ng-if="ctrl.type == 'group'">
-              <span md-truncate>{{ (ctrl.receiver.members | idToName).join(', ') }}</span>
+                <span class="group-members">{{ (ctrl.receiver.members | idToName).join(', ') }}</span>
             </div>
         </div>
     </div>
