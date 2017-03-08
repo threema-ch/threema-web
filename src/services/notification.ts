@@ -27,7 +27,7 @@ export class NotificationService implements threema.NotificationService {
     private $state: ng.ui.IStateService;
 
     private settingsService: SettingsService;
-    private logTag = '[Notification Service]';
+    private logTag = '[NotificationService]';
 
     // Whether user has granted notification permission
     private notificationPermission: boolean = null;
@@ -51,113 +51,147 @@ export class NotificationService implements threema.NotificationService {
         this.settingsService = settingsService;
     }
 
+    public init() {
+        this.checkNotificationAPI();
+        this.fetchSettings();
+    }
+
     /**
      * Ask user for desktop notification permissions.
      *
-     * Updates internal `maxNotify` flag. If the user accepts, the is set to to
-     * true. If the user declines, the flag is set to false. If the
-     * user makes no choice, the flag is set to null
+     * Possible values for 'notificationPermission'
+     *      - denied: User has denied the notification permission
+     *      - granted: User has granted the notification permission
+     *      - default: User has visits Threema Web the first time.
+     *                 It stays default unless he denies/grants us the
+     *                 notification permission or if the result is sth. else
+     * If the user grants the permission, the 'desktopNotification' flag
+     * becomes true and is stored in the local storage.
      */
     private requestNotificationPermission(): void {
-        const Notification = this.$window.Notification;
-        this.$log.debug(this.logTag, 'Requesting notification permission...');
-        Notification.requestPermission((result) => {
-            switch (result) {
+        if (this.notificationAPIAvailable) {
+            const Notification = this.$window.Notification;
+            this.$log.debug(this.logTag, 'Requesting notification permission...');
+            Notification.requestPermission((result) => {
+                switch (result) {
+                    case 'denied':
+                        this.notificationPermission = false;
+                        break;
+                    case 'granted':
+                        this.notificationPermission = true;
+                        this.desktopNotifications = true;
+                        this.storeSetting(NotificationService.SETTINGS_NOTIFICATIONS, 'true');
+                        break;
+                    case 'default':
+                        this.desktopNotifications = false;
+                        this.notificationPermission = null;
+                        break;
+                    default:
+                        this.notificationPermission = false;
+                        break;
+                }
+                this.$log.debug(this.logTag, 'Notification permission', this.notificationPermission);
+            });
+        }
+    }
+
+    /**
+     * Check the notification api availability and permission state
+     *
+     * If the api is available, 'notificationAPIAvailable' becomes true and
+     * the permission state is checked
+     */
+    private checkNotificationAPI(): void {
+        this.notificationAPIAvailable = ('Notification' in this.$window);
+        this.$log.debug(this.logTag, 'Notification API available:', this.notificationAPIAvailable);
+        if (this.notificationAPIAvailable) {
+            const Notification = this.$window.Notification;
+            switch (Notification.permission) {
+                // denied means the user must manually re-grant permission via browser settings
                 case 'denied':
                     this.notificationPermission = false;
                     break;
                 case 'granted':
                     this.notificationPermission = true;
-                    this.desktopNotifications = true;
-                    this.storeSetting(NotificationService.SETTINGS_NOTIFICATIONS, 'true');
                     break;
                 case 'default':
-                    this.desktopNotifications = false;
                     this.notificationPermission = null;
                     break;
                 default:
                     this.notificationPermission = false;
                     break;
             }
-            this.$log.debug(this.logTag, 'Notification permission', this.notificationPermission);
-        });
-    }
-
-    /**
-     * Check the notification api availability and permission state
-     *
-     * Denied: Don´t ask again, user must manually re-grant permission
-     * via browser settings
-     * Granted: We have the (browser-)permission to send notifications
-     * Default: Initially state on first visit
-     */
-    public checkNotificationAPI(): void {
-        this.notificationAPIAvailable = ('Notification' in this.$window);
-        this.$log.debug(this.logTag, 'Notification API available:', this.notificationAPIAvailable);
-        const Notification = this.$window.Notification;
-        switch (Notification.permission) {
-            // denied means the user must manually re-grant permission via browser settings
-            case 'denied':
-                this.notificationPermission = false;
-                break;
-            case 'granted':
-                this.notificationPermission = true;
-                break;
-            case 'default':
-                this.notificationPermission = null;
-                break;
-            default:
-                this.notificationPermission = false;
-                break;
         }
         this.$log.debug(this.logTag, 'Initial notificationPermission', this.notificationPermission);
     }
 
-    public fetchSettings(): void {
+    private fetchSettings(): void {
+        /**
+         * Get the initial settings from local storage
+         */
         this.$log.debug(this.logTag, 'Fetching settings...');
         let notifications = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATIONS);
         let preview = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
-        if (notifications.length > 0) {
-            if (notifications === 'true') {
-                this.desktopNotifications = true;
-                // check permission because user may have revoked them
-                this.requestNotificationPermission();
-            } else if (notifications === 'false') {
-                // user does not want notifications
-                this.desktopNotifications = false;
-            } else {
-                // neither true nor false was in local storage, so we have to ask the user if he wants notifications
-                this.requestNotificationPermission();
-            }
+        if (notifications === 'true') {
+            this.$log.debug(this.logTag, 'Desktop notifications:', notifications);
+            this.desktopNotifications = true;
+            // check permission because user may have revoked them
+            this.requestNotificationPermission();
+        } else if (notifications === 'false') {
+            this.$log.debug(this.logTag, 'Desktop notifications:', notifications);
+            // user does not want notifications
+            this.desktopNotifications = false;
         } else {
-            this.$log.debug(this.logTag, 'Notification preference not set');
+            this.$log.debug(this.logTag, 'Desktop notifications:', notifications, 'Asking user...');
+            // Neither true nor false was in local storage, so we have to ask the user if he wants notifications
+            // If he grants (or already has granted) us the permission, we will set the flag true (default setting)
             this.requestNotificationPermission();
         }
-
         if (preview === 'false') {
             this.notificationPreview = false;
         } else {
+            // set the flag true if true/nothing or sth. else is in local storage (default setting)
             this.notificationPreview = true;
             this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, 'true');
         }
     }
 
+    /**
+     * Returns if the user has granted the notification permission
+     * @returns {boolean}
+     */
     public getNotificationPermission(): boolean {
         return this.notificationPermission;
     }
 
+    /**
+     * Returns if the user wants to receive notifications
+     * @returns {boolean}
+     */
     public getWantsNotifications(): boolean {
         return this.desktopNotifications;
     }
 
+    /**
+     * Returns if the user wants a message preview in the notification
+     * @returns {boolean}
+     */
     public getWantsPreview(): boolean {
         return this.notificationPreview;
     }
 
+    /**
+     * Returns if the notification api is available
+     * @returns {boolean}
+     */
     public isNotificationApiAvailable(): boolean {
         return this.notificationAPIAvailable;
     }
 
+    /**
+     * Sets if the user wants desktop notifications
+     * @param wantsNotifications
+     */
     public setWantsNotifications(wantsNotifications: boolean): void {
         this.$log.debug(this.logTag, 'Requesting notification preference change to', wantsNotifications);
         if (wantsNotifications) {
@@ -168,16 +202,30 @@ export class NotificationService implements threema.NotificationService {
         }
     }
 
+    /**
+     * Sets if the user wants a message preview
+     * @param wantsPreview
+     */
     public setWantsPreview(wantsPreview: boolean): void {
         this.$log.debug(this.logTag, 'Requesting preview preference change to', wantsPreview);
         this.notificationPreview = wantsPreview;
         this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, wantsPreview.toString());
     }
 
+    /**
+     * Stores the given key/value pair in local storage
+     * @param key
+     * @param value
+     */
     private storeSetting(key: string, value: string): void {
         this.settingsService.storeUntrustedKeyValuePair(key, value);
     }
 
+    /**
+     * Retrieves the value for the given key from local storage
+     * @param key
+     * @returns {string}
+     */
     private retrieveSetting(key: string): string {
         return this.settingsService.retrieveUntrustedKeyValuePair(key);
     }

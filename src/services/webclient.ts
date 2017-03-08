@@ -406,10 +406,9 @@ export class WebClientService implements threema.WebClientService {
         this.salty.on('handover', () => {
             this.$log.debug('Handover done');
 
-            // Ask user for notification permission
-            this.$log.debug('Check notification API and fetch initial settings...');
-            this.notificationService.checkNotificationAPI();
-            this.notificationService.fetchSettings();
+            // Initialize NotificationService
+            this.$log.debug('Initializing NotificationService...');
+            this.notificationService.init();
 
             // Create secure data channel
             this.$log.debug('Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
