@@ -17,7 +17,7 @@
 
         .header-details {
             @include mouse-hand;
-
+            overflow: hidden;
 
             & > *:first-child {
                 font-weight: bold;
@@ -30,10 +30,12 @@
             font-size: 120%;
         }
 
-        .group-members {
+        .conversation-header-details-detail, .conversation-header-details-name {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            max-width: 100%;
+            display: inherit;
         }
     }
 
@@ -41,7 +43,7 @@
         flex-grow: 1;
         align-items: center;
         justify-content: center;
-        display: flex;
+        display: inherit;
     }
     #conversation-chat {
         flex-grow: 1;
