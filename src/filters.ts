@@ -245,7 +245,7 @@ angular.module('3ema.filters', [])
 }])
 
 /**
- * Convert ID-Array to (Display-)Name-Array
+ * Convert ID-Array to (Display-)Name-String, separated by ','
  */
     .filter('idToName', ['WebClientService', function (webClientService: threema.WebClientService) {
     return(ids: string[]) => {
@@ -254,7 +254,7 @@ angular.module('3ema.filters', [])
             this.contactReceiver = webClientService.contacts.get(id);
             names.push(this.contactReceiver.displayName);
         }
-        return names;
+        return names.join(', ');
     };
 }])
 
