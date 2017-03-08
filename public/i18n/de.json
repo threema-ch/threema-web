@@ -164,7 +164,7 @@
         "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen).",
         "NOTIFICATION_PERMISSION_DENIED" : "Berechtigung nicht erteilt. Sie müssen die Berechtigungen für Threema Web manuell erteilen.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE" : "Mehr erfahren.",
-        "API_NOT_AVAILABLE" : "Ihr Browser unterstütz keine Desktopbenachrichtigungen."
+        "API_NOT_AVAILABLE" : "Ihr Browser unterstützt keine Desktopbenachrichtigungen."
     },
     "mimeTypes": {
         "android_apk": "Android-Paket",

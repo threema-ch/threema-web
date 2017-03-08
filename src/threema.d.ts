@@ -348,8 +348,7 @@ declare namespace threema {
         setWantsNotifications(wantsNotifications: boolean): void;
         setWantsPreview(wantsPreview: boolean): void;
         getWantsPreview(): boolean;
-        fetchSettings(): void;
-        checkNotificationAPI(): void;
+        init(): void;
         isNotificationApiAvailable(): boolean;
         showNotification(id: string, title: string, body: string,
                          avatar: string | null, clickCallback: any | null): boolean;
