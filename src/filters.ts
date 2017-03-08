@@ -244,4 +244,18 @@ angular.module('3ema.filters', [])
     };
 }])
 
+/**
+ * Convert ID-Array to (Display-)Name-String, separated by ','
+ */
+.filter('idsToNames', ['WebClientService', function (webClientService: threema.WebClientService) {
+    return(ids: string[]) => {
+        let names: string[] = [];
+        for (let id of ids){
+            this.contactReceiver = webClientService.contacts.get(id);
+            names.push(this.contactReceiver.displayName);
+        }
+        return names.join(', ');
+    };
+}])
+
 ;
