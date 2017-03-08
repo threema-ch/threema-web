@@ -10,6 +10,7 @@
         "object-literal-sort-keys": false,
         "only-arrow-functions": false,
         "quotemark": [true, "single", "avoid-escape"],
-        "indent": [true, "spaces"]
+        "indent": [true, "spaces"],
+        "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-module", "check-separator", "check-type", "check-typecast", "check-preblock"]
     }
 }

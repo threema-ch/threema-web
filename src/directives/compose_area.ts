@@ -79,7 +79,7 @@ export default [
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
                  */
-                let EmoijPickerContainer = (function(){
+                let EmoijPickerContainer = (function() {
                     let instance;
 
                     function click(e) {
