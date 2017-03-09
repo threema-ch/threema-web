@@ -13,12 +13,13 @@
 
     &.is-loading {
         //show default blured
-        .avatar-default {
-            &.avatar-high {
+        &.avatar-high {
+            > img {
                 filter: blur(40px);
                 border-radius: 0;
             }
         }
+
     }
     .avatar-loading {
         position: absolute;

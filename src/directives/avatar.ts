@@ -17,8 +17,11 @@
 
 export default [
     '$rootScope',
+    '$timeout',
     'WebClientService',
-    function($rootScope: ng.IRootScopeService, webClientService: threema.WebClientService) {
+    function($rootScope: ng.IRootScopeService,
+             $timeout: ng.ITimeoutService,
+             webClientService: threema.WebClientService) {
         return {
             restrict: 'E',
             scope: {},
@@ -31,64 +34,75 @@ export default [
             controller: [function() {
                 this.highResolution = this.resolution === 'high';
                 this.isLoading = this.highResolution;
-
+                this.backgroundColor = this.receiver.color;
+                let loadingPromise: ng.IPromise<any> = null;
                 this.avatarClass = () => {
                     return 'avatar-' + this.resolution + (this.isLoading ? ' is-loading' : '');
                 };
 
                 this.avatarExists = () => {
-                    if (this.receiver.avatar === undefined) {
-                        return false;
-                    }
-                    if (this.receiver.avatar[this.resolution] === undefined) {
+                    if (this.receiver.avatar === undefined
+                        || this.receiver.avatar[this.resolution] === undefined) {
                         return false;
                     }
                     this.isLoading = false;
+                    // Reset background color
+                    this.backgroundColor = null;
                     return true;
                 };
 
-                this.getAvatar = () => this.receiver.avatar[this.resolution];
-                this.getDefaultAvatar = () => {
-                    if (this.highResolution && this.receiver.avatar.low !== undefined) {
-                        // return low resolution image first
+                this.getAvatar = () => {
+                    if (this.avatarExists()) {
+                        return this.receiver.avatar[this.resolution];
+                    } else if (this.highResolution && this.receiver.avatar.low !== undefined) {
                         return this.receiver.avatar.low;
                     }
                     return webClientService.defaults.getAvatar(this.type, this.highResolution);
                 };
 
-                this.requestAvatar = () => {
+                this.requestAvatar = (inView: boolean) => {
                     if (this.avatarExists()) {
                         // do not request
                         return;
                     }
 
-                    // show loading only on high res images!
-                    webClientService.requestAvatar({
-                        type: this.type,
-                        id: this.receiver.id,
-                    } as threema.Receiver, this.highResolution).then((avatar) => {
-                        $rootScope.$apply(() => {
-                            this.isLoading = false;
-                        });
-                    }).catch(() => {
-                        $rootScope.$apply(() => {
-                            this.isLoading = false;
-                        });
-                    });
+                    if (inView) {
+                        if (loadingPromise === null) {
+                            // Do not wait on high resolution avatar
+                            let loadingTimeout = this.highResolution ? 0 : 500;
+                            loadingPromise = $timeout(() => {
+                                // show loading only on high res images!
+                                webClientService.requestAvatar({
+                                    type: this.type,
+                                    id: this.receiver.id,
+                                } as threema.Receiver, this.highResolution).then((avatar) => {
+                                    $rootScope.$apply(() => {
+                                        this.isLoading = false;
+                                    });
+                                }).catch(() => {
+                                    $rootScope.$apply(() => {
+                                        this.isLoading = false;
+                                    });
+                                });
+                            }, loadingTimeout);
+                        }
+                    } else if (loadingPromise !== null) {
+                        // Cancel pending avatar loading
+                        $timeout.cancel(loadingPromise);
+                        loadingPromise = null;
+                    }
                 };
             }],
             template: `
-                <div class="avatar" ng-class="ctrl.avatarClass()" ng-cloak>
+                <div class="avatar" ng-class="ctrl.avatarClass()">
                     <div class="avatar-loading" ng-if="ctrl.isLoading">
                         <span></span>
                     </div>
-                    <img class="avatar-default" ng-if="!ctrl.avatarExists()"
+                    <img
                          ng-class="ctrl.avatarClass()"
-                         ng-style="{ 'background-color': ctrl.receiver.color }"
-                         ng-src="{{ ctrl.getDefaultAvatar() }}"
-                         in-view="$inview && ctrl.requestAvatar()">
-                    <img class="avatar-image" ng-if="ctrl.avatarExists()"
-                         ng-src="{{ ctrl.getAvatar()}}">
+                         ng-style="{ 'background-color': ctrl.backgroundColor }"
+                         ng-src="{{ ctrl.getAvatar() }}"
+                         in-view="ctrl.requestAvatar($inview)"/>
                </div>
             `,
         };
