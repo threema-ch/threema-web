@@ -51,7 +51,7 @@ export class NotificationService implements threema.NotificationService {
         this.settingsService = settingsService;
     }
 
-    public init() {
+    public init(): void {
         this.checkNotificationAPI();
         this.fetchSettings();
     }
@@ -125,10 +125,10 @@ export class NotificationService implements threema.NotificationService {
         this.$log.debug(this.logTag, 'Initial notificationPermission', this.notificationPermission);
     }
 
+    /**
+     * Get the initial settings from local storage
+     */
     private fetchSettings(): void {
-        /**
-         * Get the initial settings from local storage
-         */
         this.$log.debug(this.logTag, 'Fetching settings...');
         let notifications = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATIONS);
         let preview = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
@@ -248,8 +248,10 @@ export class NotificationService implements threema.NotificationService {
             return false;
         }
 
+        // Clear body string if the user does not want a notification preview
         if (!this.notificationPreview) {
             body = '';
+            // Clear notification cache
             if (this.notificationCache[tag]) {
                 this.clearCache(tag);
             }
