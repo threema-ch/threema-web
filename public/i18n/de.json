@@ -161,7 +161,10 @@
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
         "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",
-        "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen)."
+        "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen).",
+        "NOTIFICATION_PERMISSION_DENIED" : "Berechtigung nicht erteilt. Sie müssen die Berechtigungen für Threema Web manuell erteilen.",
+        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE" : "Mehr erfahren.",
+        "NOTIFICATION_API_NOT_AVAILABLE" : "Ihr Browser unterstützt keine Desktopbenachrichtigungen."
     },
     "mimeTypes": {
         "android_apk": "Android-Paket",
@@ -191,6 +194,11 @@
         "LICENSE_LINK_AFTER": "gefunden werden"
     },
     "settings": {
-        "SETTINGS":"Einstellungen"
+        "SETTINGS":"Einstellungen",
+        "notifications": {
+            "NOTIFICATIONS" : "Benachrichtigungen",
+            "SHOW_NOTIFICATIONS" : "Desktopbenachrichtigungen anzeigen",
+            "SHOW_PREVIEW" : "Nachrichteninhalt in Benachrichtigungen anzeigen"
+        }
     }
 }
