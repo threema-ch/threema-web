@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ReceiverService} from "./receiver";
+
 class MessageAccess implements threema.MessageAccess {
     public quote = false;
     public ack = false;
@@ -24,13 +26,13 @@ class MessageAccess implements threema.MessageAccess {
     public copy = false;
 }
 
-export class MessageService implements threema.MessageService {
+export class MessageService {
 
     private $log: ng.ILogService;
-    private receiverService: threema.ReceiverService;
+    private receiverService: ReceiverService;
 
     public static $inject = ['$log', 'ReceiverService'];
-    constructor($log: ng.ILogService, receiverService: threema.ReceiverService) {
+    constructor($log: ng.ILogService, receiverService: ReceiverService) {
         this.$log = $log;
         this.receiverService = receiverService;
     }

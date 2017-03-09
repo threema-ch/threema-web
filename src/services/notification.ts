@@ -15,9 +15,11 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {SettingsService} from './settings';
+
 import Receiver = threema.Receiver;
-import SettingsService = threema.SettingsService;
-export class NotificationService implements threema.NotificationService {
+
+export class NotificationService {
 
     private static SETTINGS_NOTIFICATIONS = 'notifications';
     private static SETTINGS_NOTIFICATION_PREVIEW = 'notificationPreview';

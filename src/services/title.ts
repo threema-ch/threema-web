@@ -18,7 +18,7 @@
 /**
  * The title service can update the window title.
  */
-export class TitleService implements threema.TitleService {
+export class TitleService {
 
     private $log: ng.ILogService;
     private $document: ng.IDocumentService;

@@ -15,9 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from "../services/webclient";
+import {ReceiverService} from "../services/receiver";
+
 export default [
     'WebClientService', 'ReceiverService',
-    function(webClientService: threema.WebClientService, receiverService: threema.ReceiverService) {
+    function(webClientService: WebClientService, receiverService: ReceiverService) {
         return {
             restrict: 'EA',
             scope: {},

@@ -15,6 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from "../services/webclient";
+import {ReceiverService} from "../services/receiver";
+import {MessageService} from "../services/message";
+
 export default [
     'WebClientService',
     'MessageService',
@@ -23,8 +27,8 @@ export default [
     '$translate',
     '$rootScope',
     '$log',
-    function(webClientService: threema.WebClientService, messageService: threema.MessageService,
-             receiverService: threema.ReceiverService,
+    function(webClientService: WebClientService, messageService: MessageService,
+             receiverService: ReceiverService,
              $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
              $rootScope: ng.IRootScopeService, $log: ng.ILogService) {
 

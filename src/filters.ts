@@ -16,6 +16,8 @@
  */
 
 import {filter} from './helpers';
+import {WebClientService} from "./services/webclient";
+import {MimeService} from "./services/mime";
 
 angular.module('3ema.filters', [])
 
@@ -141,7 +143,7 @@ angular.module('3ema.filters', [])
 /**
  * Return whether contact is not me.
  */
-.filter('isNotMe', ['WebClientService', function(webClientService: threema.WebClientService) {
+.filter('isNotMe', ['WebClientService', function(webClientService: WebClientService) {
     return function(obj: threema.Receiver) {
         const valid = (contact: threema.Receiver) => contact.id !== webClientService.receivers.me.id;
         return filter(obj, valid);
@@ -234,7 +236,7 @@ angular.module('3ema.filters', [])
         return (x + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]);
     };
 })
-.filter('mimeType', ['MimeService', function(mimeService: threema.MimeService) {
+.filter('mimeType', ['MimeService', function(mimeService: MimeService) {
     return (mimeType: string, asText: boolean = true) => {
         if (asText) {
             return mimeService.getLabel(mimeType);
@@ -247,7 +249,7 @@ angular.module('3ema.filters', [])
 /**
  * Convert ID-Array to (Display-)Name-String, separated by ','
  */
-.filter('idsToNames', ['WebClientService', function (webClientService: threema.WebClientService) {
+.filter('idsToNames', ['WebClientService', function (webClientService: WebClientService) {
     return(ids: string[]) => {
         let names: string[] = [];
         for (let id of ids) {

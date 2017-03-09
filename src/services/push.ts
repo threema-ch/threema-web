@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class PushService implements threema.PushService {
+export class PushService {
     private static ARG_TOKEN = 'token';
     private static ARG_SESSION = 'session';
     private static ARG_VERSION = 'version';

@@ -15,8 +15,13 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AvatarControllerModel} from '../controller_model/avatar';
 import {TrustedKeyStoreService} from '../services/keystore';
+import {StateService} from "../services/state";
+import {WebClientService} from "../services/webclient";
+import {PushService} from "../services/push";
+import {BrowserService} from "../services/browser";
+import BrowserMinVersions = threema.BrowserMinVersions;
+import {ControllerService} from "../services/controller";
 
 class DialogController {
     // TODO: This is also used in partials/messenger.ts. We could somehow
@@ -51,10 +56,10 @@ class WelcomeController {
     private $translate: ng.translate.ITranslateService;
 
     // Custom services
-    private webClientService: threema.WebClientService;
+    private webClientService: WebClientService;
     private TrustedKeyStore: TrustedKeyStoreService;
-    private pushService: threema.PushService;
-    private stateService: threema.StateService;
+    private pushService: PushService;
+    private stateService: StateService;
 
     // Other
     public name = 'welcome';
@@ -71,11 +76,11 @@ class WelcomeController {
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
                 $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
-                webClientService: threema.WebClientService, TrustedKeyStore: TrustedKeyStoreService,
-                stateService: threema.StateService, pushService: threema.PushService,
-                browserService: threema.BrowserService,
-                minVersions: threema.BrowserMinVersions,
-                controllerService: threema.ControllerService) {
+                webClientService: WebClientService, TrustedKeyStore: TrustedKeyStoreService,
+                stateService: StateService, pushService: PushService,
+                browserService: BrowserService,
+                minVersions: BrowserMinVersions,
+                controllerService: ControllerService) {
         controllerService.setControllerName('welcome');
         // Angular services
         this.$scope = $scope;

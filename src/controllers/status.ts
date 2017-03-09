@@ -15,6 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {StateService} from "../services/state";
+import {WebClientService} from "../services/webclient";
+import {ControllerService} from "../services/controller";
+
 /**
  * This controller handles state changes globally.
  *
@@ -41,15 +45,15 @@ export class StatusController {
     private $log: ng.ILogService;
 
     // Custom services
-    private stateService: threema.StateService;
-    private webClientService: threema.WebClientService;
-    private controllerService: threema.ControllerService;
+    private stateService: StateService;
+    private webClientService: WebClientService;
+    private controllerService: ControllerService;
 
     public static $inject = ['$scope', '$timeout', '$log', '$state', 'StateService',
         'WebClientService', 'ControllerService'];
     constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: ng.ui.IStateService,
-                stateService: threema.StateService, webClientService: threema.WebClientService,
-                controllerService: threema.ControllerService) {
+                stateService: StateService, webClientService: WebClientService,
+                controllerService: ControllerService) {
 
         // Angular services
         this.$timeout = $timeout;

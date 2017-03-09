@@ -1,3 +1,4 @@
+import {WebClientService} from "../services/webclient";
 /**
  * This file is part of Threema Web.
  *
@@ -22,7 +23,7 @@ export class AvatarControllerModel implements threema.AvatarControllerModel {
     public onChangeAvatar: (image: ArrayBuffer) => void;
 
     constructor($log: ng.ILogService,
-                webClientService: threema.WebClientService,
+                webClientService: WebClientService,
                 receiver: threema.Receiver) {
         this.$log = $log;
         this.loadAvatar = new Promise((resolve, reject) => {

@@ -15,9 +15,11 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from "../services/webclient";
+
 export default [
     'WebClientService',
-    function(webClientService: threema.WebClientService) {
+    function(webClientService: WebClientService) {
         return {
             restrict: 'EA',
             scope: {},

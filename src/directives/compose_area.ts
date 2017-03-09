@@ -15,6 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {BrowserService} from "../services/browser";
+import {StringService} from "../services/string";
+
 /**
  * The compose area where messages are written.
  */
@@ -27,8 +30,8 @@ export default [
     '$mdDialog',
     '$filter',
     '$log',
-    function(browserService: threema.BrowserService,
-             stringService: threema.StringService,
+    function(browserService: BrowserService,
+             stringService: StringService,
              $window, $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,

@@ -17,6 +17,7 @@
 
 import {ControllerModelMode} from '../types/enums';
 import {AvatarControllerModel} from './avatar';
+import {WebClientService} from "../services/webclient";
 
 export class GroupControllerModel implements threema.ControllerModel {
 
@@ -30,13 +31,13 @@ export class GroupControllerModel implements threema.ControllerModel {
 
     private addContactPlaceholder: string;
     private group: threema.GroupReceiver;
-    private webClientService: threema.WebClientService;
+    private webClientService: WebClientService;
     private avatarController: threema.AvatarControllerModel;
     private mode: ControllerModelMode;
     private onRemovedCallback: any;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
-                webClientService: threema.WebClientService,
+                webClientService: WebClientService,
                 mode: ControllerModelMode,
                 group: threema.GroupReceiver = undefined) {
         this.$log = $log;

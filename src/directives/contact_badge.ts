@@ -17,13 +17,15 @@
 
 // tslint:disable:max-line-length
 
+import {WebClientService} from "../services/webclient";
+
 /**
  * Show a contact receiver with small avatar, name and verification level
  */
 export default [
     'WebClientService',
     '$state',
-    function(webClientService: threema.WebClientService, $state: ng.ui.IStateService) {
+    function(webClientService: WebClientService, $state: ng.ui.IStateService) {
         return {
             restrict: 'EA',
             scope: {},

@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ReceiverService} from "../services/receiver";
+
 /**
  * A simple HashSet implementation based on a JavaScript object.
  *
@@ -49,7 +51,7 @@ class StringHashSet {
 
 angular.module('3ema.container', [])
 .factory('Container', ['$filter', '$log', 'ReceiverService',
-    function($filter, $log, receiverService: threema.ReceiverService) {
+    function($filter, $log, receiverService: ReceiverService) {
     type ContactMap = Map<string, threema.ContactReceiver>;
     type GroupMap = Map<string, threema.GroupReceiver>;
     type DistributionListMap = Map<string, threema.DistributionListReceiver>;

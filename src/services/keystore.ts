@@ -37,7 +37,7 @@ import {stringToUtf8a, utf8aToString} from '../helpers';
  *     "<nonceHexString>:<encryptedHexString>"
  *
  */
-export class TrustedKeyStoreService implements threema.TrustedKeyStoreService {
+export class TrustedKeyStoreService {
     private static STORAGE_KEY = 'trusted';
 
     private logTag: string = '[TrustedKeyStoreService]';

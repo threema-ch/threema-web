@@ -15,6 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from "../services/webclient";
+import {MessageService} from "../services/message";
+
 export default [
     'WebClientService',
     'MessageService',
@@ -23,7 +26,7 @@ export default [
     '$timeout',
     '$log',
     '$filter',
-    function(webClientService: threema.WebClientService, messageService: threema.MessageService,
+    function(webClientService: WebClientService, messageService: MessageService,
              $rootScope: ng.IRootScopeService,
              $mdDialog: ng.material.IDialogService,
              $timeout: ng.ITimeoutService, $log: ng.ILogService,

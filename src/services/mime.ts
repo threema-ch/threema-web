@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class MimeService implements threema.MimeService {
+export class MimeService {
     public static $inject = ['$log', '$translate'];
 
     private $log: ng.ILogService;

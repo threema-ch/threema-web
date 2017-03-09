@@ -18,7 +18,17 @@
 import * as msgpack from 'msgpack-lite';
 import {hexToU8a} from '../helpers';
 import {TrustedKeyStoreService} from './keystore';
+import {StateService} from "./state";
 import {PeerConnectionHelper} from './peerconnection';
+import {NotificationService} from "./notification";
+import {MessageService} from "./message";
+import {PushService} from "./push";
+import {BrowserService} from "./browser";
+import {TitleService} from "./title";
+import {FingerPrintService} from "./fingerprint";
+import {QrCodeService} from "./qrcode";
+import {MimeService} from "./mime";
+import {ReceiverService} from "./receiver";
 
 class WebClientDefault implements threema.WebClientDefault {
     private avatar: threema.AvatarRegistry = {
@@ -53,7 +63,7 @@ class WebClientDefault implements threema.WebClientDefault {
 /**
  * This service handles everything related to the communication with the peer.
  */
-export class WebClientService implements threema.WebClientService {
+export class WebClientService {
     private static AVATAR_LOW_MAX_SIZE = 48;
     private static MAX_TEXT_LENGTH = 3500;
     private static MAX_FILE_SIZE = 15 * 1024 * 1024;
@@ -124,15 +134,15 @@ export class WebClientService implements threema.WebClientService {
     private $timeout: ng.ITimeoutService;
 
     // Custom services
-    private notificationService: threema.NotificationService;
-    private messageService: threema.MessageService;
-    private pushService: threema.PushService;
-    private browserService: threema.BrowserService;
-    private titleService: threema.TitleService;
-    private fingerPrintService: threema.FingerPrintService;
-    private qrCodeService: threema.QrCodeService;
-    private mimeService: threema.MimeService;
-    private receiverService: threema.ReceiverService;
+    private notificationService: NotificationService;
+    private messageService: MessageService;
+    private pushService: PushService;
+    private browserService: BrowserService;
+    private titleService: TitleService;
+    private fingerPrintService: FingerPrintService;
+    private qrCodeService: QrCodeService;
+    private mimeService: MimeService;
+    private receiverService: ReceiverService;
 
     // State handling
     private startupPromise: ng.IDeferred<{}>; // TODO: deferred type
@@ -140,7 +150,7 @@ export class WebClientService implements threema.WebClientService {
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
     private initialized: Set<threema.InitializationStep> = new Set();
     private initializedThreshold = 3;
-    private state: threema.StateService;
+    private state: StateService;
 
     // SaltyRTC
     private saltyRtcHost: string = null;
@@ -196,16 +206,16 @@ export class WebClientService implements threema.WebClientService {
                 $timeout: ng.ITimeoutService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
-                stateService: threema.StateService,
-                notificationService: threema.NotificationService,
-                messageService: threema.MessageService,
-                pushService: threema.PushService,
-                browserService: threema.BrowserService,
-                titleService: threema.TitleService,
-                fingerPrintService: threema.FingerPrintService,
-                qrCodeService: threema.QrCodeService,
-                mimeService: threema.MimeService,
-                receiverService: threema.ReceiverService,
+                stateService: StateService,
+                notificationService: NotificationService,
+                messageService: MessageService,
+                pushService: PushService,
+                browserService: BrowserService,
+                titleService: TitleService,
+                fingerPrintService: FingerPrintService,
+                qrCodeService: QrCodeService,
+                mimeService: MimeService,
+                receiverService: ReceiverService,
                 CONFIG: threema.Config) {
 
         // Angular services

@@ -15,13 +15,15 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from "../services/webclient";
+
 export default [
     '$rootScope',
     '$timeout',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
              $timeout: ng.ITimeoutService,
-             webClientService: threema.WebClientService) {
+             webClientService: WebClientService) {
         return {
             restrict: 'E',
             scope: {},
