@@ -531,6 +531,9 @@ export class WebClientService implements threema.WebClientService {
 
         this.state.reset();
 
+        // Reset the unread count
+        this.resetUnreadCount();
+
         // Clear stored data (trusted key, push token, etc)
         if (deleteStoredData === true) {
             this.trustedKeyStore.clearTrustedKey();
@@ -2350,5 +2353,12 @@ export class WebClientService implements threema.WebClientService {
             .get()
             .reduce((a: number, b: threema.Conversation) => a + b.unreadCount, 0);
         this.titleService.updateUnreadCount(totalUnreadCount);
+    }
+
+    /**
+     * Reset the unread count in the window title
+     */
+    private resetUnreadCount(): void {
+        this.titleService.updateUnreadCount(0);
     }
 }
