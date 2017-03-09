@@ -49,6 +49,13 @@ function doChecks() {
         switchTo('ls', 'no');
     }
 
+    // Check for desktop notifications
+    if ('Notification' in window) {
+        switchTo('dn', 'yes');
+    } else {
+        switchTo('dn', 'no');
+    }
+
     // Check for TURN connectivity
     var timeout = null;
     function turnSuccess() {
