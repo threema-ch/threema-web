@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ReceiverService} from "../services/receiver";
+import {ReceiverService} from '../services/receiver';
 
 /**
  * A simple HashSet implementation based on a JavaScript object.

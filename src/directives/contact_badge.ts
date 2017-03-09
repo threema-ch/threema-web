@@ -17,7 +17,7 @@
 
 // tslint:disable:max-line-length
 
-import {WebClientService} from "../services/webclient";
+import {WebClientService} from '../services/webclient';
 
 /**
  * Show a contact receiver with small avatar, name and verification level

@@ -15,9 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from '../services/webclient';
 import {ControllerModelMode} from '../types/enums';
 import {AvatarControllerModel} from './avatar';
-import {WebClientService} from "../services/webclient";
 
 export class ContactControllerModel implements threema.ControllerModel {
 

@@ -17,19 +17,19 @@
 
 import {ContactControllerModel} from '../controller_model/contact';
 import {supportsPassive, throttle} from '../helpers';
+import {ContactService} from '../services/contact';
+import {ControllerService} from '../services/controller';
+import {ControllerModelService} from '../services/controller_model';
 import {ExecuteService} from '../services/execute';
+import {FingerPrintService} from '../services/fingerprint';
+import {TrustedKeyStoreService} from '../services/keystore';
+import {MimeService} from '../services/mime';
+import {NotificationService} from '../services/notification';
+import {ReceiverService} from '../services/receiver';
+import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
+import {WebClientService} from '../services/webclient';
 import {ControllerModelMode} from '../types/enums';
-import {SettingsService} from "../services/settings";
-import {WebClientService} from "../services/webclient";
-import {ReceiverService} from "../services/receiver";
-import {TrustedKeyStoreService} from "../services/keystore";
-import {ControllerService} from "../services/controller";
-import {FingerPrintService} from "../services/fingerprint";
-import {ContactService} from "../services/contact";
-import {ControllerModelService} from "../services/controller_model";
-import {MimeService} from "../services/mime";
-import {NotificationService} from "../services/notification";
 
 abstract class DialogController {
     public static $inject = ['$mdDialog'];
@@ -100,7 +100,7 @@ class SettingsController {
     public $mdDialog: ng.material.IDialogService;
     public $window: ng.IWindowService;
     public settingsService: SettingsService;
-    private notificationService: NotificationService
+    private notificationService: NotificationService;
     public activeElement: HTMLElement | null;
 
     private desktopNotifications: boolean;

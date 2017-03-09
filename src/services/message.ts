@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ReceiverService} from "./receiver";
+import {ReceiverService} from './receiver';
 
 class MessageAccess implements threema.MessageAccess {
     public quote = false;

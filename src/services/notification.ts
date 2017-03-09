@@ -17,8 +17,6 @@
 
 import {SettingsService} from './settings';
 
-import Receiver = threema.Receiver;
-
 export class NotificationService {
 
     private static SETTINGS_NOTIFICATIONS = 'notifications';

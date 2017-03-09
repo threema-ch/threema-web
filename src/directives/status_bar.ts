@@ -15,8 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {StateService} from "../services/state";
-import {TrustedKeyStoreService} from "../services/keystore";
+import {TrustedKeyStoreService} from '../services/keystore';
+import {StateService} from '../services/state';
 
 // tslint:disable:max-line-length
 

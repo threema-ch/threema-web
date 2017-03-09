@@ -15,8 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {WebClientService} from "../services/webclient";
-import {MessageService} from "../services/message";
+import {MessageService} from '../services/message';
+import {WebClientService} from '../services/webclient';
 
 export default [
     'WebClientService',

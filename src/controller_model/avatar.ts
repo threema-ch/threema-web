@@ -1,4 +1,3 @@
-import {WebClientService} from "../services/webclient";
 /**
  * This file is part of Threema Web.
  *
@@ -15,6 +14,8 @@ import {WebClientService} from "../services/webclient";
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import {WebClientService} from '../services/webclient';
 
 export class AvatarControllerModel implements threema.AvatarControllerModel {
     private $log: ng.ILogService;

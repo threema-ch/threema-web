@@ -17,18 +17,18 @@
 
 import * as msgpack from 'msgpack-lite';
 import {hexToU8a} from '../helpers';
+import {BrowserService} from './browser';
+import {FingerPrintService} from './fingerprint';
 import {TrustedKeyStoreService} from './keystore';
-import {StateService} from "./state";
+import {MessageService} from './message';
+import {MimeService} from './mime';
+import {NotificationService} from './notification';
 import {PeerConnectionHelper} from './peerconnection';
-import {NotificationService} from "./notification";
-import {MessageService} from "./message";
-import {PushService} from "./push";
-import {BrowserService} from "./browser";
-import {TitleService} from "./title";
-import {FingerPrintService} from "./fingerprint";
-import {QrCodeService} from "./qrcode";
-import {MimeService} from "./mime";
-import {ReceiverService} from "./receiver";
+import {PushService} from './push';
+import {QrCodeService} from './qrcode';
+import {ReceiverService} from './receiver';
+import {StateService} from './state';
+import {TitleService} from './title';
 
 class WebClientDefault implements threema.WebClientDefault {
     private avatar: threema.AvatarRegistry = {

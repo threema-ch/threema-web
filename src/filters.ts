@@ -16,8 +16,8 @@
  */
 
 import {filter} from './helpers';
-import {WebClientService} from "./services/webclient";
-import {MimeService} from "./services/mime";
+import {MimeService} from './services/mime';
+import {WebClientService} from './services/webclient';
 
 angular.module('3ema.filters', [])
 

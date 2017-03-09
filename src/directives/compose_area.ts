@@ -15,8 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {BrowserService} from "../services/browser";
-import {StringService} from "../services/string";
+import {BrowserService} from '../services/browser';
+import {StringService} from '../services/string';
 
 /**
  * The compose area where messages are written.

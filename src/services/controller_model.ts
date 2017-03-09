@@ -19,7 +19,7 @@ import {ContactControllerModel} from '../controller_model/contact';
 import {DistributionListControllerModel} from '../controller_model/distributionList';
 import {GroupControllerModel} from '../controller_model/group';
 import {ControllerModelMode} from '../types/enums';
-import {WebClientService} from "./webclient";
+import {WebClientService} from './webclient';
 
 /**
  * Factory to create ControllerModels

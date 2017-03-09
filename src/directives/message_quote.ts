@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {WebClientService} from "../services/webclient";
+import {WebClientService} from '../services/webclient';
 
 // tslint:disable:max-line-length
 

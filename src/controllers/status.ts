@@ -15,9 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {StateService} from "../services/state";
-import {WebClientService} from "../services/webclient";
-import {ControllerService} from "../services/controller";
+import {ControllerService} from '../services/controller';
+import {StateService} from '../services/state';
+import {WebClientService} from '../services/webclient';
 
 /**
  * This controller handles state changes globally.
