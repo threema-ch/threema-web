@@ -84,20 +84,32 @@ class SendFileController extends DialogController {
  */
 class SettingsController {
 
-    public static $inject = ['$mdDialog', '$window', 'SettingsService'];
+    public static $inject = ['$mdDialog', '$window', 'SettingsService', 'NotificationService'];
 
     public $mdDialog: ng.material.IDialogService;
     public $window: ng.IWindowService;
     public settingsService: threema.SettingsService;
+    private notificationService: threema.NotificationService;
     public activeElement: HTMLElement | null;
+
+    private desktopNotifications: boolean;
+    private notificationApiAvailable: boolean;
+    private notificationPermission: boolean;
+    private notificationPreview: boolean;
 
     constructor($mdDialog: ng.material.IDialogService,
                 $window: ng.IWindowService,
-                settingsService: threema.SettingsService) {
+                settingsService: threema.SettingsService,
+                notificationService: threema.NotificationService) {
         this.$mdDialog = $mdDialog;
         this.$window = $window;
         this.settingsService = settingsService;
+        this.notificationService = notificationService;
         this.activeElement = document.activeElement as HTMLElement;
+        this.desktopNotifications = notificationService.getWantsNotifications();
+        this.notificationApiAvailable = notificationService.isNotificationApiAvailable();
+        this.notificationPermission = notificationService.getNotificationPermission();
+        this.notificationPreview = notificationService.getWantsPreview();
     }
 
     public cancel(): void {
@@ -115,6 +127,14 @@ class SettingsController {
             // Reset focus
             this.activeElement.focus();
         }
+    }
+
+    public setWantsNotifications(desktopNotifications: boolean) {
+        this.notificationService.setWantsNotifications(desktopNotifications);
+    }
+
+    public setWantsPreview(notificationPreview: boolean) {
+        this.notificationService.setWantsPreview(notificationPreview);
     }
 
 }
