@@ -30,7 +30,7 @@ import {ReceiverService} from './receiver';
 import {StateService} from './state';
 import {TitleService} from './title';
 
-class WebClientDefault implements threema.WebClientDefault {
+class WebClientDefault {
     private avatar: threema.AvatarRegistry = {
         group: {
             low: 'img/ic_group_t.png',
@@ -163,7 +163,7 @@ export class WebClientService {
     public conversations: threema.Container.Conversations;
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
-    public defaults: threema.WebClientDefault;
+    public defaults: WebClientDefault;
     private myIdentity: threema.Identity;
     private pushToken: string = null;
 

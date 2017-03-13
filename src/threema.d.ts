@@ -388,10 +388,6 @@ declare namespace threema {
         OPERA: number;
     }
 
-    interface WebClientDefault {
-        getAvatar(type: string, highResolution: boolean): string;
-    }
-
     namespace Container {
         interface ReceiverData {
             me: MeReceiver;
