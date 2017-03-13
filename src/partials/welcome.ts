@@ -390,6 +390,11 @@ class WelcomeController {
                 // TODO: should probably show an error message instead
                 this.$timeout(() => this.$state.reload(), WelcomeController.REDIRECT_DELAY);
             },
+
+            // State updates
+            (progress: threema.ConnectionBuildupStateChange) => {
+                // Do nothing
+            },
         );
     }
 

@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AsyncEvent} from 'ts-events';
+
 export class StateService {
 
     private logTag: string = '[StateService]';
@@ -22,6 +24,9 @@ export class StateService {
     // Angular services
     private $log: ng.ILogService;
     private $interval: ng.IIntervalService;
+
+    // Events
+    public evtConnectionBuildupStateChange = new AsyncEvent<threema.ConnectionBuildupStateChange>();
 
     // WebRTC states
     public signalingConnectionState: saltyrtc.SignalingState;
@@ -111,10 +116,12 @@ export class StateService {
         if (this.connectionBuildupState === state) {
             return;
         }
-        this.$log.debug(this.logTag, 'Connection buildup state:', this.connectionBuildupState, '=>', state);
+        const prevState = this.connectionBuildupState;
+        this.$log.debug(this.logTag, 'Connection buildup state:', prevState, '=>', state);
 
         // Update state
         this.connectionBuildupState = state;
+        this.evtConnectionBuildupStateChange.post({state: state, prevState: prevState});
 
         // Cancel progress interval if present
         if (this.progressInterval !== null) {

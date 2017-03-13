@@ -145,7 +145,7 @@ export class WebClientService {
     private receiverService: ReceiverService;
 
     // State handling
-    private startupPromise: ng.IDeferred<{}>; // TODO: deferred type
+    private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
     private startupDone: boolean = false;
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
     private initialized: Set<threema.InitializationStep> = new Set();
@@ -257,6 +257,15 @@ export class WebClientService {
 
         // Setup fields
         this._resetFields();
+
+        // Register event handlers
+        this.stateService.evtConnectionBuildupStateChange.attach(
+            (stateChange: threema.ConnectionBuildupStateChange) => {
+                if (this.startupPromise !== null) {
+                    this.startupPromise.notify(stateChange);
+                }
+            },
+        );
     }
 
     get me(): threema.MeReceiver {
@@ -639,6 +648,7 @@ export class WebClientService {
         if (this.initialized.size >= this.initializedThreshold) {
             this.stateService.updateConnectionBuildupState('done');
             this.startupPromise.resolve();
+            this.startupPromise = null;
             this.startupDone = true;
             this._resetInitializationSteps();
         }
