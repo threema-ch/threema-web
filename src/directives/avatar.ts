@@ -56,7 +56,9 @@ export default [
                 this.getAvatar = () => {
                     if (this.avatarExists()) {
                         return this.receiver.avatar[this.resolution];
-                    } else if (this.highResolution && this.receiver.avatar.low !== undefined) {
+                    } else if (this.highResolution
+                        && this.receiver.avatar !== undefined
+                        && this.receiver.avatar.low !== undefined) {
                         return this.receiver.avatar.low;
                     }
                     return webClientService.defaults.getAvatar(this.type, this.highResolution);
