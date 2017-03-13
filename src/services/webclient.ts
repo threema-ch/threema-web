@@ -17,10 +17,20 @@
 
 import * as msgpack from 'msgpack-lite';
 import {hexToU8a} from '../helpers';
+import {BrowserService} from './browser';
+import {FingerPrintService} from './fingerprint';
 import {TrustedKeyStoreService} from './keystore';
+import {MessageService} from './message';
+import {MimeService} from './mime';
+import {NotificationService} from './notification';
 import {PeerConnectionHelper} from './peerconnection';
+import {PushService} from './push';
+import {QrCodeService} from './qrcode';
+import {ReceiverService} from './receiver';
+import {StateService} from './state';
+import {TitleService} from './title';
 
-class WebClientDefault implements threema.WebClientDefault {
+class WebClientDefault {
     private avatar: threema.AvatarRegistry = {
         group: {
             low: 'img/ic_group_t.png',
@@ -53,7 +63,7 @@ class WebClientDefault implements threema.WebClientDefault {
 /**
  * This service handles everything related to the communication with the peer.
  */
-export class WebClientService implements threema.WebClientService {
+export class WebClientService {
     private static AVATAR_LOW_MAX_SIZE = 48;
     private static MAX_TEXT_LENGTH = 3500;
     private static MAX_FILE_SIZE = 15 * 1024 * 1024;
@@ -124,15 +134,15 @@ export class WebClientService implements threema.WebClientService {
     private $timeout: ng.ITimeoutService;
 
     // Custom services
-    private notificationService: threema.NotificationService;
-    private messageService: threema.MessageService;
-    private pushService: threema.PushService;
-    private browserService: threema.BrowserService;
-    private titleService: threema.TitleService;
-    private fingerPrintService: threema.FingerPrintService;
-    private qrCodeService: threema.QrCodeService;
-    private mimeService: threema.MimeService;
-    private receiverService: threema.ReceiverService;
+    private notificationService: NotificationService;
+    private messageService: MessageService;
+    private pushService: PushService;
+    private browserService: BrowserService;
+    private titleService: TitleService;
+    private fingerPrintService: FingerPrintService;
+    private qrCodeService: QrCodeService;
+    private mimeService: MimeService;
+    private receiverService: ReceiverService;
 
     // State handling
     private startupPromise: ng.IDeferred<{}>; // TODO: deferred type
@@ -140,7 +150,7 @@ export class WebClientService implements threema.WebClientService {
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
     private initialized: Set<threema.InitializationStep> = new Set();
     private initializedThreshold = 3;
-    private state: threema.StateService;
+    private state: StateService;
 
     // SaltyRTC
     private saltyRtcHost: string = null;
@@ -153,7 +163,7 @@ export class WebClientService implements threema.WebClientService {
     public conversations: threema.Container.Conversations;
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
-    public defaults: threema.WebClientDefault;
+    public defaults: WebClientDefault;
     private myIdentity: threema.Identity;
     private pushToken: string = null;
 
@@ -196,16 +206,16 @@ export class WebClientService implements threema.WebClientService {
                 $timeout: ng.ITimeoutService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
-                stateService: threema.StateService,
-                notificationService: threema.NotificationService,
-                messageService: threema.MessageService,
-                pushService: threema.PushService,
-                browserService: threema.BrowserService,
-                titleService: threema.TitleService,
-                fingerPrintService: threema.FingerPrintService,
-                qrCodeService: threema.QrCodeService,
-                mimeService: threema.MimeService,
-                receiverService: threema.ReceiverService,
+                stateService: StateService,
+                notificationService: NotificationService,
+                messageService: MessageService,
+                pushService: PushService,
+                browserService: BrowserService,
+                titleService: TitleService,
+                fingerPrintService: FingerPrintService,
+                qrCodeService: QrCodeService,
+                mimeService: MimeService,
+                receiverService: ReceiverService,
                 CONFIG: threema.Config) {
 
         // Angular services

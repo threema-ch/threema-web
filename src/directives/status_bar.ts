@@ -15,6 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {TrustedKeyStoreService} from '../services/keystore';
+import {StateService} from '../services/state';
+
 // tslint:disable:max-line-length
 
 export default [
@@ -22,8 +25,8 @@ export default [
     'TrustedKeyStore',
     'StateService',
     function($window: ng.IWindowService,
-             trustedKeyStore: threema.TrustedKeyStoreService,
-             stateService: threema.StateService) {
+             trustedKeyStore: TrustedKeyStoreService,
+             stateService: StateService) {
         return {
             restrict: 'E',
             scope: {},

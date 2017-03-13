@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from '../services/webclient';
 import {ControllerModelMode} from '../types/enums';
 
 export class DistributionListControllerModel implements threema.ControllerModel {
@@ -29,12 +30,12 @@ export class DistributionListControllerModel implements threema.ControllerModel 
 
     private addContactPlaceholder: string;
     private distributionList: threema.DistributionListReceiver;
-    private webClientService: threema.WebClientService;
+    private webClientService: WebClientService;
     private mode: ControllerModelMode;
     private onRemovedCallback: any;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
-                webClientService: threema.WebClientService,
+                webClientService: WebClientService,
                 mode: ControllerModelMode,
                 distributionList: threema.DistributionListReceiver = undefined) {
         this.$log = $log;

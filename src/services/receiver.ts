@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class ReceiverService implements threema.ReceiverService {
+export class ReceiverService {
     private $log: ng.ILogService;
     private activeReceiver: threema.Receiver;
     public static $inject = ['$log'];

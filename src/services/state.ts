@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class StateService implements threema.StateService {
+export class StateService {
 
     // Angular services
     private $log: ng.ILogService;

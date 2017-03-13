@@ -19,7 +19,7 @@
  * The settings service can update variables for settings and persist them to
  * LocalStorage.
  */
-export class SettingsService implements threema.SettingsService {
+export class SettingsService {
     private $log: ng.ILogService;
 
     private static STORAGE_KEY_PREFIX = 'settings-';

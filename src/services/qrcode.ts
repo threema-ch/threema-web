@@ -20,7 +20,7 @@ import {stringToUtf8a} from '../helpers';
 /**
  * Functionality related to the initial QR code.
  */
-export class QrCodeService implements threema.QrCodeService {
+export class QrCodeService {
 
     private config: threema.Config;
     private protocolVersion: number;

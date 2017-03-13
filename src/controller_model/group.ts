@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from '../services/webclient';
 import {ControllerModelMode} from '../types/enums';
 import {AvatarControllerModel} from './avatar';
 
@@ -30,13 +31,13 @@ export class GroupControllerModel implements threema.ControllerModel {
 
     private addContactPlaceholder: string;
     private group: threema.GroupReceiver;
-    private webClientService: threema.WebClientService;
-    private avatarController: threema.AvatarControllerModel;
+    private webClientService: WebClientService;
+    private avatarController: AvatarControllerModel;
     private mode: ControllerModelMode;
     private onRemovedCallback: any;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
-                webClientService: threema.WebClientService,
+                webClientService: WebClientService,
                 mode: ControllerModelMode,
                 group: threema.GroupReceiver = undefined) {
         this.$log = $log;

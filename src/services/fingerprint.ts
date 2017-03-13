@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class FingerPrintService implements threema.FingerPrintService {
+export class FingerPrintService {
     private $log: ng.ILogService;
 
     public static $inject = ['$log'];
