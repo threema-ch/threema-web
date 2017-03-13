@@ -44,8 +44,6 @@ declare namespace threema {
         data?: any;
     }
 
-    type WireMessageCallback = (message: WireMessage, result: any) => boolean;
-
     type MessageType = 'text' | 'image' | 'video' | 'audio' | 'location' | 'status' | 'ballot' | 'file';
     type MessageState = 'delivered' | 'read' | 'send-failed' | 'sent' | 'user-ack' | 'user-dec' | 'pending' | 'sending';
     type InitializationStep = 'client info' | 'conversations' |  'receivers';
@@ -264,11 +262,6 @@ declare namespace threema {
      * Type of message to be sent to a receiver.
      */
     type MessageContentType = 'text' | 'file';
-
-    /**
-     * Possible message types sent to the receiver.
-     */
-    type MessageDataType = 'text' | 'file';
 
     interface MessageData {
         // optional quote object
