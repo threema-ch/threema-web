@@ -608,13 +608,16 @@ export class WebClientService {
         }
     }
 
-    // Mark a component as initialized
+    /**
+     * Mark a component as initialized
+     */
     public registerInitializationStep(name: threema.InitializationStep) {
         if (this.initialized.has(name) ) {
             this.$log.warn(this.logTag, 'initialization step', name, 'already registered');
             return;
         }
 
+        this.$log.debug(this.logTag, 'Initialization step', name, 'done');
         this.initialized.add(name);
 
         // check pending routines
@@ -637,6 +640,7 @@ export class WebClientService {
             this.stateService.updateConnectionBuildupState('done');
             this.startupPromise.resolve();
             this.startupDone = true;
+            this._resetInitializationSteps();
         }
     }
 
@@ -1234,13 +1238,20 @@ export class WebClientService {
     }
 
     /**
+     * Reset data related to initialization.
+     */
+    private _resetInitializationSteps(): void {
+        this.$log.debug(this.logTag, 'Reset initialization steps');
+        this.initialized.clear();
+        this.pendingInitializationStepRoutines = [];
+    }
+
+    /**
      * Reset data fields.
      */
     private _resetFields(): void {
-        // clear initialized steps
-        this.initialized.clear();
-        // clear step routines
-        this.pendingInitializationStepRoutines = [];
+        // Reset initialization data
+        this._resetInitializationSteps();
 
         // Create container instances
         this.receivers = this.container.createReceivers();
@@ -2363,4 +2374,5 @@ export class WebClientService {
     private resetUnreadCount(): void {
         this.titleService.updateUnreadCount(0);
     }
+
 }
