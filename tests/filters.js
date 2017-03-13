@@ -96,6 +96,15 @@ describe('Filters', function() {
             ]);
         });
 
+        it('ignores markup with <br> (HTML line break)', () => {
+            this.testPatterns([
+                ['*First line<br> and a new one. (do not parse)*', '*First line<br> and a new one. (do not parse)*'],
+                ['*<br> begins with linebreak. (do not parse)*', '*<br> begins with linebreak. (do not parse)*'],
+                ['*<a href="https://threema.ch/>_Other HTML tags are okay_</a>*', '<span class="text-bold">' +
+                '<a href="https://threema.ch/><span class="text-italic">Other HTML tags are okay</span></a></span>'],
+            ]);
+        });
+
     });
 
     describe('escapeHtml', function() {

@@ -104,9 +104,9 @@ angular.module('3ema.filters', [])
 .filter('markify', function() {
     return function(text) {
         if (text !== null) {
-            text = text.replace(/\B\*([^\r\n]+?)\*\B/g, '<span class="text-bold">$1</span>');
-            text = text.replace(/\b_([^\r\n]+?)_\b/g, '<span class="text-italic">$1</span>');
-            text = text.replace(/\B~([^\r\n]+?)~\B/g, '<span class="text-strike">$1</span>');
+            text = text.replace(/\B\*([^\r\n]|(?:(?!<br>).)+?)\*\B/g, '<span class="text-bold">$1</span>');
+            text = text.replace(/\b_([^\r\n]|(?:(?!<br>).)+?)_\b/g, '<span class="text-italic">$1</span>');
+            text = text.replace(/\B~([^\r\n]|(?:(?!<br>).)+?)~\B/g, '<span class="text-strike">$1</span>');
             return text;
         }
         return text;
@@ -251,6 +251,7 @@ angular.module('3ema.filters', [])
  */
 .filter('idsToNames', ['WebClientService', function (webClientService: WebClientService) {
     return(ids: string[]) => {
+        console.info("Convertig group member ids to names: " + ids);
         let names: string[] = [];
         for (let id of ids) {
             this.contactReceiver = webClientService.contacts.get(id);
