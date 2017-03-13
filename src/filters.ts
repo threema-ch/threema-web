@@ -251,7 +251,6 @@ angular.module('3ema.filters', [])
  */
 .filter('idsToNames', ['WebClientService', function (webClientService: WebClientService) {
     return(ids: string[]) => {
-        console.info("Convertig group member ids to names: " + ids);
         let names: string[] = [];
         for (let id of ids) {
             this.contactReceiver = webClientService.contacts.get(id);
