@@ -37,7 +37,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     private contact: threema.ContactReceiver;
     private webClientService: WebClientService;
     private firstNameLabel: string;
-    private avatarController: threema.AvatarControllerModel;
+    private avatarController: AvatarControllerModel;
     private mode = ControllerModelMode.NEW;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,

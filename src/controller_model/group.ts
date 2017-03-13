@@ -32,7 +32,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     private addContactPlaceholder: string;
     private group: threema.GroupReceiver;
     private webClientService: WebClientService;
-    private avatarController: threema.AvatarControllerModel;
+    private avatarController: AvatarControllerModel;
     private mode: ControllerModelMode;
     private onRemovedCallback: any;
 

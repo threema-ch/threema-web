@@ -356,11 +356,6 @@ declare namespace threema {
         setOnRemoved(callback: any): void;
     }
 
-    interface AvatarControllerModel {
-        onChangeAvatar: (image: ArrayBuffer) => void;
-        getAvatar(): ArrayBuffer | null;
-    }
-
     interface Alert {
         source: string;
         type: string;

@@ -17,7 +17,7 @@
 
 import {WebClientService} from '../services/webclient';
 
-export class AvatarControllerModel implements threema.AvatarControllerModel {
+export class AvatarControllerModel {
     private $log: ng.ILogService;
     private avatar: ArrayBuffer = null;
     private loadAvatar: Promise<string>;
