@@ -1256,14 +1256,6 @@ export class WebClientService {
         this.conversations.setFilter(this.container.Filters.hasData(this.receivers));
     }
 
-    private _resetUI(): void {
-        this.$log.debug('UI Reset');
-        // Only reset if currently in the messenger state
-        if (this.$state.includes('messenger')) {
-            this.$state.go(this.$state.current, this.$state.params, {reload: true});
-        }
-    }
-
     private _requestInitialData(): void {
         // if all conversations are reloaded, clear the message cache
         // to get in sync (we dont know if a message was removed, updated etc..)
