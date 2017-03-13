@@ -313,15 +313,6 @@ declare namespace threema {
         initParams: null | {identity: null};
     }
 
-    interface MessageAccess {
-        quote: boolean;
-        ack: boolean;
-        dec: boolean;
-        delete: boolean;
-        download: boolean;
-        copy: boolean;
-    }
-
     interface Quote {
         identity: string;
         text: string;

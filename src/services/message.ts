@@ -17,7 +17,7 @@
 
 import {ReceiverService} from './receiver';
 
-class MessageAccess implements threema.MessageAccess {
+export class MessageAccess {
     public quote = false;
     public ack = false;
     public dec = false;
