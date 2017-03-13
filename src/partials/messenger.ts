@@ -20,7 +20,7 @@ import {supportsPassive, throttle} from '../helpers';
 import {ExecuteService} from '../services/execute';
 import {ControllerModelMode} from '../types/enums';
 
-abstract class DialogController {
+class DialogController {
     public static $inject = ['$mdDialog'];
 
     public $mdDialog: ng.material.IDialogService;
@@ -47,11 +47,14 @@ abstract class DialogController {
             this.activeElement.focus();
         }
     }
+
     /**
      * If true, the focus on the active element (before opening the dialog)
-     * will be restored.
+     * will be restored. Default `true`, override if desired.
      */
-    protected abstract resumeFocusOnClose(): boolean;
+    protected resumeFocusOnClose(): boolean {
+        return true;
+    }
 }
 
 /**
@@ -72,10 +75,6 @@ class SendFileController extends DialogController {
         if ($event.key === 'Enter') { // see https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
             this.send();
         }
-    }
-
-    protected resumeFocusOnClose(): boolean {
-        return true;
     }
 }
 
