@@ -22,6 +22,12 @@ md-dialog {
     md-dialog-content {
         line-height: 1.3em;
     }
+    .md-subheader-inner {
+        padding-left: 0;
+    }
+    .status {
+        padding-left: 16px;
+    }
 }
 
 md-dialog.send-file-dialog {

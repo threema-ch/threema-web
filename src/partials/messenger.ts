@@ -106,6 +106,7 @@ class SettingsController {
     private notificationApiAvailable: boolean;
     private notificationPermission: boolean;
     private notificationPreview: boolean;
+    private notificationSound: boolean;
 
     constructor($mdDialog: ng.material.IDialogService,
                 $window: ng.IWindowService,
@@ -120,6 +121,7 @@ class SettingsController {
         this.notificationApiAvailable = notificationService.isNotificationApiAvailable();
         this.notificationPermission = notificationService.getNotificationPermission();
         this.notificationPreview = notificationService.getWantsPreview();
+        this.notificationSound = notificationService.getWantsSound();
     }
 
     public cancel(): void {
@@ -145,6 +147,10 @@ class SettingsController {
 
     public setWantsPreview(notificationPreview: boolean) {
         this.notificationService.setWantsPreview(notificationPreview);
+    }
+
+    public setWantsSound(notificationSound: boolean) {
+        this.notificationService.setWantsSound(notificationSound);
     }
 
 }

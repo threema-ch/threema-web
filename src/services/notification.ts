@@ -21,6 +21,8 @@ export class NotificationService {
 
     private static SETTINGS_NOTIFICATIONS = 'notifications';
     private static SETTINGS_NOTIFICATION_PREVIEW = 'notificationPreview';
+    private static SETTINGS_NOTIFICATION_SOUND = 'notificationSound';
+    private static NOTIFICATION_SOUND = 'public/sounds/notification.mp3';
 
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
@@ -37,6 +39,8 @@ export class NotificationService {
     private notificationAPIAvailable: boolean = null;
     // Whether the user wants notification preview
     private notificationPreview: boolean = null;
+    // Whether the user wants notification sound
+    private notificationSound: boolean = null;
 
     // Cache notifications
     private notificationCache: any = {};
@@ -132,6 +136,7 @@ export class NotificationService {
         this.$log.debug(this.logTag, 'Fetching settings...');
         let notifications = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATIONS);
         let preview = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
+        let sound = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND);
         if (notifications === 'true') {
             this.$log.debug(this.logTag, 'Desktop notifications:', notifications);
             this.desktopNotifications = true;
@@ -148,11 +153,22 @@ export class NotificationService {
             this.requestNotificationPermission();
         }
         if (preview === 'false') {
+            this.$log.debug(this.logTag, 'Notification preview:', preview);
             this.notificationPreview = false;
         } else {
             // set the flag true if true/nothing or sth. else is in local storage (default setting)
+            this.$log.debug(this.logTag, 'Notification preview:', preview, 'Using default value (true)');
             this.notificationPreview = true;
             this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, 'true');
+        }
+        if (sound === 'true') {
+            this.$log.debug(this.logTag, 'Notification sound:', sound);
+            this.notificationSound = true;
+        } else {
+            // set the flag false if false/nothing or sth. else is in local storage (default setting)
+            this.$log.debug(this.logTag, 'Notification sound:', sound, 'Using default value (false)');
+            this.notificationSound = false;
+            this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND, 'false');
         }
     }
 
@@ -178,6 +194,14 @@ export class NotificationService {
      */
     public getWantsPreview(): boolean {
         return this.notificationPreview;
+    }
+
+    /**
+     * Returns if the user wants sound when a new message arrives
+     * @returns {boolean}
+     */
+    public getWantsSound(): boolean {
+        return this.notificationSound;
     }
 
     /**
@@ -209,7 +233,17 @@ export class NotificationService {
     public setWantsPreview(wantsPreview: boolean): void {
         this.$log.debug(this.logTag, 'Requesting preview preference change to', wantsPreview);
         this.notificationPreview = wantsPreview;
-        this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, wantsPreview.toString());
+        this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, wantsPreview ? 'true' : 'false');
+    }
+
+    /**
+     * Sets if the user wants sound when a new message arrives
+     * @param wantsSound
+     */
+    public setWantsSound(wantsSound: boolean): void {
+        this.$log.debug(this.logTag, 'Requesting sound preference change to', wantsSound);
+        this.notificationSound = wantsSound;
+        this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND, wantsSound ? 'true' : 'false');
     }
 
     /**
@@ -243,6 +277,13 @@ export class NotificationService {
      */
     public showNotification(tag: string, title: string, body: string,
                             avatar: string = '/img/threema-64x64.png', clickCallback: any): boolean {
+
+        // Play sound on new message if the user wants to
+        if (this.notificationSound) {
+            const audio = new Audio(NotificationService.NOTIFICATION_SOUND);
+            audio.play();
+        }
+
         // Only show notifications if user granted permission to do so
         if (this.notificationPermission !== true || this.desktopNotifications !== true) {
             return false;
