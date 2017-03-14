@@ -1,4 +1,7 @@
 {
+    "meta": {
+        "DESCRIPTION": "Mit Threema Web bequem vom PC aus chatten, mit vollem Zugriff auf Chats, Kontakte und Medien."
+    },
     "welcome": {
         "ABORT": "Abbrechen",
         "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> oder <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",

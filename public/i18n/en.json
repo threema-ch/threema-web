@@ -1,4 +1,7 @@
 {
+    "meta": {
+        "DESCRIPTION": "Chat from your desktop with Threema Web and have full access to all chats, contacts and media files."
+    },
     "welcome": {
         "ABORT": "Abort",
         "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> or <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, otherwise the web client might not work properly.",
