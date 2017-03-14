@@ -17,6 +17,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {AsyncEvent} from 'ts-events';
+
 import config from './config';
 import './controllers';
 import './directives';
@@ -25,6 +27,12 @@ import './partials/messenger';
 import './partials/welcome';
 import './services';
 import './threema/container';
+
+// Configure asynchronous events
+AsyncEvent.setScheduler(function(callback) {
+    // Replace the default setImmediate() call by a setTimeout(, 0) call
+    setTimeout(callback, 0);
+});
 
 // Create app module and set dependencies
 angular.module('3ema', [

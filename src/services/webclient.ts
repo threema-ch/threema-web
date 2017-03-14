@@ -145,12 +145,12 @@ export class WebClientService {
     private receiverService: ReceiverService;
 
     // State handling
-    private startupPromise: ng.IDeferred<{}>; // TODO: deferred type
+    private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
     private startupDone: boolean = false;
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
     private initialized: Set<threema.InitializationStep> = new Set();
     private initializedThreshold = 3;
-    private state: StateService;
+    private stateService: StateService;
 
     // SaltyRTC
     private saltyRtcHost: string = null;
@@ -243,7 +243,7 @@ export class WebClientService {
         this.config = CONFIG;
 
         // State
-        this.state = stateService;
+        this.stateService = stateService;
 
         // Other properties
         this.container = container;
@@ -257,6 +257,15 @@ export class WebClientService {
 
         // Setup fields
         this._resetFields();
+
+        // Register event handlers
+        this.stateService.evtConnectionBuildupStateChange.attach(
+            (stateChange: threema.ConnectionBuildupStateChange) => {
+                if (this.startupPromise !== null) {
+                    this.startupPromise.notify(stateChange);
+                }
+            },
+        );
     }
 
     get me(): threema.MeReceiver {
@@ -295,7 +304,7 @@ export class WebClientService {
      */
     public init(keyStore?: saltyrtc.KeyStore, peerTrustedKey?: Uint8Array, resetFields = true): void {
         // Reset state
-        this.state.reset();
+        this.stateService.reset();
 
         // Create WebRTC task instance
         const maxPacketSize = this.browserService.getBrowser().firefox ? 16384 : 65536;
@@ -333,7 +342,7 @@ export class WebClientService {
         this.salty.on('new-responder', () => {
             if (!this.startupDone) {
                 // Peer handshake
-                this.state.updateConnectionBuildupState('peer_handshake');
+                this.stateService.updateConnectionBuildupState('peer_handshake');
             }
         });
 
@@ -347,16 +356,16 @@ export class WebClientService {
                         case 'new':
                         case 'ws-connecting':
                         case 'server-handshake':
-                            if (this.state.connectionBuildupState !== 'push'
-                                && this.state.connectionBuildupState !== 'manual_start') {
-                                this.state.updateConnectionBuildupState('connecting');
+                            if (this.stateService.connectionBuildupState !== 'push'
+                                && this.stateService.connectionBuildupState !== 'manual_start') {
+                                this.stateService.updateConnectionBuildupState('connecting');
                             }
                             break;
                         case 'peer-handshake':
                             // Waiting for peer
-                            if (this.state.connectionBuildupState !== 'push'
-                                && this.state.connectionBuildupState !== 'manual_start') {
-                                this.state.updateConnectionBuildupState('waiting');
+                            if (this.stateService.connectionBuildupState !== 'push'
+                                && this.stateService.connectionBuildupState !== 'manual_start') {
+                                this.stateService.updateConnectionBuildupState('waiting');
                             }
                             break;
                         case 'task':
@@ -364,13 +373,13 @@ export class WebClientService {
                             break;
                         case 'closing':
                         case 'closed':
-                            this.state.updateConnectionBuildupState('closed');
+                            this.stateService.updateConnectionBuildupState('closed');
                             break;
                         default:
                             this.$log.warn('Unknown signaling state:', state);
                     }
                 }
-                this.state.updateSignalingConnectionState(state);
+                this.stateService.updateSignalingConnectionState(state);
             }, 0);
         });
 
@@ -389,12 +398,12 @@ export class WebClientService {
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
-                if (state === 'connected' && this.state.wasConnected) {
+                if (state === 'connected' && this.stateService.wasConnected) {
                     // this happens if a lost connection could be restored
                     // without reset the peer connection
                     this._requestInitialData();
                 }
-                this.state.updateRtcConnectionState(state);
+                this.stateService.updateRtcConnectionState(state);
             };
 
             // Initiate handover
@@ -436,7 +445,7 @@ export class WebClientService {
                     this._requestInitialData();
 
                     // Notify state service about data loading
-                    this.state.updateConnectionBuildupState('loading');
+                    this.stateService.updateConnectionBuildupState('loading');
                 },
             );
 
@@ -505,12 +514,12 @@ export class WebClientService {
                 .then(() => {
                     this.$log.debug('Requested app wakeup');
                     this.$rootScope.$apply(() => {
-                        this.state.updateConnectionBuildupState('push');
+                        this.stateService.updateConnectionBuildupState('push');
                     });
                 });
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug('Push service not available');
-            this.state.updateConnectionBuildupState('manual_start');
+            this.stateService.updateConnectionBuildupState('manual_start');
         }
 
         return this.startupPromise.promise;
@@ -534,12 +543,12 @@ export class WebClientService {
                 redirect: boolean = false): void {
         this.$log.info('Disconnecting...');
 
-        if (requestedByUs && this.state.rtcConnectionState === 'connected') {
+        if (requestedByUs && this.stateService.rtcConnectionState === 'connected') {
             // Ask peer to disconnect too
             this.salty.sendApplicationMessage({type: 'disconnect', forget: deleteStoredData});
         }
 
-        this.state.reset();
+        this.stateService.reset();
 
         // Reset the unread count
         this.resetUnreadCount();
@@ -608,13 +617,16 @@ export class WebClientService {
         }
     }
 
-    // Mark a component as initialized
+    /**
+     * Mark a component as initialized
+     */
     public registerInitializationStep(name: threema.InitializationStep) {
         if (this.initialized.has(name) ) {
             this.$log.warn(this.logTag, 'initialization step', name, 'already registered');
             return;
         }
 
+        this.$log.debug(this.logTag, 'Initialization step', name, 'done');
         this.initialized.add(name);
 
         // check pending routines
@@ -634,9 +646,11 @@ export class WebClientService {
         });
 
         if (this.initialized.size >= this.initializedThreshold) {
-            this.state.updateConnectionBuildupState('done');
+            this.stateService.updateConnectionBuildupState('done');
             this.startupPromise.resolve();
+            this.startupPromise = null;
             this.startupDone = true;
+            this._resetInitializationSteps();
         }
     }
 
@@ -1234,13 +1248,20 @@ export class WebClientService {
     }
 
     /**
+     * Reset data related to initialization.
+     */
+    private _resetInitializationSteps(): void {
+        this.$log.debug(this.logTag, 'Reset initialization steps');
+        this.initialized.clear();
+        this.pendingInitializationStepRoutines = [];
+    }
+
+    /**
      * Reset data fields.
      */
     private _resetFields(): void {
-        // clear initialized steps
-        this.initialized.clear();
-        // clear step routines
-        this.pendingInitializationStepRoutines = [];
+        // Reset initialization data
+        this._resetInitializationSteps();
 
         // Create container instances
         this.receivers = this.container.createReceivers();
@@ -1254,14 +1275,6 @@ export class WebClientService {
 
         // Add filters
         this.conversations.setFilter(this.container.Filters.hasData(this.receivers));
-    }
-
-    private _resetUI(): void {
-        this.$log.debug('UI Reset');
-        // Only reset if currently in the messenger state
-        if (this.$state.includes('messenger')) {
-            this.$state.go(this.$state.current, this.$state.params, {reload: true});
-        }
     }
 
     private _requestInitialData(): void {
@@ -2371,4 +2384,5 @@ export class WebClientService {
     private resetUnreadCount(): void {
         this.titleService.updateUnreadCount(0);
     }
+
 }
