@@ -1,0 +1,22 @@
+noscript {
+    div {
+        background-color: white;
+        display: block;
+        margin: 16px auto 0;
+        width: 50%;
+        text-align: center;
+        padding: 16px;
+    }
+
+    img#logo-noscript {
+        display: block;
+        min-width: 100px;
+        max-width: 300px;
+        margin: 16px auto;
+        text-align: center;
+    }
+
+    h2 {
+        padding-bottom: 8px;
+    }
+}

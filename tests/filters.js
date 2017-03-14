@@ -2,6 +2,8 @@ describe('Filters', function() {
 
     let $filter;
 
+    beforeAll(() => window.onbeforeunload = () => 'Ignoring page reload request');
+
     beforeEach(function() {
 
         // Load 3ema.filters module
@@ -14,16 +16,18 @@ describe('Filters', function() {
 
     });
 
+    function testPatterns(filterName, cases) {
+        const filter = $filter(filterName);
+        for (let testcase of cases) {
+            const input = testcase[0];
+            const expected = testcase[1];
+            expect(filter(input)).toEqual(expected);
+        };
+    };
+
     describe('markify', function() {
 
-        this.testPatterns = (cases) => {
-            const filter = $filter('markify');
-            for (let testcase of cases) {
-                const input = testcase[0];
-                const expected = testcase[1];
-                expect(filter(input)).toEqual(expected);
-            };
-        };
+        this.testPatterns = (cases) => testPatterns('markify', cases);
 
         it('detects bold text', () => {
             this.testPatterns([
@@ -92,5 +96,28 @@ describe('Filters', function() {
             ]);
         });
 
+        it('ignores markup with \\n (newline)', () => {
+            this.testPatterns([
+                ['*First line\n and a new one. (do not parse)*', '*First line\n and a new one. (do not parse)*'],
+                ['*\nbegins with linebreak. (do not parse)*', '*\nbegins with linebreak. (do not parse)*'],
+                ['*Just some text. But it ends with newline (do not parse)\n*', '*Just some text. But it ends with newline (do not parse)\n*'],
+            ]);
+        });
+
     });
+
+    describe('escapeHtml', function() {
+
+        this.testPatterns = (cases) => testPatterns('escapeHtml', cases);
+
+        it('escapes html tags', () => {
+            this.testPatterns([
+                ['<h1>heading</h1>', '&lt;h1&gt;heading&lt;/h1&gt;'],
+                ['<b>< script >foo&ndash;</b>< script>', '&lt;b&gt;&lt; script &gt;foo&amp;ndash;&lt;/b&gt;&lt; script&gt;'],
+                ['<a href="/">a</a>', '&lt;a href=&quot;/&quot;&gt;a&lt;/a&gt;'],
+            ]);
+        });
+
+    });
+
 });

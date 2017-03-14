@@ -18,7 +18,7 @@
 /**
  * controller states
  */
-export class ControllerService implements threema.ControllerService {
+export class ControllerService {
     private currentController: string;
     private $log: ng.ILogService;
     public static $inject = ['$log'];

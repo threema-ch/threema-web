@@ -16,14 +16,15 @@ export default {
     SALTYRTC_SERVER_KEY: 'b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171',
 
     // ICE
-    SALTYRTC_STUN: {
-        urls: 'stun:stun.threema.ch:443',
-    },
-    SALTYRTC_TURN: {
-        urls: 'turn:turn.threema.ch:443',
+    ICE_SERVERS: [{
+        urls: [
+            'turn:turn.threema.ch:443?transport=udp',
+            'turn:turn.threema.ch:443?transport=tcp',
+            'turns:turn.threema.ch:443',
+        ],
         username: 'threema-angular',
         credential: 'Uv0LcCq3kyx6EiRwQW5jVigkhzbp70CjN2CJqzmRxG3UGIdJHSJV6tpo7Gj7YnGB',
-    },
+    }],
 
     // Push
     PUSH_URL: 'https://push-web.threema.ch/push',

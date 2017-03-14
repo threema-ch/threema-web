@@ -21,7 +21,7 @@
             </div>
         </div>
 
-        <div ng-if="(ctrl.state === 'connecting' || ctrl.state === 'waiting') && ctrl.mode === 'unlock'" class="unlock">
+        <div ng-if="ctrl.state === 'connecting' && ctrl.mode === 'unlock'" class="unlock">
             <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
             <div class="password-entry">
                 <label>
@@ -73,6 +73,14 @@
                                 <i class="material-icons md-dark md-14">help</i>
                                 <span translate>troubleshooting.SESSION_DELETED</span>
                             </li>
+                            <li ng-if="ctrl.state === 'peer_handshake'">
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.PLUGIN</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'peer_handshake'">
+                                <i class="material-icons md-dark md-14">help</i>
+                                <span translate>troubleshooting.ADBLOCKER</span>
+                            </li>
                         </ul>
                         <p class="forget" ng-if="ctrl.state === 'push'">
                             <span translate>welcome.IF_YOU_WANT</span>
@@ -100,6 +108,10 @@
                 <strong><span translate>common.ERROR</span>:</strong> <span translate>connecting.CONNECTION_CLOSED</span><br>
                 <span translate>welcome.PLEASE_RELOAD</span>
             </p>
+            <br>
+            <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
+                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+            </md-button>
         </div>
 
     </div>

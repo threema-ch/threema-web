@@ -15,11 +15,13 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {WebClientService} from '../services/webclient';
+
 // tslint:disable:max-line-length
 
 export default [
     'WebClientService',
-    function(webClientService: threema.WebClientService) {
+    function(webClientService: WebClientService) {
         return {
             restrict: 'EA',
             scope: {},
@@ -34,7 +36,7 @@ export default [
             template: `
                 <div class="message-quote-content" ng-style="{'border-color': ctrl.contact.color}">
                     <span class="message-name" ng-style="{'color': ctrl.contact.color}">{{ ctrl.contact.displayName }}</span>
-                    <span class="message-quote" ng-bind-html="ctrl.text | escapeHtml | writeNewLine | emojify | linkify | markify"></span>
+                    <span class="message-quote" ng-bind-html="ctrl.text | escapeHtml | markify | emojify | linkify | nlToBr"></span>
                 </div>
             `,
         };

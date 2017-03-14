@@ -48,7 +48,7 @@ export default [
                 }
             }],
             template: `
-                <span threema-action ng-bind-html="ctrl.text | escapeHtml | writeNewLine: ctrl.multiLine | emojify | markify | linkify"></span>
+                <span threema-action ng-bind-html="ctrl.text | escapeHtml | markify | emojify | linkify | nlToBr: ctrl.multiLine"></span>
             `,
         };
     },

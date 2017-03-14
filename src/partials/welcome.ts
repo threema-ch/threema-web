@@ -15,8 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AvatarControllerModel} from '../controller_model/avatar';
+import {BrowserService} from '../services/browser';
+import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
+import {PushService} from '../services/push';
+import {StateService} from '../services/state';
+import {WebClientService} from '../services/webclient';
 
 class DialogController {
     // TODO: This is also used in partials/messenger.ts. We could somehow
@@ -44,16 +48,17 @@ class WelcomeController {
     private $timeout: ng.ITimeoutService;
     private $interval: ng.IIntervalService;
     private $log: ng.ILogService;
+    private $window: ng.IWindowService;
 
     // Material design services
-    private $mdDialog;
-    private $translate: any;
+    private $mdDialog: ng.material.IDialogService;
+    private $translate: ng.translate.ITranslateService;
 
     // Custom services
-    private webClientService: threema.WebClientService;
+    private webClientService: WebClientService;
     private TrustedKeyStore: TrustedKeyStoreService;
-    private pushService: threema.PushService;
-    private stateService: threema.StateService;
+    private pushService: PushService;
+    private stateService: StateService;
 
     // Other
     public name = 'welcome';
@@ -62,18 +67,19 @@ class WelcomeController {
     private password: string = '';
 
     public static $inject = [
-        '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$mdDialog', '$translate',
+        '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
         'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
         'BROWSER_MIN_VERSIONS', 'ControllerService',
     ];
     constructor($scope: ng.IScope, $state: ng.ui.IStateService, $stateParams: threema.WelcomeStateParams,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
-                $log: ng.ILogService, $mdDialog, $translate,
-                webClientService: threema.WebClientService, TrustedKeyStore: TrustedKeyStoreService,
-                stateService: threema.StateService, pushService: threema.PushService,
-                browserService: threema.BrowserService,
+                $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
+                $translate: ng.translate.ITranslateService,
+                webClientService: WebClientService, TrustedKeyStore: TrustedKeyStoreService,
+                stateService: StateService, pushService: PushService,
+                browserService: BrowserService,
                 minVersions: threema.BrowserMinVersions,
-                controllerService: threema.ControllerService) {
+                controllerService: ControllerService) {
         controllerService.setControllerName('welcome');
         // Angular services
         this.$scope = $scope;
@@ -81,6 +87,7 @@ class WelcomeController {
         this.$timeout = $timeout;
         this.$interval = $interval;
         this.$log = $log;
+        this.$window = $window;
         this.$mdDialog = $mdDialog;
         this.$translate = $translate;
 
@@ -117,7 +124,13 @@ class WelcomeController {
             this.showBrowserWarning();
         }
 
-        // clear cache
+        // Determine whether local storage is available
+        if (this.TrustedKeyStore.blocked === true) {
+            $log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
+            this.showLocalStorageWarning();
+        }
+
+        // Clear cache
         this.webClientService.clearCache();
 
         // Determine connection mode
@@ -234,19 +247,34 @@ class WelcomeController {
     }
 
     /**
-     * Show the "decryption failed" dialog.
+     * Show a browser warning dialog.
      */
     private showBrowserWarning(): void {
-        const confirm = this.$mdDialog.confirm()
-            .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
-            .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
-            .ok(this.$translate.instant('welcome.CONTINUE_ANYWAY'))
-            .cancel(this.$translate.instant('welcome.ABORT'));
-        this.$mdDialog.show(confirm).then(() => {
-            // do nothing
-        }, () => {
-            // Redirect to Threema website
-            window.location.replace('https://threema.ch/');
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.confirm()
+                .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
+                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
+                .ok(this.$translate.instant('welcome.CONTINUE_ANYWAY'))
+                .cancel(this.$translate.instant('welcome.ABORT'));
+            this.$mdDialog.show(confirm).then(() => {
+                // do nothing
+            }, () => {
+                // Redirect to Threema website
+                window.location.replace('https://threema.ch/');
+            });
+        });
+    }
+
+    /**
+     * Show a dialog indicating that local storage is not available.
+     */
+    private showLocalStorageWarning(): void {
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.alert()
+                .title(this.$translate.instant('common.ERROR'))
+                .htmlContent(this.$translate.instant('welcome.LOCAL_STORAGE_MISSING_DETAILS'))
+                .ok(this.$translate.instant('common.OK'));
+            this.$mdDialog.show(confirm);
         });
     }
 
@@ -343,8 +371,8 @@ class WelcomeController {
      * It must be initialized before calling this method.
      */
     private start() {
-        // Start
         this.webClientService.start().then(
+            // If connection buildup is done...
             () => {
                 // Pass password to webclient service
                 this.webClientService.setPassword(this.password);
@@ -355,12 +383,26 @@ class WelcomeController {
                 // Redirect to home
                 this.$timeout(() => this.$state.go('messenger.home'), WelcomeController.REDIRECT_DELAY);
             },
+
+            // If an error occurs...
             (error) => {
                 this.$log.error('Error state:', error);
                 // TODO: should probably show an error message instead
                 this.$timeout(() => this.$state.reload(), WelcomeController.REDIRECT_DELAY);
             },
+
+            // State updates
+            (progress: threema.ConnectionBuildupStateChange) => {
+                // Do nothing
+            },
         );
+    }
+
+    /**
+     * Reload the page.
+     */
+    public reload() {
+        this.$window.location.reload();
     }
 }
 

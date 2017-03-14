@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class BrowserService implements threema.BrowserService {
+export class BrowserService {
     private browser: threema.BrowserInfo;
     private $log: ng.ILogService;
     private isPageVisible = true;

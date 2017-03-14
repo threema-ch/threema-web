@@ -7,32 +7,31 @@
         }
     }
     &.avatar-high {
-
         max-width: 540px;
         max-height: 540px;
     }
 
     &.is-loading {
         //show default blured
-        .avatar-default {
-            &.avatar-high {
+        &.avatar-high {
+            > img {
                 filter: blur(40px);
                 border-radius: 0;
             }
         }
+
     }
     .avatar-loading {
         position: absolute;
         width: 100%;
         height: 100%;
+        z-index: 10;
 
-        md-progress-circular {
-            z-index: 10;
-            display: inline;
+        $circle-diameter: 160px;
+        $thickness: 10px;
+        @include loading-spinner($circle-diameter - $thickness * 2, $thickness, rgba(255, 255, 255, 0.87), rgba(255, 255, 255, 0.1));
+        &>:first-child {
             position: relative;
-
-            // Progress circle diameter is hardcoded as 100px in avatar.ts
-            $circle-diameter: 100px;
             left: calc(50% - #{$circle-diameter / 2});
             top: calc(50% - #{$circle-diameter / 2});
         }

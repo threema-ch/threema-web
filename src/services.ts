@@ -27,7 +27,9 @@ import {NotificationService} from './services/notification';
 import {PushService} from './services/push';
 import {QrCodeService} from './services/qrcode';
 import {ReceiverService} from './services/receiver';
+import {SettingsService} from './services/settings';
 import {StateService} from './services/state';
+import {StringService} from './services/string';
 import {TitleService} from './services/title';
 import {WebClientService} from './services/webclient';
 
@@ -50,4 +52,6 @@ angular.module('3ema.services', [])
 .service('MimeService', MimeService)
 .service('BrowserService', BrowserService)
 .service('ControllerService', ControllerService)
+.service('StringService', StringService)
+.service('SettingsService', SettingsService)
 ;

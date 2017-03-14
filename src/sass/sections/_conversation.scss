@@ -17,7 +17,7 @@
 
         .header-details {
             @include mouse-hand;
-
+            overflow: hidden;
 
             & > *:first-child {
                 font-weight: bold;
@@ -28,6 +28,15 @@
             margin: 0 0 4px 0;
             padding: 0;
             font-size: 120%;
+        }
+
+        .conversation-header-details-detail, .conversation-header-details-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: inherit;
+            line-height: 1.3;
         }
     }
 
@@ -63,7 +72,7 @@
         align-self: flex-end;
         height: 0;
         position: relative;
-        right: 8px;
+        right: 16px;
         bottom: 8px + $scrolljump-height;
         z-index: 15;
         outline: none;
@@ -126,7 +135,7 @@
             margin-top: $main-padding;
             text-align: center;
             .loading {
-                $loading-element-size: 20px;
+                @include loading-spinner(24px, 3px, $material-grey-dark, rgba(0, 0, 0, 0.1));
                 background-color: white;
                 border-radius: 50%;
                 display:inline-block;

@@ -1,12 +1,16 @@
 {
+    "meta": {
+        "DESCRIPTION": "Mit Threema Web bequem vom PC aus chatten, mit vollem Zugriff auf Chats, Kontakte und Medien."
+    },
     "welcome": {
         "ABORT": "Abbrechen",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> oder <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>,<br>um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> oder <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
         "CONTINUE_ANYWAY": "Trotzdem fortfahren",
         "PLEASE_SCAN": "Scannen Sie den QR-Code mit Ihrer Threema-App",
         "PLEASE_UNLOCK": "Verbindung wiederaufbauen",
         "WAITING": "Auf Verbindung warten",
         "PLEASE_RELOAD": "Bitte laden Sie die Seite neu.",
+        "RELOAD": "Seite neu laden",
         "PASSWORD": "Passwort",
         "CHOOSE_PASSWORD": "W\u00e4hlen Sie vor dem Scannen ein Passwort, <br> um sp\u00e4ter die gleiche Sitzung erneut herzustellen.",
         "UNLOCK_FAILED_TEXT": "Sie haben das falsche Passwort eingegeben. Die Verbindung kann nicht aufgebaut werden.",
@@ -29,7 +33,8 @@
         "MANUAL_START_STEP1": "Öffnen Sie die Threema App und tippen Sie auf \"Threema Web\" in der linken Navigation",
         "MANUAL_START_STEP2": "Tippen Sie auf die Sitzung, die Sie wiederherstellen möchten",
         "MANUAL_START_STEP3": "Wählen Sie im Menu \"Sitzung starten\"",
-        "MORE_ABOUT_WEB": "Mehr über Threema Web"
+        "MORE_ABOUT_WEB": "Mehr über Threema Web",
+        "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich.  Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons."
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindungsprobleme",
@@ -45,7 +50,9 @@
         "APP_STARTED": "Ist die Threema-App gestartet?",
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
-        "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?"
+        "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?",
+        "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
+        "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?"
     },
     "common": {
         "YES": "Ja",
@@ -53,7 +60,7 @@
         "CLOSE": "Schliessen",
         "SESSION_CLOSE": "Sitzung schliessen",
         "CONFIRM_CLOSE_BODY": "Wollen Sie die Sitzung wirklich schliessen?",
-        "SESSION_DELETE": "Sitzung Löschen",
+        "SESSION_DELETE": "Sitzung löschen",
         "CONFIRM_DELETE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich löschen?",
         "CONFIRM_DELETE_CLOSE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich schliessen und löschen?",
         "ERROR": "Fehler",
@@ -82,6 +89,7 @@
         "CONTACTS": "Kontakte",
         "NO_CONVERSATIONS_FOUND": "Keine Chats gefunden.",
         "ABOUT": "\u00dcber",
+        "SETTINGS": "Einstellungen",
         "HELP": "Hilfe",
         "NO_CONTACTS_FOUND": "Keine Kontakte gefunden.",
         "ACKNOWLEDGE": "Best\u00e4tigen",
@@ -136,7 +144,9 @@
         "DRAFT": "Entwurf",
         "PRIVATE": "Privat",
         "PRIVATE_CHAT": "Private Unterhaltung",
-        "PRIVATE_CHAT_DESCRIPTION": "Private Unterhaltungen werden in Threema Web nicht unterstützt."
+        "PRIVATE_CHAT_DESCRIPTION": "Private Unterhaltungen werden in Threema Web nicht unterstützt.",
+        "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Nachricht aufteilen.",
+        "MESSAGE_TOO_LONG_SPLIT_BODY": "Es werden maximal {max} Zeichen pro Nachricht unterstützt, wollen Sie die Nachricht in {count} separate Nachrichten aufteilen?"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
@@ -153,7 +163,11 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Sprachnachrichten erhalten.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
-        "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden"
+        "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",
+        "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen).",
+        "NOTIFICATION_PERMISSION_DENIED" : "Berechtigung nicht erteilt. Sie müssen die Berechtigungen für Threema Web manuell erteilen.",
+        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE" : "Mehr erfahren.",
+        "NOTIFICATION_API_NOT_AVAILABLE" : "Ihr Browser unterstützt keine Desktopbenachrichtigungen."
     },
     "mimeTypes": {
         "android_apk": "Android-Paket",
@@ -181,5 +195,13 @@
         "LICENSE_LINK_BEFORE": "Lizenzen von verwendeten Open Source Komponenten können",
         "LICENSE_LINK_TEXT": "im Quellcode",
         "LICENSE_LINK_AFTER": "gefunden werden"
+    },
+    "settings": {
+        "SETTINGS":"Einstellungen",
+        "notifications": {
+            "NOTIFICATIONS": "Benachrichtigungen",
+            "SHOW_NOTIFICATIONS": "Desktopbenachrichtigungen anzeigen",
+            "SHOW_PREVIEW": "Nachrichteninhalt in Benachrichtigungen anzeigen"
+        }
     }
 }

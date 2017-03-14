@@ -15,11 +15,18 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class StateService implements threema.StateService {
+import {AsyncEvent} from 'ts-events';
+
+export class StateService {
+
+    private logTag: string = '[StateService]';
 
     // Angular services
     private $log: ng.ILogService;
     private $interval: ng.IIntervalService;
+
+    // Events
+    public evtConnectionBuildupStateChange = new AsyncEvent<threema.ConnectionBuildupStateChange>();
 
     // WebRTC states
     public signalingConnectionState: saltyrtc.SignalingState;
@@ -50,7 +57,7 @@ export class StateService implements threema.StateService {
         const prevState = this.signalingConnectionState;
         this.signalingConnectionState = state;
         if (this.stage === 'signaling') {
-            this.$log.debug('[StateService] Signaling connection state:', prevState, '=>', state);
+            this.$log.debug(this.logTag, 'Signaling connection state:', prevState, '=>', state);
             switch (state) {
                 case 'new':
                 case 'ws-connecting':
@@ -67,10 +74,10 @@ export class StateService implements threema.StateService {
                     this.state = 'error';
                     break;
                 default:
-                    this.$log.warn('[StateService] Ignored signaling connection state change to', state);
+                    this.$log.warn(this.logTag, 'Ignored signaling connection state change to', state);
             }
         } else {
-            this.$log.debug('[StateService] Ignored signaling connection state to "' + state + '"');
+            this.$log.debug(this.logTag, 'Ignored signaling connection state to "' + state + '"');
         }
     }
 
@@ -81,7 +88,7 @@ export class StateService implements threema.StateService {
         const prevState = this.rtcConnectionState;
         this.rtcConnectionState = state;
         if (this.stage === 'rtc') {
-            this.$log.debug('[StateService] RTC connection state:', prevState, '=>', state);
+            this.$log.debug(this.logTag, 'RTC connection state:', prevState, '=>', state);
             switch (state) {
                 case 'new':
                 case 'connecting':
@@ -95,10 +102,10 @@ export class StateService implements threema.StateService {
                     this.state = 'error';
                     break;
                 default:
-                    this.$log.warn('[StateService] Ignored RTC connection state change to', state);
+                    this.$log.warn(this.logTag, 'Ignored RTC connection state change to', state);
             }
         } else {
-            this.$log.debug('[StateService] Ignored RTC connection state change to "' + state + '"');
+            this.$log.debug(this.logTag, 'Ignored RTC connection state change to "' + state + '"');
         }
     }
 
@@ -109,10 +116,12 @@ export class StateService implements threema.StateService {
         if (this.connectionBuildupState === state) {
             return;
         }
-        this.$log.debug('[StateService] Connection buildup state:', this.connectionBuildupState, '=>', state);
+        const prevState = this.connectionBuildupState;
+        this.$log.debug(this.logTag, 'Connection buildup state:', prevState, '=>', state);
 
         // Update state
         this.connectionBuildupState = state;
+        this.evtConnectionBuildupStateChange.post({state: state, prevState: prevState});
 
         // Cancel progress interval if present
         if (this.progressInterval !== null) {
@@ -188,7 +197,7 @@ export class StateService implements threema.StateService {
      * Reset all states.
      */
     public reset(): void {
-        this.$log.debug('[StateService] Reset');
+        this.$log.debug(this.logTag, 'Reset');
 
         // Reset state
         this.signalingConnectionState = 'new';

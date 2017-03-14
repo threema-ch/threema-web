@@ -29,6 +29,7 @@ LICENSE_FILES=(
     'node-sass' 'node_modules/node-sass/LICENSE'
     'saltyrtc-client' 'node_modules/saltyrtc-client/LICENSE.md'
     'saltyrtc-task-webrtc' 'node_modules/saltyrtc-task-webrtc/LICENSE.md'
+    'ts-events' 'node_modules/ts-events/LICENSE'
     'tsify' '.licenses/tsify'
     'tweetnacl' 'node_modules/tweetnacl/LICENSE'
     'typescript' 'node_modules/typescript/LICENSE.txt'

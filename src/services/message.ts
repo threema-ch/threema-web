@@ -15,7 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class MessageAccess implements threema.MessageAccess {
+import {ReceiverService} from './receiver';
+
+export class MessageAccess {
     public quote = false;
     public ack = false;
     public dec = false;
@@ -24,13 +26,13 @@ class MessageAccess implements threema.MessageAccess {
     public copy = false;
 }
 
-export class MessageService implements threema.MessageService {
+export class MessageService {
 
     private $log: ng.ILogService;
-    private receiverService: threema.ReceiverService;
+    private receiverService: ReceiverService;
 
     public static $inject = ['$log', 'ReceiverService'];
-    constructor($log: ng.ILogService, receiverService: threema.ReceiverService) {
+    constructor($log: ng.ILogService, receiverService: ReceiverService) {
         this.$log = $log;
         this.receiverService = receiverService;
     }
@@ -38,7 +40,7 @@ export class MessageService implements threema.MessageService {
     public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess  {
         let access = new MessageAccess();
 
-        if (message !== undefined || receiver !== undefined || message.temporaryId === undefined) {
+        if (message !== undefined && receiver !== undefined && message.temporaryId === undefined) {
             access.quote =  (message.type === 'text')
                 || (message.type === 'location')
                 || (message.caption !== undefined);
@@ -69,7 +71,7 @@ export class MessageService implements threema.MessageService {
     }
 
     public showStatusIcon(message: threema.Message, receiver: threema.Receiver): boolean {
-        if (message !== null) {
+        if (message !== null && receiver !== null) {
 
             let messageState = message.state;
             // MessageState messageState = messageModel.getState();
@@ -77,8 +79,7 @@ export class MessageService implements threema.MessageService {
             // group message/distribution list message icons only on pending or failing states
             switch (receiver.type) {
                 case 'group':
-
-                    if (message.isOutbox && message.temporaryId === undefined && message.temporaryId === null) {
+                    if (message.isOutbox && (message.temporaryId === undefined || message.temporaryId === null)) {
                         return messageState === 'send-failed'
                             || messageState === 'sending'
                             || (messageState === 'pending' && message.type !== 'ballot');
@@ -96,12 +97,56 @@ export class MessageService implements threema.MessageService {
                             || messageState === 'sending'
                             || messageState === 'pending';
                     }
+
                     return true;
                 default:
                     return false;
             }
         }
         return false;
+    }
+
+    /**
+     * return the filename of a message (image, audio, file)
+     * used for downloads
+     * @param message
+     * @returns filename string or null
+     */
+    public getFileName(message: threema.Message): string {
+        if (message === undefined
+            || message === null) {
+            return null;
+        }
+
+        let getFileName = (prefix: string, postfix?: string): string => {
+            if (message.id === undefined) {
+                this.$log.warn('missing id on message model');
+                return null;
+            }
+            return prefix
+                + '-' + message.id
+                + (postfix !== undefined ? '.' + postfix : '');
+        };
+
+        switch (message.type) {
+            case 'image':
+                return getFileName('image', 'jpg');
+            case 'video':
+                return getFileName('video', 'mpg');
+            case 'file':
+                if (message.file !== undefined) {
+                    return message.file.name;
+                }
+
+                // should not happen
+                this.$log.warn('file message without file object', message.id);
+                return getFileName('file');
+            case 'audio':
+                return getFileName('audio', 'mp4');
+            default:
+                // ignore file types without a read file
+                return null;
+        }
     }
 
     /**

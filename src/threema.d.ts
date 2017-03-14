@@ -15,8 +15,6 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Types used for the Threema Webclient.
-
 declare const angular: ng.IAngularStatic;
 
 declare namespace threema {
@@ -44,10 +42,14 @@ declare namespace threema {
         data?: any;
     }
 
-    type WireMessageCallback = (message: WireMessage, result: any) => boolean;
-
     type MessageType = 'text' | 'image' | 'video' | 'audio' | 'location' | 'status' | 'ballot' | 'file';
     type MessageState = 'delivered' | 'read' | 'send-failed' | 'sent' | 'user-ack' | 'user-dec' | 'pending' | 'sending';
+    type InitializationStep = 'client info' | 'conversations' |  'receivers';
+
+    interface InitializationStepRoutine {
+        requiredSteps: InitializationStep[];
+        callback: any;
+    }
 
     interface Thumbnail {
         img?: string;
@@ -227,9 +229,27 @@ declare namespace threema {
 
     /**
      * Connection state in the welcome dialog.
+     *
+     * States:
+     *
+     * - new: Initial state
+     * - connecting: Connecting to signaling server
+     * - push: When trying to reconnect, waiting for push notification to arrive
+     * - manual_start: When trying to reconnect, waiting for manual session start
+     * - waiting: Waiting for new-responder message from signaling server
+     * - peer_handshake: Doing SaltyRTC handshake with the peer
+     * - loading: Loading initial data
+     * - done: Initial loading is finished
+     * - closed: Connection is closed
+     *
      */
-    type ConnectionBuildupState = 'new' | 'push' | 'manual_start' | 'connecting' | 'waiting'
+    type ConnectionBuildupState = 'new' | 'connecting' | 'push' | 'manual_start' | 'waiting'
         | 'peer_handshake' | 'loading' | 'done' | 'closed';
+
+    interface ConnectionBuildupStateChange {
+        state: ConnectionBuildupState;
+        prevState: ConnectionBuildupState;
+    }
 
     /**
      * Connection state of the WebRTC peer connection.
@@ -245,11 +265,6 @@ declare namespace threema {
      * Type of message to be sent to a receiver.
      */
     type MessageContentType = 'text' | 'file';
-
-    /**
-     * Possible message types sent to the receiver.
-     */
-    type MessageDataType = 'text' | 'file';
 
     interface MessageData {
         // optional quote object
@@ -294,57 +309,6 @@ declare namespace threema {
         initParams: null | {identity: null};
     }
 
-    /**
-     * State service.
-     */
-    interface StateService {
-        // WebRTC states
-        signalingConnectionState: saltyrtc.SignalingState;
-        rtcConnectionState: RTCConnectionState;
-
-        // Global connection state
-        state: 'ok' | 'warning' | 'error';
-        stage: 'signaling' | 'rtc';
-        wasConnected: boolean;
-
-        // Connection buildup
-        connectionBuildupState: ConnectionBuildupState;
-        progress: number;
-        slowConnect: boolean;
-
-        // Update states
-        updateSignalingConnectionState(state: saltyrtc.SignalingState): void;
-        updateRtcConnectionState(state: RTCConnectionState): void;
-        updateConnectionBuildupState(state: ConnectionBuildupState): void;
-
-        reset(): void;
-    }
-
-    /**
-     * Notification service.
-     */
-    interface NotificationService {
-        requestNotificationPermission(): void;
-        showNotification(id: string, title: string, body: string,
-                         avatar: string | null, clickCallback: any | null): boolean;
-        clearCache(tag: string): void;
-    }
-
-    interface MessageService {
-        getAccess(message: Message, receiver: Receiver): MessageAccess;
-        createTemporary(receiver: Receiver, type: string, messageData: MessageData): Message;
-        showStatusIcon(message: Message, receiver: Receiver): boolean;
-    }
-
-    interface MessageAccess {
-        quote: boolean;
-        ack: boolean;
-        dec: boolean;
-        delete: boolean;
-        download: boolean;
-        copy: boolean;
-    }
-
     interface Quote {
         identity: string;
         text: string;
@@ -364,21 +328,6 @@ declare namespace threema {
         pushToken: string | null;
     }
 
-    interface TrustedKeyStoreService {
-        storeTrustedKey(ownPublicKey: Uint8Array, ownSecretKey: Uint8Array, peerPublicKey: Uint8Array,
-                        pushToken: string | null, password: string): void;
-        hasTrustedKey(): boolean;
-        retrieveTrustedKey(password: string): TrustedKeyStoreData;
-        clearTrustedKey(): void;
-    }
-
-    interface PushService {
-        init(pushToken: string): void;
-        reset(): void;
-        isAvailable(): boolean;
-        sendPush(session: Uint8Array): Promise<boolean>;
-    }
-
     interface BrowserInfo {
         chrome: boolean;
         firefox: boolean;
@@ -387,35 +336,6 @@ declare namespace threema {
         safari: boolean;
         version: string;
         textInfo: string;
-    }
-
-    interface BrowserService {
-        getBrowser(): BrowserInfo;
-        isVisible(): boolean;
-    }
-
-    interface TitleService {
-        updateUnreadCount(count: number): void;
-    }
-
-    interface FingerPrintService {
-        generate(publicKey: ArrayBuffer): string;
-    }
-
-    interface ContactService {
-        requiredDetails(contactReceiver: ContactReceiver): Promise<ContactReceiver>;
-    }
-
-    interface ControllerModelService {
-        contact(receiver: ContactReceiver, mode: any): ControllerModel;
-        group(receiver: GroupReceiver, mode: any): ControllerModel;
-        distributionList(receiver: DistributionListReceiver, mode: any): ControllerModel;
-    }
-
-    interface QrCodeService {
-        buildQrCodePayload(initiatorKey: Uint8Array, authToken: Uint8Array, serverKey: Uint8Array | null,
-                           host: string, port: number,
-                           persistent: boolean): string;
     }
 
     interface PromiseCallbacks {
@@ -439,11 +359,6 @@ declare namespace threema {
         setOnRemoved(callback: any): void;
     }
 
-    interface AvatarControllerModel {
-        onChangeAvatar: (image: ArrayBuffer) => void;
-        getAvatar(): ArrayBuffer | null;
-    }
-
     interface Alert {
         source: string;
         type: string;
@@ -461,8 +376,7 @@ declare namespace threema {
         SALTYRTC_HOST: string | null;
         SALTYRTC_HOST_PREFIX: string | null;
         SALTYRTC_HOST_SUFFIX: string | null;
-        SALTYRTC_STUN: RTCIceServer;
-        SALTYRTC_TURN: RTCIceServer;
+        ICE_SERVERS: RTCIceServer[];
         PUSH_URL: string;
     }
 
@@ -470,90 +384,6 @@ declare namespace threema {
         FF: number;
         CHROME: number;
         OPERA: number;
-    }
-
-    interface MimeService {
-        isImage(mimeType: string): boolean;
-        isAudio(mimeType: string): boolean;
-        isVideo(mimeType: string): boolean;
-        getLabel(mimeType: string): string;
-        getIconUrl(mimeType: string): string;
-    }
-
-    interface ReceiverService {
-        setActive(activeReceiver: Receiver): void;
-        getActive(): Receiver;
-        isConversationActive(conversation: Conversation): boolean;
-        compare(a: Conversation | Receiver, b: Conversation| Receiver): boolean;
-        isContact(receiver: Receiver): boolean;
-        isGroup(receiver: Receiver): boolean;
-        isDistributionList(receiver: Receiver): boolean;
-        isBusinessContact(receiver: Receiver): boolean;
-    }
-
-    interface WebClientDefault {
-        getAvatar(type: string, highResolution: boolean): string;
-    }
-
-    interface WebClientService {
-        salty: saltyrtc.SaltyRTC;
-        messages: Container.Messages;
-        conversations: Container.Conversations;
-        receivers: Container.Receivers;
-        alerts: Alert[];
-        defaults: WebClientDefault;
-        receiverListener: ReceiverListener[];
-
-        me: MeReceiver;
-        contacts: Map<string, ContactReceiver>;
-        groups: Map<string, GroupReceiver>;
-        distributionLists: Map<string, DistributionListReceiver>;
-        typing: Container.Typing;
-
-        buildQrCodePayload(persistent: boolean): string;
-        init(keyStore?: saltyrtc.KeyStore, peerTrustedKey?: Uint8Array, resetField?: boolean): void;
-        start(): ng.IPromise<any>;
-        stop(requestedByUs: boolean, deleteStoredData?: boolean, resetPush?: boolean, redirect?: boolean): void;
-        registerInitializationStep(name: string): void;
-        setReceiverListener(listener: ReceiverListener): void;
-        requestClientInfo(): void;
-        requestReceivers(): void;
-        requestConversations(): void;
-        requestMessages(receiver: Receiver, reloadExisting?: boolean): number;
-        requestAvatar(receiver: Receiver, highResolution: boolean): Promise<any>;
-        requestThumbnail(receiver: Receiver, message: Message): Promise<any>;
-        requestBlob(msgId: number, receiver: Receiver): Promise<ArrayBuffer>;
-        requestRead(receiver, newestMessageId: number): void;
-        requestContactDetail(contactReceiver: ContactReceiver): Promise<any>;
-        sendMessage(receiver, type: MessageContentType, message: MessageData): Promise<Promise<any>>;
-        ackMessage(receiver, message: Message, acknowledged?: boolean): void;
-        deleteMessage(receiver, message: Message): void;
-        sendMeIsTyping(receiver, isTyping: boolean): void;
-        sendKeyPersisted(): void;
-        addContact(threemaId: String): Promise<ContactReceiver>;
-        modifyContact(threemaId: String, firstName: String, lastName: String, avatar?: ArrayBuffer):
-            Promise<ContactReceiver>;
-        createGroup(members: String[], name: String, avatar?: ArrayBuffer): Promise<GroupReceiver>;
-        modifyGroup(id: string, members: String[], name: String, avatar?: ArrayBuffer): Promise<GroupReceiver>;
-        leaveGroup(group: GroupReceiver): Promise<any>;
-        deleteGroup(group: GroupReceiver): Promise<any>;
-        syncGroup(group: GroupReceiver): Promise<any>;
-        createDistributionList(members: String[], name: String): Promise<DistributionListReceiver>;
-        modifyDistributionList(id: string, members: String[], name: String): Promise<DistributionListReceiver>;
-        deleteDistributionList(distributionList: DistributionListReceiver): Promise<any>;
-        isTyping(receiver: ContactReceiver): boolean;
-        getMyIdentity(): Identity;
-        getQuote(receiver: Receiver): Quote;
-        setQuote(receiver: Receiver, message?: Message): void;
-        setDraft(receiver: Receiver, message: string): void;
-        getDraft(receiver: Receiver): string;
-        setPassword(password: string): void;
-        clearCache(): void;
-    }
-
-    interface ControllerService {
-        setControllerName(name: string): void;
-        getControllerName(): string;
     }
 
     namespace Container {

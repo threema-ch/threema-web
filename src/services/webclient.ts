@@ -17,10 +17,20 @@
 
 import * as msgpack from 'msgpack-lite';
 import {hexToU8a} from '../helpers';
+import {BrowserService} from './browser';
+import {FingerPrintService} from './fingerprint';
 import {TrustedKeyStoreService} from './keystore';
+import {MessageService} from './message';
+import {MimeService} from './mime';
+import {NotificationService} from './notification';
 import {PeerConnectionHelper} from './peerconnection';
+import {PushService} from './push';
+import {QrCodeService} from './qrcode';
+import {ReceiverService} from './receiver';
+import {StateService} from './state';
+import {TitleService} from './title';
 
-class WebClientDefault implements threema.WebClientDefault {
+class WebClientDefault {
     private avatar: threema.AvatarRegistry = {
         group: {
             low: 'img/ic_group_t.png',
@@ -53,8 +63,10 @@ class WebClientDefault implements threema.WebClientDefault {
 /**
  * This service handles everything related to the communication with the peer.
  */
-export class WebClientService implements threema.WebClientService {
+export class WebClientService {
     private static AVATAR_LOW_MAX_SIZE = 48;
+    private static MAX_TEXT_LENGTH = 3500;
+    private static MAX_FILE_SIZE = 15 * 1024 * 1024;
 
     private static TYPE_REQUEST = 'request';
     private static TYPE_RESPONSE = 'response';
@@ -122,22 +134,23 @@ export class WebClientService implements threema.WebClientService {
     private $timeout: ng.ITimeoutService;
 
     // Custom services
-    private notificationService: threema.NotificationService;
-    private messageService: threema.MessageService;
-    private pushService: threema.PushService;
-    private browserService: threema.BrowserService;
-    private titleService: threema.TitleService;
-    private fingerPrintService: threema.FingerPrintService;
-    private qrCodeService: threema.QrCodeService;
-    private mimeService: threema.MimeService;
-    private receiverService: threema.ReceiverService;
+    private notificationService: NotificationService;
+    private messageService: MessageService;
+    private pushService: PushService;
+    private browserService: BrowserService;
+    private titleService: TitleService;
+    private fingerPrintService: FingerPrintService;
+    private qrCodeService: QrCodeService;
+    private mimeService: MimeService;
+    private receiverService: ReceiverService;
 
     // State handling
-    private startupPromise: ng.IDeferred<{}>; // TODO: deferred type
+    private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
     private startupDone: boolean = false;
-    private initialized = 0;
+    private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
+    private initialized: Set<threema.InitializationStep> = new Set();
     private initializedThreshold = 3;
-    private state: threema.StateService;
+    private stateService: StateService;
 
     // SaltyRTC
     private saltyRtcHost: string = null;
@@ -150,7 +163,7 @@ export class WebClientService implements threema.WebClientService {
     public conversations: threema.Container.Conversations;
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
-    public defaults: threema.WebClientDefault;
+    public defaults: WebClientDefault;
     private myIdentity: threema.Identity;
     private pushToken: string = null;
 
@@ -193,16 +206,16 @@ export class WebClientService implements threema.WebClientService {
                 $timeout: ng.ITimeoutService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
-                stateService: threema.StateService,
-                notificationService: threema.NotificationService,
-                messageService: threema.MessageService,
-                pushService: threema.PushService,
-                browserService: threema.BrowserService,
-                titleService: threema.TitleService,
-                fingerPrintService: threema.FingerPrintService,
-                qrCodeService: threema.QrCodeService,
-                mimeService: threema.MimeService,
-                receiverService: threema.ReceiverService,
+                stateService: StateService,
+                notificationService: NotificationService,
+                messageService: MessageService,
+                pushService: PushService,
+                browserService: BrowserService,
+                titleService: TitleService,
+                fingerPrintService: FingerPrintService,
+                qrCodeService: QrCodeService,
+                mimeService: MimeService,
+                receiverService: ReceiverService,
                 CONFIG: threema.Config) {
 
         // Angular services
@@ -230,7 +243,7 @@ export class WebClientService implements threema.WebClientService {
         this.config = CONFIG;
 
         // State
-        this.state = stateService;
+        this.stateService = stateService;
 
         // Other properties
         this.container = container;
@@ -239,10 +252,20 @@ export class WebClientService implements threema.WebClientService {
         // Get default class
         this.defaults = new WebClientDefault();
 
+        // Initialize drafts
         this.drafts = this.container.createDrafts();
 
         // Setup fields
         this._resetFields();
+
+        // Register event handlers
+        this.stateService.evtConnectionBuildupStateChange.attach(
+            (stateChange: threema.ConnectionBuildupStateChange) => {
+                if (this.startupPromise !== null) {
+                    this.startupPromise.notify(stateChange);
+                }
+            },
+        );
     }
 
     get me(): threema.MeReceiver {
@@ -281,7 +304,7 @@ export class WebClientService implements threema.WebClientService {
      */
     public init(keyStore?: saltyrtc.KeyStore, peerTrustedKey?: Uint8Array, resetFields = true): void {
         // Reset state
-        this.state.reset();
+        this.stateService.reset();
 
         // Create WebRTC task instance
         const maxPacketSize = this.browserService.getBrowser().firefox ? 16384 : 65536;
@@ -319,7 +342,7 @@ export class WebClientService implements threema.WebClientService {
         this.salty.on('new-responder', () => {
             if (!this.startupDone) {
                 // Peer handshake
-                this.state.updateConnectionBuildupState('peer_handshake');
+                this.stateService.updateConnectionBuildupState('peer_handshake');
             }
         });
 
@@ -333,16 +356,16 @@ export class WebClientService implements threema.WebClientService {
                         case 'new':
                         case 'ws-connecting':
                         case 'server-handshake':
-                            if (this.state.connectionBuildupState !== 'push'
-                                && this.state.connectionBuildupState !== 'manual_start') {
-                                this.state.updateConnectionBuildupState('connecting');
+                            if (this.stateService.connectionBuildupState !== 'push'
+                                && this.stateService.connectionBuildupState !== 'manual_start') {
+                                this.stateService.updateConnectionBuildupState('connecting');
                             }
                             break;
                         case 'peer-handshake':
                             // Waiting for peer
-                            if (this.state.connectionBuildupState !== 'push'
-                                && this.state.connectionBuildupState !== 'manual_start') {
-                                this.state.updateConnectionBuildupState('waiting');
+                            if (this.stateService.connectionBuildupState !== 'push'
+                                && this.stateService.connectionBuildupState !== 'manual_start') {
+                                this.stateService.updateConnectionBuildupState('waiting');
                             }
                             break;
                         case 'task':
@@ -350,31 +373,37 @@ export class WebClientService implements threema.WebClientService {
                             break;
                         case 'closing':
                         case 'closed':
-                            this.state.updateConnectionBuildupState('closed');
+                            this.stateService.updateConnectionBuildupState('closed');
                             break;
                         default:
                             this.$log.warn('Unknown signaling state:', state);
                     }
                 }
-                this.state.updateSignalingConnectionState(state);
+                this.stateService.updateSignalingConnectionState(state);
             }, 0);
         });
 
         // Once the connection is established, initiate the peer connection
         // and start the handover.
         this.salty.once('state-change:task', () => {
+            // Firefox <53 does not yet support TLS. Skip it, to save allocations.
+            const browser = this.browserService.getBrowser();
+            if (browser.firefox && parseFloat(browser.version) < 53) {
+                this.skipIceTls();
+            }
+
             this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
                                                      this.$rootScope, this.webrtcTask,
-                                                     this.config.SALTYRTC_STUN, this.config.SALTYRTC_TURN);
+                                                     this.config.ICE_SERVERS);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
-                if (state === 'connected' && this.state.wasConnected) {
+                if (state === 'connected' && this.stateService.wasConnected) {
                     // this happens if a lost connection could be restored
                     // without reset the peer connection
                     this._requestInitialData();
                 }
-                this.state.updateRtcConnectionState(state);
+                this.stateService.updateRtcConnectionState(state);
             };
 
             // Initiate handover
@@ -396,9 +425,9 @@ export class WebClientService implements threema.WebClientService {
         this.salty.on('handover', () => {
             this.$log.debug('Handover done');
 
-            // Ask user for notification permission
-            this.$log.debug('Check notification permission...');
-            this.notificationService.requestNotificationPermission();
+            // Initialize NotificationService
+            this.$log.debug('Initializing NotificationService...');
+            this.notificationService.init();
 
             // Create secure data channel
             this.$log.debug('Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
@@ -416,7 +445,7 @@ export class WebClientService implements threema.WebClientService {
                     this._requestInitialData();
 
                     // Notify state service about data loading
-                    this.state.updateConnectionBuildupState('loading');
+                    this.stateService.updateConnectionBuildupState('loading');
                 },
             );
 
@@ -484,11 +513,13 @@ export class WebClientService implements threema.WebClientService {
                 .catch(() => this.$log.warn('Could not notify app!'))
                 .then(() => {
                     this.$log.debug('Requested app wakeup');
-                    this.state.updateConnectionBuildupState('push');
+                    this.$rootScope.$apply(() => {
+                        this.stateService.updateConnectionBuildupState('push');
+                    });
                 });
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug('Push service not available');
-            this.state.updateConnectionBuildupState('manual_start');
+            this.stateService.updateConnectionBuildupState('manual_start');
         }
 
         return this.startupPromise.promise;
@@ -512,12 +543,15 @@ export class WebClientService implements threema.WebClientService {
                 redirect: boolean = false): void {
         this.$log.info('Disconnecting...');
 
-        if (requestedByUs && this.state.rtcConnectionState === 'connected') {
+        if (requestedByUs && this.stateService.rtcConnectionState === 'connected') {
             // Ask peer to disconnect too
             this.salty.sendApplicationMessage({type: 'disconnect', forget: deleteStoredData});
         }
 
-        this.state.reset();
+        this.stateService.reset();
+
+        // Reset the unread count
+        this.resetUnreadCount();
 
         // Clear stored data (trusted key, push token, etc)
         if (deleteStoredData === true) {
@@ -565,13 +599,58 @@ export class WebClientService implements threema.WebClientService {
         }
     }
 
-    // Mark a component as initialized
-    public registerInitializationStep(name: string) {
-        this.initialized += 1;
-        if (this.initialized >= this.initializedThreshold) {
-            this.state.updateConnectionBuildupState('done');
+    /**
+     * Remove "turns:" servers from the ICE_SERVERS configuration
+     * if at least one "turn:" server with tcp transport is in the list.
+     */
+    public skipIceTls(): void {
+        this.$log.debug(this.logTag, 'Requested to remove TURNS server from ICE configuration');
+        const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
+        if (allUrls.some((url) => url.startsWith('turn:') && url.endsWith('=tcp'))) {
+            // There's at least one TURN server with TCP transport in the list
+            for (let server of this.config.ICE_SERVERS) {
+                // Remove TLS entries
+                server.urls = server.urls.filter((url) => !url.startsWith('turns:'));
+            }
+        } else {
+            this.$log.debug(this.logTag, 'No fallback TURN TCP server present, keeping TURNS server');
+        }
+    }
+
+    /**
+     * Mark a component as initialized
+     */
+    public registerInitializationStep(name: threema.InitializationStep) {
+        if (this.initialized.has(name) ) {
+            this.$log.warn(this.logTag, 'initialization step', name, 'already registered');
+            return;
+        }
+
+        this.$log.debug(this.logTag, 'Initialization step', name, 'done');
+        this.initialized.add(name);
+
+        // check pending routines
+        this.pendingInitializationStepRoutines = this.pendingInitializationStepRoutines.filter((routine) => {
+            let isValid = true;
+            for (let requiredStep of routine.requiredSteps) {
+                if (!this.initialized.has(requiredStep)) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) {
+                this.$log.log('run routine after initialisation', name, ' completed');
+                routine.callback();
+            }
+            return !isValid;
+        });
+
+        if (this.initialized.size >= this.initializedThreshold) {
+            this.stateService.updateConnectionBuildupState('done');
             this.startupPromise.resolve();
+            this.startupPromise = null;
             this.startupDone = true;
+            this._resetInitializationSteps();
         }
     }
 
@@ -775,13 +854,18 @@ export class WebClientService implements threema.WebClientService {
                     case 'text':
                         subType = WebClientService.SUB_TYPE_TEXT_MESSAGE;
                         // Ignore empty text messages
-                        if ((message as threema.TextMessageData).text.length === 0) {
+                        let textSize = (message as threema.TextMessageData).text.length;
+                        if (textSize === 0) {
                             return reject();
+                        } else if (textSize > WebClientService.MAX_TEXT_LENGTH) {
+                            return reject(this.$translate.instant('error.TEXT_TOO_LONG', {
+                                max: WebClientService.MAX_TEXT_LENGTH,
+                            }));
                         }
                         break;
                     case 'file':
                         // validate max file size of 20mb
-                        if ((message as threema.FileMessageData).size > 15 * 1024 * 1024) {
+                        if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE) {
                             return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
                         }
                         // determine feature required feature level
@@ -858,7 +942,7 @@ export class WebClientService implements threema.WebClientService {
                 // send message and handling error promise
                 this._sendCreatePromise(subType, args, message)
                     .catch((error) => {
-                        this.$log.error('error sending file', error);
+                        this.$log.error('error sending message', error);
                         // remove temporary message
                         this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
 
@@ -1164,11 +1248,20 @@ export class WebClientService implements threema.WebClientService {
     }
 
     /**
+     * Reset data related to initialization.
+     */
+    private _resetInitializationSteps(): void {
+        this.$log.debug(this.logTag, 'Reset initialization steps');
+        this.initialized.clear();
+        this.pendingInitializationStepRoutines = [];
+    }
+
+    /**
      * Reset data fields.
      */
     private _resetFields(): void {
-        // Set initialization count back to 0
-        this.initialized = 0;
+        // Reset initialization data
+        this._resetInitializationSteps();
 
         // Create container instances
         this.receivers = this.container.createReceivers();
@@ -1182,14 +1275,6 @@ export class WebClientService implements threema.WebClientService {
 
         // Add filters
         this.conversations.setFilter(this.container.Filters.hasData(this.receivers));
-    }
-
-    private _resetUI(): void {
-        this.$log.debug('UI Reset');
-        // Only reset if currently in the messenger state
-        if (this.$state.includes('messenger')) {
-            this.$state.go(this.$state.current, this.$state.params, {reload: true});
-        }
     }
 
     private _requestInitialData(): void {
@@ -1442,7 +1527,8 @@ export class WebClientService implements threema.WebClientService {
                         id: conversation.id,
                         type: conversation.type,
                     } as threema.Receiver);
-                    if (receiver.avatar === undefined) {
+                    if (receiver !== undefined
+                            && receiver.avatar === undefined) {
                         receiver.avatar = {
                             low: this.$filter('bufferToUrl')(conversation.avatar, 'image/png'),
                         };
@@ -1454,6 +1540,7 @@ export class WebClientService implements threema.WebClientService {
                 this.conversations.updateOrAdd(conversation);
             }
         }
+        this.updateUnreadCount();
         this.registerInitializationStep('conversations');
     }
 
@@ -1482,21 +1569,20 @@ export class WebClientService implements threema.WebClientService {
                     for (let conversation of this.conversations.get()) {
                         if (this.receiverService.compare(conversation, data)) {
 
-                            // This is our conversation! If the unreadcount has increased,
-                            // we received a new message.
                             if (data.unreadCount > conversation.unreadCount) {
+                                // This is our conversation! If the unreadcount
+                                // has increased, we received a new message.
                                 this.onNewMessage(data.latestMessage, conversation);
-
-                            // Otherwise, if it has decreased, clear the notification cache.
                             } else if (data.unreadCount < conversation.unreadCount) {
-                                this.notificationService.clearCache(data.type + '-' + data.id);
+                                // Otherwise, if it has decreased, hide the notification.
+                                this.notificationService.hideNotification(data.type + '-' + data.id);
                             }
 
                             break;
                         }
                     }
                 } else {
-                    this.notificationService.clearCache(data.type + '-' + data.id);
+                    this.notificationService.hideNotification(data.type + '-' + data.id);
                 }
                 // we have to call update or add, we are not sure if this
                 // conversation is already fetched
@@ -1515,11 +1601,7 @@ export class WebClientService implements threema.WebClientService {
                 return;
         }
 
-        // Update unread count
-        const totalUnreadCount = this.conversations
-            .get()
-            .reduce((a: number, b: threema.Conversation) => a + b.unreadCount, 0);
-        this.titleService.updateUnreadCount(totalUnreadCount);
+        this.updateUnreadCount();
     }
 
     private _receiveResponseMessages(message: threema.WireMessage): void {
@@ -1885,6 +1967,14 @@ export class WebClientService implements threema.WebClientService {
     }
 
     /**
+     * Return the max text length
+     * @returns {number}
+     */
+    public getMaxTextLength(): number {
+        return WebClientService.MAX_TEXT_LENGTH;
+    }
+
+    /**
      * Called when a new message arrives.
      */
     private onNewMessage(message: threema.Message, conversation: threema.Conversation): void {
@@ -2094,7 +2184,9 @@ export class WebClientService implements threema.WebClientService {
                 this._receiveResponseReceivers(message);
                 break;
             case WebClientService.SUB_TYPE_CONVERSATIONS:
-                this._receiveResponseConversations(message);
+                this.runAfterInitializationSteps(['receivers'], () => {
+                    this._receiveResponseConversations(message);
+                });
                 break;
             case WebClientService.SUB_TYPE_CONVERSATION:
                 this._receiveResponseConversation(message);
@@ -2252,6 +2344,21 @@ export class WebClientService implements threema.WebClientService {
         }
     }
 
+    private runAfterInitializationSteps(requiredSteps: threema.InitializationStep[], callback: any): void {
+        for (let requiredStep of requiredSteps) {
+            if (!this.initialized.has(requiredStep)) {
+                this.$log.debug(this.logTag, 'required step', requiredStep, 'not completed, add pending');
+                this.pendingInitializationStepRoutines.push({
+                    requiredSteps: requiredSteps,
+                    callback: callback,
+                } as threema.InitializationStepRoutine);
+                return;
+            }
+        }
+
+        callback();
+    }
+
     private currentController: string;
     public setControllerName(name: string): void {
         this.currentController = name;
@@ -2260,4 +2367,22 @@ export class WebClientService implements threema.WebClientService {
     public getControllerName(): string {
         return this.currentController;
     }
+
+    /**
+     * Update the unread count in the window title.
+     */
+    private updateUnreadCount(): void {
+        const totalUnreadCount = this.conversations
+            .get()
+            .reduce((a: number, b: threema.Conversation) => a + b.unreadCount, 0);
+        this.titleService.updateUnreadCount(totalUnreadCount);
+    }
+
+    /**
+     * Reset the unread count in the window title
+     */
+    private resetUnreadCount(): void {
+        this.titleService.updateUnreadCount(0);
+    }
+
 }

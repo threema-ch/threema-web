@@ -15,14 +15,16 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class AvatarControllerModel implements threema.AvatarControllerModel {
+import {WebClientService} from '../services/webclient';
+
+export class AvatarControllerModel {
     private $log: ng.ILogService;
     private avatar: ArrayBuffer = null;
     private loadAvatar: Promise<string>;
     public onChangeAvatar: (image: ArrayBuffer) => void;
 
     constructor($log: ng.ILogService,
-                webClientService: threema.WebClientService,
+                webClientService: WebClientService,
                 receiver: threema.Receiver) {
         this.$log = $log;
         this.loadAvatar = new Promise((resolve, reject) => {

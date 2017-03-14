@@ -15,30 +15,45 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {BrowserService} from '../services/browser';
+import {StringService} from '../services/string';
+
 /**
  * The compose area where messages are written.
  */
 export default [
     'BrowserService',
+    'StringService',
     '$window',
     '$timeout',
     '$translate',
+    '$mdDialog',
     '$filter',
     '$log',
-    function(browserService: threema.BrowserService,
+    function(browserService: BrowserService,
+             stringService: StringService,
              $window, $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
+             $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
              $log: ng.ILogService) {
         return {
             restrict: 'EA',
             scope: {
+                // Callback to submit text or file data
                 submit: '=',
+
+                // Callbacks to update typing information
                 startTyping: '=',
                 stopTyping: '=',
                 onTyping: '=',
+
+                // Reference to drafts variable
                 draft: '=',
+
+                // Callback that is called when uploading files
                 onUploading: '=',
+                maxTextLength: '=',
             },
             link(scope: any, element) {
                 // Logging
@@ -67,7 +82,7 @@ export default [
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
                  */
-                let EmoijPickerContainer = (function(){
+                let EmoijPickerContainer = (function() {
                     let instance;
 
                     function click(e) {
@@ -99,9 +114,11 @@ export default [
                 // Submit the text from the compose area.
                 //
                 // Emoji images are converted to their alt text in this process.
-                function submitText() {
+                function submitText(): Promise<any> {
                     let text = '';
-                    for (let node of composeDiv[0].childNodes) {
+                    // tslint:disable-next-line: prefer-for-of (see #98)
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
                         switch (node.nodeType) {
                             case Node.TEXT_NODE:
                                 text += node.nodeValue;
@@ -119,15 +136,46 @@ export default [
                                 $log.warn(logTag, 'Unhandled node:', node);
                         }
                     }
-                    const textMessageData: threema.TextMessageData = {text: text.trim()};
-                    // send as array
-                    return scope.submit('text', [textMessageData]);
+                    return new Promise((resolve, reject) => {
+                        let submitTexts = (strings: string[]) => {
+                            let messages: threema.TextMessageData[] = [];
+                            for (let piece of strings) {
+                                messages.push({
+                                    text: piece,
+                                });
+                            }
+
+                            scope.submit('text', messages)
+                                .then(resolve)
+                                .catch(reject);
+                        };
+
+                        let fullText = text.trim();
+                        if (fullText.length > scope.maxTextLength) {
+                            let pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 50);
+                            let confirm = $mdDialog.confirm()
+                                .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
+                                .textContent($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_BODY', {
+                                    max: scope.maxTextLength,
+                                    count: pieces.length,
+                                }))
+                                .ok($translate.instant('common.YES'))
+                                .cancel($translate.instant('common.NO'));
+
+                            $mdDialog.show(confirm).then(function () {
+                                submitTexts(pieces);
+                            }, () => {
+                                reject();
+                            });
+                        } else {
+                            submitTexts([fullText]);
+                        }
+                    });
                 }
 
                 function sendText(): boolean {
                     if  (composeDiv[0].innerHTML.length > 0) {
-                        const submitted = submitText();
-                        if (submitted) {
+                        submitText().then(() => {
                             // Clear compose div
                             composeDiv[0].innerText = '';
 
@@ -135,10 +183,14 @@ export default [
                             scope.stopTyping();
 
                             scope.onTyping('');
-                        }
 
-                        updateView();
-                        return submitted;
+                            updateView();
+                        }).catch(() => {
+                            // do nothing
+                            this.$log.warn('failed to submit text');
+                        });
+
+                        return true;
                     }
                     return false;
                 }
@@ -228,26 +280,86 @@ export default [
                     });
                 }
 
-                function applyFilters(text: string): string {
-                    const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
-                    return emojify(text, true);
-                }
-
                 // Handle pasting
-                // Source: http://stackoverflow.com/a/36846308/284318
                 function onPaste(ev: ClipboardEvent) {
                     ev.preventDefault();
-                    const text = ev.clipboardData.getData('text/plain');
-                    let formatted = applyFilters(text);
 
-                    // replace newlines with html br
-                    const parseNewLine = $filter('writeNewLine') as (a: string, b?: boolean) => string;
-                    formatted = parseNewLine(formatted, true);
+                    // If no clipboard data is available, do nothing.
+                    if (!ev.clipboardData) {
+                        return;
+                    }
 
-                    document.execCommand('insertHTML', false, formatted);
+                    // Extract pasted items
+                    const items: DataTransferItemList = ev.clipboardData.items;
+                    if (!items) {
+                        return;
+                    }
 
-                    cleanupComposeContent();
-                    updateView();
+                    // Find available types
+                    let fileIdx: number | null = null;
+                    let textIdx: number | null = null;
+                    for (let i = 0; i < items.length; i++) {
+                        if (items[i].type.indexOf('image/') !== -1 || items[i].type === 'application/x-moz-file') {
+                            fileIdx = i;
+                        } else if (items[i].type === 'text/plain') {
+                            textIdx = i;
+                        }
+                    }
+
+                    // Handle pasting of files
+                    if (fileIdx !== null) {
+                        // Read clipboard data as blob
+                        const blob: Blob = items[fileIdx].getAsFile();
+
+                        // Convert blob to arraybuffer
+                        const reader = new FileReader();
+                        reader.onload = function() {
+                            let buffer: ArrayBuffer = this.result;
+
+                            // Construct file name
+                            let fileName: string;
+                            if ((blob as any).name) {
+                                fileName = (blob as any).name;
+                            } else if (blob.type && blob.type.match(/^[^;]*\//) !== null) {
+                                const fileExt = blob.type.split(';')[0].split('/')[1];
+                                fileName = 'clipboard.' + fileExt;
+                            } else {
+                                $log.warn(logTag, 'Pasted file has an invalid MIME type: "' + blob.type + '"');
+                                return;
+                            }
+
+                            // Send data as file
+                            const fileMessageData: threema.FileMessageData = {
+                                name: fileName,
+                                fileType: blob.type,
+                                size: blob.size,
+                                data: buffer,
+                            };
+                            scope.submit('file', [fileMessageData]);
+                        };
+                        reader.readAsArrayBuffer(blob);
+
+                    // Handle pasting of text
+                    } else if (textIdx !== null) {
+                        const text = ev.clipboardData.getData('text/plain');
+
+                        // Look up some filter functions
+                        const escapeHtml = $filter('escapeHtml') as (a: string) => string;
+                        const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
+                        const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
+
+                        // Escape HTML markup
+                        const escaped = escapeHtml(text);
+
+                        // Apply filters (emojify, convert newline, etc)
+                        const formatted = nlToBr(emojify(escaped, true), true);
+
+                        // Insert resulting HTML
+                        document.execCommand('insertHTML', false, formatted);
+
+                        cleanupComposeContent();
+                        updateView();
+                    }
                 }
 
                 // Translate placeholder texts
@@ -306,12 +418,14 @@ export default [
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
                     const emoji = this.textContent; // Unicode character
-                    const formatted = applyFilters(emoji);
+                    const formatted = ($filter('emojify') as any)(emoji, true);
 
                     // Firefox inserts a <br> after editing content editable fields.
                     // Remove the last <br> to fix this.
                     let currentHTML = '';
-                    composeDiv[0].childNodes.forEach((node: Node|any, pos: number) => {
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
+
                         if (node.nodeType === node.TEXT_NODE) {
                             currentHTML += node.textContent;
                         } else if (node.nodeType === node.ELEMENT_NODE) {
@@ -320,12 +434,12 @@ export default [
                                 currentHTML += getOuterHtml(node);
                             } else if (tag === 'br') {
                                 // not not append br if the br is the LAST element
-                                if (pos < composeDiv[0].childNodes.length - 1) {
+                                if (i < composeDiv[0].childNodes.length - 1) {
                                     currentHTML += getOuterHtml(node);
                                 }
                             }
                         }
-                    });
+                    }
 
                     if (caretPosition !== null) {
                         currentHTML = currentHTML.substr(0, caretPosition.from)
@@ -463,8 +577,8 @@ export default [
                         sel.addRange(range);
                     };
 
-                    for (let nodeIndex = 0; nodeIndex < composeDiv[0].childNodes.length; nodeIndex++) {
-                        let node = composeDiv[0].childNodes[nodeIndex];
+                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
+                        const node = composeDiv[0].childNodes[i];
                         let size;
                         let offset;
                         switch (node.nodeType) {
@@ -483,7 +597,7 @@ export default [
                             // use this node
                             rangeAt(node, offset);
                             this.stop = true;
-                        } else if (nodeIndex === composeDiv[0].childNodes.length - 1) {
+                        } else if (i === composeDiv[0].childNodes.length - 1) {
                             rangeAt(node);
                         }
                         pos -= size;
@@ -521,7 +635,7 @@ export default [
                         <i class="md-primary emoji-trigger trigger is-enabled material-icons">tag_faces</i>
                     </div>
                     <div>
-                        <div class="compose" contenteditable translate translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE"></div>
+                        <div class="compose" contenteditable translate translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE" autofocus></div>
                     </div>
                     <div>
                         <i class="md-primary send-trigger trigger material-icons">send</i>

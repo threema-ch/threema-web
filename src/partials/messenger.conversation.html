@@ -20,6 +20,10 @@
             <eee-verification-level ng-if="ctrl.type == 'contact'"
                                     contact="ctrl.receiver"></eee-verification-level>
             </div>
+            <div class="conversation-header-details-detail" ng-if="ctrl.type == 'group'"
+                 title="{{ ctrl.receiver.members | idsToNames }}">
+                <span>{{ ctrl.receiver.members | idsToNames }}</span>
+            </div>
         </div>
     </div>
     <div id="conversation-is-private" ng-if="ctrl.locked">
@@ -37,11 +41,9 @@
 
     <div id="conversation-chat" scroll-glue in-view-container ng-show="!ctrl.locked">
         <ul class="chat">
-            <li in-view="$inview && !ctrl.locked && ctrl.requestMessages()" class="load-more">
+            <li in-view="$inview && !ctrl.locked && ctrl.topOfChat()" class="load-more">
                 <div ng-if="ctrl.hasMoreMessages()" class="loading">
-                    <md-progress-circular
-                            class="md-primary"
-                            md-diameter="30"></md-progress-circular>
+                    <span></span>
                 </div>
             </li>
             <li ng-repeat="message in ctrl.messages" id="message-{{message.id}}">
@@ -85,7 +87,8 @@
                     on-typing="ctrl.onTyping"
                     start-typing="ctrl.startTyping"
                     stop-typing="ctrl.stopTyping"
-                    on-uploading="ctrl.onUploading">
+                    on-uploading="ctrl.onUploading"
+                    max-text-length="ctrl.maxTextLength">
             </compose-area>
         </div>
     </div>

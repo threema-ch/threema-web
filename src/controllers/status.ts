@@ -15,6 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ControllerService} from '../services/controller';
+import {StateService} from '../services/state';
+import {WebClientService} from '../services/webclient';
+
 /**
  * This controller handles state changes globally.
  *
@@ -23,6 +27,8 @@
  * Status updates should be done through the status service.
  */
 export class StatusController {
+
+    private logTag: string = '[StatusController]';
 
     // State variable
     private state: threema.GlobalConnectionState = 'error';
@@ -41,15 +47,15 @@ export class StatusController {
     private $log: ng.ILogService;
 
     // Custom services
-    private stateService: threema.StateService;
-    private webClientService: threema.WebClientService;
-    private controllerService: threema.ControllerService;
+    private stateService: StateService;
+    private webClientService: WebClientService;
+    private controllerService: ControllerService;
 
     public static $inject = ['$scope', '$timeout', '$log', '$state', 'StateService',
         'WebClientService', 'ControllerService'];
     constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: ng.ui.IStateService,
-                stateService: threema.StateService, webClientService: threema.WebClientService,
-                controllerService: threema.ControllerService) {
+                stateService: StateService, webClientService: WebClientService,
+                controllerService: ControllerService) {
 
         // Angular services
         this.$timeout = $timeout;
@@ -106,7 +112,7 @@ export class StatusController {
                 }
                 break;
             default:
-                this.$log.error('Invalid state change: From', oldValue, 'to', newValue);
+                this.$log.error(this.logTag, 'Invalid state change: From', oldValue, 'to', newValue);
         }
     }
 
@@ -133,11 +139,18 @@ export class StatusController {
      * Go back to the welcome screen and try to reconnect using the same keys as right now.
      */
     private reconnect(): void {
-        this.$log.debug('Connection lost. Attempting to reconnect...');
+        this.$log.warn(this.logTag, 'Connection lost. Attempting to reconnect...');
 
         // Get original keys
         let originalKeyStore = this.webClientService.salty.keyStore;
         let originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+
+        // Timeout durations
+        const TIMEOUT1 = 20 * 1000; // Duration per step for first reconnect
+        const TIMEOUT2 = 20 * 1000; // Duration per step for second reconnect
+
+        // Reconnect state
+        let reconnectTry: 1 | 2 = 1;
 
         // Handler for failed reconnection attempts
         let reconnectionFailed = () => {
@@ -156,6 +169,20 @@ export class StatusController {
             });
         };
 
+        // Handlers for reconnecting timeout
+        const reconnect2Timeout = () => {
+            // Give up
+            this.$log.error(this.logTag, 'Reconnect timeout 2. Going back to initial loading screen...');
+            reconnectionFailed();
+        };
+        const reconnect1Timeout = () => {
+            // Could not connect so far.
+            this.$log.error(this.logTag, 'Reconnect timeout 1. Retrying...');
+            reconnectTry = 2;
+            this.reconnectTimeout = this.$timeout(reconnect2Timeout, TIMEOUT2);
+            doSoftReconnect();
+        };
+
         // Function to soft-reconnect. Does not reset the loaded data.
         let doSoftReconnect = () => {
             const deleteStoredData = false;
@@ -172,25 +199,29 @@ export class StatusController {
                     this.collapseStatusBar();
                 },
                 (error) => {
-                    this.$log.error('Error state:', error);
+                    this.$log.error(this.logTag, 'Error state:', error);
                     this.$timeout.cancel(this.reconnectTimeout);
                     reconnectionFailed();
+                },
+                (progress: threema.ConnectionBuildupStateChange) => {
+                    if (progress.state === 'peer_handshake' || progress.state === 'loading') {
+                        this.$log.debug(this.logTag, 'Connection buildup advanced, resetting timeout');
+                        // Restart timeout
+                        this.$timeout.cancel(this.reconnectTimeout);
+                        if (reconnectTry === 1) {
+                            this.reconnectTimeout = this.$timeout(reconnect1Timeout, TIMEOUT1);
+                        } else if (reconnectTry === 2) {
+                            this.reconnectTimeout = this.$timeout(reconnect2Timeout, TIMEOUT2);
+                        } else {
+                            throw new Error('Invalid reconnectTry value: ' + reconnectTry);
+                        }
+                    }
                 },
             );
         };
 
         // Start timeout
-        this.reconnectTimeout = this.$timeout(() => {
-            // Could not connect so far.
-            // Retry once, but increase reconnect timeout to 40 seconds
-            this.$log.error('Reconnect timeout 1. Retrying for 40 seconds...');
-            this.reconnectTimeout = this.$timeout(() => {
-                // Give up
-                this.$log.error('Reconnect timeout 2. Going back to initial loading screen...');
-                reconnectionFailed();
-            }, 40000);
-            doSoftReconnect();
-        }, 20000);
+        this.reconnectTimeout = this.$timeout(reconnect1Timeout, TIMEOUT1);
 
         // Start reconnecting process
         doSoftReconnect();

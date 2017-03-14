@@ -1,17 +1,17 @@
 {
   "name": "threema-web",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "Threema Webclient",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "browserify -p tsify src/app.ts -t [ babelify --presets [ es2015 ] --extensions .ts ] -p [ browserify-header --file header.js ] -o dist/app.js",
     "build:css": "node-sass -o public/css/ --output-style compressed src/sass/",
     "build:css:watch": "node-sass -w -r --source-map true --source-map-embed true -o public/css/ --output-style compressed src/sass/",
-    "dist": "npm run build && echo '' && dist/package.sh",
+    "dist": "npm run build && echo \"\" && dist/package.sh",
     "serve": "npm run build:css && budo src/app.ts:dist/app.js -- -d -p tsify -t [ babelify --presets [ es2015 ] --extensions .ts ]",
-    "serve:live": "npm run build:css && concurrently --kill-others --names 'css,server' -p name 'npm run build:css:watch' 'budo src/app.ts:dist/app.js -d . -d public -d src --live -- -d -p tsify -t [ babelify --presets [ es2015 ] --extensions .ts ]'",
+    "serve:live": "npm run build:css && concurrently --kill-others --names \"css,server\" -p name \"npm run build:css:watch\" \"budo src/app.ts:dist/app.js -d . -d public -d src --live -- -d -p tsify -t [ babelify --presets [ es2015 ] --extensions .ts ]\"",
     "test": "karma start --single-run --log-level=debug --colors",
-    "lint": "tslint -c tslint.json --project tsconfig.json --exclude '**/src/config.ts'",
+    "lint": "tslint -c tslint.json --project tsconfig.json --exclude \"**/src/config.ts\"",
     "clean": "rm -rf js/ build/ dist/app*"
   },
   "keywords": [
@@ -27,6 +27,7 @@
   "dependencies": {
     "@types/angular": "~1.5.21",
     "@types/angular-material": "~1.1.43",
+    "@types/angular-sanitize": "~1.3.4",
     "@types/angular-translate": "~2.4.34",
     "@types/angular-ui-router": "~1.1.35",
     "@types/filesaver": "~0.0.30",
@@ -58,20 +59,22 @@
     "node-sass": "~3.10.0",
     "saltyrtc-client": "~0.9.1",
     "saltyrtc-task-webrtc": "~0.9.1",
+    "sdp": "~1.3.0",
+    "ts-events": "^3.1.5",
     "tsify": "~2.0.1",
     "tweetnacl": "~0.14.4",
     "typescript": "~2.1.0",
     "webrtc-adapter": "~2.1.0"
   },
   "devDependencies": {
-    "angular-mocks": "^1.6.1",
-    "budo": "^8.3.0",
-    "concurrently": "^2.2.0",
-    "jasmine-core": "^2.5.2",
-    "karma": "^1.4.0",
-    "karma-chrome-launcher": "^2.0.0",
-    "karma-firefox-launcher": "^1.0.0",
-    "karma-jasmine": "^1.1.0",
-    "tslint": "^4.3.1"
+    "angular-mocks": "~1.6.1",
+    "budo": "~9.4.7",
+    "concurrently": "~3.3.0",
+    "jasmine-core": "~2.5.2",
+    "karma": "~1.5.0",
+    "karma-chrome-launcher": "~2.0.0",
+    "karma-firefox-launcher": "~1.0.0",
+    "karma-jasmine": "~1.1.0",
+    "tslint": "~4.4.2"
   }
 }

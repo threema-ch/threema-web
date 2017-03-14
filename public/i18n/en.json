@@ -1,12 +1,16 @@
 {
+    "meta": {
+        "DESCRIPTION": "Chat from your desktop with Threema Web and have full access to all chats, contacts and media files."
+    },
     "welcome": {
         "ABORT": "Abort",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> or <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>,<br>otherwise the web client might not work properly.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> or <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, otherwise the web client might not work properly.",
         "CONTINUE_ANYWAY": "Continue anyway",
         "PLEASE_SCAN": "Scan this QR code with your Threema app",
         "PLEASE_UNLOCK": "Reconnecting session",
         "WAITING": "Waiting for connection",
         "PLEASE_RELOAD": "Please reload the page to try again.",
+        "RELOAD": "Reload page",
         "PASSWORD": "Password",
         "CHOOSE_PASSWORD": "To stay logged in, please enter<br>a session password before scanning.",
         "UNLOCK_FAILED_TEXT": "You entered the wrong password, the session cannot be restored.",
@@ -29,7 +33,8 @@
         "MANUAL_START_STEP1": "Open the Threema app and tap on \"Threema Web\" in the left navigation drawer",
         "MANUAL_START_STEP2": "Tap on the session related to this browser",
         "MANUAL_START_STEP3": "Select \"Start session\" to start the session",
-        "MORE_ABOUT_WEB": "More about Threema Web"
+        "MORE_ABOUT_WEB": "More about Threema Web",
+        "LOCAL_STORAGE_MISSING_DETAILS": "Access to LocalStorage not possible. This can occur if your browser is configured to reject cookies, or if you installed a browser add-on that blocks access to LocalStorage. Please allow local storage in your browser settings or disable any add-ons you might have installed."
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",
@@ -46,7 +51,9 @@
         "APP_STARTED": "Is the Threema app started?",
         "SESSION_DELETED": "Did you delete this session on your phone?",
         "PHONE_ONLINE": "Is your phone connected to the internet?",
-        "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?"
+        "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?",
+        "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
+        "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?"
     },
     "common": {
         "YES": "Yes",
@@ -75,7 +82,7 @@
         "VERIFICATION_LEVEL1_EXPLAIN": "There is no guarantee that this person is who they claim they are.",
         "VERIFICATION_LEVEL2_WORK_EXPLAIN": "The identity of this person has been verified by your Threema Work administrator",
         "COMPOSE_MESSAGE_DRAGOVER": "Drop files to send",
-        "COMPOSE_MESSAGE": "Type a message or drop a files",
+        "COMPOSE_MESSAGE": "Type a message or drop a file",
         "UNREAD_MESSAGES": "Unread messages",
         "IS_TYPING": "is typing...",
         "SEARCH": "Search",
@@ -83,6 +90,7 @@
         "CONTACTS": "Contacts",
         "NO_CONVERSATIONS_FOUND": "No conversations found.",
         "ABOUT": "About",
+        "SETTINGS": "Settings",
         "HELP": "Help",
         "NO_CONTACTS_FOUND": "No contacts found.",
         "ACKNOWLEDGE": "Agree",
@@ -137,7 +145,9 @@
         "DRAFT": "Draft",
         "PRIVATE": "Private",
         "PRIVATE_CHAT": "Private chat",
-        "PRIVATE_CHAT_DESCRIPTION": "Private chat are not supported in Threema Web."
+        "PRIVATE_CHAT_DESCRIPTION": "Private chat are not supported in Threema Web.",
+        "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Split Message",
+        "MESSAGE_TOO_LONG_SPLIT_BODY": "No more than {max} characters can be sent per message, do you want to split it into {count} separate messages?"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
@@ -154,7 +164,11 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive voice messages.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive files.",
         "ERROR_OCCURRED": "An error occurred.",
-        "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web"
+        "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web",
+        "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters).",
+        "NOTIFICATION_PERMISSION_DENIED" : "Permission denied. You have to grant the permission for Threema Web manually.",
+        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE" : "Learn more.",
+        "NOTIFICATION_API_NOT_AVAILABLE" : "Your browser does not support desktop notifications."
     },
     "mimeTypes": {
         "android_apk": "Android package",
@@ -182,5 +196,13 @@
         "LICENSE_LINK_BEFORE": "Licenses of used open source components can be found",
         "LICENSE_LINK_TEXT": "in the source code",
         "LICENSE_LINK_AFTER": ""
+    },
+    "settings": {
+        "SETTINGS":"Settings",
+        "notifications": {
+            "NOTIFICATIONS" : "Notifications",
+            "SHOW_NOTIFICATIONS" : "Show desktop notifications",
+            "SHOW_PREVIEW" : "Show message contents in notifications"
+        }
     }
 }

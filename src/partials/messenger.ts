@@ -17,10 +17,21 @@
 
 import {ContactControllerModel} from '../controller_model/contact';
 import {supportsPassive, throttle} from '../helpers';
+import {ContactService} from '../services/contact';
+import {ControllerService} from '../services/controller';
+import {ControllerModelService} from '../services/controller_model';
 import {ExecuteService} from '../services/execute';
+import {FingerPrintService} from '../services/fingerprint';
+import {TrustedKeyStoreService} from '../services/keystore';
+import {MimeService} from '../services/mime';
+import {NotificationService} from '../services/notification';
+import {ReceiverService} from '../services/receiver';
+import {SettingsService} from '../services/settings';
+import {StateService} from '../services/state';
+import {WebClientService} from '../services/webclient';
 import {ControllerModelMode} from '../types/enums';
 
-abstract class DialogController {
+class DialogController {
     public static $inject = ['$mdDialog'];
 
     public $mdDialog: ng.material.IDialogService;
@@ -47,11 +58,14 @@ abstract class DialogController {
             this.activeElement.focus();
         }
     }
+
     /**
      * If true, the focus on the active element (before opening the dialog)
-     * will be restored.
+     * will be restored. Default `true`, override if desired.
      */
-    protected abstract resumeFocusOnClose(): boolean;
+    protected resumeFocusOnClose(): boolean {
+        return true;
+    }
 }
 
 /**
@@ -69,14 +83,70 @@ class SendFileController extends DialogController {
     }
 
     public keypress($event: KeyboardEvent): void {
-        if ($event.charCode === 13) { // Enter
+        if ($event.key === 'Enter') { // see https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
             this.send();
         }
     }
+}
 
-    protected resumeFocusOnClose(): boolean {
-        return true;
+/**
+ * Handle settings
+ */
+class SettingsController {
+
+    public static $inject = ['$mdDialog', '$window', 'SettingsService', 'NotificationService'];
+
+    public $mdDialog: ng.material.IDialogService;
+    public $window: ng.IWindowService;
+    public settingsService: SettingsService;
+    private notificationService: NotificationService;
+    public activeElement: HTMLElement | null;
+
+    private desktopNotifications: boolean;
+    private notificationApiAvailable: boolean;
+    private notificationPermission: boolean;
+    private notificationPreview: boolean;
+
+    constructor($mdDialog: ng.material.IDialogService,
+                $window: ng.IWindowService,
+                settingsService: SettingsService,
+                notificationService: NotificationService) {
+        this.$mdDialog = $mdDialog;
+        this.$window = $window;
+        this.settingsService = settingsService;
+        this.notificationService = notificationService;
+        this.activeElement = document.activeElement as HTMLElement;
+        this.desktopNotifications = notificationService.getWantsNotifications();
+        this.notificationApiAvailable = notificationService.isNotificationApiAvailable();
+        this.notificationPermission = notificationService.getNotificationPermission();
+        this.notificationPreview = notificationService.getWantsPreview();
     }
+
+    public cancel(): void {
+        this.$mdDialog.cancel();
+        this.done();
+    }
+
+    protected hide(data: any): void {
+        this.$mdDialog.hide(data);
+        this.done();
+    }
+
+    private done(): void {
+        if (this.activeElement !== null) {
+            // Reset focus
+            this.activeElement.focus();
+        }
+    }
+
+    public setWantsNotifications(desktopNotifications: boolean) {
+        this.notificationService.setWantsNotifications(desktopNotifications);
+    }
+
+    public setWantsPreview(notificationPreview: boolean) {
+        this.notificationService.setWantsPreview(notificationPreview);
+    }
+
 }
 
 class ConversationController {
@@ -90,10 +160,10 @@ class ConversationController {
     private $scope: ng.IScope;
 
     // Own services
-    private webClientService: threema.WebClientService;
-    private receiverService: threema.ReceiverService;
-    private stateService: threema.StateService;
-    private mimeService: threema.MimeService;
+    private webClientService: WebClientService;
+    private receiverService: ReceiverService;
+    private stateService: StateService;
+    private mimeService: MimeService;
 
     // Third party services
     private $mdDialog: ng.material.IDialogService;
@@ -117,6 +187,7 @@ class ConversationController {
     private draft: string;
     private $translate: ng.translate.ITranslateService;
     private locked = false;
+    public maxTextLength: number;
     public isTyping = (): boolean => false;
 
     private uploading = {
@@ -140,10 +211,10 @@ class ConversationController {
                 $mdToast: ng.material.IToastService,
                 $location,
                 $translate: ng.translate.ITranslateService,
-                webClientService: threema.WebClientService,
-                stateService: threema.StateService,
-                receiverService: threema.ReceiverService,
-                mimeService: threema.MimeService) {
+                webClientService: WebClientService,
+                stateService: StateService,
+                receiverService: ReceiverService,
+                mimeService: MimeService) {
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
         this.$log = $log;
@@ -161,6 +232,8 @@ class ConversationController {
 
         // Close any showing dialogs
         this.$mdDialog.cancel();
+
+        this.maxTextLength = this.webClientService.getMaxTextLength();
 
         // On every navigation event, close all dialogs.
         // Note: Deprecated. When migrating ui-router ($state),
@@ -275,99 +348,121 @@ class ConversationController {
      * Submit function for input field. Can contain text or file data.
      * Return whether sending was successful.
      */
-    public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): boolean => {
+    public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): Promise<any> => {
         // Validate whether a connection is available
-        if (this.stateService.state !== 'ok') {
-            // Invalid connection, show toast and abort
-            this.showError(this.$translate.instant('error.NO_CONNECTION'));
-            return false;
-        }
-        switch (type) {
-            case 'file':
-                // Determine file type
-                let showSendAsFileCheckbox = false;
-                for (let msg of contents) {
-                    const mime = (msg as threema.FileMessageData).fileType;
-                    if (this.mimeService.isImage(mime)
-                        || this.mimeService.isAudio(mime)
-                        || this.mimeService.isVideo(mime)) {
-                        showSendAsFileCheckbox = true;
-                        break;
+        return new Promise((resolve, reject) => {
+            if (this.stateService.state !== 'ok') {
+                // Invalid connection, show toast and abort
+                this.showError(this.$translate.instant('error.NO_CONNECTION'));
+                return reject();
+            }
+            let success = true;
+            let nextCallback = (index: number) => {
+                if (index === contents.length - 1) {
+                    if (success) {
+                        resolve();
+                    } else {
+                        reject();
                     }
                 }
+            };
 
-                // Eager translations
-                const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
-                    senderName: this.receiver.displayName,
-                });
-                const placeholder = this.$translate.instant('messenger.CONFIRM_FILE_CAPTION');
-                const confirmSendAsFile = this.$translate.instant('messenger.CONFIRM_SEND_AS_FILE');
-
-                // Show confirmation dialog
-                this.$mdDialog.show({
-                    clickOutsideToClose: false,
-                    controller: 'SendFileController',
-                    controllerAs: 'ctrl',
-                    // tslint:disable:max-line-length
-                    template: `
-                        <md-dialog class="send-file-dialog">
-                            <md-dialog-content class="md-dialog-content">
-                                <h2 class="md-title">${title}</h2>
-                                <md-input-container md-no-float class="input-caption md-prompt-input-container">
-                                    <input md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
-                                </md-input-container>
-                                <md-input-container md-no-float class="input-send-as-file md-prompt-input-container" ng-show="${showSendAsFileCheckbox}">
-                                    <md-checkbox ng-model="ctrl.sendAsFile" aria-label="${confirmSendAsFile}">
-                                        ${confirmSendAsFile}
-                                    </md-checkbox>
-                                </md-input-container>
-                            </md-dialog-content>
-                            <md-dialog-actions>
-                                <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.cancel()">
-                                    <span translate>common.CANCEL</span>
-                                </button>
-                                <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.send()">
-                                    <span translate>common.SEND</span>
-                                </button>
-                            </md-dialog-actions>
-                        </md-dialog>
-                    `,
-                    // tslint:enable:max-line-length
-                }).then((data) => {
-                    const caption = data.caption;
-                    const sendAsFile = data.sendAsFile;
-                    contents.forEach((msg: threema.FileMessageData) => {
-                        if (caption !== undefined && caption.length > 0) {
-                            msg.caption = caption;
+            switch (type) {
+                case 'file':
+                    // Determine file type
+                    let showSendAsFileCheckbox = false;
+                    for (let msg of contents) {
+                        const mime = (msg as threema.FileMessageData).fileType;
+                        if (this.mimeService.isImage(mime)
+                            || this.mimeService.isAudio(mime)
+                            || this.mimeService.isVideo(mime)) {
+                            showSendAsFileCheckbox = true;
+                            break;
                         }
-                        msg.sendAsFile = sendAsFile;
+                    }
+
+                    // Eager translations
+                    const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
+                        senderName: this.receiver.displayName,
+                    });
+                    const placeholder = this.$translate.instant('messenger.CONFIRM_FILE_CAPTION');
+                    const confirmSendAsFile = this.$translate.instant('messenger.CONFIRM_SEND_AS_FILE');
+
+                    // Show confirmation dialog
+                    this.$mdDialog.show({
+                        clickOutsideToClose: false,
+                        controller: 'SendFileController',
+                        controllerAs: 'ctrl',
+                        // tslint:disable:max-line-length
+                        template: `
+                            <md-dialog class="send-file-dialog">
+                                <md-dialog-content class="md-dialog-content">
+                                    <h2 class="md-title">${title}</h2>
+                                    <md-input-container md-no-float class="input-caption md-prompt-input-container">
+                                        <input md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
+                                    </md-input-container>
+                                    <md-input-container md-no-float class="input-send-as-file md-prompt-input-container" ng-show="${showSendAsFileCheckbox}">
+                                        <md-checkbox ng-model="ctrl.sendAsFile" aria-label="${confirmSendAsFile}">
+                                            ${confirmSendAsFile}
+                                        </md-checkbox>
+                                    </md-input-container>
+                                </md-dialog-content>
+                                <md-dialog-actions>
+                                    <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.cancel()">
+                                        <span translate>common.CANCEL</span>
+                                    </button>
+                                    <button class="md-primary md-cancel-button md-button" md-ink-ripple type="button" ng-click="ctrl.send()">
+                                        <span translate>common.SEND</span>
+                                    </button>
+                                </md-dialog-actions>
+                            </md-dialog>
+                        `,
+                        // tslint:enable:max-line-length
+                    }).then((data) => {
+                        const caption = data.caption;
+                        const sendAsFile = data.sendAsFile;
+                        contents.forEach((msg: threema.FileMessageData, index: number) => {
+                            if (caption !== undefined && caption.length > 0) {
+                                msg.caption = caption;
+                            }
+                            msg.sendAsFile = sendAsFile;
+                            this.webClientService.sendMessage(this.$stateParams, type, msg)
+                                .then(() => {
+                                    nextCallback(index);
+                                })
+                                .catch((error) => {
+                                    this.$log.error(error);
+                                    this.showError(error);
+                                    success = false;
+                                    nextCallback(index);
+                                });
+                        });
+                    }, angular.noop);
+                    break;
+                case 'text':
+                    // do not show confirmation, send directly
+                    contents.forEach((msg: threema.MessageData, index: number) => {
+                        msg.quote = this.webClientService.getQuote(this.receiver);
+                        // remove quote
+                        this.webClientService.setQuote(this.receiver);
+                        // send message
                         this.webClientService.sendMessage(this.$stateParams, type, msg)
+                            .then(() => {
+                                nextCallback(index);
+                            })
                             .catch((error) => {
                                 this.$log.error(error);
                                 this.showError(error);
+                                success = false;
+                                nextCallback(index);
                             });
                     });
-                }, angular.noop);
-                break;
-            case 'text':
-                // do not show confirmation, send directly
-                contents.forEach((msg) => {
-                    msg.quote = this.webClientService.getQuote(this.receiver);
-                    // remove quote
-                    this.webClientService.setQuote(this.receiver);
-                    // send message
-                    this.webClientService.sendMessage(this.$stateParams, type, msg)
-                        .catch((error) => {
-                            this.$log.error(error);
-                            this.showError(error);
-                        });
-                });
-
-                break;
-            default:
-                this.$log.warn('Invalid message type:', type);
-        }
-        return true;
+                    return;
+                default:
+                    this.$log.warn('Invalid message type:', type);
+                    reject();
+            }
+        });
     }
 
     /**
@@ -417,6 +512,13 @@ class ConversationController {
 
         // Notify app
         this.webClientService.sendMeIsTyping(this.$stateParams, false);
+    }
+
+    /**
+     * User scrolled to the top of the chat.
+     */
+    public topOfChat(): void {
+        this.requestMessages();
     }
 
     public requestMessages(): void {
@@ -485,10 +587,10 @@ class NavigationController {
 
     public name = 'navigation';
 
-    private webClientService: threema.WebClientService;
-    private receiverService: threema.ReceiverService;
-    private stateService: threema.StateService;
-    private trustedKeyStoreService: threema.TrustedKeyStoreService;
+    private webClientService: WebClientService;
+    private receiverService: ReceiverService;
+    private stateService: StateService;
+    private trustedKeyStoreService: TrustedKeyStoreService;
 
     private activeTab: 'contacts' | 'conversations' = 'conversations';
     private searchVisible = false;
@@ -505,9 +607,9 @@ class NavigationController {
 
     constructor($log: ng.ILogService, $state: ng.ui.IStateService,
                 $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
-                webClientService: threema.WebClientService, stateService: threema.StateService,
-                receiverService: threema.ReceiverService,
-                trustedKeyStoreService: threema.TrustedKeyStoreService) {
+                webClientService: WebClientService, stateService: StateService,
+                receiverService: ReceiverService,
+                trustedKeyStoreService: TrustedKeyStoreService) {
 
         // Redirect to welcome if necessary
         if (stateService.state === 'error') {
@@ -594,6 +696,21 @@ class NavigationController {
     }
 
     /**
+     * Show settings dialog.
+     */
+    public settings(ev): void {
+        this.$mdDialog.show({
+            controller: SettingsController,
+            controllerAs: 'ctrl',
+            templateUrl: 'partials/dialog.settings.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: true,
+        });
+    }
+
+    /**
      * Return whether a trusted key is available.
      */
     public isPersistent(): boolean {
@@ -676,9 +793,9 @@ class NavigationController {
 
 class MessengerController {
     public name = 'messenger';
-    private receiverService: threema.ReceiverService;
+    private receiverService: ReceiverService;
     private $state;
-    private webClientService: threema.WebClientService;
+    private webClientService: WebClientService;
 
     public static $inject = [
         '$scope', '$state', '$log', '$mdDialog', '$translate',
@@ -686,8 +803,8 @@ class MessengerController {
     ];
     constructor($scope, $state, $log: ng.ILogService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
-                stateService: threema.StateService, receiverService: threema.ReceiverService,
-                webClientService: threema.WebClientService, controllerService: threema.ControllerService) {
+                stateService: StateService, receiverService: ReceiverService,
+                webClientService: WebClientService, controllerService: ControllerService) {
         // Redirect to welcome if necessary
         if (stateService.state === 'error') {
             $log.debug('MessengerController: WebClient not yet running, redirecting to welcome screen');
@@ -752,8 +869,8 @@ class ReceiverDetailController {
     public receiver: threema.Receiver;
     public title: string;
     public fingerPrint?: string;
-    private fingerPrintService: threema.FingerPrintService;
-    private contactService: threema.ContactService;
+    private fingerPrintService: FingerPrintService;
+    private contactService: ContactService;
     private showGroups = false;
     private showDistributionLists = false;
     private inGroups: threema.GroupReceiver[] = [];
@@ -768,8 +885,8 @@ class ReceiverDetailController {
         'WebClientService', 'FingerPrintService', 'ContactService', 'ControllerModelService',
     ];
     constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService, $mdDialog: ng.material.IDialogService,
-                webClientService: threema.WebClientService, fingerPrintService: threema.FingerPrintService,
-                contactService: threema.ContactService, controllerModelService: threema.ControllerModelService) {
+                webClientService: WebClientService, fingerPrintService: FingerPrintService,
+                contactService: ContactService, controllerModelService: ControllerModelService) {
 
         this.$mdDialog = $mdDialog;
         this.$state = $state;
@@ -876,7 +993,7 @@ class ReceiverEditController {
     ];
     constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService,
                 $mdDialog, $timeout: ng.ITimeoutService, $translate: ng.translate.ITranslateService,
-                webClientService: threema.WebClientService, controllerModelService: threema.ControllerModelService) {
+                webClientService: WebClientService, controllerModelService: ControllerModelService) {
 
         this.$mdDialog = $mdDialog;
         this.$state = $state;
@@ -966,7 +1083,7 @@ class ReceiverCreateController {
 
     constructor($stateParams: threema.CreateReceiverStateParams, $mdDialog, $mdToast, $translate,
                 $timeout: ng.ITimeoutService, $state: ng.ui.IStateService, $log: ng.ILogService,
-                controllerModelService: threema.ControllerModelService) {
+                controllerModelService: ControllerModelService) {
         this.$mdDialog = $mdDialog;
         this.$timeout = $timeout;
         this.$state = $state;
@@ -1098,5 +1215,4 @@ angular.module('3ema.messenger', ['ngMaterial'])
 .controller('ReceiverDetailController', ReceiverDetailController)
 .controller('ReceiverEditController', ReceiverEditController)
 .controller('ReceiverCreateController', ReceiverCreateController)
-
 ;

@@ -25,6 +25,7 @@
 // Components: Micro layout files. Your styles for buttons and navigation and
 // similar page components.
 //@import "components/lists";
+@import "components/spinner";
 @import "components/links";
 @import "components/scrollbars";
 @import "components/avatar";
@@ -33,7 +34,6 @@
 @import "components/fade_blink";
 @import "components/no_lastpass";
 @import "components/dialogs";
-@import "components/spinner";
 @import "components/message_media";
 @import "components/emoji_picker";
 @import "components/placeholder";
@@ -41,6 +41,7 @@
 @import "components/avatar_editor";
 @import "components/avatar_area";
 @import "components/drag_file";
+@import "components/buttons";
 
 // Sections: Styles specific to individual pages or sections.
 // Nothing to see here yet!
@@ -52,6 +53,7 @@
 @import "sections/footer";
 @import "sections/status_bar";
 @import "sections/my_identity";
+@import "sections/noscript";
 
 // Vendors: Third party code.
 // Nothing to see here yet!

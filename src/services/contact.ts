@@ -15,11 +15,13 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class ContactService implements threema.ContactService {
-    private webClientService: threema.WebClientService;
+import {WebClientService} from './webclient';
+
+export class ContactService {
+    private webClientService: WebClientService;
 
     public static $inject = ['WebClientService'];
-    constructor(webClientService: threema.WebClientService) {
+    constructor(webClientService: WebClientService) {
         this.webClientService = webClientService;
     }
 

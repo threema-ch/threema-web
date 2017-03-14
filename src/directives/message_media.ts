@@ -15,14 +15,19 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {MessageService} from '../services/message';
+import {WebClientService} from '../services/webclient';
+
 export default [
     'WebClientService',
+    'MessageService',
     '$rootScope',
     '$mdDialog',
     '$timeout',
     '$log',
     '$filter',
-    function(webClientService: threema.WebClientService, $rootScope: ng.IRootScopeService,
+    function(webClientService: WebClientService, messageService: MessageService,
+             $rootScope: ng.IRootScopeService,
              $mdDialog: ng.material.IDialogService,
              $timeout: ng.ITimeoutService, $log: ng.ILogService,
              $filter: ng.IFilterService) {
@@ -40,7 +45,10 @@ export default [
                 this.thumbnailDownloading = false;
                 this.downloaded = false;
                 this.timeout = null as ng.IPromise<void>;
-                this.isAnimGif = (this.message as threema.Message).type === 'file'
+                this.uploading = this.message.temporaryId !== undefined
+                    && this.message.temporaryId !== null;
+                this.isAnimGif = !this.uploading
+                    && (this.message as threema.Message).type === 'file'
                     && (this.message as threema.Message).file.type === 'image/gif';
                 // do not show thumbnail in file messages (except anim gif
                 // if a thumbnail in file messages are available, the thumbnail
@@ -48,6 +56,7 @@ export default [
                 this.showThumbnail = this.message.thumbnail !== undefined
                     && ((this.message as threema.Message).type !== 'file'
                         || this.isAnimGif);
+
                 this.thumbnail = null;
 
                 if (this.message.thumbnail !== undefined) {
@@ -152,10 +161,8 @@ export default [
 
                                 switch (this.message.type) {
                                     case 'image':
-                                        saveAs(new Blob([buffer]), 'image.jpg');
-                                        break;
                                     case 'video':
-                                        saveAs(new Blob([buffer]), 'video.mpg');
+                                        saveAs(new Blob([buffer]), messageService.getFileName(message));
                                         break;
                                     case 'file':
                                         if (this.message.file.type === 'image/gif') {
@@ -164,7 +171,7 @@ export default [
                                             // hide thumbnail
                                             this.showThumbnail = false;
                                         } else {
-                                            saveAs(new Blob([buffer]), this.message.file.name);
+                                            saveAs(new Blob([buffer]), messageService.getFileName(message));
                                         }
                                         break;
                                     case 'audio':

@@ -16,6 +16,8 @@
  */
 
 import {filter} from './helpers';
+import {MimeService} from './services/mime';
+import {WebClientService} from './services/webclient';
 
 angular.module('3ema.filters', [])
 
@@ -30,16 +32,26 @@ angular.module('3ema.filters', [])
         '"': '&quot;',
         "'": '&#039;',
     };
-    return (text) => (text !== undefined && text !== null ? text : '').replace(/[&<>"']/g, (m) => map[m]);
+    return (text: string) => {
+        if (text === undefined || text === null) {
+            text = '';
+        }
+        return text.replace(/[&<>"']/g, (m) => map[m]);
+    };
 })
-.filter('writeNewLine', function() {
+
+/**
+ * Convert newline characters with a <br> tag.
+ */
+.filter('nlToBr', function() {
     return (text, enabled: boolean) => {
         if (enabled) {
-            text = text.replace(/\n/g, '<br/>');
+            text = text.replace(/\n/g, '<br>');
         }
         return text;
     };
 })
+
 /**
  * Convert links in text to <a> tags.
  */
@@ -131,7 +143,7 @@ angular.module('3ema.filters', [])
 /**
  * Return whether contact is not me.
  */
-.filter('isNotMe', ['WebClientService', function(webClientService: threema.WebClientService) {
+.filter('isNotMe', ['WebClientService', function(webClientService: WebClientService) {
     return function(obj: threema.Receiver) {
         const valid = (contact: threema.Receiver) => contact.id !== webClientService.receivers.me.id;
         return filter(obj, valid);
@@ -150,8 +162,13 @@ angular.module('3ema.filters', [])
         return padLeft + left + ':' + padRight + right;
     };
 })
-.filter('bufferToUrl', ['$sce', function($sce) {
+.filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
+    const logTag = '[filters.bufferToUrl]';
     return function(buffer: ArrayBuffer, mimeType) {
+        if (!buffer) {
+            $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
+            return '';
+        }
         let binary = '';
         const bytes = new Uint8Array(buffer);
         const len = bytes.byteLength;
@@ -219,13 +236,27 @@ angular.module('3ema.filters', [])
         return (x + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]);
     };
 })
-.filter('mimeType', ['MimeService', function(mimeService: threema.MimeService) {
+.filter('mimeType', ['MimeService', function(mimeService: MimeService) {
     return (mimeType: string, asText: boolean = true) => {
         if (asText) {
             return mimeService.getLabel(mimeType);
         } else {
             return mimeService.getIconUrl(mimeType);
         }
+    };
+}])
+
+/**
+ * Convert ID-Array to (Display-)Name-String, separated by ','
+ */
+.filter('idsToNames', ['WebClientService', function (webClientService: WebClientService) {
+    return(ids: string[]) => {
+        let names: string[] = [];
+        for (let id of ids) {
+            this.contactReceiver = webClientService.contacts.get(id);
+            names.push(this.contactReceiver.displayName);
+        }
+        return names.join(', ');
     };
 }])
 

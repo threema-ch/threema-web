@@ -11,6 +11,10 @@ Update version numbers:
     $ rm npm-shrinkwrap.json
     $ npm shrinkwrap
 
+Update changelog:
+
+    $ vim CHANGELOG.md
+
 Commit & tag:
 
     $ git commit -S${GPG_KEY} -m "Release v${VERSION}"
