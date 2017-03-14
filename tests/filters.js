@@ -96,6 +96,14 @@ describe('Filters', function() {
             ]);
         });
 
+        it('ignores markup with \\n (newline)', () => {
+            this.testPatterns([
+                ['*First line\n and a new one. (do not parse)*', '*First line\n and a new one. (do not parse)*'],
+                ['*\nbegins with linebreak. (do not parse)*', '*\nbegins with linebreak. (do not parse)*'],
+                ['*Just some text. But it ends with newline (do not parse)\n*', '*Just some text. But it ends with newline (do not parse)\n*'],
+            ]);
+        });
+
     });
 
     describe('escapeHtml', function() {
