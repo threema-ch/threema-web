@@ -30,6 +30,7 @@ import includeReplace from './directives/include_replace';
 import latestMessage from './directives/latest_message';
 import latestMessageState from './directives/latest_message_state';
 import location from './directives/location';
+import mediabox from './directives/mediabox';
 import memberListEditor from './directives/member_list_editor';
 import message from './directives/message';
 import messageContact from './directives/message_contact';
@@ -70,6 +71,7 @@ angular.module('3ema.directives').directive('eeeVerificationLevel', verification
 angular.module('3ema.directives').directive('includeReplace', includeReplace);
 angular.module('3ema.directives').directive('location', location);
 angular.module('3ema.directives').directive('memberListEditor', memberListEditor);
+angular.module('3ema.directives').directive('mediabox', mediabox);
 angular.module('3ema.directives').directive('searchbox', searchbox);
 angular.module('3ema.directives').directive('statusBar', statusBar);
 angular.module('3ema.directives').directive('threemaAction', threemaAction);
