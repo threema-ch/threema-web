@@ -20,9 +20,11 @@ import {MediaboxService} from '../services/mediabox';
 export default [
     '$rootScope',
     '$filter',
+    '$document',
     'MediaboxService',
     function($rootScope: ng.IRootScopeService,
              $filter: ng.IFilterService,
+             $document: ng.IDocumentService,
              mediaboxService: MediaboxService) {
         return {
             restrict: 'E',
@@ -30,13 +32,16 @@ export default [
             bindToController: {},
             controllerAs: 'ctrl',
             controller: [function() {
+                // Data attributes
                 this.imageDataUrl = null;
                 this.caption = '';
 
+                // Close method
                 this.close = () => {
                     this.imageDataUrl = null;
                 };
 
+                // Listen to Mediabox service events
                 const filter = $filter('bufferToUrl') as (buffer: ArrayBuffer, mimeType: string) => string;
                 mediaboxService.evtMediaChanged.attach((dataAvailable: boolean) => {
                     $rootScope.$apply(() => {
@@ -45,6 +50,15 @@ export default [
                     });
                 });
             }],
+            link($scope: any, $element: ng.IAugmentedJQuery, attrs) {
+                // Register event handler for ESC key
+                $document.on('keyup', (e: Event) => {
+                    const ke = e as KeyboardEvent;
+                    if (ke.key === 'Escape' && $scope.ctrl.imageDataUrl !== null) {
+                        $scope.$apply($scope.ctrl.close);
+                    }
+                });
+            },
             // tslint:disable:max-line-length
             template: `
                 <div class="box" ng-if="ctrl.imageDataUrl !== null">
