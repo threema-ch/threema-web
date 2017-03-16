@@ -9,6 +9,37 @@ mediabox {
         z-index: 41;
         background-color: rgba(0, 0, 0, 0.75);
 
+        // Transitions
+        $mediabox-transition-duration: 0.1s;
+        &.ng-enter {
+            opacity: 0;
+            transition: $mediabox-transition-duration linear opacity;
+            img {
+                transform: scale(0.95);
+                transition: $mediabox-transition-duration linear transform;
+            }
+        }
+        &.ng-enter-active {
+            opacity: 1;
+            img {
+                transform: scale(1.0);
+            }
+        }
+        &.ng-leave {
+            opacity: 1;
+            transition: $mediabox-transition-duration linear opacity;
+            img {
+                transform: scale(1.0);
+                transition: $mediabox-transition-duration linear transform;
+            }
+        }
+        &.ng-leave-active {
+            opacity: 0;
+            img {
+                transform: scale(0.95);
+            }
+        }
+
         .close {
             height: 24px;
             width: 24px;
