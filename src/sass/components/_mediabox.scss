@@ -68,6 +68,10 @@ mediabox {
             justify-content: center;
             align-items: center;
 
+            &:focus {
+                outline: 0;
+            }
+
             img {
                 max-height: calc(100% - 28px - 28px);
                 max-width: 100%;

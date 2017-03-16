@@ -37,8 +37,16 @@ export default [
                 this.caption = '';
 
                 // Close method
-                this.close = () => {
-                    this.imageDataUrl = null;
+                this.close = ($event?: Event) => {
+                    if ($event !== undefined) {
+                        // If this was triggered by a click event, only close the box
+                        // if the click was directly on the target element.
+                        if ($event.target === $event.currentTarget) {
+                            this.imageDataUrl = null;
+                        }
+                    } else {
+                        this.imageDataUrl = null;
+                    }
                 };
 
                 // Listen to Mediabox service events
@@ -63,7 +71,7 @@ export default [
             template: `
                 <div class="box" ng-if="ctrl.imageDataUrl !== null">
                     <md-icon class="close material-icons md-24" ng-click="ctrl.close()" aria-label="Close" translate-attr="{'aria-label': 'common.CLOSE'}">close</md-icon>
-                    <div class="inner">
+                    <div class="inner" ng-click="ctrl.close($event)">
                         <img ng-src="{{ ctrl.imageDataUrl }}">
                         <div class="caption">
                             {{ ctrl.caption }}
