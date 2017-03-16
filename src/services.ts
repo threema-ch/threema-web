@@ -21,6 +21,7 @@ import {ControllerService} from './services/controller';
 import {ControllerModelService} from './services/controller_model';
 import {FingerPrintService} from './services/fingerprint';
 import {TrustedKeyStoreService} from './services/keystore';
+import {MediaboxService} from './services/mediabox';
 import {MessageService} from './services/message';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
@@ -54,4 +55,5 @@ angular.module('3ema.services', [])
 .service('ControllerService', ControllerService)
 .service('StringService', StringService)
 .service('SettingsService', SettingsService)
+.service('MediaboxService', MediaboxService)
 ;

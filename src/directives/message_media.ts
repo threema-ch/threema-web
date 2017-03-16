@@ -15,21 +15,26 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';
 import {WebClientService} from '../services/webclient';
 
 export default [
     'WebClientService',
+    'MediaboxService',
     'MessageService',
     '$rootScope',
     '$mdDialog',
     '$timeout',
     '$log',
     '$filter',
-    function(webClientService: WebClientService, messageService: MessageService,
+    function(webClientService: WebClientService,
+             mediaboxService: MediaboxService,
+             messageService: MessageService,
              $rootScope: ng.IRootScopeService,
              $mdDialog: ng.material.IDialogService,
-             $timeout: ng.ITimeoutService, $log: ng.ILogService,
+             $timeout: ng.ITimeoutService,
+             $log: ng.ILogService,
              $filter: ng.IFilterService) {
         return {
             restrict: 'EA',
@@ -161,6 +166,9 @@ export default [
 
                                 switch (this.message.type) {
                                     case 'image':
+                                        const caption = message.caption || '';
+                                        mediaboxService.setMedia(buffer, messageService.getFileName(message), caption);
+                                        break;
                                     case 'video':
                                         saveAs(new Blob([buffer]), messageService.getFileName(message));
                                         break;
