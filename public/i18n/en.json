@@ -197,7 +197,7 @@
         "LICENSE_LINK_TEXT": "in the source code",
         "LICENSE_LINK_AFTER": "",
         "CHANGELOG": "Changelog",
-        "CHANGELOG_LINK_BEFORE": "The Threema Web changelog can be found.",
+        "CHANGELOG_LINK_BEFORE": "The Threema Web changelog can be found",
         "CHANGELOG_LINK_TEXT": "on Github",
         "CHANGELOG_LINK_AFTER": "."
     },
