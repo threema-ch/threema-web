@@ -41,6 +41,7 @@ mediabox {
                 max-height: calc(100% - 28px - 28px);
                 max-width: 100%;
                 user-select: none;
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
             }
 
             .caption {
