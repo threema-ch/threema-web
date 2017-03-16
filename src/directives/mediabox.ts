@@ -78,7 +78,7 @@ export default [
                     <div class="inner" ng-click="ctrl.close($event)">
                         <img ng-src="{{ ctrl.imageDataUrl }}">
                         <div class="caption">
-                            {{ ctrl.caption }}
+                            <span ng-bind-html="ctrl.caption | escapeHtml | markify | emojify"></span>
                         </div>
                     </div>
                 </div>

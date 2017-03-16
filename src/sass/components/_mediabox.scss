@@ -97,6 +97,10 @@ mediabox {
                 margin: 4px 0 0;
                 color: rgba(255, 255, 255, 0.8);
                 font-size: 1.3em;
+                .e1 {
+                    transform: scale(0.75);
+                    margin: -3px -2px;
+                }
             }
         }
     }
