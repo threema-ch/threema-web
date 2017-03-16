@@ -31,6 +31,7 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.imageDataUrl = null;
+                this.caption = '';
 
                 this.close = () => {
                     this.imageDataUrl = null;
@@ -40,6 +41,7 @@ export default [
                 mediaboxService.evtMediaChanged.attach((dataAvailable: boolean) => {
                     $rootScope.$apply(() => {
                         this.imageDataUrl = filter(mediaboxService.data, 'image/jpeg');
+                        this.caption = mediaboxService.caption;
                     });
                 });
             }],
@@ -50,7 +52,7 @@ export default [
                     <div class="inner">
                         <img ng-src="{{ ctrl.imageDataUrl }}">
                         <div class="caption">
-                            Image Caption
+                            {{ ctrl.caption }}
                         </div>
                     </div>
                 </div>

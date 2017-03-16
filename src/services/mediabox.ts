@@ -37,6 +37,7 @@ export class MediaboxService {
      * The full-resolution media data.
      */
     public data: ArrayBuffer | null = null;
+    public caption: string = '';
 
     public static $inject = ['$log'];
     constructor($log: ng.ILogService) {
@@ -46,9 +47,10 @@ export class MediaboxService {
     /**
      * Update media data.
      */
-    public setMedia(data: ArrayBuffer) {
+    public setMedia(data: ArrayBuffer, caption: string) {
         this.$log.debug(this.logTag, 'Media data updated');
         this.data = data;
+        this.caption = caption;
         this.evtMediaChanged.post(data !== null);
     }
 
@@ -58,6 +60,7 @@ export class MediaboxService {
     public clearMedia() {
         this.$log.debug(this.logTag, 'Media data cleared');
         this.data = null;
+        this.caption = '';
         this.evtMediaChanged.post(false);
     }
 
