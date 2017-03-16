@@ -166,13 +166,8 @@ export default [
 
                                 switch (this.message.type) {
                                     case 'image':
-                                        let caption;
-                                        if (message.caption) {
-                                            caption = message.caption;
-                                        } else {
-                                            caption = messageService.getFileName(message);
-                                        }
-                                        mediaboxService.setMedia(buffer, caption);
+                                        const caption = message.caption || '';
+                                        mediaboxService.setMedia(buffer, messageService.getFileName(message), caption);
                                         break;
                                     case 'video':
                                         saveAs(new Blob([buffer]), messageService.getFileName(message));

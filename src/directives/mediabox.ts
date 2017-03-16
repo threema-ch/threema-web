@@ -36,7 +36,7 @@ export default [
                 this.imageDataUrl = null;
                 this.caption = '';
 
-                // Close method
+                // Close and save
                 this.close = ($event?: Event) => {
                     if ($event !== undefined) {
                         // If this was triggered by a click event, only close the box
@@ -48,13 +48,16 @@ export default [
                         this.imageDataUrl = null;
                     }
                 };
+                this.save = () => {
+                    saveAs(new Blob([mediaboxService.data]), mediaboxService.filename || 'image.jpg');
+                };
 
                 // Listen to Mediabox service events
                 const filter = $filter('bufferToUrl') as (buffer: ArrayBuffer, mimeType: string) => string;
                 mediaboxService.evtMediaChanged.attach((dataAvailable: boolean) => {
                     $rootScope.$apply(() => {
                         this.imageDataUrl = filter(mediaboxService.data, 'image/jpeg');
-                        this.caption = mediaboxService.caption;
+                        this.caption = mediaboxService.caption || mediaboxService.filename;
                     });
                 });
             }],
@@ -70,7 +73,8 @@ export default [
             // tslint:disable:max-line-length
             template: `
                 <div class="box" ng-if="ctrl.imageDataUrl !== null">
-                    <md-icon class="close material-icons md-24" ng-click="ctrl.close()" aria-label="Close" translate-attr="{'aria-label': 'common.CLOSE'}">close</md-icon>
+                    <md-icon class="save material-icons md-24" ng-click="ctrl.save()" aria-label="Save" translate-attr="{'aria-label': 'common.SAVE', 'title': 'common.SAVE'}">save</md-icon>
+                    <md-icon class="close material-icons md-24" ng-click="ctrl.close()" aria-label="Close" translate-attr="{'aria-label': 'common.CLOSE', 'title': 'common.CLOSE'}">close</md-icon>
                     <div class="inner" ng-click="ctrl.close($event)">
                         <img ng-src="{{ ctrl.imageDataUrl }}">
                         <div class="caption">

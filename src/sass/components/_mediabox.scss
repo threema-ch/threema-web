@@ -40,13 +40,14 @@ mediabox {
             }
         }
 
-        .close {
-            height: 24px;
-            width: 24px;
+
+        md-icon {
             display: block;
+            box-sizing: border-box;
             position: absolute;
+            height: 28px;
+            width: 28px;
             top: 24px;
-            right: 24px;
             color: rgba(255, 255, 255, 0.8);
             background-color: rgba(0, 0, 0, 0.7);
             border: 2px solid rgba(255, 255, 255, 0.8);
@@ -57,6 +58,16 @@ mediabox {
             &:focus {
                 color: rgba(255, 255, 255, 1.0);
                 border: 2px solid rgba(255, 255, 255, 1.0);
+            }
+
+            &.save {
+                right: 60px;
+                font-size: 20px;
+                padding: 2px;
+            }
+
+            &.close {
+                right: 24px;
             }
         }
 
