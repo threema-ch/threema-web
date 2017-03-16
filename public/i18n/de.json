@@ -194,7 +194,11 @@
         "EMOJI_ART": "Verwendete Emoji stammen von <a href='http://emojione.com'>EmojiOne</a>",
         "LICENSE_LINK_BEFORE": "Lizenzen von verwendeten Open Source Komponenten können",
         "LICENSE_LINK_TEXT": "im Quellcode",
-        "LICENSE_LINK_AFTER": "gefunden werden"
+        "LICENSE_LINK_AFTER": "gefunden werden",
+        "CHANGELOG": "Änderungsprotokoll",
+        "CHANGELOG_LINK_BEFORE": "Das Änderungsprotokoll von Threema Web findet sich",
+        "CHANGELOG_LINK_TEXT": "auf Github",
+        "CHANGELOG_LINK_AFTER": "."
     },
     "settings": {
         "SETTINGS":"Einstellungen",

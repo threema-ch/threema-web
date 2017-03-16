@@ -195,7 +195,11 @@
         "EMOJI_ART": "Emoji art supplied by <a href='http://emojione.com'>EmojiOne</a>",
         "LICENSE_LINK_BEFORE": "Licenses of used open source components can be found",
         "LICENSE_LINK_TEXT": "in the source code",
-        "LICENSE_LINK_AFTER": ""
+        "LICENSE_LINK_AFTER": "",
+        "CHANGELOG": "Changelog",
+        "CHANGELOG_LINK_BEFORE": "The Threema Web changelog can be found.",
+        "CHANGELOG_LINK_TEXT": "on Github",
+        "CHANGELOG_LINK_AFTER": "."
     },
     "settings": {
         "SETTINGS":"Settings",
