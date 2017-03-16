@@ -3,7 +3,7 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
-### [v1.0.6][v1.0.6] (2017-03-16)
+### [v1.1.0][v1.1.0] (2017-03-16)
 
 Changes:
 
@@ -137,7 +137,7 @@ First public release.
 [i161]: https://github.com/threema-ch/threema-web/issues/161
 [i167]: https://github.com/threema-ch/threema-web/issues/167
 
-[v1.0.6]: https://github.com/threema-ch/threema-web/compare/v1.0.5...v1.0.6
+[v1.1.0]: https://github.com/threema-ch/threema-web/compare/v1.0.5...v1.1.0
 [v1.0.5]: https://github.com/threema-ch/threema-web/compare/v1.0.4...v1.0.5
 [v1.0.4]: https://github.com/threema-ch/threema-web/compare/v1.0.3...v1.0.4
 [v1.0.3]: https://github.com/threema-ch/threema-web/compare/v1.0.2...v1.0.3
