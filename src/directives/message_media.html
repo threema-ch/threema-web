@@ -1,6 +1,6 @@
 <!-- Thumbnail -->
 <!-- Images, Gifs & Videos -->
-<span class="in-view-indicator" in-view="ctrl.thumbnailInView($inview)"></span>
+<span ng-if="ctrl.type !== 'location'" class="in-view-indicator" in-view="ctrl.thumbnailInView($inview)"></span>
 
 <div ng-if="ctrl.uploading">
     <!-- Loading indicator -->
