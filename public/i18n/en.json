@@ -166,10 +166,9 @@
         "ERROR_OCCURRED": "An error occurred.",
         "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web",
         "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters).",
-        "NOTIFICATION_PERMISSION_DENIED" : "Permission denied. You have to grant the permission for Threema Web manually.",
-        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE" : "Learn more.",
-        "NOTIFICATION_API_NOT_AVAILABLE" : "Your browser does not support desktop notifications.",
-        "BALLOT_NOT_SUPPORTED": "Ballot messages are not yet supported."
+        "NOTIFICATION_PERMISSION_DENIED": "You have to grant the notification permission for Threema Web manually in order to receive desktop notifications.",
+        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Learn more.",
+        "NOTIFICATION_API_NOT_AVAILABLE": "Your browser does not support desktop notifications."
     },
     "mimeTypes": {
         "android_apk": "Android package",
@@ -193,7 +192,8 @@
         "LICENSES": "Licenses",
         "OPEN_SOURCE": "Threema Web is fully open source.",
         "SOURCE_CODE": "The source code and the licensing terms can be found on Github:",
-        "EMOJI_ART": "Emoji art supplied by <a href='http://emojione.com'>EmojiOne</a>",
+        "EMOJI_ART": "Emoji art supplied by <a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>",
+        "NOTIFICATION_SOUND": "Sound files &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
         "LICENSE_LINK_BEFORE": "Licenses of used open source components can be found",
         "LICENSE_LINK_TEXT": "in the source code",
         "LICENSE_LINK_AFTER": "",
@@ -205,9 +205,10 @@
     "settings": {
         "SETTINGS":"Settings",
         "notifications": {
-            "NOTIFICATIONS" : "Notifications",
-            "SHOW_NOTIFICATIONS" : "Show desktop notifications",
-            "SHOW_PREVIEW" : "Show message contents in notifications"
+            "NOTIFICATIONS": "Notifications",
+            "SHOW_NOTIFICATIONS": "Show desktop notifications",
+            "SHOW_PREVIEW": "Show message contents in notifications",
+            "PLAY_SOUND": "Play sound"
         }
     }
 }

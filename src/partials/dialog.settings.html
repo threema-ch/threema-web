@@ -14,8 +14,8 @@
                 <section>
                     <md-subheader class="md-accent"><span translate>settings.notifications.NOTIFICATIONS</span>
                     </md-subheader>
-                    <md-list flex ng-if="ctrl.notificationApiAvailable && ctrl.notificationPermission !== false">
-                        <md-list-item>
+                    <md-list flex>
+                        <md-list-item ng-if="ctrl.notificationApiAvailable && ctrl.notificationPermission !== false">
                             <md-checkbox
                                     ng-disabled="!ctrl.notificationApiAvailable || ctrl.notificationPermission === false"
                                     ng-model="ctrl.desktopNotifications"
@@ -24,7 +24,7 @@
                                 <span translate>settings.notifications.SHOW_NOTIFICATIONS</span>
                             </md-checkbox>
                         </md-list-item>
-                        <md-list-item ng-if="ctrl.desktopNotifications">
+                        <md-list-item ng-if="ctrl.desktopNotifications && ctrl.notificationApiAvailable && ctrl.notificationPermission !== false">
                             <md-checkbox
                                     ng-disabled="!ctrl.desktopNotifications"
                                     ng-model="ctrl.notificationPreview"
@@ -33,8 +33,15 @@
                                 <span translate>settings.notifications.SHOW_PREVIEW</span>
                             </md-checkbox>
                         </md-list-item>
+                        <md-list-item>
+                            <md-checkbox
+                                    ng-model="ctrl.notificationSound"
+                                    ng-change="ctrl.setWantsSound(ctrl.notificationSound)"
+                                    aria-label="Play notification sound">
+                                <span translate>settings.notifications.PLAY_SOUND</span>
+                            </md-checkbox>
+                        </md-list-item>
                     </md-list>
-
                     <div ng-if="!ctrl.notificationApiAvailable" class="status status-no">
                         <i class="material-icons md-24">error</i>
                         <span translate>error.NOTIFICATION_API_NOT_AVAILABLE</span>
@@ -43,7 +50,7 @@
                         <i class="material-icons md-24">error</i> <span translate>error.NOTIFICATION_PERMISSION_DENIED</span>
                         <a href="https://threema.ch/de/faq/web_notifications"
                            target="_blank" rel="noopener noreferrer">
-                            <span translate>error.NOTIFICATION_PERMISSION_DENIED_LEARN_MORE</span>
+                            <p translate>error.NOTIFICATION_PERMISSION_DENIED_LEARN_MORE</p>
                         </a>
                     </div>
                 </section>
