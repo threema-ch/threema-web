@@ -165,9 +165,9 @@
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
         "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",
         "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen).",
-        "NOTIFICATION_PERMISSION_DENIED" : "Berechtigung nicht erteilt. Sie müssen die Berechtigungen für Threema Web manuell erteilen.",
-        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE" : "Mehr erfahren.",
-        "NOTIFICATION_API_NOT_AVAILABLE" : "Ihr Browser unterstützt keine Desktopbenachrichtigungen."
+        "NOTIFICATION_PERMISSION_DENIED": "Sie müssen die Benachrichtigungsberechtigung für Threema Web manuell erteilen, um Desktopbenachrichtigungen erhalten zu können.",
+        "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Mehr erfahren.",
+        "NOTIFICATION_API_NOT_AVAILABLE": "Ihr Browser unterstützt keine Desktopbenachrichtigungen."
     },
     "mimeTypes": {
         "android_apk": "Android-Paket",
@@ -191,7 +191,8 @@
         "LICENSES": "Lizenzen",
         "OPEN_SOURCE": "Threema Web ist vollständig Open Source.",
         "SOURCE_CODE": "Der Quellcode und die Lizenzbedingungen finden sich auf Github:",
-        "EMOJI_ART": "Verwendete Emoji stammen von <a href='http://emojione.com'>EmojiOne</a>",
+        "EMOJI_ART": "Verwendete Emoji stammen von <a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>",
+        "NOTIFICATION_SOUNDS": "Benachrichtigunstöne &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
         "LICENSE_LINK_BEFORE": "Lizenzen von verwendeten Open Source Komponenten können",
         "LICENSE_LINK_TEXT": "im Quellcode",
         "LICENSE_LINK_AFTER": "gefunden werden",
@@ -205,7 +206,8 @@
         "notifications": {
             "NOTIFICATIONS": "Benachrichtigungen",
             "SHOW_NOTIFICATIONS": "Desktopbenachrichtigungen anzeigen",
-            "SHOW_PREVIEW": "Nachrichteninhalt in Benachrichtigungen anzeigen"
+            "SHOW_PREVIEW": "Nachrichteninhalt in Benachrichtigungen anzeigen",
+            "PLAY_SOUND": "Ton abspielen"
         }
     }
 }
