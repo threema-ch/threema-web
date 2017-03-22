@@ -1,6 +1,6 @@
 <!-- Thumbnail -->
 <!-- Images, Gifs & Videos -->
-<span ng-if="ctrl.type !== 'location'" class="in-view-indicator" in-view="ctrl.thumbnailInView($inview)"></span>
+<span class="in-view-indicator" in-view="ctrl.thumbnailInView($inview)"></span>
 
 <div ng-if="ctrl.uploading">
     <!-- Loading indicator -->
@@ -86,4 +86,4 @@
     </div>
 </div>
 <!-- Ballot -->
-<span ng-if="ctrl.type === 'ballot'"><em>Ballot messages are not yet supported.</em></span> <!-- TODO -->
+<span ng-if="ctrl.type === 'ballot'"><em translate>error.BALLOT_NOT_SUPPORTED</em></span> <!-- TODO -->

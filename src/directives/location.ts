@@ -31,10 +31,16 @@ export default [
                         : this.location.lat  + ', ' + this.location.lon;
             }],
             template: `
-                <a ng-href="{{ctrl.location | mapLink}}" class="location-address" target="_blank" rel="noopener noreferrer">
-                    {{ctrl.label}}
-                </a>
-                <div class="location-poi" ng-if="ctrl.location.poi">{{ctrl.location.poi}}</div>
+                <div class="file-message">
+                    <div class="circle">
+                        <i class="material-icons md-24">location_on</i>
+                    </div>
+                    <div class="info">
+                        <a ng-href="{{ctrl.location | mapLink}}" class="location-address" target="_blank" rel="noopener noreferrer">
+                            {{ctrl.label}}
+                        </a>
+                    </div>
+                </div>
             `,
         };
     },
