@@ -150,7 +150,13 @@
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
-        "FILE_MESSAGE": "Datei"
+        "FILE_MESSAGE": "Datei",
+        "image": "Bild",
+        "video": "Video",
+        "file": "Datei",
+        "audio": "Sprachnachricht",
+        "location": "Ort",
+        "ballot": "Umfrage"
     },
     "validationError": {
         "createReceiver": {

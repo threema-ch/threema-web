@@ -29,6 +29,7 @@ import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
 import {TitleService} from './title';
+import {log} from "util";
 
 class WebClientDefault {
     private avatar: threema.AvatarRegistry = {
@@ -2008,12 +2009,34 @@ export class WebClientService {
             .then((titlePrefix) =>  {
                 const title = `${titlePrefix} ${senderName}`;
                 let body = '';
-                switch (message.type) {
+                let messageType = message.type;
+                let caption = message.caption;
+                let captionString = '';
+                if (typeof caption !== "undefined"){
+                    captionString = captionString + ': ' + caption;
+                }
+                let messageTypeString = this.$translate.instant('messageTypes.' + messageType);
+                console.info(messageTypeString + ": " + messageType);
+                switch (messageType) {
                     case 'text':
                         body = message.body;
                         break;
+                    case 'location':
+                        body = messageTypeString + ': ' + message.location.poi;
+                        break;
+                    case 'file':
+                        if (captionString.length > 0) {
+                            body = messageTypeString + captionString;
+                            break;
+                        }
+                        body = messageTypeString + ': ' + message.file.name;
+                        break;
+                    case 'ballot':
+                        // TODO Show ballot title if ballot messages are implemented in the web version
+                        body = messageTypeString;
+                        break;
                     default:
-                        body = `[${message.type}]`;
+                        body = messageTypeString + captionString;
                 }
                 if (conversation.type === 'group') {
                     body = partnerName + ': ' + body;
