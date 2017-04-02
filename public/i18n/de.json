@@ -15,7 +15,7 @@
         "CHOOSE_PASSWORD": "W\u00e4hlen Sie vor dem Scannen ein Passwort, <br> um sp\u00e4ter die gleiche Sitzung erneut herzustellen.",
         "UNLOCK_FAILED_TEXT": "Sie haben das falsche Passwort eingegeben. Die Verbindung kann nicht aufgebaut werden.",
         "ENTER_PASSWORD": "Um die letzte Sitzung wiederherzustellen, <br> geben Sie bitte das entsprechende Passwort ein.",
-        "UNLOCK_FAILED_TITLE": "Verbindung abbrechen fehlgeschlagen",
+        "UNLOCK_FAILED_TITLE": "Verbindung aufbauen fehlgeschlagen",
         "ALTERNATIVELY": "Alternativ:",
         "UNLOCK_FAILED_FORGOTTEN": "Haben Sie Ihr Passwort vergessen? W\u00e4hlen Sie \"Verbindung abbrechen\" und setzen Sie ein neues Passwort.",
         "IF_YOU_WANT": "Wenn Sie möchten, können Sie die",

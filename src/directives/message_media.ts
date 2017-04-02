@@ -28,6 +28,7 @@ export default [
     '$timeout',
     '$log',
     '$filter',
+    '$window',
     function(webClientService: WebClientService,
              mediaboxService: MediaboxService,
              messageService: MessageService,
@@ -35,7 +36,8 @@ export default [
              $mdDialog: ng.material.IDialogService,
              $timeout: ng.ITimeoutService,
              $log: ng.ILogService,
-             $filter: ng.IFilterService) {
+             $filter: ng.IFilterService,
+             $window: ng.IWindowService) {
         return {
             restrict: 'EA',
             scope: {},
@@ -113,6 +115,11 @@ export default [
                     this.location = this.message.location;
                     this.downloaded = true;
                 }
+
+                // Open map link in new window using mapLink-filter
+                this.openMapLink = () => {
+                    $window.open($filter<any>('mapLink')(this.location), '_blank');
+                };
 
                 // Play a Audio file in a dialog
                 this.playAudio = (buffer: ArrayBuffer) => {

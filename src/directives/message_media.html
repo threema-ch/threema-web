@@ -1,6 +1,6 @@
 <!-- Thumbnail -->
 <!-- Images, Gifs & Videos -->
-<span class="in-view-indicator" in-view="ctrl.thumbnailInView($inview)"></span>
+<span class="in-view-indicator" ng-if="ctrl.type !== 'location'" in-view="ctrl.thumbnailInView($inview)"></span>
 
 <div ng-if="ctrl.uploading">
     <!-- Loading indicator -->
@@ -35,12 +35,12 @@
     </div>
 
     <!-- Location -->
-    <location ng-if="ctrl.type === 'location'" location="ctrl.location"></location>
+    <location ng-if="ctrl.type === 'location'" location="ctrl.location" ng-click="ctrl.openMapLink()"></location>
 
     <!-- Audio file -->
-    <div class="file-message" ng-if="ctrl.type === 'audio'">
+    <div class="file-message" ng-if="ctrl.type === 'audio'" ng-click="ctrl.download()">
         <!-- Loading indicator -->
-        <div class="circle" ng-click="ctrl.download()"
+        <div class="circle"
              ng-class="{active: !ctrl.downloading}"
              ng-if="!ctrl.downloaded">
             <i class="material-icons md-24">file_download</i>

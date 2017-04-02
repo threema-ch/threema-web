@@ -36,9 +36,7 @@ export default [
                         <i class="material-icons md-24">location_on</i>
                     </div>
                     <div class="info">
-                        <a ng-href="{{ctrl.location | mapLink}}" class="location-address" target="_blank" rel="noopener noreferrer">
                             {{ctrl.label}}
-                        </a>
                     </div>
                 </div>
             `,
