@@ -157,7 +157,8 @@
         "file": "File",
         "audio": "Audio",
         "location": "Location",
-        "ballot": "Ballot"
+        "ballot": "Ballot",
+        "gif": "GIF"
 
     },
     "validationError": {

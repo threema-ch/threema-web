@@ -156,7 +156,8 @@
         "file": "Datei",
         "audio": "Sprachnachricht",
         "location": "Ort",
-        "ballot": "Umfrage"
+        "ballot": "Umfrage",
+        "gif": "GIF"
     },
     "validationError": {
         "createReceiver": {

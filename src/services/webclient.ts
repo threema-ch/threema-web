@@ -2025,6 +2025,11 @@ export class WebClientService {
                         body = messageTypeString + ': ' + message.location.poi;
                         break;
                     case 'file':
+                        if (message.file.type === 'image/gif') {
+                            body = this.$translate.instant('messageTypes.' + 'gif') + captionString;
+                            break;
+                        }
+                        // Display caption, if available otherwise use filename
                         if (captionString.length > 0) {
                             body = messageTypeString + captionString;
                             break;
@@ -2036,6 +2041,7 @@ export class WebClientService {
                         body = messageTypeString;
                         break;
                     default:
+                        // Image, video and audio
                         body = messageTypeString + captionString;
                 }
                 if (conversation.type === 'group') {
