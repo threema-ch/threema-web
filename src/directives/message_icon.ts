@@ -37,8 +37,9 @@ export default [
                         case 'location':
                             return 'ic_location_on_24px.svg';
                         case 'file':
-                            if (this.message.file.type === 'image/gif')
+                            if (this.message.file.type === 'image/gif') {
                                 return 'ic_image_24px.svg';
+                            }
                             return 'ic_insert_drive_file_24px.svg';
                         case 'ballot':
                             return 'ic_poll_24px.svg';

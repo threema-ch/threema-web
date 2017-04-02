@@ -2011,11 +2011,10 @@ export class WebClientService {
                 let messageType = message.type;
                 let caption = message.caption;
                 let captionString = '';
-                if (typeof caption !== "undefined"){
+                if (typeof caption !== 'undefined') {
                     captionString = captionString + ': ' + caption;
                 }
                 let messageTypeString = this.$translate.instant('messageTypes.' + messageType);
-                console.info(messageTypeString + ": " + messageType);
                 switch (messageType) {
                     case 'text':
                         body = message.body;
