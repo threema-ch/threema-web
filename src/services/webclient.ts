@@ -29,7 +29,6 @@ import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
 import {TitleService} from './title';
-import {log} from "util";
 
 class WebClientDefault {
     private avatar: threema.AvatarRegistry = {
