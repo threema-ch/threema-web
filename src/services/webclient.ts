@@ -2011,7 +2011,7 @@ export class WebClientService {
                 let messageType = message.type;
                 let caption = message.caption;
                 let captionString = '';
-                if (typeof caption !== 'undefined') {
+                if (caption !== undefined) {
                     captionString = captionString + ': ' + caption;
                 }
                 let messageTypeString = this.$translate.instant('messageTypes.' + messageType);
@@ -2030,9 +2030,9 @@ export class WebClientService {
                         // Display caption, if available otherwise use filename
                         if (captionString.length > 0) {
                             body = messageTypeString + captionString;
-                            break;
+                        } else {
+                            body = messageTypeString + ': ' + message.file.name;
                         }
-                        body = messageTypeString + ': ' + message.file.name;
                         break;
                     case 'ballot':
                         // TODO Show ballot title if ballot messages are implemented in the web version
