@@ -152,7 +152,15 @@
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
-        "FILE_MESSAGE": "File Message"
+        "FILE_MESSAGE": "File Message",
+        "image": "Image",
+        "video": "Video",
+        "file": "File",
+        "audio": "Audio",
+        "location": "Location",
+        "ballot": "Ballot",
+        "gif": "GIF"
+
     },
     "validationError": {
         "createReceiver": {
