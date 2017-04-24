@@ -124,6 +124,8 @@ keybase](https://keybase.io/threema).
 
 ## License
 
+Threema Web license:
+
     Threema Web.
 
     Copyright © 2016-2017 Threema GmbH (https://threema.ch/).
@@ -140,3 +142,5 @@ keybase](https://keybase.io/threema).
 
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+For third party library licenses, see `LICENSE-3RD-PARTY.txt`.

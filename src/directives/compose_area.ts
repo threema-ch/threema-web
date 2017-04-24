@@ -424,7 +424,7 @@ export default [
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
                     const emoji = this.textContent; // Unicode character
-                    const formatted = ($filter('emojify') as any)(emoji, true);
+                    const formatted = ($filter('emojify') as any)(emoji, true, true);
 
                     // Firefox inserts a <br> after editing content editable fields.
                     // Remove the last <br> to fix this.
