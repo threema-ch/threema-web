@@ -82,7 +82,7 @@ export default [
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
                  */
-                let EmoijPickerContainer = (function() {
+                let EmojiPickerContainer = (function() {
                     let instance;
 
                     function click(e) {
@@ -370,7 +370,7 @@ export default [
 
                 // Show emoji picker element
                 function showEmojiPicker() {
-                    const emojiPicker: HTMLElement = EmoijPickerContainer.get().htmlElement;
+                    const emojiPicker: HTMLElement = EmojiPickerContainer.get().htmlElement;
 
                     // Show
                     emojiKeyboard.addClass('active');
@@ -396,11 +396,11 @@ export default [
 
                     // Find all emoji
                     const allEmoji: any = angular.element(
-                        EmoijPickerContainer.get().htmlElement.querySelectorAll('.content .e1'));
+                        EmojiPickerContainer.get().htmlElement.querySelectorAll('.content .e1'));
 
                     // Remove event handlers
                     allEmoji.off('click', onEmojiChosen);
-                    EmoijPickerContainer.destroy();
+                    EmojiPickerContainer.destroy();
                 }
 
                 // Emoji trigger is clicked
