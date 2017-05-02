@@ -6,7 +6,7 @@ LICENSE_FILES=(
     'angular' 'node_modules/angular/LICENSE.md'
     'angular-animate' 'node_modules/angular-animate/LICENSE.md'
     'angular-aria' 'node_modules/angular-aria/LICENSE.md'
-    'angular-inview' 'node_modules/angular-inview/LICENSE'
+    'angular-inview' 'public/libs/angular-inview/LICENSE'
     'angular-material' 'node_modules/angular-material/LICENSE'
     'angular-messages' 'node_modules/angular-messages/LICENSE.md'
     'angular-qrcode' '.licenses/angular-qrcode'
