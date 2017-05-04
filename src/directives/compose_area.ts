@@ -48,8 +48,8 @@ export default [
                 stopTyping: '=',
                 onTyping: '=',
 
-                // Reference to drafts variable
-                draft: '=',
+                // Reference to initial text and draft
+                initialData: '=',
 
                 // Callback that is called when uploading files
                 onUploading: '=',
@@ -72,9 +72,12 @@ export default [
                 const fileTrigger: any = angular.element(element[0].querySelector('i.file-trigger'));
                 const fileInput: any = angular.element(element[0].querySelector('input.file-input'));
 
-                // Restore drafts
-                if (scope.draft !== undefined) {
-                    composeDiv[0].innerText = scope.draft;
+                // Set initial text
+                if (scope.initialData.initialText) {
+                    composeDiv[0].innerText = scope.initialData.initialText;
+                    scope.initialData.initialText = '';
+                } else if (scope.initialData.draft !== undefined) {
+                    composeDiv[0].innerText = scope.initialData.draft;
                 }
 
                 let caretPosition: {from?: number, to?: number} = null;

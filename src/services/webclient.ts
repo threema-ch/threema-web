@@ -2048,7 +2048,11 @@ export class WebClientService {
                 const tag = conversation.type + '-' + conversation.id;
                 const avatar = (sender.avatar && sender.avatar.low) ? sender.avatar.low : null;
                 this.notificationService.showNotification(tag, title, body, avatar, () => {
-                    this.$state.go('messenger.home.conversation', conversation);
+                    this.$state.go('messenger.home.conversation', {
+                        type: conversation.type,
+                        id: conversation.id,
+                        initParams: null,
+                    });
                 });
             });
     }

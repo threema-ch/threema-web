@@ -139,6 +139,9 @@ declare namespace threema {
         canChangeMembers?: boolean;
     }
 
+    /**
+     * The base class for a receiver. Only type and id.
+     */
     interface BaseReceiver {
         id: string;
         type: ReceiverType;
@@ -308,8 +311,14 @@ declare namespace threema {
     }
 
     interface CreateReceiverStateParams extends ng.ui.IStateParamsService {
-        type: string;
-        initParams: null | {identity: null};
+        type: ReceiverType;
+        initParams: null | {identity: string | null};
+    }
+
+    interface ConversationStateParams extends ng.ui.IStateParamsService {
+        type: ReceiverType;
+        id: string;
+        initParams: null | {text: string | null};
     }
 
     interface Quote {
@@ -383,6 +392,11 @@ declare namespace threema {
         PUSH_URL: string;
     }
 
+    interface InitialConversationData {
+        draft: string;
+        initialText: string;
+    }
+
     interface BrowserMinVersions {
         FF: number;
         CHROME: number;
@@ -412,7 +426,7 @@ declare namespace threema {
             groups: Map<string, GroupReceiver>;
             distributionLists: Map<string, DistributionListReceiver>;
             get(receiverType: ReceiverType): Receiver | Map<string, Receiver>;
-            getData(receiver: Receiver): Receiver | null;
+            getData(receiver: BaseReceiver): Receiver | null;
             set(data: ReceiverData): void;
             setMe(data: MeReceiver): void;
             setContacts(data: ContactReceiver[]): void;

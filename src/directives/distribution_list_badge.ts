@@ -34,6 +34,7 @@ export default [
                     $state.go('messenger.home.conversation', {
                         type: 'distributionList',
                         id: this.distributionListReceiver.id,
+                        initParams: null,
                     });
                 };
             }],

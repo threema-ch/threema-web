@@ -26,10 +26,10 @@ export class UriService {
         if (!(typeof query === 'string' || query instanceof String)) {
             return null;
         }
-        if (query.length == 0) {
+        if (query.length === 0) {
             return {};
         }
-        const objStr = '{"' + decodeURI(query).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}';
+        const objStr = '{"' + decodeURI(query).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"') + '"}';
         return JSON.parse(objStr);
     }
 

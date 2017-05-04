@@ -93,7 +93,7 @@ angular.module('3ema.container', [])
         /**
          * Get the receiver matching a certain template.
          */
-        public getData(receiver: threema.Receiver): threema.Receiver | null {
+        public getData(receiver: threema.BaseReceiver): threema.Receiver | null {
             if (receiver.type === 'me') {
                 return this.me.id === receiver.id ? this.me : undefined;
             } else {

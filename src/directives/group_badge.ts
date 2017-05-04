@@ -49,7 +49,11 @@ export default [
                     }
                 }
                 this.click = () => {
-                    $state.go('messenger.home.conversation', { type: 'group', id: this.groupReceiver.id });
+                    $state.go('messenger.home.conversation', {
+                        type: 'group',
+                        id: this.groupReceiver.id,
+                        initParams: null,
+                    });
                 };
             }],
             template: `
