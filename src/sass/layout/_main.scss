@@ -90,26 +90,6 @@
                     margin-left: 8px;
                 }
 
-                // back button
-                .header-back-button {
-                    @include mouse-hand;
-                    img {
-                        transition: all 0.8s;
-                        opacity: 0.8;
-                    }
-
-                    &:hover {
-                         img {
-                                opacity: 1;
-                                width: 105%;
-                         }
-                    }
-                }
-
-                .header-avatar {
-
-                }
-
                 .header-detail {
                     display: flex;
                     flex-direction: column;

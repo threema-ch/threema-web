@@ -1,0 +1,14 @@
+.md-button.md-icon-button.header-back-button {
+    @include mouse-hand;
+    min-width: 24px;
+    width: 24px;
+    margin: 0 4px 0 0;
+    padding: 0;
+    md-icon {
+        color: $material-grey-dark;
+        transform: scale(1.2);
+    }
+    &.md-focused {
+        background-color: transparent !important; /* fix bug in md-no-ink */
+    }
+}

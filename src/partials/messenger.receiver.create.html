@@ -1,8 +1,6 @@
 <div class="form">
     <div id="receiver-detail-header" class="detail-header">
-        <div class="header-back-button" ng-click="ctrl.goBack()">
-            <img src="img/ic_arrow_left.svg" alt="Back">
-        </div>
+        <ng-include src="'partials/messenger.backbutton.html'"></ng-include>
         <div class="header-details">
             <h2>{{ctrl.controllerModel.subject}}</h2>
         </div>

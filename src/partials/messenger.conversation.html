@@ -5,9 +5,7 @@
             on-uploading="ctrl.onUploading"></drag-file>
 
     <div id="conversation-header" class="detail-header">
-        <div class="header-back-button" ng-click="ctrl.goBack()">
-            <img src="img/ic_arrow_left.svg" alt="Back">
-        </div>
+        <ng-include src="'partials/messenger.backbutton.html'"></ng-include>
         <div class="header-avatar" ng-click="ctrl.showReceiver()">
             <eee-avatar eee-type="ctrl.type" eee-receiver="ctrl.receiver"
                         eee-resolution="'low'"></eee-avatar>
