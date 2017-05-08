@@ -57,7 +57,7 @@ export default [
         };
 
         const getThreemaActionHandler = (name: string) => {
-            switch (name) {
+            switch (name.toLowerCase()) {
                 case 'add':
                     return addAction;
                 case 'compose':
@@ -80,7 +80,7 @@ export default [
                             && node.tagName.toLowerCase() === 'a') {
 
                             const link = (node as HTMLElement).innerText;
-                            if (link !== undefined && link.startsWith('threema://')) {
+                            if (link !== undefined && link.toLowerCase().startsWith('threema://')) {
                                 const matches = (/\bthreema:\/\/([a-z]+)\?([^\s]+)\b/gi).exec(link);
                                 if (matches !== null) {
                                     const handler = getThreemaActionHandler(matches[1]);
