@@ -60,6 +60,7 @@
 
     <!-- Other file messages -->
     <div class="file-message" ng-if="ctrl.type === 'file' && !ctrl.isAnimGif" ng-click="ctrl.download()">
+
         <!-- Loading indicator -->
         <div class="circle"
              ng-class="{active: !ctrl.downloading}"
@@ -68,21 +69,24 @@
             <i class="material-icons md-24">file_download</i>
             <div class="loading" ng-class="{active: ctrl.downloading}"></div>
         </div>
-        <!-- Open Indicator -->
+
+        <!-- File type indicator -->
         <div class="circle"
              ng-if="ctrl.downloaded && ctrl.message.thumbnail.preview !== undefined"
              ng-style="{'background-image': 'url({{ctrl.message.thumbnail.preview | bufferToUrl: 'image/png'}})' }">
         </div>
-
         <div class="circle"
              ng-if="ctrl.downloaded && ctrl.message.thumbnail.preview == undefined">
-            <img ng-src="{{ ctrl.message.file.type | mimeType: false }}"/>
+            <img ng-src="{{ ctrl.message.file.type | mimeTypeIcon }}"/>
         </div>
+
+        <!-- File information -->
         <div class="info">
             <p>{{ctrl.message.file.name}}</p>
-            <p>{{ctrl.message.file.type | mimeType: true}}</p>
+            <p>{{ctrl.message.file.type | mimeTypeLabel}}</p>
             <p>{{ctrl.message.file.size | fileSize}}</p>
         </div>
+
     </div>
 </div>
 <!-- Ballot -->
