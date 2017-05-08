@@ -78,13 +78,14 @@ export default [
                     && this.message.type !== 'status';
 
                 this.getDraft = () => {
-                    if (receiverService.isConversationActive(this.receiver)) {
-                        return null;
-                    }
                     return webClientService.getDraft(this.receiver);
                 };
 
-                this.hasDraft = () => {
+                this.showDraft = () => {
+                    if (receiverService.isConversationActive(this.receiver)) {
+                        // Don't show draft if conversation is active
+                        return false;
+                    }
                     let draft = this.getDraft();
                     return draft !== undefined && draft !== null;
                 };
