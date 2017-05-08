@@ -383,11 +383,13 @@ class ConversationController {
                 case 'file':
                     // Determine file type
                     let showSendAsFileCheckbox = false;
-                    for (let msg of contents) {
-                        const mime = (msg as threema.FileMessageData).fileType;
-                        if (this.mimeService.isImage(mime)
-                            || this.mimeService.isAudio(mime)
-                            || this.mimeService.isVideo(mime)) {
+                    for (let msg of contents as threema.FileMessageData[]) {
+                        if (!msg.fileType) {
+                            msg.fileType = 'application/octet-stream';
+                        }
+                        if (this.mimeService.isImage(msg.fileType)
+                            || this.mimeService.isAudio(msg.fileType)
+                            || this.mimeService.isVideo(msg.fileType)) {
                             showSendAsFileCheckbox = true;
                             break;
                         }

@@ -180,7 +180,7 @@
         "NOTIFICATION_API_NOT_AVAILABLE": "Your browser does not support desktop notifications."
     },
     "mimeTypes": {
-        "android_apk": "Android package",
+        "apk": "Android package",
         "audio": "Audio file",
         "certificate": "Digital certificate",
         "codes": "Source code",

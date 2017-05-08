@@ -43,29 +43,35 @@ export class MimeService {
     }
 
     public getLabel(mimeType: string): string {
-        let key = this.getKey(mimeType);
-
+        const key = this.getKey(mimeType);
         if (key !== null) {
-            return this.$translate.instant('mimeTypes.' + this.getKey(mimeType));
+            return this.$translate.instant('mimeTypes.' + key);
         }
-
         return mimeType;
     }
 
     public getIconUrl(mimeType: string): string {
         let key = this.getKey(mimeType);
-        if (key === undefined || key.length === 0) {
-            key = 'generic_am';
+        if (key === undefined || key === null || key.length === 0) {
+            key = 'generic';
         }
         return 'img/mime/ic_doc_' + key + '.png';
     }
 
     private getKey(mimeType: string): string {
+        if (mimeType.startsWith('audio/')) {
+            return 'audio';
+        }
+        if (mimeType.startsWith('video/')) {
+            return 'video';
+        }
         switch (mimeType) {
             case 'application/vnd.android.package-archive':
                 return 'apk';
             case 'application/ogg':
             case 'application/x-flac':
+            case 'application/mpeg3':
+            case 'application/x-mpeg-3':
                 return 'audio';
             case 'application/pgp-keys':
             case 'application/pgp-signature':
@@ -128,10 +134,10 @@ export class MimeService {
                 return 'compressed';
             case 'text/x-vcard':
             case 'text/vcard':
-                return 'contact_am';
+                return 'contact';
             case 'text/calendar':
             case 'text/x-vcalendar':
-                return 'event_am';
+                return 'event';
             case 'application/x-font':
             case 'application/font-woff':
             case 'application/x-font-woff':
@@ -150,11 +156,15 @@ export class MimeService {
                 return 'image';
             case 'application/pdf':
                 return 'pdf';
+            case 'application/vnd.ms-powerpoint':
+            case 'application/vnd.oasis.opendocument.presentation':
+            case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+            case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow':
+            case 'application/vnd.openxmlformats-officedocument.presentationml.template':
             case 'application/vnd.stardivision.impress':
             case 'application/vnd.sun.xml.impress':
             case 'application/vnd.sun.xml.impress.template':
             case 'application/x-kpresenter':
-            case 'application/vnd.oasis.opendocument.presentation':
                 return 'presentation';
             case 'application/vnd.oasis.opendocument.spreadsheet':
             case 'application/vnd.oasis.opendocument.spreadsheet-template':
@@ -162,7 +172,10 @@ export class MimeService {
             case 'application/vnd.sun.xml.calc':
             case 'application/vnd.sun.xml.calc.template':
             case 'application/x-kspread':
-                return 'spreadsheet_am';
+            case 'application/vnd.ms-excel':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
+                return 'spreadsheet';
             case 'application/vnd.oasis.opendocument.text':
             case 'application/vnd.oasis.opendocument.text-master':
             case 'application/vnd.oasis.opendocument.text-template':
@@ -174,23 +187,14 @@ export class MimeService {
             case 'application/vnd.sun.xml.writer.template':
             case 'application/x-abiword':
             case 'application/x-kword':
-                return 'text_am';
+                return 'text';
             case 'application/x-quicktimeplayer':
             case 'application/x-shockwave-flash':
-                return 'video_am';
+                return 'video';
             case 'application/msword':
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             case 'application/vnd.openxmlformats-officedocument.wordprocessingml.template':
                 return 'word';
-            case 'application/vnd.ms-excel':
-            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
-            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.template':
-                return 'excel';
-            case 'application/vnd.ms-powerpoint':
-            case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
-            case 'application/vnd.openxmlformats-officedocument.presentationml.template':
-            case 'application/vnd.openxmlformats-officedocument.presentationml.slideshow':
-                return 'powerpoint';
             default:
                 return null;
         }

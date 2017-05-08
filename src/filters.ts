@@ -236,14 +236,19 @@ angular.module('3ema.filters', [])
         return (x + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]);
     };
 })
-.filter('mimeType', ['MimeService', function(mimeService: MimeService) {
-    return (mimeType: string, asText: boolean = true) => {
-        if (asText) {
-            return mimeService.getLabel(mimeType);
-        } else {
-            return mimeService.getIconUrl(mimeType);
-        }
-    };
+
+/**
+ * Return the MIME type label.
+ */
+.filter('mimeTypeLabel', ['MimeService', function(mimeService: MimeService) {
+    return (mimeType: string) => mimeService.getLabel(mimeType);
+}])
+
+/**
+ * Return the MIME type icon URL.
+ */
+.filter('mimeTypeIcon', ['MimeService', function(mimeService: MimeService) {
+    return (mimeType: string) => mimeService.getIconUrl(mimeType);
 }])
 
 /**

@@ -5,9 +5,11 @@ module.exports = function(config) {
         files: [
             'node_modules/angular/angular.js',
             'node_modules/angular-mocks/angular-mocks.js',
+            'node_modules/angular-translate/dist/angular-translate.min.js',
             'dist/app.js',
             'tests/filters.js',
             'tests/service/message.js',
+            'tests/service/mime.js',
             'tests/service/qrcode.js',
             'tests/service/uri.js',
             'tests/service/webclient.js',
