@@ -116,6 +116,7 @@ angular.module('3ema.container', [])
          * Set own contact.
          */
         public setMe(data: threema.MeReceiver): void {
+            data.type = 'me';
             this.me = data;
         }
 
@@ -123,7 +124,10 @@ angular.module('3ema.container', [])
          * Set contacts.
          */
         public setContacts(data: threema.ContactReceiver[]): void {
-            this.contacts = new Map(data.map((c) => [c.id, c]) as any) as ContactMap;
+            this.contacts = new Map(data.map((c) => {
+                c.type = 'contact';
+                return [c.id, c];
+            }) as any) as ContactMap;
             if (this.me !== undefined) {
                 this.contacts.set(this.me.id, this.me);
             }
@@ -133,14 +137,20 @@ angular.module('3ema.container', [])
          * Set groups.
          */
         public setGroups(data: threema.GroupReceiver[]): void {
-            this.groups = new Map(data.map((g) => [g.id, g]) as any) as GroupMap;
+            this.groups = new Map(data.map((g) => {
+                g.type = 'group';
+                return [g.id, g];
+            }) as any) as GroupMap;
         }
 
         /**
          * Set distribution lists.
          */
         public setDistributionLists(data: threema.DistributionListReceiver[]): void {
-            this.distributionLists = new Map(data.map((d) => [d.id, d]) as any) as DistributionListMap;
+            this.distributionLists = new Map(data.map((d) => {
+                d.type = 'distributionList';
+                return [d.id, d];
+            }) as any) as DistributionListMap;
         }
 
         public extend(receiverType: threema.ReceiverType, data: threema.Receiver): threema.Receiver {
@@ -161,6 +171,7 @@ angular.module('3ema.container', [])
         public extendDistributionList(data: threema.DistributionListReceiver): threema.DistributionListReceiver {
             let distributionListReceiver  = this.distributionLists.get(data.id);
             if (distributionListReceiver === undefined) {
+                data.type = 'distributionList';
                 this.distributionLists.set(data.id, data);
                 return data;
             }
@@ -173,6 +184,7 @@ angular.module('3ema.container', [])
         public extendGroup(data: threema.GroupReceiver): threema.GroupReceiver {
             let groupReceiver  = this.groups.get(data.id);
             if (groupReceiver === undefined) {
+                data.type = 'group';
                 this.groups.set(data.id, data);
                 return data;
             }
@@ -184,6 +196,7 @@ angular.module('3ema.container', [])
 
         public extendMe(data: threema.MeReceiver): threema.MeReceiver {
             if (this.me === undefined) {
+                data.type = 'me';
                 this.me = data;
                 return data;
             }
@@ -196,6 +209,7 @@ angular.module('3ema.container', [])
         public extendContact(data: threema.ContactReceiver): threema.ContactReceiver {
             let contactReceiver = this.contacts.get(data.id);
             if (contactReceiver === undefined) {
+                data.type = 'contact';
                 this.contacts.set(data.id, data);
                 return data;
             }

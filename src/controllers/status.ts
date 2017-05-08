@@ -136,7 +136,7 @@ export class StatusController {
     }
 
     /**
-     * Go back to the welcome screen and try to reconnect using the same keys as right now.
+     * Attempt to reconnect after a connection loss.
      */
     private reconnect(): void {
         this.$log.warn(this.logTag, 'Connection lost. Attempting to reconnect...');

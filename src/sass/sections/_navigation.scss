@@ -191,7 +191,7 @@
                         }
                     }
 
-                    &.has-draft {
+                    &.show-draft {
                         .no-draft {
                             display: none;
                         }
@@ -202,7 +202,7 @@
                             display: none;
                         }
                     }
-                    &:not(.has-draft) {
+                    &:not(.show-draft) {
                         .draft {
                             display: none;
                         }

@@ -40,11 +40,16 @@ export class ReceiverService {
     }
 
     public isConversationActive(conversation: threema.Conversation): boolean {
-        if (this.activeReceiver !== undefined) {
-           return this.compare(conversation, this.activeReceiver);
+        if (!this.activeReceiver) {
+            return false;
         }
+        return this.compare(conversation, this.activeReceiver);
     }
 
+    /**
+     * Compare two conversations and/or receivers.
+     * Return `true` if they both have the same type and id.
+     */
     public compare(a: threema.Conversation | threema.Receiver,
                    b: threema.Conversation | threema.Receiver): boolean {
         return a !== undefined
