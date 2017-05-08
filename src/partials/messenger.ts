@@ -190,7 +190,10 @@ class ConversationController {
     private hasMore = true;
     private latestRefMsgId: number = null;
     private messages: threema.Message[];
-    private draft: string;
+    public initialData: threema.InitialConversationData = {
+        draft: '',
+        initialText: '',
+    };
     private $translate: ng.translate.ITranslateService;
     private locked = false;
     public maxTextLength: number;
@@ -207,7 +210,7 @@ class ConversationController {
         '$mdDialog', '$mdToast', '$location', '$translate',
         'WebClientService', 'StateService', 'ReceiverService', 'MimeService',
     ];
-    constructor($stateParams,
+    constructor($stateParams: threema.ConversationStateParams,
                 $state: ng.ui.IStateService,
                 $timeout: ng.ITimeoutService,
                 $log: ng.ILogService,
@@ -267,7 +270,7 @@ class ConversationController {
 
         // Set receiver and type
         try {
-            this.receiver = webClientService.receivers.getData($stateParams);
+            this.receiver = webClientService.receivers.getData({type: $stateParams.type, id: $stateParams.id});
             this.type = $stateParams.type;
 
             if (this.receiver.type === undefined) {
@@ -299,7 +302,10 @@ class ConversationController {
                     },
                 );
 
-                this.draft = webClientService.getDraft(this.receiver);
+                this.initialData = {
+                    draft: webClientService.getDraft(this.receiver),
+                    initialText: $stateParams.initParams ? $stateParams.initParams.text : '',
+                };
 
                 if (this.receiver.type === 'contact') {
                     this.isTyping = () => this.webClientService.isTyping(this.receiver as threema.ContactReceiver);
@@ -960,14 +966,22 @@ class ReceiverDetailController {
     }
 
     public chat(): void {
-        this.$state.go('messenger.home.conversation', this.receiver);
+        this.$state.go('messenger.home.conversation', {
+            type: this.receiver.type,
+            id: this.receiver.id,
+            initParams: null,
+        });
     }
 
     public edit(): void {
         if (!this.controllerModel.canEdit()) {
             return;
         }
-        this.$state.go('messenger.home.edit', this.receiver);
+        this.$state.go('messenger.home.edit', {
+            type: this.receiver.type,
+            id: this.receiver.id,
+            initParams: null,
+        });
     }
 
     public goBack(): void {
@@ -1190,6 +1204,7 @@ angular.module('3ema.messenger', ['ngMaterial'])
             templateUrl: 'partials/messenger.conversation.html',
             controller: 'ConversationController',
             controllerAs: 'ctrl',
+            params: {initParams: null},
         })
 
         .state('messenger.home.detail', {

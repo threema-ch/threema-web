@@ -14,11 +14,59 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
+import {UriService} from '../services/uri';
 
 export default [
     '$timeout',
     '$state',
-    function($timeout, $state: ng.ui.IStateService) {
+    'UriService',
+    function($timeout, $state: ng.ui.IStateService, uriService: UriService) {
+
+        const validateThreemaId = (id: string): boolean => {
+            return id !== undefined && id !== null && /^[0-9A-Z]{8}/.test(id);
+        };
+
+        const addAction = (params) => {
+            return function(e: Event) {
+                if (!validateThreemaId(params.id)) {
+                    return false;
+                }
+                $state.go('messenger.home.create', {
+                    type: 'contact',
+                    initParams: {
+                        identity: params.id,
+                    },
+                });
+            };
+        };
+
+        const composeAction = (params) => {
+            return function(e: Event) {
+                if (!validateThreemaId(params.id)) {
+                    return false;
+                }
+                const text = params.text || '';
+                $state.go('messenger.home.conversation', {
+                    type: 'contact',
+                    id: params.id,
+                    initParams: {
+                        text: text,
+                    },
+                });
+            };
+        };
+
+        const getThreemaActionHandler = (name: string) => {
+            switch (name.toLowerCase()) {
+                case 'add':
+                    return addAction;
+                case 'compose':
+                    return composeAction;
+                default:
+                    return null;
+            }
+        };
+
         return {
             restrict: 'A',
             scope: {},
@@ -26,26 +74,20 @@ export default [
                 $timeout(() => {
                     // tslint:disable-next-line: prefer-for-of (see #98)
                     for (let i = 0; i < el[0].childNodes.length; i++) {
-                        const node = el[0].childNodes[i];
+                        const node: HTMLElement = el[0].childNodes[i];
 
                         if (node.nodeType === Node.ELEMENT_NODE
-                            && (node as Element).tagName.toLowerCase() === 'a') {
+                            && node.tagName.toLowerCase() === 'a') {
 
-                            let link = (node as Element).innerHTML;
-
-                            if (link !== undefined) {
-                                let addRegex = /\bthreema:\/\/add\?id=([\w\*]{8})\b/gi;
-
-                                if (link.match(addRegex)) {
-                                    let threemaId = link.replace(addRegex, '$1');
-                                    (node as Element).addEventListener('click', function(e) {
-                                        $state.go('messenger.home.create', {
-                                            type: 'contact',
-                                            initParams: {
-                                                identity: threemaId,
-                                            },
-                                        });
-                                    });
+                            const link = (node as HTMLElement).innerText;
+                            if (link !== undefined && link.toLowerCase().startsWith('threema://')) {
+                                const matches = (/\bthreema:\/\/([a-z]+)\?([^\s]+)\b/gi).exec(link);
+                                if (matches !== null) {
+                                    const handler = getThreemaActionHandler(matches[1]);
+                                    const params = uriService.parseQueryParams(matches[2]);
+                                    if (handler !== null && params !== null) {
+                                        node.addEventListener('click', handler(params));
+                                    }
                                 }
                             }
                         }

@@ -46,7 +46,7 @@ export default [
                 this.click = () => {
                     if (this.linked !== undefined
                         && this.linked === true) {
-                        $state.go('messenger.home.conversation', {type: 'contact', id: this.identity});
+                        $state.go('messenger.home.conversation', {type: 'contact', id: this.identity, initParams: null});
                     }
                 };
 

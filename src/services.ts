@@ -32,6 +32,7 @@ import {SettingsService} from './services/settings';
 import {StateService} from './services/state';
 import {StringService} from './services/string';
 import {TitleService} from './services/title';
+import {UriService} from './services/uri';
 import {WebClientService} from './services/webclient';
 
 // Create services for the controller
@@ -56,4 +57,5 @@ angular.module('3ema.services', [])
 .service('StringService', StringService)
 .service('SettingsService', SettingsService)
 .service('MediaboxService', MediaboxService)
+.service('UriService', UriService)
 ;

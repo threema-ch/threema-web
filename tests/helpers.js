@@ -5,16 +5,17 @@ describe('Helpers', function () {
     beforeAll(() => window.onbeforeunload = () => 'Ignoring page reload request');
 
     beforeEach(function () {
-            // Load 3ema.services
+        // Load 3ema.services
         module('3ema.services');
 
         // Inject the $filter function
-        inject(function (StringService) {
+        inject(function(StringService) {
             stringService = StringService;
         });
 
     });
-    describe('byteChunkSplit', function () {
+
+    describe('byteChunkSplit', function() {
         this.testPatterns = (cases, size, offset) => {
             for (let testcase of cases) {
                 const input = testcase[0];
@@ -48,4 +49,5 @@ describe('Helpers', function () {
             ], 20, 10);
         });
     });
+
 });
