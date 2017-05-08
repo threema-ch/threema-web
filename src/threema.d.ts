@@ -139,15 +139,18 @@ declare namespace threema {
         canChangeMembers?: boolean;
     }
 
+    interface BaseReceiver {
+        id: string;
+        type: ReceiverType;
+    }
+
     /**
      * A generic receiver.
      *
      * Note that the id is not unique for all receivers, only for all receivers
      * of a certain type. The primary key for a receiver is the tuple (type, id).
      */
-    interface Receiver {
-        type?: ReceiverType;
-        id: string;
+    interface Receiver extends BaseReceiver {
         displayName: string;
         color: string;
         avatar?: Avatar; // May be set if already fetched
@@ -160,7 +163,7 @@ declare namespace threema {
      * A contact.
      */
     interface ContactReceiver extends Receiver {
-        type?: 'contact' | 'me';
+        type: 'contact' | 'me';
         publicNickname?: string;
         firstName?: string;
         lastName?: string;
@@ -176,14 +179,14 @@ declare namespace threema {
      * Own contact.
      */
     interface MeReceiver extends ContactReceiver {
-        type?: 'me';
+        type: 'me';
     }
 
     /**
      * A group.
      */
     interface GroupReceiver extends Receiver {
-        type?: 'group';
+        type: 'group';
         disabled: boolean;
         members: string[];
         administrator: string;
@@ -194,7 +197,7 @@ declare namespace threema {
      * A distribution list.
      */
     interface DistributionListReceiver extends Receiver {
-        type?: 'distributionList';
+        type: 'distributionList';
         members: string[];
         access: DistributionListReceiverAccess;
     }
