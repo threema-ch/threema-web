@@ -178,7 +178,7 @@
         "NOTIFICATION_API_NOT_AVAILABLE": "Ihr Browser unterstützt keine Desktopbenachrichtigungen."
     },
     "mimeTypes": {
-        "android_apk": "Android-Paket",
+        "apk": "Android-Paket",
         "audio": "Audio-Datei",
         "certificate": "Digitales Zertifikat",
         "codes": "Programmcode",
