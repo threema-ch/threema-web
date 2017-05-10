@@ -864,11 +864,12 @@ export class WebClientService {
                         }
                         break;
                     case 'file':
-                        // validate max file size of 20mb
+                        // validate max file size
                         if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE) {
                             return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
                         }
-                        // determine feature required feature level
+
+                        // Determine required feature level
                         let requiredFeatureLevel = 3;
                         let invalidFeatureLevelMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
                         if ((message as threema.FileMessageData).sendAsFile !== true) {
@@ -915,8 +916,13 @@ export class WebClientService {
                                 }
                                 break;
                             case 'contact':
-                                let contact = this.contacts.get(receiver.id);
-                                if (contact === undefined || contact.featureLevel < requiredFeatureLevel) {
+                                const contact = this.contacts.get(receiver.id);
+                                if (contact === undefined) {
+                                    this.$log.error('Cannot retrieve contact');
+                                    return reject(this.$translate.instant('error.ERROR_OCCURRED'));
+                                } else if (contact.featureLevel < requiredFeatureLevel) {
+                                    this.$log.debug('Cannot send message: Feature level mismatch:',
+                                        contact.featureLevel, '<', requiredFeatureLevel);
                                     return reject(this.$translate.instant(invalidFeatureLevelMessage, {
                                         receiverName: contact.displayName}));
                                 }
