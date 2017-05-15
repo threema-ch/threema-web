@@ -848,20 +848,28 @@ export class WebClientService {
                        message: threema.MessageData): Promise<Promise<any>> {
         return new Promise<any> (
             (resolve, reject) => {
+
                 // Decide on subtype
                 let subType;
                 switch (type) {
                     case 'text':
                         subType = WebClientService.SUB_TYPE_TEXT_MESSAGE;
+
+                        const textMessage = message as threema.TextMessageData;
+                        const msgLength = textMessage.text.length;
+
                         // Ignore empty text messages
-                        let textSize = (message as threema.TextMessageData).text.length;
-                        if (textSize === 0) {
+                        if (msgLength === 0) {
                             return reject();
-                        } else if (textSize > WebClientService.MAX_TEXT_LENGTH) {
+                        }
+
+                        // Ignore text messages that are too long.
+                        if (msgLength > WebClientService.MAX_TEXT_LENGTH) {
                             return reject(this.$translate.instant('error.TEXT_TOO_LONG', {
                                 max: WebClientService.MAX_TEXT_LENGTH,
                             }));
                         }
+
                         break;
                     case 'file':
                         // validate max file size
@@ -945,27 +953,30 @@ export class WebClientService {
                     [WebClientService.ARGUMENT_TEMPORARY_ID]: temporaryMessage.temporaryId,
                 };
 
-                // send message and handling error promise
-                this._sendCreatePromise(subType, args, message)
-                    .catch((error) => {
-                        this.$log.error('error sending message', error);
-                        // remove temporary message
-                        this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
+                // Send message and handling error promise
+                this._sendCreatePromise(subType, args, message).catch((error) => {
+                    this.$log.error('Error sending message:', error);
 
-                        let errorMessage;
-                        switch (error) {
-                            case 'file_too_large':
-                                errorMessage = this.$translate.instant('error.FILE_TOO_LARGE');
-                                break;
-                            default:
-                                errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
-                        }
-                        this.alerts.push({
-                            source: 'sendMessage',
-                            type: 'alert',
-                            message: errorMessage,
-                        } as threema.Alert);
-                    });
+                    // Remove temporary message
+                    this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
+
+                    // Determine error message
+                    let errorMessage;
+                    switch (error) {
+                        case 'file_too_large':
+                            errorMessage = this.$translate.instant('error.FILE_TOO_LARGE');
+                            break;
+                        default:
+                            errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
+                    }
+
+                    // Show alert
+                    this.alerts.push({
+                        source: 'sendMessage',
+                        type: 'alert',
+                        message: errorMessage,
+                    } as threema.Alert);
+                });
                 resolve();
             });
     }
