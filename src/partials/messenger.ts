@@ -28,6 +28,7 @@ import {NotificationService} from '../services/notification';
 import {ReceiverService} from '../services/receiver';
 import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
+import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 import {ControllerModelMode} from '../types/enums';
 
@@ -208,7 +209,7 @@ class ConversationController {
     public static $inject = [
         '$stateParams', '$state', '$timeout', '$log', '$scope', '$rootScope',
         '$mdDialog', '$mdToast', '$location', '$translate',
-        'WebClientService', 'StateService', 'ReceiverService', 'MimeService',
+        'WebClientService', 'StateService', 'ReceiverService', 'MimeService', 'VersionService',
     ];
     constructor($stateParams: threema.ConversationStateParams,
                 $state: ng.ui.IStateService,
@@ -223,7 +224,8 @@ class ConversationController {
                 webClientService: WebClientService,
                 stateService: StateService,
                 receiverService: ReceiverService,
-                mimeService: MimeService) {
+                mimeService: MimeService,
+                versionService: VersionService) {
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
         this.$log = $log;
@@ -248,6 +250,9 @@ class ConversationController {
         // Note: Deprecated. When migrating ui-router ($state),
         // replace with transition hooks.
         $rootScope.$on('$stateChangeStart', () => this.$mdDialog.cancel());
+
+        // Check for version updates
+        versionService.checkForUpdate();
 
         // Redirect to welcome if necessary
         if (stateService.state === 'error') {
@@ -909,7 +914,7 @@ class ReceiverDetailController {
 
         this.receiver = webClientService.receivers.getData($stateParams);
 
-        // append members
+        // Append members
         if (this.receiver.type === 'contact') {
             let contactReceiver = (<threema.ContactReceiver> this.receiver);
 
