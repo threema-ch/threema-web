@@ -22,7 +22,7 @@ export class NotificationService {
     private static SETTINGS_NOTIFICATIONS = 'notifications';
     private static SETTINGS_NOTIFICATION_PREVIEW = 'notificationPreview';
     private static SETTINGS_NOTIFICATION_SOUND = 'notificationSound';
-    private static NOTIFICATION_SOUND = 'public/sounds/notification.mp3';
+    private static NOTIFICATION_SOUND = 'sounds/notification.mp3';
 
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
