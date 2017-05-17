@@ -451,7 +451,7 @@ export class WebClientService {
                     this._requestInitialData();
 
                     // Fetch current version
-                    this.versionService.initVersion();
+                    this.versionService.checkForUpdate();
 
                     // Notify state service about data loading
                     this.stateService.updateConnectionBuildupState('loading');

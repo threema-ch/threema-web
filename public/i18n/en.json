@@ -212,12 +212,16 @@
         "CHANGELOG_LINK_AFTER": "."
     },
     "settings": {
-        "SETTINGS":"Settings",
+        "SETTINGS": "Settings",
         "notifications": {
             "NOTIFICATIONS": "Notifications",
             "SHOW_NOTIFICATIONS": "Show desktop notifications",
             "SHOW_PREVIEW": "Show message contents in notifications",
             "PLAY_SOUND": "Play sound"
         }
+    },
+    "version": {
+        "NEW_VERSION": "New Version Available",
+        "NEW_VERSION_BODY": "A new version of Threema Web ({version}) is available. Click \"OK\" to reload the page."
     }
 }

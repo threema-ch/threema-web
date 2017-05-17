@@ -44,6 +44,11 @@ export class VersionService {
      * Set the version by fetching the version.txt file.
      */
     public initVersion(): void {
+        if (this.version !== undefined) {
+            this.checkForUpdate();
+            return;
+        }
+
         this.fetchVersion()
             .then((version: string) => {
                 this.version = version;
@@ -79,6 +84,40 @@ export class VersionService {
                     return reject(error);
                 },
             );
+        });
+    }
+
+    /**
+     * Check for a version update. If the version was updated, show a dialog.
+     */
+    public checkForUpdate(): void {
+        this.$log.debug(this.logTag, 'Checking for version update...');
+        this.fetchVersion()
+            .then((version: string) => {
+                if (version !== this.version) {
+                    this.$log.warn(this.logTag,
+                        'A new version of Threema Web is available:',
+                        this.version, '->', version);
+                    this.notifyNewVersion(version);
+                }
+            })
+            .catch((error: string) => {
+                this.$log.error('Could not fetch version.txt:', error);
+            });
+    }
+
+    /**
+     * A new version is available!
+     */
+    private notifyNewVersion(version: string): void {
+        const confirm = this.$mdDialog.alert()
+            .title(this.$translate.instant('version.NEW_VERSION', {version: version}))
+            .textContent(this.$translate.instant('version.NEW_VERSION_BODY', {version: version}))
+            .ok(this.$translate.instant('common.OK'));
+        this.$mdDialog.show(confirm).then(() => {
+            this.$window.location.reload();
+        }, () => {
+            this.$window.location.reload();
         });
     }
 
