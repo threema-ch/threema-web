@@ -27,6 +27,9 @@ describe('WebClientService', function() {
         });
 
         // Load modules
+        module('ngAria');
+        module('ngAnimate');
+        module('ngMaterial');
         module('3ema.services');
         module('3ema.container');
 
