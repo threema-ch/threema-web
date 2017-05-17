@@ -3,6 +3,27 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.2.0][v1.2.0] (2017-05-17)
+
+Changes:
+
+* [feature] Support markup and emoji in media box caption ([#177][i177])
+* [feature] Optional notification sound for incoming messages ([#178][i178])
+* [feature] Consider page visibility when marking messages as read ([#17][i17] / [#108][i108] / [#211][i211])
+* [feature] Support all threema url actions ([#190][i190] / [#215][i215])
+* [change] Location message redesign ([#185][i185])
+* [change] Enhanced desktop notification preview ([#193][i193])
+* [bug] Enforce text cursor on compose box ([#204][i204])
+* [bug] Fix resizing behavior of back arrow button ([#205][i205])
+* [bug] Fix displaying of drafts in active conversation ([#189][i189])
+* [bug] Fix MIME type handling ([#90][i90] / [#59][i59] / [#202][i202])
+
+Contributors:
+
+- [@IndianaDschones][@IndianaDschones]
+- [@Pythonix][@Pythonix]
+- [@econic][@econic]
+
 ### [v1.1.0][v1.1.0] (2017-03-16)
 
 Changes:
@@ -98,6 +119,7 @@ First public release.
 [i6]: https://github.com/threema-ch/threema-web/issues/6
 [i8]: https://github.com/threema-ch/threema-web/issues/8
 [i11]: https://github.com/threema-ch/threema-web/issues/11
+[i17]: https://github.com/threema-ch/threema-web/issues/17
 [i20]: https://github.com/threema-ch/threema-web/issues/20
 [i29]: https://github.com/threema-ch/threema-web/issues/29
 [i38]: https://github.com/threema-ch/threema-web/issues/38
@@ -108,6 +130,7 @@ First public release.
 [i48]: https://github.com/threema-ch/threema-web/issues/48
 [i49]: https://github.com/threema-ch/threema-web/issues/49
 [i57]: https://github.com/threema-ch/threema-web/issues/57
+[i59]: https://github.com/threema-ch/threema-web/issues/59
 [i61]: https://github.com/threema-ch/threema-web/issues/61
 [i64]: https://github.com/threema-ch/threema-web/issues/64
 [i66]: https://github.com/threema-ch/threema-web/issues/66
@@ -117,8 +140,10 @@ First public release.
 [i82]: https://github.com/threema-ch/threema-web/issues/82
 [i83]: https://github.com/threema-ch/threema-web/issues/83
 [i86]: https://github.com/threema-ch/threema-web/issues/86
+[i90]: https://github.com/threema-ch/threema-web/issues/90
 [i93]: https://github.com/threema-ch/threema-web/issues/93
 [i102]: https://github.com/threema-ch/threema-web/issues/102
+[i108]: https://github.com/threema-ch/threema-web/issues/108
 [i109]: https://github.com/threema-ch/threema-web/issues/109
 [i117]: https://github.com/threema-ch/threema-web/issues/117
 [i119]: https://github.com/threema-ch/threema-web/issues/119
@@ -136,7 +161,19 @@ First public release.
 [i156]: https://github.com/threema-ch/threema-web/issues/156
 [i161]: https://github.com/threema-ch/threema-web/issues/161
 [i167]: https://github.com/threema-ch/threema-web/issues/167
+[i177]: https://github.com/threema-ch/threema-web/issues/177
+[i178]: https://github.com/threema-ch/threema-web/issues/178
+[i185]: https://github.com/threema-ch/threema-web/issues/185
+[i189]: https://github.com/threema-ch/threema-web/issues/189
+[i190]: https://github.com/threema-ch/threema-web/issues/190
+[i193]: https://github.com/threema-ch/threema-web/issues/193
+[i202]: https://github.com/threema-ch/threema-web/issues/202
+[i204]: https://github.com/threema-ch/threema-web/issues/204
+[i205]: https://github.com/threema-ch/threema-web/issues/205
+[i211]: https://github.com/threema-ch/threema-web/issues/211
+[i215]: https://github.com/threema-ch/threema-web/issues/215
 
+[v1.2.0]: https://github.com/threema-ch/threema-web/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/threema-ch/threema-web/compare/v1.0.5...v1.1.0
 [v1.0.5]: https://github.com/threema-ch/threema-web/compare/v1.0.4...v1.0.5
 [v1.0.4]: https://github.com/threema-ch/threema-web/compare/v1.0.3...v1.0.4
@@ -152,3 +189,5 @@ First public release.
 [@ovalseven8]: https://github.com/ovalseven8/
 [@IndianaDschones]: https://github.com/IndianaDschones/
 [@FloThinksPi]: https://github.com/FloThinksPi/
+[@Pythonix]: https://github.com/Pythonix/
+[@econic]: https://github.com/econic/
