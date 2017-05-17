@@ -132,6 +132,7 @@ export class WebClientService {
     private $translate: ng.translate.ITranslateService;
     private $filter: any;
     private $timeout: ng.ITimeoutService;
+    private $http: ng.IHttpService;
 
     // Custom services
     private notificationService: NotificationService;
@@ -175,6 +176,7 @@ export class WebClientService {
     private pcHelper: PeerConnectionHelper = null;
     private deviceInfo: string = null;
     private trustedKeyStore: TrustedKeyStoreService;
+    private version = null;
 
     private blobCache = new Map<String, ArrayBuffer>();
     private loadingMessages = new Map<String, boolean>();
@@ -190,7 +192,8 @@ export class WebClientService {
     private requestPromises: Map<string, threema.PromiseCallbacks> = new Map();
 
     public static $inject = [
-        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout',
+        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter',
+        '$timeout', '$http',
         'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'FingerPrintService', 'QrCodeService', 'MimeService', 'ReceiverService',
@@ -204,6 +207,7 @@ export class WebClientService {
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,
                 $timeout: ng.ITimeoutService,
+                $http: ng.IHttpService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService,
@@ -227,6 +231,7 @@ export class WebClientService {
         this.$translate = $translate;
         this.$filter = $filter;
         this.$timeout = $timeout;
+        this.$http = $http;
 
         // Own services
         this.notificationService = notificationService;
@@ -423,18 +428,18 @@ export class WebClientService {
 
         // Wait for handover to be finished
         this.salty.on('handover', () => {
-            this.$log.debug('Handover done');
+            this.$log.debug(this.logTag, 'Handover done');
 
             // Initialize NotificationService
-            this.$log.debug('Initializing NotificationService...');
+            this.$log.debug(this.logTag, 'Initializing NotificationService...');
             this.notificationService.init();
 
             // Create secure data channel
-            this.$log.debug('Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
+            this.$log.debug(this.logTag, 'Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
             this.secureDataChannel = this.pcHelper.createSecureDataChannel(
                 WebClientService.DC_LABEL,
                 (event: Event) => {
-                    this.$log.debug('SecureDataChannel open');
+                    this.$log.debug(this.logTag, 'SecureDataChannel open');
 
                     // Initialize fields
                     if (resetFields) {
@@ -443,6 +448,16 @@ export class WebClientService {
 
                     // Request initial data
                     this._requestInitialData();
+
+                    // Fetch current version
+                    this.fetchVersion()
+                        .then((version: string) => {
+                            this.version = version;
+                            this.$log.info(this.logTag, 'Using Threema Web version', this.version);
+                        })
+                        .catch((error: string) => {
+                            this.$log.error(this.logTag, 'Could not fetch version.txt:', error);
+                        });
 
                     // Notify state service about data loading
                     this.stateService.updateConnectionBuildupState('loading');
@@ -1292,6 +1307,34 @@ export class WebClientService {
         this.requestClientInfo();
         this.requestReceivers();
         this.requestConversations();
+    }
+
+    /**
+     * Fetch the version.txt file.
+     */
+    private fetchVersion(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const cacheBust = Math.floor(Math.random() * 1000000000);
+            this.$http({
+                method: 'GET',
+                url: 'version.txt?' + cacheBust,
+                cache: false,
+                responseType: 'text',
+                transformResponse: (data: string, headersGetter, statusCode) => {
+                    if (statusCode !== 200) {
+                        this.$log.error('Could not fetch version.txt: HTTP', statusCode);
+                    }
+                    return data.trim();
+                },
+            }).then(
+                (successResponse: ng.IHttpPromiseCallbackArg<string>) => {
+                    resolve(successResponse.data);
+                },
+                (error: Error) => {
+                    reject(error);
+                },
+            );
+        });
     }
 
     private _receiveResponseReceivers(message: threema.WireMessage) {
