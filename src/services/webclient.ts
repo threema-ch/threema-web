@@ -451,7 +451,9 @@ export class WebClientService {
                     this._requestInitialData();
 
                     // Fetch current version
-                    this.versionService.checkForUpdate();
+                    // Delay it to prevent the dialog from being closed by the messenger constructor,
+                    // which closes all open dialogs.
+                    this.$timeout(() => this.versionService.checkForUpdate(), 7000);
 
                     // Notify state service about data loading
                     this.stateService.updateConnectionBuildupState('loading');

@@ -27,6 +27,7 @@ export class VersionService {
     private $window: ng.IWindowService;
 
     private version: string;
+    private dialogShowing = false;
 
     constructor($log: ng.ILogService,
                 $http: ng.IHttpService,
@@ -114,10 +115,15 @@ export class VersionService {
      * A new version is available!
      */
     private notifyNewVersion(version: string): void {
+        if (this.dialogShowing === true) {
+            // Don't show again if dialog is already showing.
+            return;
+        }
         const confirm = this.$mdDialog.alert()
             .title(this.$translate.instant('version.NEW_VERSION', {version: version}))
             .textContent(this.$translate.instant('version.NEW_VERSION_BODY', {version: version}))
             .ok(this.$translate.instant('common.OK'));
+        this.dialogShowing = true;
         this.$mdDialog.show(confirm).then(() => {
             this.$window.location.reload();
         }, () => {
