@@ -119,12 +119,14 @@ export default [
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
                     let text = '';
+
+                    // Extract text
                     // tslint:disable-next-line: prefer-for-of (see #98)
                     for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
                         const node = composeDiv[0].childNodes[i];
                         switch (node.nodeType) {
                             case Node.TEXT_NODE:
-                                text += node.nodeValue;
+                                text += node.nodeValue.trim();
                                 break;
                             case Node.ELEMENT_NODE:
                                 const tag = node.tagName.toLowerCase();
@@ -139,6 +141,7 @@ export default [
                                 $log.warn(logTag, 'Unhandled node:', node);
                         }
                     }
+
                     return new Promise((resolve, reject) => {
                         let submitTexts = (strings: string[]) => {
                             let messages: threema.TextMessageData[] = [];
@@ -153,7 +156,7 @@ export default [
                                 .catch(reject);
                         };
 
-                        let fullText = text.trim();
+                        const fullText = text.trim().replace(/\r/g, '');
                         if (fullText.length > scope.maxTextLength) {
                             let pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 50);
                             let confirm = $mdDialog.confirm()
