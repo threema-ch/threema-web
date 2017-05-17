@@ -3,6 +3,14 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.2.1][v1.2.1] (2017-05-17)
+
+Changes:
+
+* [feature] Check for a new version, notify user if version changed ([#183][i183])
+* [bug] Fix line breaks when pasting on Windows ([#134][i134])
+* [bug] Fix path to sound notification file
+
 ### [v1.2.0][v1.2.0] (2017-05-17)
 
 Changes:
@@ -153,6 +161,7 @@ First public release.
 [i126]: https://github.com/threema-ch/threema-web/issues/126
 [i127]: https://github.com/threema-ch/threema-web/issues/127
 [i131]: https://github.com/threema-ch/threema-web/issues/131
+[i134]: https://github.com/threema-ch/threema-web/issues/134
 [i143]: https://github.com/threema-ch/threema-web/issues/143
 [i144]: https://github.com/threema-ch/threema-web/issues/144
 [i148]: https://github.com/threema-ch/threema-web/issues/148
@@ -163,6 +172,7 @@ First public release.
 [i167]: https://github.com/threema-ch/threema-web/issues/167
 [i177]: https://github.com/threema-ch/threema-web/issues/177
 [i178]: https://github.com/threema-ch/threema-web/issues/178
+[i183]: https://github.com/threema-ch/threema-web/issues/183
 [i185]: https://github.com/threema-ch/threema-web/issues/185
 [i189]: https://github.com/threema-ch/threema-web/issues/189
 [i190]: https://github.com/threema-ch/threema-web/issues/190
@@ -173,6 +183,7 @@ First public release.
 [i211]: https://github.com/threema-ch/threema-web/issues/211
 [i215]: https://github.com/threema-ch/threema-web/issues/215
 
+[v1.2.0]: https://github.com/threema-ch/threema-web/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/threema-ch/threema-web/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/threema-ch/threema-web/compare/v1.0.5...v1.1.0
 [v1.0.5]: https://github.com/threema-ch/threema-web/compare/v1.0.4...v1.0.5
