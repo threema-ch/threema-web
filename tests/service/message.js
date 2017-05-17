@@ -2,7 +2,8 @@ describe('MessageService', function() {
 
     let messageService;
 
-    beforeAll(() => window.onbeforeunload = () => 'Ignoring page reload request');
+    // Ignoring page reload request
+    beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function() {
 
