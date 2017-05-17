@@ -92,6 +92,10 @@ export class VersionService {
      */
     public checkForUpdate(): void {
         this.$log.debug(this.logTag, 'Checking for version update...');
+        if (this.version === undefined) {
+            this.$log.error(this.logTag, 'Cannot check for update, version is not initialized');
+            return;
+        }
         this.fetchVersion()
             .then((version: string) => {
                 if (version !== this.version) {
