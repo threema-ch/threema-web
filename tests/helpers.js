@@ -2,7 +2,8 @@ describe('Helpers', function () {
 
     let stringService;
 
-    beforeAll(() => window.onbeforeunload = () => 'Ignoring page reload request');
+    // Ignoring page reload request
+    beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function () {
         // Load 3ema.services
