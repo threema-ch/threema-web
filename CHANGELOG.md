@@ -183,7 +183,7 @@ First public release.
 [i211]: https://github.com/threema-ch/threema-web/issues/211
 [i215]: https://github.com/threema-ch/threema-web/issues/215
 
-[v1.2.0]: https://github.com/threema-ch/threema-web/compare/v1.2.0...v1.2.1
+[v1.2.1]: https://github.com/threema-ch/threema-web/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/threema-ch/threema-web/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/threema-ch/threema-web/compare/v1.0.5...v1.1.0
 [v1.0.5]: https://github.com/threema-ch/threema-web/compare/v1.0.4...v1.0.5
