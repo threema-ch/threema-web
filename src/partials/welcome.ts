@@ -20,6 +20,7 @@ import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
 import {PushService} from '../services/push';
 import {StateService} from '../services/state';
+import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 
 class DialogController {
@@ -68,7 +69,7 @@ class WelcomeController {
 
     public static $inject = [
         '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
-        'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
+        'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService', 'VersionService',
         'BROWSER_MIN_VERSIONS', 'ControllerService',
     ];
     constructor($scope: ng.IScope, $state: ng.ui.IStateService, $stateParams: threema.WelcomeStateParams,
@@ -78,6 +79,7 @@ class WelcomeController {
                 webClientService: WebClientService, TrustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService, pushService: PushService,
                 browserService: BrowserService,
+                versionService: VersionService,
                 minVersions: threema.BrowserMinVersions,
                 controllerService: ControllerService) {
         controllerService.setControllerName('welcome');
@@ -129,6 +131,9 @@ class WelcomeController {
             $log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
             this.showLocalStorageWarning();
         }
+
+        // Determine current version
+        versionService.initVersion();
 
         // Clear cache
         this.webClientService.clearCache();

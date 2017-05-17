@@ -83,7 +83,7 @@ for target in "${targets[@]}"; do
 done
 
 echo "+ Update version number..."
-sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js
+sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;

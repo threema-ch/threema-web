@@ -29,6 +29,7 @@ import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
 import {TitleService} from './title';
+import {VersionService} from './version';
 
 class WebClientDefault {
     private avatar: threema.AvatarRegistry = {
@@ -143,6 +144,7 @@ export class WebClientService {
     private qrCodeService: QrCodeService;
     private mimeService: MimeService;
     private receiverService: ReceiverService;
+    private versionService: VersionService;
 
     // State handling
     private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
@@ -175,6 +177,7 @@ export class WebClientService {
     private pcHelper: PeerConnectionHelper = null;
     private deviceInfo: string = null;
     private trustedKeyStore: TrustedKeyStoreService;
+    public version = null;
 
     private blobCache = new Map<String, ArrayBuffer>();
     private loadingMessages = new Map<String, boolean>();
@@ -194,6 +197,7 @@ export class WebClientService {
         'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'FingerPrintService', 'QrCodeService', 'MimeService', 'ReceiverService',
+        'VersionService',
         'CONFIG',
     ];
     constructor($log: ng.ILogService,
@@ -216,6 +220,7 @@ export class WebClientService {
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
+                VersionService: VersionService,
                 CONFIG: threema.Config) {
 
         // Angular services
@@ -238,6 +243,7 @@ export class WebClientService {
         this.qrCodeService = qrCodeService;
         this.mimeService = mimeService;
         this.receiverService = receiverService;
+        this.versionService = VersionService;
 
         // Configuration object
         this.config = CONFIG;
@@ -423,18 +429,18 @@ export class WebClientService {
 
         // Wait for handover to be finished
         this.salty.on('handover', () => {
-            this.$log.debug('Handover done');
+            this.$log.debug(this.logTag, 'Handover done');
 
             // Initialize NotificationService
-            this.$log.debug('Initializing NotificationService...');
+            this.$log.debug(this.logTag, 'Initializing NotificationService...');
             this.notificationService.init();
 
             // Create secure data channel
-            this.$log.debug('Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
+            this.$log.debug(this.logTag, 'Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
             this.secureDataChannel = this.pcHelper.createSecureDataChannel(
                 WebClientService.DC_LABEL,
                 (event: Event) => {
-                    this.$log.debug('SecureDataChannel open');
+                    this.$log.debug(this.logTag, 'SecureDataChannel open');
 
                     // Initialize fields
                     if (resetFields) {
@@ -443,6 +449,9 @@ export class WebClientService {
 
                     // Request initial data
                     this._requestInitialData();
+
+                    // Fetch current version
+                    this.versionService.checkForUpdate();
 
                     // Notify state service about data loading
                     this.stateService.updateConnectionBuildupState('loading');
