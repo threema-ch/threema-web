@@ -107,11 +107,6 @@
     }
 
     .message-quote {
-
-        .e1 {
-            transform: scale(0.75);
-            margin: -3px -2px;
-        }
         @include word-wrap;
     }
 }
@@ -365,11 +360,6 @@
                 margin-top: 0;
             }
         }
-    }
-
-    .e1 {
-        margin: -3px -2px;
-        transform: scale(0.75);
     }
 
     .unread-separator {
