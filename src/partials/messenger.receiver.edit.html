@@ -2,7 +2,7 @@
     <div id="receiver-detail-header" class="detail-header">
         <ng-include src="'partials/messenger.backbutton.html'"></ng-include>
         <div class="header-details">
-            <h2>{{ctrl.controllerModel.subject}}</h2>
+            <h2 ng-bind-html="ctrl.controllerModel.subject | escapeHtml | emojify"></h2>
         </div>
 
         <div class="header-buttons">
