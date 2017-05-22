@@ -886,6 +886,7 @@ class ReceiverDetailController {
     public $mdDialog: any;
     public $state: ng.ui.IStateService;
     public receiver: threema.Receiver;
+    public me: threema.MeReceiver;
     public title: string;
     public fingerPrint?: string;
     private fingerPrintService: FingerPrintService;
@@ -913,6 +914,7 @@ class ReceiverDetailController {
         this.contactService = contactService;
 
         this.receiver = webClientService.receivers.getData($stateParams);
+        this.me = webClientService.me;
 
         // Append members
         if (this.receiver.type === 'contact') {

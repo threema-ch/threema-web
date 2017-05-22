@@ -11,7 +11,6 @@
   }
 }
 .receiver-badge {
-  @include mouse-hand;
   display: flex;
   flex-direction: row;
   align-items: center !important;
@@ -56,4 +55,8 @@
       color: #757575;
     }
   }
+}
+
+.linked .receiver-badge {
+    @include mouse-hand;
 }
