@@ -244,6 +244,13 @@ class ConversationController {
         // Close any showing dialogs
         this.$mdDialog.cancel();
 
+        // Check if this is our own contact
+        if (this.webClientService.me.id === $stateParams.id) {
+            $log.warn('ConversationController: Cannot show own contact, redirecting to home');
+            $state.go('messenger.home');
+            return;
+        }
+
         this.maxTextLength = this.webClientService.getMaxTextLength();
 
         // On every navigation event, close all dialogs.
