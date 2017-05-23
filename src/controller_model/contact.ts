@@ -69,6 +69,7 @@ export class ContactControllerModel implements threema.ControllerModel {
                 break;
 
             case ControllerModelMode.VIEW:
+            case ControllerModelMode.CHAT:
                 this.subject = this.contact.displayName;
                 this.access = this.contact.access;
                 break;
@@ -79,7 +80,6 @@ export class ContactControllerModel implements threema.ControllerModel {
 
             default:
                 $log.error('Invalid controller model mode: ', this.getMode());
-
         }
     }
 
@@ -97,6 +97,10 @@ export class ContactControllerModel implements threema.ControllerModel {
             return true;
         }
         return this.identity !== undefined && this.identity.length === 8;
+    }
+
+    public canView(): boolean {
+        return this.contact.id !== this.webClientService.me.id;
     }
 
     public canEdit(): boolean {

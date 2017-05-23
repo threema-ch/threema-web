@@ -62,6 +62,7 @@ export class GroupControllerModel implements threema.ControllerModel {
                 break;
 
             case ControllerModelMode.VIEW:
+            case ControllerModelMode.CHAT:
                 this.subject = this.group.displayName;
                 this.members = this.group.members;
                 break;
@@ -91,6 +92,10 @@ export class GroupControllerModel implements threema.ControllerModel {
         return this.members.filter((identity: string) => {
                 return identity !== this.webClientService.getMyIdentity().identity;
             }).length > 0;
+    }
+
+    public canView(): boolean {
+        return true;
     }
 
     public canEdit(): boolean {

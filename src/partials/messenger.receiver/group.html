@@ -15,7 +15,9 @@
 			<md-card-content>
 				<eee-contact-badge
 						eee-identity="ctrl.receiver.administrator"
-						eee-linked="true"></eee-contact-badge>
+						eee-linked="ctrl.receiver.administrator != ctrl.me.id"
+                        ng-class="{'linked': ctrl.receiver.administrator != ctrl.me.id}">
+                </eee-contact-badge>
 			</md-card-content>
 
 			<md-card-title>
@@ -25,10 +27,12 @@
 			</md-card-title>
 			<md-card-content>
 				<ul class="member-list">
-					<li ng-repeat="memberIdentity in ctrl.receiver.members">
+					<li ng-repeat="memberIdentity in ctrl.receiver.members" ng-if="memberIdentity != ctrl.receiver.administrator">
 						<eee-contact-badge
 								eee-identity="memberIdentity"
-								eee-linked="true"></eee-contact-badge>
+								eee-linked="memberIdentity != ctrl.me.id"
+                                ng-class="{'linked': memberIdentity != ctrl.me.id}">
+                        </eee-contact-badge>
 					</li>
 				</ul>
 

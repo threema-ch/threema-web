@@ -57,6 +57,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
                 break;
 
             case ControllerModelMode.VIEW:
+            case ControllerModelMode.CHAT:
                 this.subject = this.distributionList.displayName;
                 this.members = this.distributionList.members;
                 break;
@@ -83,6 +84,10 @@ export class DistributionListControllerModel implements threema.ControllerModel 
         return this.members.filter((identity: string) => {
                 return identity !== this.webClientService.getMyIdentity().identity;
             }).length > 0;
+    }
+
+    public canView(): boolean {
+        return true;
     }
 
     public canEdit(): boolean {
