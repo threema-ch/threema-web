@@ -93,6 +93,10 @@ export class GroupControllerModel implements threema.ControllerModel {
             }).length > 0;
     }
 
+    public canView(): boolean {
+        return true;
+    }
+
     public canEdit(): boolean {
         return this.group.access !== undefined && (
                 this.group.access.canChangeAvatar === true

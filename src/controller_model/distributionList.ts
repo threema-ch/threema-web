@@ -85,6 +85,10 @@ export class DistributionListControllerModel implements threema.ControllerModel 
             }).length > 0;
     }
 
+    public canView(): boolean {
+        return true;
+    }
+
     public canEdit(): boolean {
         // a distribution list can always be edited
         return true;

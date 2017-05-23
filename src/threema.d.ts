@@ -366,6 +366,7 @@ declare namespace threema {
         isLoading: boolean;
         save(): any;
         isValid(): boolean;
+        canView(): boolean;
         canEdit(): boolean;
         getMode(): number;
         setOnRemoved(callback: any): void;
