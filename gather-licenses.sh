@@ -22,6 +22,8 @@ LICENSE_FILES=(
     'browserify' 'node_modules/browserify/LICENSE'
     'browserify-header' '.licenses/browserify-header'
     'croppie' 'node_modules/croppie/LICENSE'
+    'EmojiOne JS' '.licenses/emojione-js'
+    'EmojiOne Artwork' '.licenses/emojione-artwork'
     'file-saver' 'node_modules/file-saver/LICENSE.md'
     'js-sha256' 'node_modules/js-sha256/LICENSE.txt'
     'messageformat' 'node_modules/messageformat/LICENSE'
