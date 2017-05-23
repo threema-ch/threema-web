@@ -75,8 +75,7 @@
 
             <section class="conversation-box">
                 <section class="receiver-box">
-                    <span ng-class="{'disabled': conversation.receiver.disabled === true}">
-                        {{ conversation.receiver.displayName }}
+                    <span ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify">
                     </span>
                     <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
                         {{ conversation.unreadCount }}
@@ -113,7 +112,7 @@
             </section>
 
             <section class="left">
-                <div class="name">{{ contact.displayName }}</div>
+                <div class="name" ng-bind-html="contact.displayName | escapeHtml | emojify"></div>
                 <div class="identity">{{ contact.id }}</div>
             </section>
 
