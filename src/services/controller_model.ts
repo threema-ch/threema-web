@@ -18,6 +18,7 @@
 import {ContactControllerModel} from '../controller_model/contact';
 import {DistributionListControllerModel} from '../controller_model/distributionList';
 import {GroupControllerModel} from '../controller_model/group';
+import {MeControllerModel} from '../controller_model/me';
 import {WebClientService} from './webclient';
 
 // Type aliases
@@ -39,6 +40,17 @@ export class ControllerModelService {
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
         this.webClientService = webClientService;
+    }
+
+    public me(receiver: threema.MeReceiver, mode: ControllerModelMode): threema.ControllerModel {
+        return new MeControllerModel(
+            this.$log,
+            this.$translate,
+            this.$mdDialog,
+            this.webClientService,
+            mode,
+            receiver,
+        );
     }
 
     public contact(receiver: threema.ContactReceiver, mode: ControllerModelMode): threema.ControllerModel {

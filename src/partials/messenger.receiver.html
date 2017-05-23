@@ -2,7 +2,7 @@
     <div id="receiver-detail-header" class="detail-header">
         <ng-include src="'partials/messenger.backbutton.html'"></ng-include>
         <div class="header-details">
-            <h2 ng-bind-html="ctrl.receiver.displayName | escapeHtml | emojify"></h2>
+            <h2 ng-bind-html="ctrl.controllerModel.subject | escapeHtml | emojify"></h2>
         </div>
 
         <div class="header-buttons">
@@ -10,7 +10,7 @@
                 <md-icon class="material-icons md-24">mode_edit</md-icon>
             </md-button>
 
-            <md-button aria-label="edit" class="md-icon-button" ng-click="ctrl.chat()">
+            <md-button aria-label="edit" class="md-icon-button" ng-show="ctrl.controllerModel.canChat()" ng-click="ctrl.chat()">
                 <md-icon class="material-icons md-24">message</md-icon>
             </md-button>
         </div>

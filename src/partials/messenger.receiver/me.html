@@ -1,0 +1,25 @@
+<div class="form-content">
+	<!-- information list card -->
+	<md-card class="two-row">
+		<div class="avatar">
+			<eee-avatar eee-type="'contact'"
+						eee-receiver="ctrl.receiver"
+						eee-resolution="'high'"></eee-avatar>
+		</div>
+		<md-card-content>
+			<dl class="key-values">
+				<dt>Threema ID</dt>
+				<dd>{{ctrl.receiver.id}}
+					<eee-verification-level
+							contact="ctrl.receiver">
+					</eee-verification-level></dd>
+
+				<dt><span translate>messenger.KEY_FINGERPRINT</span></dt>
+				<dd>{{ctrl.fingerPrint}}</dd>
+
+				<dt><span translate>messenger.MY_PUBLIC_NICKNAME</span></dt>
+				<dd>{{ ctrl.controllerModel.nickname || "-" }}</dd>
+			</dl>
+		</md-card-content>
+	</md-card>
+</div>

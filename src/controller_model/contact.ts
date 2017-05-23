@@ -101,7 +101,7 @@ export class ContactControllerModel implements threema.ControllerModel {
         return this.identity !== undefined && this.identity.length === 8;
     }
 
-    public canView(): boolean {
+    public canChat(): boolean {
         return this.contact.id !== this.webClientService.me.id;
     }
 
@@ -114,7 +114,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     }
 
     public canClean(): boolean {
-        return this.canView();
+        return this.canChat();
     }
 
     public clean(ev: any): any {
