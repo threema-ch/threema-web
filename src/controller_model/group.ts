@@ -62,6 +62,7 @@ export class GroupControllerModel implements threema.ControllerModel {
                 break;
 
             case ControllerModelMode.VIEW:
+            case ControllerModelMode.CHAT:
                 this.subject = this.group.displayName;
                 this.members = this.group.members;
                 break;

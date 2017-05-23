@@ -57,6 +57,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
                 break;
 
             case ControllerModelMode.VIEW:
+            case ControllerModelMode.CHAT:
                 this.subject = this.distributionList.displayName;
                 this.members = this.distributionList.members;
                 break;

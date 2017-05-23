@@ -69,6 +69,7 @@ export class ContactControllerModel implements threema.ControllerModel {
                 break;
 
             case ControllerModelMode.VIEW:
+            case ControllerModelMode.CHAT:
                 this.subject = this.contact.displayName;
                 this.access = this.contact.access;
                 break;

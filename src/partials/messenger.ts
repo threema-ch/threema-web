@@ -158,6 +158,7 @@ class SettingsController {
 
 class ConversationController {
     public name = 'navigation';
+    private logTag: string = '[ConversationController]';
 
     // Angular services
     private $stateParams;
@@ -175,6 +176,9 @@ class ConversationController {
     // Third party services
     private $mdDialog: ng.material.IDialogService;
     private $mdToast: ng.material.IToastService;
+
+    // Controller model
+    private controllerModel: threema.ControllerModel;
 
     // DOM Elements
     private domChatElement: HTMLElement;
@@ -210,6 +214,7 @@ class ConversationController {
         '$stateParams', '$state', '$timeout', '$log', '$scope', '$rootScope',
         '$mdDialog', '$mdToast', '$location', '$translate',
         'WebClientService', 'StateService', 'ReceiverService', 'MimeService', 'VersionService',
+        'ControllerModelService',
     ];
     constructor($stateParams: threema.ConversationStateParams,
                 $state: ng.ui.IStateService,
@@ -225,7 +230,8 @@ class ConversationController {
                 stateService: StateService,
                 receiverService: ReceiverService,
                 mimeService: MimeService,
-                versionService: VersionService) {
+                versionService: VersionService,
+                controllerModelService: ControllerModelService) {
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
         this.$log = $log;
@@ -243,13 +249,6 @@ class ConversationController {
 
         // Close any showing dialogs
         this.$mdDialog.cancel();
-
-        // Check if this is our own contact
-        if (this.webClientService.me.id === $stateParams.id) {
-            $log.warn('ConversationController: Cannot show own contact, redirecting to home');
-            $state.go('messenger.home');
-            return;
-        }
 
         this.maxTextLength = this.webClientService.getMaxTextLength();
 
@@ -287,6 +286,36 @@ class ConversationController {
 
             if (this.receiver.type === undefined) {
                 this.receiver.type = this.type;
+            }
+
+            // Initialize controller model
+            const mode = ControllerModelMode.CHAT;
+            switch (this.receiver.type) {
+                case 'me':
+                case 'contact':
+                    this.controllerModel = controllerModelService.contact(
+                        this.receiver as threema.ContactReceiver, mode);
+                    break;
+                case 'group':
+                    this.controllerModel = controllerModelService.group(
+                        this.receiver as threema.GroupReceiver, mode);
+                    break;
+                case 'distributionList':
+                    this.controllerModel = controllerModelService.distributionList(
+                        this.receiver as threema.DistributionListReceiver, mode);
+                    break;
+                default:
+                    $log.error(this.logTag, 'Cannot initialize controller model:',
+                        'Invalid receiver type "' + this.receiver.type + '"');
+                    $state.go('welcome');
+                    return;
+            }
+
+            // Check if this receiver may be viewed
+            if (this.controllerModel.canView() === false) {
+                $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
+                $state.go('messenger.home');
+                return;
             }
 
             // initial set locked state
