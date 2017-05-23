@@ -6,6 +6,10 @@
         </div>
 
         <div class="header-buttons">
+            <md-button aria-label="chat" class="md-icon-button" ng-show="ctrl.controllerModel.canShowQr()" ng-click="ctrl.showQr()">
+                <md-icon><img src="public/img/ic_qr.svg" alt="QR"></md-icon>
+            </md-button>
+
             <md-button aria-label="chat" class="md-icon-button" ng-show="ctrl.controllerModel.canEdit()" ng-click="ctrl.edit()">
                 <md-icon class="material-icons md-24">mode_edit</md-icon>
             </md-button>

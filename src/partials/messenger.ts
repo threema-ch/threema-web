@@ -16,7 +16,7 @@
  */
 
 import {ContactControllerModel} from '../controller_model/contact';
-import {supportsPassive, throttle} from '../helpers';
+import {supportsPassive, throttle, u8aToHex} from '../helpers';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
@@ -1061,14 +1061,19 @@ class MessengerController {
 class ReceiverDetailController {
     private logTag: string = '[ReceiverDetailController]';
 
-    public $mdDialog: any;
-    public $state: ng.ui.IStateService;
+    // Angular services
+    private $mdDialog: any;
+    private $state: ng.ui.IStateService;
+
+    // Own services
+    private fingerPrintService: FingerPrintService;
+    private contactService: ContactService;
+    private webClientService: WebClientService;
+
     public receiver: threema.Receiver;
     public me: threema.MeReceiver;
     public title: string;
     public fingerPrint?: string;
-    private fingerPrintService: FingerPrintService;
-    private contactService: ContactService;
     private showGroups = false;
     private showDistributionLists = false;
     private inGroups: threema.GroupReceiver[] = [];
@@ -1093,6 +1098,7 @@ class ReceiverDetailController {
         this.$state = $state;
         this.fingerPrintService = fingerPrintService;
         this.contactService = contactService;
+        this.webClientService = webClientService;
 
         this.receiver = webClientService.receivers.getData($stateParams);
         this.me = webClientService.me;
@@ -1185,6 +1191,35 @@ class ReceiverDetailController {
             type: this.receiver.type,
             id: this.receiver.id,
             initParams: null,
+        });
+    }
+
+    /**
+     * Show the QR code of the public key.
+     */
+    public showQr(): void {
+        const profile = this.webClientService.getProfile();
+        const $mdDialog = this.$mdDialog;
+        $mdDialog.show({
+            controllerAs: 'ctrl',
+            controller: [function() {
+               this.cancel = () =>  {
+                   $mdDialog.cancel();
+               };
+               this.profile = profile;
+               this.qrCode = {
+                    errorCorrectionLevel: 'L',
+                    size: '400px',
+                    data: '3mid:'
+                    + profile.identity
+                    + ','
+                    + u8aToHex(new Uint8Array(profile.publicKey)),
+                };
+            }],
+            templateUrl: 'partials/dialog.qr.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            fullscreen: true,
         });
     }
 

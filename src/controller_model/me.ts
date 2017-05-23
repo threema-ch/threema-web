@@ -157,6 +157,10 @@ export class MeControllerModel implements threema.ControllerModel {
         return false;
     }
 
+    public canShowQr(): boolean {
+        return true;
+    }
+
     /**
      * Save the changes, return a promise with the receiver.
      */

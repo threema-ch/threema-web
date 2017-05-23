@@ -132,6 +132,10 @@ export class DistributionListControllerModel implements threema.ControllerModel 
             });
     }
 
+    public canShowQr(): boolean {
+        return false;
+    }
+
     public delete(ev): void {
 
         const confirm = this.$mdDialog.confirm()
