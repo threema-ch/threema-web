@@ -391,7 +391,7 @@ declare namespace threema {
         text: string;
     }
 
-    interface Identity {
+    interface Profile {
         identity: string;
         publicNickname: string;
         publicKey: ArrayBuffer;
@@ -461,10 +461,10 @@ declare namespace threema {
          */
         isValid(): boolean;
 
-        /**
-         * Can this receiver be viewed?
+        /*
+         * Return whether this receiver can be chatted with.
          */
-        canView(): boolean;
+        canChat(): boolean;
 
         /**
          * Can this receiver be edited?
@@ -477,7 +477,7 @@ declare namespace threema {
         canClean(): boolean;
 
         /**
-         * The mode, e.g. view or edit this receiver.
+         * The editing mode, e.g. view or edit this receiver.
          */
         getMode(): ControllerModelMode;
 

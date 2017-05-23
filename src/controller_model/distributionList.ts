@@ -84,11 +84,11 @@ export class DistributionListControllerModel implements threema.ControllerModel 
 
     public isValid(): boolean {
         return this.members.filter((identity: string) => {
-                return identity !== this.webClientService.getMyIdentity().identity;
+                return identity !== this.webClientService.getProfile().identity;
             }).length > 0;
     }
 
-    public canView(): boolean {
+    public canChat(): boolean {
         return true;
     }
 

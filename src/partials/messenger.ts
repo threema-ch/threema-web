@@ -233,7 +233,7 @@ class ConversationController {
 
     public static $inject = [
         '$stateParams', '$state', '$timeout', '$log', '$scope', '$rootScope',
-        '$mdDialog', '$mdToast', '$location', '$translate', '$filter',
+        '$mdDialog', '$mdToast', '$translate', '$filter',
         'WebClientService', 'StateService', 'ReceiverService', 'MimeService', 'VersionService',
         'ControllerModelService',
     ];
@@ -245,7 +245,6 @@ class ConversationController {
                 $rootScope: ng.IRootScopeService,
                 $mdDialog: ng.material.IDialogService,
                 $mdToast: ng.material.IToastService,
-                $location,
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,
                 webClientService: WebClientService,
@@ -317,9 +316,9 @@ class ConversationController {
             const mode = ControllerModelMode.CHAT;
             switch (this.receiver.type) {
                 case 'me':
-                    $log.warn(this.logTag, 'Cannot chat with own contact');
-                    $state.go('messenger.home');
-                    return;
+                    this.controllerModel = controllerModelService.me(
+                        this.receiver as threema.MeReceiver, mode);
+                    break;
                 case 'contact':
                     this.controllerModel = controllerModelService.contact(
                         this.receiver as threema.ContactReceiver, mode);
@@ -339,9 +338,9 @@ class ConversationController {
                     return;
             }
 
-            // Check if this receiver may be viewed
-            if (this.controllerModel.canView() === false) {
-                $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
+            // Check if this receiver may be chatted with
+            if (this.controllerModel.canChat() === false) {
+                $log.warn(this.logTag, 'Cannot chat with this receiver, redirecting to home');
                 $state.go('messenger.home');
                 return;
             }
@@ -898,6 +897,13 @@ class NavigationController {
     }
 
     /**
+     * Show profile.
+     */
+    public showProfile(ev): void {
+        this.$state.go('messenger.home.detail', this.webClientService.me);
+    }
+
+    /**
      * Return whether a trusted key is available.
      */
     public isPersistent(): boolean {
@@ -964,6 +970,7 @@ class NavigationController {
             type: 'distributionList',
         });
     }
+
     /**
      * Toggle search bar.
      */
@@ -971,13 +978,13 @@ class NavigationController {
         this.searchVisible = !this.searchVisible;
     }
 
-    public getMyIdentity(): threema.Identity {
-        return this.webClientService.getMyIdentity();
+    /**
+     * Return the user profile.
+     */
+    public getProfile(): threema.Profile {
+        return this.webClientService.getProfile();
     }
 
-    public showMyIdentity(): boolean {
-        return this.getMyIdentity() !== undefined;
-    }
 }
 
 class MessengerController {
@@ -1035,7 +1042,7 @@ class MessengerController {
                             if ($state.params.type === receiver.type
                                 && $state.params.id === receiver.id) {
                                 // conversation or sub form is open, redirect to home!
-                                $state.go('messenger.home', null, {location: 'replace'});
+                                $state.go('messenger.home');
                             }
                         }
                         break;
@@ -1074,10 +1081,11 @@ class ReceiverDetailController {
     private controllerModel: threema.ControllerModel;
 
     public static $inject = [
-        '$log', '$stateParams', '$state', '$mdDialog',
+        '$log', '$stateParams', '$state', '$mdDialog', '$translate',
         'WebClientService', 'FingerPrintService', 'ContactService', 'ControllerModelService',
     ];
-    constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService, $mdDialog: ng.material.IDialogService,
+    constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService,
+                $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, fingerPrintService: FingerPrintService,
                 contactService: ContactService, controllerModelService: ControllerModelService) {
 
@@ -1089,7 +1097,7 @@ class ReceiverDetailController {
         this.receiver = webClientService.receivers.getData($stateParams);
         this.me = webClientService.me;
 
-        // Append members
+        // Append group membership
         if (this.receiver.type === 'contact') {
             const contactReceiver = this.receiver as threema.ContactReceiver;
 
@@ -1104,6 +1112,7 @@ class ReceiverDetailController {
 
             this.isWorkReceiver = contactReceiver.identityType === threema.IdentityType.Work;
             this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
+
             webClientService.groups.forEach((groupReceiver: threema.GroupReceiver) => {
                 // check if my identity is a member
                 if (groupReceiver.members.indexOf(contactReceiver.id) !== -1) {
@@ -1127,12 +1136,15 @@ class ReceiverDetailController {
 
         switch (this.receiver.type) {
             case 'me':
-                $log.warn(this.logTag, 'Cannot view own contact');
-                $state.go('messenger.home');
-                return;
+                const meReceiver = this.receiver as threema.MeReceiver;
+                this.fingerPrint = this.fingerPrintService.generate(meReceiver.publicKey);
+                this.controllerModel = controllerModelService.me(meReceiver, ControllerModelMode.VIEW);
+                break;
             case 'contact':
+                const contactReceiver = this.receiver as threema.ContactReceiver;
+                this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
                 this.controllerModel = controllerModelService
-                    .contact(this.receiver as threema.ContactReceiver, ControllerModelMode.VIEW);
+                    .contact(contactReceiver, ControllerModelMode.VIEW);
                 break;
             case 'group':
                 this.controllerModel = controllerModelService
@@ -1149,14 +1161,7 @@ class ReceiverDetailController {
                 return;
         }
 
-        // If this receiver may not be viewed, navigate to "home" view
-        if (this.controllerModel.canView() === false) {
-            $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
-            this.$state.go('messenger.home');
-            return;
-        }
-
-        // If this receiver is removed, navigate to "home" view
+        // If this receiver was removed, navigate to "home" view
         this.controllerModel.setOnRemoved((receiverId: string) => {
             $log.warn(this.logTag, 'Receiver removed, redirecting to home');
             this.$state.go('messenger.home');
@@ -1252,13 +1257,6 @@ class ReceiverEditController {
                 return;
         }
         this.type = receiver.type;
-
-        // If this receiver may not be viewed, navigate to "home" view
-        if (this.controllerModel.canView() === false) {
-            $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
-            this.$state.go('messenger.home');
-            return;
-        }
 
         this.execute = new ExecuteService($log, $timeout, 1000);
     }
@@ -1399,7 +1397,7 @@ class ReceiverCreateController {
         // validate first
         this.execute.execute(this.controllerModel.save())
             .then((receiver: threema.Receiver) => {
-                this.$state.go('messenger.home.detail', receiver, {location: 'replace'});
+                this.$state.go('messenger.home.detail', receiver);
             })
             .catch((errorCode) => {
                 this.showAddError(errorCode);

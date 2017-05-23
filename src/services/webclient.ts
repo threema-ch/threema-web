@@ -182,7 +182,7 @@ export class WebClientService {
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
     public defaults: WebClientDefault;
-    private myIdentity: threema.Identity;
+    private profile: threema.Profile;
     private pushToken: string = null;
 
     // Other
@@ -411,7 +411,7 @@ export class WebClientService {
                             this.stateService.updateConnectionBuildupState('closed');
                             break;
                         default:
-                            this.$log.warn('Unknown signaling state:', state);
+                            this.$log.warn(this.logTag, 'Unknown signaling state:', state);
                     }
                 }
                 this.stateService.updateSignalingConnectionState(state);
@@ -1327,10 +1327,10 @@ export class WebClientService {
     }
 
     /**
-     * Return own identity.
+     * Return own profile.
      */
-    public getMyIdentity(): threema.Identity {
-        return this.myIdentity;
+    public getProfile(): threema.Profile {
+        return this.profile;
     }
 
     /**
@@ -2109,12 +2109,12 @@ export class WebClientService {
         }
 
         // Set own identity
-        this.myIdentity = {
+        this.profile = {
             identity: this.clientInfo.myAccount.identity,
             publicKey: this.clientInfo.myAccount.publicKey,
             publicNickname: this.clientInfo.myAccount.publicNickname,
             fingerprint: this.fingerPrintService.generate(this.clientInfo.myAccount.publicKey),
-        } as threema.Identity;
+        };
 
         this.registerInitializationStep(InitializationStep.ClientInfo);
     }

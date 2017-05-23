@@ -1,7 +1,10 @@
-<!-- My identity -->
-<div id="my-identity" ng-if="ctrl.showMyIdentity()">
-    <div class="my-identity-content" eee-my-identity
-            eee-identity="ctrl.getMyIdentity()"></div>
+<!-- Top header (nickname + menu) -->
+<div id="navigation-topheader">
+    <div class="my-identity">
+        <span ng-click="ctrl.showProfile()" ng-cloak translate-attr="{'title': 'messenger.MY_PUBLIC_NICKNAME'}">
+            {{ ctrl.getProfile().publicNickname || ctrl.getProfile().identity }}
+        </span>
+    </div>
 
     <battery-status></battery-status>
 
