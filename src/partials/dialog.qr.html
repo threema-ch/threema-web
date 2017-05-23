@@ -2,21 +2,15 @@
     <form ng-cloak>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>messenger.MY_THREEMA_ID</h2>
+                <h2>{{ ctrl.profile.identity }}</h2>
                 <span flex></span>
-                <md-button class="md-icon-button" ng-click="ctrl.cancel()" translate-attr="{'aria-label': 'common.OK'}">
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()" translate-attr="{'aria-label': 'common.CANCEL'}">
                     <md-icon aria-label="Close dialog" class="material-icons md-24">close</md-icon>
                 </md-button>
             </div>
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content center">
-                <dl class="key-values">
-                    <dt>Threema ID</dt>
-                    <dd>{{ctrl.identity.identity}}</dd>
-                    <dt translate>messenger.KEY_FINGERPRINT</dt>
-                    <dd>{{ctrl.identity.fingerprint}}</dd>
-                </dl>
                 <div class="qrcode">
                     <qrcode version="{{ ctrl.qrCode.version }}"
                     error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"
@@ -27,7 +21,7 @@
         <md-dialog-actions layout="row">
             <span flex></span>
             <md-button ng-click="ctrl.cancel()">
-                <span translate>common.OK</span>
+                <span translate>common.CLOSE</span>
             </md-button>
         </md-dialog-actions>
     </form>

@@ -476,6 +476,11 @@ declare namespace threema {
          */
         canClean(): boolean;
 
+        /*
+         * Return whether this receiver can show a QR code of the public key.
+         */
+        canShowQr(): boolean;
+
         /**
          * The editing mode, e.g. view or edit this receiver.
          */

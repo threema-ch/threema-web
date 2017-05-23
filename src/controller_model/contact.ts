@@ -148,6 +148,10 @@ export class ContactControllerModel implements threema.ControllerModel {
             });
     }
 
+    public canShowQr(): boolean {
+        return false;
+    }
+
     public save(): Promise<threema.ContactReceiver> {
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
