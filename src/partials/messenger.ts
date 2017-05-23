@@ -292,6 +292,9 @@ class ConversationController {
             const mode = ControllerModelMode.CHAT;
             switch (this.receiver.type) {
                 case 'me':
+                    $log.warn(this.logTag, 'Cannot chat with own contact');
+                    $state.go('messenger.home');
+                    return;
                 case 'contact':
                     this.controllerModel = controllerModelService.contact(
                         this.receiver as threema.ContactReceiver, mode);
@@ -307,7 +310,7 @@ class ConversationController {
                 default:
                     $log.error(this.logTag, 'Cannot initialize controller model:',
                         'Invalid receiver type "' + this.receiver.type + '"');
-                    $state.go('welcome');
+                    $state.go('messenger.home');
                     return;
             }
 
@@ -918,6 +921,7 @@ class MessengerController {
 }
 
 class ReceiverDetailController {
+    private logTag: string = '[ReceiverDetailController]';
 
     public $mdDialog: any;
     public $state: ng.ui.IStateService;
@@ -986,6 +990,10 @@ class ReceiverDetailController {
         }
 
         switch (this.receiver.type) {
+            case 'me':
+                $log.warn(this.logTag, 'Cannot view own contact');
+                $state.go('messenger.home');
+                return;
             case 'contact':
                 this.controllerModel = controllerModelService
                     .contact(this.receiver as threema.ContactReceiver, ControllerModelMode.VIEW);
@@ -999,13 +1007,23 @@ class ReceiverDetailController {
                     .distributionList(this.receiver as threema.DistributionListReceiver, ControllerModelMode.VIEW);
                 break;
             default:
-                $log.warn('Invalid receiver type:', this.receiver.type);
+                $log.error(this.logTag, 'Cannot initialize controller model:',
+                    'Invalid receiver type "' + this.receiver.type + '"');
+                $state.go('messenger.home');
+                return;
         }
 
-        // if this receiver was removed, navigation to "home" view
+        // If this receiver may not be viewed, navigate to "home" view
+        if (this.controllerModel.canView() === false) {
+            $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
+            this.$state.go('messenger.home');
+            return;
+        }
+
+        // If this receiver is removed, navigate to "home" view
         this.controllerModel.setOnRemoved((receiverId: string) => {
-            // go "home"
-            this.$state.go('messenger.home', null, {location: 'replace'});
+            $log.warn(this.logTag, 'Receiver removed, redirecting to home');
+            this.$state.go('messenger.home');
         });
 
     }
@@ -1040,6 +1058,8 @@ class ReceiverDetailController {
  * fields, validate and save routines are implemented in the specific ControllerModel
  */
 class ReceiverEditController {
+    private logTag: string = '[ReceiverEditController]';
+
     public $mdDialog: any;
     public $state: ng.ui.IStateService;
     private $translate: ng.translate.ITranslateService;
@@ -1066,8 +1086,11 @@ class ReceiverEditController {
         this.$translate = $translate;
 
         const receiver = webClientService.receivers.getData($stateParams);
-
         switch (receiver.type) {
+            case 'me':
+                $log.warn(this.logTag, 'Cannot edit own contact');
+                $state.go('messenger.home');
+                return;
             case 'contact':
                 this.controllerModel = controllerModelService.contact(
                     receiver as threema.ContactReceiver,
@@ -1087,10 +1110,21 @@ class ReceiverEditController {
                 );
                 break;
             default:
-                $log.warn('Invalid receiver type:', receiver.type);
+                $log.error(this.logTag, 'Cannot initialize controller model:',
+                    'Invalid receiver type "' + receiver.type + '"');
+                $state.go('messenger.home');
+                return;
         }
-        this.execute = new ExecuteService($log, $timeout, 1000);
         this.type = receiver.type;
+
+        // If this receiver may not be viewed, navigate to "home" view
+        if (this.controllerModel.canView() === false) {
+            $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
+            this.$state.go('messenger.home');
+            return;
+        }
+
+        this.execute = new ExecuteService($log, $timeout, 1000);
     }
 
     public save(): void {
@@ -1109,7 +1143,8 @@ class ReceiverEditController {
     }
 
     public isSaving(): boolean {
-        return this.execute.isRunning();
+        return this.execute !== undefined
+            && this.execute.isRunning();
     }
 
     public showError(errorCode): void {
@@ -1131,8 +1166,8 @@ class ReceiverEditController {
  * fields, validate and save routines are implemented in the specific ControllerModel
  */
 class ReceiverCreateController {
-    public static $inject = ['$stateParams', '$mdDialog', '$mdToast', '$translate',
-        '$timeout', '$state', '$log', 'ControllerModelService'];
+    private logTag: string = '[ReceiverEditController]';
+
     public $mdDialog: any;
     private loading = false;
     private $timeout: ng.ITimeoutService;
@@ -1146,6 +1181,8 @@ class ReceiverCreateController {
 
     public controllerModel: threema.ControllerModel;
 
+    public static $inject = ['$stateParams', '$mdDialog', '$mdToast', '$translate',
+        '$timeout', '$state', '$log', 'ControllerModelService'];
     constructor($stateParams: threema.CreateReceiverStateParams, $mdDialog, $mdToast, $translate,
                 $timeout: ng.ITimeoutService, $state: ng.ui.IStateService, $log: ng.ILogService,
                 controllerModelService: ControllerModelService) {
@@ -1157,8 +1194,11 @@ class ReceiverCreateController {
         this.$translate = $translate;
 
         this.type = $stateParams.type;
-
         switch (this.type) {
+            case 'me':
+                $log.warn(this.logTag, 'Cannot create own contact');
+                $state.go('messenger.home');
+                return;
             case 'contact':
                 this.controllerModel = controllerModelService.contact(null, ControllerModelMode.NEW);
                 if ($stateParams.initParams !== null) {
