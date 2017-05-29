@@ -15,13 +15,13 @@
 					</eee-verification-level></dd>
 
 				<dt><span translate>messenger.KEY_FINGERPRINT</span></dt>
-				<dd>{{ctrl.fingerPrint}}</dd>
+				<dd>{{ ctrl.fingerPrint }}</dd>
 
 				<dt><span translate>messenger.FIRST_NAME</span></dt>
-				<dd>{{ctrl.receiver.firstName}}</dd>
+				<dd>{{ ctrl.receiver.firstName || "-" }}</dd>
 
 				<dt><span translate>messenger.LAST_NAME</span></dt>
-				<dd>{{ctrl.receiver.lastName}}</dd>
+				<dd>{{ ctrl.receiver.lastName || "-" }}</dd>
 			</dl>
 		</md-card-content>
 	</md-card>
