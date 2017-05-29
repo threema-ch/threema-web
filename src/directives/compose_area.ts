@@ -126,7 +126,8 @@ export default [
                         const node = composeDiv[0].childNodes[i];
                         switch (node.nodeType) {
                             case Node.TEXT_NODE:
-                                text += node.nodeValue.trim();
+                                // Append text, but strip leading and trailing newlines
+                                text += node.nodeValue.replace(/(^[\r\n]*|[\r\n]*$)/g, '');
                                 break;
                             case Node.ELEMENT_NODE:
                                 const tag = node.tagName.toLowerCase();
