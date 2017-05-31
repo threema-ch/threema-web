@@ -194,7 +194,7 @@ export default [
                             updateView();
                         }).catch(() => {
                             // do nothing
-                            this.$log.warn('failed to submit text');
+                            $log.warn(logTag, 'Failed to submit text');
                         });
 
                         return true;
