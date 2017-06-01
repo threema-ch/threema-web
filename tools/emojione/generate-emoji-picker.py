@@ -38,7 +38,7 @@ def make_hexchar(codepoint):
 print('<div class="emojione-picker">')
 for i, category in enumerate(category_order):
     print('    <div class="tab">')
-    print('        <input type="radio" id="tab-%d" name="tabs" checked>' % i)
+    print('        <input type="radio" id="tab-%d" name="tabs"%s>' % (i, ' checked' if i == 0 else ''))
     print('        <label for="tab-%d" title="%s">' % (i, category['name']))
     print('            <span class="e1 e1-{0} _{1}">{2}</span>'.format(category['id'], category['icon'], make_hexchar(category['icon'])))
     print('        </label>')
