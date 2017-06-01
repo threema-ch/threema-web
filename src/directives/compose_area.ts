@@ -435,11 +435,20 @@ export default [
                     const emoji = this.textContent; // Unicode character
                     const formatted = ($filter('emojify') as any)(emoji, true, true);
 
-                    // Firefox inserts a <br> after editing content editable fields.
-                    // Remove the last <br> to fix this.
+                    // In Chrome in right-to-left mode, our content editable
+                    // area may contain a DIV element.
+                    const nestedDiv = composeDiv[0].childNodes.length === 1
+                        && composeDiv[0].childNodes[0].tagName.toLowerCase() === 'div';
+                    let contentElement;
+                    if (nestedDiv === true) {
+                        contentElement = composeDiv[0].childNodes[0];
+                    } else {
+                        contentElement = composeDiv[0];
+                    }
+
                     let currentHTML = '';
-                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
-                        const node = composeDiv[0].childNodes[i];
+                    for (let i = 0; i < contentElement.childNodes.length; i++) {
+                        const node = contentElement.childNodes[i];
 
                         if (node.nodeType === node.TEXT_NODE) {
                             currentHTML += node.textContent;
@@ -448,8 +457,9 @@ export default [
                             if (tag === 'img') {
                                 currentHTML += getOuterHtml(node);
                             } else if (tag === 'br') {
-                                // not not append br if the br is the LAST element
-                                if (i < composeDiv[0].childNodes.length - 1) {
+                                // Firefox inserts a <br> after editing content editable fields.
+                                // Remove the last <br> to fix this.
+                                if (i < contentElement.childNodes.length - 1) {
                                     currentHTML += getOuterHtml(node);
                                 }
                             }
@@ -473,7 +483,7 @@ export default [
                         };
                     }
 
-                    composeDiv[0].innerHTML = currentHTML;
+                    contentElement.innerHTML = currentHTML;
                     cleanupComposeContent();
                     setCaretPosition(caretPosition.from);
 
@@ -558,7 +568,7 @@ export default [
                     return pos;
                 }
 
-                // define position of caret
+                // Update the current caret position or selection
                 function updateCaretPosition() {
                     caretPosition = null;
                     if (window.getSelection && composeDiv[0].innerHTML.length > 0) {
@@ -623,6 +633,7 @@ export default [
                 composeDiv.on('keydown', onTyping);
                 composeDiv.on('keyup mouseup', updateCaretPosition);
                 composeDiv.on('selectionchange', updateCaretPosition);
+
                 // When switching chat, send stopTyping message
                 scope.$on('$destroy', scope.stopTyping);
 
