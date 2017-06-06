@@ -220,7 +220,7 @@ export class WebClientService {
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
-                VersionService: VersionService,
+                versionService: VersionService,
                 CONFIG: threema.Config) {
 
         // Angular services
@@ -243,7 +243,7 @@ export class WebClientService {
         this.qrCodeService = qrCodeService;
         this.mimeService = mimeService;
         this.receiverService = receiverService;
-        this.versionService = VersionService;
+        this.versionService = versionService;
 
         // Configuration object
         this.config = CONFIG;
