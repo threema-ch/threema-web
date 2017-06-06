@@ -151,7 +151,6 @@ export class WebClientService {
     private startupDone: boolean = false;
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
     private initialized: Set<threema.InitializationStep> = new Set();
-    private initializedThreshold = 3;
     private stateService: StateService;
 
     // SaltyRTC
@@ -405,8 +404,10 @@ export class WebClientService {
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
                 if (state === 'connected' && this.stateService.wasConnected) {
-                    // this happens if a lost connection could be restored
-                    // without reset the peer connection
+                    // This happens if a lost connection could be restored
+                    // without resetting the peer connection.
+                    // Request initial data again, since some packets could have been lost
+                    // while the connection was gone.
                     this._requestInitialData();
                 }
                 this.stateService.updateRtcConnectionState(state);
@@ -445,6 +446,17 @@ export class WebClientService {
                     // Initialize fields
                     if (resetFields) {
                         this._resetFields();
+                    }
+
+                    // Resolve startup promise once initialization is done
+                    if (this.startupPromise !== null) {
+                        this.runAfterInitializationSteps(['client info', 'conversations', 'receivers'], () => {
+                            this.stateService.updateConnectionBuildupState('done');
+                            this.startupPromise.resolve();
+                            this.startupPromise = null;
+                            this.startupDone = true;
+                            this._resetInitializationSteps();
+                        });
                     }
 
                     // Request initial data
@@ -633,14 +645,14 @@ export class WebClientService {
      */
     public registerInitializationStep(name: threema.InitializationStep) {
         if (this.initialized.has(name) ) {
-            this.$log.warn(this.logTag, 'initialization step', name, 'already registered');
+            this.$log.warn(this.logTag, 'Initialization step "' + name + '" already registered');
             return;
         }
 
-        this.$log.debug(this.logTag, 'Initialization step', name, 'done');
+        this.$log.debug(this.logTag, 'Initialization step "' + name + '" done');
         this.initialized.add(name);
 
-        // check pending routines
+        // Check pending routines
         this.pendingInitializationStepRoutines = this.pendingInitializationStepRoutines.filter((routine) => {
             let isValid = true;
             for (let requiredStep of routine.requiredSteps) {
@@ -650,19 +662,11 @@ export class WebClientService {
                 }
             }
             if (isValid) {
-                this.$log.log('run routine after initialisation', name, ' completed');
+                this.$log.debug(this.logTag, 'Running routine after initialization "' + name + '" completed');
                 routine.callback();
             }
             return !isValid;
         });
-
-        if (this.initialized.size >= this.initializedThreshold) {
-            this.stateService.updateConnectionBuildupState('done');
-            this.startupPromise.resolve();
-            this.startupPromise = null;
-            this.startupDone = true;
-            this._resetInitializationSteps();
-        }
     }
 
     public setReceiverListener(listener: threema.ReceiverListener): void {
@@ -670,7 +674,7 @@ export class WebClientService {
     }
 
     /**
-     * Send all client info request.
+     * Send a client info request.
      */
     public requestClientInfo(): void {
         this.$log.debug('Sending client info request');
@@ -2406,7 +2410,8 @@ export class WebClientService {
     private runAfterInitializationSteps(requiredSteps: threema.InitializationStep[], callback: any): void {
         for (let requiredStep of requiredSteps) {
             if (!this.initialized.has(requiredStep)) {
-                this.$log.debug(this.logTag, 'required step', requiredStep, 'not completed, add pending');
+                this.$log.debug(this.logTag,
+                    'Required initialization step', requiredStep, 'not completed, add pending routine');
                 this.pendingInitializationStepRoutines.push({
                     requiredSteps: requiredSteps,
                     callback: callback,
