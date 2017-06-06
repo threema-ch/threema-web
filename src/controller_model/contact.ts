@@ -153,7 +153,7 @@ export class ContactControllerModel implements threema.ControllerModel {
                     this.contact.id,
                     this.firstName,
                     this.lastName,
-                    this.avatarController.getAvatar(),
+                    this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
                 );
             case ControllerModelMode.NEW:
                 return this.webClientService.addContact(this.identity);
