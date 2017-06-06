@@ -103,6 +103,7 @@ export class WebClientService {
     private static ARGUMENT_RECEIVER_ID = 'id';
     private static ARGUMENT_TEMPORARY_ID = 'temporaryId';
     private static ARGUMENT_REFERENCE_MSG_ID = 'refMsgId';
+    private static ARGUMENT_AVATAR = 'avatar';
     private static ARGUMENT_AVATAR_HIGH_RESOLUTION = 'highResolution';
     private static ARGUMENT_CONTACT_IS_TYPING = 'isTyping';
     private static ARGUMENT_MESSAGE_ID = 'messageId';
@@ -1068,7 +1069,7 @@ export class WebClientService {
             data[WebClientService.ARGUMENT_LAST_NAME] = lastName;
         }
         if (avatar !== undefined) {
-            data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
         }
 
         // If no changes happened, resolve the promise immediately.
