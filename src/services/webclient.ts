@@ -1122,24 +1122,38 @@ export class WebClientService {
      * Modify a contact name or a avatar
      */
     public modifyContact(threemaId: string,
-                         firstName: string,
-                         lastName: string,
+                         firstName?: string,
+                         lastName?: string,
                          avatar?: ArrayBuffer): Promise<threema.ContactReceiver> {
-        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, {
-            [WebClientService.ARGUMENT_IDENTITY]: threemaId,
-        }, {
-            [WebClientService.ARGUMENT_FIRST_NAME]: firstName,
-            [WebClientService.ARGUMENT_LAST_NAME]: lastName,
-            [WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION]: avatar,
-        });
-
-        if (avatar !== undefined) {
-            // reset avatar to force a avatar reload
-            this.receivers.getData({
-                type: 'contact',
-                id: threemaId,
-            } as threema.Receiver).avatar = {};
+        // Prepare payload data
+        const data = {};
+        if (firstName !== undefined) {
+            data[WebClientService.ARGUMENT_FIRST_NAME] = firstName;
         }
+        if (lastName !== undefined) {
+            data[WebClientService.ARGUMENT_LAST_NAME] = lastName;
+        }
+        if (avatar !== undefined) {
+            data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
+        }
+
+        // If no changes happened, resolve the promise immediately.
+        if (Object.keys(data).length === 0) {
+            this.$log.warn(this.logTag, 'Trying to modify contact without any changes');
+            return Promise.resolve(this.contacts.get(threemaId));
+        }
+
+        // Send update
+        const args = {
+            [WebClientService.ARGUMENT_IDENTITY]: threemaId,
+        };
+        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, args, data);
+
+        // If necessary, reset avatar to force a avatar reload
+        if (avatar !== undefined) {
+            this.contacts.get(threemaId).avatar = {};
+        }
+
         return promise;
     }
 
