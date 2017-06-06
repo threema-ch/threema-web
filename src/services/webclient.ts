@@ -1098,10 +1098,10 @@ export class WebClientService {
     public createGroup(members: string[],
                        name: string = null,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
-        let data = {
+        const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
+        } as Object;
 
         if (avatar !== undefined) {
             data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
@@ -1112,26 +1112,27 @@ export class WebClientService {
 
     public modifyGroup(id: string,
                        members: String[],
-                       name: String = null,
+                       name?: String,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
-        let data = {
-            [WebClientService.ARGUMENT_MEMBERS]: members,
-            [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
-
+        // Prepare payload data
+        const data = {};
+        data[WebClientService.ARGUMENT_MEMBERS] = members;
+        if (name !== undefined) {
+            data[WebClientService.ARGUMENT_NAME] = name;
+        }
         if (avatar !== undefined) {
             data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
         }
-        let promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, {
-            [WebClientService.ARGUMENT_RECEIVER_ID]: id,
-        }, data);
 
+        // Send update
+        const args = {
+            [WebClientService.ARGUMENT_RECEIVER_ID]: id,
+        };
+        let promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, args, data);
+
+        // If necessary, reset avatar to force a avatar reload
         if (avatar !== undefined) {
-            // reset avatar to force a avatar reload
-            this.receivers.getData({
-                type: 'group',
-                id: id,
-            } as threema.GroupReceiver).avatar = {};
+            this.groups.get(id).avatar = {};
         }
         return promise;
     }
