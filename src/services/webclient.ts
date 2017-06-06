@@ -1121,7 +1121,7 @@ export class WebClientService {
             data[WebClientService.ARGUMENT_NAME] = name;
         }
         if (avatar !== undefined) {
-            data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
         }
 
         // Send update
