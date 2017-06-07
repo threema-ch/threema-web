@@ -391,6 +391,7 @@ declare namespace threema {
         SALTYRTC_HOST_SUFFIX: string | null;
         ICE_SERVERS: RTCIceServer[];
         PUSH_URL: string;
+        MSG_DEBUGGING: boolean;
     }
 
     interface InitialConversationData {

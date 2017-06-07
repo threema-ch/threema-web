@@ -478,6 +478,10 @@ export class WebClientService {
                     return;
                 }
 
+                if (this.config.MSG_DEBUGGING) {
+                    this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, message);
+                }
+
                 // Process data
                 this.$rootScope.$apply(() => {
                     this.receive(message);
@@ -2373,6 +2377,9 @@ export class WebClientService {
      */
     private send(message: threema.WireMessage): void {
         this.$log.debug('Sending', message.type + '/' + message.subType, 'message');
+        if (this.config.MSG_DEBUGGING) {
+            this.$log.debug('[Message] Outgoing:', message.type, '/', message.subType, message);
+        }
         const bytes: Uint8Array = this.msgpackEncode(message);
         this.secureDataChannel.send(bytes);
     }
