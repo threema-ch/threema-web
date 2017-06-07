@@ -604,18 +604,26 @@ class ConversationController {
      * avoid sending too many messages at once.
      */
     public msgRead(msgId: number): void {
-        if (msgId > this.lastReadMsgId) {
-            this.lastReadMsgId = msgId;
-        }
-        if (!this.msgReadReportPending) {
-            this.msgReadReportPending = true;
-            const receiver = angular.copy(this.receiver);
-            receiver.type = this.type;
-            this.$timeout(() => {
-                this.webClientService.requestRead(receiver, this.lastReadMsgId);
-                this.msgReadReportPending = false;
-            }, 500);
-        }
+		var type = this.type;
+		var parentClass = this;
+		function checkHidden(parentClass, type) {
+			if (!document.hidden) {
+				clearInterval(_hiddenCheck);
+				if (msgId > parentClass.lastReadMsgId) {
+					parentClass.lastReadMsgId = msgId;
+				}
+				if (!parentClass.msgReadReportPending) {
+					parentClass.msgReadReportPending = true;
+					const receiver = angular.copy(parentClass.receiver);
+					receiver.type = type;
+					parentClass.$timeout(() => {
+						parentClass.webClientService.requestRead(receiver, parentClass.lastReadMsgId);
+						parentClass.msgReadReportPending = false;
+					}, 500);
+				}
+			}
+		}
+		var _hiddenCheck = setInterval(function(){checkHidden(parentClass,type)},500);		
     }
 
     public goBack(): void {
