@@ -113,6 +113,8 @@ export class BrowserService {
                         b = 'msie|edge';
                     } else if (x === 'opera') {
                         b = 'opr';
+                    } else if (x === 'safari') {
+                        b = 'version';
                     } else {
                         b = x;
                     }
