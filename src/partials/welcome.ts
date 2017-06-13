@@ -57,7 +57,7 @@ class WelcomeController {
 
     // Custom services
     private webClientService: WebClientService;
-    private TrustedKeyStore: TrustedKeyStoreService;
+    private trustedKeyStore: TrustedKeyStoreService;
     private pushService: PushService;
     private stateService: StateService;
 
@@ -76,7 +76,7 @@ class WelcomeController {
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
                 $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
-                webClientService: WebClientService, TrustedKeyStore: TrustedKeyStoreService,
+                webClientService: WebClientService, trustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService, pushService: PushService,
                 browserService: BrowserService,
                 versionService: VersionService,
@@ -95,7 +95,7 @@ class WelcomeController {
 
         // Own services
         this.webClientService = webClientService;
-        this.TrustedKeyStore = TrustedKeyStore;
+        this.trustedKeyStore = trustedKeyStore;
         this.stateService = stateService;
         this.pushService = pushService;
 
@@ -127,7 +127,7 @@ class WelcomeController {
         }
 
         // Determine whether local storage is available
-        if (this.TrustedKeyStore.blocked === true) {
+        if (this.trustedKeyStore.blocked === true) {
             $log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
             this.showLocalStorageWarning();
         }
@@ -144,7 +144,7 @@ class WelcomeController {
             const keyStore = $stateParams.initParams.keyStore;
             const peerTrustedKey = $stateParams.initParams.peerTrustedKey;
             this.reconnect(keyStore, peerTrustedKey);
-        } else if (TrustedKeyStore.hasTrustedKey()) {
+        } else if (trustedKeyStore.hasTrustedKey()) {
             this.mode = 'unlock';
             this.unlock();
         } else {
@@ -225,7 +225,7 @@ class WelcomeController {
      * Decrypt the keys and initiate the session.
      */
     private unlockConfirm(): void {
-        const decrypted: threema.TrustedKeyStoreData = this.TrustedKeyStore.retrieveTrustedKey(this.password);
+        const decrypted: threema.TrustedKeyStoreData = this.trustedKeyStore.retrieveTrustedKey(this.password);
         if (decrypted === null) {
             return this.showDecryptionFailed();
         }

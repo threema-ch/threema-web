@@ -103,6 +103,7 @@ export class WebClientService {
     private static ARGUMENT_RECEIVER_ID = 'id';
     private static ARGUMENT_TEMPORARY_ID = 'temporaryId';
     private static ARGUMENT_REFERENCE_MSG_ID = 'refMsgId';
+    private static ARGUMENT_AVATAR = 'avatar';
     private static ARGUMENT_AVATAR_HIGH_RESOLUTION = 'highResolution';
     private static ARGUMENT_CONTACT_IS_TYPING = 'isTyping';
     private static ARGUMENT_MESSAGE_ID = 'messageId';
@@ -220,7 +221,7 @@ export class WebClientService {
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
-                VersionService: VersionService,
+                versionService: VersionService,
                 CONFIG: threema.Config) {
 
         // Angular services
@@ -243,7 +244,7 @@ export class WebClientService {
         this.qrCodeService = qrCodeService;
         this.mimeService = mimeService;
         this.receiverService = receiverService;
-        this.versionService = VersionService;
+        this.versionService = versionService;
 
         // Configuration object
         this.config = CONFIG;
@@ -1050,7 +1051,7 @@ export class WebClientService {
     /**
      * Send a add Contact request
      */
-    public addContact(threemaId: String): Promise<threema.ContactReceiver> {
+    public addContact(threemaId: string): Promise<threema.ContactReceiver> {
         return this._sendCreatePromise(WebClientService.SUB_TYPE_CONTACT, {
             [WebClientService.ARGUMENT_IDENTITY]: threemaId,
         });
@@ -1059,38 +1060,52 @@ export class WebClientService {
     /**
      * Modify a contact name or a avatar
      */
-    public modifyContact(threemaId: String,
-                         firstName: String,
-                         lastName: String,
+    public modifyContact(threemaId: string,
+                         firstName?: string,
+                         lastName?: string,
                          avatar?: ArrayBuffer): Promise<threema.ContactReceiver> {
-        let promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, {
-            [WebClientService.ARGUMENT_IDENTITY]: threemaId,
-        }, {
-            [WebClientService.ARGUMENT_FIRST_NAME]: firstName,
-            [WebClientService.ARGUMENT_LAST_NAME]: lastName,
-            [WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION]: avatar,
-        });
-
-        if (avatar !== undefined) {
-            // reset avatar to force a avatar reload
-            this.receivers.getData({
-                type: 'contact',
-                id: threemaId,
-            } as threema.Receiver).avatar = {};
+        // Prepare payload data
+        const data = {};
+        if (firstName !== undefined) {
+            data[WebClientService.ARGUMENT_FIRST_NAME] = firstName;
         }
+        if (lastName !== undefined) {
+            data[WebClientService.ARGUMENT_LAST_NAME] = lastName;
+        }
+        if (avatar !== undefined) {
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
+        }
+
+        // If no changes happened, resolve the promise immediately.
+        if (Object.keys(data).length === 0) {
+            this.$log.warn(this.logTag, 'Trying to modify contact without any changes');
+            return Promise.resolve(this.contacts.get(threemaId));
+        }
+
+        // Send update
+        const args = {
+            [WebClientService.ARGUMENT_IDENTITY]: threemaId,
+        };
+        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, args, data);
+
+        // If necessary, reset avatar to force a avatar reload
+        if (avatar !== undefined) {
+            this.contacts.get(threemaId).avatar = {};
+        }
+
         return promise;
     }
 
     /**
      * Create a group receiver
      */
-    public createGroup(members: String[],
-                       name: String = null,
+    public createGroup(members: string[],
+                       name: string = null,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
-        let data = {
+        const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
+        } as Object;
 
         if (avatar !== undefined) {
             data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
@@ -1101,26 +1116,27 @@ export class WebClientService {
 
     public modifyGroup(id: string,
                        members: String[],
-                       name: String = null,
+                       name?: String,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
-        let data = {
-            [WebClientService.ARGUMENT_MEMBERS]: members,
-            [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
-
-        if (avatar !== undefined) {
-            data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
+        // Prepare payload data
+        const data = {};
+        data[WebClientService.ARGUMENT_MEMBERS] = members;
+        if (name !== undefined) {
+            data[WebClientService.ARGUMENT_NAME] = name;
         }
-        let promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, {
-            [WebClientService.ARGUMENT_RECEIVER_ID]: id,
-        }, data);
-
         if (avatar !== undefined) {
-            // reset avatar to force a avatar reload
-            this.receivers.getData({
-                type: 'group',
-                id: id,
-            } as threema.GroupReceiver).avatar = {};
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
+        }
+
+        // Send update
+        const args = {
+            [WebClientService.ARGUMENT_RECEIVER_ID]: id,
+        };
+        let promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, args, data);
+
+        // If necessary, reset avatar to force a avatar reload
+        if (avatar !== undefined) {
+            this.groups.get(id).avatar = {};
         }
         return promise;
     }
