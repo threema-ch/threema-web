@@ -3,6 +3,17 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.3.0][v1.3.0] (2017-06-22)
+
+Changes:
+
+* [feature] Upgrade to Emojione 3 ([#54][i54] / [#201][i201])
+* [feature] Support emoji in conversation and contact names ([#44][i44])
+* [feature] Fallback text in user profile if first/last name are not provided ([#238][i238])
+* [bug] Make it impossible to open own contact ([#231][i231] / [#235][i235])
+* [bug] When pasting text, only trim newline characters ([#237][i237])
+* [bug] Fix right-to-left support ([#239][i239])
+
 ### [v1.2.1][v1.2.1] (2017-05-17)
 
 Changes:
@@ -134,9 +145,11 @@ First public release.
 [i39]: https://github.com/threema-ch/threema-web/issues/39
 [i41]: https://github.com/threema-ch/threema-web/issues/41
 [i43]: https://github.com/threema-ch/threema-web/issues/43
+[i44]: https://github.com/threema-ch/threema-web/issues/44
 [i46]: https://github.com/threema-ch/threema-web/issues/46
 [i48]: https://github.com/threema-ch/threema-web/issues/48
 [i49]: https://github.com/threema-ch/threema-web/issues/49
+[i54]: https://github.com/threema-ch/threema-web/issues/54
 [i57]: https://github.com/threema-ch/threema-web/issues/57
 [i59]: https://github.com/threema-ch/threema-web/issues/59
 [i61]: https://github.com/threema-ch/threema-web/issues/61
@@ -177,12 +190,19 @@ First public release.
 [i189]: https://github.com/threema-ch/threema-web/issues/189
 [i190]: https://github.com/threema-ch/threema-web/issues/190
 [i193]: https://github.com/threema-ch/threema-web/issues/193
+[i201]: https://github.com/threema-ch/threema-web/issues/201
 [i202]: https://github.com/threema-ch/threema-web/issues/202
 [i204]: https://github.com/threema-ch/threema-web/issues/204
 [i205]: https://github.com/threema-ch/threema-web/issues/205
 [i211]: https://github.com/threema-ch/threema-web/issues/211
 [i215]: https://github.com/threema-ch/threema-web/issues/215
+[i231]: https://github.com/threema-ch/threema-web/issues/231
+[i235]: https://github.com/threema-ch/threema-web/issues/235
+[i237]: https://github.com/threema-ch/threema-web/issues/237
+[i238]: https://github.com/threema-ch/threema-web/issues/238
+[i239]: https://github.com/threema-ch/threema-web/issues/239
 
+[v1.3.0]: https://github.com/threema-ch/threema-web/compare/v1.2.1...v1.3.0
 [v1.2.1]: https://github.com/threema-ch/threema-web/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/threema-ch/threema-web/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/threema-ch/threema-web/compare/v1.0.5...v1.1.0
