@@ -199,9 +199,10 @@ export class GroupControllerModel implements threema.ControllerModel {
                     this.group.id,
                     this.members,
                     this.name,
-                    this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
+                    this.avatarController.getAvatar(),
                 );
             case ControllerModelMode.NEW:
+
                 return this.webClientService.createGroup(
                     this.members,
                     this.name,
