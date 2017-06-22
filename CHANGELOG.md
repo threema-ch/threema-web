@@ -3,6 +3,12 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.3.1][v1.3.1] (2017-06-22)
+
+Changes:
+
+* [bug] Fix bug when inserting emoji in Chrome ([#256][i256])
+
 ### [v1.3.0][v1.3.0] (2017-06-22)
 
 Changes:
@@ -201,7 +207,9 @@ First public release.
 [i237]: https://github.com/threema-ch/threema-web/issues/237
 [i238]: https://github.com/threema-ch/threema-web/issues/238
 [i239]: https://github.com/threema-ch/threema-web/issues/239
+[i256]: https://github.com/threema-ch/threema-web/issues/256
 
+[v1.3.1]: https://github.com/threema-ch/threema-web/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/threema-ch/threema-web/compare/v1.2.1...v1.3.0
 [v1.2.1]: https://github.com/threema-ch/threema-web/compare/v1.2.0...v1.2.1
 [v1.2.0]: https://github.com/threema-ch/threema-web/compare/v1.1.0...v1.2.0
