@@ -437,8 +437,10 @@ export default [
 
                     // In Chrome in right-to-left mode, our content editable
                     // area may contain a DIV element.
-                    const nestedDiv = composeDiv[0].childNodes.length === 1
-                        && composeDiv[0].childNodes[0].tagName.toLowerCase() === 'div';
+                    const childNodes = composeDiv[0].childNodes;
+                    const nestedDiv = childNodes.length === 1
+                        && childNodes[0].tagName !== undefined
+                        && childNodes[0].tagName.toLowerCase() === 'div';
                     let contentElement;
                     if (nestedDiv === true) {
                         contentElement = composeDiv[0].childNodes[0];
