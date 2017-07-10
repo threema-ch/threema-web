@@ -21,7 +21,8 @@ export class AvatarControllerModel {
     private $log: ng.ILogService;
     private avatar: ArrayBuffer = null;
     private loadAvatar: Promise<string>;
-    public onChangeAvatar: (image: ArrayBuffer) => void;
+    private onChangeAvatar: (image: ArrayBuffer) => void;
+    private _avatarChanged: boolean = false;
 
     constructor($log: ng.ILogService,
                 webClientService: WebClientService,
@@ -44,10 +45,25 @@ export class AvatarControllerModel {
         // bind to the editor
         this.onChangeAvatar = (image: ArrayBuffer) => {
             this.avatar = image;
+            this._avatarChanged = true;
         };
     }
 
+    /**
+     * Return the avatar bytes (or null if no avatar is defined).
+     */
     public getAvatar(): ArrayBuffer | null {
         return this.avatar;
+    }
+
+    /**
+     * Return whether this avatar was changed.
+     *
+     * This will return true if an avatar was added or removed. It does not
+     * actually look at the content to determine whether the bytes of the
+     * avatar really changed.
+     */
+    public get avatarChanged(): boolean {
+        return this._avatarChanged;
     }
 }
