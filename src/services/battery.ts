@@ -27,6 +27,13 @@ export class BatteryStatusService {
     }
 
     /**
+     * Is battery status information available?
+     */
+    public get dataAvailable(): boolean {
+        return this.batteryStatus !== null;
+    }
+
+    /**
      * Return the charge level in percent.
      */
     public get percent(): number {

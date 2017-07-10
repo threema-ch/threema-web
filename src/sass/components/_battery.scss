@@ -1,0 +1,24 @@
+.battery-status {
+    position: relative;
+    top: -12px;
+    right: 24px;
+
+    &.with-percent {
+        top: -18px;
+    }
+
+    md-icon, span {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        position: absolute;
+    }
+
+    .battery-percent {
+        font-size: 0.8em;
+        font-family: monospace;
+        text-align: center;
+        top: 20px;
+        left: 1px;
+    }
+}
