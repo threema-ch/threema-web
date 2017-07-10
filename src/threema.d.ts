@@ -44,7 +44,7 @@ declare namespace threema {
 
     type MessageType = 'text' | 'image' | 'video' | 'audio' | 'location' | 'status' | 'ballot' | 'file';
     type MessageState = 'delivered' | 'read' | 'send-failed' | 'sent' | 'user-ack' | 'user-dec' | 'pending' | 'sending';
-    type InitializationStep = 'client info' | 'conversations' |  'receivers';
+    type InitializationStep = 'client info' | 'conversations' | 'receivers';
 
     interface InitializationStepRoutine {
         requiredSteps: InitializationStep[];
@@ -403,6 +403,11 @@ declare namespace threema {
         FF: number;
         CHROME: number;
         OPERA: number;
+    }
+
+    interface BatteryStatus {
+        percent: number;
+        isCharging: boolean;
     }
 
     namespace Container {

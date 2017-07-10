@@ -17,6 +17,7 @@
 
 import * as msgpack from 'msgpack-lite';
 import {hexToU8a} from '../helpers';
+import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
 import {FingerPrintService} from './fingerprint';
 import {TrustedKeyStoreService} from './keystore';
@@ -94,6 +95,7 @@ export class WebClientService {
     private static SUB_TYPE_DISTRIBUTION_LIST = 'distributionList';
     private static SUB_TYPE_ALERT = 'alert';
     private static SUB_TYPE_GROUP_SYNC = 'groupSync';
+    private static SUB_TYPE_BATTERY_STATUS = 'batteryStatus';
     private static ARGUMENT_MODE = 'mode';
     private static ARGUMENT_MODE_REFRESH = 'refresh';
     private static ARGUMENT_MODE_NEW = 'new';
@@ -135,15 +137,16 @@ export class WebClientService {
     private $timeout: ng.ITimeoutService;
 
     // Custom services
-    private notificationService: NotificationService;
-    private messageService: MessageService;
-    private pushService: PushService;
+    private batteryStatusService: BatteryStatusService;
     private browserService: BrowserService;
-    private titleService: TitleService;
     private fingerPrintService: FingerPrintService;
-    private qrCodeService: QrCodeService;
+    private messageService: MessageService;
     private mimeService: MimeService;
+    private notificationService: NotificationService;
+    private pushService: PushService;
+    private qrCodeService: QrCodeService;
     private receiverService: ReceiverService;
+    private titleService: TitleService;
     private versionService: VersionService;
 
     // State handling
@@ -196,7 +199,7 @@ export class WebClientService {
         'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'FingerPrintService', 'QrCodeService', 'MimeService', 'ReceiverService',
-        'VersionService',
+        'VersionService', 'BatteryStatusService',
         'CONFIG',
     ];
     constructor($log: ng.ILogService,
@@ -219,7 +222,8 @@ export class WebClientService {
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
-                VersionService: VersionService,
+                versionService: VersionService,
+                batteryStatusService: BatteryStatusService,
                 CONFIG: threema.Config) {
 
         // Angular services
@@ -233,16 +237,17 @@ export class WebClientService {
         this.$timeout = $timeout;
 
         // Own services
-        this.notificationService = notificationService;
-        this.messageService = messageService;
-        this.pushService = pushService;
+        this.batteryStatusService = batteryStatusService;
         this.browserService = browserService;
-        this.titleService = titleService;
         this.fingerPrintService = fingerPrintService;
-        this.qrCodeService = qrCodeService;
+        this.messageService = messageService;
         this.mimeService = mimeService;
+        this.notificationService = notificationService;
+        this.pushService = pushService;
+        this.qrCodeService = qrCodeService;
         this.receiverService = receiverService;
-        this.versionService = VersionService;
+        this.titleService = titleService;
+        this.versionService = versionService;
 
         // Configuration object
         this.config = CONFIG;
@@ -703,6 +708,14 @@ export class WebClientService {
         this._sendRequest(WebClientService.SUB_TYPE_CONVERSATIONS, {
             [WebClientService.ARGUMENT_MAX_SIZE]: WebClientService.AVATAR_LOW_MAX_SIZE,
         });
+    }
+
+    /**
+     * Send a battery status request.
+     */
+    public requestBatteryStatus(): void {
+        this.$log.debug('Sending battery status request');
+        this._sendRequest(WebClientService.SUB_TYPE_BATTERY_STATUS);
     }
 
     /**
@@ -1322,6 +1335,7 @@ export class WebClientService {
         this.requestClientInfo();
         this.requestReceivers();
         this.requestConversations();
+        this.requestBatteryStatus();
     }
 
     private _receiveResponseReceivers(message: threema.WireMessage) {
@@ -1954,6 +1968,25 @@ export class WebClientService {
     }
 
     /**
+     * Process an incoming battery status message.
+     */
+    private _receiveUpdateBatteryStatus(message: threema.WireMessage): void {
+        this.$log.debug('Received battery status');
+
+        // Unpack data and arguments
+        const data = message.data as threema.BatteryStatus;
+        if (data === undefined) {
+            this.$log.warn('Invalid battery status message, data missing');
+            return;
+        }
+
+        // Set battery status
+        this.batteryStatusService.setStatus(data);
+
+        this.$log.debug('[BatteryStatusService]', this.batteryStatusService.toString());
+    }
+
+    /**
      * The peer sends the device information string. This can be used to
      * identify the active session.
      */
@@ -2282,6 +2315,9 @@ export class WebClientService {
             case WebClientService.SUB_TYPE_GROUP_SYNC:
                 receiveResult = this._receiveGroupSync(message);
                 break;
+            case WebClientService.SUB_TYPE_BATTERY_STATUS:
+                this._receiveUpdateBatteryStatus(message);
+                break;
             default:
                 this.$log.warn('Ignored response with type:', type);
                 return;
@@ -2302,6 +2338,9 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_TYPING:
                 this._receiveUpdateTyping(message);
+                break;
+            case WebClientService.SUB_TYPE_BATTERY_STATUS:
+                this._receiveUpdateBatteryStatus(message);
                 break;
             case WebClientService.SUB_TYPE_CONTACT:
                 receiveResult = this._receiveResponseContact(message);
