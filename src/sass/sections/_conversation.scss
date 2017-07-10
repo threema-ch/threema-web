@@ -126,11 +126,12 @@
             margin-top: $main-padding;
             text-align: center;
             .loading {
-                @include loading-spinner(24px, 3px, $material-grey-dark, rgba(0, 0, 0, 0.1));
+                height: 30px;
+                width: 30px;
                 background-color: white;
                 border-radius: 50%;
-                display:inline-block;
-                padding: $main-padding;
+                display: inline-block;
+                padding: 6px;
                 @include message-bubble-shadow;
             }
         }
