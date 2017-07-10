@@ -39,7 +39,7 @@
         <ul class="chat">
             <li in-view="$inview && !ctrl.locked && ctrl.topOfChat()" class="load-more">
                 <div ng-if="ctrl.hasMoreMessages()" class="loading">
-                    <span></span>
+                    <img ng-src="img/spinner.gif" alt="...">
                 </div>
             </li>
             <li ng-repeat="message in ctrl.messages" id="message-{{message.id}}">
