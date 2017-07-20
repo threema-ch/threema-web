@@ -3,6 +3,14 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.4.0][v1.4.0] (2017-07-20)
+
+Changes:
+
+* [feature] Show battery status indicator ([#265][i265])
+* [change] Reduce browser CPU usage in conversation ([#264][i264])
+* [bug] Add high DPI versions of emoji spritemaps ([#261][i261])
+
 ### [v1.3.1][v1.3.1] (2017-06-22)
 
 Changes:
@@ -208,7 +216,11 @@ First public release.
 [i238]: https://github.com/threema-ch/threema-web/issues/238
 [i239]: https://github.com/threema-ch/threema-web/issues/239
 [i256]: https://github.com/threema-ch/threema-web/issues/256
+[i261]: https://github.com/threema-ch/threema-web/issues/261
+[i264]: https://github.com/threema-ch/threema-web/issues/264
+[i265]: https://github.com/threema-ch/threema-web/issues/265
 
+[v1.4.0]: https://github.com/threema-ch/threema-web/compare/v1.3.1...v1.4.0
 [v1.3.1]: https://github.com/threema-ch/threema-web/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/threema-ch/threema-web/compare/v1.2.1...v1.3.0
 [v1.2.1]: https://github.com/threema-ch/threema-web/compare/v1.2.0...v1.2.1
