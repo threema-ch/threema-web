@@ -6,6 +6,13 @@
     &.with-percent {
         top: -18px;
     }
+    
+    md-icon {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
 
     md-icon, span {
         width: 24px;
