@@ -20,7 +20,8 @@
                 aria-label="group name"
                 translate-attr="{'aria-label': 'messenger.GROUP_NAME'}"
                 ng-model="ctrl.controllerModel.name"
-                ng-disabled="ctrl.isSaving()">
+                ng-disabled="ctrl.isSaving()"
+                ng-keypress="ctrl.keypress($event)">
         </md-input-container>
     </md-card-content>
 </md-card>

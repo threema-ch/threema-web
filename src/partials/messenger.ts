@@ -1127,6 +1127,12 @@ class ReceiverEditController {
         this.execute = new ExecuteService($log, $timeout, 1000);
     }
 
+    public keypress($event: KeyboardEvent): void {
+        if ($event.key === 'Enter' && this.controllerModel.isValid()) {
+            this.save();
+        }
+    }
+
     public save(): void {
 
         // show loading
@@ -1239,6 +1245,12 @@ class ReceiverCreateController {
                 .textContent(this.$translate.instant('validationError.createReceiver.' + errorCode))
                 .ok(this.$translate.instant('common.OK')),
         );
+    }
+
+    public keypress($event: KeyboardEvent): void {
+        if ($event.key === 'Enter' && this.controllerModel.isValid()) {
+            this.create();
+        }
     }
 
     public create(): void {

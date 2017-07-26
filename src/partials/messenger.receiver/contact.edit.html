@@ -15,12 +15,12 @@
 	<md-card-content>
 		<md-input-container class="md-block" ng-if="ctrl.controllerModel.access.canChangeFirstName">
 			<label>{{ctrl.controllerModel.firstNameLabel}}</label>
-			<input ng-disabled="ctrl.isSaving()" ng-model="ctrl.controllerModel.firstName">
+			<input ng-disabled="ctrl.isSaving()" ng-model="ctrl.controllerModel.firstName" ng-keypress="ctrl.keypress($event)">
 		</md-input-container>
 
 		<md-input-container class="md-block" ng-if="ctrl.controllerModel.access.canChangeLastName">
 			<label translate>messenger.LAST_NAME</label>
-			<input ng-disabled="ctrl.isSaving()" ng-model="ctrl.controllerModel.lastName">
+			<input ng-disabled="ctrl.isSaving()" ng-model="ctrl.controllerModel.lastName" ng-keypress="ctrl.keypress($event)">
 		</md-input-container>
 	</md-card-content>
 </md-card>
