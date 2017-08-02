@@ -13,3 +13,15 @@ $bright-background-color: white;
 $material-card-shadow: 0px 2px 5px 0px rgba(0,0,0,0.16),0px 2px 5px 0px rgba(0,0,0,0.23);
 
 $active-placeholder-color: lightgray;
+
+.color-status-ok {
+    color: $status-ok;
+}
+
+.color-status-warning {
+    color: $status-warning;
+}
+
+.color-status-error {
+    color: $status-error;
+}

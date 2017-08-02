@@ -76,6 +76,7 @@ export default [
                 this.showMedia = this.message.type !== 'text';
                 this.showState = messageService.showStatusIcon(this.message as threema.Message, this.receiver);
                 this.showQuote = this.message.quote !== undefined;
+                this.showVoipInfo = this.message.type === 'voipStatus';
 
                 this.access = messageService.getAccess(this.message, this.receiver);
 
