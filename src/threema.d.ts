@@ -392,6 +392,7 @@ declare namespace threema {
         ICE_SERVERS: RTCIceServer[];
         PUSH_URL: string;
         MSG_DEBUGGING: boolean;
+        ICE_DEBUGGING: boolean;
     }
 
     interface InitialConversationData {

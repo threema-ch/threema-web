@@ -29,7 +29,8 @@ export default {
     // Push
     PUSH_URL: 'https://push-web.threema.ch/push',
 
-    // Message debugging
+    // Debugging options
     MSG_DEBUGGING: false,
+    ICE_DEBUGGING: false,
 
 } as threema.Config;

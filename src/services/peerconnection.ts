@@ -44,10 +44,14 @@ export class PeerConnectionHelper {
     // Internal callback when connection closes
     private onConnectionClosed: () => void = null;
 
+    // Debugging
+    private censorCandidates: boolean;
+
     constructor($log: ng.ILogService, $q: ng.IQService,
                 $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
                 webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
-                iceServers: RTCIceServer[]) {
+                iceServers: RTCIceServer[],
+                censorCandidates: boolean = true) {
         this.$log = $log;
         this.$log.info(this.logTag, 'Initialize WebRTC PeerConnection');
         this.$log.debug(this.logTag, 'ICE servers used:', [].concat(...iceServers.map((c) => c.urls)).join(', '));
@@ -56,6 +60,8 @@ export class PeerConnectionHelper {
         this.$rootScope = $rootScope;
 
         this.webrtcTask = webrtcTask;
+
+        this.censorCandidates = censorCandidates;
 
         // Set up peer connection
         this.pc = new RTCPeerConnection({iceServers: iceServers});
@@ -98,7 +104,7 @@ export class PeerConnectionHelper {
         this.pc.onicecandidate = (e: RTCPeerConnectionIceEvent) => {
             if (e.candidate) {
                 this.$log.debug(this.logTag, 'Gathered local ICE candidate:',
-                    PeerConnectionHelper.censorCandidate(e.candidate.candidate));
+                    this.censorCandidate(e.candidate.candidate));
                 this.webrtcTask.sendCandidate({
                     candidate: e.candidate.candidate,
                     sdpMid: e.candidate.sdpMid,
@@ -143,7 +149,7 @@ export class PeerConnectionHelper {
             for (let candidateInit of e.data) {
                 if (candidateInit) {
                     this.$log.debug(this.logTag, 'Adding remote ICE candidate:',
-                        PeerConnectionHelper.censorCandidate(candidateInit.candidate));
+                        this.censorCandidate(candidateInit.candidate));
                 } else {
                     this.$log.debug(this.logTag, 'No more remote ICE candidates');
                 }
@@ -247,18 +253,20 @@ export class PeerConnectionHelper {
     }
 
     /**
-     * Censor an ICE candidate's address and port.
+     * Censor an ICE candidate's address and port (unless censoring is disabled).
      *
      * Return the censored ICE candidate.
      */
-    private static censorCandidate(candidateInit: string): string {
+    private censorCandidate(candidateInit: string): string {
         let candidate = SDPUtils.parseCandidate(candidateInit);
-        if (candidate.type !== 'relay') {
-            candidate.ip = '***';
-            candidate.port = 1;
+        if (this.censorCandidates) {
+            if (candidate.type !== 'relay') {
+                candidate.ip = '***';
+                candidate.port = 1;
+            }
+            candidate.relatedAddress = '***';
+            candidate.relatedPort = 2;
         }
-        candidate.relatedAddress = '***';
-        candidate.relatedPort = 2;
         return SDPUtils.writeCandidate(candidate);
     }
 }

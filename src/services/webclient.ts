@@ -404,7 +404,8 @@ export class WebClientService {
 
             this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
                                                      this.$rootScope, this.webrtcTask,
-                                                     this.config.ICE_SERVERS);
+                                                     this.config.ICE_SERVERS,
+                                                     !this.config.ICE_DEBUGGING);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
