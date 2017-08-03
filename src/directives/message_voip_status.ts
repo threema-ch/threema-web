@@ -34,27 +34,27 @@ export default [
                 this.outgoing = this.message.isOutbox;
             }],
             template: `
-                <p ng-if="ctrl.status == 1">
+                <p ng-if="ctrl.status === 1">
                     <md-icon class="material-icons color-status-warning">call_missed</md-icon>
                     <span translate>voip.CALL_MISSED</span>
                 </p>
-                <p ng-if="ctrl.status == 2 && ctrl.incoming">
+                <p ng-if="ctrl.status === 2 && ctrl.incoming">
                     <md-icon class="material-icons color-status-ok">call_received</md-icon>
                     <span translate>voip.CALL_FINISHED_IN</span>
                 </p>
-                <p ng-if="ctrl.status == 2 && ctrl.outgoing">
+                <p ng-if="ctrl.status === 2 && ctrl.outgoing">
                     <md-icon class="material-icons color-status-ok">call_made</md-icon>
                     <span translate>voip.CALL_FINISHED_OUT</span>
                 </p>
-                <p ng-if="ctrl.status == 3 && ctrl.incoming">
+                <p ng-if="ctrl.status === 3 && ctrl.incoming">
                     <md-icon class="material-icons color-status-error">call_missed</md-icon>
                     <span translate>voip.CALL_REJECTED</span>
                 </p>
-                <p ng-if="ctrl.status == 3 && ctrl.outgoing">
+                <p ng-if="ctrl.status === 3 && ctrl.outgoing">
                     <md-icon class="material-icons color-status-error">call_missed_outgoing</md-icon>
                     <span translate>voip.CALL_REJECTED</span>
                 </p>
-                <p ng-if="ctrl.status == 4">
+                <p ng-if="ctrl.status === 4">
                     <md-icon class="material-icons color-status-warning">call_missed_outgoing</md-icon>
                     <span translate>voip.CALL_ABORTED</span>
                 </p>
