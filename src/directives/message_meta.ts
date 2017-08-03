@@ -31,17 +31,20 @@ export default [
                 this.type = msg.type;
                 this.isGif = msg.file !== undefined && msg.file.type === 'image/gif';
 
-                // For audio or video, retrieve the duration
+                // For audio, video or voip call, retrieve the duration
                 this.duration = null;
                 if (this.message.audio !== undefined) {
                     this.duration = this.message.audio.duration;
                 } else if (this.message.video !== undefined) {
                     this.duration = this.message.video.duration;
+                } else if (this.message.voip !== undefined && this.message.voip.duration) {
+                    this.duration = this.message.voip.duration;
                 }
             }],
             template: `
                 <span ng-if="ctrl.isGif" class="message-meta-item">GIF</span>
                 <span ng-if="ctrl.duration" class="message-meta-item message-duration">
+                    <md-icon class="material-icons">av_timer</md-icon>
                     {{ctrl.duration | duration}}
                 </span>
             `,

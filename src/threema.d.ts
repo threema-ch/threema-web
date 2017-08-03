@@ -42,7 +42,7 @@ declare namespace threema {
         data?: any;
     }
 
-    type MessageType = 'text' | 'image' | 'video' | 'audio' | 'location' | 'status' | 'ballot' | 'file';
+    type MessageType = 'text' | 'image' | 'video' | 'audio' | 'location' | 'status' | 'ballot' | 'file' | 'voipStatus';
     type MessageState = 'delivered' | 'read' | 'send-failed' | 'sent' | 'user-ack' | 'user-dec' | 'pending' | 'sending';
     type InitializationStep = 'client info' | 'conversations' | 'receivers';
 

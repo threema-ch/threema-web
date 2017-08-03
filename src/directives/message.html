@@ -27,6 +27,12 @@
             eee-receiver="ctrl.receiver">
         </eee-message-media>
 
+        <eee-message-voip-status
+            ng-if="ctrl.showVoipInfo"
+            class="message-voip-status"
+            eee-message="ctrl.message">
+        </eee-message-voip-status>
+
         <eee-message-quote
             ng-if="ctrl.showQuote"
             class="message-quote"
