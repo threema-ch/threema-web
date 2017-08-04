@@ -41,7 +41,7 @@ export class TitleService {
 
     private update(): void {
         if (this.unreadCount > 0) {
-            this.title = `${this.DEFAULT_TITLE} (${this.unreadCount})`;
+            this.title = `(${this.unreadCount}) ${this.DEFAULT_TITLE}`;
         } else {
             this.title = this.DEFAULT_TITLE;
         }
