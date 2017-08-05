@@ -26,6 +26,7 @@ import {MediaboxService} from './services/mediabox';
 import {MessageService} from './services/message';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
+import {PeerConnectionStatsService} from './services/peerconnection_stats';
 import {PushService} from './services/push';
 import {QrCodeService} from './services/qrcode';
 import {ReceiverService} from './services/receiver';
@@ -47,6 +48,7 @@ angular.module('3ema.services', [])
 .service('FingerPrintService', FingerPrintService)
 .service('MessageService', MessageService)
 .service('NotificationService', NotificationService)
+.service('PeerConnectionStatsService', PeerConnectionStatsService)
 .service('PushService', PushService)
 .service('QrCodeService', QrCodeService)
 .service('ReceiverService', ReceiverService)

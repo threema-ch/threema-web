@@ -25,6 +25,7 @@ import {MessageService} from './message';
 import {MimeService} from './mime';
 import {NotificationService} from './notification';
 import {PeerConnectionHelper} from './peerconnection';
+import {PeerConnectionStatsService} from './peerconnection_stats';
 import {PushService} from './push';
 import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
@@ -134,6 +135,7 @@ export class WebClientService {
     private $window: ng.IWindowService;
     private $translate: ng.translate.ITranslateService;
     private $filter: any;
+    private $interval: ng.IIntervalService;
     private $timeout: ng.ITimeoutService;
 
     // Custom services
@@ -143,6 +145,7 @@ export class WebClientService {
     private messageService: MessageService;
     private mimeService: MimeService;
     private notificationService: NotificationService;
+    private peerConnectionStatsService: PeerConnectionStatsService;
     private pushService: PushService;
     private qrCodeService: QrCodeService;
     private receiverService: ReceiverService;
@@ -195,11 +198,11 @@ export class WebClientService {
     private requestPromises: Map<string, threema.PromiseCallbacks> = new Map();
 
     public static $inject = [
-        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout',
+        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$interval', '$timeout',
         'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'FingerPrintService', 'QrCodeService', 'MimeService', 'ReceiverService',
-        'VersionService', 'BatteryStatusService',
+        'VersionService', 'BatteryStatusService', 'PeerConnectionStatsService',
         'CONFIG',
     ];
     constructor($log: ng.ILogService,
@@ -209,6 +212,7 @@ export class WebClientService {
                 $window: ng.IWindowService,
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,
+                $interval: ng.IIntervalService,
                 $timeout: ng.ITimeoutService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
@@ -224,6 +228,7 @@ export class WebClientService {
                 receiverService: ReceiverService,
                 versionService: VersionService,
                 batteryStatusService: BatteryStatusService,
+                peerConnectionStatsService: PeerConnectionStatsService,
                 CONFIG: threema.Config) {
 
         // Angular services
@@ -234,6 +239,7 @@ export class WebClientService {
         this.$window = $window;
         this.$translate = $translate;
         this.$filter = $filter;
+        this.$interval = $interval;
         this.$timeout = $timeout;
 
         // Own services
@@ -243,6 +249,7 @@ export class WebClientService {
         this.messageService = messageService;
         this.mimeService = mimeService;
         this.notificationService = notificationService;
+        this.peerConnectionStatsService = peerConnectionStatsService;
         this.pushService = pushService;
         this.qrCodeService = qrCodeService;
         this.receiverService = receiverService;
@@ -402,8 +409,9 @@ export class WebClientService {
                 this.skipIceTls();
             }
 
-            this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
-                                                     this.$rootScope, this.webrtcTask,
+            this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$interval, this.$timeout,
+                                                     this.$rootScope, this.peerConnectionStatsService,
+                                                     this.webrtcTask,
                                                      this.config.ICE_SERVERS,
                                                      !this.config.ICE_DEBUGGING);
 

@@ -17,6 +17,8 @@
 
 /// <reference types="saltyrtc-task-webrtc" />
 import * as SDPUtils from 'sdp';
+import {PeerConnectionStatsService} from './peerconnection_stats';
+import {isNullOrUndefined} from "util";
 
 /**
  * Wrapper around the WebRTC PeerConnection.
@@ -25,17 +27,24 @@ import * as SDPUtils from 'sdp';
  */
 export class PeerConnectionHelper {
 
+    private static SELECTED_CANDIDATE_PAIR_STATS_INTERVAL = 10000; // in milliseconds
+
     private logTag: string = '[PeerConnectionHelper]';
 
     // Angular services
     private $log: ng.ILogService;
     private $q: ng.IQService;
+    private $interval: ng.IIntervalService;
     private $timeout: ng.ITimeoutService;
     private $rootScope: ng.IRootScopeService;
 
     // WebRTC
     private pc: RTCPeerConnection;
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask;
+
+    // Stats service & related attributes
+    private statsService: PeerConnectionStatsService;
+    private selectedCandidatePairStatsTimer: ng.IPromise<any>;
 
     // Calculated connection state
     public connectionState: threema.RTCConnectionState = 'new';
@@ -48,7 +57,8 @@ export class PeerConnectionHelper {
     private censorCandidates: boolean;
 
     constructor($log: ng.ILogService, $q: ng.IQService,
-                $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
+                $interval: ng.IIntervalService, $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
+                statsService: PeerConnectionStatsService,
                 webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
                 iceServers: RTCIceServer[],
                 censorCandidates: boolean = true) {
@@ -56,9 +66,11 @@ export class PeerConnectionHelper {
         this.$log.info(this.logTag, 'Initialize WebRTC PeerConnection');
         this.$log.debug(this.logTag, 'ICE servers used:', [].concat(...iceServers.map((c) => c.urls)).join(', '));
         this.$q = $q;
+        this.$interval = $interval;
         this.$timeout = $timeout;
         this.$rootScope = $rootScope;
 
+        this.statsService = statsService;
         this.webrtcTask = webrtcTask;
 
         this.censorCandidates = censorCandidates;
@@ -87,6 +99,7 @@ export class PeerConnectionHelper {
         this.pc.ondatachannel = (e: RTCDataChannelEvent) => {
             $log.debug(this.logTag, 'New data channel was created:', e.channel.label);
         };
+        window['pc'] = this;
     }
 
     /**
@@ -122,18 +135,22 @@ export class PeerConnectionHelper {
             this.$rootScope.$apply(() => {
                 switch (this.pc.iceConnectionState) {
                     case 'new':
+                        this.requestSelectedCandidatePairStats();
                         this.setConnectionState('new');
                         break;
                     case 'checking':
                     case 'disconnected':
+                        this.requestSelectedCandidatePairStats();
                         this.setConnectionState('connecting');
                         break;
                     case 'connected':
                     case 'completed':
+                        this.requestSelectedCandidatePairStats();
                         this.setConnectionState('connected');
                         break;
                     case 'failed':
                     case 'closed':
+                        this.clearSelectedCandidatePairStats();
                         this.setConnectionState('disconnected');
                         break;
                     default:
@@ -249,6 +266,72 @@ export class PeerConnectionHelper {
             } else {
                 resolve();
             }
+        });
+    }
+
+    /**
+     * Request updating the selected candidate pair and queue further updates.
+     * Will update the internally stored stats service.
+     */
+    private requestSelectedCandidatePairStats(): void {
+        // Query updating selected now
+        this.getSelectedCandidatePairStats();
+
+        // Start timer (if not already started)
+        if (isNullOrUndefined(this.selectedCandidatePairStatsTimer)) {
+            this.selectedCandidatePairStatsTimer = this.$interval(() => {
+                this.getSelectedCandidatePairStats();
+            }, PeerConnectionHelper.SELECTED_CANDIDATE_PAIR_STATS_INTERVAL);
+        }
+    }
+
+    /**
+     * Stop the timer to query the selected candidate pair stats.
+     */
+    private clearSelectedCandidatePairStats(): void {
+        // Stop timer (if already started)
+        if (!isNullOrUndefined(this.selectedCandidatePairStatsTimer)) {
+            this.$interval.cancel(this.selectedCandidatePairStatsTimer);
+            this.selectedCandidatePairStatsTimer = null;
+        }
+
+        // Clear selected pair
+        this.statsService.setSelectedCandidatePair(null);
+    }
+
+    private getSelectedCandidatePairStats(): void {
+        this.peerConnection.getStats().then((report: RTCStatsReport) => {
+            let selectedCandidatePair = null;
+
+            // TODO: get and values is not defined for RTCStatsReport although it should be
+            for (let stats of report['values']()) {
+                let pair: RTCIceCandidatePairStats = null;
+                if (stats.type === 'transport') {
+                    pair = report['get'](stats.selectedCandidatePairId);
+                }
+
+                // As not all implementations have a 'transport' stats object (looking at you, Firefox), we need to
+                // look at candidate pairs which could have a proprietary element 'selected'.
+                if (stats.type === 'candidate-pair' && stats.selected) {
+                    pair = stats;
+                }
+
+                if (pair) {
+                    const local = report['get'](pair.localCandidateId);
+                    const remote = report['get'](pair.remoteCandidateId);
+                    if (local && remote) {
+                        selectedCandidatePair = [pair, local, remote];
+                    }
+                    break
+                }
+            }
+
+            // Update pair
+            this.$rootScope.$apply(() => {
+                this.statsService.setSelectedCandidatePair(selectedCandidatePair);
+            });
+        }).catch((reason) => {
+            console.warn('Unable to retrieve peer connection stats, reason:', reason);
         });
     }
 

@@ -1,0 +1,26 @@
+.connection-type {
+    position: relative;
+    top: -12px;
+    right: 64px;
+    
+    md-icon {
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
+        position: absolute;
+        top: 1px;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+        cursor: default;
+
+        &.direct {
+            color: $material-green-200 !important;
+        }
+
+        &.relayed {
+            color: $material-amber-200 !important;
+        }
+    }
+}
