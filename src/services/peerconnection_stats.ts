@@ -50,10 +50,10 @@ export class PeerConnectionStatsService {
             return CandidatePairConnectionType.NONE;
         }
         const [pair, local, remote] = this.selectedCandidatePair;
-        if (local.candidateType !== 'relay' && remote.candidateType !== 'relay') {
-            return CandidatePairConnectionType.DIRECT;
-        } else {
+        if (local.candidateType === 'relay' || remote.candidateType === 'relay') {
             return CandidatePairConnectionType.RELAYED;
+        } else {
+            return CandidatePairConnectionType.DIRECT;
         }
     }
 }
