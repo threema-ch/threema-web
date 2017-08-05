@@ -21,7 +21,7 @@ export default [
     '$rootScope',
     'PeerConnectionStatsService',
     function($rootScope: ng.IRootScopeService,
-              peerConnectionStatsService: PeerConnectionStatsService) {
+             peerConnectionStatsService: PeerConnectionStatsService) {
         return {
             restrict: 'E',
             scope: {},
@@ -29,8 +29,14 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.available = () => peerConnectionStatsService.haveSelectedCandidatePair;
-                this.isDirect = () => peerConnectionStatsService.selectedCandidatePairConnectionType == CandidatePairConnectionType.DIRECT;
-                this.isRelayed = () => peerConnectionStatsService.selectedCandidatePairConnectionType == CandidatePairConnectionType.RELAYED;
+                this.isDirect = () => {
+                    return peerConnectionStatsService.selectedCandidatePairConnectionType
+                        === CandidatePairConnectionType.DIRECT;
+                };
+                this.isRelayed = () => {
+                    return peerConnectionStatsService.selectedCandidatePairConnectionType
+                        === CandidatePairConnectionType.RELAYED;
+                };
             }],
             template: `
                 <div class="connection-type">

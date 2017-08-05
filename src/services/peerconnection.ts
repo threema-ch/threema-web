@@ -17,8 +17,8 @@
 
 /// <reference types="saltyrtc-task-webrtc" />
 import * as SDPUtils from 'sdp';
+import {isNullOrUndefined} from 'util';
 import {PeerConnectionStatsService} from './peerconnection_stats';
-import {isNullOrUndefined} from "util";
 
 /**
  * Wrapper around the WebRTC PeerConnection.
@@ -99,7 +99,6 @@ export class PeerConnectionHelper {
         this.pc.ondatachannel = (e: RTCDataChannelEvent) => {
             $log.debug(this.logTag, 'New data channel was created:', e.channel.label);
         };
-        window['pc'] = this;
     }
 
     /**
@@ -275,12 +274,12 @@ export class PeerConnectionHelper {
      */
     private requestSelectedCandidatePairStats(): void {
         // Query updating selected now
-        this.getSelectedCandidatePairStats();
+        this._getSelectedCandidatePairStats();
 
         // Start timer (if not already started)
         if (isNullOrUndefined(this.selectedCandidatePairStatsTimer)) {
             this.selectedCandidatePairStatsTimer = this.$interval(() => {
-                this.getSelectedCandidatePairStats();
+                this._getSelectedCandidatePairStats();
             }, PeerConnectionHelper.SELECTED_CANDIDATE_PAIR_STATS_INTERVAL);
         }
     }
@@ -299,15 +298,16 @@ export class PeerConnectionHelper {
         this.statsService.setSelectedCandidatePair(null);
     }
 
-    private getSelectedCandidatePairStats(): void {
-        this.peerConnection.getStats().then((report: RTCStatsReport) => {
+    private _getSelectedCandidatePairStats(): void {
+        // TODO: 'report' should be of type 'RTCStatsReport' but the methods 'get' and 'values' are not defined for
+        //       the types
+        this.peerConnection.getStats().then((report: any) => {
             let selectedCandidatePair = null;
 
-            // TODO: get and values is not defined for RTCStatsReport although it should be
-            for (let stats of report['values']()) {
+            for (let stats of report.values()) {
                 let pair: RTCIceCandidatePairStats = null;
                 if (stats.type === 'transport') {
-                    pair = report['get'](stats.selectedCandidatePairId);
+                    pair = report.get(stats.selectedCandidatePairId);
                 }
 
                 // As not all implementations have a 'transport' stats object (looking at you, Firefox), we need to
@@ -317,12 +317,12 @@ export class PeerConnectionHelper {
                 }
 
                 if (pair) {
-                    const local = report['get'](pair.localCandidateId);
-                    const remote = report['get'](pair.remoteCandidateId);
+                    const local = report.get(pair.localCandidateId);
+                    const remote = report.get(pair.remoteCandidateId);
                     if (local && remote) {
                         selectedCandidatePair = [pair, local, remote];
                     }
-                    break
+                    break;
                 }
             }
 
