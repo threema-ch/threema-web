@@ -187,7 +187,10 @@ export class WebClientService {
     public receiverListener: threema.ReceiverListener[] = [];
 
     // Msgpack
-    private msgpackOptions: msgpack.BufferOptions = {
+    private msgpackEncoderOptions: msgpack.EncoderOptions = {
+        codec: msgpack.createCodec({binarraybuffer: true}),
+    };
+    private msgpackDecoderOptions: msgpack.DecoderOptions = {
         codec: msgpack.createCodec({binarraybuffer: true}),
     };
 
@@ -2406,14 +2409,14 @@ export class WebClientService {
      * Encode an object using the msgpack format.
      */
     private msgpackEncode(data: any): Uint8Array {
-        return msgpack.encode(data, this.msgpackOptions);
+        return msgpack.encode(data, this.msgpackEncoderOptions);
     }
 
     /**
      * Decode an object using the msgpack format.
      */
     private msgpackDecode(bytes: Uint8Array): any {
-        return msgpack.decode(bytes, this.msgpackOptions);
+        return msgpack.decode(bytes, this.msgpackDecoderOptions);
     }
 
     /**
