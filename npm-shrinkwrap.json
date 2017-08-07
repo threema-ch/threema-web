@@ -48,9 +48,9 @@
       "integrity": "sha1-kX/mUwDbxsy9+n4u5RFZ+9Kddok="
     },
     "@types/msgpack-lite": {
-      "version": "0.1.1",
-      "resolved": "https://registry.npmjs.org/@types/msgpack-lite/-/msgpack-lite-0.1.1.tgz",
-      "integrity": "sha1-ues9bAoSdvBy6J/eSu+HHQPNXJE=",
+      "version": "0.1.4",
+      "resolved": "https://registry.npmjs.org/@types/msgpack-lite/-/msgpack-lite-0.1.4.tgz",
+      "integrity": "sha1-D/oSuwCPm4dl99Z3LBCbrziSXeU=",
       "requires": {
         "@types/node": "8.0.19"
       }
@@ -4126,8 +4126,7 @@
       "dev": true
     },
     "qrcode-generator": {
-      "version": "git://github.com/monospaced/bower-qrcode-generator.git#64e898f180fbd76aa2740be41124d219aa735f0c",
-      "integrity": "sha1-PN33qH/LtRFU3ilZKSNn4LXjRos="
+      "version": "git://github.com/monospaced/bower-qrcode-generator.git#64e898f180fbd76aa2740be41124d219aa735f0c"
     },
     "qs": {
       "version": "https://registry.npmjs.org/qs/-/qs-6.4.0.tgz",
