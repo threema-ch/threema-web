@@ -1,6 +1,6 @@
 {
   "name": "threema-web",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -4126,7 +4126,8 @@
       "dev": true
     },
     "qrcode-generator": {
-      "version": "git://github.com/monospaced/bower-qrcode-generator.git#64e898f180fbd76aa2740be41124d219aa735f0c"
+      "version": "git://github.com/monospaced/bower-qrcode-generator.git#64e898f180fbd76aa2740be41124d219aa735f0c",
+      "integrity": "sha1-PN33qH/LtRFU3ilZKSNn4LXjRos="
     },
     "qs": {
       "version": "https://registry.npmjs.org/qs/-/qs-6.4.0.tgz",

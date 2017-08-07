@@ -3,6 +3,20 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.4.1][v1.4.1] (2017-08-07)
+
+Changes:
+
+* [feature] Implement display of VoIP message types ([#282][i282])
+* [feature] Make it possible to save new contacts / groups / distribution lists
+  with enter key ([#271][i271])
+* [change] Make battery icon unselectable ([#275][i275])
+
+Contributors:
+
+- [@IndianaDschones][@IndianaDschones]
+- [@rugk][@rugk]
+
 ### [v1.4.0][v1.4.0] (2017-07-20)
 
 Changes:
@@ -77,8 +91,8 @@ Changes:
 
 Contributors:
 
-- [@IndianaDschones][@IndianaDschones]
-- [@FloThinksPi][@FloThinksPi]
+* [@IndianaDschones][@IndianaDschones]
+* [@FloThinksPi][@FloThinksPi]
 
 ### [v1.0.5][v1.0.5] (2017-03-03)
 
@@ -121,8 +135,8 @@ Changes:
 
 Contributors:
 
-- [@thommy101][@thommy101]
-- [@lgrahl][@lgrahl]
+* [@thommy101][@thommy101]
+* [@lgrahl][@lgrahl]
 
 
 ### [v1.0.2][v1.0.2] (2017-02-21)
@@ -140,9 +154,9 @@ Changes:
 
 Contributors:
 
-- [@rugk][@rugk]
-- [@Mic92][@Mic92]
-- [@freddyb][@freddyb]
+* [@rugk][@rugk]
+* [@Mic92][@Mic92]
+* [@freddyb][@freddyb]
 
 
 ### v1.0.1 (2017-02-15)
@@ -219,7 +233,11 @@ First public release.
 [i261]: https://github.com/threema-ch/threema-web/issues/261
 [i264]: https://github.com/threema-ch/threema-web/issues/264
 [i265]: https://github.com/threema-ch/threema-web/issues/265
+[i271]: https://github.com/threema-ch/threema-web/issues/271
+[i275]: https://github.com/threema-ch/threema-web/issues/275
+[i282]: https://github.com/threema-ch/threema-web/issues/282
 
+[v1.4.1]: https://github.com/threema-ch/threema-web/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/threema-ch/threema-web/compare/v1.3.1...v1.4.0
 [v1.3.1]: https://github.com/threema-ch/threema-web/compare/v1.3.0...v1.3.1
 [v1.3.0]: https://github.com/threema-ch/threema-web/compare/v1.2.1...v1.3.0
