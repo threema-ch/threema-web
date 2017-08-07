@@ -4,7 +4,8 @@
 			<label translate>messenger.ADD_CONTACT_THREEMA_ID</label>
 			<input class="threema-id"  minlength="8" ng-maxlength="8" maxlength="8" required md-no-asterisk
 			       ng-model="ctrl.controllerModel.identity"
-			       ng-disabled="ctrl.isSaving()">
+			       ng-disabled="ctrl.isSaving()"
+				   ng-keypress="ctrl.keypress($event)">
 		</md-input-container>
 	</md-card-content>
 </md-card>
