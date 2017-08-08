@@ -79,7 +79,6 @@ export default [
                     && this.message.type !== 'text'
                     && this.message.type !== 'status';
 
-
                 this.getDraft = () => {
                     return webClientService.getDraft(this.receiver);
                 };
