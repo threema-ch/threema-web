@@ -49,8 +49,9 @@ export default [
                 this.isDistributionList = !this.isGroup
                     &&  this.type as threema.ReceiverType === 'distributionList';
 
-                this.defaultStatusIcon = (this.message as threema.Message).type === 'voipStatus' ?
-                    'phone_locked' :
+                this.showVoipInfo = (this.message as threema.Message).type === 'voipStatus';
+
+                this.defaultStatusIcon = this.showVoipInfo ? 'phone_locked' :
                     (this.isGroup ? 'group' : (this.isDistributionList ? 'forum' : null));
 
                 // Find sender of latest message in group chats
@@ -78,7 +79,6 @@ export default [
                     && this.message.type !== 'text'
                     && this.message.type !== 'status';
 
-                this.showVoipInfo = this.message.type === 'voipStatus';
 
                 this.getDraft = () => {
                     return webClientService.getDraft(this.receiver);
