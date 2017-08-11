@@ -147,7 +147,8 @@
         "PRIVATE_CHAT_DESCRIPTION": "Private Unterhaltungen werden in Threema Web nicht unterstützt.",
         "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Nachricht aufteilen.",
         "MESSAGE_TOO_LONG_SPLIT_BODY": "Es werden maximal {max} Zeichen pro Nachricht unterstützt, wollen Sie die Nachricht in {count} separate Nachrichten aufteilen?",
-        "BALLOT_MESSAGES_NOT_SUPPORTED": "Umfragen werden in Threema Web derzeit nicht untersützt."
+        "BALLOT_MESSAGES_NOT_SUPPORTED": "Umfragen werden in Threema Web derzeit nicht untersützt.",
+        "NICKNAME": "Nickname"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
