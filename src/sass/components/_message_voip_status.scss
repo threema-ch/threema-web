@@ -1,0 +1,10 @@
+eee-message-voip-status {
+    > p {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        md-icon {
+            margin-right: $main-padding/2;
+        }
+  }
+}
