@@ -47,9 +47,10 @@ export default [
 
                 this.isGroup = this.type as threema.ReceiverType === 'group';
                 this.isDistributionList = !this.isGroup
-                    &&  this.type as threema.ReceiverType === 'distributionList';
+                    && this.type as threema.ReceiverType === 'distributionList';
 
-                this.showVoipInfo = (this.message as threema.Message).type === 'voipStatus';
+                this.showVoipInfo = this.message
+                    && (this.message as threema.Message).type === 'voipStatus';
 
                 this.defaultStatusIcon = this.showVoipInfo ? 'phone_locked' :
                     (this.isGroup ? 'group' : (this.isDistributionList ? 'forum' : null));
