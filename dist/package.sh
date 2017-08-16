@@ -56,9 +56,9 @@ targets=(
     tweetnacl/nacl-fast.min.js
     file-saver/FileSaver.min.js
     js-sha256/build/sha256.min.js
-    chunked-dc/dist/chunked-dc.es5.js
-    saltyrtc-client/dist/saltyrtc-client.es5.js
-    saltyrtc-task-webrtc/dist/saltyrtc-task-webrtc.es5.js
+    @saltyrtc/chunked-dc/dist/chunked-dc.es5.js
+    @saltyrtc/client/dist/saltyrtc-client.es5.js
+    @saltyrtc/task-webrtc/dist/saltyrtc-task-webrtc.es5.js
     webrtc-adapter/out/adapter_no_edge.js
     webrtc-adapter/out/adapter.js
     qrcode-generator/js/qrcode.js
