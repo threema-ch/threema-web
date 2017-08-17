@@ -30,13 +30,12 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.contact = webClientService.contacts.get(this.quote.identity);
-                this.text = this.quote.text;
+                this.contact = () => webClientService.contacts.get(this.quote.identity);
             }],
             template: `
-                <div class="message-quote-content" ng-style="{'border-color': ctrl.contact.color}">
-                    <span class="message-name" ng-style="{'color': ctrl.contact.color}">{{ ctrl.contact.displayName }}</span>
-                    <span class="message-quote" ng-bind-html="ctrl.text | escapeHtml | markify | emojify | linkify | nlToBr"></span>
+                <div class="message-quote-content" ng-style="{'border-color': ctrl.contact().color}">
+                    <span class="message-name" ng-style="{'color': ctrl.contact().color}">{{ ctrl.contact().displayName }}</span>
+                    <span class="message-quote" ng-bind-html="ctrl.quote.text | escapeHtml | markify | emojify | linkify | nlToBr"></span>
                 </div>
             `,
         };

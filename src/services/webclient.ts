@@ -1253,9 +1253,10 @@ export class WebClientService {
      * Set or remove (if message is null) a quoted message model.
      */
     public setQuote(receiver: threema.Receiver, message: threema.Message = null): void {
-        if (message === null) {
-            this.drafts.removeQuote(receiver);
-        } else {
+        // Remove current quote
+        this.drafts.removeQuote(receiver);
+
+        if (message !== null) {
             let quoteText;
             switch (message.type) {
                 case 'text':
@@ -1276,7 +1277,7 @@ export class WebClientService {
                 this.drafts.setQuote(receiver, {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
                     text: quoteText,
-                });
+                } as threema.Quote);
             }
         }
     }
