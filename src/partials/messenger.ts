@@ -386,7 +386,7 @@ class ConversationController {
     }
 
     public cancelQuoting(): void {
-        // clear curren quote
+        // Clear current quote
         this.webClientService.setQuote(this.receiver);
     }
 
