@@ -1,33 +1,34 @@
 <md-card>
-	<md-card-title>
-		<md-card-title-text>
-			<span class="md-headline" translate>messenger.DISTRIBUTION_LIST_NAME</span>
-		</md-card-title-text>
-	</md-card-title>
-	<md-card-content>
-		<md-input-container class="md-block" >
-			<input
-					aria-label="group name"
-					translate-attr="{'aria-label': 'messenger.DISTRIBUTION_LIST_NAME'}"
-					ng-model="ctrl.controllerModel.name"
-					ng-disabled="ctrl.isSaving()"
-					ng-keypress="ctrl.keypress($event)">
-		</md-input-container>
-	</md-card-content>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline" translate>messenger.DISTRIBUTION_LIST_NAME</span>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <md-input-container class="md-block" >
+            <input
+                    aria-label="group name"
+                    translate-attr="{'aria-label': 'messenger.DISTRIBUTION_LIST_NAME'}"
+                    ng-model="ctrl.controllerModel.name"
+                    ng-disabled="ctrl.isSaving()"
+                    ng-keypress="ctrl.keypress($event)"
+                    autofocus>
+        </md-input-container>
+    </md-card-content>
 </md-card>
 <md-card>
-	<md-card-title>
-		<md-card-title-text>
-			<span class="md-headline" translate>messenger.DISTRIBUTION_LIST_MEMBERS</span>
-		</md-card-title-text>
-	</md-card-title>
-	<md-card-content>
-		<ul class="member-list">
-			<member-list-editor
-					eee-members="ctrl.controllerModel.members",
-					eee-placeholder="ctrl.controllerModel.addContactPlaceholder"
-					eee-on-change="ctrl.controllerModel.onChangeMembers" />
-		</ul>
-	</md-card-content>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline" translate>messenger.DISTRIBUTION_LIST_MEMBERS</span>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <ul class="member-list">
+            <member-list-editor
+                    eee-members="ctrl.controllerModel.members",
+                    eee-placeholder="ctrl.controllerModel.addContactPlaceholder"
+                    eee-on-change="ctrl.controllerModel.onChangeMembers" />
+        </ul>
+    </md-card-content>
 </md-card>
 
