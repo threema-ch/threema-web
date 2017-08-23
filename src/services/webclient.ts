@@ -429,7 +429,7 @@ export class WebClientService {
         // Handle a disconnect request
         this.salty.on('application', (applicationData: any) => {
             if (applicationData.data.type === 'disconnect') {
-                this.$log.debug('Disconnecting requested');
+                this.$log.debug(this.logTag, 'Disconnecting requested');
                 const deleteStoredData = applicationData.data.forget === true;
                 const resetPush = true;
                 const redirect = true;
@@ -577,7 +577,7 @@ export class WebClientService {
                 deleteStoredData: boolean = false,
                 resetPush: boolean = true,
                 redirect: boolean = false): void {
-        this.$log.info('Disconnecting...');
+        this.$log.info(this.logTag, 'Disconnecting...');
 
         if (requestedByUs && this.stateService.rtcConnectionState === 'connected') {
             // Ask peer to disconnect too
@@ -601,13 +601,13 @@ export class WebClientService {
 
         // Close data channel
         if (this.secureDataChannel !== null) {
-            this.$log.debug('Closing secure datachannel');
+            this.$log.debug(this.logTag, 'Closing secure datachannel');
             this.secureDataChannel.close();
         }
 
         // Close SaltyRTC connection
         if (this.salty !== null) {
-            this.$log.debug('Closing signaling');
+            this.$log.debug(this.logTag, 'Closing signaling');
             this.salty.disconnect();
         }
 
