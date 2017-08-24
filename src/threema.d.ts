@@ -176,6 +176,7 @@ declare namespace threema {
         publicKey: ArrayBuffer;
         systemContact?: SystemContact;
         access: ContactReceiverAccess;
+        isWork?: boolean;
     }
 
     /**

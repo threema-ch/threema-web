@@ -26,6 +26,8 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
+                const contact: threema.ContactReceiver = this.contact;
+
                 let label;
                 switch (parseInt(this.contact.verificationLevel, 10)) {
                     case 1:
@@ -34,7 +36,7 @@ export default [
                         break;
                     case 2:
                         this.cls = 'level2';
-                        if (this.contact.isWork) {
+                        if (contact.isWork) {
                             label = 'VERIFICATION_LEVEL2_WORK_EXPLAIN';
                         } else {
                             label = 'VERIFICATION_LEVEL2_EXPLAIN';
@@ -53,7 +55,7 @@ export default [
                     return;
                 }
 
-                if (this.contact.isWork) {
+                if (contact.isWork) {
                     // append work class
                     this.cls += ' work';
                 }
