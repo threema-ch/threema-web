@@ -1,7 +1,7 @@
 # Threema Web
 
 [![Build status](https://circleci.com/gh/threema-ch/threema-web.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/threema-ch/threema-web)
-[![License](https://img.shields.io/github/license/threema-ch/threema-web.svg)](https://github.com/threema-ch/threema-web/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://github.com/threema-ch/threema-web/blob/master/LICENSE.txt)
 
 Threema Web is a web client for Threema, a privacy-focussed end-to-end
 encrypted mobile messenger hosted and developed in Switzerland. With Threema
