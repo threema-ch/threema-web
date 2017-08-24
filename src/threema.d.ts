@@ -154,11 +154,22 @@ declare namespace threema {
      * of a certain type. The primary key for a receiver is the tuple (type, id).
      */
     interface Receiver extends BaseReceiver {
+        // The display name
         displayName: string;
+
+        // The color used for the avatar
         color: string;
-        avatar?: Avatar; // May be set if already fetched
+
+        // The avatar, may be set if already fetched
+        avatar?: Avatar;
+
+        // Permissions towards this receiver
         access: ReceiverAccess;
+
+        // Whether the chat with this receiver is locked.
         locked?: boolean;
+
+        // Whether the chat with this receiver is visible.
         visible?: boolean;
     }
 
@@ -166,16 +177,38 @@ declare namespace threema {
      * A contact.
      */
     interface ContactReceiver extends Receiver {
+        // Flag indicating whether this is the own profile or another contact
         type: 'contact' | 'me';
+
+        // Public nickname, if set
         publicNickname?: string;
+
+        // First name, if set
         firstName?: string;
+
+        // Last name, if set
         lastName?: string;
+
+        // Verification level integer (1-3)
         verificationLevel?: number;
-        state: string;
+
+        // Feature level (0-3)
         featureLevel: number | null;
+
+        // The identity state
+        state: 'ACTIVE' | 'INACTIVE';
+
+        // The Threema public key
         publicKey: ArrayBuffer;
+
+        // System confact information
         systemContact?: SystemContact;
+
+        // Permissions towards this contact
         access: ContactReceiverAccess;
+
+        // Whether this is a contact from the same Threema Work package.
+        // Only relevant for Threema Work users.
         isWork?: boolean;
     }
 
