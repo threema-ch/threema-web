@@ -8,8 +8,6 @@ Set variables:
 Update version numbers:
 
     $ vim -p package.json
-    $ rm npm-shrinkwrap.json
-    $ npm shrinkwrap
 
 Update changelog:
 
