@@ -210,6 +210,11 @@ declare namespace threema {
         // Whether this is a contact from the same Threema Work package.
         // Only relevant for Threema Work users.
         isWork?: boolean;
+
+        // The identity type.
+        // 0 - Regular Threema user.
+        // 1 - Threema Work user.
+        identityType?: number;
     }
 
     /**
