@@ -139,6 +139,11 @@ declare namespace threema {
         canChangeMembers?: boolean;
     }
 
+    const enum IdentityType {
+        Regular = 0,
+        Work
+    }
+
     /**
      * The base class for a receiver. Only type and id.
      */
@@ -214,7 +219,7 @@ declare namespace threema {
         // The identity type.
         // 0 - Regular Threema user.
         // 1 - Threema Work user.
-        identityType?: number;
+        identityType?: IdentityType;
     }
 
     /**

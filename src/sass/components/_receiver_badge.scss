@@ -1,14 +1,24 @@
 .md-autocomplete-suggestions{
     $avatar-size-in-autocomplete: 30px;
-  .receiver-badge {
-    .avatar-box {
-      max-height: $avatar-size-in-autocomplete;
-      img {
-        max-height: $avatar-size-in-autocomplete;
-        width: auto;
-      }
+    .receiver-badge {
+        .avatar-box {
+            height: $avatar-size-in-autocomplete;
+            img {
+                height: $avatar-size-in-autocomplete;
+                width: auto;
+            }
+            .work-indicator {
+                // Override configuration.
+                // This is a bit of a hack
+                $indicator-size: 12px;
+                top: $avatar-size-in-autocomplete - $indicator-size - 18px;
+                img {
+                    width: $indicator-size;
+                    height: $indicator-size;
+                }
+            }
+        }
     }
-  }
 }
 .receiver-badge {
   display: flex;

@@ -86,7 +86,6 @@ export default [
             template: `
                 <ul class="member-list">
                     <li>
-
                         <md-autocomplete
                                 md-no-cache="false"
                                 md-delay="200"
