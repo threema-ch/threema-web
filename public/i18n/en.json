@@ -149,6 +149,7 @@
         "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Split Message",
         "MESSAGE_TOO_LONG_SPLIT_BODY": "No more than {max} characters can be sent per message, do you want to split it into {count} separate messages?",
         "BALLOT_MESSAGES_NOT_SUPPORTED": "Ballot messages are not yet supported in Threema Web.",
+        "UNKNOWN_MESSAGE_TYPE": "Unknown message type",
         "NICKNAME": "Nickname",
         "THREEMA_WORK_CONTACT": "Threema Work user"
     },
