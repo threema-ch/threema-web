@@ -1,4 +1,10 @@
 .avatar {
+    position: relative;
+    > img {
+        width: 100%;
+    }
+
+    // Different resolutions
     &.avatar-low {
         > img {
             width: 48px;
@@ -11,9 +17,10 @@
         max-height: 540px;
     }
 
+    // Loading indicator
     &.is-loading {
-        //show default blured
         &.avatar-high {
+            // Show default blured
             > img {
                 filter: blur(40px);
                 border-radius: 0;
@@ -36,9 +43,16 @@
             top: calc(50% - #{$circle-diameter / 2});
         }
     }
-    > img {
-        width: 100%;
-    }
 
+    // Indicators depending on identity type (e.g. Work suitcase)
+    .work-indicator {
+        $indicator-size: 18px;
+        position: absolute;
+        top: 48px - $indicator-size;
+        img {
+            width: $indicator-size;
+            height: $indicator-size;
+        }
+    }
 
 }

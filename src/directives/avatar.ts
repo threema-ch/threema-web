@@ -96,11 +96,22 @@ export default [
                         loadingPromise = null;
                     }
                 };
+
+                this.showWorkIndicator = () => {
+                    return this.type === 'contact'
+                        && !this.highResolution
+                        && (this.receiver as threema.ContactReceiver).identityType === threema.IdentityType.Work;
+                };
             }],
             template: `
                 <div class="avatar" ng-class="ctrl.avatarClass()">
                     <div class="avatar-loading" ng-if="ctrl.isLoading">
                         <span></span>
+                    </div>
+                    <div class="work-indicator" ng-if="ctrl.showWorkIndicator()"
+                        translate-attr="{'aria-label': 'messenger.THREEMA_WORK_CONTACT',
+                            'title': 'messenger.THREEMA_WORK_CONTACT'}">
+                        <img src="img/ic_work_round.svg" alt="Threema Work user">
                     </div>
                     <img
                          ng-class="ctrl.avatarClass()"

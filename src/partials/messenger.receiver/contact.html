@@ -9,10 +9,17 @@
 		<md-card-content>
 			<dl class="key-values">
 				<dt>Threema ID</dt>
-				<dd>{{ctrl.receiver.id}}
-					<eee-verification-level
-							contact="ctrl.receiver">
-					</eee-verification-level></dd>
+				<dd>
+					<span class="complex-values">
+						<span>{{ctrl.receiver.id}}</span>
+						<span class="indicator-icon" ng-if="ctrl.isWorkReceiver"
+							  translate-attr="{'aria-label': 'messenger.THREEMA_WORK_CONTACT',
+								'title': 'messenger.THREEMA_WORK_CONTACT'}">
+								<img src="img/ic_work_round.svg" alt="Threema Work user">
+						</span>
+						<eee-verification-level contact="ctrl.receiver"></eee-verification-level>
+					</span>
+				</dd>
 
 				<dt><span translate>messenger.KEY_FINGERPRINT</span></dt>
 				<dd>{{ ctrl.fingerPrint }}</dd>
