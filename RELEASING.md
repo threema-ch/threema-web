@@ -8,6 +8,7 @@ Set variables:
 Update version numbers:
 
     $ vim -p package.json
+    $ npm install
 
 Update changelog:
 

@@ -3,6 +3,19 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.5.0][v1.5.0] (2017-08-29)
+
+* [feature] Mark Threema Work users with a suitcase icon ([#310][i310])
+* [feature] Show nickname for verified contacts and in contact details ([#296][i296])
+* [bug] Fix quote preview not updating when changing quote ([#281][i281])
+* [bug] Auto focus input field on creating a new receiver ([#289][i289])
+* [bug] Show voip status messages in the navigation view ([#291][i291])
+* [change] Put unread count in window title as first element ([#285][i285])
+
+Contributors:
+
+- [@IndianaDschones][@IndianaDschones]
+
 ### [v1.4.1][v1.4.1] (2017-08-07)
 
 Changes:
@@ -235,8 +248,15 @@ First public release.
 [i265]: https://github.com/threema-ch/threema-web/issues/265
 [i271]: https://github.com/threema-ch/threema-web/issues/271
 [i275]: https://github.com/threema-ch/threema-web/issues/275
+[i281]: https://github.com/threema-ch/threema-web/issues/281
 [i282]: https://github.com/threema-ch/threema-web/issues/282
+[i285]: https://github.com/threema-ch/threema-web/issues/285
+[i289]: https://github.com/threema-ch/threema-web/issues/289
+[i291]: https://github.com/threema-ch/threema-web/issues/291
+[i296]: https://github.com/threema-ch/threema-web/issues/296
+[i310]: https://github.com/threema-ch/threema-web/issues/310
 
+[v1.5.0]: https://github.com/threema-ch/threema-web/compare/v1.4.1...v1.5.0
 [v1.4.1]: https://github.com/threema-ch/threema-web/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/threema-ch/threema-web/compare/v1.3.1...v1.4.0
 [v1.3.1]: https://github.com/threema-ch/threema-web/compare/v1.3.0...v1.3.1
