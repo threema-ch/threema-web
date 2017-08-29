@@ -293,8 +293,27 @@ a.threema-action {
 
     dd {
         word-break: normal;
-        display: block;
         margin-bottom: $main-padding*2;
+        display: block;
+
+        > .complex-values {
+            display: flex;
+            justify-items: center;
+            align-items: center;
+            flex-direction: row;
+
+            > *:not(:last-child) {
+                margin-right: $main-padding;
+            }
+            .indicator-icon {
+                $indicator-size: 18px;
+                top: 48px - $indicator-size;
+                img {
+                    width: $indicator-size;
+                    height: $indicator-size;
+                }
+            }
+        }
     }
 }
 

@@ -937,6 +937,7 @@ class ReceiverDetailController {
     private inDistributionLists: threema.DistributionListReceiver[] = [];
     private hasSystemEmails = false;
     private hasSystemPhones = false;
+    private isWorkReceiver = false;
 
     private controllerModel: threema.ControllerModel;
 
@@ -969,6 +970,7 @@ class ReceiverDetailController {
                     // do nothing
                 });
 
+            this.isWorkReceiver = contactReceiver.identityType === threema.IdentityType.Work;
             this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
             webClientService.groups.forEach((groupReceiver: threema.GroupReceiver) => {
                 // check if my identity is a member
