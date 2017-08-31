@@ -1,12 +1,12 @@
 header {
     text-align: center;
-    height: $header-height;
-    //background-color: #009688;
+    height: auto;
+    padding: 2em;
 }
 
 #title {
     #logo {
-        display: block;
+        display: inline;
         width: 100%;
         svg {
             width: 220px;
@@ -16,5 +16,5 @@ header {
     }
     display: block;
     position: relative;
-    top: 8px;
+    top: 3px;
 }
