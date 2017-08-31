@@ -193,6 +193,7 @@ export default [
                         submitText().then(() => {
                             // Clear compose div
                             composeDiv[0].innerText = '';
+                            composeDiv[0].focus();
 
                             // Send stopTyping event
                             scope.stopTyping();
