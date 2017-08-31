@@ -30,15 +30,25 @@ export default [
             controller: [function() {
                 // Get text depending on type
                 let rawText = null;
-                switch (this.message.type) {
+                let message = this.message as threema.Message;
+                switch (message.type) {
                     case 'text':
-                        rawText = this.message.body;
+                        rawText = message.body;
                         break;
                     case 'location':
-                        rawText = this.message.location.poi;
+                        rawText = message.location.poi;
+                        break;
+                    case 'file':
+                        // Prefer caption for file messages, if available
+                        if (message.caption !== null
+                                && message.caption.length > 0) {
+                            rawText = message.caption;
+                        } else {
+                            rawText = message.file.name;
+                        }
                         break;
                     default:
-                        rawText = this.message.caption;
+                        rawText = message.caption;
                         break;
                 }
                 // Escaping will be done in the HTML using filters
