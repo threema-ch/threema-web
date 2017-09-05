@@ -80,6 +80,7 @@ declare namespace threema {
         file?: FileInfo;
         video?: VideoInfo;
         audio?: AudioInfo;
+        voip?: VoipStatusInfo;
         location?: LocationInfo;
         // only for temporary Messages
         temporaryId?: string;
@@ -101,6 +102,10 @@ declare namespace threema {
 
     interface AudioInfo {
         duration: number;
+    }
+
+    interface VoipStatusInfo {
+        status: number;
     }
 
     interface LocationInfo {

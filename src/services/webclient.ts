@@ -2089,7 +2089,7 @@ export class WebClientService {
                     captionString = captionString + ': ' + caption;
                 }
                 let messageTypeString = this.$translate.instant('messageTypes.' + messageType);
-                switch (messageType) {
+                switch (messageType as threema.MessageType) {
                     case 'text':
                         body = message.body;
                         break;
@@ -2111,6 +2111,29 @@ export class WebClientService {
                     case 'ballot':
                         // TODO Show ballot title if ballot messages are implemented in the web version
                         body = messageTypeString;
+                        break;
+                    case 'voipStatus':
+                        let translationKey: string;
+                        switch ((message as threema.Message).voip.status) {
+                            case 1:
+                                translationKey = 'CALL_MISSED';
+                                break;
+                            case 2:
+                                translationKey = message.isOutbox ? 'CALL_FINISHED_IN' : 'CALL_FINISHED_OUT';
+                                break;
+                            case 3:
+                                translationKey = 'CALL_REJECTED';
+                                break;
+                            case 4:
+                                translationKey = 'CALL_ABORTED';
+                                break;
+                            default:
+                                // No default
+                        }
+
+                        if (translationKey !== undefined) {
+                            body = this.$translate.instant('voip.' + translationKey);
+                        }
                         break;
                     default:
                         // Image, video and audio
