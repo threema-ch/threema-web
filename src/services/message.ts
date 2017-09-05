@@ -49,7 +49,8 @@ export class MessageService {
 
             if (message !== undefined
                 && message.isOutbox === false
-                && this.receiverService.isContact(receiver)) {
+                && this.receiverService.isContact(receiver)
+                && message.type !== 'voipStatus') {
                 access.ack = message.state !== 'user-ack';
                 access.dec = message.state !== 'user-dec';
             }
