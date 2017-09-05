@@ -16,9 +16,7 @@
     height: 100%;
     margin: 0 auto;
     width: 98vw;
-    max-width: 450px;
-    max-height: 575px;
-    height: calc(100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});
+    max-width: 450px;        
     &.wide {
         max-width: 1500px;
         max-height: inherit;
