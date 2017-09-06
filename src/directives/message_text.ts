@@ -40,8 +40,7 @@ export default [
                         break;
                     case 'file':
                         // Prefer caption for file messages, if available
-                        if (message.caption !== null
-                                && message.caption.length > 0) {
+                        if (message.caption && message.caption.length > 0) {
                             rawText = message.caption;
                         } else {
                             rawText = message.file.name;
