@@ -80,6 +80,10 @@ export class GroupControllerModel implements threema.ControllerModel {
         }
     }
 
+    public getMaxMemberSize(): number {
+        return this.webClientService.getMaxGroupMemberSize();
+    }
+
     public setOnRemoved(callback: any): void {
         this.onRemovedCallback = callback;
     }
@@ -157,7 +161,6 @@ export class GroupControllerModel implements threema.ControllerModel {
     }
 
     private reallyDelete(): void {
-
         if (!this.group.access.canDelete) {
             this.$log.error('can not delete group');
             return;

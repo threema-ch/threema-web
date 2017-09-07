@@ -245,6 +245,7 @@ declare namespace threema {
         members: string[];
         administrator: string;
         access: GroupReceiverAccess;
+        createdAt: string;
     }
 
     /**
@@ -460,6 +461,21 @@ declare namespace threema {
     interface BatteryStatus {
         percent: number;
         isCharging: boolean;
+    }
+
+    interface MyAccount {
+        identity: string;
+        publicKey: ArrayBuffer;
+        publicNickname: string;
+        fingerprint?: string;
+    }
+
+    interface ClientInfo {
+        device: string;
+        isWork: boolean;
+        myPushToken?: string;
+        maxGroupSize?: number;
+        myAccount: MyAccount;
     }
 
     namespace Container {
