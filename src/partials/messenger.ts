@@ -938,6 +938,7 @@ class ReceiverDetailController {
     private hasSystemEmails = false;
     private hasSystemPhones = false;
     private isWorkReceiver = false;
+    private showBlocked = () => false;
 
     private controllerModel: threema.ControllerModel;
 
@@ -989,6 +990,8 @@ class ReceiverDetailController {
                     }
                 },
             );
+
+            this.showBlocked = () => contactReceiver.isBlocked;
         }
 
         switch (this.receiver.type) {

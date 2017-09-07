@@ -223,6 +223,9 @@ declare namespace threema {
         // Only relevant for Threema Work users.
         isWork?: boolean;
 
+        // Whether this contact is blocked
+        isBlocked?: boolean;
+
         // The identity type.
         // 0 - Regular Threema user.
         // 1 - Threema Work user.

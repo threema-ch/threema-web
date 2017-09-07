@@ -12,6 +12,10 @@
 				<dd>
 					<span class="complex-values">
 						<span>{{ctrl.receiver.id}}</span>
+						<span class="indicator-icon" ng-if="ctrl.showBlocked()"
+							  translate-attr="{'aria-label': 'messenger.THREEMA_BLOCKED_RECEIVER'}">
+								(<span translate>messenger.THREEMA_BLOCKED_RECEIVER</span>)
+						</span>
 						<span class="indicator-icon" ng-if="ctrl.isWorkReceiver"
 							  translate-attr="{'aria-label': 'messenger.THREEMA_WORK_CONTACT',
 								'title': 'messenger.THREEMA_WORK_CONTACT'}">

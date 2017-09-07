@@ -50,7 +50,7 @@ export default [
                 this.icon = getIcon(this.message.type);
             }],
             template: `
-                <img ng-if="ctrl.icon !== null" ng-src="img/{{ ctrl.icon }}" alt="{{ ctrl.message.type }} icon">
+                <img ng-if="ctrl.icon !== null" ng-src="img/{{ ctrl.icon }}" alt="{{ ctrl.message.type }} icon" />
             `,
         };
     },

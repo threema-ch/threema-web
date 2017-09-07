@@ -150,7 +150,8 @@
         "BALLOT_MESSAGES_NOT_SUPPORTED": "Umfragen werden in Threema Web derzeit nicht untersützt.",
         "UNKNOWN_MESSAGE_TYPE": "Unbekannter Nachrichtentyp",
         "NICKNAME": "Nickname",
-        "THREEMA_WORK_CONTACT": "Threema Work Nutzer"
+        "THREEMA_WORK_CONTACT": "Threema Work Nutzer",
+        "THREEMA_BLOCKED_RECEIVER": "blockiert"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
@@ -173,6 +174,7 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» kann diese Nachricht noch nicht erhalten.",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Sprachnachrichten erhalten.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
+        "RECEIVER_BLOCKED":  "Sie können keine Nachrichten an blockierte Empfänger senden",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
         "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",
         "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen).",

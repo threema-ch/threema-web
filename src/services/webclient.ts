@@ -884,7 +884,13 @@ export class WebClientService {
                        message: threema.MessageData): Promise<Promise<any>> {
         return new Promise<any> (
             (resolve, reject) => {
-
+                // Try to load receiver object
+                let receiverObject = this.receivers.getData(receiver);
+                // Check blocked flag
+                if (receiverObject.type === 'contact'
+                    && (receiverObject as threema.ContactReceiver).isBlocked) {
+                    return reject(this.$translate.instant('error.RECEIVER_BLOCKED'));
+                }
                 // Decide on subtype
                 let subType;
                 switch (type) {
@@ -1001,6 +1007,9 @@ export class WebClientService {
                     switch (error) {
                         case 'file_too_large':
                             errorMessage = this.$translate.instant('error.FILE_TOO_LARGE');
+                            break;
+                        case 'blocked':
+                            errorMessage = this.$translate.instant('error.RECEIVER_BLOCKED');
                             break;
                         default:
                             errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
