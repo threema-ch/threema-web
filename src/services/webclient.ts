@@ -177,7 +177,7 @@ export class WebClientService {
     private typingInstance: threema.Container.Typing;
     private drafts: threema.Container.Drafts;
     private pcHelper: PeerConnectionHelper = null;
-    private deviceInfo: string = null;
+    private clientInfo: threema.ClientInfo;
     private trustedKeyStore: TrustedKeyStoreService;
     public version = null;
 
@@ -2002,24 +2002,23 @@ export class WebClientService {
             this.$log.warn('Invalid client info, argument field missing');
             return;
         }
-        this.deviceInfo = args.device;
-        this.$log.debug('Client device:', this.deviceInfo);
+
+        this.clientInfo = args as threema.ClientInfo;
+        this.$log.debug('Client device:', this.clientInfo.device);
 
         // Store push token
-        if (args.myPushToken) {
-            this.pushToken = args.myPushToken;
-            this.pushService.init(args.myPushToken);
+        if (this.clientInfo.myPushToken) {
+            this.pushToken = this.clientInfo.myPushToken;
+            this.pushService.init(this.pushToken);
         }
 
         // Set own identity
-        let myAccount = args.myAccount;
-
         this.myIdentity = {
-            identity: myAccount.identity,
-            publicKey: myAccount.publicKey,
-            publicNickname: myAccount.publicNickname,
-            fingerprint: this.fingerPrintService.generate(myAccount.publicKey),
-        };
+            identity: this.clientInfo.myAccount.identity,
+            publicKey: this.clientInfo.myAccount.publicKey,
+            publicNickname: this.clientInfo.myAccount.publicNickname,
+            fingerprint: this.fingerPrintService.generate(this.clientInfo.myAccount.publicKey),
+        } as threema.Identity;
 
         this.registerInitializationStep('client info');
     }
@@ -2046,6 +2045,14 @@ export class WebClientService {
      */
     public getMaxTextLength(): number {
         return WebClientService.MAX_TEXT_LENGTH;
+    }
+
+    /**
+     * Returns the max group member size
+     * @returns {number}
+     */
+    public getMaxGroupMemberSize(): number {
+        return this.clientInfo && this.clientInfo.maxGroupSize ? this.clientInfo.maxGroupSize : 50;
     }
 
     /**

@@ -9,30 +9,35 @@
 
 			<md-card-title>
 				<md-card-title-text>
-					<span class="md-headline" translate>messenger.GROUP_CREATOR</span>
+					<span class="md-headline">
+						<span translate>messenger.GROUP_CREATOR</span>
+						<span ng-if="ctrl.receiver.createdAt"> ({{ctrl.receiver.createdAt}})</span>
+					</span>
 				</md-card-title-text>
 			</md-card-title>
 			<md-card-content>
 				<eee-contact-badge
 						eee-identity="ctrl.receiver.administrator"
 						eee-linked="ctrl.receiver.administrator != ctrl.me.id"
-                        ng-class="{'linked': ctrl.receiver.administrator != ctrl.me.id}">
-                </eee-contact-badge>
+						ng-class="{'linked': ctrl.receiver.administrator != ctrl.me.id}">
+				</eee-contact-badge>
 			</md-card-content>
-
 			<md-card-title>
 				<md-card-title-text>
-					<span class="md-headline" translate>messenger.GROUP_MEMBERS</span>
+					<span class="md-headline">
+						<span translate>messenger.GROUP_MEMBERS</span>
+						<span> ({{ctrl.receiver.members.length}}/{{ctrl.controllerModel.getMaxMemberSize()}})</span>
+					</span>
 				</md-card-title-text>
 			</md-card-title>
 			<md-card-content>
 				<ul class="member-list">
-					<li ng-repeat="memberIdentity in ctrl.receiver.members" ng-if="memberIdentity != ctrl.receiver.administrator">
+					<li ng-repeat="memberIdentity in ctrl.receiver.members">
 						<eee-contact-badge
 								eee-identity="memberIdentity"
 								eee-linked="memberIdentity != ctrl.me.id"
-                                ng-class="{'linked': memberIdentity != ctrl.me.id}">
-                        </eee-contact-badge>
+								ng-class="{'linked': memberIdentity != ctrl.me.id}">
+						</eee-contact-badge>
 					</li>
 				</ul>
 
