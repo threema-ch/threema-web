@@ -39,6 +39,17 @@
 			</dl>
 		</md-card-content>
 	</md-card>
+
+	<md-card>
+		<md-card-content>
+			<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
+				<md-button ng-disabled="!ctrl.controllerModel.canClean()" class="md-raised" ng-click="ctrl.controllerModel.clean($event)">
+					<span translate>messenger.DELETE_THREAD</span>
+				</md-button>
+			</section>
+		</md-card-content>
+	</md-card>
+
 	<!-- system contact list card -->
 	<md-card ng-if="ctrl.hasSystemEmails || ctrl.hasSystemPhones">
 		<md-card-title>

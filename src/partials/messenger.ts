@@ -904,7 +904,7 @@ class MessengerController {
                             if ($state.params.type === receiver.type
                                 && $state.params.id === receiver.id) {
                                 // conversation or sub form is open, redirect to home!
-                                this.$state.go('messenger.home', null, {location: 'replace'});
+                                $state.go('messenger.home', null, {location: 'replace'});
                             }
                         }
                         break;

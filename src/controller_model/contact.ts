@@ -111,6 +111,43 @@ export class ContactControllerModel implements threema.ControllerModel {
             );
     }
 
+    public canClean(): boolean {
+        return this.canView();
+            // blocked
+            // && this.contact.;
+    }
+
+    public clean(ev: any): any {
+        let confirm = this.$mdDialog.confirm()
+            .title(this.$translate.instant('messenger.DELETE_THREAD'))
+            .textContent(this.$translate.instant('messenger.DELETE_THREAD_MESSAGE', {count: 1}))
+            .targetEvent(ev)
+            .ok(this.$translate.instant('common.YES'))
+            .cancel(this.$translate.instant('common.NO'));
+
+        this.$mdDialog.show(confirm).then(() => {
+            this.reallyClean();
+        }, () => {
+            this.$log.debug('clean canceled');
+        });
+    }
+
+    private reallyClean(): any {
+        if (!this.canClean()) {
+            this.$log.error('not allowed to clean this contact');
+            return;
+        }
+
+        this.isLoading = true;
+        this.webClientService.clean(this.contact)
+            .then(() => {
+                this.isLoading = false;
+            })
+            .catch(() => {
+                this.isLoading = false;
+            });
+    }
+
     public save(): Promise<threema.ContactReceiver> {
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:

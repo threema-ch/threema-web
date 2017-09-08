@@ -96,6 +96,7 @@ export class WebClientService {
     private static SUB_TYPE_ALERT = 'alert';
     private static SUB_TYPE_GROUP_SYNC = 'groupSync';
     private static SUB_TYPE_BATTERY_STATUS = 'batteryStatus';
+    private static SUB_TYPE_CLEAN_RECEIVER = 'cleanReceiver';
     private static ARGUMENT_MODE = 'mode';
     private static ARGUMENT_MODE_REFRESH = 'refresh';
     private static ARGUMENT_MODE_NEW = 'new';
@@ -1233,6 +1234,24 @@ export class WebClientService {
         };
 
         return this._sendDeletePromise(WebClientService.SUB_TYPE_DISTRIBUTION_LIST, args);
+    }
+
+    /**
+     * Remove all messages of a receiver
+     * @param {threema.Receiver} receiver
+     * @returns {Promise<any>}
+     */
+    public clean(receiver: threema.Receiver): Promise<any> {
+        if (receiver === undefined) {
+            return new Promise((resolve, reject) => reject('invalid receiver'));
+        }
+
+        let args = {
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
+            [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
+        };
+
+        return this._sendDeletePromise(WebClientService.SUB_TYPE_CLEAN_RECEIVER, args);
     }
 
     /**

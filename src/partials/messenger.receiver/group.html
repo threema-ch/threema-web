@@ -51,6 +51,9 @@
 				<md-button ng-disabled="!ctrl.receiver.access.canSync" class="md-raised" ng-click="ctrl.controllerModel.sync($event)">
 					<span translate>messenger.GROUP_SYNC</span>
 				</md-button>
+				<md-button ng-disabled="!ctrl.controllerModel.canClean()" class="md-raised" ng-click="ctrl.controllerModel.clean($event)">
+					<span translate>messenger.DELETE_THREAD</span>
+				</md-button>
 				<md-button ng-disabled="!ctrl.receiver.access.canLeave" class="md-raised " ng-click="ctrl.controllerModel.leave($event)">
 					<span translate>messenger.GROUP_LEAVE</span>
 				</md-button>

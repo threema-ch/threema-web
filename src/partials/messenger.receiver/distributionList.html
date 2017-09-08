@@ -19,6 +19,9 @@
 
 	<md-card>
 		<md-card-content>
+				<md-button ng-disabled="!ctrl.controllerModel.canClean()" class="md-raised" ng-click="ctrl.controllerModel.clean($event)">
+					<span translate>messenger.DELETE_THREAD</span>
+				</md-button>
 			<section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
 				<md-button ng-disabled="!ctrl.receiver.access.canDelete" class="md-raised md-warn" ng-click="ctrl.controllerModel.delete()">
 					<span translate>messenger.DISTRIBUTION_LIST_DELETE</span>

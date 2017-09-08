@@ -152,7 +152,9 @@
         "UNKNOWN_MESSAGE_TYPE": "Unknown message type",
         "NICKNAME": "Nickname",
         "THREEMA_WORK_CONTACT": "Threema Work user",
-        "THREEMA_BLOCKED_RECEIVER": "blocked"
+        "THREEMA_BLOCKED_RECEIVER": "blocked",
+        "DELETE_THREAD": "Delete chat",
+        "DELETE_THREAD_MESSAGE": "{count, plural, one {Do you really want to delete this chat? You will not be able to recover the messages.} other {Do you really want to delete # chat(s)? You will not be able to recover the messages.}}"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
