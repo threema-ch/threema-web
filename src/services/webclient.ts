@@ -889,7 +889,7 @@ export class WebClientService {
                 // Check blocked flag
                 if (receiverObject.type === 'contact'
                     && (receiverObject as threema.ContactReceiver).isBlocked) {
-                    return reject(this.$translate.instant('error.RECEIVER_BLOCKED'));
+                    return reject(this.$translate.instant('error.CONTACT_BLOCKED'));
                 }
                 // Decide on subtype
                 let subType;
@@ -1009,7 +1009,7 @@ export class WebClientService {
                             errorMessage = this.$translate.instant('error.FILE_TOO_LARGE');
                             break;
                         case 'blocked':
-                            errorMessage = this.$translate.instant('error.RECEIVER_BLOCKED');
+                            errorMessage = this.$translate.instant('error.CONTACT_BLOCKED');
                             break;
                         default:
                             errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
