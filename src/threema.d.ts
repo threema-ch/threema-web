@@ -420,9 +420,11 @@ declare namespace threema {
         subject: string;
         isLoading: boolean;
         save(): any;
+        clean(ev: any): any;
         isValid(): boolean;
         canView(): boolean;
         canEdit(): boolean;
+        canClean(): boolean;
         getMode(): number;
         setOnRemoved(callback: any): void;
     }

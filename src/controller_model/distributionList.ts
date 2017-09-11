@@ -95,6 +95,41 @@ export class DistributionListControllerModel implements threema.ControllerModel 
         return true;
     }
 
+    public canClean(): boolean {
+        return true;
+    }
+
+    public clean(ev: any): any {
+        let confirm = this.$mdDialog.confirm()
+            .title(this.$translate.instant('messenger.DELETE_THREAD'))
+            .textContent(this.$translate.instant('messenger.DELETE_THREAD_MESSAGE', {count: 1}))
+            .targetEvent(ev)
+            .ok(this.$translate.instant('common.YES'))
+            .cancel(this.$translate.instant('common.CANCEL'));
+
+        this.$mdDialog.show(confirm).then(() => {
+            this.reallyClean();
+        }, () => {
+            this.$log.debug('clean canceled');
+        });
+    }
+
+    private reallyClean(): any {
+        if (!this.canClean()) {
+            this.$log.error('not allowed to clean this contact');
+            return;
+        }
+
+        this.isLoading = true;
+        this.webClientService.cleanReceiverConversation(this.distributionList)
+            .then(() => {
+                this.isLoading = false;
+            })
+            .catch(() => {
+                this.isLoading = false;
+            });
+    }
+
     public delete(ev): void {
 
         let confirm = this.$mdDialog.confirm()

@@ -96,6 +96,7 @@ export class WebClientService {
     private static SUB_TYPE_ALERT = 'alert';
     private static SUB_TYPE_GROUP_SYNC = 'groupSync';
     private static SUB_TYPE_BATTERY_STATUS = 'batteryStatus';
+    private static SUB_TYPE_CLEAN_RECEIVER_CONVERSATION = 'cleanReceiverConversation';
     private static ARGUMENT_MODE = 'mode';
     private static ARGUMENT_MODE_REFRESH = 'refresh';
     private static ARGUMENT_MODE_NEW = 'new';
@@ -1032,7 +1033,8 @@ export class WebClientService {
     public ackMessage(receiver, message: threema.Message, acknowledged: boolean = true): void {
         // Ignore empty text messages
         // TODO check into a util class
-        if (message === undefined
+        if (message === null
+            || message === undefined
             || message.isOutbox) {
             return;
         }
@@ -1051,7 +1053,7 @@ export class WebClientService {
      */
     public deleteMessage(receiver, message: threema.Message): void {
         // Ignore empty text messages
-        if (message === undefined) {
+        if (message === null || message === undefined) {
             return;
         }
 
@@ -1156,7 +1158,7 @@ export class WebClientService {
     }
 
     public leaveGroup(group: threema.GroupReceiver): Promise<any> {
-        if (group === undefined || !group.access.canLeave) {
+        if (group === null || group === undefined || !group.access.canLeave) {
             return new Promise((resolve, reject) => reject('not allowed'));
         }
 
@@ -1170,7 +1172,7 @@ export class WebClientService {
     }
 
     public deleteGroup(group: threema.GroupReceiver): Promise<any> {
-        if (group === undefined || !group.access.canDelete) {
+        if (group === null || group === undefined || !group.access.canDelete) {
             return new Promise<any> (
                 (resolve, reject) => {
                     reject('not allowed');
@@ -1187,7 +1189,7 @@ export class WebClientService {
     }
 
     public syncGroup(group: threema.GroupReceiver): Promise<any> {
-        if (group === undefined || !group.access.canSync) {
+        if (group === null || group === undefined || !group.access.canSync) {
             return new Promise<any> (
                 (resolve, reject) => {
                     reject('not allowed');
@@ -1224,7 +1226,7 @@ export class WebClientService {
     }
 
     public deleteDistributionList(distributionList: threema.DistributionListReceiver): Promise<any> {
-        if (distributionList === undefined || !distributionList.access.canDelete) {
+        if (distributionList === null || distributionList === undefined || !distributionList.access.canDelete) {
             return new Promise((resolve, reject) => reject('not allowed'));
         }
 
@@ -1233,6 +1235,24 @@ export class WebClientService {
         };
 
         return this._sendDeletePromise(WebClientService.SUB_TYPE_DISTRIBUTION_LIST, args);
+    }
+
+    /**
+     * Remove all messages of a receiver
+     * @param {threema.Receiver} receiver
+     * @returns {Promise<any>}
+     */
+    public cleanReceiverConversation(receiver: threema.Receiver): Promise<any> {
+        if (receiver === null || receiver === undefined) {
+            return new Promise((resolve, reject) => reject('invalid receiver'));
+        }
+
+        let args = {
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
+            [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
+        };
+
+        return this._sendDeletePromise(WebClientService.SUB_TYPE_CLEAN_RECEIVER_CONVERSATION, args);
     }
 
     /**
@@ -1654,7 +1674,8 @@ export class WebClientService {
                 break;
             case WebClientService.ARGUMENT_MODE_REMOVED:
                 this.conversations.remove(data);
-
+                // Remove all cached messages
+                this.messages.clearReceiverMessages((data as threema.Receiver));
                 this.receiverListener.forEach((listener: threema.ReceiverListener) => {
                     this.$log.debug('call on removed listener');
                     listener.onRemoved(data);
