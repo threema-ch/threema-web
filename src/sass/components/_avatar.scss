@@ -55,4 +55,17 @@
         }
     }
 
+    // If a receiver is "blocked"
+    .blocked-indicator {
+        position: absolute;
+        $indicator-size: 18px;
+        position: absolute;
+        top: 48px - $indicator-size;
+        right: 0;
+        img {
+            width: $indicator-size;
+            height: $indicator-size;
+        }
+    }
+
 }

@@ -102,6 +102,11 @@ export default [
                         && !this.highResolution
                         && (this.receiver as threema.ContactReceiver).identityType === threema.IdentityType.Work;
                 };
+                this.showBlocked = () => {
+                    return this.type === 'contact'
+                        && !this.highResolution
+                        && (this.receiver as threema.ContactReceiver).isBlocked;
+                };
             }],
             template: `
                 <div class="avatar" ng-class="ctrl.avatarClass()">
@@ -112,6 +117,11 @@ export default [
                         translate-attr="{'aria-label': 'messenger.THREEMA_WORK_CONTACT',
                             'title': 'messenger.THREEMA_WORK_CONTACT'}">
                         <img src="img/ic_work_round.svg" alt="Threema Work user">
+                    </div>
+                    <div class="blocked-indicator"  ng-if="ctrl.showBlocked()"
+                        translate-attr="{'aria-label': 'messenger.THREEMA_BLOCKED_RECEIVER',
+                            'title': 'messenger.THREEMA_BLOCKED_RECEIVER'}">
+                        <img src="img/ic_blocked_24px.svg" alt="blocked icon"/>
                     </div>
                     <img
                          ng-class="ctrl.avatarClass()"

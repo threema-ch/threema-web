@@ -151,7 +151,8 @@
         "BALLOT_MESSAGES_NOT_SUPPORTED": "Ballot messages are not yet supported in Threema Web.",
         "UNKNOWN_MESSAGE_TYPE": "Unknown message type",
         "NICKNAME": "Nickname",
-        "THREEMA_WORK_CONTACT": "Threema Work user"
+        "THREEMA_WORK_CONTACT": "Threema Work user",
+        "THREEMA_BLOCKED_RECEIVER": "blocked"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
@@ -175,6 +176,7 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» cannot receive this message.",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive voice messages.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive files.",
+        "CONTACT_BLOCKED":  "You cannot send messages to a blocked contact.",
         "ERROR_OCCURRED": "An error occurred.",
         "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web",
         "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters).",
