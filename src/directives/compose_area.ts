@@ -247,14 +247,14 @@ export default [
                 function fetchFileListContents(fileList: FileList): Promise<Map<File, ArrayBuffer>> {
                     return new Promise((resolve) => {
                         let buffers = new Map<File, ArrayBuffer>();
+                        const fileCounter = fileList.length;
                         let next = (file: File, res: ArrayBuffer | null, error: any) => {
                             buffers.set(file, res);
-                            if (buffers.size >= fileList.length) {
+                            if (buffers.size >= fileCounter) {
                                resolve(buffers);
                             }
                         };
-
-                        for (let n = 0; n < fileList.length; n++) {
+                        for (let n = 0; n < fileCounter; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
                             reader.onload = (ev: Event) => {
@@ -267,7 +267,7 @@ export default [
                             reader.onprogress = function(data) {
                                 if (data.lengthComputable) {
                                     let progress = ((data.loaded / data.total) * 100);
-                                    scope.onUploading(true, progress, 100 / fileList.length * n);
+                                    scope.onUploading(true, progress, 100 / fileCounter * n);
                                 }
                             };
                             reader.readAsArrayBuffer(file);
