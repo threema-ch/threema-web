@@ -121,7 +121,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
         }
 
         this.isLoading = true;
-        this.webClientService.clean(this.distributionList)
+        this.webClientService.cleanReceiverConversation(this.distributionList)
             .then(() => {
                 this.isLoading = false;
             })

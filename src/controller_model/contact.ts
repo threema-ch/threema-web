@@ -113,8 +113,6 @@ export class ContactControllerModel implements threema.ControllerModel {
 
     public canClean(): boolean {
         return this.canView();
-            // blocked
-            // && this.contact.;
     }
 
     public clean(ev: any): any {
@@ -139,7 +137,7 @@ export class ContactControllerModel implements threema.ControllerModel {
         }
 
         this.isLoading = true;
-        this.webClientService.clean(this.contact)
+        this.webClientService.cleanReceiverConversation(this.contact)
             .then(() => {
                 this.isLoading = false;
             })

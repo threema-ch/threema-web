@@ -136,7 +136,7 @@ export class GroupControllerModel implements threema.ControllerModel {
         }
 
         this.isLoading = true;
-        this.webClientService.clean(this.group)
+        this.webClientService.cleanReceiverConversation(this.group)
             .then(() => {
                 this.isLoading = false;
             })
