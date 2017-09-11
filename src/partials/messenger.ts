@@ -432,6 +432,7 @@ class ConversationController {
                         if (!msg.fileType) {
                             msg.fileType = 'application/octet-stream';
                         }
+                        captionSupported = this.mimeService.isImage(msg.fileType);
                         if (this.mimeService.isImage(msg.fileType)
                             || this.mimeService.isAudio(msg.fileType)
                             || this.mimeService.isVideo(msg.fileType)) {
