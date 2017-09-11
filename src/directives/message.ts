@@ -106,10 +106,11 @@ export default [
                 };
 
                 this.download = (ev) => {
+                    this.downloading = true;
                     webClientService.requestBlob(this.message.id, this.receiver)
                         .then((buffer: ArrayBuffer) => {
                             $rootScope.$apply(() => {
-                                // this.downloading = false;
+                                this.downloading = false;
                                 // this.downloaded = true;
 
                                 switch (this.message.type) {
@@ -126,9 +127,13 @@ export default [
                         })
                         .catch((error) => {
                             $log.error('error downloading blob ', error);
-                            // this.downloading = false;
+                            this.downloading = false;
                             // this.downloaded = true;
                         });
+                };
+
+                this.isDownloading = () => {
+                    return this.downloading;
                 };
             }],
             link: function(scope: any, element: ng.IAugmentedJQuery, attrs) {

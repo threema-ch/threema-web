@@ -44,6 +44,7 @@ export default [
             bindToController: {
                 message: '=eeeMessage',
                 receiver: '=eeeReceiver',
+                showDownloading: '=eeeShowDownloading',
             },
             controllerAs: 'ctrl',
             controller: [function() {
@@ -203,6 +204,12 @@ export default [
                             this.downloading = false;
                             this.downloaded = true;
                         });
+                };
+
+                this.isDownloading = () => {
+                    return this.downloading
+                        || this.thumbnailDownloading
+                        || (this.showDownloading && this.showDownloading());
                 };
             }],
             templateUrl: 'directives/message_media.html',
