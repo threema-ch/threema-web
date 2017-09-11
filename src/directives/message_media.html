@@ -13,16 +13,16 @@
     <div ng-if="ctrl.showThumbnail" class="thumbnail {{ ctrl.type }}" ng-click="ctrl.download()" ng-style="ctrl.thumbnailStyle">
 
         <!-- Loading indicator -->
-        <div class="loading-wrapper" ng-class="{active: ctrl.downloading || ctrl.thumbnailDownloading}">
+        <div class="loading-wrapper" ng-class="{active: ctrl.isDownloading()}">
             <div class="loading"></div>
             <div class="loading-text" translate>messenger.DOWNLOADING</div>
         </div>
 
         <!-- Thumbnail overlays for videos and GIFs -->
-        <div class="overlay video" ng-if="ctrl.type === 'video' && !ctrl.downloading">
+        <div class="overlay video" ng-if="ctrl.type === 'video' && !ctrl.isDownloading()">
             <i class="material-icons md-light">play_circle_outline</i>
         </div>
-        <div class="overlay gif" ng-if="ctrl.type === 'file' && ctrl.message.file.type === 'image/gif' && !ctrl.downloading">
+        <div class="overlay gif" ng-if="ctrl.type === 'file' && ctrl.message.file.type === 'image/gif' && !ctrl.isDownloading()">
             <i class="material-icons md-light">play_circle_outline</i>
         </div>
 
@@ -41,10 +41,10 @@
     <div class="file-message" ng-if="ctrl.type === 'audio'" ng-click="ctrl.download()">
         <!-- Loading indicator -->
         <div class="circle"
-             ng-class="{active: !ctrl.downloading}"
+             ng-class="{active: !ctrl.isDownloading()}"
              ng-if="!ctrl.downloaded">
             <i class="material-icons md-24">file_download</i>
-            <div class="loading" ng-class="{active: ctrl.downloading}"></div>
+            <div class="loading" ng-class="{active: ctrl.isDownloading()}"></div>
         </div>
         <!-- Play Indicator -->
         <div class="circle" ng-click="ctrl.download()" ng-if="ctrl.downloaded">
@@ -63,11 +63,11 @@
 
         <!-- Loading indicator -->
         <div class="circle"
-             ng-class="{active: !ctrl.downloading}"
+             ng-class="{active: !ctrl.isDownloading()}"
              ng-if="!ctrl.downloaded"
              ng-style="{'background-image': 'url({{ctrl.message.thumbnail.preview | bufferToUrl: 'image/png'}})' }">
             <i class="material-icons md-24">file_download</i>
-            <div class="loading" ng-class="{active: ctrl.downloading}"></div>
+            <div class="loading" ng-class="{active: ctrl.isDownloading()}"></div>
         </div>
 
         <!-- File type indicator -->
