@@ -20,20 +20,13 @@
     .my-threema-information {
       @include mouse-hand;
       div {
-        /* hide nickname */
-        span {
-          font-size: 10pt;
-          text-shadow: none;
-          margin-bottom: ($main-padding/2);
-          display: none;
-        }
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         word-wrap: break-word;
         word-break: break-all;
       }
-      .threema-id {
+      .nickname {
         font-size: 16pt;
       }
     }
