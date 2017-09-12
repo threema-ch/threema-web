@@ -458,7 +458,7 @@ class ConversationController {
                             <md-dialog class="send-file-dialog">
                                 <md-dialog-content class="md-dialog-content">
                                     <h2 class="md-title">${title}</h2>
-                                    <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="ctrl.sendAsFile || ${captionSupported}">
+                                    <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="!${showSendAsFileCheckbox} || ctrl.sendAsFile || ${captionSupported}">
                                         <input md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
                                     </md-input-container>
                                     <md-input-container md-no-float class="input-send-as-file md-prompt-input-container" ng-show="${showSendAsFileCheckbox}">
