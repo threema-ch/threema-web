@@ -103,7 +103,6 @@
         font-weight: bold;
         font-size: 0.9em;
         margin-bottom: 8px;
-
     }
 
     .message-quote {
@@ -301,6 +300,10 @@
             font-weight: bold;
             font-size: 0.9em;
             margin-bottom: 8px;
+            // Emoji styling
+            > span:not(.ng-binding) {
+                transform: scale(0.6);
+            }
         }
 
         .message-text {

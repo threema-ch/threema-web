@@ -29,7 +29,7 @@
 				<dd>{{ ctrl.fingerPrint }}</dd>
 
 				<dt><span translate>messenger.NICKNAME</span></dt>
-				<dd>{{ ctrl.receiver.publicNickname || "-" }}</dd>
+				<dd ng-bind-html="ctrl.receiver.publicNickname | emojify"></dd>
 
 				<dt><span translate>messenger.FIRST_NAME</span></dt>
 				<dd>{{ ctrl.receiver.firstName || "-" }}</dd>

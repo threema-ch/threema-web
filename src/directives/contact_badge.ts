@@ -59,8 +59,8 @@ export default [
                                     eee-receiver="ctrl.contactReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
-                    <div class="receiver-badge-name">
-                        {{ctrl.contactReceiver.displayName}}
+                    <div class="receiver-badge-name"
+                        ng-bind-html="ctrl.contactReceiver.displayName | emojify">
                     </div>
                     <div class="contact-badge-identity">
                         {{ctrl.contactReceiver.id}}

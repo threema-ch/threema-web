@@ -24,8 +24,9 @@ export default [
                 colored: '=eeeColored',
             },
             template: `
-                <span class="message-name" ng-style="colored && {'color': contact.color}">
-                    {{ contact.displayName }}
+                <span class="message-name"
+                    ng-style="colored && {'color': contact.color}"
+                       ng-bind-html="contact.displayName | emojify">
                 </span>
             `,
         };

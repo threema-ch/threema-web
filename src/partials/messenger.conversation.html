@@ -18,7 +18,7 @@
             </div>
             <div class="conversation-header-details-detail" ng-if="ctrl.type == 'group'"
                  title="{{ ctrl.receiver.members | idsToNames }}">
-                <span>{{ ctrl.receiver.members | idsToNames }}</span>
+                <span ng-bind-html="ctrl.receiver.members | idsToNames | emojify"></span>
             </div>
         </div>
     </div>

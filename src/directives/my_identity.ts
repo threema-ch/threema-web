@@ -55,9 +55,8 @@ export default [
             }],
             template: `
                 <div class="my-threema-information" ng-click="ctrl.showQRCode()">
-                    <div class="threema-id" ng-cloak>
-                        <span translate>messenger.MY_PUBLIC_NICKNAME</span>
-                        {{ctrl.identity.publicNickname}}
+                    <div class="nickname" ng-cloak
+                        ng-bind-html="ctrl.identity.publicNickname | emojify | emptyToPlaceholder: '-'">
                     </div>
                 </div>
             `,

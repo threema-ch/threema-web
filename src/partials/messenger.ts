@@ -166,6 +166,7 @@ class ConversationController {
     private $state: ng.ui.IStateService;
     private $log: ng.ILogService;
     private $scope: ng.IScope;
+    private $filter: ng.IFilterService;
 
     // Own services
     private webClientService: WebClientService;
@@ -212,7 +213,7 @@ class ConversationController {
 
     public static $inject = [
         '$stateParams', '$state', '$timeout', '$log', '$scope', '$rootScope',
-        '$mdDialog', '$mdToast', '$location', '$translate',
+        '$mdDialog', '$mdToast', '$location', '$translate', '$filter',
         'WebClientService', 'StateService', 'ReceiverService', 'MimeService', 'VersionService',
         'ControllerModelService',
     ];
@@ -226,6 +227,7 @@ class ConversationController {
                 $mdToast: ng.material.IToastService,
                 $location,
                 $translate: ng.translate.ITranslateService,
+                $filter: ng.IFilterService,
                 webClientService: WebClientService,
                 stateService: StateService,
                 receiverService: ReceiverService,
@@ -242,6 +244,7 @@ class ConversationController {
 
         this.$state = $state;
         this.$scope = $scope;
+        this.$filter = $filter;
 
         this.$mdDialog = $mdDialog;
         this.$mdToast = $mdToast;
@@ -443,7 +446,8 @@ class ConversationController {
 
                     // Eager translations
                     const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
-                        senderName: this.receiver.displayName,
+                        senderName: (this.$filter('emojify') as any)
+                            ((this.$filter('emptyToPlaceholder') as any)(this.receiver.displayName, '-')),
                     });
                     const placeholder = this.$translate.instant('messenger.CONFIRM_FILE_CAPTION');
                     const confirmSendAsFile = this.$translate.instant('messenger.CONFIRM_SEND_AS_FILE');
