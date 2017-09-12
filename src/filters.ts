@@ -53,6 +53,18 @@ angular.module('3ema.filters', [])
 })
 
 /**
+ * Replace a undefined/null or empty string with a placeholder
+ */
+.filter('emptyToPlaceholder', function() {
+    return (text, placeholder: string = '-') => {
+        if (text === null || text === undefined || text.trim().length === 0) {
+            return placeholder;
+        }
+        return text;
+    };
+})
+
+/**
  * Convert links in text to <a> tags.
  */
 .filter('linkify', function() {
