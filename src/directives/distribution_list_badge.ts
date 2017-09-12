@@ -45,8 +45,7 @@ export default [
                                     eee-receiver="ctrl.distributionListReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
-                    <div class="receiver-badge-name">
-                        {{ctrl.distributionListReceiver.displayName}}
+                    <div class="receiver-badge-name" ng-bind-html="ctrl.distributionListReceiver.displayName | emojify">
                     </div>
 
                 </div>
