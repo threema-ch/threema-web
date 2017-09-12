@@ -60,17 +60,19 @@ class WelcomeController {
     private TrustedKeyStore: TrustedKeyStoreService;
     private pushService: PushService;
     private stateService: StateService;
+    private config: threema.Config;
 
     // Other
     public name = 'welcome';
     private mode: 'scan' | 'unlock';
     private qrCode;
     private password: string = '';
+    private pleaseUpdateAppMsg: string = null;
 
     public static $inject = [
         '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
         'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService', 'VersionService',
-        'BROWSER_MIN_VERSIONS', 'ControllerService',
+        'BROWSER_MIN_VERSIONS', 'CONFIG', 'ControllerService',
     ];
     constructor($scope: ng.IScope, $state: ng.ui.IStateService, $stateParams: threema.WelcomeStateParams,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
@@ -81,6 +83,7 @@ class WelcomeController {
                 browserService: BrowserService,
                 versionService: VersionService,
                 minVersions: threema.BrowserMinVersions,
+                config: threema.Config,
                 controllerService: ControllerService) {
         controllerService.setControllerName('welcome');
         // Angular services
@@ -98,6 +101,7 @@ class WelcomeController {
         this.TrustedKeyStore = TrustedKeyStore;
         this.stateService = stateService;
         this.pushService = pushService;
+        this.config = config;
 
         // Determine whether browser warning should be shown
         const browser = browserService.getBrowser();
@@ -134,6 +138,16 @@ class WelcomeController {
 
         // Determine current version
         versionService.initVersion();
+
+        // Determine last version with previous protocol version
+        if (this.config.PREV_PROTOCOL_LAST_VERSION !== null) {
+            this.pleaseUpdateAppMsg = this.$translate.instant('troubleshooting.PLEASE_UPDATE_APP');
+            if (!this.config.SELF_HOSTED) {
+                this.pleaseUpdateAppMsg += ' ' + this.$translate.instant('troubleshooting.USE_ARCHIVE_VERSION', {
+                    archiveUrl: `https://web.threema.ch/archive/${this.config.PREV_PROTOCOL_LAST_VERSION}/`,
+                });
+            }
+        }
 
         // Clear cache
         this.webClientService.clearCache();

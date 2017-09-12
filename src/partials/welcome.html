@@ -86,6 +86,9 @@
                             <span translate>welcome.IF_YOU_WANT</span>
                             <a href="#" ng-click="ctrl.deleteSession()" translate>welcome.FORGET_SESSION</a>.
                         </p>
+                        <div class="protocol-updated" ng-if="ctrl.config.PREV_PROTOCOL_LAST_VERSION !== null">
+                            <p ng-bind-html="ctrl.pleaseUpdateAppMsg"></p>
+                        </div>
                     </div>
                 </div>
             </div>

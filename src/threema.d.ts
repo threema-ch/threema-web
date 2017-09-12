@@ -441,6 +441,7 @@ declare namespace threema {
 
     interface Config {
         SELF_HOSTED: boolean;
+        PREV_PROTOCOL_LAST_VERSION: string | null;
         SALTYRTC_PORT: number;
         SALTYRTC_SERVER_KEY: string | null;
         SALTYRTC_HOST: string | null;
