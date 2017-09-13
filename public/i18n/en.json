@@ -238,5 +238,10 @@
         "CALL_FINISHED_OUT": "Outgoing call",
         "CALL_REJECTED": "Call rejected",
         "CALL_ABORTED": "Call aborted"
+    },
+    "battery": {
+        "CHARGING": "Charging: {percent}%",
+        "DISCHARGING": "Discharging: {percent}%",
+        "ALERT": "Discharging: {percent}%"
     }
 }
