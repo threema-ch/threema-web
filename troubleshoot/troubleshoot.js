@@ -76,9 +76,9 @@ function doChecks() {
         var noop = function() {};
         var pc = new RTCPeerConnection({iceServers: [{
             urls: [
-                'turn:turn.threema.ch:443?transport=udp',
-                'turn:turn.threema.ch:443?transport=tcp',
-                'turns:turn.threema.ch:443',
+                'turn:ds.turn.threema.ch:443?transport=udp',
+                'turn:ds.turn.threema.ch:443?transport=tcp',
+                'turns:ds.turn.threema.ch:443',
             ],
             username: 'threema-angular-test',
             credential: 'VaoVnhxKGt2wD20F9bTOgiew6yHQmj4P7y7SE4lrahAjTQC0dpnG32FR4fnrlpKa',
