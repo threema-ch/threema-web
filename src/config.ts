@@ -19,9 +19,9 @@ export default {
     // ICE
     ICE_SERVERS: [{
         urls: [
-            'turn:turn.threema.ch:443?transport=udp',
-            'turn:turn.threema.ch:443?transport=tcp',
-            'turns:turn.threema.ch:443',
+            'turn:ds.turn.threema.ch:443?transport=udp',
+            'turn:ds.turn.threema.ch:443?transport=tcp',
+            'turns:ds.turn.threema.ch:443',
         ],
         username: 'threema-angular',
         credential: 'Uv0LcCq3kyx6EiRwQW5jVigkhzbp70CjN2CJqzmRxG3UGIdJHSJV6tpo7Gj7YnGB',
