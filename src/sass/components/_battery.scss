@@ -1,16 +1,10 @@
 .battery-status {
     position: relative;
-    top: -12px;
+    top: -18px;
     right: 24px;
 
-    &.with-percent {
-        top: -18px;
-    }
-
     &.alert {
-        .battery-percent {
-            animation: alert 1s linear infinite;
-        }
+        animation: alert 1990ms linear infinite;
     }
 
     md-icon {
@@ -37,6 +31,6 @@
     }
 
     @keyframes alert {
-        50% { opacity: 0.7; }
+        50% { opacity: 0.2; }
     }
 }
