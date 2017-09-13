@@ -240,6 +240,7 @@
     },
     "battery": {
         "CHARGING": "Charging: {percent}%",
-        "DISCHARGING": "Discharging: {percent}%"
+        "DISCHARGING": "Discharging: {percent}%",
+        "ALERT": "Discharging: {percent}%"
     }
 }
