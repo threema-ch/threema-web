@@ -53,7 +53,9 @@
         "PHONE_ONLINE": "Is your phone connected to the internet?",
         "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?",
         "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
-        "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?"
+        "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?",
+        "PLEASE_UPDATE_APP": "Please make sure that you're using the <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">latest version</a> of the Threema app!",
+        "USE_ARCHIVE_VERSION": "Alternatively you can switch back to the <a href=\"{archiveUrl}\">previous version</a> of Threema Web."
     },
     "common": {
         "YES": "Yes",
@@ -166,7 +168,6 @@
         "location": "Location",
         "ballot": "Ballot",
         "gif": "GIF"
-
     },
     "validationError": {
         "createReceiver": {

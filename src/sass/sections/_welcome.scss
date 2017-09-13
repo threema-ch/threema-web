@@ -108,6 +108,20 @@
             }
         }
 
+        .protocol-updated {
+            font-size: 0.9em;
+            background-color: $status-error;
+            color: white;
+            font-weight: bold;
+            position: absolute;
+            bottom: 148px;
+            padding: 8px 8px;
+            width: calc(100% - 16px);
+            a {
+                color: #9dd0f2;
+            }
+        }
+
         .troubleshoot {
             $troubleshoot-height: 190px;
             height: $troubleshoot-height;
@@ -117,6 +131,7 @@
 
             h3 {
                 margin-bottom: 8px;
+                height: 44px;
             }
 
             ul {

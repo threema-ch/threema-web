@@ -7,6 +7,7 @@ export default {
 
     // General
     SELF_HOSTED: false,
+    PREV_PROTOCOL_LAST_VERSION: null,
 
     // SaltyRTC
     SALTYRTC_HOST: null,

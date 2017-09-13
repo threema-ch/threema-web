@@ -34,7 +34,7 @@
         "MANUAL_START_STEP2": "Tippen Sie auf die Sitzung, die Sie wiederherstellen möchten",
         "MANUAL_START_STEP3": "Wählen Sie im Menu \"Sitzung starten\"",
         "MORE_ABOUT_WEB": "Mehr über Threema Web",
-        "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich.  Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons."
+        "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich. Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons."
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindungsprobleme",
@@ -42,6 +42,7 @@
         "RECOVERING_CONNECTION": "Versuche Verbindung wiederherzustellen\u2026",
         "WAITING_FOR_APP": "Threema-App wird aufgeweckt\u2026",
         "WAITING_FOR_APP_MANUAL": "Google Play Services nicht installiert. Bitte starten Sie die Sitzung manuell.",
+        "CONNECTING_TO_SERVER": "Verbinden mit Server\u2026",
         "CONNECTING_TO_APP": "Verbindung zu App wird aufgebaut\u2026",
         "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen."
     },
@@ -52,7 +53,9 @@
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
         "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?",
         "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
-        "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?"
+        "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?",
+        "PLEASE_UPDATE_APP": "Bitte stellen Sie sicher, dass Sie die <a href=\"https://threema.ch/de/whats-new\" target=\"_blank\">neuste App-Version</a> von Threema nutzen!",
+        "USE_ARCHIVE_VERSION": "Alternativ können Sie zu der <a href=\"{archiveUrl}\">vorherigen Version</a> von Threema Web wechseln."
     },
     "common": {
         "YES": "Ja",

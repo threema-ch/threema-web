@@ -69,6 +69,10 @@ The configuration of Threema Web can be tweaked in `src/config.ts`:
 
 - `SELF_HOSTED`: Set this to `true` if this instance of Threema Web isn't being
   hosted on `web.threema.ch`.
+- `PREV_PROTOCOL_LAST_VERSION`: When the Threema Web protocol version changes,
+  this can be set to the last version of Threema Web that supported  the
+  previous protocol version. If set to something different than `null`, a
+  message will be shown to the user if reconnecting fails.
 
 **SaltyRTC**
 
