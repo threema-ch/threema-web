@@ -58,7 +58,7 @@ export default [
                 };
             }],
             template: `
-                <div class="battery-status" ng-if="ctrl.available()"">
+                <div class="battery-status" ng-if="ctrl.available()"" ng-class="{'alert': ctrl.alert()}">
                     <md-icon
                         aria-label="{{ ctrl.description() }}"
                         title="{{ ctrl.description() }}"
