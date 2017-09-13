@@ -30,13 +30,15 @@ export default [
     '$mdDialog',
     '$filter',
     '$log',
+    '$rootScope',
     function(browserService: BrowserService,
              stringService: StringService,
              $window, $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
-             $log: ng.ILogService) {
+             $log: ng.ILogService,
+             $rootScope: ng.IRootScopeService) {
         return {
             restrict: 'EA',
             scope: {
@@ -656,6 +658,10 @@ export default [
                 sendTrigger.on('click', onSendTrigger);
 
                 updateView();
+
+                $rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
+                    composeDiv[0].focus();
+                });
             },
             // tslint:disable:max-line-length
             template: `
