@@ -19,8 +19,9 @@ import {BatteryStatusService} from '../services/battery';
 
 export default [
     '$rootScope',
+    '$translate',
     'BatteryStatusService',
-    function($rootScope: ng.IRootScopeService,
+    function($rootScope: ng.IRootScopeService, $translate: ng.translate.ITranslateService,
              batteryStatusService: BatteryStatusService) {
         return {
             restrict: 'E',
@@ -29,26 +30,40 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.available = () => batteryStatusService.dataAvailable;
-                this.percent = () => batteryStatusService.percent;
-                this.isCharging = () => batteryStatusService.isCharging;
                 this.alert = () => batteryStatusService.percent < 20;
-                this.showPercent = () => !this.alert() && !this.isCharging();
+                this.percent = () => batteryStatusService.percent;
+
+                this.description = (): string => {
+                    if (batteryStatusService.isCharging) {
+                        return $translate.instant('battery.CHARGING', {
+                            percent: this.percent(),
+                        });
+                    } else if (this.alert()) {
+                        return $translate.instant('battery.ALERT', {
+                            percent: this.percent(),
+                        });
+                    }
+                    return $translate.instant('battery.DISCHARGING', {
+                        percent: this.percent(),
+                    });
+                };
+
+                this.icon = (): string => {
+                    if (batteryStatusService.isCharging) {
+                        return 'battery_charging_full';
+                    } else if (this.alert()) {
+                        return 'battery_alert';
+                    }
+                    return 'battery_std';
+                };
             }],
             template: `
-                <div class="battery-status" ng-if="ctrl.available()" ng-class="{'with-percent': ctrl.showPercent()}">
-                    <md-icon ng-if="ctrl.isCharging()"
-                             aria-label="Battery status: Charging"
-                             title="Charging: {{ ctrl.percent() }}%"
-                             class="material-icons md-light md-24">battery_charging_full</md-icon>
-                    <md-icon ng-if="!ctrl.isCharging() && !ctrl.alert()"
-                             aria-label="Battery status: Discharging"
-                             title="Discharging: {{ ctrl.percent() }}%"
-                             class="material-icons md-light md-24">battery_std</md-icon>
-                    <span ng-if="ctrl.showPercent()" class="battery-percent">{{ ctrl.percent() }}%</span>
-                    <md-icon ng-if="!ctrl.isCharging() && ctrl.alert()"
-                             aria-label="Battery status: Alert"
-                             title="Discharging: {{ ctrl.percent() }}%"
-                             class="material-icons md-light md-24">battery_alert</md-icon>
+                <div class="battery-status" ng-if="ctrl.available()"">
+                    <md-icon
+                        aria-label="{{ ctrl.description() }}"
+                        title="{{ ctrl.description() }}"
+                        class="material-icons md-light md-24">{{ ctrl.icon() }}</md-icon>
+                       <span class="battery-percent">{{ ctrl.percent() }}%</span>
                 </div>
             `,
         };

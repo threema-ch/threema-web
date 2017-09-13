@@ -235,6 +235,9 @@
         "CALL_FINISHED_OUT": "Ausgehender Anruf",
         "CALL_REJECTED": "Anruf abgelehnt",
         "CALL_ABORTED": "Anruf abgebrochen"
+    },
+    "battery": {
+        "CHARGING": "Aufladen: {percent}%",
+        "DISCHARGING": "Entladen: {percent}%"
     }
-
 }
