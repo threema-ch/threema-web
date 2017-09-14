@@ -91,12 +91,14 @@ mediabox {
             }
 
             .caption {
-                display: flex;
-                align-items: flex-end;
-                height: 28px;
                 margin: 4px 0 0;
                 color: rgba(255, 255, 255, 0.8);
                 font-size: 1.3em;
+                display: block;
+                width: 90%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }

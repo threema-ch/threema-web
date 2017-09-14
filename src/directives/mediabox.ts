@@ -77,7 +77,7 @@ export default [
                     <md-icon class="close material-icons md-24" ng-click="ctrl.close()" aria-label="Close" translate-attr="{'aria-label': 'common.CLOSE', 'title': 'common.CLOSE'}">close</md-icon>
                     <div class="inner" ng-click="ctrl.close($event)">
                         <img ng-src="{{ ctrl.imageDataUrl }}">
-                        <div class="caption">
+                        <div class="caption" title="{{ ctrl.caption | escapeHtml}}">
                             <span ng-bind-html="ctrl.caption | escapeHtml | markify | emojify"></span>
                         </div>
                     </div>
