@@ -1303,10 +1303,16 @@ export class WebClientService {
             }
 
             if (quoteText !== undefined) {
-                this.drafts.setQuote(receiver, {
+                let quote = {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
                     text: quoteText,
-                } as threema.Quote);
+                } as threema.Quote;
+
+                this.drafts.setQuote(receiver, quote);
+                this.$rootScope.$broadcast('onQuoted', {
+                    receiver: receiver,
+                    quote: quote,
+                });
             }
         }
     }
