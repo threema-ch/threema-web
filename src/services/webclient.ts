@@ -413,13 +413,6 @@ export class WebClientService {
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
-                if (state === 'connected' && this.stateService.wasConnected) {
-                    // This happens if a lost connection could be restored
-                    // without resetting the peer connection.
-                    // Request initial data again, since some packets could have been lost
-                    // while the connection was gone.
-                    this._requestInitialData();
-                }
                 this.stateService.updateRtcConnectionState(state);
             };
 
