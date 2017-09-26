@@ -5,6 +5,8 @@ the full log, please refer to the git commit history.
 
 ### [v1.6.0][v1.6.0] (2017-09-26)
 
+Changes:
+
 * [feature] Deal with unknown message types ([#311][i311])
 * [feature] Focus input field after sending message ([#316][i316])
 * [feature] Add file message preview in conversations list ([#315][i315])
@@ -28,6 +30,8 @@ Contributors:
 - [@JlnWntr][@JlnWntr]
 
 ### [v1.5.0][v1.5.0] (2017-08-29)
+
+Changes:
 
 * [feature] Mark Threema Work users with a suitcase icon ([#310][i310])
 * [feature] Show nickname for verified contacts and in contact details ([#296][i296])
