@@ -3,6 +3,30 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.6.0][v1.6.0] (2017-09-26)
+
+* [feature] Deal with unknown message types ([#311][i311])
+* [feature] Focus input field after sending message ([#316][i316])
+* [feature] Add file message preview in conversations list ([#315][i315])
+* [feature] Show group creation and member count in group detail view ([#255][i255])
+* [feature] Mark blocked contacts / disable sending messages to blocked contacts ([#135][i135])
+* [feature] Implement deleting all messages of a chat ([#50][i50])
+* [feature] Emojify nicknames ([#338][i338])
+* [feature] Add mechanisms to improve protocol version upgrades ([#339][i339])
+* [feature] Battery status improvements ([#340][i340])
+* [bug] Do not allow ack/dec on voip status messages ([#320][i320])
+* [bug] Fix missing translation in notification of voip status messages ([#321][i321])
+* [bug] Show downloading indicator on downloading a message via menu ([#334][i334])
+* [bug] Fix sending multiple files via attachment button ([#330][i330])
+* [bug] Show caption input only on file and image messages ([#332][i332])
+* [bug] Focus compose area on quoting a text ([#251][i251])
+* [change] Limit image caption text characters ([#343][i343])
+* [change] Don't reload data on ICE reconnect ([#349][i349])
+
+Contributors:
+
+- [@JlnWntr][@JlnWntr]
+
 ### [v1.5.0][v1.5.0] (2017-08-29)
 
 * [feature] Mark Threema Work users with a suitcase icon ([#310][i310])
@@ -190,6 +214,7 @@ First public release.
 [i46]: https://github.com/threema-ch/threema-web/issues/46
 [i48]: https://github.com/threema-ch/threema-web/issues/48
 [i49]: https://github.com/threema-ch/threema-web/issues/49
+[i50]: https://github.com/threema-ch/threema-web/issues/50
 [i54]: https://github.com/threema-ch/threema-web/issues/54
 [i57]: https://github.com/threema-ch/threema-web/issues/57
 [i59]: https://github.com/threema-ch/threema-web/issues/59
@@ -216,6 +241,7 @@ First public release.
 [i127]: https://github.com/threema-ch/threema-web/issues/127
 [i131]: https://github.com/threema-ch/threema-web/issues/131
 [i134]: https://github.com/threema-ch/threema-web/issues/134
+[i135]: https://github.com/threema-ch/threema-web/issues/135
 [i143]: https://github.com/threema-ch/threema-web/issues/143
 [i144]: https://github.com/threema-ch/threema-web/issues/144
 [i148]: https://github.com/threema-ch/threema-web/issues/148
@@ -242,6 +268,8 @@ First public release.
 [i237]: https://github.com/threema-ch/threema-web/issues/237
 [i238]: https://github.com/threema-ch/threema-web/issues/238
 [i239]: https://github.com/threema-ch/threema-web/issues/239
+[i251]: https://github.com/threema-ch/threema-web/issues/251
+[i255]: https://github.com/threema-ch/threema-web/issues/255
 [i256]: https://github.com/threema-ch/threema-web/issues/256
 [i261]: https://github.com/threema-ch/threema-web/issues/261
 [i264]: https://github.com/threema-ch/threema-web/issues/264
@@ -255,7 +283,21 @@ First public release.
 [i291]: https://github.com/threema-ch/threema-web/issues/291
 [i296]: https://github.com/threema-ch/threema-web/issues/296
 [i310]: https://github.com/threema-ch/threema-web/issues/310
+[i311]: https://github.com/threema-ch/threema-web/issues/311
+[i315]: https://github.com/threema-ch/threema-web/issues/315
+[i316]: https://github.com/threema-ch/threema-web/issues/316
+[i320]: https://github.com/threema-ch/threema-web/issues/320
+[i330]: https://github.com/threema-ch/threema-web/issues/330
+[i321]: https://github.com/threema-ch/threema-web/issues/321
+[i332]: https://github.com/threema-ch/threema-web/issues/332
+[i334]: https://github.com/threema-ch/threema-web/issues/334
+[i338]: https://github.com/threema-ch/threema-web/issues/338
+[i339]: https://github.com/threema-ch/threema-web/issues/339
+[i340]: https://github.com/threema-ch/threema-web/issues/340
+[i343]: https://github.com/threema-ch/threema-web/issues/343
+[i349]: https://github.com/threema-ch/threema-web/issues/349
 
+[v1.6.0]: https://github.com/threema-ch/threema-web/compare/v1.5.0...v1.6.0
 [v1.5.0]: https://github.com/threema-ch/threema-web/compare/v1.4.1...v1.5.0
 [v1.4.1]: https://github.com/threema-ch/threema-web/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/threema-ch/threema-web/compare/v1.3.1...v1.4.0
@@ -280,3 +322,4 @@ First public release.
 [@FloThinksPi]: https://github.com/FloThinksPi/
 [@Pythonix]: https://github.com/Pythonix/
 [@econic]: https://github.com/econic/
+[@JlnWntr]: https://github.com/JlnWntr/
