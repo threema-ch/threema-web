@@ -130,9 +130,8 @@ export class TrustedKeyStoreService {
 
         const nonce = hexToU8a(parts[0]);
         const encrypted = hexToU8a(parts[1]);
-        // TODO: Remove type cast once https://github.com/dchest/tweetnacl-js/pull/113 is merged
-        const decrypted = nacl.secretbox.open(encrypted, nonce, this.pwToKey(password)) as Uint8Array | false;
-        if (decrypted === false) {
+        const decrypted = nacl.secretbox.open(encrypted, nonce, this.pwToKey(password));
+        if (!decrypted) {
             return null;
         }
 
