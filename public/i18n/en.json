@@ -66,6 +66,7 @@
         "SESSION_DELETE": "Delete Session",
         "CONFIRM_DELETE_BODY": "Do you really want to delete this saved session?",
         "CONFIRM_DELETE_CLOSE_BODY": "Do you really want to close and delete this saved session?",
+        "WARNING": "Warning",
         "ERROR": "Error",
         "CANCEL": "Cancel",
         "NO": "No",
@@ -242,6 +243,8 @@
     "battery": {
         "CHARGING": "Charging: {percent}%",
         "DISCHARGING": "Discharging: {percent}%",
-        "ALERT": "Discharging: {percent}%"
+        "ALERT": "Discharging: {percent}%",
+        "LEVEL_LOW": "Your device battery level is low ({percent}%).",
+        "LEVEL_CRITICAL": "Your device battery level is critical ({percent}%)!"
     }
 }

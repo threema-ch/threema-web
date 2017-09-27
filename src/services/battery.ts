@@ -15,15 +15,54 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {NotificationService} from './notification';
+
 export class BatteryStatusService {
     // Attributes
     private batteryStatus: threema.BatteryStatus = null;
+    private alertedLow = false;
+    private alertedCritical = false;
+
+    // Constants
+    private static readonly PERCENT_LOW = 20;
+    private static readonly PERCENT_CRITICAL = 5;
+
+    // Services
+    private $translate: ng.translate.ITranslateService;
+    private notificationService: NotificationService;
+
+    public static $inject = ['$translate', 'NotificationService'];
+
+    constructor($translate: ng.translate.ITranslateService, notificationService: NotificationService) {
+        this.$translate = $translate;
+        this.notificationService = notificationService;
+    }
 
     /**
      * Update the battery status.
      */
     public setStatus(batteryStatus: threema.BatteryStatus): void {
         this.batteryStatus = batteryStatus;
+
+        // Alert if percent drops below a certain threshold
+        if (!this.alertedCritical && batteryStatus.percent < BatteryStatusService.PERCENT_CRITICAL) {
+            this.notifyLevel('critical');
+            this.alertedCritical = true;
+        } else if (!this.alertedLow && batteryStatus.percent < BatteryStatusService.PERCENT_LOW) {
+            this.notifyLevel('low');
+            this.alertedLow = true;
+        }
+
+        // Reset alert flag if percentage goes above a certain threshold
+        const hysteresis = 3;
+        if (this.alertedLow && batteryStatus.percent > BatteryStatusService.PERCENT_LOW + hysteresis) {
+            this.alertedLow = false;
+            this.notificationService.hideNotification('battery-low');
+        }
+        if (this.alertedCritical && batteryStatus.percent > BatteryStatusService.PERCENT_CRITICAL + hysteresis) {
+            this.alertedCritical = false;
+            this.notificationService.hideNotification('battery-critical');
+        }
     }
 
     /**
@@ -45,6 +84,49 @@ export class BatteryStatusService {
      */
     public get isCharging(): boolean {
         return this.batteryStatus.isCharging;
+    }
+
+    /**
+     * Return whether the battery level is low (<20%).
+     */
+    public get isLow(): boolean {
+        return this.batteryStatus.percent < BatteryStatusService.PERCENT_LOW;
+    }
+
+    /**
+     * Return whether the battery level is critical (<20%).
+     */
+    public get isCritical(): boolean {
+        return this.batteryStatus.percent < BatteryStatusService.PERCENT_CRITICAL;
+    }
+
+    /**
+     * Alert the user about a certain battery level.
+     */
+    private notifyLevel(level: 'low' | 'critical'): void {
+        if (!this.notificationService.getWantsNotifications()) {
+            // User does not want notifications.
+            // This flag is also checked in the `showNotification` function, but
+            // we'll return early to avoid having to do the translations and to
+            // keep the notification sound from playing without a visible
+            // notification.
+            return;
+        }
+
+        const title = this.$translate.instant('common.WARNING');
+        const avatar = 'img/ic_battery_alert-64x64.png';
+        let tag: string;
+        let body: string;
+        if (level === 'low') {
+            tag = 'battery-low';
+            body = this.$translate.instant('battery.LEVEL_LOW', { percent: this.percent });
+            this.notificationService.hideNotification('battery-critical');
+        } else if (level === 'critical') {
+            tag = 'battery-critical';
+            body = this.$translate.instant('battery.LEVEL_CRITICAL', { percent: this.percent });
+            this.notificationService.hideNotification('battery-low');
+        }
+        this.notificationService.showNotification(tag, title, body, avatar, undefined, true, true);
     }
 
     public toString(): string {
