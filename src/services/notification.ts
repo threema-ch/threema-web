@@ -272,11 +272,18 @@ export class NotificationService {
      * @param tag A tag used to group similar notifications.
      * @param title The notification title
      * @param body The notification body
-     * @param avatar URL to the avatar file
-     * @param clickCallback Callback function to be executed on click
+     * @param avatar URL to the avatar file (optional, default is the Threema logo)
+     * @param clickCallback Callback function to be executed on click (optional)
+     * @param forceShowBody Show the notification body even if the user has disabled
+     *            notification preview (optional, default false)
+     * @param overwriteOlder Do not append message to pre-existing notifications with
+     *            the same tag, replace them instead (optional, default false)
      */
     public showNotification(tag: string, title: string, body: string,
-                            avatar: string = '/img/threema-64x64.png', clickCallback: any): boolean {
+                            avatar: string = '/img/threema-64x64.png',
+                            clickCallback?: any,
+                            forceShowBody: boolean = false,
+                            overwriteOlder: boolean = false): boolean {
 
         // Play sound on new message if the user wants to
         if (this.notificationSound) {
@@ -290,12 +297,17 @@ export class NotificationService {
         }
 
         // Clear body string if the user does not want a notification preview
-        if (!this.notificationPreview) {
+        if (!this.notificationPreview && !forceShowBody) {
             body = '';
             // Clear notification cache
             if (this.notificationCache[tag]) {
                 this.clearCache(tag);
             }
+        }
+
+        // Clear cache if the user wants to overwrite older messages of the same tag
+        if (overwriteOlder === true) {
+            this.clearCache(tag);
         }
 
         // If the cache is not empty, append old messages

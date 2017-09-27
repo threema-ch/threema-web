@@ -66,6 +66,7 @@
         "SESSION_DELETE": "Sitzung löschen",
         "CONFIRM_DELETE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich löschen?",
         "CONFIRM_DELETE_CLOSE_BODY": "Wollen Sie die gespeicherte Sitzung wirklich schliessen und löschen?",
+        "WARNING": "Achtung",
         "ERROR": "Fehler",
         "CANCEL": "Abbrechen",
         "NO": "Nein",
@@ -242,6 +243,8 @@
     "battery": {
         "CHARGING": "Aufladen: {percent}%",
         "DISCHARGING": "Entladen: {percent}%",
-        "ALERT": "Entladen: {percent}%"
+        "ALERT": "Entladen: {percent}%",
+        "LEVEL_LOW": "Der Akkustand Ihres Gerätes ist niedrig ({percent}%).",
+        "LEVEL_CRITICAL": "Der Akkustand Ihres Gerätes ist kritisch ({percent}%)!"
     }
 }

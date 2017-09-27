@@ -30,7 +30,7 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.available = () => batteryStatusService.dataAvailable;
-                this.alert = () => batteryStatusService.percent < 20;
+                this.alert = () => batteryStatusService.isLow;
                 this.percent = () => batteryStatusService.percent;
 
                 this.description = (): string => {
