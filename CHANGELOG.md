@@ -3,6 +3,13 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.6.1][v1.6.1] (2017-10-02)
+
+Changes:
+
+* [feature] Show desktop notifications if battery level is low ([#351][i351])
+* [change] Updated STUN/TURN endpoints
+
 ### [v1.6.0][v1.6.0] (2017-09-26)
 
 Changes:
@@ -24,6 +31,7 @@ Changes:
 * [bug] Focus compose area on quoting a text ([#251][i251])
 * [change] Limit image caption text characters ([#343][i343])
 * [change] Don't reload data on ICE reconnect ([#349][i349])
+* [change] Updated STUN/TURN endpoints
 
 Contributors:
 
@@ -300,7 +308,9 @@ First public release.
 [i340]: https://github.com/threema-ch/threema-web/issues/340
 [i343]: https://github.com/threema-ch/threema-web/issues/343
 [i349]: https://github.com/threema-ch/threema-web/issues/349
+[i351]: https://github.com/threema-ch/threema-web/issues/351
 
+[v1.6.1]: https://github.com/threema-ch/threema-web/compare/v1.6.0...v1.6.1
 [v1.6.0]: https://github.com/threema-ch/threema-web/compare/v1.5.0...v1.6.0
 [v1.5.0]: https://github.com/threema-ch/threema-web/compare/v1.4.1...v1.5.0
 [v1.4.1]: https://github.com/threema-ch/threema-web/compare/v1.4.0...v1.4.1
