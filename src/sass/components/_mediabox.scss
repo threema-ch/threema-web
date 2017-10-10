@@ -95,7 +95,7 @@ mediabox {
                 color: rgba(255, 255, 255, 0.8);
                 font-size: 1.3em;
                 display: block;
-                width: 90%;
+                max-width: 90%;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
