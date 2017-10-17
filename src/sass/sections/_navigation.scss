@@ -119,7 +119,7 @@
                 justify-content: space-between;
                 font-weight: bold;
                 color: black;
-                :first-child {
+                .title {
                     flex: 1;
                     white-space: nowrap;
                     overflow: hidden;
@@ -128,6 +128,17 @@
                 }
                 .disabled {
                     text-decoration: line-through;
+                }
+                .muted {
+                    margin: 1px 0 0 4px;
+                    padding: 0;
+                    height: 20px;
+                    i {
+                        color: $material-grey;
+                        font-size: 20px;
+                        margin: 0;
+                        padding: 0;
+                    }
                 }
             }
 
@@ -218,6 +229,7 @@
             color: white;
             font-size: 0.9em;
             padding: 0 5px;
+            margin-left: 4px;
         }
     }
 
