@@ -524,6 +524,7 @@ declare namespace threema {
         interface Conversations {
             get(): Conversation[];
             set(data: Conversation[]): void;
+            find(pattern: Conversation | Receiver): Conversation | null;
             add(conversation: Conversation): void;
             updateOrAdd(conversation: Conversation): void;
             remove(conversation: Conversation): void;

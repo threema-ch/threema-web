@@ -250,6 +250,22 @@ angular.module('3ema.container', [])
             });
         }
 
+        /**
+         * Find a stored conversation matching the given conversation or receiver.
+         *
+         * Comparison is done by type and id.
+         */
+        public find(pattern: threema.Conversation | threema.Receiver): threema.Conversation | null {
+            for (let conversation of this.get()) {
+                const a = pattern;
+                const b = conversation;
+                if (a !== undefined && b !== undefined && a.type === b.type && a.id === b.id) {
+                    return conversation;
+                }
+            }
+            return null;
+        }
+
         public add(conversation: threema.Conversation): void {
             this.conversations.splice(conversation.position, 0, conversation);
         }
