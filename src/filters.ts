@@ -177,7 +177,7 @@ angular.module('3ema.filters', [])
 })
 .filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
     const logTag = '[filters.bufferToUrl]';
-    return function(buffer: ArrayBuffer, mimeType) {
+    return function(buffer: ArrayBuffer, mimeType: string, trust: boolean = true) {
         if (!buffer) {
             $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
             return '';
@@ -188,8 +188,12 @@ angular.module('3ema.filters', [])
         for (let i = 0; i < len; i++) {
             binary += String.fromCharCode(bytes[i]);
         }
-
-        return $sce.trustAsResourceUrl('data:' + mimeType + ';base64,' +  btoa(binary));
+        const uri = 'data:' + mimeType + ';base64,' +  btoa(binary);
+        if (trust) {
+            return $sce.trustAsResourceUrl(uri);
+        } else {
+            return uri;
+        }
     };
 }])
 .filter('mapLink', function() {
