@@ -2096,10 +2096,16 @@ export class WebClientService {
         }
         const sender: threema.Receiver = conversation.receiver;
 
-        if (sender === undefined  || sender.locked) {
-            // do not show any notifications on private chats
+        // Do not show any notifications on private chats
+        if (sender === undefined || sender.locked) {
             return;
         }
+
+        // Do not show any notifications on muted chats
+        if (conversation.isMuted === true) {
+            return;
+        }
+
         // Determine sender and partner name (used for notification)
         let senderName = sender.id;
         if (sender.displayName) {

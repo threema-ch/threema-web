@@ -286,6 +286,7 @@ declare namespace threema {
         latestMessage: Message;
         receiver?: Receiver;
         avatar?: ArrayBuffer;
+        isMuted?: boolean;
     }
 
     /**
