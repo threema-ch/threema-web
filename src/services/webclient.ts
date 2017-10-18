@@ -1649,27 +1649,34 @@ export class WebClientService {
                 if (data.unreadCount > 0) {
 
                     // Find the correct conversation in the conversation list
-                    for (let conversation of this.conversations.get()) {
-                        if (this.receiverService.compare(conversation, data)) {
+                    const conversation = this.conversations.find(data);
+                    if (data === null) {
+                        // Conversation not found, add it!
+                        this.conversations.add(data);
+                        this.onNewMessage(data.latestMessage, conversation);
+                    } else {
+                        // Check for unread count changes
+                        const unreadCountIncreased = data.unreadCount > conversation.unreadCount;
+                        const unreadCountDecreased = data.unreadCount < conversation.unreadCount;
 
-                            if (data.unreadCount > conversation.unreadCount) {
-                                // This is our conversation! If the unreadcount
-                                // has increased, we received a new message.
-                                this.onNewMessage(data.latestMessage, conversation);
-                            } else if (data.unreadCount < conversation.unreadCount) {
-                                // Otherwise, if it has decreased, hide the notification.
-                                this.notificationService.hideNotification(data.type + '-' + data.id);
-                            }
+                        // Update the conversation
+                        this.conversations.updateOrAdd(data);
 
-                            break;
+                        // If the unreadcount has increased, we received a new message.
+                        // Otherwise, if it has decreased, hide the notification.
+                        if (unreadCountIncreased) {
+                            this.onNewMessage(data.latestMessage, conversation);
+                        } else if (unreadCountDecreased) {
+                            this.notificationService.hideNotification(data.type + '-' + data.id);
                         }
                     }
+
                 } else {
+                    // Update the conversation and hide any notifications
+                    this.conversations.updateOrAdd(data);
                     this.notificationService.hideNotification(data.type + '-' + data.id);
                 }
-                // we have to call update or add, we are not sure if this
-                // conversation is already fetched
-                this.conversations.updateOrAdd(data);
+
                 break;
             case WebClientService.ARGUMENT_MODE_REMOVED:
                 this.conversations.remove(data);
@@ -2088,18 +2095,23 @@ export class WebClientService {
      * Called when a new message arrives.
      */
     private onNewMessage(message: threema.Message, conversation: threema.Conversation): void {
-        // ignore message from active receivers (and if the browser tab is visible
+        // Ignore message from active receivers (and if the browser tab is visible)
         if (this.browserService.isVisible()
-            && this.receiverService.compare(conversation, this.receiverService.getActive())) {
-            this.$log.debug('do not show a notification of a active chat');
+                && this.receiverService.compare(conversation, this.receiverService.getActive())) {
             return;
         }
         const sender: threema.Receiver = conversation.receiver;
 
-        if (sender === undefined  || sender.locked) {
-            // do not show any notifications on private chats
+        // Do not show any notifications on private chats
+        if (sender === undefined || sender.locked) {
             return;
         }
+
+        // Do not show any notifications on muted chats
+        if (conversation.isMuted === true) {
+            return;
+        }
+
         // Determine sender and partner name (used for notification)
         let senderName = sender.id;
         if (sender.displayName) {

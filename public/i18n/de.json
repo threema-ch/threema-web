@@ -157,7 +157,8 @@
         "THREEMA_WORK_CONTACT": "Threema Work Nutzer",
         "THREEMA_BLOCKED_RECEIVER": "blockiert",
         "DELETE_THREAD": "Chat löschen",
-        "DELETE_THREAD_MESSAGE": "{count, plural, one {Möchten Sie wirklich diesen Chat löschen? Die Nachrichten können nicht wiederhergestellt werden.} other {Möchten Sie wirklich # Chats löschen? Die Nachrichten können nicht wiederhergestellt werden.}}"
+        "DELETE_THREAD_MESSAGE": "{count, plural, one {Möchten Sie wirklich diesen Chat löschen? Die Nachrichten können nicht wiederhergestellt werden.} other {Möchten Sie wirklich # Chats löschen? Die Nachrichten können nicht wiederhergestellt werden.}}",
+        "MUTED": "Keine Benachrichtigungen"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",

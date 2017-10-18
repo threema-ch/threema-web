@@ -77,7 +77,10 @@
 
             <section class="conversation-box">
                 <section class="receiver-box">
-                    <span ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify">
+                    <span class="title" ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify">
+                    </span>
+                    <span class="muted" ng-show="conversation.isMuted">
+                        <i class="material-icons md-dark" translate translate-attr-title="messenger.MUTED">do_not_disturb_on</i>
                     </span>
                     <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
                         {{ conversation.unreadCount }}
