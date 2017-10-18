@@ -45,12 +45,14 @@ export class BatteryStatusService {
         this.batteryStatus = batteryStatus;
 
         // Alert if percent drops below a certain threshold
-        if (!this.alertedCritical && batteryStatus.percent < BatteryStatusService.PERCENT_CRITICAL) {
-            this.notifyLevel('critical');
-            this.alertedCritical = true;
-        } else if (!this.alertedLow && batteryStatus.percent < BatteryStatusService.PERCENT_LOW) {
-            this.notifyLevel('low');
-            this.alertedLow = true;
+        if (!batteryStatus.isCharging) {
+            if (!this.alertedCritical && batteryStatus.percent < BatteryStatusService.PERCENT_CRITICAL) {
+                this.notifyLevel('critical');
+                this.alertedCritical = true;
+            } else if (!this.alertedLow && batteryStatus.percent < BatteryStatusService.PERCENT_LOW) {
+                this.notifyLevel('low');
+                this.alertedLow = true;
+            }
         }
 
         // Reset alert flag if percentage goes above a certain threshold
