@@ -34,6 +34,8 @@ export default [
                 onChange: '=',
             },
             link(scope: any, element, attrs, controller) {
+                const logTag: string = '[AvatarEditorDirective]';
+
                 // Constants
                 const DRAGOVER_CSS_CLASS = 'is-dragover';
                 const VIEWPORT_SIZE = 220;
@@ -114,7 +116,6 @@ export default [
                             }
                         };
                         reader.readAsArrayBuffer(file);
-
                     });
                 }
 
@@ -124,11 +125,10 @@ export default [
                     }
                     // get first
                     fetchFileContent(fileList[0]).then((data: ArrayBuffer) => {
-                        let image = $filter('bufferToUrl')(data, 'image/jpg');
+                        let image = $filter('bufferToUrl')(data, 'image/jpg', false);
                         setImage(image);
-
                     }).catch((ev: ErrorEvent) => {
-                        $log.error('Could not load file:', ev.message);
+                        $log.error(logTag, 'Could not load file:', ev.message);
                     });
                 }
 
@@ -190,6 +190,8 @@ export default [
                     // load image to calculate size
                     let img = new Image();
                     img.addEventListener('load', function () {
+                        $log.debug(logTag, 'Image loaded');
+
                         // hack to fix typescript undefined method (width) exception
                         let w = (this as any).naturalWidth;
                         let h = (this as any).naturalHeight;
@@ -207,7 +209,8 @@ export default [
                             points: imageSize,
                         }).then(() => {
                             loading(false);
-                        }).catch(() => {
+                        }).catch((e) => {
+                            $log.error(logTag, 'Could not bind avatar preview:', e);
                             loading(false);
                         });
 
@@ -216,8 +219,9 @@ export default [
                         }
                     });
 
-                    img.addEventListener('error', function () {
+                    img.addEventListener('error', function(e) {
                         // this is not a valid image
+                        $log.error(logTag, 'Could not load image:', e);
                         loading(false);
                     });
 
