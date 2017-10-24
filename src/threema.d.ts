@@ -287,6 +287,7 @@ declare namespace threema {
         receiver?: Receiver;
         avatar?: ArrayBuffer;
         isMuted?: boolean;
+        isStarred?: boolean;
     }
 
     /**
