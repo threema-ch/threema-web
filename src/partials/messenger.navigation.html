@@ -65,6 +65,7 @@
     <ul>
         <li ng-repeat="conversation in ctrl.conversations() | filter:ctrl.searchConversation"
             ng-class="{'unread': conversation.unreadCount > 0,
+                'starred': conversation.isStarred,
                 'active': ctrl.isActive(conversation)}"
             ui-sref="messenger.home.conversation({ type: conversation.type, id: conversation.id, initParams: null })"
             class="conversation" ng-if="ctrl.isVisible(conversation)">
