@@ -3,6 +3,17 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.6.2][v1.6.2] (2017-10-25)
+
+Changes:
+
+* [feature] Do not trigger notifications for muted conversations ([#357][i357])
+* [feature] Show indicator for muted conversations ([#357][i357])
+* [feature] Implement display of starred conversations ([#362][i362])
+* [bug] Fix centering of caption text ([#352][i352])
+* [bug] Don't display low battery notification when charging ([#359][i359])
+* [bug] Fix image upload for avatar editor ([#358][i358])
+
 ### [v1.6.1][v1.6.1] (2017-10-02)
 
 Changes:
@@ -309,7 +320,13 @@ First public release.
 [i343]: https://github.com/threema-ch/threema-web/issues/343
 [i349]: https://github.com/threema-ch/threema-web/issues/349
 [i351]: https://github.com/threema-ch/threema-web/issues/351
+[i352]: https://github.com/threema-ch/threema-web/issues/352
+[i357]: https://github.com/threema-ch/threema-web/issues/357
+[i358]: https://github.com/threema-ch/threema-web/issues/358
+[i359]: https://github.com/threema-ch/threema-web/issues/359
+[i362]: https://github.com/threema-ch/threema-web/issues/362
 
+[v1.6.2]: https://github.com/threema-ch/threema-web/compare/v1.6.1...v1.6.2
 [v1.6.1]: https://github.com/threema-ch/threema-web/compare/v1.6.0...v1.6.1
 [v1.6.0]: https://github.com/threema-ch/threema-web/compare/v1.5.0...v1.6.0
 [v1.5.0]: https://github.com/threema-ch/threema-web/compare/v1.4.1...v1.5.0
