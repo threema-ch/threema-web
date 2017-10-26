@@ -247,6 +247,38 @@ class WelcomeController {
         // Instantiate new keystore
         const keyStore = new saltyrtcClient.KeyStore(decrypted.ownSecretKey);
 
+        // Check if there are other tabs running on the same session
+        if ('BroadcastChannel' in self) {
+            const channel = new BroadcastChannel('session-check');
+            channel.onmessage = (event: MessageEvent) => {
+                const message = JSON.parse(event.data);
+                this.$log.debug(message); // TODO: REMOVE
+                switch (message.type) {
+                    case 'publicKey':
+                        if (message.key === keyStore.publicKeyHex) {
+                            channel.postMessage(JSON.stringify({
+                                type: 'open',
+                                key: keyStore.publicKeyHex,
+                            }));
+                        }
+                        break;
+                    case 'open':
+                        if (message.key === keyStore.publicKeyHex) {
+                            this.$log.error('SESSION ALREADY OPEN');
+                        }
+                        break;
+                    default:
+                        this.$log.warn('Unknown session-check message type:', message.type);
+                        break;
+                }
+            };
+            this.$log.debug('Checking if the session is already open');
+            channel.postMessage(JSON.stringify({
+                type: 'publicKey',
+                key: keyStore.publicKeyHex,
+            }));
+        }
+
         // Initialize push service
         if (decrypted.pushToken !== null) {
             this.pushService.init(decrypted.pushToken);
