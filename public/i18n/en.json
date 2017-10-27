@@ -232,7 +232,7 @@
     },
     "version": {
         "NEW_VERSION": "New Version Available",
-        "NEW_VERSION_BODY": "A new version of Threema Web ({version}) is available. Click \"OK\" to reload the page."
+        "NEW_VERSION_BODY": "A new version of Threema Web ({version}) is available. Check out the {changelog} for more information. Click \"OK\" to activate the update."
     },
     "voip": {
         "CALL_MISSED": "Missed call",

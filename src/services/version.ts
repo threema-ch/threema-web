@@ -119,9 +119,14 @@ export class VersionService {
             // Don't show again if dialog is already showing.
             return;
         }
+        const changelogUrl = 'https://github.com/threema-ch/threema-web/blob/master/CHANGELOG.md';
+        const changelogLink = '<a href="' + changelogUrl + '" target="_blank">Changelog</a>';
         const confirm = this.$mdDialog.alert()
-            .title(this.$translate.instant('version.NEW_VERSION', {version: version}))
-            .textContent(this.$translate.instant('version.NEW_VERSION_BODY', {version: version}))
+            .title(this.$translate.instant('version.NEW_VERSION'))
+            .htmlContent(this.$translate.instant('version.NEW_VERSION_BODY', {
+                version: version,
+                changelog: changelogLink,
+            }))
             .ok(this.$translate.instant('common.OK'));
         this.dialogShowing = true;
         this.$mdDialog.show(confirm).then(() => {
