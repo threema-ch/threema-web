@@ -29,7 +29,7 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.showQRCode = () => {
-                    let identity = this.identity;
+                    let identity: threema.Identity = this.identity;
                     $mdDialog.show({
                         controllerAs: 'ctrl',
                         controller: [function() {
@@ -41,7 +41,7 @@ export default [
                                 errorCorrectionLevel: 'L',
                                 size: '400px',
                                 data: '3mid:'
-                                + identity.threemaId
+                                + identity.identity
                                 + ','
                                 + u8aToHex(new Uint8Array(identity.publicKey)),
                             };
