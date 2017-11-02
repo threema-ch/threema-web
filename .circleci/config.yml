@@ -1,0 +1,46 @@
+version: 2
+
+references:
+  build-steps: &test-steps
+    - checkout
+    - restore_cache:
+        keys:
+          - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+    - run: npm install
+    - run: npm run build
+    - run: npm test
+    - save_cache:
+        key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+        paths:
+          - node_modules
+
+jobs:
+  test-node7:
+    docker:
+      - image: circleci/node:7
+    steps: *build-steps
+  test-node8:
+    docker:
+      - image: circleci/node:8
+    steps: *build-steps
+  test-node9:
+    docker:
+      - image: circleci/node:9
+    steps: *build-steps
+  lint:
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-test-node8-{{ arch }}-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run lint
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - test
+      - lint
