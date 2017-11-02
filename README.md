@@ -25,7 +25,9 @@ Whitepaper](https://threema.ch/en/blog/posts/threema-web-whitepaper).
 
 Threema Web is written using [TypeScript](https://www.typescriptlang.org/) and
 [AngularJS 1](https://www.angularjs.org/). Dependencies are managed with
-[npm](https://www.npmjs.com/).
+[npm](https://www.npmjs.com/). You currently need Node.js 8 or later to build
+Threema Web. (Note that Node.js is only a build dependency, the result is plain
+old client-side JavaScript.)
 
 Install development dependencies:
 
