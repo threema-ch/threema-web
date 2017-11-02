@@ -12,6 +12,18 @@ function switchTo(type, newStatus) {
     document.querySelector('#status-' + type + ' .status-' + newStatus).classList.remove('hidden');
 }
 
+function setupChecks() {
+    var start = document.querySelector('#start');
+    var helpText = document.querySelector('#help-text');
+    var checks = document.querySelector('#checks');
+    start.addEventListener('click', function(e) {
+        start.classList.add('hidden');
+        helpText.classList.add('hidden');
+        checks.classList.remove('hidden');
+        doChecks();
+    });
+}
+
 function doChecks() {
     // Check for JS
     switchTo('js', 'yes');
@@ -67,9 +79,7 @@ function doChecks() {
         document.querySelector('#status-turn .results').classList.add('hidden');
         document.querySelector('#status-turn .status-no .small').classList.remove('hidden');
     }
-    var button = document.querySelector('#status-turn button');
-    button.addEventListener('click', function(e) {
-        button.outerHTML = '<img src="loading.gif" alt="Loading...">';
+    function testTurn() {
         timeout = setTimeout(function() {
             turnFail();
         }, 10000);
@@ -110,11 +120,12 @@ function doChecks() {
                 console.warn('Invalid candidate:', ice.candidate.candidate);
             }
         }
-    });
+    }
+    testTurn();
 }
 
 if (document.readyState != 'loading') {
-    doChecks();
+    setupChecks();
 } else {
-    document.addEventListener('DOMContentLoaded', doChecks);
+    document.addEventListener('DOMContentLoaded', setupChecks);
 }

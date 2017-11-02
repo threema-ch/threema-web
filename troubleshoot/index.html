@@ -118,93 +118,100 @@
 
         <h1>Threema Web Diagnostics</h1>
 
-        <h2>Is JavaScript enabled?</h2>
-        <div id="status-js">
-            <div class="status status-no">
-                <i class="material-icons md-36">error</i> <span class="text">No</span>
-            </div>
-            <div class="status status-yes hidden">
-                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-            </div>
-        </div>
+        <p id="help-text">This test will check your browser for compatibility problems. It
+        will also check whether WebRTC connection buildup using STUN/TURN works.</p>
 
-        <h2>Is WebRTC available?</h2>
-        <div id="status-pc">
-            <div class="status status-unknown">
-                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
-            </div>
-            <div class="status status-no hidden">
-                <i class="material-icons md-36">error</i> <span class="text">No</span>
-                <p class="small">RTCPeerConnection is a part of WebRTC.<br>Threema Web cannot work without it.</p>
-            </div>
-            <div class="status status-yes hidden">
-                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-            </div>
-        </div>
+        <button id="start">Start Test</button>
 
-        <h2>Are WebRTC DataChannels available?</h2>
-        <div id="status-dc">
-            <div class="status status-unknown">
-                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+        <div id="checks" class="hidden">
+            <h2>Is JavaScript enabled?</h2>
+            <div id="status-js">
+                <div class="status status-no">
+                    <i class="material-icons md-36">error</i> <span class="text">No</span>
+                </div>
+                <div class="status status-yes hidden">
+                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+                </div>
             </div>
-            <div class="status status-no hidden">
-                <i class="material-icons md-36">error</i> <span class="text">No</span>
-                <p class="small">RTCDataChannel is a part of WebRTC.<br>Threema Web cannot work without it.</p>
-            </div>
-            <div class="status status-yes hidden">
-                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-            </div>
-        </div>
 
-        <h2>Is LocalStorage available?</h2>
-        <div id="status-ls">
-            <div class="status status-unknown">
-                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+            <h2>Is WebRTC available?</h2>
+            <div id="status-pc">
+                <div class="status status-unknown">
+                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+                </div>
+                <div class="status status-no hidden">
+                    <i class="material-icons md-36">error</i> <span class="text">No</span>
+                    <p class="small">RTCPeerConnection is a part of WebRTC.<br>Threema Web cannot work without it.</p>
+                </div>
+                <div class="status status-yes hidden">
+                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+                </div>
             </div>
-            <div class="status status-no hidden">
-                <i class="material-icons md-36">error</i> <span class="text">No</span>
-                <p class="small">Without LocalStorage, persistent sessions and settings<br>cannot be stored in the browser.<br>
-                See the <a href="https://threema.ch/faq/web_browser_settings">FAQ</a> for information on how to fix this.</p>
-            </div>
-            <div class="status status-yes hidden">
-                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-            </div>
-        </div>
 
-        <h2>Are desktop notifications available?</h2>
-        <div id="status-dn">
-            <div class="status status-unknown">
-                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+            <h2>Are WebRTC DataChannels available?</h2>
+            <div id="status-dc">
+                <div class="status status-unknown">
+                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+                </div>
+                <div class="status status-no hidden">
+                    <i class="material-icons md-36">error</i> <span class="text">No</span>
+                    <p class="small">RTCDataChannel is a part of WebRTC.<br>Threema Web cannot work without it.</p>
+                </div>
+                <div class="status status-yes hidden">
+                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+                </div>
             </div>
-            <div class="status status-no hidden">
-                <i class="material-icons md-36">error</i> <span class="text">No</span>
-                <p class="small">Without desktop notifications, we cannot notify you when a new message arrives.</p>
-            </div>
-            <div class="status status-yes hidden">
-                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-            </div>
-        </div>
 
-        <h2>Does TURN work?</h2>
-        <div id="status-turn">
-            <div class="status status-unknown">
-                <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+            <h2>Is LocalStorage available?</h2>
+            <div id="status-ls">
+                <div class="status status-unknown">
+                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+                </div>
+                <div class="status status-no hidden">
+                    <i class="material-icons md-36">error</i> <span class="text">No</span>
+                    <p class="small">Without LocalStorage, persistent sessions and settings<br>cannot be stored in the browser.<br>
+                    See the <a href="https://threema.ch/faq/web_browser_settings">FAQ</a> for information on how to fix this.</p>
+                </div>
+                <div class="status status-yes hidden">
+                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+                </div>
             </div>
-            <div class="status status-no hidden">
-                <i class="material-icons md-36">error</i> <span class="text">No</span>
-                <p class="small hidden">It looks like TURN traffic is being blocked by your firewall.<br>
-                Without TURN, connections can only be established if your computer<br>
-                and your phone are in the same network.</p>
+
+            <h2>Are desktop notifications available?</h2>
+            <div id="status-dn">
+                <div class="status status-unknown">
+                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+                </div>
+                <div class="status status-no hidden">
+                    <i class="material-icons md-36">error</i> <span class="text">No</span>
+                    <p class="small">Without desktop notifications, we cannot notify you when a new message arrives.</p>
+                </div>
+                <div class="status status-yes hidden">
+                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+                </div>
             </div>
-            <div class="status status-yes hidden">
-                <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-            </div>
-            <div class="status status-test hidden">
-                <button>Click to test</button>
-            </div>
-            <div class="results hidden">
-                <p>Results:</p>
-                <p class="result-data"></p>
+
+            <h2>Does TURN work?</h2>
+            <div id="status-turn">
+                <div class="status status-unknown">
+                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
+                </div>
+                <div class="status status-no hidden">
+                    <i class="material-icons md-36">error</i> <span class="text">No</span>
+                    <p class="small hidden">It looks like TURN traffic is being blocked by your firewall.<br>
+                    Without TURN, connections can only be established if your computer<br>
+                    and your phone are in the same network.</p>
+                </div>
+                <div class="status status-yes hidden">
+                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
+                </div>
+                <div class="status status-test hidden">
+                    <img src="loading.gif" alt="Loading...">
+                </div>
+                <div class="results hidden">
+                    <p>Results:</p>
+                    <p class="result-data"></p>
+                </div>
             </div>
         </div>
     </div>
