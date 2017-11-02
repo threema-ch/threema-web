@@ -15,10 +15,6 @@ references:
           - node_modules
 
 jobs:
-  test-node7:
-    docker:
-      - image: circleci/node:7-browsers
-    steps: *test-steps
   test-node8:
     docker:
       - image: circleci/node:8-browsers
@@ -42,7 +38,6 @@ workflows:
   version: 2
   build:
     jobs:
-      - test-node7
       - test-node8
       - test-node9
       - lint
