@@ -17,19 +17,19 @@ references:
 jobs:
   test-node7:
     docker:
-      - image: circleci/node:7
+      - image: circleci/node:7-browsers
     steps: *test-steps
   test-node8:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:8-browsers
     steps: *test-steps
   test-node9:
     docker:
-      - image: circleci/node:9
+      - image: circleci/node:9-browsers
     steps: *test-steps
   lint:
     docker:
-      - image: circleci/node:8
+      - image: circleci/node:8-browsers
     steps:
       - checkout
       - restore_cache:
