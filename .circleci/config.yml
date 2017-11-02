@@ -1,7 +1,7 @@
 version: 2
 
 references:
-  build-steps: &test-steps
+  test-steps: &test-steps
     - checkout
     - restore_cache:
         keys:
@@ -18,15 +18,15 @@ jobs:
   test-node7:
     docker:
       - image: circleci/node:7
-    steps: *build-steps
+    steps: *test-steps
   test-node8:
     docker:
       - image: circleci/node:8
-    steps: *build-steps
+    steps: *test-steps
   test-node9:
     docker:
       - image: circleci/node:9
-    steps: *build-steps
+    steps: *test-steps
   lint:
     docker:
       - image: circleci/node:8
