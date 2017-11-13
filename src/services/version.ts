@@ -120,7 +120,7 @@ export class VersionService {
             return;
         }
         const changelogUrl = 'https://github.com/threema-ch/threema-web/blob/master/CHANGELOG.md';
-        const changelogLink = '<a href="' + changelogUrl + '" target="_blank">Changelog</a>';
+        const changelogLink = '<a href="' + changelogUrl + '" target="_blank" rel="noopener noreferrer">Changelog</a>';
         const confirm = this.$mdDialog.alert()
             .title(this.$translate.instant('version.NEW_VERSION'))
             .htmlContent(this.$translate.instant('version.NEW_VERSION_BODY', {
