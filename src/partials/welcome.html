@@ -106,6 +106,16 @@
             </ol>
         </div>
 
+        <div class="already-connected" ng-if="ctrl.state === 'already_connected'">
+            <h2 class="instructions" translate>welcome.ALREADY_CONNECTED</h2>
+            <i class="illustration material-icons md-dark md-96">phonelink_ring</i>
+            <p translate>welcome.ALREADY_CONNECTED_DETAILS</p>
+            <br>
+            <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
+                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+            </md-button>
+        </div>
+
         <div ng-if="ctrl.state === 'closed'">
             <p class="state error">
                 <strong><span translate>common.ERROR</span>:</strong> <span translate>connecting.CONNECTION_CLOSED</span><br>

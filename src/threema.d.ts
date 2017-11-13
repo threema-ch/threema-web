@@ -299,6 +299,7 @@ declare namespace threema {
      * - connecting: Connecting to signaling server
      * - push: When trying to reconnect, waiting for push notification to arrive
      * - manual_start: When trying to reconnect, waiting for manual session start
+     * - already_connected: When the user is already connected in another tab or window
      * - waiting: Waiting for new-responder message from signaling server
      * - peer_handshake: Doing SaltyRTC handshake with the peer
      * - loading: Loading initial data
@@ -306,8 +307,8 @@ declare namespace threema {
      * - closed: Connection is closed
      *
      */
-    type ConnectionBuildupState = 'new' | 'connecting' | 'push' | 'manual_start' | 'waiting'
-        | 'peer_handshake' | 'loading' | 'done' | 'closed';
+    type ConnectionBuildupState = 'new' | 'connecting' | 'push' | 'manual_start' | 'already_connected'
+        | 'waiting' | 'peer_handshake' | 'loading' | 'done' | 'closed';
 
     interface ConnectionBuildupStateChange {
         state: ConnectionBuildupState;

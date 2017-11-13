@@ -34,7 +34,9 @@
         "MANUAL_START_STEP2": "Tippen Sie auf die Sitzung, die Sie wiederherstellen möchten",
         "MANUAL_START_STEP3": "Wählen Sie im Menu \"Sitzung starten\"",
         "MORE_ABOUT_WEB": "Mehr über Threema Web",
-        "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich. Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons."
+        "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich. Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons.",
+        "ALREADY_CONNECTED": "Bereits Verbunden",
+        "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindungsprobleme",
