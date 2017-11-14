@@ -32,14 +32,16 @@
                     top: 0;
                     left: 0;
                     outline: none;
-                    line-height: 1.3em;
+                    line-height: 20px;
                     max-height: calc(1.3em * 5);
-                    min-height: 1.3em;
+                    min-height: 22px;
                     cursor: text;
 
-                    img {
+                    img.e1 {
                         vertical-align: middle;
-                        margin: -3px 1px;
+                        margin: 0 1px;
+                        transform: none; // https://github.com/threema-ch/threema-web/issues/262
+                        height: 20px;
                     }
                 }
             }
