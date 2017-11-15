@@ -549,7 +549,7 @@ class ConversationController {
     /**
      * We started typing.
      */
-    public startTyping = (text: string) => {
+    public startTyping = () => {
         if (this.stopTypingTimer === null) {
             // Notify app
             this.webClientService.sendMeIsTyping(this.$stateParams, true);
