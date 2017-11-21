@@ -7,7 +7,7 @@
     "build:js": "browserify -p tsify src/app.ts -t [ babelify --presets [ es2015 ] --extensions .ts ] -p [ browserify-header --file header.js ] -o dist/app.js",
     "build:css": "node-sass -o public/css/ --output-style compressed src/sass/",
     "build:css:watch": "node-sass -w -r --source-map true --source-map-embed true -o public/css/ --output-style compressed src/sass/",
-    "dist": "npm run build && echo \"\" && dist/package.sh",
+    "dist": "npm run build && echo \"\" && node dist/build-package.js",
     "serve": "npm run build:css && budo src/app.ts:dist/app.js -- -d -p tsify -t [ babelify --presets [ es2015 ] --extensions .ts ]",
     "serve:live": "npm run build:css && concurrently --kill-others --names \"css,server\" -p name \"npm run build:css:watch\" \"budo src/app.ts:dist/app.js -d . -d public -d src --live -- -d -p tsify -t [ babelify --presets [ es2015 ] --extensions .ts ]\"",
     "test": "karma start --single-run --log-level=debug --colors",
