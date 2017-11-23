@@ -145,7 +145,7 @@ export default [
                 }
 
                 // Process a DOM node recursively and extract text from compose area.
-                function getText() {
+                function getText(trim = true) {
                     let text = '';
                     const visitChildNodes = (parentNode: HTMLElement) => {
                         // tslint:disable-next-line: prefer-for-of (see #98)
@@ -174,7 +174,7 @@ export default [
                         }
                     };
                     visitChildNodes(composeDiv[0]);
-                    return text.trim();
+                    return trim ? text.trim() : text;
                 }
 
                 // Determine whether field is empty
@@ -275,7 +275,8 @@ export default [
                     $timeout(() => {
                         // If the compose area contains only a single <br>, make it fully empty.
                         // See also: https://stackoverflow.com/q/14638887/284318
-                        if (composeDiv[0].innerText === '\n') {
+                        let text = getText(false);
+                        if (text === '\n') {
                             composeDiv[0].innerText = '';
                         }
 
@@ -285,7 +286,7 @@ export default [
                         } else {
                             startTyping();
                         }
-                        scope.onTyping(getText());
+                        scope.onTyping(text.trim());
 
                         updateView();
                     }, 0);
