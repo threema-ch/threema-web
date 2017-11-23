@@ -116,6 +116,34 @@ export default [
                     };
                 })();
 
+                // Typing events
+                let stopTypingTimer: ng.IPromise<void> = null;
+                function stopTyping() {
+                    // We can only stop typing of the timer is set (meaning
+                    // that we started typing earlier)
+                    if (stopTypingTimer !== null) {
+                        // Cancel timer
+                        $timeout.cancel(stopTypingTimer);
+                        stopTypingTimer = null;
+
+                        // Send stop typing message
+                        scope.stopTyping();
+                    }
+                }
+                function startTyping() {
+                    if (stopTypingTimer === null) {
+                        // If the timer wasn't set previously, we just
+                        // started typing!
+                        scope.startTyping();
+                    } else {
+                        // Cancel timer, we'll re-create it
+                        $timeout.cancel(stopTypingTimer);
+                    }
+
+                    // Define a timeout to send the stopTyping event
+                    stopTypingTimer = $timeout(stopTyping, 10000);
+                }
+
                 // Process a DOM node recursively and extract text from compose area.
                 function getText() {
                     let text = '';
@@ -205,7 +233,7 @@ export default [
                             composeDiv[0].focus();
 
                             // Send stopTyping event
-                            scope.stopTyping();
+                            stopTyping();
 
                             // Clear draft
                             scope.onTyping('');
@@ -253,9 +281,9 @@ export default [
 
                         // Update typing information
                         if (composeAreaIsEmpty()) {
-                            scope.stopTyping();
+                            stopTyping();
                         } else {
-                            scope.startTyping();
+                            startTyping();
                         }
                         scope.onTyping(getText());
 
@@ -663,7 +691,7 @@ export default [
                 composeDiv.on('selectionchange', updateCaretPosition);
 
                 // When switching chat, send stopTyping message
-                scope.$on('$destroy', scope.stopTyping);
+                scope.$on('$destroy', stopTyping);
 
                 // Handle paste event
                 composeDiv.on('paste', onPaste);
