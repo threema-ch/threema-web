@@ -116,13 +116,9 @@ export default [
                     };
                 })();
 
-                // Submit the text from the compose area.
-                //
-                // Emoji images are converted to their alt text in this process.
-                function submitText(): Promise<any> {
+                // Process a DOM node recursively and extract text from compose area.
+                function getText() {
                     let text = '';
-
-                    // Process a DOM node recursively and extract text.
                     const visitChildNodes = (parentNode: HTMLElement) => {
                         // tslint:disable-next-line: prefer-for-of (see #98)
                         for (let i = 0; i < parentNode.childNodes.length; i++) {
@@ -149,9 +145,20 @@ export default [
                             }
                         }
                     };
-
-                    // Extract text
                     visitChildNodes(composeDiv[0]);
+                    return text.trim();
+                }
+
+                // Determine whether field is empty
+                function composeAreaIsEmpty() {
+                    return getText().length === 0;
+                }
+
+                // Submit the text from the compose area.
+                //
+                // Emoji images are converted to their alt text in this process.
+                function submitText(): Promise<any> {
+                    const text = getText();
 
                     return new Promise((resolve, reject) => {
                         let submitTexts = (strings: string[]) => {
@@ -191,7 +198,7 @@ export default [
                 }
 
                 function sendText(): boolean {
-                    if  (composeDiv[0].innerHTML.length > 0) {
+                    if (!composeAreaIsEmpty()) {
                         submitText().then(() => {
                             // Clear compose div
                             composeDiv[0].innerText = '';
@@ -200,6 +207,7 @@ export default [
                             // Send stopTyping event
                             scope.stopTyping();
 
+                            // Clear draft
                             scope.onTyping('');
 
                             updateView();
@@ -214,7 +222,7 @@ export default [
                 }
 
                 // Handle typing events
-                function onTyping(ev: KeyboardEvent): void {
+                function onKeyDown(ev: KeyboardEvent): void {
                     // If enter is pressed, prevent default event from being dispatched
                     if (!ev.shiftKey && ev.which === 13) {
                         ev.preventDefault();
@@ -230,15 +238,26 @@ export default [
                             }
                         }
 
-                        // Update typing information
-                        if (composeDiv[0].innerText.length === 0) {
-                            scope.stopTyping();
-                        } else {
-                            scope.startTyping(composeDiv[0].innerText);
+                        updateView();
+                    }, 0);
+                }
+                function onKeyUp(ev: KeyboardEvent): void {
+                    // At link time, the element is not yet evaluated.
+                    // Therefore add following code to end of event loop.
+                    $timeout(() => {
+                        // If the compose area contains only a single <br>, make it fully empty.
+                        // See also: https://stackoverflow.com/q/14638887/284318
+                        if (composeDiv[0].innerText === '\n') {
+                            composeDiv[0].innerText = '';
                         }
 
-                        // Notify about typing event
-                        scope.onTyping(composeDiv[0].innerText);
+                        // Update typing information
+                        if (composeAreaIsEmpty()) {
+                            scope.stopTyping();
+                        } else {
+                            scope.startTyping();
+                        }
+                        scope.onTyping(getText());
 
                         updateView();
                     }, 0);
@@ -492,6 +511,9 @@ export default [
                     cleanupComposeContent();
                     setCaretPosition(caretPosition.from);
 
+                    // Update the draft text
+                    scope.onTyping(getText());
+
                     updateView();
                 }
 
@@ -531,7 +553,7 @@ export default [
 
                 // Set all correct styles
                 function updateView() {
-                    if (composeDiv[0].innerHTML.length === 0) {
+                    if (composeAreaIsEmpty()) {
                         sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                     } else {
                         sendTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
@@ -635,7 +657,8 @@ export default [
                 }
 
                 // Handle typing events
-                composeDiv.on('keydown', onTyping);
+                composeDiv.on('keydown', onKeyDown);
+                composeDiv.on('keyup', onKeyUp);
                 composeDiv.on('keyup mouseup', updateCaretPosition);
                 composeDiv.on('selectionchange', updateCaretPosition);
 
