@@ -51,13 +51,18 @@
         background-color: white;
         padding: 8px;
         display: flex;
-        justify-content: center;
         flex-direction: row;
 
         .message-quote {
-            flex: 1;
             @include word-wrap;
             line-height: 1.3em;
+            max-width: 85%;
+        }
+
+        .md-icon-button {
+            flex: 1;
+            display: flex;
+            justify-content: right;
         }
     }
 
