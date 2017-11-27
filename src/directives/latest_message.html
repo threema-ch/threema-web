@@ -41,14 +41,11 @@
         <span class="no-draft no-hidden">
             <span eee-message-date
                   class="message-date" eee-message="ctrl.message"></span>
-            <span eee-latest-message-state
-                  class="message-state"
-                  eee-message="ctrl.message"
-                  ng-show="!ctrl.defaultStatusIcon"></span>
 
-            <span class="message-state"
-                  ng-show="ctrl.defaultStatusIcon">
-                <i class="material-icons md-dark md-14">{{ ctrl.defaultStatusIcon }}</i>
+            <span class="message-state" ng-show="ctrl.statusIcon">
+                 <i class="material-icons md-dark md-14 {{ctrl.message.state}}">
+                     {{ ctrl.statusIcon }}
+                 </i>
             </span>
         </span>
         <span class="draft no-hidden">
