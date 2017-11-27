@@ -62,7 +62,7 @@ export default [
                 } else if (!this.message.isOutbox) {
                     this.statusIcon = 'reply';
                 } else if (messageService.showStatusIcon(this.message, this.receiver)) {
-                    // Show status icon of incoming messages every thime
+                    // Show status icon of incoming messages every time
                     this.statusIcon = $filter('messageStateIcon')(this.message);
                 } else {
                     // Do not show a status icon
