@@ -86,6 +86,7 @@
     }
 
     .conversation-wrapper {
+        display: block;
         @include nav-item-separator;
 
         .conversation {
