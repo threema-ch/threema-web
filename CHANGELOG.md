@@ -3,6 +3,29 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.7.0][v1.7.0] (2017-11-27)
+
+Changes:
+
+* [feature] Upgrade to Emojione 3.1 / Unicode 10.0 ([#373][i373])
+* [feature] Warn if other tabs use the same session ([#369][i369])
+* [bug] Fix QR code content in "my identity" view ([#365][i365])
+* [bug] Fix missing caret between emoji in Firefox ([#374][i374])
+* [bug] Fix multiple issues with compose area and drafts ([#376][i376] / [#380][i380] / [#382][i382])
+* [bug] Fix citation text overflow ([#378][i378])
+* [bug] Don't fade battery icon when charging ([#372][i372])
+* [bug] Fix bottom border for marked / unread conversations ([#366][i366])
+* [bug] Harmonize status icons ([#345][i345] / [#385][i385])
+* [change] Link to changelog from version update alert dialog ([#363][i363])
+* [change] Improve troubleshooting tool ([#364][i364])
+* [change] Use powershell to run `package.sh` on Windows ([#371][i371])
+
+Contributors:
+
+* [@bluec0re][@bluec0re]
+* [@lgrahl][@lgrahl]
+* [@Octoate][@Octoate]
+
 ### [v1.6.2][v1.6.2] (2017-10-25)
 
 Changes:
@@ -318,6 +341,7 @@ First public release.
 [i339]: https://github.com/threema-ch/threema-web/issues/339
 [i340]: https://github.com/threema-ch/threema-web/issues/340
 [i343]: https://github.com/threema-ch/threema-web/issues/343
+[i345]: https://github.com/threema-ch/threema-web/issues/345
 [i349]: https://github.com/threema-ch/threema-web/issues/349
 [i351]: https://github.com/threema-ch/threema-web/issues/351
 [i352]: https://github.com/threema-ch/threema-web/issues/352
@@ -325,7 +349,22 @@ First public release.
 [i358]: https://github.com/threema-ch/threema-web/issues/358
 [i359]: https://github.com/threema-ch/threema-web/issues/359
 [i362]: https://github.com/threema-ch/threema-web/issues/362
+[i363]: https://github.com/threema-ch/threema-web/issues/363
+[i364]: https://github.com/threema-ch/threema-web/issues/364
+[i365]: https://github.com/threema-ch/threema-web/issues/365
+[i366]: https://github.com/threema-ch/threema-web/issues/366
+[i369]: https://github.com/threema-ch/threema-web/issues/369
+[i371]: https://github.com/threema-ch/threema-web/issues/371
+[i372]: https://github.com/threema-ch/threema-web/issues/372
+[i373]: https://github.com/threema-ch/threema-web/issues/373
+[i374]: https://github.com/threema-ch/threema-web/issues/374
+[i376]: https://github.com/threema-ch/threema-web/issues/376
+[i378]: https://github.com/threema-ch/threema-web/issues/378
+[i380]: https://github.com/threema-ch/threema-web/issues/380
+[i382]: https://github.com/threema-ch/threema-web/issues/382
+[i385]: https://github.com/threema-ch/threema-web/issues/385
 
+[v1.7.0]: https://github.com/threema-ch/threema-web/compare/v1.6.2...v1.7.0
 [v1.6.2]: https://github.com/threema-ch/threema-web/compare/v1.6.1...v1.6.2
 [v1.6.1]: https://github.com/threema-ch/threema-web/compare/v1.6.0...v1.6.1
 [v1.6.0]: https://github.com/threema-ch/threema-web/compare/v1.5.0...v1.6.0
@@ -354,3 +393,5 @@ First public release.
 [@Pythonix]: https://github.com/Pythonix/
 [@econic]: https://github.com/econic/
 [@JlnWntr]: https://github.com/JlnWntr/
+[@bluec0re]: https://github.com/bluec0re/
+[@Octoate]: https://github.com/Octoate/
