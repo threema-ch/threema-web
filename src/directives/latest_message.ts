@@ -78,7 +78,7 @@ export default [
                 // Typing indicator
                 this.isTyping = () => false;
                 if (this.isGroup === false
-                    && this.isDitributionList === false
+                    && this.isDistributionList === false
                     && this.contact !== null) {
                     this.isTyping = () => {
                         return webClientService.isTyping(this.contact);
