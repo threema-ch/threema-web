@@ -15,12 +15,14 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {MessageService} from '../services/message';
 import {ReceiverService} from '../services/receiver';
 import {WebClientService} from '../services/webclient';
 
 export default [
-    'WebClientService', 'ReceiverService',
-    function(webClientService: WebClientService, receiverService: ReceiverService) {
+    'WebClientService', 'ReceiverService', 'MessageService', '$filter',
+    function(webClientService: WebClientService, receiverService: ReceiverService,
+             messageService: MessageService, $filter: any) {
         return {
             restrict: 'EA',
             scope: {},
@@ -42,7 +44,6 @@ export default [
                     }
                     return null;
                 };
-
                 // Conversation properties
 
                 this.isGroup = this.type as threema.ReceiverType === 'group';
@@ -52,8 +53,21 @@ export default [
                 this.showVoipInfo = this.message
                     && (this.message as threema.Message).type === 'voipStatus';
 
-                this.defaultStatusIcon = this.showVoipInfo ? 'phone_locked' :
-                    (this.isGroup ? 'group' : (this.isDistributionList ? 'forum' : null));
+                if (this.showVoipInfo) {
+                    this.statusIcon = 'phone_locked';
+                } else if (this.isGroup) {
+                    this.statusIcon = 'group';
+                } else if (this.isDistributionList) {
+                    this.statusIcon = 'forum';
+                } else if (!this.message.isOutbox) {
+                    this.statusIcon = 'reply';
+                } else if (messageService.showStatusIcon(this.message, this.receiver)) {
+                    // Show status icon of incoming messages every time
+                    this.statusIcon = $filter('messageStateIcon')(this.message);
+                } else {
+                    // Do not show a status icon
+                    this.statusIcon = null;
+                }
 
                 // Find sender of latest message in group chats
                 this.contact = null;
@@ -64,7 +78,7 @@ export default [
                 // Typing indicator
                 this.isTyping = () => false;
                 if (this.isGroup === false
-                    && this.isDitributionList === false
+                    && this.isDistributionList === false
                     && this.contact !== null) {
                     this.isTyping = () => {
                         return webClientService.isTyping(this.contact);
