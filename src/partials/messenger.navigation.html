@@ -64,39 +64,43 @@
     <p class="empty" ng-if="ctrl.conversations().length === 0" translate>messenger.NO_CONVERSATIONS_FOUND</p>
     <ul>
         <li ng-repeat="conversation in ctrl.conversations() | filter:ctrl.searchConversation"
-            ng-class="{'unread': conversation.unreadCount > 0,
-                'starred': conversation.isStarred,
-                'active': ctrl.isActive(conversation)}"
             ui-sref="messenger.home.conversation({ type: conversation.type, id: conversation.id, initParams: null })"
-            class="conversation" ng-if="ctrl.isVisible(conversation)">
+            class="conversation-wrapper" ng-if="ctrl.isVisible(conversation)">
 
-            <section class="avatar-box">
-                <eee-avatar eee-type="conversation.type"
+            <div class="conversation"
+                  ng-class="{'unread': conversation.unreadCount > 0,
+                            'starred': conversation.isStarred,
+                            'active': ctrl.isActive(conversation)}">
+
+                <section class="avatar-box">
+                    <eee-avatar eee-type="conversation.type"
+                                eee-receiver="conversation.receiver"
+                                eee-resolution="'low'"></eee-avatar>
+                </section>
+
+                <section class="conversation-box">
+                    <section class="receiver-box">
+                        <span class="title" ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify">
+                        </span>
+                        <span class="muted" ng-show="conversation.isMuted">
+                            <i class="material-icons md-dark" translate translate-attr-title="messenger.MUTED">do_not_disturb_on</i>
+                        </span>
+                        <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
+                            {{ conversation.unreadCount }}
+                        </span>
+                    </section>
+
+                    <section class="message-box">
+                        <eee-latest-message
+                            ng-show="!conversation.receiver.isTyping() && conversation.latestMessage"
+                            ng-class="latest-message-text"
+                            eee-type="conversation.type"
                             eee-receiver="conversation.receiver"
-                            eee-resolution="'low'"></eee-avatar>
-            </section>
-
-            <section class="conversation-box">
-                <section class="receiver-box">
-                    <span class="title" ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify">
-                    </span>
-                    <span class="muted" ng-show="conversation.isMuted">
-                        <i class="material-icons md-dark" translate translate-attr-title="messenger.MUTED">do_not_disturb_on</i>
-                    </span>
-                    <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
-                        {{ conversation.unreadCount }}
-                    </span>
+                            eee-message="conversation.latestMessage"></eee-latest-message>
+                    </section>
                 </section>
 
-                <section class="message-box">
-                    <eee-latest-message
-                        ng-show="!conversation.receiver.isTyping() && conversation.latestMessage"
-                        ng-class="latest-message-text"
-                        eee-type="conversation.type"
-                        eee-receiver="conversation.receiver"
-                        eee-message="conversation.latestMessage"></eee-latest-message>
-                </section>
-            </section>
+            </div>
 
         </li>
     </ul>
