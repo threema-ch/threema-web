@@ -269,19 +269,35 @@ export default [
                         updateView();
                     }, 0);
                 }
+
                 function onKeyUp(ev: KeyboardEvent): void {
                     // At link time, the element is not yet evaluated.
                     // Therefore add following code to end of event loop.
                     $timeout(() => {
+
                         // If the compose area contains only a single <br>, make it fully empty.
                         // See also: https://stackoverflow.com/q/14638887/284318
                         let text = getText(false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
+                        } else if (ev.keyCode === 190) {
+                            // A ':' is pressed, try to parse
+                            // TODO: Move into a service to create a unittest
+                            let currentWord = text.substr(0, caretPosition.from).trim()
+                                .split(/[\s,]+/).pop();
+                            if (currentWord.length > 2
+                                && currentWord.substr(0, 1) === ':') {
+                                let unicodeEmoji = emojione.shortnameToUnicode(currentWord);
+                                if (unicodeEmoji && unicodeEmoji !== currentWord) {
+                                    return insertEmoji(unicodeEmoji,
+                                        caretPosition.from - currentWord.length,
+                                        caretPosition.to);
+                                }
+                            }
                         }
 
-                        // Update typing information
-                        if (composeAreaIsEmpty()) {
+                        // Update typing information (use text instead method)
+                        if (text.trim().length === 0) {
                             stopTyping();
                         } else {
                             startTyping();
@@ -483,7 +499,10 @@ export default [
                 // Emoji is chosen
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
-                    const emoji = this.textContent; // Unicode character
+                    insertEmoji (this.textContent);
+                }
+
+                function insertEmoji(emoji, posFrom = null, posTo = null): void {
                     const formatted = ($filter('emojify') as any)(emoji, true, true);
 
                     // In Chrome in right-to-left mode, our content editable
@@ -519,10 +538,13 @@ export default [
                         }
                     }
 
+                    posFrom = null === posFrom ? caretPosition.from : posFrom;
+                    posTo = null === posTo ? caretPosition.to : posTo;
+
                     if (caretPosition !== null) {
-                        currentHTML = currentHTML.substr(0, caretPosition.from)
+                        currentHTML = currentHTML.substr(0, posFrom)
                             + formatted
-                            + currentHTML.substr(caretPosition.to);
+                            + currentHTML.substr(posTo);
 
                         // change caret position
                         caretPosition.from += formatted.length - 1;
@@ -538,7 +560,7 @@ export default [
 
                     contentElement.innerHTML = currentHTML;
                     cleanupComposeContent();
-                    setCaretPosition(caretPosition.from);
+                    setCaretPosition(posFrom);
 
                     // Update the draft text
                     scope.onTyping(getText());
@@ -677,7 +699,6 @@ export default [
                         if (pos < size) {
                             // use this node
                             rangeAt(node, offset);
-                            this.stop = true;
                         } else if (i === composeDiv[0].childNodes.length - 1) {
                             rangeAt(node);
                         }

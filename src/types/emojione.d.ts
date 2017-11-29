@@ -29,5 +29,6 @@ declare var emojione: {
     toShort: (str: string) => string,
     toImage: (str: string) => string,
     shortnameToImage: (str: string) => string,
+    shortnameToUnicode: (str: string) => string,
     unicodeToImage: (str: string) => string,
 };
