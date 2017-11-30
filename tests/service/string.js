@@ -16,24 +16,6 @@ describe('StringService', function() {
 
     });
 
-    let input = 'this 😄 is a :smile: face';
-    let pos = 19;
-    let chars = [...input];
-    pos = Math.min(pos-1, chars.length-1);
-
-    let wordChars = new Array(pos);
-    for(let n = pos; n >= 0; n--) {
-        if (chars[n] == ' '
-            || chars[n] == "\n"
-            || chars[n] == "\t") {
-            break;
-        }
-
-        wordChars[n] = chars[n];
-    }
-
-
-
     it('parse null string', () => {
         expect($service.getWord(null, 1)).toEqual('');
     });
