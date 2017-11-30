@@ -33,7 +33,7 @@ export class StringService {
             if (currentChunkSize + length > byteLength) {
                 let appendNewChunk = true;
                 if (lastSeparator > -1) {
-                    // check if sepeator in offset
+                    // check if separator in offset
                     if (currentChunkSize - lastSeparator <= offset
                         && chunks.length >= 1) {
                         // create new chunk with existing data
@@ -57,5 +57,40 @@ export class StringService {
             currentChunkSize += length;
         });
         return chunks;
+    }
+    public getWord(input: string, pos: number, additionalSeparators: string[] = null): string {
+        if (input !== null && input.length > 0) {
+            let chars = [...input];
+            let charFound = false;
+            let realPos = Math.min(pos, chars.length) - 1;
+
+            let wordChars = new Array(realPos);
+            for (let n = realPos; n >= 0; n--) {
+                let realChar = chars[n].trim();
+                if (realChar === '') {
+                    // Abort
+                    if (charFound === false) {
+                        continue;
+                    } else {
+                        break;
+                    }
+                } else if (additionalSeparators !== null) {
+                    if (additionalSeparators.indexOf(chars[n]) > -1) {
+                        // append char
+                        wordChars[n] = realChar;
+                        if (charFound === false) {
+                            continue;
+                        } else {
+                            break;
+                        }
+                    }
+                }
+
+                wordChars[n] = realChar;
+                charFound = true;
+            }
+            return wordChars.join('');
+        }
+        return '';
     }
 }

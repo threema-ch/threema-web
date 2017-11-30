@@ -82,7 +82,11 @@ export default [
                     composeDiv[0].innerText = scope.initialData.draft;
                 }
 
-                let caretPosition: {from?: number, to?: number} = null;
+                let caretPosition: {
+                    from?: number,
+                    to?: number,
+                    fromBytes?: number,
+                    toBytes?: number } = null;
 
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
@@ -283,8 +287,9 @@ export default [
                         } else if (ev.keyCode === 190) {
                             // A ':' is pressed, try to parse
                             // TODO: Move into a service to create a unittest
-                            let currentWord = text.substr(0, caretPosition.from).trim()
-                                .split(/[\s,]+/).pop();
+
+                            // G
+                            let currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
                             if (currentWord.length > 2
                                 && currentWord.substr(0, 1) === ':') {
                                 let unicodeEmoji = emojione.shortnameToUnicode(currentWord);
@@ -538,25 +543,26 @@ export default [
                         }
                     }
 
-                    posFrom = null === posFrom ? caretPosition.from : posFrom;
-                    posTo = null === posTo ? caretPosition.to : posTo;
-
                     if (caretPosition !== null) {
+                        posFrom = null === posFrom ? caretPosition.from : posFrom;
+                        posTo = null === posTo ? caretPosition.to : posTo;
                         currentHTML = currentHTML.substr(0, posFrom)
                             + formatted
                             + currentHTML.substr(posTo);
 
                         // change caret position
                         caretPosition.from += formatted.length - 1;
-                        caretPosition.to = caretPosition.from;
+                        caretPosition.fromBytes++;
                     } else {
                         // insert at the end of line
+                        posFrom = currentHTML.length;
                         currentHTML += formatted;
                         caretPosition = {
                             from: currentHTML.length,
-                            to: currentHTML.length,
                         };
                     }
+                    caretPosition.to = caretPosition.from;
+                    caretPosition.toBytes = caretPosition.fromBytes;
 
                     contentElement.innerHTML = currentHTML;
                     cleanupComposeContent();
@@ -619,31 +625,42 @@ export default [
                 }
 
                 // return the html code position of the container element
-                function getHTMLPosition(offset: number, container: Node) {
+                function getPositions(offset: number, container: Node): {html: number, text: number} {
                     let pos = null;
+                    let textPos = null;
+
                     if (composeDiv[0].contains(container)) {
                         let selectedElement;
                         if (container === composeDiv[0]) {
                             if (offset === 0) {
-                                return 0;
+                                return {
+                                    html: 0, text: 0,
+                                };
                             }
                             selectedElement = composeDiv[0].childNodes[offset - 1];
                             pos = 0;
+                            textPos = 0;
                         } else {
                             selectedElement =  container.previousSibling;
                             pos = offset;
+                            textPos = offset;
                         }
 
                         while (selectedElement !== null) {
                             if (selectedElement.nodeType === Node.TEXT_NODE) {
                                 pos += selectedElement.textContent.length;
+                                textPos += selectedElement.textContent.length;
                             } else {
                                 pos += getOuterHtml(selectedElement).length;
+                                textPos += 1;
                             }
                             selectedElement = selectedElement.previousSibling;
                         }
                     }
-                    return pos;
+                    return {
+                        html: pos,
+                        text: textPos,
+                    };
                 }
 
                 // Update the current caret position or selection
@@ -653,11 +670,15 @@ export default [
                         const selection = window.getSelection();
                         if (selection.rangeCount) {
                             const range = selection.getRangeAt(0);
-                            let from = getHTMLPosition(range.startOffset, range.startContainer);
-                            if (from !== null && from >= 0) {
+                            let from = getPositions(range.startOffset, range.startContainer);
+                            if (from !== null && from.html >= 0) {
+                                const to = getPositions(range.endOffset, range.endContainer);
+
                                 caretPosition = {
-                                    from: from,
-                                    to: getHTMLPosition(range.endOffset, range.endContainer),
+                                    from: from.html,
+                                    to: to.html,
+                                    fromBytes: from.text,
+                                    toBytes: to.text,
                                 };
                             }
                         }
