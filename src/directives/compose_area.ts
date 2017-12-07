@@ -286,9 +286,6 @@ export default [
                             composeDiv[0].innerText = '';
                         } else if (ev.keyCode === 190) {
                             // A ':' is pressed, try to parse
-                            // TODO: Move into a service to create a unittest
-
-                            // G
                             let currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
                             if (currentWord.length > 2
                                 && currentWord.substr(0, 1) === ':') {
