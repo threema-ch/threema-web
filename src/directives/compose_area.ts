@@ -82,7 +82,11 @@ export default [
                     composeDiv[0].innerText = scope.initialData.draft;
                 }
 
-                let caretPosition: {from?: number, to?: number} = null;
+                let caretPosition: {
+                    from?: number,
+                    to?: number,
+                    fromBytes?: number,
+                    toBytes?: number } = null;
 
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
@@ -269,19 +273,33 @@ export default [
                         updateView();
                     }, 0);
                 }
+
                 function onKeyUp(ev: KeyboardEvent): void {
                     // At link time, the element is not yet evaluated.
                     // Therefore add following code to end of event loop.
                     $timeout(() => {
+
                         // If the compose area contains only a single <br>, make it fully empty.
                         // See also: https://stackoverflow.com/q/14638887/284318
                         let text = getText(false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
+                        } else if (ev.keyCode === 190) {
+                            // A ':' is pressed, try to parse
+                            let currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
+                            if (currentWord.length > 2
+                                && currentWord.substr(0, 1) === ':') {
+                                let unicodeEmoji = emojione.shortnameToUnicode(currentWord);
+                                if (unicodeEmoji && unicodeEmoji !== currentWord) {
+                                    return insertEmoji(unicodeEmoji,
+                                        caretPosition.from - currentWord.length,
+                                        caretPosition.to);
+                                }
+                            }
                         }
 
-                        // Update typing information
-                        if (composeAreaIsEmpty()) {
+                        // Update typing information (use text instead method)
+                        if (text.trim().length === 0) {
                             stopTyping();
                         } else {
                             startTyping();
@@ -483,7 +501,10 @@ export default [
                 // Emoji is chosen
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
-                    const emoji = this.textContent; // Unicode character
+                    insertEmoji (this.textContent);
+                }
+
+                function insertEmoji(emoji, posFrom = null, posTo = null): void {
                     const formatted = ($filter('emojify') as any)(emoji, true, true);
 
                     // In Chrome in right-to-left mode, our content editable
@@ -520,25 +541,29 @@ export default [
                     }
 
                     if (caretPosition !== null) {
-                        currentHTML = currentHTML.substr(0, caretPosition.from)
+                        posFrom = null === posFrom ? caretPosition.from : posFrom;
+                        posTo = null === posTo ? caretPosition.to : posTo;
+                        currentHTML = currentHTML.substr(0, posFrom)
                             + formatted
-                            + currentHTML.substr(caretPosition.to);
+                            + currentHTML.substr(posTo);
 
                         // change caret position
                         caretPosition.from += formatted.length - 1;
-                        caretPosition.to = caretPosition.from;
+                        caretPosition.fromBytes++;
                     } else {
                         // insert at the end of line
+                        posFrom = currentHTML.length;
                         currentHTML += formatted;
                         caretPosition = {
                             from: currentHTML.length,
-                            to: currentHTML.length,
                         };
                     }
+                    caretPosition.to = caretPosition.from;
+                    caretPosition.toBytes = caretPosition.fromBytes;
 
                     contentElement.innerHTML = currentHTML;
                     cleanupComposeContent();
-                    setCaretPosition(caretPosition.from);
+                    setCaretPosition(posFrom);
 
                     // Update the draft text
                     scope.onTyping(getText());
@@ -597,31 +622,42 @@ export default [
                 }
 
                 // return the html code position of the container element
-                function getHTMLPosition(offset: number, container: Node) {
+                function getPositions(offset: number, container: Node): {html: number, text: number} {
                     let pos = null;
+                    let textPos = null;
+
                     if (composeDiv[0].contains(container)) {
                         let selectedElement;
                         if (container === composeDiv[0]) {
                             if (offset === 0) {
-                                return 0;
+                                return {
+                                    html: 0, text: 0,
+                                };
                             }
                             selectedElement = composeDiv[0].childNodes[offset - 1];
                             pos = 0;
+                            textPos = 0;
                         } else {
                             selectedElement =  container.previousSibling;
                             pos = offset;
+                            textPos = offset;
                         }
 
                         while (selectedElement !== null) {
                             if (selectedElement.nodeType === Node.TEXT_NODE) {
                                 pos += selectedElement.textContent.length;
+                                textPos += selectedElement.textContent.length;
                             } else {
                                 pos += getOuterHtml(selectedElement).length;
+                                textPos += 1;
                             }
                             selectedElement = selectedElement.previousSibling;
                         }
                     }
-                    return pos;
+                    return {
+                        html: pos,
+                        text: textPos,
+                    };
                 }
 
                 // Update the current caret position or selection
@@ -631,11 +667,15 @@ export default [
                         const selection = window.getSelection();
                         if (selection.rangeCount) {
                             const range = selection.getRangeAt(0);
-                            let from = getHTMLPosition(range.startOffset, range.startContainer);
-                            if (from !== null && from >= 0) {
+                            let from = getPositions(range.startOffset, range.startContainer);
+                            if (from !== null && from.html >= 0) {
+                                const to = getPositions(range.endOffset, range.endContainer);
+
                                 caretPosition = {
-                                    from: from,
-                                    to: getHTMLPosition(range.endOffset, range.endContainer),
+                                    from: from.html,
+                                    to: to.html,
+                                    fromBytes: from.text,
+                                    toBytes: to.text,
                                 };
                             }
                         }
@@ -677,7 +717,6 @@ export default [
                         if (pos < size) {
                             // use this node
                             rangeAt(node, offset);
-                            this.stop = true;
                         } else if (i === composeDiv[0].childNodes.length - 1) {
                             rangeAt(node);
                         }
