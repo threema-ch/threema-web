@@ -49,7 +49,7 @@ for i, category in enumerate(category_order):
             emoji[0],
             emoji[1]['code_points']['greedy_matches'][0],
             emoji[1]['shortname'],
-            emoji[1]['name'],
+            emoji[1]['shortname'],
             make_hexchar(emoji[1]['code_points']['greedy_matches'][0]),
         ))
     print('        </div>')
