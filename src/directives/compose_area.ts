@@ -354,6 +354,14 @@ export default [
                                 size: file.size,
                                 data: buffer,
                             };
+
+                            // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1240259
+                            if (browserService.getBrowser().firefox) {
+                                if (fileMessageData.name.endsWith('.ogg') && fileMessageData.fileType === 'video/ogg') {
+                                    fileMessageData.fileType = 'audio/ogg';
+                                }
+                            }
+
                             fileMessages.push(fileMessageData);
                         });
                         scope.submit('file', fileMessages);
