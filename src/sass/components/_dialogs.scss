@@ -38,4 +38,10 @@ md-dialog.send-file-dialog {
         margin-top: 0;
         margin-bottom: 0;
     }
+    .preview {
+        display: block;
+        margin: 0px auto;
+        max-height: 250px;
+        max-width: 100%;
+    }
 }
