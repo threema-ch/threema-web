@@ -73,8 +73,16 @@ class DialogController {
  * Handle sending of files.
  */
 class SendFileController extends DialogController {
+    public static $inject = ['$mdDialog', 'preview'];
+
     public caption: string;
     public sendAsFile: boolean = false;
+    public preview: threema.FileMessageData | null = null;
+
+    constructor($mdDialog: ng.material.IDialogService, preview: threema.FileMessageData) {
+        super($mdDialog);
+        this.preview = preview;
+    }
 
     public send(): void {
         this.hide({
@@ -87,6 +95,10 @@ class SendFileController extends DialogController {
         if ($event.key === 'Enter') { // see https://developer.mozilla.org/de/docs/Web/API/KeyboardEvent/key/Key_Values
             this.send();
         }
+    }
+
+    public hasPreview(): boolean {
+        return this.preview !== null && this.preview !== undefined;
     }
 }
 
@@ -443,6 +455,15 @@ class ConversationController {
                         }
                     }
 
+                    // Prepare preview
+                    let preview: threema.FileMessageData | null = null;
+                    if (contents.length === 1) {
+                        const msg = contents[0] as threema.FileMessageData;
+                        if (this.mimeService.isImage(msg.fileType)) {
+                            preview = msg;
+                        }
+                    }
+
                     // Eager translations
                     const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
                         senderName: (this.$filter('emojify') as any)
@@ -454,6 +475,7 @@ class ConversationController {
                     // Show confirmation dialog
                     this.$mdDialog.show({
                         clickOutsideToClose: false,
+                        locals: { preview: preview },
                         controller: 'SendFileController',
                         controllerAs: 'ctrl',
                         // tslint:disable:max-line-length
@@ -461,6 +483,7 @@ class ConversationController {
                             <md-dialog class="send-file-dialog">
                                 <md-dialog-content class="md-dialog-content">
                                     <h2 class="md-title">${title}</h2>
+                                    <img class="preview" ng-if="ctrl.hasPreview()" ng-src="{{ ctrl.preview.data | bufferToUrl: ctrl.preview.fileType }}" />
                                     <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="!${showSendAsFileCheckbox} || ctrl.sendAsFile || ${captionSupported}">
                                         <input maxlength="1000" md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
                                     </md-input-container>
