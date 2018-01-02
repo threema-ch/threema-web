@@ -1,7 +1,7 @@
 /*
 ** Threema Web.
 **
-** Copyright © 2016-2017 Threema GmbH (https://threema.ch/).
+** Copyright © 2016-2018 Threema GmbH (https://threema.ch/).
 **
 ** This program is free software: you can redistribute it and/or modify
 ** it under the terms of the GNU Affero General Public License as
