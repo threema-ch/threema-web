@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {filter} from './helpers';
+import {escapeRegExp, filter} from './helpers';
 import {MimeService} from './services/mime';
 import {WebClientService} from './services/webclient';
 
@@ -126,6 +126,42 @@ angular.module('3ema.filters', [])
     };
 })
 
+/**
+ * Convert mention elements to html elements
+ */
+.filter('mentionify', ['WebClientService', '$translate',
+    function (webClientService: WebClientService, $translate) {
+        return(text) => {
+            if (text !== null && text.length > 10) {
+                let result = text.match(/@\[([\*\@a-zA-Z0-9][\@a-zA-Z0-9]{7})\]/g);
+                if (result !== null) {
+                    result = ([...new Set(result)]);
+                    // Unique
+                    for (let possibleMention of result) {
+                        let identity = possibleMention.substr(2, 8);
+                        let html;
+
+                        if (identity === '@@@@@@@@') {
+                            html = '<span class="mention all">' + $translate.instant('messenger.ALL') + '</span>';
+                        } else {
+                            const contact = webClientService.contacts.get(possibleMention.substr(2, 8));
+                            if (contact !== null) {
+                                html = '<span class="mention contact">' + contact.displayName + '</span>';
+                            }
+                        }
+
+                        if (html !== undefined) {
+                            text = text.replace(
+                                new RegExp(escapeRegExp(possibleMention), 'g'),
+                                html,
+                            );
+                        }
+                    }
+                }
+            }
+            return text;
+        };
+}])
 /**
  * Reverse an array.
  */

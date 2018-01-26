@@ -4,17 +4,49 @@ describe('Filters', function() {
 
     // Ignoring page reload request
     beforeAll(() => window.onbeforeunload = () => null);
+    let webClientServiceMock = {
+        contacts: {
+            get: function(id) {
+                if (id === 'AAAAAAAA') {
+                    return {
+                        displayName: 'ContactA'
+                    }
+                }
+                else if (id === 'XXXXXXXX') {
+                    return {
+                        displayName: 'ContactX'
+                    }
+                }
+                else if (id === '*AAAAAAA') {
+                    return {
+                        displayName: 'GWContactA'
+                    }
+                }
+                return null;
+            }
+        }
+    };
+
+    let translationMock = {
+        instant: function(label) {
+            return label;
+        }
+    };
 
     beforeEach(function() {
 
         // Load 3ema.filters module
         module('3ema.filters');
 
+        module(function ($provide) {
+            $provide.value('WebClientService', webClientServiceMock);
+            $provide.value('$translate', translationMock);
+        });
+
         // Inject the $filter function
         inject(function(_$filter_) {
             $filter = _$filter_;
         });
-
     });
 
     function testPatterns(filterName, cases) {
@@ -119,6 +151,52 @@ describe('Filters', function() {
             ]);
         });
 
+    });
+
+    describe('mentionify', function() {
+
+
+        this.testPatterns = (cases) => testPatterns('mentionify', cases);
+
+        it('no mentions', () => {
+            this.testPatterns([
+                ['', ''],
+                ['hello my friend', 'hello my friend'],
+                ['@[AAAAAAA]', '@[AAAAAAA]'],
+                ['this is not a valid @[AAAAAAA]', 'this is not a valid @[AAAAAAA]'],
+                ['@[@@@@@@@]', '@[@@@@@@@]'],
+                ['this is not a valid @[@@@@@@@]', 'this is not a valid @[@@@@@@@]'],
+            ]);
+        });
+
+        it('mention - no contacts', () => {
+            this.testPatterns([
+                ['@[BBBBBBBB]', '@[BBBBBBBB]'],
+                ['@[*BBBBBBB]', '@[*BBBBBBB]'],
+            ]);
+        });
+
+        it('mention - contact', () => {
+            this.testPatterns([
+                ['@[AAAAAAAA]', '<span class="mention contact">ContactA</span>'],
+                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention contact">ContactA</span>. <span class="mention contact">ContactA</span> you are my friend'],
+                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention contact">ContactA</span> <span class="mention contact">ContactA</span> <span class="mention contact">ContactA</span>']
+            ]);
+        });
+
+        it('mention - all', () => {
+            this.testPatterns([
+                ['@[@@@@@@@@]', '<span class="mention all">messenger.ALL</span>'],
+                ['@[@@@@@@@@] your base are belong to us', '<span class="mention all">messenger.ALL</span> your base are belong to us'],
+                ['@[@@@@@@@@] @[@@@@@@@@] @[@@@@@@@@]', '<span class="mention all">messenger.ALL</span> <span class="mention all">messenger.ALL</span> <span class="mention all">messenger.ALL</span>']
+            ]);
+        });
+
+        it('mention - mixed', () => {
+            this.testPatterns([
+                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention all">messenger.ALL</span> <span class="mention contact">ContactA</span> @[BBBBBBBB]'],
+            ]);
+        });
     });
 
 });

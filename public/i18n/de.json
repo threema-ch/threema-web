@@ -160,7 +160,8 @@
         "THREEMA_BLOCKED_RECEIVER": "blockiert",
         "DELETE_THREAD": "Chat löschen",
         "DELETE_THREAD_MESSAGE": "{count, plural, one {Möchten Sie wirklich diesen Chat löschen? Die Nachrichten können nicht wiederhergestellt werden.} other {Möchten Sie wirklich # Chats löschen? Die Nachrichten können nicht wiederhergestellt werden.}}",
-        "MUTED": "Keine Benachrichtigungen"
+        "MUTED": "Keine Benachrichtigungen",
+        "ALL": "Alle"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
