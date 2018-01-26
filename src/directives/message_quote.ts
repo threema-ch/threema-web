@@ -36,7 +36,7 @@ export default [
                 <div class="message-quote-content" ng-style="{'border-color': ctrl.contact().color}">
                     <span class="message-name" ng-style="{'color': ctrl.contact().color}"
                         ng-bind-html="ctrl.contact().displayName | emojify"></span>
-                    <span class="message-quote" ng-bind-html="ctrl.quote.text | escapeHtml | markify | emojify | linkify | nlToBr"></span>
+                    <span class="message-quote" ng-bind-html="ctrl.quote.text | escapeHtml | markify | emojify | linkify | mentionify | nlToBr"></span>
                 </div>
             `,
         };
