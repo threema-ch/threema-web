@@ -28,7 +28,7 @@ if [ -e "release" ]; then
     done
 fi
 
-VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
+VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/' | sed 's/ //g')
 DIR="release/threema-web-$VERSION"
 
 echo "+ Create release directory..."
