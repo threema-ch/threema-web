@@ -82,7 +82,7 @@ targets=(
 for target in "${targets[@]}"; do
 
 	if [[ "$OSTYPE" == "darwin"* ]]; then
-    	install "node_modules/$target" "$DIR/node_modules/$target"
+		ditto "node_modules/$target"/. "$DIR/node_modules/$target"/
     else
 		install -D "node_modules/$target" "$DIR/node_modules/$target"
     fi
