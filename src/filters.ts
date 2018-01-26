@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {filter} from './helpers';
+import {escapeRegExp, filter} from './helpers';
 import {MimeService} from './services/mime';
 import {WebClientService} from './services/webclient';
 
@@ -152,8 +152,9 @@ angular.module('3ema.filters', [])
 
                         if (html !== undefined) {
                             text = text.replace(
-                                new RegExp(possibleMention.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1'), 'g'),
-                                html);
+                                new RegExp(escapeRegExp(possibleMention), 'g'),
+                                html,
+                            );
                         }
                     }
                 }

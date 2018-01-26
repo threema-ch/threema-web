@@ -242,3 +242,12 @@ export function supportsPassive() {
         window.addEventListener('test', null, opts);
     } catch (e) { /* do nothing */ }
 }
+
+/**
+ * Excape a RegEx, so that none of the string characters are considered special characters.
+ *
+ * Taken from https://stackoverflow.com/a/17606289/284318
+ */
+export function escapeRegExp(str: string) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
