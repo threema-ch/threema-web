@@ -78,8 +78,14 @@ targets=(
     sdp/sdp.js
 )
 
+
 for target in "${targets[@]}"; do
-    install -D "node_modules/$target" "$DIR/node_modules/$target"
+
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+    	install "node_modules/$target" "$DIR/node_modules/$target"
+    else
+		install -D "node_modules/$target" "$DIR/node_modules/$target"
+    fi
 done
 
 echo "+ Update version number..."
