@@ -158,13 +158,22 @@ class WelcomeController {
         // Clear cache
         this.webClientService.clearCache();
 
+        // Determine whether trusted key is available
+        let hasTrustedKey = null;
+        try {
+            hasTrustedKey = this.TrustedKeyStore.hasTrustedKey();
+        } catch (e) {
+            $log.error('Exception while accessing local storage:', e);
+            this.showLocalStorageException(e);
+        }
+
         // Determine connection mode
         if ($stateParams.initParams !== null) {
             this.mode = 'unlock';
             const keyStore = $stateParams.initParams.keyStore;
             const peerTrustedKey = $stateParams.initParams.peerTrustedKey;
             this.reconnect(keyStore, peerTrustedKey);
-        } else if (TrustedKeyStore.hasTrustedKey()) {
+        } else if (hasTrustedKey) {
             this.mode = 'unlock';
             this.unlock();
         } else {
@@ -372,6 +381,21 @@ class WelcomeController {
             const confirm = this.$mdDialog.alert()
                 .title(this.$translate.instant('common.ERROR'))
                 .htmlContent(this.$translate.instant('welcome.LOCAL_STORAGE_MISSING_DETAILS'))
+                .ok(this.$translate.instant('common.OK'));
+            this.$mdDialog.show(confirm);
+        });
+    }
+
+    /**
+     * Show a dialog indicating that local storage cannot be accessed.
+     */
+    private showLocalStorageException(e: Error): void {
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.alert()
+                .title(this.$translate.instant('common.ERROR'))
+                .htmlContent(this.$translate.instant('welcome.LOCAL_STORAGE_EXCEPTION_DETAILS', {
+                    errorMsg: e.name,
+                }))
                 .ok(this.$translate.instant('common.OK'));
             this.$mdDialog.show(confirm);
         });
