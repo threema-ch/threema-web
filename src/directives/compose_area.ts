@@ -171,6 +171,9 @@ export default [
                                     } else if (tag === 'br') {
                                         text += '\n';
                                         break;
+                                    } else if (tag === 'span' && node.hasAttribute('text')) {
+                                        text += node.getAttributeNode('text').value;
+                                        break;
                                     }
                                 default:
                                     $log.warn(logTag, 'Unhandled node:', node);
@@ -301,10 +304,11 @@ export default [
                         // Update typing information (use text instead method)
                         if (text.trim().length === 0) {
                             stopTyping();
+                            scope.onTyping('');
                         } else {
                             startTyping();
+                            scope.onTyping(text.trim(), stringService.getWord(text, caretPosition.from));
                         }
-                        scope.onTyping(text.trim());
 
                         updateView();
                     }, 0);
@@ -438,13 +442,14 @@ export default [
                         // Look up some filter functions
                         const escapeHtml = $filter('escapeHtml') as (a: string) => string;
                         const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
+                        const mentionify = $filter('mentionify') as (a: string) => string;
                         const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
 
                         // Escape HTML markup
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = nlToBr(emojify(escaped, true), true);
+                        const formatted = nlToBr(mentionify(emojify(escaped, true)), true);
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);
@@ -536,7 +541,7 @@ export default [
                             currentHTML += node.textContent;
                         } else if (node.nodeType === node.ELEMENT_NODE) {
                             let tag = node.tagName.toLowerCase();
-                            if (tag === 'img') {
+                            if (tag === 'img' || tag === 'span') {
                                 currentHTML += getOuterHtml(node);
                             } else if (tag === 'br') {
                                 // Firefox inserts a <br> after editing content editable fields.
@@ -579,6 +584,73 @@ export default [
                     updateView();
                 }
 
+                function insertMention(mentionString, posFrom = null, posTo = null): void {
+                    const formatted = ($filter('mentionify') as any)(mentionString);
+
+                    // In Chrome in right-to-left mode, our content editable
+                    // area may contain a DIV element.
+                    const childNodes = composeDiv[0].childNodes;
+                    const nestedDiv = childNodes.length === 1
+                        && childNodes[0].tagName !== undefined
+                        && childNodes[0].tagName.toLowerCase() === 'div';
+                    let contentElement;
+                    if (nestedDiv === true) {
+                        contentElement = composeDiv[0].childNodes[0];
+                    } else {
+                        contentElement = composeDiv[0];
+                    }
+
+                    let currentHTML = '';
+                    for (let i = 0; i < contentElement.childNodes.length; i++) {
+                        const node = contentElement.childNodes[i];
+
+                        if (node.nodeType === node.TEXT_NODE) {
+                            currentHTML += node.textContent;
+                        } else if (node.nodeType === node.ELEMENT_NODE) {
+                            let tag = node.tagName.toLowerCase();
+                            if (tag === 'img' || tag === 'span') {
+                                currentHTML += getOuterHtml(node);
+                            } else if (tag === 'br') {
+                                // Firefox inserts a <br> after editing content editable fields.
+                                // Remove the last <br> to fix this.
+                                if (i < contentElement.childNodes.length - 1) {
+                                    currentHTML += getOuterHtml(node);
+                                }
+                            }
+                        }
+                    }
+
+                    if (caretPosition !== null) {
+                        posFrom = null === posFrom ? caretPosition.from : posFrom;
+                        posTo = null === posTo ? caretPosition.to : posTo;
+                        currentHTML = currentHTML.substr(0, posFrom)
+                            + formatted
+                            + currentHTML.substr(posTo);
+
+                        // change caret position
+                        caretPosition.from += formatted.length - 1;
+                        caretPosition.fromBytes += mentionString.length;
+                        posFrom += formatted.length;
+                    } else {
+                        // insert at the end of line
+                        posFrom = currentHTML.length;
+                        currentHTML += formatted;
+                        caretPosition = {
+                            from: currentHTML.length,
+                        };
+                    }
+                    caretPosition.to = caretPosition.from;
+                    caretPosition.toBytes = caretPosition.fromBytes;
+
+                    contentElement.innerHTML = currentHTML;
+                    cleanupComposeContent();
+                    setCaretPosition(posFrom);
+
+                    // Update the draft text
+                    scope.onTyping(getText());
+
+                    updateView();
+                }
                 // File trigger is clicked
                 function onFileTrigger(ev: MouseEvent): void {
                     ev.preventDefault();
@@ -604,6 +676,9 @@ export default [
                     for (let img of composeDiv[0].getElementsByTagName('img')) {
                         img.ondragstart = () => false;
                     }
+                    for (let span of composeDiv[0].getElementsByTagName('span')) {
+                        span.setAttribute('contenteditable', false);
+                    }
 
                     if (browserService.getBrowser().firefox) {
                         // disable object resizing is the only way to disable resizing of
@@ -625,7 +700,7 @@ export default [
                 // return the outer html of a node element
                 function getOuterHtml(node: Node): string {
                     let pseudoElement = document.createElement('pseudo');
-                    pseudoElement.appendChild(node.cloneNode());
+                    pseudoElement.appendChild(node.cloneNode(true));
                     return pseudoElement.innerHTML;
                 }
 
@@ -760,6 +835,13 @@ export default [
 
                 $rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
                     composeDiv[0].focus();
+                });
+                $rootScope.$on('onMentioned', (event: ng.IAngularEvent, args: any) => {
+                    if (args.query && args.mention) {
+                        // Insert resulting HTML
+                        insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,
+                            caretPosition ?  caretPosition.to : null);
+                    }
                 });
             },
             // tslint:disable:max-line-length

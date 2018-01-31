@@ -178,6 +178,7 @@ class ConversationController {
     private $state: ng.ui.IStateService;
     private $log: ng.ILogService;
     private $scope: ng.IScope;
+    private $rootScope: ng.IRootScopeService;
     private $filter: ng.IFilterService;
 
     // Own services
@@ -206,6 +207,7 @@ class ConversationController {
     public msgReadReportPending = false;
     private hasMore = true;
     private latestRefMsgId: number = null;
+    private allText: string;
     private messages: threema.Message[];
     public initialData: threema.InitialConversationData = {
         draft: '',
@@ -214,7 +216,32 @@ class ConversationController {
     private $translate: ng.translate.ITranslateService;
     private locked = false;
     public maxTextLength: number;
+    public members: string[] = [];
     public isTyping = (): boolean => false;
+
+    public currentMentionFilterWord = null;
+    public showMentionSelector = (): boolean => this.type === 'group'
+        && this.currentMentionFilterWord != null;
+    /**
+     * Predicate function used for mention filtering.
+     *
+     * Match by contact name *or* id *or* if identity is null, the "all" entry
+     */
+    public filterMentions = (identity: string = null, index, array): boolean => {
+        if (this.currentMentionFilterWord && this.currentMentionFilterWord.length > 0) {
+            let query = this.currentMentionFilterWord.toLowerCase().trim();
+            if (identity === null) {
+                return this.allText.toLowerCase().indexOf(query) >= 0;
+            }
+            const contactReceiver = this.webClientService.contacts.get(identity);
+            return contactReceiver
+                && (
+                    contactReceiver.id.toLowerCase().indexOf(query) >= 0
+                    || contactReceiver.displayName.toLowerCase().indexOf(query) >= 0 );
+        } else {
+            return true;
+        }
+    };
 
     private uploading = {
         enabled: false,
@@ -256,6 +283,7 @@ class ConversationController {
         this.$state = $state;
         this.$scope = $scope;
         this.$filter = $filter;
+        this.$rootScope = $rootScope;
 
         this.$mdDialog = $mdDialog;
         this.$mdToast = $mdToast;
@@ -265,6 +293,7 @@ class ConversationController {
         this.$mdDialog.cancel();
 
         this.maxTextLength = this.webClientService.getMaxTextLength();
+        this.allText = this.$translate.instant('messenger.ALL');
 
         // On every navigation event, close all dialogs.
         // Note: Deprecated. When migrating ui-router ($state),
@@ -359,6 +388,8 @@ class ConversationController {
                         latestHeight = this.domChatElement.scrollHeight;
                     },
                 );
+
+                this.members = this.controllerModel.getMembers();
 
                 this.initialData = {
                     draft: webClientService.getDraft(this.receiver),
@@ -557,9 +588,21 @@ class ConversationController {
      * In contrast to startTyping, this method is is always called, not just if
      * the text field is non-empty.
      */
-    public onTyping = (text: string) => {
+    public onTyping = (text: string, currentWord: string = null) => {
         // Update draft
         this.webClientService.setDraft(this.receiver, text);
+        if (currentWord && currentWord.substr(0, 1) === '@') {
+            this.currentMentionFilterWord = currentWord.substr(1);
+        } else {
+            this.currentMentionFilterWord = null;
+        }
+    }
+
+    public onMentioned(identity: string = null): void {
+        this.$rootScope.$broadcast('onMentioned', {
+            query: '@' + this.currentMentionFilterWord,
+            mention: '@[' + (identity === null ? '@@@@@@@@' : identity.toUpperCase()) + ']',
+        });
     }
 
     public onUploading = (inProgress: boolean, percentCurrent: number = null, percentFull: number = null)  => {

@@ -178,23 +178,23 @@ describe('Filters', function() {
 
         it('mention - contact', () => {
             this.testPatterns([
-                ['@[AAAAAAAA]', '<span class="mention contact">ContactA</span>'],
-                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention contact">ContactA</span>. <span class="mention contact">ContactA</span> you are my friend'],
-                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention contact">ContactA</span> <span class="mention contact">ContactA</span> <span class="mention contact">ContactA</span>']
+                ['@[AAAAAAAA]', '<span class="mention" text="@[AAAAAAAA]">ContactA</span>'],
+                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention" text="@[AAAAAAAA]">ContactA</span>. <span class="mention" text="@[AAAAAAAA]">ContactA</span> you are my friend'],
+                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention" text="@[AAAAAAAA]">ContactA</span> <span class="mention" text="@[AAAAAAAA]">ContactA</span> <span class="mention" text="@[AAAAAAAA]">ContactA</span>']
             ]);
         });
 
         it('mention - all', () => {
             this.testPatterns([
-                ['@[@@@@@@@@]', '<span class="mention all">messenger.ALL</span>'],
-                ['@[@@@@@@@@] your base are belong to us', '<span class="mention all">messenger.ALL</span> your base are belong to us'],
-                ['@[@@@@@@@@] @[@@@@@@@@] @[@@@@@@@@]', '<span class="mention all">messenger.ALL</span> <span class="mention all">messenger.ALL</span> <span class="mention all">messenger.ALL</span>']
+                ['@[@@@@@@@@]', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span>'],
+                ['@[@@@@@@@@] your base are belong to us', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> your base are belong to us'],
+                ['@[@@@@@@@@] @[@@@@@@@@] @[@@@@@@@@]', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention" text="@[@@@@@@@@]">messenger.ALL</span>']
             ]);
         });
 
         it('mention - mixed', () => {
             this.testPatterns([
-                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention all">messenger.ALL</span> <span class="mention contact">ContactA</span> @[BBBBBBBB]'],
+                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention" text="@[AAAAAAAA]">ContactA</span> @[BBBBBBBB]'],
             ]);
         });
     });

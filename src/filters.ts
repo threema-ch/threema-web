@@ -139,21 +139,20 @@ angular.module('3ema.filters', [])
                     // Unique
                     for (let possibleMention of result) {
                         let identity = possibleMention.substr(2, 8);
-                        let html;
-
+                        let mentionName;
                         if (identity === '@@@@@@@@') {
-                            html = '<span class="mention all">' + $translate.instant('messenger.ALL') + '</span>';
+                            mentionName = $translate.instant('messenger.ALL');
                         } else {
                             const contact = webClientService.contacts.get(possibleMention.substr(2, 8));
                             if (contact !== null) {
-                                html = '<span class="mention contact">' + contact.displayName + '</span>';
+                                mentionName = contact.displayName;
                             }
                         }
 
-                        if (html !== undefined) {
+                        if (mentionName !== undefined) {
                             text = text.replace(
                                 new RegExp(escapeRegExp(possibleMention), 'g'),
-                                html,
+                                '<span class="mention" text="@[' + identity + ']">' + mentionName + '</span>',
                             );
                         }
                     }

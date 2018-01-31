@@ -430,6 +430,8 @@ declare namespace threema {
         canClean(): boolean;
         getMode(): number;
         setOnRemoved(callback: any): void;
+        onChangeMembers(identities: string[]): void;
+        getMembers(): string[];
     }
 
     interface Alert {

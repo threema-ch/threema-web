@@ -1,10 +1,20 @@
 .mention {
     background-color: #E0E0E0;
-    padding: 2px 5px;
-    position: relative;
+    padding: 2px 5px 2px 20px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     border-radius:5px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
     color: black;
+    line-height: 10pt !important;
+
+    &:before {
+        content: '@';
+        font-size: 10pt;
+        position: relative;
+        margin-top: -3px;
+        margin-left: -14px;
+        opacity: 0.4;
+    }
+
 }
