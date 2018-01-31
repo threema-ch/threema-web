@@ -241,7 +241,7 @@ class ConversationController {
         } else {
             return true;
         }
-    };
+    }
 
     private uploading = {
         enabled: false,
