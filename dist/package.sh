@@ -81,19 +81,19 @@ targets=(
 
 for target in "${targets[@]}"; do
 
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		ditto "node_modules/$target" "$DIR/node_modules/$target"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        ditto "node_modules/$target" "$DIR/node_modules/$target"
     else
-		install -D "node_modules/$target" "$DIR/node_modules/$target"
+        install -D "node_modules/$target" "$DIR/node_modules/$target"
     fi
 done
 
 
 echo "+ Update version number..."
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	    gsed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
+        gsed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
     else
-		sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
+        sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
     fi
 
 echo "+ Update permissions..."
