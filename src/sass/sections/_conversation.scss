@@ -101,7 +101,7 @@
                 list-style-type: none;
 
                 > li {
-                    &:not(:hover) {
+                    &:not(:hover):not(.selected) {
                         background-color: white;
                     }
                     @include mouse-hand;

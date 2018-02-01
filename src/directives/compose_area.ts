@@ -49,6 +49,7 @@ export default [
                 startTyping: '=',
                 stopTyping: '=',
                 onTyping: '=',
+                onKeyDown: '=',
 
                 // Reference to initial text and draft
                 initialData: '=',
@@ -261,6 +262,12 @@ export default [
                     // If enter is pressed, prevent default event from being dispatched
                     if (!ev.shiftKey && ev.which === 13) {
                         ev.preventDefault();
+                    }
+
+                    // If the keydown is handled and aborted outside
+                    if (scope.onKeyDown && scope.onKeyDown(ev) !== true) {
+                        ev.preventDefault();
+                        return;
                     }
 
                     // At link time, the element is not yet evaluated.

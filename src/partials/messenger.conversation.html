@@ -79,8 +79,10 @@
         </div>
         <div id="mention-selector" ng-if="ctrl.showMentionSelector()">
             <ul class="member-list">
-                <li ng-if="ctrl.filterMentions()" ng-click="ctrl.onMentioned(null)">
-                    <div class="contact-badge receiver-badge">
+                <li ng-repeat="mention in ctrl.currentMentions"
+                    ng-click="ctrl.onMentioned(mention.identity)"
+                    ng-class="{selected: ctrl.selectedMention == $index}">
+                    <div class="contact-badge receiver-badge" ng-if="mention.isAll">
                         <section class="avatar-box">
                             <eee-avatar eee-type="'group'"
                                         eee-receiver="ctrl.receiver"
@@ -88,10 +90,10 @@
                         </section>
                         <div translate>messenger.ALL</div>
                     </div>
-                </li>
-                <li ng-repeat="identity in ctrl.members | filter:ctrl.filterMentions" ng-click="ctrl.onMentioned(identity)">
+
                     <eee-contact-badge
-                            eee-identity="identity"
+                            ng-if="!mention.isAll"
+                            eee-identity="mention.identity"
                             eee-disable-click="true"/>
                 </li>
             </ul>
@@ -101,6 +103,7 @@
                     submit="ctrl.submit"
                     initial-data="ctrl.initialData"
                     on-typing="ctrl.onTyping"
+                    on-key-down="ctrl.onComposeKeyDown"
                     start-typing="ctrl.startTyping"
                     stop-typing="ctrl.stopTyping"
                     on-uploading="ctrl.onUploading"
