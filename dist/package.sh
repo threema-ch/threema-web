@@ -28,7 +28,12 @@ if [ -e "release" ]; then
     done
 fi
 
-VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/' | sed 's/ //g')
+if [[ "$OSTYPE" == "darwin"* ]]; then
+        VERSION=$(grep "\"version\"" package.json  | gsed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
+    else
+       VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
+    fi
+
 DIR="release/threema-web-$VERSION"
 
 echo "+ Create release directory..."
