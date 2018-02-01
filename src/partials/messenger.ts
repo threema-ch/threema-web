@@ -31,7 +31,6 @@ import {StateService} from '../services/state';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 import {ControllerModelMode} from '../types/enums';
-import {isIdentifierPart} from 'typescript';
 
 class DialogController {
     public static $inject = ['$mdDialog'];
