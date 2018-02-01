@@ -140,11 +140,17 @@ angular.module('3ema.filters', [])
                     for (let possibleMention of result) {
                         let identity = possibleMention.substr(2, 8);
                         let mentionName;
+                        let mentionType;
                         if (identity === '@@@@@@@@') {
                             mentionName = $translate.instant('messenger.ALL');
+                            mentionType = 'all';
+                        } else if (identity === webClientService.me.id) {
+                            mentionName = webClientService.me.displayName;
+                            mentionType = 'me';
                         } else {
                             const contact = webClientService.contacts.get(possibleMention.substr(2, 8));
                             if (contact !== null) {
+                                mentionType = 'id';
                                 mentionName = contact.displayName;
                             }
                         }
@@ -152,7 +158,8 @@ angular.module('3ema.filters', [])
                         if (mentionName !== undefined) {
                             text = text.replace(
                                 new RegExp(escapeRegExp(possibleMention), 'g'),
-                                '<span class="mention" text="@[' + identity + ']">' + mentionName + '</span>',
+                                '<span class="mention ' + mentionType + '"'
+                                    + ' text="@[' + identity + ']">' + mentionName + '</span>',
                             );
                         }
                     }

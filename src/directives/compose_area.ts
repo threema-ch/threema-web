@@ -518,74 +518,16 @@ export default [
                 }
 
                 function insertEmoji(emoji, posFrom = null, posTo = null): void {
-                    const formatted = ($filter('emojify') as any)(emoji, true, true);
-
-                    // In Chrome in right-to-left mode, our content editable
-                    // area may contain a DIV element.
-                    const childNodes = composeDiv[0].childNodes;
-                    const nestedDiv = childNodes.length === 1
-                        && childNodes[0].tagName !== undefined
-                        && childNodes[0].tagName.toLowerCase() === 'div';
-                    let contentElement;
-                    if (nestedDiv === true) {
-                        contentElement = composeDiv[0].childNodes[0];
-                    } else {
-                        contentElement = composeDiv[0];
-                    }
-
-                    let currentHTML = '';
-                    for (let i = 0; i < contentElement.childNodes.length; i++) {
-                        const node = contentElement.childNodes[i];
-
-                        if (node.nodeType === node.TEXT_NODE) {
-                            currentHTML += node.textContent;
-                        } else if (node.nodeType === node.ELEMENT_NODE) {
-                            let tag = node.tagName.toLowerCase();
-                            if (tag === 'img' || tag === 'span') {
-                                currentHTML += getOuterHtml(node);
-                            } else if (tag === 'br') {
-                                // Firefox inserts a <br> after editing content editable fields.
-                                // Remove the last <br> to fix this.
-                                if (i < contentElement.childNodes.length - 1) {
-                                    currentHTML += getOuterHtml(node);
-                                }
-                            }
-                        }
-                    }
-
-                    if (caretPosition !== null) {
-                        posFrom = null === posFrom ? caretPosition.from : posFrom;
-                        posTo = null === posTo ? caretPosition.to : posTo;
-                        currentHTML = currentHTML.substr(0, posFrom)
-                            + formatted
-                            + currentHTML.substr(posTo);
-
-                        // change caret position
-                        caretPosition.from += formatted.length - 1;
-                        caretPosition.fromBytes++;
-                    } else {
-                        // insert at the end of line
-                        posFrom = currentHTML.length;
-                        currentHTML += formatted;
-                        caretPosition = {
-                            from: currentHTML.length,
-                        };
-                    }
-                    caretPosition.to = caretPosition.from;
-                    caretPosition.toBytes = caretPosition.fromBytes;
-
-                    contentElement.innerHTML = currentHTML;
-                    cleanupComposeContent();
-                    setCaretPosition(posFrom);
-
-                    // Update the draft text
-                    scope.onTyping(getText());
-
-                    updateView();
+                    const emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
+                    insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 
                 function insertMention(mentionString, posFrom = null, posTo = null): void {
-                    const formatted = ($filter('mentionify') as any)(mentionString);
+                    const mentionElement = ($filter('mentionify') as any)(mentionString) as string;
+                    insertHTMLElement(mentionString, mentionElement, posFrom, posTo);
+                }
+
+                function insertHTMLElement(original: string, formatted: string, posFrom = null, posTo = null): void {
 
                     // In Chrome in right-to-left mode, our content editable
                     // area may contain a DIV element.
@@ -628,8 +570,8 @@ export default [
                             + currentHTML.substr(posTo);
 
                         // change caret position
-                        caretPosition.from += formatted.length - 1;
-                        caretPosition.fromBytes += mentionString.length;
+                        caretPosition.from += formatted.length;
+                        caretPosition.fromBytes += original.length;
                         posFrom += formatted.length;
                     } else {
                         // insert at the end of line
@@ -651,6 +593,7 @@ export default [
 
                     updateView();
                 }
+
                 // File trigger is clicked
                 function onFileTrigger(ev: MouseEvent): void {
                     ev.preventDefault();

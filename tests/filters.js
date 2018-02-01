@@ -5,6 +5,10 @@ describe('Filters', function() {
     // Ignoring page reload request
     beforeAll(() => window.onbeforeunload = () => null);
     let webClientServiceMock = {
+        me: {
+            id: 'MEMEMEME',
+            displayName: 'Er'
+        },
         contacts: {
             get: function(id) {
                 if (id === 'AAAAAAAA') {
@@ -178,23 +182,32 @@ describe('Filters', function() {
 
         it('mention - contact', () => {
             this.testPatterns([
-                ['@[AAAAAAAA]', '<span class="mention" text="@[AAAAAAAA]">ContactA</span>'],
-                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention" text="@[AAAAAAAA]">ContactA</span>. <span class="mention" text="@[AAAAAAAA]">ContactA</span> you are my friend'],
-                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention" text="@[AAAAAAAA]">ContactA</span> <span class="mention" text="@[AAAAAAAA]">ContactA</span> <span class="mention" text="@[AAAAAAAA]">ContactA</span>']
+                ['@[AAAAAAAA]', '<span class="mention id" text="@[AAAAAAAA]">ContactA</span>'],
+                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention id" text="@[AAAAAAAA]">ContactA</span>. <span class="mention id" text="@[AAAAAAAA]">ContactA</span> you are my friend'],
+                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention id" text="@[AAAAAAAA]">ContactA</span> <span class="mention id" text="@[AAAAAAAA]">ContactA</span> <span class="mention id" text="@[AAAAAAAA]">ContactA</span>']
             ]);
         });
 
         it('mention - all', () => {
             this.testPatterns([
-                ['@[@@@@@@@@]', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span>'],
-                ['@[@@@@@@@@] your base are belong to us', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> your base are belong to us'],
-                ['@[@@@@@@@@] @[@@@@@@@@] @[@@@@@@@@]', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention" text="@[@@@@@@@@]">messenger.ALL</span>']
+                ['@[@@@@@@@@]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span>'],
+                ['@[@@@@@@@@] your base are belong to us', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> your base are belong to us'],
+                ['@[@@@@@@@@] @[@@@@@@@@] @[@@@@@@@@]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span>']
             ]);
         });
 
         it('mention - mixed', () => {
             this.testPatterns([
-                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention" text="@[AAAAAAAA]">ContactA</span> @[BBBBBBBB]'],
+                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention id" text="@[AAAAAAAA]">ContactA</span> @[BBBBBBBB]'],
+            ]);
+        });
+
+
+        it('mention - me contact', () => {
+            this.testPatterns([
+                ['@[MEMEMEME]', '<span class="mention me" text="@[MEMEMEME]">Er</span>'],
+                ['hello @[MEMEMEME]. @[MEMEMEME] you are my friend', 'hello <span class="mention me" text="@[MEMEMEME]">Er</span>. <span class="mention me" text="@[MEMEMEME]">Er</span> you are my friend'],
+                ['@[MEMEMEME] @[MEMEMEME] @[MEMEMEME]', '<span class="mention me" text="@[MEMEMEME]">Er</span> <span class="mention me" text="@[MEMEMEME]">Er</span> <span class="mention me" text="@[MEMEMEME]">Er</span>']
             ]);
         });
     });
