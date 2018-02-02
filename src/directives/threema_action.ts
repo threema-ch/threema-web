@@ -15,22 +15,38 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 import {UriService} from '../services/uri';
+import {WebClientService} from '../services/webclient';
 
 export default [
     '$timeout',
     '$state',
     'UriService',
-    function($timeout, $state: ng.ui.IStateService, uriService: UriService) {
+    'WebClientService',
+    function($timeout, $state: ng.ui.IStateService, uriService: UriService, webClientService: WebClientService) {
 
         const validateThreemaId = (id: string): boolean => {
             return id !== undefined && id !== null && /^[0-9A-Z]{8}/.test(id);
         };
-
+        const viewReceiver = (receiver: threema.Receiver) => {
+            return function(e: Event) {
+                if (!receiver) {
+                    return false;
+                }
+                $state.go('messenger.home.detail', receiver);
+            };
+        };
         const addAction = (params) => {
             return function(e: Event) {
                 if (!validateThreemaId(params.id)) {
                     return false;
                 }
+
+                // Verify the receiver already exists
+                const contactReceiver = webClientService.contacts.get(params.id);
+                if (contactReceiver) {
+                    return viewReceiver(contactReceiver)(e);
+                }
+
                 $state.go('messenger.home.create', {
                     type: 'contact',
                     initParams: {
@@ -76,19 +92,38 @@ export default [
                     for (let i = 0; i < el[0].childNodes.length; i++) {
                         const node: HTMLElement = el[0].childNodes[i];
 
-                        if (node.nodeType === Node.ELEMENT_NODE
-                            && node.tagName.toLowerCase() === 'a') {
-
-                            const link = (node as HTMLElement).innerText;
-                            if (link !== undefined && link.toLowerCase().startsWith('threema://')) {
-                                const matches = (/\bthreema:\/\/([a-z]+)\?([^\s]+)\b/gi).exec(link);
-                                if (matches !== null) {
-                                    const handler = getThreemaActionHandler(matches[1]);
-                                    const params = uriService.parseQueryParams(matches[2]);
-                                    if (handler !== null && params !== null) {
-                                        node.addEventListener('click', handler(params));
+                        if (node.nodeType === Node.ELEMENT_NODE) {
+                            switch ( node.tagName.toLowerCase()) {
+                                case 'a':
+                                    const link = (node as HTMLElement).innerText;
+                                    if (link !== undefined && link.toLowerCase().startsWith('threema://')) {
+                                        const matches = (/\bthreema:\/\/([a-z]+)\?([^\s]+)\b/gi).exec(link);
+                                        if (matches !== null) {
+                                            const handler = getThreemaActionHandler(matches[1]);
+                                            const params = uriService.parseQueryParams(matches[2]);
+                                            if (handler !== null && params !== null) {
+                                                node.addEventListener('click', handler(params));
+                                            }
+                                        }
                                     }
-                                }
+                                    break;
+                                case 'span':
+                                    // supprt only id mentions (not all or me)
+                                    const mentionCssClass = 'mention id';
+                                    const cls = node.getAttribute('class');
+                                    if (cls.substr(0, mentionCssClass.length) === mentionCssClass) {
+                                        // Hack to extract the identity from class name
+                                        const identity = cls.substring(mentionCssClass.length).trim();
+                                        if (validateThreemaId(identity)) {
+                                            const contactReceiver = webClientService.contacts.get(identity);
+                                            node.addEventListener('click', viewReceiver(contactReceiver));
+                                            node.setAttribute('class', cls + ' link');
+                                            node.setAttribute('title', contactReceiver.displayName);
+                                        }
+                                    }
+
+                                default:
+                                    // ignore
                             }
                         }
                     }

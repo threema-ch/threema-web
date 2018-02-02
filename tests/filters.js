@@ -182,9 +182,9 @@ describe('Filters', function() {
 
         it('mention - contact', () => {
             this.testPatterns([
-                ['@[AAAAAAAA]', '<span class="mention id" text="@[AAAAAAAA]">ContactA</span>'],
-                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention id" text="@[AAAAAAAA]">ContactA</span>. <span class="mention id" text="@[AAAAAAAA]">ContactA</span> you are my friend'],
-                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention id" text="@[AAAAAAAA]">ContactA</span> <span class="mention id" text="@[AAAAAAAA]">ContactA</span> <span class="mention id" text="@[AAAAAAAA]">ContactA</span>']
+                ['@[AAAAAAAA]', '<span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span>'],
+                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span>. <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> you are my friend'],
+                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span>']
             ]);
         });
 
@@ -198,7 +198,7 @@ describe('Filters', function() {
 
         it('mention - mixed', () => {
             this.testPatterns([
-                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention id" text="@[AAAAAAAA]">ContactA</span> @[BBBBBBBB]'],
+                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> @[BBBBBBBB]'],
             ]);
         });
 

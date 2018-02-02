@@ -1,5 +1,5 @@
 .mention {
-    padding: 2px 5px 2px 20px;
+    padding: 0 5px 0 20px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     border-radius:5px;
@@ -25,4 +25,7 @@
         opacity: 0.6;
     }
 
+    &.link {
+        @include mouse-hand;
+    }
 }
