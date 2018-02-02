@@ -9,12 +9,12 @@
       "type": "image/x-icon"
     },
     {
-      "src": "img/logo.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml"
+      "src": "img/threema-576x576.png",
+      "sizes": "576x576",
+      "type": "image/png"
     }
   ],
   "name": "Threema Web",
   "short_name": "Threema Web",
-  "start_url": "/"
+  "start_url": "."
 }
