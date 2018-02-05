@@ -22,6 +22,7 @@ import avatar from './directives/avatar';
 import avatarArea from './directives/avatar_area';
 import avatarEditor from './directives/avatar_editor';
 import batteryStatus from './directives/battery';
+import clickAction from './directives/click_action';
 import composeArea from './directives/compose_area';
 import contactBadge from './directives/contact_badge';
 import distributionListBadge from './directives/distribution_list_badge';
@@ -45,13 +46,13 @@ import messageVoipStatus from './directives/message_voip_status';
 import myIdentity from './directives/my_identity';
 import searchbox from './directives/searchbox';
 import statusBar from './directives/status_bar';
-import threemaAction from './directives/threema_action';
 import verificationLevel from './directives/verification_level';
 
 angular.module('3ema.directives').directive('autofocus', autofocus);
 angular.module('3ema.directives').directive('avatarArea', avatarArea);
 angular.module('3ema.directives').directive('avatarEditor', avatarEditor);
 angular.module('3ema.directives').directive('batteryStatus', batteryStatus);
+angular.module('3ema.directives').directive('clickAction', clickAction);
 angular.module('3ema.directives').directive('composeArea', composeArea);
 angular.module('3ema.directives').directive('eeeAvatar', avatar);
 angular.module('3ema.directives').directive('eeeContactBadge', contactBadge);
@@ -76,5 +77,4 @@ angular.module('3ema.directives').directive('memberListEditor', memberListEditor
 angular.module('3ema.directives').directive('mediabox', mediabox);
 angular.module('3ema.directives').directive('searchbox', searchbox);
 angular.module('3ema.directives').directive('statusBar', statusBar);
-angular.module('3ema.directives').directive('threemaAction', threemaAction);
 angular.module('3ema.directives').directive('dragFile', dragFile);
