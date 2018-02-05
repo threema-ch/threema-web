@@ -199,4 +199,25 @@ describe('Filters', function() {
         });
     });
 
+    describe('nlToBr', function() {
+
+        this.testPatterns = (cases) => testPatterns('nlToBr', cases);
+
+        it('converts newlines (enabled=true)', () => {
+            const filter = $filter('nlToBr');
+            expect(filter('abc \n def', true)).toEqual('abc <br> def');
+            expect(filter('a\nb\nc\\n', true)).toEqual('a<br>b<br>c\\n');
+        });
+
+        it('does not converts newlines (enabled=false)', () => {
+            const filter = $filter('nlToBr');
+            expect(filter('abc\ndef', false)).toEqual('abc\ndef');
+        });
+
+        it('if enabled flag is not set, converts newlines', () => {
+            const filter = $filter('nlToBr');
+            expect(filter('abc\ndef')).toEqual('abc<br>def');
+        });
+    });
+
 });
