@@ -41,11 +41,11 @@ angular.module('3ema.filters', [])
 })
 
 /**
- * Convert newline characters with a <br> tag.
+ * Replace newline characters with a <br> tag.
  */
 .filter('nlToBr', function() {
     return (text, enabled: boolean) => {
-        if (enabled) {
+        if (enabled || enabled === undefined) {
             text = text.replace(/\n/g, '<br>');
         }
         return text;
