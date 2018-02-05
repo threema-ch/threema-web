@@ -129,8 +129,8 @@ angular.module('3ema.filters', [])
 /**
  * Convert mention elements to html elements
  */
-.filter('mentionify', ['WebClientService', '$translate',
-    function (webClientService: WebClientService, $translate) {
+.filter('mentionify', ['WebClientService', '$translate', 'escapeHtmlFilter',
+    function (webClientService: WebClientService, $translate: ng.translate.ITranslateService, escapeHtmlFilter) {
         return(text) => {
             if (text !== null && text.length > 10) {
                 let result = text.match(/@\[([\*\@a-zA-Z0-9][\@a-zA-Z0-9]{7})\]/g);
@@ -160,7 +160,7 @@ angular.module('3ema.filters', [])
                             text = text.replace(
                                 new RegExp(escapeRegExp(possibleMention), 'g'),
                                 '<span class="mention ' + cssClass + '"'
-                                    + ' text="@[' + identity + ']">' + mentionName + '</span>',
+                                    + ' text="@[' + identity + ']">' + escapeHtmlFilter(mentionName) + '</span>',
                             );
                         }
                     }
