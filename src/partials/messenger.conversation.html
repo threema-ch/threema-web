@@ -80,7 +80,7 @@
         <div id="mention-selector" ng-if="ctrl.showMentionSelector()">
             <ul class="member-list">
                 <li ng-repeat="mention in ctrl.currentMentions"
-                    ng-click="ctrl.onMentioned(mention.identity)"
+                    ng-click="ctrl.onMentionSelected(mention.identity)"
                     ng-class="{selected: ctrl.selectedMention == $index}">
                     <div class="contact-badge receiver-badge" ng-if="mention.isAll">
                         <section class="avatar-box">

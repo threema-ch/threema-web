@@ -260,7 +260,7 @@ export default [
                 // Handle typing events
                 function onKeyDown(ev: KeyboardEvent): void {
                     // If enter is pressed, prevent default event from being dispatched
-                    if (!ev.shiftKey && ev.which === 13) {
+                    if (!ev.shiftKey && ev.key === 'Enter') {
                         ev.preventDefault();
                     }
 
@@ -274,7 +274,7 @@ export default [
                     // Therefore add following code to end of event loop.
                     $timeout(() => {
                         // Shift + enter to insert a newline. Enter to send.
-                        if (!ev.shiftKey && ev.which === 13) {
+                        if (!ev.shiftKey && ev.key === 'Enter') {
                             if (sendText()) {
                                 return;
                             }
@@ -786,7 +786,7 @@ export default [
                 $rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
                     composeDiv[0].focus();
                 });
-                $rootScope.$on('onMentioned', (event: ng.IAngularEvent, args: any) => {
+                $rootScope.$on('onMentionSelected', (event: ng.IAngularEvent, args: any) => {
                     if (args.query && args.mention) {
                         // Insert resulting HTML
                         insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,

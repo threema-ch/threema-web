@@ -218,8 +218,8 @@ class ConversationController {
     public maxTextLength: number;
     public isTyping = (): boolean => false;
 
-    public allMentions: Array<{identity: string, query: string, isAll: boolean}> = [];
-    public currentMentions: Array<{identity: string, query: string, isAll: boolean}> = [];
+    public allMentions: threema.Mention[] = [];
+    public currentMentions: threema.Mention[] = [];
     public currentMentionFilterWord = null;
     public selectedMention: number = null;
     public showMentionSelector = (): boolean => this.type === 'group'
@@ -616,7 +616,7 @@ class ConversationController {
         }
     }
 
-    public getSelectedMention = (): {identity: string, query: string, isAll: boolean} => {
+    public getSelectedMention = (): threema.Mention => {
         if (this.selectedMention === null
             || this.selectedMention < 0
             || this.selectedMention > this.currentMentions.length - 1) {
@@ -630,7 +630,7 @@ class ConversationController {
      */
     public onComposeKeyDown = (ev: KeyboardEvent): boolean => {
         if (this.showMentionSelector() && !ev.shiftKey) {
-            let move = ev.which === 40 ? 1 : (ev.which === 38 ? - 1 : 0);
+            let move = ev.key === 'ArrowDown' ? 1 : (ev.key === 'ArrowUp' ? - 1 : 0);
             if (move !== 0) {
                 // Move cursors position in mention selector
                 if (this.selectedMention !== null) {
@@ -647,14 +647,14 @@ class ConversationController {
                 return false;
             }
 
-            if (ev.which === 13) {
+            if (ev.key === 'Enter') {
                 // Enter, select current mention
                 const selectedMentionObject = this.getSelectedMention();
                 if (selectedMentionObject === null) {
                     // If no (or a invalid) mention is selected, select the first mention
                     this.selectedMention = 0;
                 } else {
-                    this.onMentioned(selectedMentionObject.identity);
+                    this.onMentionSelected(selectedMentionObject.identity);
                 }
                 return false;
             }
@@ -663,8 +663,8 @@ class ConversationController {
         return true;
     }
 
-    public onMentioned(identity: string = null): void {
-        this.$rootScope.$broadcast('onMentioned', {
+    public onMentionSelected(identity: string = null): void {
+        this.$rootScope.$broadcast('onMentionSelected', {
             query: '@' + this.currentMentionFilterWord,
             mention: '@[' + (identity === null ? '@@@@@@@@' : identity.toUpperCase()) + ']',
         });

@@ -108,9 +108,11 @@ export default [
                                     }
                                     break;
                                 case 'span':
-                                    // supprt only id mentions (not all or me)
+                                    // Support only id mentions (not all or me)
                                     const mentionCssClass = 'mention id';
                                     const cls = node.getAttribute('class');
+                                    // Solved with the css classes, because angularJS removes
+                                    // all other attributes from the DOMElement
                                     if (cls.substr(0, mentionCssClass.length) === mentionCssClass) {
                                         // Hack to extract the identity from class name
                                         const identity = cls.substring(mentionCssClass.length).trim();

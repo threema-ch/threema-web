@@ -489,6 +489,12 @@ declare namespace threema {
         myAccount: MyAccount;
     }
 
+    interface Mention {
+        identity: string;
+        query: string;
+        isAll: boolean;
+    }
+
     namespace Container {
         interface ReceiverData {
             me: MeReceiver;
