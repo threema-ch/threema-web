@@ -43,9 +43,6 @@ Finally, unpack the `dist/threema-web-[VERSION].tar.gz` archive to your web serv
 Make sure to serve Threema Web only via https. We also recommend to enable
 HSTS, HPKP, CSP and other available security mechanisms in your web server.
 
-#### Notes on building on macOS
-Building on macOS works as well if you have gnu-sed installed. You can get gnu-sed from homebrew with ```brew install gnu-sed```.
-
 ### Downloading pre-built version
 
 If you don't want to build Threema Web yourself, you can also [download a
