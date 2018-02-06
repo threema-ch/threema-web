@@ -63,7 +63,8 @@ export default [
                                     eee-receiver="ctrl.groupReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
-                    <div class="receiver-badge-name" ng-bind-html="ctrl.groupReceiver.displayName | emojify">
+                    <div class="receiver-badge-name"
+                        ng-bind-html="ctrl.groupReceiver.displayName | escapeHtml | emojify">
                     </div>
                     <div class="receiver-role" ng-if="ctrl.showRoleIcon" title="{{ctrl.roleLabel}}">
                         <md-icon aria-label="{{ctrl.roleLabel}}"  class="material-icons md-24">
