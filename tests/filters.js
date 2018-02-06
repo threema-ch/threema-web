@@ -26,6 +26,11 @@ describe('Filters', function() {
                         displayName: 'GWContactA'
                     }
                 }
+                else if (id === 'BAD0BAD1') {
+                    return {
+                        displayName: '<b>< script >foo&ndash;</b>< script>',
+                    }
+                }
                 return null;
             }
         }
@@ -202,12 +207,17 @@ describe('Filters', function() {
             ]);
         });
 
-
         it('mention - me contact', () => {
             this.testPatterns([
                 ['@[MEMEMEME]', '<span class="mention me" text="@[MEMEMEME]">Er</span>'],
                 ['hello @[MEMEMEME]. @[MEMEMEME] you are my friend', 'hello <span class="mention me" text="@[MEMEMEME]">Er</span>. <span class="mention me" text="@[MEMEMEME]">Er</span> you are my friend'],
                 ['@[MEMEMEME] @[MEMEMEME] @[MEMEMEME]', '<span class="mention me" text="@[MEMEMEME]">Er</span> <span class="mention me" text="@[MEMEMEME]">Er</span> <span class="mention me" text="@[MEMEMEME]">Er</span>']
+            ]);
+        });
+
+        it('mention - escape html parameters', () => {
+            this.testPatterns([
+                ['@[BAD0BAD1]', '<span class="mention id BAD0BAD1" text="@[BAD0BAD1]">&lt;b&gt;&lt; script &gt;foo&amp;ndash;&lt;/b&gt;&lt; script&gt;</span>'],
             ]);
         });
     });
