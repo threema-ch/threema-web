@@ -11,14 +11,15 @@
                         eee-resolution="'low'"></eee-avatar>
         </div>
         <div class="header-details" ng-click="ctrl.showReceiver()">
-            <div class="conversation-header-details-name" ng-bind-html="ctrl.receiver.displayName | escapeHtml | emojify"></div>
+            <div class="conversation-header-details-name"
+                 ng-bind-html="ctrl.receiver.displayName | escapeHtml | emojify"></div>
             <div class="conversation-header-details-detail" ng-if="ctrl.type == 'contact'">
             <eee-verification-level ng-if="ctrl.type == 'contact'"
                                     contact="ctrl.receiver"></eee-verification-level>
             </div>
             <div class="conversation-header-details-detail" ng-if="ctrl.type == 'group'"
-                 title="{{ ctrl.receiver.members | idsToNames }}">
-                <span ng-bind-html="ctrl.receiver.members | idsToNames | emojify"></span>
+                 title="{{ ctrl.receiver.members | idsToNames | escapeHtml }}">
+                <span ng-bind-html="ctrl.receiver.members | idsToNames | escapeHtml | emojify"></span>
             </div>
         </div>
     </div>
