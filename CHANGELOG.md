@@ -3,6 +3,12 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.8.1][v1.8.1] (2018-02-06)
+
+Changes:
+
+* [change] Make mentions display-only ([#419][i419])
+
 ### [v1.8.0][v1.8.0] (2018-02-06)
 
 Changes:
@@ -385,7 +391,9 @@ First public release.
 [i404]: https://github.com/threema-ch/threema-web/issues/404
 [i408]: https://github.com/threema-ch/threema-web/issues/408
 [i410]: https://github.com/threema-ch/threema-web/issues/410
+[i419]: https://github.com/threema-ch/threema-web/issues/419
 
+[v1.8.1]: https://github.com/threema-ch/threema-web/compare/v1.8.0...v1.8.1
 [v1.8.0]: https://github.com/threema-ch/threema-web/compare/v1.7.0...v1.8.0
 [v1.7.0]: https://github.com/threema-ch/threema-web/compare/v1.6.2...v1.7.0
 [v1.6.2]: https://github.com/threema-ch/threema-web/compare/v1.6.1...v1.6.2
