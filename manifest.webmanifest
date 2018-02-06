@@ -1,0 +1,20 @@
+{
+  "background_color": "rgb(117,117,117)",
+  "description": "Chat from your desktop with Threema Web and have full access to all chats, contacts and media files.",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "img/favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "img/threema-576x576.png",
+      "sizes": "576x576",
+      "type": "image/png"
+    }
+  ],
+  "name": "Threema Web",
+  "short_name": "Threema Web",
+  "start_url": "."
+}
