@@ -1,10 +1,31 @@
 .mention {
-    background-color: #E0E0E0;
-    padding: 2px 5px;
-    position: relative;
+    padding: 0 5px 0 20px;
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     border-radius:5px;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    color: black;
+    line-height: 10pt !important;
+
+    &.me {
+        background-color: #8b8b8b;
+        color: white;
+    }
+
+    &.id,&.all {
+
+        box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        color: black;
+        background-color: #E0E0E0;
+    }
+    &:before {
+        content: '@';
+        font-size: 10pt;
+        position: relative;
+        top: -2px;
+        margin-left: -16px;
+        opacity: 0.6;
+    }
+
+    &.link {
+        @include mouse-hand;
+    }
 }

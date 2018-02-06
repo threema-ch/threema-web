@@ -162,4 +162,12 @@ export class ContactControllerModel implements threema.ControllerModel {
 
         }
     }
+
+    public onChangeMembers(identities: string[]): void {
+        return null;
+    }
+
+    public getMembers(): string[] {
+        return [this.identity];
+    }
 }

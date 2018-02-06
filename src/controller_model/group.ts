@@ -254,4 +254,8 @@ export class GroupControllerModel implements threema.ControllerModel {
     public onChangeMembers(identities: string[]): void {
         this.members = identities;
     }
+
+    public getMembers(): string[] {
+        return this.members;
+    }
 }

@@ -92,6 +92,40 @@
             margin: 0;
             padding: 0;
         }
+
+        #mention-selector {
+            padding: 0;
+            ul {
+                margin: 0;
+                padding: 0;
+                list-style-type: none;
+
+                > li {
+                    &:not(:hover):not(.selected) {
+                        background-color: white;
+                    }
+                    @include mouse-hand;
+                }
+            }
+
+            .contact-badge {
+                .avatar-box {
+                    margin: $main-padding;
+                    padding: 0;
+                    .avatar {
+                        width: 28px;
+                        height: 28px;
+                        img {
+                            width: inherit;
+                            height: inherit;
+                        }
+                    }
+                }
+                .contact-badge-identity {
+                    margin-right: $main-padding;
+                }
+            }
+        }
     }
 }
 

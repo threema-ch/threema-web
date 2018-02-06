@@ -430,6 +430,8 @@ declare namespace threema {
         canClean(): boolean;
         getMode(): number;
         setOnRemoved(callback: any): void;
+        onChangeMembers(identities: string[]): void;
+        getMembers(): string[];
     }
 
     interface Alert {
@@ -485,6 +487,12 @@ declare namespace threema {
         myPushToken?: string;
         maxGroupSize?: number;
         myAccount: MyAccount;
+    }
+
+    interface Mention {
+        identity: string;
+        query: string;
+        isAll: boolean;
     }
 
     namespace Container {

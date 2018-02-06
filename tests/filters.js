@@ -5,6 +5,10 @@ describe('Filters', function() {
     // Ignoring page reload request
     beforeAll(() => window.onbeforeunload = () => null);
     let webClientServiceMock = {
+        me: {
+            id: 'MEMEMEME',
+            displayName: 'Er'
+        },
         contacts: {
             get: function(id) {
                 if (id === 'AAAAAAAA') {
@@ -20,6 +24,11 @@ describe('Filters', function() {
                 else if (id === '*AAAAAAA') {
                     return {
                         displayName: 'GWContactA'
+                    }
+                }
+                else if (id === 'BAD0BAD1') {
+                    return {
+                        displayName: '<b>< script >foo&ndash;</b>< script>',
                     }
                 }
                 return null;
@@ -178,23 +187,37 @@ describe('Filters', function() {
 
         it('mention - contact', () => {
             this.testPatterns([
-                ['@[AAAAAAAA]', '<span class="mention contact">ContactA</span>'],
-                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention contact">ContactA</span>. <span class="mention contact">ContactA</span> you are my friend'],
-                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention contact">ContactA</span> <span class="mention contact">ContactA</span> <span class="mention contact">ContactA</span>']
+                ['@[AAAAAAAA]', '<span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span>'],
+                ['hello @[AAAAAAAA]. @[AAAAAAAA] you are my friend', 'hello <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span>. <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> you are my friend'],
+                ['@[AAAAAAAA] @[AAAAAAAA] @[AAAAAAAA]', '<span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span>']
             ]);
         });
 
         it('mention - all', () => {
             this.testPatterns([
-                ['@[@@@@@@@@]', '<span class="mention all">messenger.ALL</span>'],
-                ['@[@@@@@@@@] your base are belong to us', '<span class="mention all">messenger.ALL</span> your base are belong to us'],
-                ['@[@@@@@@@@] @[@@@@@@@@] @[@@@@@@@@]', '<span class="mention all">messenger.ALL</span> <span class="mention all">messenger.ALL</span> <span class="mention all">messenger.ALL</span>']
+                ['@[@@@@@@@@]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span>'],
+                ['@[@@@@@@@@] your base are belong to us', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> your base are belong to us'],
+                ['@[@@@@@@@@] @[@@@@@@@@] @[@@@@@@@@]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span>']
             ]);
         });
 
         it('mention - mixed', () => {
             this.testPatterns([
-                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention all">messenger.ALL</span> <span class="mention contact">ContactA</span> @[BBBBBBBB]'],
+                ['@[@@@@@@@@] @[AAAAAAAA] @[BBBBBBBB]', '<span class="mention all" text="@[@@@@@@@@]">messenger.ALL</span> <span class="mention id AAAAAAAA" text="@[AAAAAAAA]">ContactA</span> @[BBBBBBBB]'],
+            ]);
+        });
+
+        it('mention - me contact', () => {
+            this.testPatterns([
+                ['@[MEMEMEME]', '<span class="mention me" text="@[MEMEMEME]">Er</span>'],
+                ['hello @[MEMEMEME]. @[MEMEMEME] you are my friend', 'hello <span class="mention me" text="@[MEMEMEME]">Er</span>. <span class="mention me" text="@[MEMEMEME]">Er</span> you are my friend'],
+                ['@[MEMEMEME] @[MEMEMEME] @[MEMEMEME]', '<span class="mention me" text="@[MEMEMEME]">Er</span> <span class="mention me" text="@[MEMEMEME]">Er</span> <span class="mention me" text="@[MEMEMEME]">Er</span>']
+            ]);
+        });
+
+        it('mention - escape html parameters', () => {
+            this.testPatterns([
+                ['@[BAD0BAD1]', '<span class="mention id BAD0BAD1" text="@[BAD0BAD1]">&lt;b&gt;&lt; script &gt;foo&amp;ndash;&lt;/b&gt;&lt; script&gt;</span>'],
             ]);
         });
     });

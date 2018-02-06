@@ -64,6 +64,10 @@ export class StringService {
             let charFound = false;
             let realPos = Math.min(pos, chars.length) - 1;
 
+            if (realPos < 0) {
+                return '';
+            }
+
             let wordChars = new Array(realPos);
             for (let n = realPos; n >= 0; n--) {
                 let realChar = chars[n].trim();

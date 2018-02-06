@@ -77,11 +77,33 @@
                 <i class="material-icons md-dark md-24" translate translate-attr-title="common.CANCEL">clear</i>
             </md-button>
         </div>
+        <div id="mention-selector" ng-if="ctrl.showMentionSelector()">
+            <ul class="member-list">
+                <li ng-repeat="mention in ctrl.currentMentions"
+                    ng-click="ctrl.onMentionSelected(mention.identity)"
+                    ng-class="{selected: ctrl.selectedMention == $index}">
+                    <div class="contact-badge receiver-badge" ng-if="mention.isAll">
+                        <section class="avatar-box">
+                            <eee-avatar eee-type="'group'"
+                                        eee-receiver="ctrl.receiver"
+                                        eee-resolution="'low'"></eee-avatar>
+                        </section>
+                        <div translate>messenger.ALL</div>
+                    </div>
+
+                    <eee-contact-badge
+                            ng-if="!mention.isAll"
+                            eee-identity="mention.identity"
+                            eee-disable-click="true"/>
+                </li>
+            </ul>
+        </div>
         <div class="chat-input">
             <compose-area
                     submit="ctrl.submit"
                     initial-data="ctrl.initialData"
                     on-typing="ctrl.onTyping"
+                    on-key-down="ctrl.onComposeKeyDown"
                     start-typing="ctrl.startTyping"
                     stop-typing="ctrl.stopTyping"
                     on-uploading="ctrl.onUploading"

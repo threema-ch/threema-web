@@ -129,8 +129,8 @@ angular.module('3ema.filters', [])
 /**
  * Convert mention elements to html elements
  */
-.filter('mentionify', ['WebClientService', '$translate',
-    function (webClientService: WebClientService, $translate) {
+.filter('mentionify', ['WebClientService', '$translate', 'escapeHtmlFilter',
+    function (webClientService: WebClientService, $translate: ng.translate.ITranslateService, escapeHtmlFilter) {
         return(text) => {
             if (text !== null && text.length > 10) {
                 let result = text.match(/@\[([\*\@a-zA-Z0-9][\@a-zA-Z0-9]{7})\]/g);
@@ -139,21 +139,28 @@ angular.module('3ema.filters', [])
                     // Unique
                     for (let possibleMention of result) {
                         let identity = possibleMention.substr(2, 8);
-                        let html;
-
+                        let mentionName;
+                        let cssClass;
                         if (identity === '@@@@@@@@') {
-                            html = '<span class="mention all">' + $translate.instant('messenger.ALL') + '</span>';
+                            mentionName = $translate.instant('messenger.ALL');
+                            cssClass = 'all';
+                        } else if (identity === webClientService.me.id) {
+                            mentionName = webClientService.me.displayName;
+                            cssClass = 'me';
                         } else {
                             const contact = webClientService.contacts.get(possibleMention.substr(2, 8));
                             if (contact !== null) {
-                                html = '<span class="mention contact">' + contact.displayName + '</span>';
+                                // Add identity to class for a simpler parsing
+                                cssClass = 'id ' + identity;
+                                mentionName = contact.displayName;
                             }
                         }
 
-                        if (html !== undefined) {
+                        if (mentionName !== undefined) {
                             text = text.replace(
                                 new RegExp(escapeRegExp(possibleMention), 'g'),
-                                html,
+                                '<span class="mention ' + cssClass + '"'
+                                    + ' text="@[' + identity + ']">' + escapeHtmlFilter(mentionName) + '</span>',
                             );
                         }
                     }

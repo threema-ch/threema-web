@@ -178,6 +178,7 @@ class ConversationController {
     private $state: ng.ui.IStateService;
     private $log: ng.ILogService;
     private $scope: ng.IScope;
+    private $rootScope: ng.IRootScopeService;
     private $filter: ng.IFilterService;
 
     // Own services
@@ -206,6 +207,7 @@ class ConversationController {
     public msgReadReportPending = false;
     private hasMore = true;
     private latestRefMsgId: number = null;
+    private allText: string;
     private messages: threema.Message[];
     public initialData: threema.InitialConversationData = {
         draft: '',
@@ -215,6 +217,14 @@ class ConversationController {
     private locked = false;
     public maxTextLength: number;
     public isTyping = (): boolean => false;
+
+    public allMentions: threema.Mention[] = [];
+    public currentMentions: threema.Mention[] = [];
+    public currentMentionFilterWord = null;
+    public selectedMention: number = null;
+    public showMentionSelector = (): boolean => this.type === 'group'
+        && this.currentMentionFilterWord != null
+        && this.currentMentions.length > 0;
 
     private uploading = {
         enabled: false,
@@ -256,6 +266,7 @@ class ConversationController {
         this.$state = $state;
         this.$scope = $scope;
         this.$filter = $filter;
+        this.$rootScope = $rootScope;
 
         this.$mdDialog = $mdDialog;
         this.$mdToast = $mdToast;
@@ -265,6 +276,7 @@ class ConversationController {
         this.$mdDialog.cancel();
 
         this.maxTextLength = this.webClientService.getMaxTextLength();
+        this.allText = this.$translate.instant('messenger.ALL');
 
         // On every navigation event, close all dialogs.
         // Note: Deprecated. When migrating ui-router ($state),
@@ -359,6 +371,25 @@ class ConversationController {
                         latestHeight = this.domChatElement.scrollHeight;
                     },
                 );
+
+                // Enable mentions only in group chats
+                if (this.type === 'group') {
+                    this.allMentions.push({
+                        identity: null,
+                        query: this.$translate.instant('messenger.ALL').toLowerCase(),
+                        isAll: true,
+                    });
+                    this.controllerModel.getMembers().forEach((identity: string) => {
+                        const contactReceiver = this.webClientService.contacts.get(identity);
+                        if (contactReceiver) {
+                            this.allMentions.push({
+                                identity: identity,
+                                query: (contactReceiver.displayName + ' ' + identity).toLowerCase(),
+                                isAll: false,
+                            });
+                        }
+                    });
+                }
 
                 this.initialData = {
                     draft: webClientService.getDraft(this.receiver),
@@ -557,9 +588,86 @@ class ConversationController {
      * In contrast to startTyping, this method is is always called, not just if
      * the text field is non-empty.
      */
-    public onTyping = (text: string) => {
+    public onTyping = (text: string, currentWord: string = null) => {
         // Update draft
         this.webClientService.setDraft(this.receiver, text);
+        if (currentWord && currentWord.substr(0, 1) === '@') {
+            this.currentMentionFilterWord = currentWord.substr(1);
+            let query = this.currentMentionFilterWord.toLowerCase().trim();
+            const selectedMentionObject = this.getSelectedMention();
+            this.currentMentions = this.allMentions.filter((i) => {
+                if (query.length === 0) {
+                    return true;
+                }
+                return i.query.indexOf(query) >= 0;
+            });
+            // If only one mention is filtered, select them
+            if (this.currentMentions.length === 1) {
+                this.selectedMention = 0;
+            } else if (selectedMentionObject !== null) {
+                // Get the new position of the latest selected mention object
+                this.selectedMention = null;
+                this.selectedMention = this.currentMentions.findIndex((m) => {
+                    return m.identity === selectedMentionObject.identity;
+                });
+            }
+        } else {
+            this.currentMentionFilterWord = null;
+        }
+    }
+
+    public getSelectedMention = (): threema.Mention => {
+        if (this.selectedMention === null
+            || this.selectedMention < 0
+            || this.selectedMention > this.currentMentions.length - 1) {
+            return null;
+        }
+
+        return this.currentMentions[this.selectedMention];
+    }
+    /**
+     * Handle mention selector navigation
+     */
+    public onComposeKeyDown = (ev: KeyboardEvent): boolean => {
+        if (this.showMentionSelector() && !ev.shiftKey) {
+            let move = ev.key === 'ArrowDown' ? 1 : (ev.key === 'ArrowUp' ? - 1 : 0);
+            if (move !== 0) {
+                // Move cursors position in mention selector
+                if (this.selectedMention !== null) {
+                    this.selectedMention += move;
+                    // Fix positions
+                    if (this.selectedMention > this.currentMentions.length - 1) {
+                        this.selectedMention = 0;
+                    } else if (this.selectedMention < 0) {
+                        this.selectedMention = this.currentMentions.length - 1;
+                    }
+                } else {
+                    this.selectedMention = 0;
+                }
+                return false;
+            }
+
+            if (ev.key === 'Enter') {
+                // Enter, select current mention
+                const selectedMentionObject = this.getSelectedMention();
+                if (selectedMentionObject === null) {
+                    // If no (or a invalid) mention is selected, select the first mention
+                    this.selectedMention = 0;
+                } else {
+                    this.onMentionSelected(selectedMentionObject.identity);
+                }
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public onMentionSelected(identity: string = null): void {
+        this.$rootScope.$broadcast('onMentionSelected', {
+            query: '@' + this.currentMentionFilterWord,
+            mention: '@[' + (identity === null ? '@@@@@@@@' : identity.toUpperCase()) + ']',
+        });
     }
 
     public onUploading = (inProgress: boolean, percentCurrent: number = null, percentFull: number = null)  => {

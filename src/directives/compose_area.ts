@@ -49,6 +49,7 @@ export default [
                 startTyping: '=',
                 stopTyping: '=',
                 onTyping: '=',
+                onKeyDown: '=',
 
                 // Reference to initial text and draft
                 initialData: '=',
@@ -171,6 +172,9 @@ export default [
                                     } else if (tag === 'br') {
                                         text += '\n';
                                         break;
+                                    } else if (tag === 'span' && node.hasAttribute('text')) {
+                                        text += node.getAttributeNode('text').value;
+                                        break;
                                     }
                                 default:
                                     $log.warn(logTag, 'Unhandled node:', node);
@@ -256,15 +260,21 @@ export default [
                 // Handle typing events
                 function onKeyDown(ev: KeyboardEvent): void {
                     // If enter is pressed, prevent default event from being dispatched
-                    if (!ev.shiftKey && ev.which === 13) {
+                    if (!ev.shiftKey && ev.key === 'Enter') {
                         ev.preventDefault();
+                    }
+
+                    // If the keydown is handled and aborted outside
+                    if (scope.onKeyDown && scope.onKeyDown(ev) !== true) {
+                        ev.preventDefault();
+                        return;
                     }
 
                     // At link time, the element is not yet evaluated.
                     // Therefore add following code to end of event loop.
                     $timeout(() => {
                         // Shift + enter to insert a newline. Enter to send.
-                        if (!ev.shiftKey && ev.which === 13) {
+                        if (!ev.shiftKey && ev.key === 'Enter') {
                             if (sendText()) {
                                 return;
                             }
@@ -301,10 +311,11 @@ export default [
                         // Update typing information (use text instead method)
                         if (text.trim().length === 0) {
                             stopTyping();
+                            scope.onTyping('');
                         } else {
                             startTyping();
+                            scope.onTyping(text.trim(), stringService.getWord(text, caretPosition.from));
                         }
-                        scope.onTyping(text.trim());
 
                         updateView();
                     }, 0);
@@ -438,13 +449,14 @@ export default [
                         // Look up some filter functions
                         const escapeHtml = $filter('escapeHtml') as (a: string) => string;
                         const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
+                        const mentionify = $filter('mentionify') as (a: string) => string;
                         const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
 
                         // Escape HTML markup
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = nlToBr(emojify(escaped, true), true);
+                        const formatted = nlToBr(mentionify(emojify(escaped, true)), true);
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);
@@ -513,7 +525,16 @@ export default [
                 }
 
                 function insertEmoji(emoji, posFrom = null, posTo = null): void {
-                    const formatted = ($filter('emojify') as any)(emoji, true, true);
+                    const emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
+                    insertHTMLElement(emoji, emojiElement, posFrom, posTo);
+                }
+
+                function insertMention(mentionString, posFrom = null, posTo = null): void {
+                    const mentionElement = ($filter('mentionify') as any)(mentionString) as string;
+                    insertHTMLElement(mentionString, mentionElement, posFrom, posTo);
+                }
+
+                function insertHTMLElement(original: string, formatted: string, posFrom = null, posTo = null): void {
 
                     // In Chrome in right-to-left mode, our content editable
                     // area may contain a DIV element.
@@ -536,7 +557,7 @@ export default [
                             currentHTML += node.textContent;
                         } else if (node.nodeType === node.ELEMENT_NODE) {
                             let tag = node.tagName.toLowerCase();
-                            if (tag === 'img') {
+                            if (tag === 'img' || tag === 'span') {
                                 currentHTML += getOuterHtml(node);
                             } else if (tag === 'br') {
                                 // Firefox inserts a <br> after editing content editable fields.
@@ -556,8 +577,9 @@ export default [
                             + currentHTML.substr(posTo);
 
                         // change caret position
-                        caretPosition.from += formatted.length - 1;
-                        caretPosition.fromBytes++;
+                        caretPosition.from += formatted.length;
+                        caretPosition.fromBytes += original.length;
+                        posFrom += formatted.length;
                     } else {
                         // insert at the end of line
                         posFrom = currentHTML.length;
@@ -604,6 +626,9 @@ export default [
                     for (let img of composeDiv[0].getElementsByTagName('img')) {
                         img.ondragstart = () => false;
                     }
+                    for (let span of composeDiv[0].getElementsByTagName('span')) {
+                        span.setAttribute('contenteditable', false);
+                    }
 
                     if (browserService.getBrowser().firefox) {
                         // disable object resizing is the only way to disable resizing of
@@ -625,7 +650,7 @@ export default [
                 // return the outer html of a node element
                 function getOuterHtml(node: Node): string {
                     let pseudoElement = document.createElement('pseudo');
-                    pseudoElement.appendChild(node.cloneNode());
+                    pseudoElement.appendChild(node.cloneNode(true));
                     return pseudoElement.innerHTML;
                 }
 
@@ -760,6 +785,13 @@ export default [
 
                 $rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
                     composeDiv[0].focus();
+                });
+                $rootScope.$on('onMentionSelected', (event: ng.IAngularEvent, args: any) => {
+                    if (args.query && args.mention) {
+                        // Insert resulting HTML
+                        insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,
+                            caretPosition ?  caretPosition.to : null);
+                    }
                 });
             },
             // tslint:disable:max-line-length
