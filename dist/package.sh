@@ -28,7 +28,9 @@ if [ -e "release" ]; then
     done
 fi
 
-VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
+
+VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')
+
 DIR="release/threema-web-$VERSION"
 
 echo "+ Create release directory..."
@@ -78,12 +80,19 @@ targets=(
     sdp/sdp.js
 )
 
+
 for target in "${targets[@]}"; do
-    install -D "node_modules/$target" "$DIR/node_modules/$target"
+
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        ditto "node_modules/$target" "$DIR/node_modules/$target"
+    else
+        install -D "node_modules/$target" "$DIR/node_modules/$target"
+    fi
 done
 
+
 echo "+ Update version number..."
-sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
+sed -i '' -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;
