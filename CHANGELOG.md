@@ -3,6 +3,21 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.8.0][v1.8.0] (2018-02-06)
+
+Changes:
+
+* [feature] Replace :shortnames: with emojis ([#390][i390])
+* [feature] Show preview in dialog when sending image message ([#401][i401])
+* [feature] Implement mentions ([#404][i404] / [#410][i410])
+* [feature] Show a dialog when local storage cannot be accessed ([#402][i402])
+* [feature] Add Web App Manifest ([#408][i408])
+* [bug] Workaround for sending .ogg audio in Firefox ([#396][i396])
+
+Contributors:
+
+- [@rugk][@rugk]
+
 ### [v1.7.0][v1.7.0] (2017-11-27)
 
 Changes:
@@ -363,7 +378,15 @@ First public release.
 [i380]: https://github.com/threema-ch/threema-web/issues/380
 [i382]: https://github.com/threema-ch/threema-web/issues/382
 [i385]: https://github.com/threema-ch/threema-web/issues/385
+[i390]: https://github.com/threema-ch/threema-web/issues/390
+[i396]: https://github.com/threema-ch/threema-web/issues/396
+[i401]: https://github.com/threema-ch/threema-web/issues/401
+[i402]: https://github.com/threema-ch/threema-web/issues/402
+[i404]: https://github.com/threema-ch/threema-web/issues/404
+[i408]: https://github.com/threema-ch/threema-web/issues/408
+[i410]: https://github.com/threema-ch/threema-web/issues/410
 
+[v1.8.0]: https://github.com/threema-ch/threema-web/compare/v1.7.0...v1.8.0
 [v1.7.0]: https://github.com/threema-ch/threema-web/compare/v1.6.2...v1.7.0
 [v1.6.2]: https://github.com/threema-ch/threema-web/compare/v1.6.1...v1.6.2
 [v1.6.1]: https://github.com/threema-ch/threema-web/compare/v1.6.0...v1.6.1
