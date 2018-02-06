@@ -29,7 +29,7 @@ if [ -e "release" ]; then
 fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-        VERSION=$(grep "\"version\"" package.json  | gsed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
+        VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')
     else
        VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
     fi
