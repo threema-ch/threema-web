@@ -96,7 +96,7 @@ done
 
 echo "+ Update version number..."
 if [[ "$OSTYPE" == "darwin"* ]]; then
-        gsed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
+        sed -i'' -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
     else
         sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
     fi
