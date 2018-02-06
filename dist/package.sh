@@ -28,11 +28,8 @@ if [ -e "release" ]; then
     done
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-        VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')
-    else
-       VERSION=$(grep "\"version\"" package.json  | sed 's/\s*\"version\": \"\([^\"]*\).*/\1/')
-    fi
+
+VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')
 
 DIR="release/threema-web-$VERSION"
 
@@ -95,11 +92,7 @@ done
 
 
 echo "+ Update version number..."
-if [[ "$OSTYPE" == "darwin"* ]]; then
-        sed -i'' -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
-    else
-        sed -i "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
-    fi
+sed -i '' -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;
