@@ -43,6 +43,16 @@
                         transform: none; // https://github.com/threema-ch/threema-web/issues/262
                         height: 20px;
                     }
+                    .mention {
+                        line-height: normal !important;
+                        vertical-align: middle;
+                        transform: none;
+                        margin: 0 2px 0 0;
+                        transform: none;
+                        user-select: none;
+                        -moz-user-select: none;
+                        -webkit-user-select: none;
+                    }
                 }
             }
             &:first-child,

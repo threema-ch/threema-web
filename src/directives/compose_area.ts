@@ -66,6 +66,8 @@ export default [
                 const TRIGGER_ENABLED_CSS_CLASS = 'is-enabled';
                 const TRIGGER_ACTIVE_CSS_CLASS = 'is-active';
 
+                const isFirefoxBrowser = browserService.getBrowser().firefox;
+
                 // Elements
                 const composeArea: any = element;
                 const composeDiv: any = angular.element(element[0].querySelector('div.compose'));
@@ -74,6 +76,8 @@ export default [
                 const sendTrigger: any = angular.element(element[0].querySelector('i.send-trigger'));
                 const fileTrigger: any = angular.element(element[0].querySelector('i.file-trigger'));
                 const fileInput: any = angular.element(element[0].querySelector('input.file-input'));
+
+                let onUpdating = false;
 
                 // Set initial text
                 if (scope.initialData.initialText) {
@@ -367,7 +371,7 @@ export default [
                             };
 
                             // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1240259
-                            if (browserService.getBrowser().firefox) {
+                            if (isFirefoxBrowser) {
                                 if (fileMessageData.name.endsWith('.ogg') && fileMessageData.fileType === 'video/ogg') {
                                     fileMessageData.fileType = 'audio/ogg';
                                 }
@@ -525,16 +529,20 @@ export default [
                 }
 
                 function insertEmoji(emoji, posFrom = null, posTo = null): void {
-                    const emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
+                    let emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
                     insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 
-                function insertMention(mentionString, posFrom = null, posTo = null): void {
+                function insertMention(mentionString, posFrom, posTo): void {
                     const mentionElement = ($filter('mentionify') as any)(mentionString) as string;
                     insertHTMLElement(mentionString, mentionElement, posFrom, posTo);
                 }
 
-                function insertHTMLElement(original: string, formatted: string, posFrom = null, posTo = null): void {
+                function insertHTMLElement(original: string,
+                                           formatted: string,
+                                           posFrom = null,
+                                           posTo = null): void {
+                    onUpdating = true;
 
                     // In Chrome in right-to-left mode, our content editable
                     // area may contain a DIV element.
@@ -563,10 +571,18 @@ export default [
                                 // Firefox inserts a <br> after editing content editable fields.
                                 // Remove the last <br> to fix this.
                                 if (i < contentElement.childNodes.length - 1) {
-                                    currentHTML += getOuterHtml(node);
+                                     currentHTML += getOuterHtml(node);
                                 }
                             }
                         }
+                    }
+
+                    // Add a remove image to handling remove inner elements
+                    // in firefox
+                    if (isFirefoxBrowser) {
+                        formatted = '<img class="remove" data-dir="next"/>'
+                            + formatted
+                            + '<img class="remove" data-dir="prev"/>';
                     }
 
                     if (caretPosition !== null) {
@@ -599,6 +615,51 @@ export default [
                     scope.onTyping(getText());
 
                     updateView();
+
+                    onUpdating = false;
+
+                    // Remove sibling element if a remove node is removed
+                    // (its only a firefox fix, works in chromium)
+                    if (isFirefoxBrowser) {
+                        for (let n in contentElement.childNodes) {
+                            if (contentElement.childNodes[n] === null) {
+                                continue;
+                            }
+                            const children = contentElement.childNodes[n];
+                            if (children.className === 'remove'
+                                && children.dataset.dir) {
+
+                                children.addEventListener('DOMNodeRemoved', function (e) {
+                                    if (!onUpdating) {
+                                        const removingDOMNode = children.dataset.dir === 'prev'
+                                            ? this.previousSibling
+                                            : this.nextSibling;
+
+                                        // Do not continue if no removing node found
+                                        if (!removingDOMNode) {
+                                            return;
+                                        }
+                                        const removingDOMNodeRemoveElement = children.dataset.dir === 'prev'
+                                            ? removingDOMNode.previousSibling
+                                            : removingDOMNode.nextSibling;
+
+                                        if (removingDOMNode) {
+                                            onUpdating = true;
+                                            removingDOMNode.parentNode.removeChild(removingDOMNode);
+
+                                            // Only remove the corresponding remove element
+                                            if (removingDOMNodeRemoveElement
+                                                && removingDOMNodeRemoveElement.className === 'remove') {
+                                                removingDOMNodeRemoveElement.parentNode
+                                                    .removeChild(removingDOMNodeRemoveElement);
+                                            }
+                                            onUpdating = false;
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
                 }
 
                 // File trigger is clicked
@@ -626,11 +687,12 @@ export default [
                     for (let img of composeDiv[0].getElementsByTagName('img')) {
                         img.ondragstart = () => false;
                     }
+
                     for (let span of composeDiv[0].getElementsByTagName('span')) {
                         span.setAttribute('contenteditable', false);
                     }
 
-                    if (browserService.getBrowser().firefox) {
+                    if (isFirefoxBrowser) {
                         // disable object resizing is the only way to disable resizing of
                         // emoji (contenteditable must be true, otherwise the emoji can not
                         // be removed with backspace (in FF))

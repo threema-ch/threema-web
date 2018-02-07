@@ -625,11 +625,11 @@ class ConversationController {
 
         return this.currentMentions[this.selectedMention];
     }
+
     /**
      * Handle mention selector navigation
      */
     public onComposeKeyDown = (ev: KeyboardEvent): boolean => {
-        /* Make mentions readonly for now
         if (this.showMentionSelector() && !ev.shiftKey) {
             let move = ev.key === 'ArrowDown' ? 1 : (ev.key === 'ArrowUp' ? - 1 : 0);
             if (move !== 0) {
@@ -660,7 +660,6 @@ class ConversationController {
                 return false;
             }
         }
-        */
         return true;
     }
 
