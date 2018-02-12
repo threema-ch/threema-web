@@ -529,7 +529,7 @@ export default [
                 }
 
                 function insertEmoji(emoji, posFrom = null, posTo = null): void {
-                    let emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
+                    const emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
                     insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 
@@ -571,14 +571,15 @@ export default [
                                 // Firefox inserts a <br> after editing content editable fields.
                                 // Remove the last <br> to fix this.
                                 if (i < contentElement.childNodes.length - 1) {
-                                     currentHTML += getOuterHtml(node);
+                                    currentHTML += getOuterHtml(node);
                                 }
                             }
                         }
                     }
 
-                    // Add a remove image to handling remove inner elements
-                    // in firefox
+                    // In Firefox, elements marked as non-editable cannot be deleted with backspace.
+                    // As a workaround, add image elements around the mention. If one of them is deleted,
+                    // the mention is deleted too.
                     if (isFirefoxBrowser) {
                         formatted = '<img class="remove" data-dir="next"/>'
                             + formatted
@@ -618,20 +619,20 @@ export default [
 
                     onUpdating = false;
 
-                    // Remove sibling element if a remove node is removed
-                    // (its only a firefox fix, works in chromium)
+                    // Remove sibling element if a "remove node" is removed
+                    // (Firefox workaround, not necessary in Chromium)
                     if (isFirefoxBrowser) {
                         for (let n in contentElement.childNodes) {
                             if (contentElement.childNodes[n] === null) {
                                 continue;
                             }
-                            const children = contentElement.childNodes[n];
-                            if (children.className === 'remove'
-                                && children.dataset.dir) {
+                            const child = contentElement.childNodes[n];
+                            if (child.className === 'remove'
+                                && child.dataset.dir) {
 
-                                children.addEventListener('DOMNodeRemoved', function (e) {
+                                child.addEventListener('DOMNodeRemoved', function (e) {
                                     if (!onUpdating) {
-                                        const removingDOMNode = children.dataset.dir === 'prev'
+                                        const removingDOMNode = child.dataset.dir === 'prev'
                                             ? this.previousSibling
                                             : this.nextSibling;
 
@@ -639,7 +640,7 @@ export default [
                                         if (!removingDOMNode) {
                                             return;
                                         }
-                                        const removingDOMNodeRemoveElement = children.dataset.dir === 'prev'
+                                        const removingDOMNodeRemoveElement = child.dataset.dir === 'prev'
                                             ? removingDOMNode.previousSibling
                                             : removingDOMNode.nextSibling;
 
