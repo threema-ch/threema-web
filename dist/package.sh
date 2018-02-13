@@ -28,7 +28,6 @@ if [ -e "release" ]; then
     done
 fi
 
-
 VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')
 
 DIR="release/threema-web-$VERSION"
@@ -80,9 +79,7 @@ targets=(
     sdp/sdp.js
 )
 
-
 for target in "${targets[@]}"; do
-
     if [[ "$OSTYPE" == "darwin"* ]]; then
         ditto "node_modules/$target" "$DIR/node_modules/$target"
     else
@@ -90,9 +87,11 @@ for target in "${targets[@]}"; do
     fi
 done
 
-
 echo "+ Update version number..."
-sed -i '' -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
+# Note: The `-i.bak` notation is requires so that the sed command works both on Linux
+# and on macOS: https://stackoverflow.com/q/5694228/284318
+sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
+rm $DIR/index.html.bak $DIR/troubleshoot/index.html.bak $DIR/dist/app.js.bak $DIR/version.txt.bak
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;
