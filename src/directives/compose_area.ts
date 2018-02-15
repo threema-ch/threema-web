@@ -826,9 +826,6 @@ export default [
                 composeDiv.on('keyup mouseup', updateCaretPosition);
                 composeDiv.on('selectionchange', updateCaretPosition);
 
-                // When switching chat, send stopTyping message
-                scope.$on('$destroy', stopTyping);
-
                 // Handle paste event
                 composeDiv.on('paste', onPaste);
 
@@ -846,15 +843,27 @@ export default [
 
                 updateView();
 
-                $rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
+                // Listen to broadcasts
+                const unsubscribeListeners = [];
+                unsubscribeListeners.push($rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
                     composeDiv[0].focus();
-                });
-                $rootScope.$on('onMentionSelected', (event: ng.IAngularEvent, args: any) => {
+                }));
+
+                unsubscribeListeners.push($rootScope.$on('onMentionSelected', (event: ng.IAngularEvent, args: any) => {
                     if (args.query && args.mention) {
                         // Insert resulting HTML
                         insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,
                             caretPosition ?  caretPosition.to : null);
                     }
+                }));
+
+                // When switching chat, send stopTyping message
+                scope.$on('$destroy', () => {
+                    unsubscribeListeners.forEach((u) => {
+                        // Unsubscribe
+                        u();
+                    });
+                    stopTyping();
                 });
             },
             // tslint:disable:max-line-length
