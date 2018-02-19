@@ -122,6 +122,8 @@ $loading-ring-thickness: 5px;
                     position: absolute;
                     top: calc(50% - #{$circle-size/2});
                     left: calc(50% - #{$circle-size/2});
+                    background: rgba(128, 128, 128, 0.6);
+                    border-radius: $circle-size - (2 * $loading-ring-thickness);
                 }
             }
         }
