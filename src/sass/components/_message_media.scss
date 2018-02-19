@@ -43,6 +43,8 @@ $loading-ring-thickness: 5px;
             color: white;
             margin: auto auto;
             position: relative;
+            background: rgba(128, 128, 128, .3);
+            border-radius: $material-radius;
         }
     }
 
