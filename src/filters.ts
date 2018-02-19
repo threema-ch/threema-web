@@ -149,7 +149,7 @@ angular.module('3ema.filters', [])
                             cssClass = 'me';
                         } else {
                             const contact = webClientService.contacts.get(possibleMention.substr(2, 8));
-                            if (contact !== null) {
+                            if (contact !== null && contact !== undefined) {
                                 // Add identity to class for a simpler parsing
                                 cssClass = 'id ' + identity;
                                 mentionName = contact.displayName;
