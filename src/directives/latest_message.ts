@@ -103,7 +103,7 @@ export default [
                         // Don't show draft if conversation is active
                         return false;
                     }
-                    let draft = this.getDraft();
+                    const draft = this.getDraft();
                     return draft !== undefined && draft !== null;
                 };
 

@@ -42,8 +42,8 @@ export class QrCodeService {
         // tslint:disable:no-bitwise
 
         // Allocate array buffer
-        let saltyRtcHostBytes = stringToUtf8a(host);
-        let buf = new ArrayBuffer(2 + 1 + 32 + 32 + 32 + 2 + saltyRtcHostBytes.byteLength);
+        const saltyRtcHostBytes = stringToUtf8a(host);
+        const buf = new ArrayBuffer(2 + 1 + 32 + 32 + 32 + 2 + saltyRtcHostBytes.byteLength);
 
         // Options bitfield
         let options = 0;
@@ -51,12 +51,12 @@ export class QrCodeService {
         options |= (persistent ? 1 : 0) << 1;
 
         // Write version and options
-        let dataView = new DataView(buf);
+        const dataView = new DataView(buf);
         dataView.setUint16(0, this.protocolVersion);
         dataView.setUint8(2, options);
 
         // Write initiator key, auth token and server key
-        let u8Array = new Uint8Array(buf);
+        const u8Array = new Uint8Array(buf);
         u8Array.set(initiatorKey, 3);
         u8Array.set(authToken, 35);
         if (serverKey === null) {

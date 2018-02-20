@@ -67,7 +67,7 @@ export class PushService {
         }
 
         // Prepare request
-        let request = {
+        const request = {
             method: 'POST',
             url: this.url,
             headers: {

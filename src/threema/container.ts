@@ -39,8 +39,8 @@ class StringHashSet {
     }
 
     public values() {
-        let values = [];
-        for (let i in this.setObj) {
+        const values = [];
+        for (const i in this.setObj) {
             if (this.setObj[i] === this.val) {
                 values.push(i);
             }
@@ -256,7 +256,7 @@ angular.module('3ema.container', [])
          * Comparison is done by type and id.
          */
         public find(pattern: threema.Conversation | threema.Receiver): threema.Conversation | null {
-            for (let conversation of this.get()) {
+            for (const conversation of this.get()) {
                 const a = pattern;
                 const b = conversation;
                 if (a !== undefined && b !== undefined && a.type === b.type && a.id === b.id) {
@@ -273,10 +273,10 @@ angular.module('3ema.container', [])
         public updateOrAdd(conversation: threema.Conversation): void {
             let moveDirection = 0;
             let updated = false;
-            for (let p of this.conversations.keys()) {
+            for (const p of this.conversations.keys()) {
                 if (receiverService.compare(this.conversations[p], conversation)) {
                     // ok, replace me and break
-                    let old = this.conversations[p];
+                    const old = this.conversations[p];
                     if (old.position !== conversation.position) {
                         // position also changed...
                         moveDirection = old.position > conversation.position ? -1 : 1;
@@ -290,7 +290,7 @@ angular.module('3ema.container', [])
             if (moveDirection !== 0) {
                 // reindex
                 let before = true;
-                for (let p in this.conversations) {
+                for (const p in this.conversations) {
                     if (receiverService.compare(this.conversations[p], conversation)) {
                         before = false;
                     } else if (before && moveDirection < 0) {
@@ -301,7 +301,7 @@ angular.module('3ema.container', [])
                 }
 
                 // sort by position field
-                this.conversations.sort(function (convA, convB) {
+                this.conversations.sort(function(convA, convB) {
                     return convA.position - convB.position;
                 });
             } else if (!updated) {
@@ -310,7 +310,7 @@ angular.module('3ema.container', [])
         }
 
         public remove(conversation: threema.Conversation): void {
-            for (let p of this.conversations.keys()) {
+            for (const p of this.conversations.keys()) {
                 if (receiverService.compare(this.conversations[p], conversation)) {
                     // remove conversation from array
                     this.conversations.splice(p, 1);
@@ -405,29 +405,28 @@ angular.module('3ema.container', [])
          * @param $scope
          */
         public clear($scope: ng.IScope): void {
-            this.messages.forEach ((messageMap: Map<string, ReceiverMessages>,
-                receiverType: threema.ReceiverType) => {
-               messageMap.forEach ((messages: ReceiverMessages, id: string) => {
-                   messages.requested = false;
-                   messages.referenceMsgId = null;
-                   messages.more = true;
-                   messages.list = [];
+            this.messages.forEach((messageMap: Map<string, ReceiverMessages>, receiverType: threema.ReceiverType) => {
+                messageMap.forEach((messages: ReceiverMessages, id: string) => {
+                    messages.requested = false;
+                    messages.referenceMsgId = null;
+                    messages.more = true;
+                    messages.list = [];
 
-                   this.notify({
-                       id: id,
-                       type: receiverType,
-                   } as threema.Receiver, $scope);
-               });
+                    this.notify({
+                        id: id,
+                        type: receiverType,
+                    } as threema.Receiver, $scope);
+                });
             });
         }
 
         /**
          * Reset the cached messages of a receiver (e.g. the receiver was locked by the mobile)
          */
-        public clearReceiverMessages(receiver: threema.Receiver): Number {
+        public clearReceiverMessages(receiver: threema.Receiver): number {
             let cachedMessageCount = 0;
             if (this.messages.has(receiver.type)) {
-                let typeMessages = this.messages.get(receiver.type);
+                const typeMessages = this.messages.get(receiver.type);
                 if (typeMessages.has(receiver.id)) {
                     cachedMessageCount = typeMessages.get(receiver.id).list.length;
                     typeMessages.delete(receiver.id);
@@ -579,7 +578,7 @@ angular.module('3ema.container', [])
          */
         public setThumbnail(receiver: threema.Receiver, messageId: number, thumbnailImage: string): boolean {
             const list = this.getList(receiver);
-            for (let message of list) {
+            for (const message of list) {
                 if (message.id === messageId) {
                     if (message.thumbnail === undefined) {
                         message.thumbnail = {img: thumbnailImage} as threema.Thumbnail;
@@ -628,7 +627,7 @@ angular.module('3ema.container', [])
 
         public bindTemporaryToMessageId(receiver: threema.Receiver, temporaryId: string, messageId: number): boolean {
             const list = this.getList(receiver);
-            for (let item of list) {
+            for (const item of list) {
                 if (item.temporaryId === temporaryId) {
                     if (item.id !== undefined) {
                         // do not bind to a new message id
@@ -762,7 +761,7 @@ angular.module('3ema.container', [])
      */
     class Drafts implements threema.Container.Drafts {
 
-        private quotes = new Map<String, threema.Quote>();
+        private quotes = new Map<string, threema.Quote>();
 
         // Use to implement draft texts!
         private texts = new Map<string, string>();

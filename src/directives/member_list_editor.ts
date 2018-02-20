@@ -54,8 +54,8 @@ export default [
                         return [];
                     } else {
                         // search for contacts, do not show selected contacts
-                        let lowercaseQuery = angular.lowercase(query);
-                        let result = this.allContacts.filter((contactReceiver: threema.ContactReceiver) => {
+                        const lowercaseQuery = angular.lowercase(query);
+                        const result = this.allContacts.filter((contactReceiver: threema.ContactReceiver) => {
                             return this.members.filter((identity: string) => {
                                     return identity === contactReceiver.id;
                                 }).length === 0
@@ -77,7 +77,7 @@ export default [
                         return false;
                     }
 
-                    this.members = this.members.filter(function (i: string) {
+                    this.members = this.members.filter(function(i: string) {
                         return i !== contact.id;
                     });
                     return true;

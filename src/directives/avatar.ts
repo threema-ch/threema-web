@@ -73,7 +73,7 @@ export default [
                     if (inView) {
                         if (loadingPromise === null) {
                             // Do not wait on high resolution avatar
-                            let loadingTimeout = this.highResolution ? 0 : 500;
+                            const loadingTimeout = this.highResolution ? 0 : 500;
                             loadingPromise = $timeout(() => {
                                 // show loading only on high res images!
                                 webClientService.requestAvatar({

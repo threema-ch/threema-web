@@ -29,9 +29,4 @@ describe('UriService', function() {
         expect(parsed).toEqual({});
     });
 
-    it('ignores invalid params', () => {
-        const parsed = $service.parseQueryParams(7);
-        expect(parsed).toEqual(null);
-    });
-
 });

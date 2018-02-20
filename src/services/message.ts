@@ -38,7 +38,7 @@ export class MessageService {
     }
 
     public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess  {
-        let access = new MessageAccess();
+        const access = new MessageAccess();
 
         if (message !== undefined && receiver !== undefined && message.temporaryId === undefined) {
             access.quote =  (message.type === 'text')
@@ -74,8 +74,7 @@ export class MessageService {
     public showStatusIcon(message: threema.Message, receiver: threema.Receiver): boolean {
         if (message !== null && receiver !== null) {
 
-            let messageState = message.state;
-            // MessageState messageState = messageModel.getState();
+            const messageState = message.state;
 
             // group message/distribution list message icons only on pending or failing states
             switch (receiver.type) {
@@ -119,7 +118,7 @@ export class MessageService {
             return null;
         }
 
-        let getFileName = (prefix: string, postfix?: string): string => {
+        const getFileName = (prefix: string, postfix?: string): string => {
             if (message.id === undefined) {
                 this.$log.warn('missing id on message model');
                 return null;
@@ -155,8 +154,8 @@ export class MessageService {
      */
     public createTemporary(receiver: threema.Receiver, msgType: string,
                            messageData: threema.MessageData): threema.Message {
-        let now = new Date();
-        let message = {
+        const now = new Date();
+        const message = {
             temporaryId: receiver.type + receiver.id + Math.random(),
             type: msgType,
             isOutbox: true,

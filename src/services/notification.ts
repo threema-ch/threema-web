@@ -134,9 +134,9 @@ export class NotificationService {
      */
     private fetchSettings(): void {
         this.$log.debug(this.logTag, 'Fetching settings...');
-        let notifications = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATIONS);
-        let preview = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
-        let sound = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND);
+        const notifications = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATIONS);
+        const preview = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
+        const sound = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND);
         if (notifications === 'true') {
             this.$log.debug(this.logTag, 'Desktop notifications:', notifications);
             this.desktopNotifications = true;

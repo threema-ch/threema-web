@@ -54,7 +54,7 @@ class WebClientDefault {
      * If the avatar type is invalid, return null.
      */
     public getAvatar(type: string, highResolution: boolean): string {
-        let field: string = highResolution ? 'high' : 'low';
+        const field: string = highResolution ? 'high' : 'low';
         if (typeof this.avatar[type] === 'undefined') {
             return null;
         }
@@ -182,8 +182,8 @@ export class WebClientService {
     private trustedKeyStore: TrustedKeyStoreService;
     public version = null;
 
-    private blobCache = new Map<String, ArrayBuffer>();
-    private loadingMessages = new Map<String, boolean>();
+    private blobCache = new Map<string, ArrayBuffer>();
+    private loadingMessages = new Map<string, boolean>();
 
     public receiverListener: threema.ReceiverListener[] = [];
 
@@ -364,7 +364,7 @@ export class WebClientService {
         this.salty.on('state-change', (ev: saltyrtc.SaltyRTCEvent) => {
             // Wrap this in a $timeout to execute at the end of the event loop.
             this.$timeout(() => {
-                let state: saltyrtc.SignalingState = ev.data;
+                const state: saltyrtc.SignalingState = ev.data;
                 if (!this.startupDone) {
                     switch (state) {
                         case 'new':
@@ -638,7 +638,7 @@ export class WebClientService {
         const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
         if (allUrls.some((url) => url.startsWith('turn:') && url.endsWith('=tcp'))) {
             // There's at least one TURN server with TCP transport in the list
-            for (let server of this.config.ICE_SERVERS) {
+            for (const server of this.config.ICE_SERVERS) {
                 // Remove TLS entries
                 server.urls = server.urls.filter((url) => !url.startsWith('turns:'));
             }
@@ -662,7 +662,7 @@ export class WebClientService {
         // Check pending routines
         this.pendingInitializationStepRoutines = this.pendingInitializationStepRoutines.filter((routine) => {
             let isValid = true;
-            for (let requiredStep of routine.requiredSteps) {
+            for (const requiredStep of routine.requiredSteps) {
                 if (!this.initialized.has(requiredStep)) {
                     isValid = false;
                     break;
@@ -772,8 +772,8 @@ export class WebClientService {
      */
     public requestAvatar(receiver: threema.Receiver, highResolution: boolean): Promise<any> {
         // Check if the receiver has an avatar or the avatar already exists
-        let resolution = highResolution ? 'high' : 'low';
-        let receiverInfo = this.receivers.getData(receiver);
+        const resolution = highResolution ? 'high' : 'low';
+        const receiverInfo = this.receivers.getData(receiver);
         if (receiverInfo && receiverInfo.avatar && receiverInfo.avatar[resolution]) {
             // Avatar already exists
             // TODO: Do we get avatar changes via update?
@@ -783,7 +783,7 @@ export class WebClientService {
         }
 
         // Create arguments and send request
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION]: highResolution,
@@ -823,7 +823,7 @@ export class WebClientService {
      * Request a blob.
      */
     public requestBlob(msgId: number, receiver: threema.Receiver): Promise<ArrayBuffer> {
-        let cached = this.blobCache.get(msgId + receiver.type);
+        const cached = this.blobCache.get(msgId + receiver.type);
 
         if (cached !== undefined) {
 
@@ -855,7 +855,7 @@ export class WebClientService {
         // }
 
         // Create arguments and send request
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_MESSAGE_ID]: newestMessageId,
@@ -879,7 +879,7 @@ export class WebClientService {
         return new Promise<any> (
             (resolve, reject) => {
                 // Try to load receiver object
-                let receiverObject = this.receivers.getData(receiver);
+                const receiverObject = this.receivers.getData(receiver);
                 // Check blocked flag
                 if (receiverObject.type === 'contact'
                     && (receiverObject as threema.ContactReceiver).isBlocked) {
@@ -918,7 +918,7 @@ export class WebClientService {
                         let invalidFeatureLevelMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
                         if ((message as threema.FileMessageData).sendAsFile !== true) {
                             // check mime type
-                            let mime = (message as threema.FileMessageData).fileType;
+                            const mime = (message as threema.FileMessageData).fileType;
 
                             if (this.mimeService.isAudio(mime)) {
                                 requiredFeatureLevel = 1;
@@ -938,16 +938,16 @@ export class WebClientService {
                                 return reject(this.$translate.instant(invalidFeatureLevelMessage, {
                                     receiverName: receiver.displayName}));
                             case 'group':
-                                let unsupportedMembers = [];
-                                let group = this.groups.get(receiver.id);
+                                const unsupportedMembers = [];
+                                const group = this.groups.get(receiver.id);
 
                                 if (group === undefined) {
                                     return reject();
                                 }
                                 group.members.forEach((identity: string) => {
                                     if (identity !== this.me.id) {
-                                        // ignore "me"
-                                        let contact = this.contacts.get(identity);
+                                        // tslint:disable-next-line: no-shadowed-variable
+                                        const contact = this.contacts.get(identity);
                                         if (contact !== undefined && contact.featureLevel < requiredFeatureLevel) {
                                             unsupportedMembers.push(contact.displayName);
                                         }
@@ -980,10 +980,10 @@ export class WebClientService {
                         return reject();
                 }
 
-                let temporaryMessage = this.messageService.createTemporary(receiver, type, message);
+                const temporaryMessage = this.messageService.createTemporary(receiver, type, message);
                 this.messages.addNewer(receiver, [temporaryMessage]);
 
-                let args = {
+                const args = {
                     [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
                     [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
                     [WebClientService.ARGUMENT_TEMPORARY_ID]: temporaryMessage.temporaryId,
@@ -1032,7 +1032,7 @@ export class WebClientService {
             return;
         }
 
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
@@ -1050,7 +1050,7 @@ export class WebClientService {
             return;
         }
 
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
@@ -1060,7 +1060,7 @@ export class WebClientService {
 
     public sendMeIsTyping(receiver, isTyping: boolean): void {
         // Create arguments and send create
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_CONTACT_IS_TYPING]: isTyping,
@@ -1075,7 +1075,7 @@ export class WebClientService {
     /**
      * Send a add Contact request
      */
-    public addContact(threemaId: String): Promise<threema.ContactReceiver> {
+    public addContact(threemaId: string): Promise<threema.ContactReceiver> {
         return this._sendCreatePromise(WebClientService.SUB_TYPE_CONTACT, {
             [WebClientService.ARGUMENT_IDENTITY]: threemaId,
         });
@@ -1084,11 +1084,11 @@ export class WebClientService {
     /**
      * Modify a contact name or a avatar
      */
-    public modifyContact(threemaId: String,
-                         firstName: String,
-                         lastName: String,
+    public modifyContact(threemaId: string,
+                         firstName: string,
+                         lastName: string,
                          avatar?: ArrayBuffer): Promise<threema.ContactReceiver> {
-        let promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, {
+        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, {
             [WebClientService.ARGUMENT_IDENTITY]: threemaId,
         }, {
             [WebClientService.ARGUMENT_FIRST_NAME]: firstName,
@@ -1109,10 +1109,10 @@ export class WebClientService {
     /**
      * Create a group receiver
      */
-    public createGroup(members: String[],
-                       name: String = null,
+    public createGroup(members: string[],
+                       name: string = null,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
-        let data = {
+        const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
         } as any;
@@ -1125,10 +1125,10 @@ export class WebClientService {
     }
 
     public modifyGroup(id: string,
-                       members: String[],
-                       name: String = null,
+                       members: string[],
+                       name: string = null,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
-        let data = {
+        const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
         } as any;
@@ -1136,7 +1136,7 @@ export class WebClientService {
         if (avatar !== undefined) {
             data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
         }
-        let promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, {
+        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, {
             [WebClientService.ARGUMENT_RECEIVER_ID]: id,
         }, data);
 
@@ -1155,7 +1155,7 @@ export class WebClientService {
             return new Promise((resolve, reject) => reject('not allowed'));
         }
 
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
             // TODO: delete type into const
             [WebClientService.ARGUMENT_DELETE_TYPE]: 'leave',
@@ -1172,7 +1172,7 @@ export class WebClientService {
                 });
         }
 
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
             // TODO: delete type into const
             [WebClientService.ARGUMENT_DELETE_TYPE]: 'delete',
@@ -1189,15 +1189,15 @@ export class WebClientService {
                 });
         }
 
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
         };
 
         return this._sendRequestPromise(WebClientService.SUB_TYPE_GROUP_SYNC, args);
     }
 
-    public createDistributionList(members: String[], name: String = null): Promise<threema.DistributionListReceiver> {
-        let data = {
+    public createDistributionList(members: string[], name: string = null): Promise<threema.DistributionListReceiver> {
+        const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
         } as any;
@@ -1206,9 +1206,9 @@ export class WebClientService {
     }
 
     public modifyDistributionList(id: string,
-                                  members: String[],
-                                  name: String = null): Promise<threema.DistributionListReceiver> {
-        let data = {
+                                  members: string[],
+                                  name: string = null): Promise<threema.DistributionListReceiver> {
+        const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
         } as any;
@@ -1223,7 +1223,7 @@ export class WebClientService {
             return new Promise((resolve, reject) => reject('not allowed'));
         }
 
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: distributionList.id,
         };
 
@@ -1240,7 +1240,7 @@ export class WebClientService {
             return new Promise((resolve, reject) => reject('invalid receiver'));
         }
 
-        let args = {
+        const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
         };
@@ -1296,7 +1296,7 @@ export class WebClientService {
             }
 
             if (quoteText !== undefined) {
-                let quote = {
+                const quote = {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
                     text: quoteText,
                 } as threema.Quote;
@@ -1397,7 +1397,7 @@ export class WebClientService {
         }
 
         if (data[WebClientService.ARGUMENT_SUCCESS]) {
-            let contactReceiver = this.receivers.contacts
+            const contactReceiver = this.receivers.contacts
                 .get(message.args[WebClientService.ARGUMENT_IDENTITY]) as threema.ContactReceiver;
 
             // get system contact
@@ -1449,7 +1449,7 @@ export class WebClientService {
 
         if (data[WebClientService.ARGUMENT_SUCCESS]
             && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            let receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.ContactReceiver;
+            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.ContactReceiver;
             // Add or update a certain receiver
             if (receiver.type === undefined) {
                 receiver.type = 'contact';
@@ -1488,7 +1488,7 @@ export class WebClientService {
 
         if (data[WebClientService.ARGUMENT_SUCCESS]
             && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            let receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.GroupReceiver;
+            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.GroupReceiver;
             // Add or update a certain receiver
             if (receiver.type === undefined) {
                 receiver.type = 'group';
@@ -1528,7 +1528,7 @@ export class WebClientService {
 
         if (data[WebClientService.ARGUMENT_SUCCESS]
             && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            let receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.DistributionListReceiver;
+            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.DistributionListReceiver;
             // Add or update a certain receiver
             if (receiver.type === undefined) {
                 receiver.type = 'distributionList';
@@ -1554,7 +1554,7 @@ export class WebClientService {
     }
 
     private _receiveResponseCreateMessage(message: threema.WireMessage):
-    threema.PromiseRequestResult<String> {
+    threema.PromiseRequestResult<string> {
         this.$log.debug('Received create message response');
         // Unpack data and arguments
         const args = message.args;
@@ -1598,15 +1598,15 @@ export class WebClientService {
 
     private _receiveResponseConversations(message: threema.WireMessage) {
         this.$log.debug('Received conversations response');
-        let data = message.data;
+        const data = message.data;
         if (data === undefined) {
             this.$log.warn('Invalid conversation response, data missing');
         } else {
             // if a avatar was set on a conversation
             // convert and copy to the receiver
-            for (let conversation of data) {
+            for (const conversation of data) {
                 if (conversation.avatar !== undefined) {
-                    let receiver = this.receivers.getData({
+                    const receiver = this.receivers.getData({
                         id: conversation.id,
                         type: conversation.type,
                     } as threema.Receiver);
@@ -1629,15 +1629,15 @@ export class WebClientService {
 
     private _receiveResponseConversation(message: threema.WireMessage) {
         this.$log.debug('Received conversation response');
-        let args = message.args;
-        let data = message.data;
+        const args = message.args;
+        const data = message.data;
         if (args === undefined || data === undefined) {
             this.$log.warn('Invalid conversation response, data or arguments missing');
             return;
         }
 
         // Unpack required argument fields
-        let type: string = args[WebClientService.ARGUMENT_MODE];
+        const type: string = args[WebClientService.ARGUMENT_MODE];
         switch (type) {
             case WebClientService.ARGUMENT_MODE_NEW:
                 this.conversations.add(data);
@@ -1721,7 +1721,7 @@ export class WebClientService {
         }
 
         // Check if the page was requested
-        let receiver = {type: type, id: id} as threema.Receiver;
+        const receiver = {type: type, id: id} as threema.Receiver;
 
         // Set as loaded
         this.loadingMessages.delete(receiver.type + receiver.id);
@@ -1778,13 +1778,13 @@ export class WebClientService {
         }
 
         // Set avatar for receiver according to resolution
-        let field: string = highResolution ? 'high' : 'low';
-        let receiverData = this.receivers.getData(args);
+        const field: string = highResolution ? 'high' : 'low';
+        const receiverData = this.receivers.getData(args);
         if (receiverData.avatar === null || receiverData.avatar === undefined) {
             receiverData.avatar = {};
         }
 
-        let avatar = this.$filter('bufferToUrl')(data, 'image/png');
+        const avatar = this.$filter('bufferToUrl')(data, 'image/png');
         receiverData.avatar[field] = avatar;
 
         return {
@@ -1897,7 +1897,7 @@ export class WebClientService {
             this.$log.warn('Invalid message update, argument field missing');
             return;
         }
-        let receiver = {type: type, id: id} as threema.Receiver;
+        const receiver = {type: type, id: id} as threema.Receiver;
 
         // React depending on mode
         switch (mode) {
@@ -1948,7 +1948,7 @@ export class WebClientService {
             case WebClientService.ARGUMENT_MODE_NEW:
             case WebClientService.ARGUMENT_MODE_MODIFIED:
                 // Add or update a certain receiver
-                let updatedReceiver = this.receivers.extend(type, data);
+                const updatedReceiver = this.receivers.extend(type, data);
 
                 // remove all cached messages if the receiver was moved to "locked" state
                 if (updatedReceiver !== undefined && updatedReceiver.locked) {
@@ -2123,20 +2123,20 @@ export class WebClientService {
             id: message.partnerId,
             type: 'contact',
         } as threema.Receiver) as threema.ContactReceiver;
-        let partnerName = partner.displayName || ('~' + partner.publicNickname);
+        const partnerName = partner.displayName || ('~' + partner.publicNickname);
 
         // Show notification
         this.$translate('messenger.MESSAGE_NOTIFICATION_SUBJECT', {messageCount: 1 + conversation.unreadCount})
             .then((titlePrefix) =>  {
                 const title = `${titlePrefix} ${senderName}`;
                 let body = '';
-                let messageType = message.type;
-                let caption = message.caption;
+                const messageType = message.type;
+                const caption = message.caption;
                 let captionString = '';
                 if (caption !== undefined) {
                     captionString = captionString + ': ' + caption;
                 }
-                let messageTypeString = this.$translate.instant('messageTypes.' + messageType);
+                const messageTypeString = this.$translate.instant('messageTypes.' + messageType);
                 switch (messageType as threema.MessageType) {
                     case 'text':
                         body = message.body;
@@ -2222,7 +2222,7 @@ export class WebClientService {
     }
 
     private _sendRequest(type, args = null): void {
-        let message: threema.WireMessage = {
+        const message: threema.WireMessage = {
             type: WebClientService.TYPE_REQUEST,
             subType: type,
         };
@@ -2247,7 +2247,7 @@ export class WebClientService {
 
         return new Promise(
             (resolve, reject) => {
-                let p = {
+                const p = {
                     resolve: resolve,
                     reject: reject,
                 } as threema.PromiseCallbacks;
@@ -2266,7 +2266,7 @@ export class WebClientService {
     }
 
     private _sendRequestPromise(type, args = null, timeout: number = null): Promise<any> {
-        let message: threema.WireMessage = {
+        const message: threema.WireMessage = {
             type: WebClientService.TYPE_REQUEST,
             subType: type,
             args: args,
@@ -2276,7 +2276,7 @@ export class WebClientService {
     }
 
     private _sendCreatePromise(type, args = null, data: any = null, timeout: number = null): Promise<any> {
-        let message: threema.WireMessage = {
+        const message: threema.WireMessage = {
             type: WebClientService.TYPE_CREATE,
             subType: type,
             args: args,
@@ -2286,7 +2286,7 @@ export class WebClientService {
     }
 
     private _sendUpdatePromise(type, args = null, data: any = null, timeout: number = null): Promise<any> {
-        let message: threema.WireMessage = {
+        const message: threema.WireMessage = {
             type: WebClientService.TYPE_UPDATE,
             subType: type,
             data: data,
@@ -2297,7 +2297,7 @@ export class WebClientService {
     }
 
     private _sendCreate(type, data, args = null): void {
-        let message: threema.WireMessage = {
+        const message: threema.WireMessage = {
             type: WebClientService.TYPE_CREATE,
             subType: type,
             data: data,
@@ -2309,7 +2309,7 @@ export class WebClientService {
     }
 
     private _sendDelete(type, args, data = null): void {
-        let message: threema.WireMessage = {
+        const message: threema.WireMessage = {
             type: WebClientService.TYPE_DELETE,
             subType: type,
             data: data,
@@ -2319,7 +2319,7 @@ export class WebClientService {
     }
 
     private _sendDeletePromise(type, args, data: any = null, timeout: number = null): Promise<any> {
-        let message: threema.WireMessage = {
+        const message: threema.WireMessage = {
             type: WebClientService.TYPE_DELETE,
             subType: type,
             data: data,
@@ -2338,7 +2338,7 @@ export class WebClientService {
             && message.args !== undefined
             && message.args[WebClientService.ARGUMENT_TEMPORARY_ID] !== undefined) {
             // find pending promise
-            let promiseId = message.args[WebClientService.ARGUMENT_TEMPORARY_ID];
+            const promiseId = message.args[WebClientService.ARGUMENT_TEMPORARY_ID];
 
             if (this.requestPromises.has(promiseId)) {
                 if (receiveResult.success) {
@@ -2530,7 +2530,7 @@ export class WebClientService {
     }
 
     private runAfterInitializationSteps(requiredSteps: threema.InitializationStep[], callback: any): void {
-        for (let requiredStep of requiredSteps) {
+        for (const requiredStep of requiredSteps) {
             if (!this.initialized.has(requiredStep)) {
                 this.$log.debug(this.logTag,
                     'Required initialization step', requiredStep, 'not completed, add pending routine');

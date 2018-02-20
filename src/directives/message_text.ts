@@ -30,7 +30,7 @@ export default [
             controller: [function() {
                 // Get text depending on type
                 let rawText = null;
-                let message = this.message as threema.Message;
+                const message = this.message as threema.Message;
                 switch (message.type) {
                     case 'text':
                         rawText = message.body;

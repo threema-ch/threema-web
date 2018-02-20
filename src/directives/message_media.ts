@@ -126,7 +126,7 @@ export default [
                 this.playAudio = (buffer: ArrayBuffer) => {
                     $mdDialog.show({
                         controllerAs: 'ctrl',
-                        controller: function () {
+                        controller: function() {
                             this.blobBuffer = buffer;
                             this.cancel = () => {
                                 $mdDialog.cancel();

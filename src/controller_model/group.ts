@@ -39,7 +39,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
                 mode: ControllerModelMode,
-                group: threema.GroupReceiver = undefined) {
+                group?: threema.GroupReceiver) {
         this.$log = $log;
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
@@ -115,7 +115,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     }
 
     public clean(ev: any): any {
-        let confirm = this.$mdDialog.confirm()
+        const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.DELETE_THREAD'))
             .textContent(this.$translate.instant('messenger.DELETE_THREAD_MESSAGE', {count: 1}))
             .targetEvent(ev)
@@ -146,7 +146,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     }
 
     public leave(ev): void {
-        let confirm = this.$mdDialog.confirm()
+        const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.GROUP_LEAVE'))
             .textContent(this.$translate.instant(
                 this.group.administrator === this.webClientService.getMyIdentity().identity
@@ -180,8 +180,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     }
 
     public delete(ev): void {
-
-        let confirm = this.$mdDialog.confirm()
+        const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.GROUP_DELETE'))
             .textContent(this.$translate.instant('messenger.GROUP_DELETE_REALLY'))
             .targetEvent(ev)
