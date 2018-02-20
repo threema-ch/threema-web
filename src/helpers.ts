@@ -232,7 +232,7 @@ export function throttle(fn, threshold: number = 250, scope) {
  *
  * Taken from https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
  */
-export function supportsPassive() {
+export function supportsPassive(): boolean {
     // Test via a getter in the options object to see if the passive property is accessed
     let support = false;
     try {
@@ -241,6 +241,7 @@ export function supportsPassive() {
         });
         window.addEventListener('test', null, opts);
     } catch (e) { /* do nothing */ }
+    return support;
 }
 
 /**

@@ -299,7 +299,7 @@ class ConversationController {
                 $rootScope.$apply(() => {
                     this.updateScrollJump();
                 });
-            }, 100, this), supportsPassive() ? {passive: true} as any : false);
+            }, 100, this), supportsPassive() ? {passive: true} : false);
         }
 
         // Set receiver and type
