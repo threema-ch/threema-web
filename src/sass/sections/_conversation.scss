@@ -52,6 +52,8 @@
         padding: 8px;
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
 
         .message-quote {
             @include word-wrap;
@@ -60,9 +62,6 @@
         }
 
         .md-icon-button {
-            flex: 1;
-            display: flex;
-            justify-content: right;
         }
     }
 
