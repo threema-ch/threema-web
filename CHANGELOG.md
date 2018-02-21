@@ -3,6 +3,22 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v1.8.2][v1.8.2] (2018-02-21)
+
+Changes:
+
+* [feature] Add autocomplete attribute to password fields ([#441][i441])
+* [feature] Get build script to work on macOS ([#406][i406])
+* [feature] Fix quote preview styling in Chromium
+* [bug] Fix location of web manifest ([#432][i432])
+* [bug] Fix CSS mouse pointer over contact group membership list ([#435][i435])
+* [bug] Fix supportsPassive helper function ([#439][i439])
+* [bug] Fix quote preview styling in Chromium
+
+Contributors:
+
+- [@joelfischerr][@joelfischerr]
+
 ### [v1.8.1][v1.8.1] (2018-02-06)
 
 Changes:
@@ -389,10 +405,16 @@ First public release.
 [i401]: https://github.com/threema-ch/threema-web/issues/401
 [i402]: https://github.com/threema-ch/threema-web/issues/402
 [i404]: https://github.com/threema-ch/threema-web/issues/404
+[i406]: https://github.com/threema-ch/threema-web/issues/406
 [i408]: https://github.com/threema-ch/threema-web/issues/408
 [i410]: https://github.com/threema-ch/threema-web/issues/410
 [i419]: https://github.com/threema-ch/threema-web/issues/419
+[i432]: https://github.com/threema-ch/threema-web/issues/432
+[i435]: https://github.com/threema-ch/threema-web/issues/435
+[i439]: https://github.com/threema-ch/threema-web/issues/439
+[i441]: https://github.com/threema-ch/threema-web/issues/441
 
+[v1.8.2]: https://github.com/threema-ch/threema-web/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/threema-ch/threema-web/compare/v1.8.0...v1.8.1
 [v1.8.0]: https://github.com/threema-ch/threema-web/compare/v1.7.0...v1.8.0
 [v1.7.0]: https://github.com/threema-ch/threema-web/compare/v1.6.2...v1.7.0
@@ -426,3 +448,4 @@ First public release.
 [@JlnWntr]: https://github.com/JlnWntr/
 [@bluec0re]: https://github.com/bluec0re/
 [@Octoate]: https://github.com/Octoate/
+[@joelfischerr]: https://github.com/joelfischerr/
