@@ -588,6 +588,8 @@ class ConversationController {
     public onTyping = (text: string, currentWord: string = null) => {
         // Update draft
         this.webClientService.setDraft(this.receiver, text);
+
+        /* Make mentions readonly for now
         if (currentWord && currentWord.substr(0, 1) === '@') {
             this.currentMentionFilterWord = currentWord.substr(1);
             const query = this.currentMentionFilterWord.toLowerCase().trim();
@@ -611,6 +613,7 @@ class ConversationController {
         } else {
             this.currentMentionFilterWord = null;
         }
+        */
     }
 
     public getSelectedMention = (): threema.Mention => {
