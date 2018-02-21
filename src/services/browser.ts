@@ -29,7 +29,7 @@ export class BrowserService {
     }
 
     private initializePageVisibility() {
-        let onChange = (isVisible: any) => {
+        const onChange = (isVisible: any) => {
             if (this.isPageVisible !== isVisible) {
                 this.isPageVisible = isVisible;
             }
@@ -62,7 +62,7 @@ export class BrowserService {
             blur: false,
         };
 
-        for (let event in map) {
+        for (const event in map) {
             if (map[event] !== undefined) {
                 document.addEventListener(event, () => {
                     onChange(map[event]);
@@ -106,7 +106,7 @@ export class BrowserService {
                 this.browser.chrome = false;
             }
 
-            for (let x in this.browser) {
+            for (const x in this.browser) {
                 if (this.browser[x]) {
                     let b;
                     if (x === 'msie') {

@@ -92,7 +92,7 @@ export default [
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
                  */
-                let EmojiPickerContainer = (function() {
+                const EmojiPickerContainer = (function() {
                     let instance;
 
                     function click(e) {
@@ -197,9 +197,9 @@ export default [
                     const text = getText();
 
                     return new Promise((resolve, reject) => {
-                        let submitTexts = (strings: string[]) => {
-                            let messages: threema.TextMessageData[] = [];
-                            for (let piece of strings) {
+                        const submitTexts = (strings: string[]) => {
+                            const messages: threema.TextMessageData[] = [];
+                            for (const piece of strings) {
                                 messages.push({
                                     text: piece,
                                 });
@@ -212,8 +212,8 @@ export default [
 
                         const fullText = text.trim().replace(/\r/g, '');
                         if (fullText.length > scope.maxTextLength) {
-                            let pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 50);
-                            let confirm = $mdDialog.confirm()
+                            const pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 50);
+                            const confirm = $mdDialog.confirm()
                                 .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
                                 .textContent($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_BODY', {
                                     max: scope.maxTextLength,
@@ -222,7 +222,7 @@ export default [
                                 .ok($translate.instant('common.YES'))
                                 .cancel($translate.instant('common.NO'));
 
-                            $mdDialog.show(confirm).then(function () {
+                            $mdDialog.show(confirm).then(function() {
                                 submitTexts(pieces);
                             }, () => {
                                 reject();
@@ -291,15 +291,15 @@ export default [
 
                         // If the compose area contains only a single <br>, make it fully empty.
                         // See also: https://stackoverflow.com/q/14638887/284318
-                        let text = getText(false);
+                        const text = getText(false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
                         } else if (ev.keyCode === 190) {
                             // A ':' is pressed, try to parse
-                            let currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
+                            const currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
                             if (currentWord.length > 2
                                 && currentWord.substr(0, 1) === ':') {
-                                let unicodeEmoji = emojione.shortnameToUnicode(currentWord);
+                                const unicodeEmoji = emojione.shortnameToUnicode(currentWord);
                                 if (unicodeEmoji && unicodeEmoji !== currentWord) {
                                     return insertEmoji(unicodeEmoji,
                                         caretPosition.from - currentWord.length,
@@ -325,9 +325,9 @@ export default [
                 // Resolve to ArrayBuffer or reject to ErrorEvent.
                 function fetchFileListContents(fileList: FileList): Promise<Map<File, ArrayBuffer>> {
                     return new Promise((resolve) => {
-                        let buffers = new Map<File, ArrayBuffer>();
+                        const buffers = new Map<File, ArrayBuffer>();
                         const fileCounter = fileList.length;
-                        let next = (file: File, res: ArrayBuffer | null, error: any) => {
+                        const next = (file: File, res: ArrayBuffer | null, error: any) => {
                             buffers.set(file, res);
                             if (buffers.size >= fileCounter) {
                                resolve(buffers);
@@ -345,7 +345,7 @@ export default [
                             };
                             reader.onprogress = function(data) {
                                 if (data.lengthComputable) {
-                                    let progress = ((data.loaded / data.total) * 100);
+                                    const progress = ((data.loaded / data.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileCounter * n);
                                 }
                             };
@@ -357,7 +357,7 @@ export default [
                 function uploadFiles(fileList: FileList): void {
                     scope.onUploading(true, 0, 0);
                     fetchFileListContents(fileList).then((data: Map<File, ArrayBuffer>) => {
-                        let fileMessages = [];
+                        const fileMessages = [];
                         data.forEach((buffer, file) => {
                             const fileMessageData: threema.FileMessageData = {
                                 name: file.name,
@@ -417,7 +417,7 @@ export default [
                         // Convert blob to arraybuffer
                         const reader = new FileReader();
                         reader.onload = function() {
-                            let buffer: ArrayBuffer = this.result;
+                            const buffer: ArrayBuffer = this.result;
 
                             // Construct file name
                             let fileName: string;
@@ -556,7 +556,7 @@ export default [
                         if (node.nodeType === node.TEXT_NODE) {
                             currentHTML += node.textContent;
                         } else if (node.nodeType === node.ELEMENT_NODE) {
-                            let tag = node.tagName.toLowerCase();
+                            const tag = node.tagName.toLowerCase();
                             if (tag === 'img' || tag === 'span') {
                                 currentHTML += getOuterHtml(node);
                             } else if (tag === 'br') {
@@ -623,10 +623,10 @@ export default [
 
                 // Disable content editable and dragging for contained images (emoji)
                 function cleanupComposeContent() {
-                    for (let img of composeDiv[0].getElementsByTagName('img')) {
+                    for (const img of composeDiv[0].getElementsByTagName('img')) {
                         img.ondragstart = () => false;
                     }
-                    for (let span of composeDiv[0].getElementsByTagName('span')) {
+                    for (const span of composeDiv[0].getElementsByTagName('span')) {
                         span.setAttribute('contenteditable', false);
                     }
 
@@ -649,7 +649,7 @@ export default [
 
                 // return the outer html of a node element
                 function getOuterHtml(node: Node): string {
-                    let pseudoElement = document.createElement('pseudo');
+                    const pseudoElement = document.createElement('pseudo');
                     pseudoElement.appendChild(node.cloneNode(true));
                     return pseudoElement.innerHTML;
                 }
@@ -700,7 +700,7 @@ export default [
                         const selection = window.getSelection();
                         if (selection.rangeCount) {
                             const range = selection.getRangeAt(0);
-                            let from = getPositions(range.startOffset, range.startContainer);
+                            const from = getPositions(range.startOffset, range.startContainer);
                             if (from !== null && from.html >= 0) {
                                 const to = getPositions(range.endOffset, range.endContainer);
 
@@ -718,15 +718,15 @@ export default [
                 // set the correct cart position in the content editable div, position
                 // is the position in the html content (not plain text)
                 function setCaretPosition(pos: number) {
-                    let rangeAt = (node: Node, offset?: number) => {
-                        let range = document.createRange();
+                    const rangeAt = (node: Node, offset?: number) => {
+                        const range = document.createRange();
                         range.collapse(false);
                         if (offset !== undefined) {
                             range.setStart(node, offset);
                         } else {
                             range.setStartAfter(node);
                         }
-                        let sel = window.getSelection();
+                        const sel = window.getSelection();
                         sel.removeAllRanges();
                         sel.addRange(range);
                     };

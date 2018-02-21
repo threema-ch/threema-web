@@ -23,9 +23,6 @@ export class UriService {
      * Based on http://stackoverflow.com/a/8649003/284318
      */
     public parseQueryParams(query: string) {
-        if (!(typeof query === 'string' || query instanceof String)) {
-            return null;
-        }
         if (query.length === 0) {
             return {};
         }

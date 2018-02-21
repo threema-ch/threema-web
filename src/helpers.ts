@@ -176,7 +176,7 @@ export function utf8aToString(bytes: Uint8Array): string {
 /**
  * Filter an array or object.
  */
-export function filter(obj: Object | any[], callback: (arg: any) => boolean) {
+export function filter(obj: object | any[], callback: (arg: any) => boolean) {
     if (obj instanceof Array) {
         // Filter arrays using Array.filter
         return (obj as any[]).filter(callback);
@@ -184,7 +184,7 @@ export function filter(obj: Object | any[], callback: (arg: any) => boolean) {
         // Filter objects by iterating over them
         // and selectively copying values
         const out = {};
-        for (let key in Object.keys(obj)) { // tslint:disable-line:forin
+        for (const key in Object.keys(obj)) { // tslint:disable-line:forin
             const value = obj[key];
             if (callback(value)) {
                 out[key] = value;
@@ -210,9 +210,9 @@ export function throttle(fn, threshold: number = 250, scope) {
     let last;
     let deferTimer;
     return function() {
-        let context = scope || this;
-        let now = +(new Date());
-        let args = arguments;
+        const context = scope || this;
+        const now = +(new Date());
+        const args = arguments;
         if (last && now < last + threshold) {
             // hold on to it
             clearTimeout(deferTimer);
@@ -234,10 +234,10 @@ export function throttle(fn, threshold: number = 250, scope) {
  */
 export function supportsPassive() {
     // Test via a getter in the options object to see if the passive property is accessed
-    let supportsPassive = false;
+    let support = false;
     try {
         const opts = Object.defineProperty({}, 'passive', {
-            get: () => supportsPassive = true,
+            get: () => support = true,
         });
         window.addEventListener('test', null, opts);
     } catch (e) { /* do nothing */ }

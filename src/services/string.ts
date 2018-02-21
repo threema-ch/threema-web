@@ -17,14 +17,14 @@
 
 export class StringService {
     public byteChunk(str: string, byteLength: number, offset: number = null): string[] {
-        let chars = [...str];
-        let chunks = [''];
+        const chars = [...str];
+        const chunks = [''];
         let currentChunkSize = 0;
         let chunkIndex = 0;
-        let offsetChars = [' ', '\r', '\n', '\t', '.'];
+        const offsetChars = [' ', '\r', '\n', '\t', '.'];
         let lastSeparator = -1;
         chars.forEach ((charString: string) => {
-            let length = Buffer.byteLength(charString, 'utf8');
+            const length = Buffer.byteLength(charString, 'utf8');
             if (offset !== null) {
                 if (offsetChars.indexOf(charString) > -1) {
                     lastSeparator = currentChunkSize + 1;
@@ -60,17 +60,17 @@ export class StringService {
     }
     public getWord(input: string, pos: number, additionalSeparators: string[] = null): string {
         if (input !== null && input.length > 0) {
-            let chars = [...input];
+            const chars = [...input];
             let charFound = false;
-            let realPos = Math.min(pos, chars.length) - 1;
+            const realPos = Math.min(pos, chars.length) - 1;
 
             if (realPos < 0) {
                 return '';
             }
 
-            let wordChars = new Array(realPos);
+            const wordChars = new Array(realPos);
             for (let n = realPos; n >= 0; n--) {
-                let realChar = chars[n].trim();
+                const realChar = chars[n].trim();
                 if (realChar === '') {
                     // Abort
                     if (charFound === false) {

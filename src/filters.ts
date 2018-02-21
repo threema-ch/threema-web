@@ -129,16 +129,19 @@ angular.module('3ema.filters', [])
 /**
  * Convert mention elements to html elements
  */
-.filter('mentionify', ['WebClientService', '$translate', 'escapeHtmlFilter',
-    function (webClientService: WebClientService, $translate: ng.translate.ITranslateService, escapeHtmlFilter) {
+.filter('mentionify', [
+    'WebClientService',
+    '$translate',
+    'escapeHtmlFilter',
+    function(webClientService: WebClientService, $translate: ng.translate.ITranslateService, escapeHtmlFilter) {
         return(text) => {
             if (text !== null && text.length > 10) {
                 let result = text.match(/@\[([\*\@a-zA-Z0-9][\@a-zA-Z0-9]{7})\]/g);
                 if (result !== null) {
                     result = ([...new Set(result)]);
                     // Unique
-                    for (let possibleMention of result) {
-                        let identity = possibleMention.substr(2, 8);
+                    for (const possibleMention of result) {
+                        const identity = possibleMention.substr(2, 8);
                         let mentionName;
                         let cssClass;
                         if (identity === '@@@@@@@@') {
@@ -168,7 +171,9 @@ angular.module('3ema.filters', [])
             }
             return text;
         };
-}])
+    },
+])
+
 /**
  * Reverse an array.
  */
@@ -291,8 +296,8 @@ angular.module('3ema.filters', [])
         if (!size) {
             return '';
         }
-        let i = Math.floor( Math.log(size) / Math.log(1024) );
-        let x = (size / Math.pow(1024, i)).toFixed(2);
+        const i = Math.floor( Math.log(size) / Math.log(1024) );
+        const x = (size / Math.pow(1024, i)).toFixed(2);
         return (x + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]);
     };
 })
@@ -314,10 +319,10 @@ angular.module('3ema.filters', [])
 /**
  * Convert ID-Array to (Display-)Name-String, separated by ','
  */
-.filter('idsToNames', ['WebClientService', function (webClientService: WebClientService) {
+.filter('idsToNames', ['WebClientService', function(webClientService: WebClientService) {
     return(ids: string[]) => {
-        let names: string[] = [];
-        for (let id of ids) {
+        const names: string[] = [];
+        for (const id of ids) {
             this.contactReceiver = webClientService.contacts.get(id);
             names.push(this.contactReceiver.displayName);
         }

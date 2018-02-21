@@ -146,7 +146,7 @@ export class PeerConnectionHelper {
             this.$log.debug(this.logTag, 'ICE gathering state change:', this.pc.iceGatheringState);
         };
         this.webrtcTask.on('candidates', (e: saltyrtc.tasks.webrtc.CandidatesEvent) => {
-            for (let candidateInit of e.data) {
+            for (const candidateInit of e.data) {
                 if (candidateInit) {
                     this.$log.debug(this.logTag, 'Adding remote ICE candidate:',
                         this.censorCandidate(candidateInit.candidate));
@@ -160,20 +160,20 @@ export class PeerConnectionHelper {
 
     private async initiatorFlow(): Promise<void> {
         // Send offer
-        let offer: RTCSessionDescriptionInit = await this.pc.createOffer();
+        const offer: RTCSessionDescriptionInit = await this.pc.createOffer();
         await this.pc.setLocalDescription(offer);
         this.$log.debug(this.logTag, 'Created offer, set local description');
         this.webrtcTask.sendOffer(offer);
 
         // Receive answer
-        let receiveAnswer: () => Promise<saltyrtc.tasks.webrtc.Answer> = () => {
+        const receiveAnswer: () => Promise<saltyrtc.tasks.webrtc.Answer> = () => {
             return new Promise((resolve) => {
                 this.webrtcTask.once('answer', (e: saltyrtc.tasks.webrtc.AnswerEvent) => {
                     resolve(e.data);
                 });
             });
         };
-        let answer: RTCSessionDescriptionInit = await receiveAnswer();
+        const answer: RTCSessionDescriptionInit = await receiveAnswer();
         await this.pc.setRemoteDescription(answer);
         this.$log.debug(this.logTag, 'Received answer, set remote description');
     }
@@ -258,7 +258,7 @@ export class PeerConnectionHelper {
      * Return the censored ICE candidate.
      */
     private censorCandidate(candidateInit: string): string {
-        let candidate = SDPUtils.parseCandidate(candidateInit);
+        const candidate = SDPUtils.parseCandidate(candidateInit);
         if (this.censorCandidates) {
             if (candidate.type !== 'relay') {
                 candidate.ip = '***';

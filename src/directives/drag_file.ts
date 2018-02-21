@@ -46,8 +46,8 @@ export default [
                 // Resolve to ArrayBuffer or reject to ErrorEvent.
                 function fetchFileListContents(fileList: FileList): Promise<Map<File, ArrayBuffer>> {
                     return new Promise((resolve) => {
-                        let buffers = new Map<File, ArrayBuffer>();
-                        let next = (file: File, res: ArrayBuffer | null, error?: ErrorEvent) => {
+                        const buffers = new Map<File, ArrayBuffer>();
+                        const next = (file: File, res: ArrayBuffer | null, error?: ErrorEvent) => {
                             buffers.set(file, res);
                             if (buffers.size >= fileList.length) {
                                 resolve(buffers);
@@ -69,7 +69,7 @@ export default [
                             };
                             reader.onprogress = function(data) {
                                 if (data.lengthComputable) {
-                                    let progress = ((data.loaded / data.total) * 100);
+                                    const progress = ((data.loaded / data.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileList.length * n);
                                 }
                             };
@@ -81,7 +81,7 @@ export default [
                 function uploadFiles(fileList: FileList): void {
                     scope.onUploading(true, 0, 0);
                     fetchFileListContents(fileList).then((data: Map<File, ArrayBuffer>) => {
-                        let fileMessages = [];
+                        const fileMessages = [];
                         data.forEach((buffer, file) => {
                             const fileMessageData: threema.FileMessageData = {
                                 name: file.name,

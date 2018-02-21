@@ -37,7 +37,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
                 mode: ControllerModelMode,
-                distributionList: threema.DistributionListReceiver = undefined) {
+                distributionList?: threema.DistributionListReceiver) {
         this.$log = $log;
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
@@ -100,7 +100,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
     }
 
     public clean(ev: any): any {
-        let confirm = this.$mdDialog.confirm()
+        const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.DELETE_THREAD'))
             .textContent(this.$translate.instant('messenger.DELETE_THREAD_MESSAGE', {count: 1}))
             .targetEvent(ev)
@@ -132,7 +132,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
 
     public delete(ev): void {
 
-        let confirm = this.$mdDialog.confirm()
+        const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.DISTRIBUTION_LIST_DELETE'))
             .textContent(this.$translate.instant('messenger.DISTRIBUTION_LIST_DELETE_REALLY'))
             .targetEvent(ev)

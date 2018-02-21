@@ -142,8 +142,8 @@ export class StatusController {
         this.$log.warn(this.logTag, 'Connection lost. Attempting to reconnect...');
 
         // Get original keys
-        let originalKeyStore = this.webClientService.salty.keyStore;
-        let originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+        const originalKeyStore = this.webClientService.salty.keyStore;
+        const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
 
         // Timeout durations
         const TIMEOUT1 = 20 * 1000; // Duration per step for first reconnect
@@ -153,7 +153,7 @@ export class StatusController {
         let reconnectTry: 1 | 2 = 1;
 
         // Handler for failed reconnection attempts
-        let reconnectionFailed = () => {
+        const reconnectionFailed = () => {
             // Collapse status bar
             this.collapseStatusBar();
 
@@ -184,7 +184,7 @@ export class StatusController {
         };
 
         // Function to soft-reconnect. Does not reset the loaded data.
-        let doSoftReconnect = () => {
+        const doSoftReconnect = () => {
             const deleteStoredData = false;
             const resetPush = false;
             const redirect = false;

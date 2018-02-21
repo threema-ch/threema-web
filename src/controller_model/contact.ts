@@ -43,7 +43,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
                 mode: ControllerModelMode,
-                contact: threema.ContactReceiver = undefined) {
+                contact?: threema.ContactReceiver) {
         this.$log = $log;
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
@@ -116,7 +116,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     }
 
     public clean(ev: any): any {
-        let confirm = this.$mdDialog.confirm()
+        const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.DELETE_THREAD'))
             .textContent(this.$translate.instant('messenger.DELETE_THREAD_MESSAGE', {count: 1}))
             .targetEvent(ev)

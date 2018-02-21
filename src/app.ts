@@ -121,14 +121,14 @@ angular.module('3ema', [
 .config(['$httpProvider', ($httpProvider: ng.IHttpProvider) => {
     $httpProvider.interceptors.push(['CACHE_BUST', (CACHE_BUST: string) => {
         return {
-            request: (config) => {
-                if (config.url.indexOf('partials/') !== -1 ||
-                    config.url.indexOf('directives/') !== -1 ||
-                    config.url.indexOf('i18n/') !== -1) {
-                    const separator = config.url.indexOf('?') === -1 ? '?' : '&';
-                    config.url = config.url + separator + CACHE_BUST;
+            request: (conf) => {
+                if (conf.url.indexOf('partials/') !== -1 ||
+                    conf.url.indexOf('directives/') !== -1 ||
+                    conf.url.indexOf('i18n/') !== -1) {
+                    const separator = conf.url.indexOf('?') === -1 ? '?' : '&';
+                    conf.url = conf.url + separator + CACHE_BUST;
                 }
-                return config;
+                return conf;
             },
         };
     }]);

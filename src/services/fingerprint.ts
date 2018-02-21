@@ -24,9 +24,8 @@ export class FingerPrintService {
     }
 
     public generate(publicKey: ArrayBuffer): string {
-        if (publicKey !== undefined
-            && publicKey.byteLength === 32) {
-            let sha256PublicKey = sha256(publicKey);
+        if (publicKey !== undefined && publicKey.byteLength === 32) {
+            const sha256PublicKey = sha256(publicKey);
             if (sha256PublicKey !== undefined) {
                 return sha256PublicKey.toLowerCase().substr(0, 32);
             }

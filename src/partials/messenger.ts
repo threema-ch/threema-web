@@ -222,9 +222,6 @@ class ConversationController {
     public currentMentions: threema.Mention[] = [];
     public currentMentionFilterWord = null;
     public selectedMention: number = null;
-    public showMentionSelector = (): boolean => this.type === 'group'
-        && this.currentMentionFilterWord != null
-        && this.currentMentions.length > 0;
 
     private uploading = {
         enabled: false,
@@ -458,7 +455,7 @@ class ConversationController {
                 return reject();
             }
             let success = true;
-            let nextCallback = (index: number) => {
+            const nextCallback = (index: number) => {
                 if (index === contents.length - 1) {
                     if (success) {
                         resolve();
@@ -473,7 +470,7 @@ class ConversationController {
                     // Determine file type
                     let showSendAsFileCheckbox = false;
                     let captionSupported = false;
-                    for (let msg of contents as threema.FileMessageData[]) {
+                    for (const msg of contents as threema.FileMessageData[]) {
                         if (!msg.fileType) {
                             msg.fileType = 'application/octet-stream';
                         }
@@ -593,7 +590,7 @@ class ConversationController {
         this.webClientService.setDraft(this.receiver, text);
         if (currentWord && currentWord.substr(0, 1) === '@') {
             this.currentMentionFilterWord = currentWord.substr(1);
-            let query = this.currentMentionFilterWord.toLowerCase().trim();
+            const query = this.currentMentionFilterWord.toLowerCase().trim();
             const selectedMentionObject = this.getSelectedMention();
             this.currentMentions = this.allMentions.filter((i) => {
                 if (query.length === 0) {
@@ -625,6 +622,13 @@ class ConversationController {
 
         return this.currentMentions[this.selectedMention];
     }
+
+    public showMentionSelector = (): boolean => {
+        return this.type === 'group'
+            && this.currentMentionFilterWord != null
+            && this.currentMentions.length > 0;
+    }
+
     /**
      * Handle mention selector navigation
      */
@@ -701,7 +705,7 @@ class ConversationController {
     }
 
     public requestMessages(): void {
-        let refMsgId = this.webClientService.requestMessages(this.$stateParams);
+        const refMsgId = this.webClientService.requestMessages(this.$stateParams);
 
         if (refMsgId !== null
             && refMsgId !== undefined) {
@@ -1081,7 +1085,7 @@ class ReceiverDetailController {
 
         // Append members
         if (this.receiver.type === 'contact') {
-            let contactReceiver = (<threema.ContactReceiver> this.receiver);
+            const contactReceiver = this.receiver as threema.ContactReceiver;
 
             this.contactService.requiredDetails(contactReceiver)
                 .then(() => {
@@ -1360,7 +1364,7 @@ class ReceiverCreateController {
         }
     }
 
-    private showAddError(errorCode: String): void {
+    private showAddError(errorCode: string): void {
         if (errorCode === undefined) {
             errorCode = 'invalid_entry';
         }

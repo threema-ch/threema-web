@@ -49,7 +49,7 @@ export default [
                 const enabled = scope.enabled === undefined || scope.enabled === true;
 
                 let croppieInstance = null;
-                let initCroppie = () => {
+                const initCroppie = () => {
                     if (croppieInstance !== null) {
                         return croppieInstance;
                     }
@@ -75,7 +75,7 @@ export default [
                                 })
                                     .then((blob: Blob) => {
                                         const fileReader = new FileReader();
-                                        fileReader.onload = function () {
+                                        fileReader.onload = function() {
                                             scope.onChange(this.result);
                                         };
                                         fileReader.readAsArrayBuffer(blob);
@@ -109,7 +109,7 @@ export default [
                             // set a null object
                             reject(ev);
                         };
-                        reader.onprogress = function (data) {
+                        reader.onprogress = function(data) {
                             if (data.lengthComputable) {
                                 // TODO implement progress?
                                 // let progress = ((data.loaded / data.total) * 100);
@@ -125,7 +125,7 @@ export default [
                     }
                     // get first
                     fetchFileContent(fileList[0]).then((data: ArrayBuffer) => {
-                        let image = $filter('bufferToUrl')(data, 'image/jpg', false);
+                        const image = $filter('bufferToUrl')(data, 'image/jpg', false);
                         setImage(image);
                     }).catch((ev: ErrorEvent) => {
                         $log.error(logTag, 'Could not load file:', ev.message);
@@ -188,17 +188,16 @@ export default [
 
                     loading(true);
                     // load image to calculate size
-                    let img = new Image();
-                    img.addEventListener('load', function () {
+                    const img = new Image();
+                    img.addEventListener('load', function() {
                         $log.debug(logTag, 'Image loaded');
 
-                        // hack to fix typescript undefined method (width) exception
-                        let w = (this as any).naturalWidth;
-                        let h = (this as any).naturalHeight;
-                        let size = Math.min(w, h);
+                        const w = this.naturalWidth;
+                        const h = this.naturalHeight;
+                        const size = Math.min(w, h);
 
                         // set to center
-                        let imageSize = [
+                        const imageSize = [
                             (w - size) / 2,
                             (h - size) / 2,
                             size,

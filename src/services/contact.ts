@@ -28,14 +28,10 @@ export class ContactService {
     public requiredDetails(contactReceiver: threema.ContactReceiver): Promise<threema.ContactReceiver> {
         return new Promise((resolve, reject) => {
             if (contactReceiver.systemContact === undefined) {
-                // load
+                // System contact not available yet. Load it!
                 this.webClientService.requestContactDetail(contactReceiver)
-                    .then(() => {
-                        resolve(resolve);
-                    })
-                    .catch((data) => {
-                        reject(data);
-                    });
+                    .then((data) => resolve(data))
+                    .catch((data) => reject(data));
             } else {
                 resolve(contactReceiver);
             }
