@@ -14,7 +14,8 @@
                             <input type="password"
                                    ng-model="ctrl.password"
                                    aria-label="Password"
-                                   translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}">
+                                   translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}"
+                                   autocomplete="new-password">
                         </md-input-container>
                     </form>
                 </label>
@@ -32,7 +33,8 @@
                                    ng-model="ctrl.password"
                                    autofocus
                                    aria-label="Password"
-                                   translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}">
+                                   translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}"
+                                   autocomplete="current-password">
                         </md-input-container>
                         <md-button type="submit" class="md-raised md-primary"><span translate>welcome.BTN_RECONNECT</span></md-button>
                     </form>
