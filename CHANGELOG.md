@@ -13,10 +13,13 @@ Changes:
 * [bug] Fix CSS mouse pointer over contact group membership list ([#435][i435])
 * [bug] Fix supportsPassive helper function ([#439][i439])
 * [bug] Fix quote preview styling in Chromium
+* [bug] Prevent dragging of background image ([#425][i425])
 
 Contributors:
 
 - [@joelfischerr][@joelfischerr]
+- [@ovalseven8][@ovalseven8]
+- [@rugk][@rugk]
 
 ### [v1.8.1][v1.8.1] (2018-02-06)
 
@@ -408,6 +411,7 @@ First public release.
 [i408]: https://github.com/threema-ch/threema-web/issues/408
 [i410]: https://github.com/threema-ch/threema-web/issues/410
 [i419]: https://github.com/threema-ch/threema-web/issues/419
+[i425]: https://github.com/threema-ch/threema-web/issues/425
 [i432]: https://github.com/threema-ch/threema-web/issues/432
 [i435]: https://github.com/threema-ch/threema-web/issues/435
 [i439]: https://github.com/threema-ch/threema-web/issues/439
