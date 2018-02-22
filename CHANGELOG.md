@@ -9,7 +9,6 @@ Changes:
 
 * [feature] Add autocomplete attribute to password fields ([#441][i441])
 * [feature] Get build script to work on macOS ([#406][i406])
-* [feature] Fix quote preview styling in Chromium
 * [bug] Fix location of web manifest ([#432][i432])
 * [bug] Fix CSS mouse pointer over contact group membership list ([#435][i435])
 * [bug] Fix supportsPassive helper function ([#439][i439])
