@@ -24,9 +24,9 @@
         "BROWSER_NOT_SUPPORTED": "Dieser Browser wird nicht unterst\u00fctzt",
         "ANDROID_ONLY": "Kompatibel mit Threema für Android.",
         "CONNECTING": "Verbindung wird aufgebaut",
-        "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt...",
-        "CONNECTING_TO_APP": "Verbindung zu App<br>wird aufgebaut...",
-        "LOADING_INITIAL_DATA": "Daten werden geladen...",
+        "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
+        "CONNECTING_TO_APP": "Verbindung zu App<br>wird aufgebaut …",
+        "LOADING_INITIAL_DATA": "Daten werden geladen …",
         "MANUAL_START": "Bitte starten Sie die Sitzung",
         "MANUAL_START_TEXT1": "Push Service ist nicht verfügbar. Sind die Google Play Services auf Ihrem Mobilgerät installiert?",
         "MANUAL_START_TEXT2": "Sie können Threema Web auch ohne Google Play Services nutzen, aber Sie müssen in diesem Fall die Sitzung manuell starten:",
@@ -36,7 +36,7 @@
         "MORE_ABOUT_WEB": "Mehr über Threema Web",
         "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich. Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Kritischer Fehler beim Zugriff auf LocalStorage: {errorMsg}.<br>Bitte starten Sie Ihren Browser neu.",
-        "ALREADY_CONNECTED": "Bereits Verbunden",
+        "ALREADY_CONNECTED": "Bereits verbunden",
         "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!"
     },
     "connecting": {
@@ -50,7 +50,7 @@
         "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen."
     },
     "troubleshooting": {
-        "SLOW_CONNECT": "Verbindungsaufbau scheint länger zu dauern<br>als normal...",
+        "SLOW_CONNECT": "Verbindungsaufbau scheint länger zu dauern<br>als normal …",
         "APP_STARTED": "Ist die Threema-App gestartet?",
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
@@ -90,7 +90,7 @@
         "COMPOSE_MESSAGE_DRAGOVER": "Dateien zum Senden hier loslassen",
         "COMPOSE_MESSAGE": "Nachricht eingeben oder Dateien hineinziehen",
         "UNREAD_MESSAGES": "Ungelesene Nachrichten",
-        "IS_TYPING": "tippt gerade...",
+        "IS_TYPING": "tippt gerade …",
         "SEARCH": "Suche",
         "CONVERSATIONS": "Chats",
         "CONTACTS": "Kontakte",
@@ -116,7 +116,7 @@
         "GROUP_ROLE_CREATOR": "Ersteller",
         "DOWNLOAD": "Herunterladen",
         "COPY": "Kopieren",
-        "DOWNLOADING": "Laden...",
+        "DOWNLOADING": "Laden …",
         "CONFIRM_FILE_SEND": "Senden an «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Optionale Beschriftung",
         "CONFIRM_SEND_AS_FILE": "Als Datei senden",
@@ -214,7 +214,7 @@
         "ALL_RIGHTS_RESERVED": "Alle Rechte vorbehalten.",
         "LICENSES": "Lizenzen",
         "OPEN_SOURCE": "Threema Web ist vollständig Open Source.",
-        "SOURCE_CODE": "Der Quellcode und die Lizenzbedingungen finden sich auf Github:",
+        "SOURCE_CODE": "Der Quellcode und die Lizenzbedingungen finden sich auf GitHub:",
         "EMOJI_ART": "Verwendete Emoji stammen von <a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>",
         "NOTIFICATION_SOUNDS": "Benachrichtigunstöne &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
         "LICENSE_LINK_BEFORE": "Lizenzen von verwendeten Open Source Komponenten können",
@@ -222,7 +222,7 @@
         "LICENSE_LINK_AFTER": "gefunden werden",
         "CHANGELOG": "Änderungsprotokoll",
         "CHANGELOG_LINK_BEFORE": "Das Änderungsprotokoll von Threema Web findet sich",
-        "CHANGELOG_LINK_TEXT": "auf Github",
+        "CHANGELOG_LINK_TEXT": "auf GitHub",
         "CHANGELOG_LINK_AFTER": "."
     },
     "settings": {

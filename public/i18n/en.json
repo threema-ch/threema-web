@@ -24,9 +24,9 @@
         "BROWSER_NOT_SUPPORTED": "This browser is not supported",
         "ANDROID_ONLY": "Compatible with Threema for Android.",
         "CONNECTING": "Connecting",
-        "WAITING_FOR_PUSH": "Waiting for<br>app wakeup...",
-        "CONNECTING_TO_APP": "Connection to app is<br>being established...",
-        "LOADING_INITIAL_DATA": "Loading initial data...",
+        "WAITING_FOR_PUSH": "Waiting for<br>app wakeup …",
+        "CONNECTING_TO_APP": "Connection to app is<br>being established …",
+        "LOADING_INITIAL_DATA": "Loading initial data …",
         "MANUAL_START": "Please start your session",
         "MANUAL_START_TEXT1": "Push service is not available. Are Google Play Services installed on your mobile device?",
         "MANUAL_START_TEXT2": "You can use Threema Web without Google Play Services, but you need to start the session manually:",
@@ -36,7 +36,7 @@
         "MORE_ABOUT_WEB": "More about Threema Web",
         "LOCAL_STORAGE_MISSING_DETAILS": "Access to LocalStorage not possible. This can occur if your browser is configured to reject cookies, or if you installed a browser add-on that blocks access to LocalStorage. Please allow local storage in your browser settings or disable any add-ons you might have installed.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Critical error when accessing LocalStorage: {errorMsg}.<br>Try restarting your browser.",
-        "ALREADY_CONNECTED": "Already Connected",
+        "ALREADY_CONNECTED": "Already connected",
         "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!"
     },
     "connecting": {
@@ -50,7 +50,7 @@
         "CONNECTION_CLOSED": "Connection to server has been closed."
     },
     "troubleshooting": {
-        "SLOW_CONNECT": "Connecting seems to take longer than usual...",
+        "SLOW_CONNECT": "Connecting seems to take longer than usual …",
         "APP_STARTED": "Is the Threema app started?",
         "SESSION_DELETED": "Did you delete this session on your phone?",
         "PHONE_ONLINE": "Is your phone connected to the internet?",
@@ -90,7 +90,7 @@
         "COMPOSE_MESSAGE_DRAGOVER": "Drop files to send",
         "COMPOSE_MESSAGE": "Type a message or drop a file",
         "UNREAD_MESSAGES": "Unread messages",
-        "IS_TYPING": "is typing...",
+        "IS_TYPING": "is typing …",
         "SEARCH": "Search",
         "CONVERSATIONS": "Conversations",
         "CONTACTS": "Contacts",
@@ -116,7 +116,7 @@
         "GROUP_ROLE_CREATOR": "Creator",
         "DOWNLOAD": "Download",
         "COPY": "Copy",
-        "DOWNLOADING": "Downloading...",
+        "DOWNLOADING": "Downloading …",
         "CONFIRM_FILE_SEND": "Send to «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Optional caption",
         "CONFIRM_SEND_AS_FILE": "Send as file message",
@@ -214,7 +214,7 @@
         "ALL_RIGHTS_RESERVED": "All rights reserved.",
         "LICENSES": "Licenses",
         "OPEN_SOURCE": "Threema Web is fully open source.",
-        "SOURCE_CODE": "The source code and the licensing terms can be found on Github:",
+        "SOURCE_CODE": "The source code and the licensing terms can be found on GitHub:",
         "EMOJI_ART": "Emoji art supplied by <a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>",
         "NOTIFICATION_SOUND": "Sound files &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
         "LICENSE_LINK_BEFORE": "Licenses of used open source components can be found",
@@ -222,7 +222,7 @@
         "LICENSE_LINK_AFTER": "",
         "CHANGELOG": "Changelog",
         "CHANGELOG_LINK_BEFORE": "The Threema Web changelog can be found",
-        "CHANGELOG_LINK_TEXT": "on Github",
+        "CHANGELOG_LINK_TEXT": "on GitHub",
         "CHANGELOG_LINK_AFTER": "."
     },
     "settings": {
