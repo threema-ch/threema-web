@@ -288,7 +288,6 @@ export default [
                     // At link time, the element is not yet evaluated.
                     // Therefore add following code to end of event loop.
                     $timeout(() => {
-
                         // If the compose area contains only a single <br>, make it fully empty.
                         // See also: https://stackoverflow.com/q/14638887/284318
                         const text = getText(false);
@@ -297,12 +296,12 @@ export default [
                         } else if (ev.keyCode === 190) {
                             // A ':' is pressed, try to parse
                             const currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
-                            if (currentWord.length > 2
-                                && currentWord.substr(0, 1) === ':') {
-                                const unicodeEmoji = emojione.shortnameToUnicode(currentWord);
-                                if (unicodeEmoji && unicodeEmoji !== currentWord) {
+                            if (currentWord.realLength > 2
+                                && currentWord.word.substr(0, 1) === ':') {
+                                const unicodeEmoji = emojione.shortnameToUnicode(currentWord.word);
+                                if (unicodeEmoji && unicodeEmoji !== currentWord.word) {
                                     return insertEmoji(unicodeEmoji,
-                                        caretPosition.from - currentWord.length,
+                                        caretPosition.from - currentWord.realLength,
                                         caretPosition.to);
                                 }
                             }
