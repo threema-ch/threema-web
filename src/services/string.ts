@@ -59,6 +59,16 @@ export class StringService {
         return chunks;
     }
 
+    /**
+     * Return the word below the cursor position.
+     *
+     * If the cursor is at the end of a word, the word to the left of it will
+     * be returned.
+     *
+     * If there is whitespace to the left of the cursor, then the returned
+     * `WordResult` object will include the trimmed word to the left of the
+     * cursor. The `realLength` includes the trimmed whitespace though.
+     */
     public getWord(input: string, pos: number, additionalSeparators: string[] = null): threema.WordResult {
         const result = {
             word: null,

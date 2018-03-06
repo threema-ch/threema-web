@@ -496,7 +496,9 @@ declare namespace threema {
     }
 
     interface WordResult {
+        // The trimmed word
         word: string;
+        // The length of the untrimmed word
         realLength: number;
     }
 
