@@ -148,7 +148,7 @@ declare namespace threema {
 
     const enum IdentityType {
         Regular = 0,
-        Work
+        Work,
     }
 
     /**
@@ -348,7 +348,7 @@ declare namespace threema {
         // File bytes
         data: ArrayBuffer;
         // Caption string
-        caption?: String;
+        caption?: string;
         // Send as file message
         sendAsFile?: boolean;
     }
@@ -386,7 +386,7 @@ declare namespace threema {
 
     interface Identity {
         identity: string;
-        publicNickname: String;
+        publicNickname: string;
         publicKey: ArrayBuffer;
         fingerprint: string;
     }
@@ -495,6 +495,13 @@ declare namespace threema {
         isAll: boolean;
     }
 
+    interface WordResult {
+        // The trimmed word
+        word: string;
+        // The length of the untrimmed word
+        realLength: number;
+    }
+
     namespace Container {
         interface ReceiverData {
             me: MeReceiver;
@@ -546,7 +553,7 @@ declare namespace threema {
             converter: (data: Message) => Message;
             getList(receiver: Receiver): Message[];
             clear($scope: ng.IScope): void;
-            clearReceiverMessages(receiver: Receiver): Number;
+            clearReceiverMessages(receiver: Receiver): number;
             contains(receiver: Receiver): boolean;
             hasMore(receiver: Receiver): boolean;
             setMore(receiver: Receiver, more: boolean): void;

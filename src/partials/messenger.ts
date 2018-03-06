@@ -585,7 +585,7 @@ class ConversationController {
      * In contrast to startTyping, this method is is always called, not just if
      * the text field is non-empty.
      */
-    public onTyping = (text: string, currentWord: string = null) => {
+    public onTyping = (text: string, currentWord: threema.WordResult = null) => {
         // Update draft
         this.webClientService.setDraft(this.receiver, text);
 

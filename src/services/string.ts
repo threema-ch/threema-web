@@ -58,43 +58,59 @@ export class StringService {
         });
         return chunks;
     }
-    public getWord(input: string, pos: number, additionalSeparators: string[] = null): string {
+
+    /**
+     * Return the word below the cursor position.
+     *
+     * If the cursor is at the end of a word, the word to the left of it will
+     * be returned.
+     *
+     * If there is whitespace to the left of the cursor, then the returned
+     * `WordResult` object will include the trimmed word to the left of the
+     * cursor. The `realLength` includes the trimmed whitespace though.
+     */
+    public getWord(input: string, pos: number, additionalSeparators: string[] = null): threema.WordResult {
+        const result = {
+            word: null,
+            realLength: 0,
+        };
         if (input !== null && input.length > 0) {
             const chars = [...input];
             let charFound = false;
             const realPos = Math.min(pos, chars.length) - 1;
 
-            if (realPos < 0) {
-                return '';
-            }
-
-            const wordChars = new Array(realPos);
-            for (let n = realPos; n >= 0; n--) {
-                const realChar = chars[n].trim();
-                if (realChar === '') {
-                    // Abort
-                    if (charFound === false) {
-                        continue;
-                    } else {
-                        break;
-                    }
-                } else if (additionalSeparators !== null) {
-                    if (additionalSeparators.indexOf(chars[n]) > -1) {
-                        // append char
-                        wordChars[n] = realChar;
+            if (realPos > 0) {
+                const wordChars = new Array(realPos);
+                for (let n = realPos; n >= 0; n--) {
+                    const realChar = chars[n].trim();
+                    if (realChar === '') {
+                        // Abort
                         if (charFound === false) {
+                            result.realLength++;
                             continue;
                         } else {
                             break;
                         }
+                    } else if (additionalSeparators !== null) {
+                        if (additionalSeparators.indexOf(chars[n]) > -1) {
+                            // append char
+                            result.realLength++;
+                            wordChars[n] = realChar;
+                            if (charFound === false) {
+                                continue;
+                            } else {
+                                break;
+                            }
+                        }
                     }
+                    result.realLength++;
+                    wordChars[n] = realChar;
+                    charFound = true;
                 }
-
-                wordChars[n] = realChar;
-                charFound = true;
+                result.word = wordChars.join('');
             }
-            return wordChars.join('');
+
         }
-        return '';
+        return result;
     }
 }
