@@ -413,6 +413,7 @@ export class WebClientService {
         // Once the connection is established, if this is a WebRTC connection,
         // initiate the peer connection and start the handover.
         this.salty.once('state-change:task', () => {
+
             // Determine chosen task
             const task = this.salty.getTask();
             if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
@@ -478,12 +479,45 @@ export class WebClientService {
     }
 
     /**
+     * For the WebRTC task, this is called when the DataChannel is open.
+     * For the relayed data task, this is called once the connection is established.
+     */
+    private onDataChannelOpen(resetFields: boolean) {
+        // Reset fields if requested
+        if (resetFields) {
+            this._resetFields();
+        }
+
+        // Resolve startup promise once initialization is done
+        if (this.startupPromise !== null) {
+            this.runAfterInitializationSteps(['client info', 'conversations', 'receivers'], () => {
+                this.stateService.updateConnectionBuildupState('done');
+                this.startupPromise.resolve();
+                this.startupPromise = null;
+                this.startupDone = true;
+                this._resetInitializationSteps();
+            });
+        }
+
+        // Request initial data
+        this._requestInitialData();
+
+        // Fetch current version
+        // Delay it to prevent the dialog from being closed by the messenger constructor,
+        // which closes all open dialogs.
+        this.$timeout(() => this.versionService.checkForUpdate(), 7000);
+
+        // Notify state service about data loading
+        this.stateService.updateConnectionBuildupState('loading');
+    }
+
+    /**
      * Handover done.
      *
      * This can either be a real handover to WebRTC (Android), or simply
      * when the relayed data task takes over (iOS).
      */
-    private onHandover = (resetFields: boolean) => {
+    private onHandover(resetFields: boolean) {
         // Initialize NotificationService
         this.$log.debug(this.logTag, 'Initializing NotificationService...');
         this.notificationService.init();
@@ -496,38 +530,11 @@ export class WebClientService {
                 WebClientService.DC_LABEL,
                 (event: Event) => {
                     this.$log.debug(this.logTag, 'SecureDataChannel open');
-
-                    // Initialize fields
-                    if (resetFields) {
-                        this._resetFields();
-                    }
-
-                    // Resolve startup promise once initialization is done
-                    if (this.startupPromise !== null) {
-                        this.runAfterInitializationSteps(['client info', 'conversations', 'receivers'], () => {
-                            this.stateService.updateConnectionBuildupState('done');
-                            this.startupPromise.resolve();
-                            this.startupPromise = null;
-                            this.startupDone = true;
-                            this._resetInitializationSteps();
-                        });
-                    }
-
-                    // Request initial data
-                    this._requestInitialData();
-
-                    // Fetch current version
-                    // Delay it to prevent the dialog from being closed by the messenger constructor,
-                    // which closes all open dialogs.
-                    this.$timeout(() => this.versionService.checkForUpdate(), 7000);
-
-                    // Notify state service about data loading
-                    this.stateService.updateConnectionBuildupState('loading');
+                    this.onDataChannelOpen(resetFields);
                 },
             );
 
             // Handle incoming messages
-            type RTCMessageEvent = (ev: MessageEvent) => void;
             this.secureDataChannel.onmessage = (ev: MessageEvent) => {
                 const bytes = new Uint8Array(ev.data);
                 this.handleIncomingMessage(bytes);
@@ -547,8 +554,11 @@ export class WebClientService {
             this.relayedDataTask.on('data', (ev: saltyrtc.SaltyRTCEvent) => {
                 this.handleIncomingMessage(ev.data);
             });
+
+            // The communication channel is now open! Fetch initial data
+            this.onDataChannelOpen(resetFields);
         }
-    };
+    }
 
     /**
      * Start the webclient service.
