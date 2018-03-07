@@ -166,6 +166,7 @@ export class WebClientService {
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask = null;
     private relayedDataTask: saltyrtc.tasks.relayed_data.RelayedDataTask = null;
     private secureDataChannel: saltyrtc.tasks.webrtc.SecureDataChannel = null;
+    private chosenTask: threema.ChosenTask = threema.ChosenTask.None;
 
     // Messenger data
     public messages: threema.Container.Messages;
@@ -412,33 +413,45 @@ export class WebClientService {
         // Once the connection is established, if this is a WebRTC connection,
         // initiate the peer connection and start the handover.
         this.salty.once('state-change:task', () => {
-            if (this.salty.getTask().getName().indexOf('webrtc.tasks.saltyrtc.org') === -1) {
-                // This is not a WebRTC task, so no handover!
+            // Determine chosen task
+            const task = this.salty.getTask();
+            if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
+                this.chosenTask = threema.ChosenTask.WebRTC;
+            } else if (task.getName().indexOf('relayed-data.tasks.saltyrtc.org') !== -1) {
+                this.chosenTask = threema.ChosenTask.RelayedData;
+            } else {
+                throw new Error('Invalid or unknown task name: ' + task.getName());
+            }
+
+            // If the WebRTC task was chosen, initialize handover.
+            if (this.chosenTask === threema.ChosenTask.WebRTC) {
+                // Firefox <53 does not yet support TLS. Skip it, to save allocations.
+                const browser = this.browserService.getBrowser();
+                if (browser.firefox && parseFloat(browser.version) < 53) {
+                    this.skipIceTls();
+                }
+
+                this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
+                    this.$rootScope, this.webrtcTask,
+                    this.config.ICE_SERVERS,
+                    !this.config.ICE_DEBUGGING);
+
+                // On state changes in the PeerConnectionHelper class, let state service know about it
+                this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
+                    this.stateService.updateRtcConnectionState(state);
+                };
+
+                // Initiate handover
+                this.webrtcTask.handover(this.pcHelper.peerConnection);
+
+            // Otherwise, no handover is necessary.
+            } else {
+                this.onHandover(resetFields);
                 return;
             }
-
-            // Firefox <53 does not yet support TLS. Skip it, to save allocations.
-            const browser = this.browserService.getBrowser();
-            if (browser.firefox && parseFloat(browser.version) < 53) {
-                this.skipIceTls();
-            }
-
-            this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
-                                                     this.$rootScope, this.webrtcTask,
-                                                     this.config.ICE_SERVERS,
-                                                     !this.config.ICE_DEBUGGING);
-
-            // On state changes in the PeerConnectionHelper class, let state service know about it
-            this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
-                this.stateService.updateRtcConnectionState(state);
-            };
-
-            // Initiate handover
-            this.webrtcTask.handover(this.pcHelper.peerConnection);
         });
 
         // Handle a disconnect request
-        // TODO: Handle this from the relayed data task too!
         this.salty.on('application', (applicationData: any) => {
             if (applicationData.data.type === 'disconnect') {
                 this.$log.debug(this.logTag, 'Disconnecting requested');
@@ -452,11 +465,31 @@ export class WebClientService {
         // Wait for handover to be finished
         this.salty.on('handover', () => {
             this.$log.debug(this.logTag, 'Handover done');
+            this.onHandover(resetFields);
+        });
 
-            // Initialize NotificationService
-            this.$log.debug(this.logTag, 'Initializing NotificationService...');
-            this.notificationService.init();
+        // Handle SaltyRTC errors
+        this.salty.on('connection-error', (ev) => {
+            this.$log.error('Connection error:', ev);
+        });
+        this.salty.on('connection-closed', (ev) => {
+            this.$log.warn('Connection closed:', ev);
+        });
+    }
 
+    /**
+     * Handover done.
+     *
+     * This can either be a real handover to WebRTC (Android), or simply
+     * when the relayed data task takes over (iOS).
+     */
+    private onHandover = (resetFields: boolean) => {
+        // Initialize NotificationService
+        this.$log.debug(this.logTag, 'Initializing NotificationService...');
+        this.notificationService.init();
+
+        // If the WebRTC task was chosen, initialize the data channel
+        if (this.chosenTask === threema.ChosenTask.WebRTC) {
             // Create secure data channel
             this.$log.debug(this.logTag, 'Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
             this.secureDataChannel = this.pcHelper.createSecureDataChannel(
@@ -494,54 +527,28 @@ export class WebClientService {
             );
 
             // Handle incoming messages
-            type RTCMessageEvent = (event: MessageEvent) => void;
-            this.secureDataChannel.onmessage = (event: MessageEvent) => {
-                this.$log.debug('New incoming message (' + event.data.byteLength + ' bytes)');
-
-                // Decode bytes
-                const bytes = new Uint8Array(event.data);
-                const message: threema.WireMessage = this.msgpackDecode(bytes);
-
-                // Validate message to keep contract defined by `threema.WireMessage` type
-                if (message.type === undefined) {
-                    this.$log.warn('Ignoring invalid message (no type attribute)');
-                    return;
-                } else if (message.subType === undefined) {
-                    this.$log.warn('Ignoring invalid message (no subType attribute)');
-                    return;
-                }
-
-                if (this.config.MSG_DEBUGGING) {
-                    // Deep copy message to prevent issues with JS debugger
-                    const deepcopy = JSON.parse(JSON.stringify(message));
-                    this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
-                }
-
-                // Process data
-                this.$rootScope.$apply(() => {
-                    this.receive(message);
-                });
+            type RTCMessageEvent = (ev: MessageEvent) => void;
+            this.secureDataChannel.onmessage = (ev: MessageEvent) => {
+                const bytes = new Uint8Array(ev.data);
+                this.handleIncomingMessage(bytes);
             };
-            this.secureDataChannel.onbufferedamountlow = (e: Event) => {
+            this.secureDataChannel.onbufferedamountlow = (ev: Event) => {
                 this.$log.debug('Secure data channel: Buffered amount low');
             };
             this.secureDataChannel.onerror = (e: ErrorEvent) => {
                 this.$log.warn('Secure data channel: Error:', e.message);
                 this.$log.debug(e);
             };
-            this.secureDataChannel.onclose = (e: Event) => {
+            this.secureDataChannel.onclose = (ev: Event) => {
                 this.$log.warn('Secure data channel: Closed');
             };
-        });
-
-        // Handle SaltyRTC errors
-        this.salty.on('connection-error', (ev) => {
-            this.$log.error('Connection error:', ev);
-        });
-        this.salty.on('connection-closed', (ev) => {
-            this.$log.warn('Connection closed:', ev);
-        });
-    }
+        } else if (this.chosenTask === threema.ChosenTask.RelayedData) {
+            // Handle messages directly
+            this.relayedDataTask.on('data', (ev: saltyrtc.SaltyRTCEvent) => {
+                this.handleIncomingMessage(ev.data);
+            });
+        }
+    };
 
     /**
      * Start the webclient service.
@@ -2521,6 +2528,38 @@ export class WebClientService {
         }
         const bytes: Uint8Array = this.msgpackEncode(message);
         this.secureDataChannel.send(bytes);
+    }
+
+    /**
+     * Handle message bytes incoming through the SecureDataChannel
+     * or through the relayed data WebSocket.
+     */
+    private handleIncomingMessage(bytes: Uint8Array): void {
+        this.$log.debug('New incoming message (' + bytes.byteLength + ' bytes)');
+
+        // Decode bytes
+        const message: threema.WireMessage = this.msgpackDecode(bytes);
+
+        // Validate message to keep contract defined by `threema.WireMessage` type
+        if (message.type === undefined) {
+            this.$log.warn('Ignoring invalid message (no type attribute)');
+            return;
+        } else if (message.subType === undefined) {
+            this.$log.warn('Ignoring invalid message (no subType attribute)');
+            return;
+        }
+
+        // If desired, log message type / subtype
+        if (this.config.MSG_DEBUGGING) {
+            // Deep copy message to prevent issues with JS debugger
+            const deepcopy = JSON.parse(JSON.stringify(message));
+            this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
+        }
+
+        // Process data
+        this.$rootScope.$apply(() => {
+            this.receive(message);
+        });
     }
 
     /**
