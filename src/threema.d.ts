@@ -503,6 +503,12 @@ declare namespace threema {
         realLength: number;
     }
 
+    const enum ChosenTask {
+        None = 'none',
+        WebRTC = 'webrtc',
+        RelayedData = 'relayed-data',
+    }
+
     namespace Container {
         interface ReceiverData {
             me: MeReceiver;
