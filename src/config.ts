@@ -31,6 +31,7 @@ export default {
     PUSH_URL: 'https://push-web.threema.ch/push',
 
     // Debugging options
+    DEBUG: false,
     MSG_DEBUGGING: false,
     ICE_DEBUGGING: false,
 
