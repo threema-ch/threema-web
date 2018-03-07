@@ -352,12 +352,17 @@ export class WebClientService {
             .connectTo(this.saltyRtcHost, this.config.SALTYRTC_PORT)
             .withServerKey(this.config.SALTYRTC_SERVER_KEY)
             .withKeyStore(keyStore)
-            .usingTasks([this.webrtcTask])
+            .usingTasks([this.webrtcTask, this.relayedDataTask])
             .withPingInterval(30);
         if (keyStore !== undefined && peerTrustedKey !== undefined) {
             builder = builder.withTrustedPeerKey(peerTrustedKey);
         }
         this.salty = builder.asInitiator();
+
+        if (this.config.DEBUG) {
+            this.$log.debug('Public key:', this.salty.permanentKeyHex);
+            this.$log.debug('Auth token:', this.salty.authTokenHex);
+        }
 
         // We want to know about new responders.
         this.salty.on('new-responder', () => {
@@ -404,9 +409,14 @@ export class WebClientService {
             }, 0);
         });
 
-        // Once the connection is established, initiate the peer connection
-        // and start the handover.
+        // Once the connection is established, if this is a WebRTC connection,
+        // initiate the peer connection and start the handover.
         this.salty.once('state-change:task', () => {
+            if (this.salty.getTask().getName().indexOf('webrtc.tasks.saltyrtc.org') === -1) {
+                // This is not a WebRTC task, so no handover!
+                return;
+            }
+
             // Firefox <53 does not yet support TLS. Skip it, to save allocations.
             const browser = this.browserService.getBrowser();
             if (browser.firefox && parseFloat(browser.version) < 53) {
@@ -428,6 +438,7 @@ export class WebClientService {
         });
 
         // Handle a disconnect request
+        // TODO: Handle this from the relayed data task too!
         this.salty.on('application', (applicationData: any) => {
             if (applicationData.data.type === 'disconnect') {
                 this.$log.debug(this.logTag, 'Disconnecting requested');
