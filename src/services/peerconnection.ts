@@ -15,7 +15,6 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// <reference types="@saltyrtc/task-webrtc" />
 import * as SDPUtils from 'sdp';
 
 /**

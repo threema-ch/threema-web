@@ -15,6 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// <reference types="@saltyrtc/task-webrtc" />
+/// <reference types="@saltyrtc/task-relayed-data" />
+
 import * as msgpack from 'msgpack-lite';
 import {hexToU8a} from '../helpers';
 import {BatteryStatusService} from './battery';
@@ -161,6 +164,7 @@ export class WebClientService {
     private saltyRtcHost: string = null;
     public salty: saltyrtc.SaltyRTC = null;
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask = null;
+    private relayedDataTask: saltyrtc.tasks.relayed_data.RelayedDataTask = null;
     private secureDataChannel: saltyrtc.tasks.webrtc.SecureDataChannel = null;
 
     // Messenger data
@@ -323,6 +327,9 @@ export class WebClientService {
         // Create WebRTC task instance
         const maxPacketSize = this.browserService.getBrowser().firefox ? 16384 : 65536;
         this.webrtcTask = new saltyrtcTaskWebrtc.WebRTCTask(true, maxPacketSize);
+
+        // Create Relayed Data task instance
+        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.DEBUG);
 
         // Create new keystore if necessary
         if (!keyStore) {

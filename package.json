@@ -26,8 +26,9 @@
   "private": true,
   "homepage": "https://threema.ch/",
   "dependencies": {
-    "@saltyrtc/client": "^0.10.0",
+    "@saltyrtc/client": "^0.10.1",
     "@saltyrtc/task-webrtc": "^0.10.0",
+    "@saltyrtc/task-relayed-data": "^0.1.2",
     "@types/angular": "^1.6.43",
     "@types/angular-material": "^1.1.58",
     "@types/angular-sanitize": "^1.3.7",

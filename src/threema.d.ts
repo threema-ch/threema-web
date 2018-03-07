@@ -454,6 +454,7 @@ declare namespace threema {
         SALTYRTC_HOST_SUFFIX: string | null;
         ICE_SERVERS: RTCIceServer[];
         PUSH_URL: string;
+        DEBUG: boolean;
         MSG_DEBUGGING: boolean;
         ICE_DEBUGGING: boolean;
     }
