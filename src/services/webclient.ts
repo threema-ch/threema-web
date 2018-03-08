@@ -19,7 +19,7 @@
 /// <reference types="@saltyrtc/task-relayed-data" />
 
 import * as msgpack from 'msgpack-lite';
-import {hexToU8a} from '../helpers';
+import {hexToU8a, msgpackVisualizer} from '../helpers';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
 import {FingerPrintService} from './fingerprint';
@@ -2555,6 +2555,9 @@ export class WebClientService {
      */
     private handleIncomingMessage(bytes: Uint8Array): void {
         this.$log.debug('New incoming message (' + bytes.byteLength + ' bytes)');
+        if (this.config.MSG_DEBUGGING) {
+            this.$log.debug('Incoming message payload:' + msgpackVisualizer(bytes));
+        }
 
         // Decode bytes
         const message: threema.WireMessage = this.msgpackDecode(bytes);
