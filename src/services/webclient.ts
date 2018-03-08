@@ -537,7 +537,7 @@ export class WebClientService {
             // Handle incoming messages
             this.secureDataChannel.onmessage = (ev: MessageEvent) => {
                 const bytes = new Uint8Array(ev.data);
-                this.handleIncomingMessage(bytes);
+                this.handleIncomingMessageBytes(bytes);
             };
             this.secureDataChannel.onbufferedamountlow = (ev: Event) => {
                 this.$log.debug('Secure data channel: Buffered amount low');
@@ -552,7 +552,7 @@ export class WebClientService {
         } else if (this.chosenTask === threema.ChosenTask.RelayedData) {
             // Handle messages directly
             this.relayedDataTask.on('data', (ev: saltyrtc.SaltyRTCEvent) => {
-                this.handleIncomingMessage(ev.data);
+                this.handleIncomingMessage(ev.data, true);
             });
 
             // The communication channel is now open! Fetch initial data
@@ -2550,10 +2550,9 @@ export class WebClientService {
     }
 
     /**
-     * Handle message bytes incoming through the SecureDataChannel
-     * or through the relayed data WebSocket.
+     * Handle incoming message bytes from the SecureDataChannel.
      */
-    private handleIncomingMessage(bytes: Uint8Array): void {
+    private handleIncomingMessageBytes(bytes: Uint8Array): void {
         this.$log.debug('New incoming message (' + bytes.byteLength + ' bytes)');
         if (this.config.MSG_DEBUGGING) {
             this.$log.debug('Incoming message payload:' + msgpackVisualizer(bytes));
@@ -2561,6 +2560,18 @@ export class WebClientService {
 
         // Decode bytes
         const message: threema.WireMessage = this.msgpackDecode(bytes);
+
+        return this.handleIncomingMessage(message, false);
+    }
+
+    /**
+     * Handle incoming incoming from the SecureDataChannel
+     * or from the relayed data WebSocket.
+     */
+    private handleIncomingMessage(message: threema.WireMessage, log: boolean): void {
+        if (log) {
+            this.$log.debug('New incoming message');
+        }
 
         // Validate message to keep contract defined by `threema.WireMessage` type
         if (message.type === undefined) {
