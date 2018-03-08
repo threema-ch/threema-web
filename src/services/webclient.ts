@@ -2536,15 +2536,15 @@ export class WebClientService {
         if (this.config.MSG_DEBUGGING) {
             this.$log.debug('[Message] Outgoing:', message.type, '/', message.subType, message);
         }
-        const bytes: Uint8Array = this.msgpackEncode(message);
         switch (this.chosenTask) {
             case threema.ChosenTask.WebRTC:
                 // Send bytes through WebRTC DataChannel
+                const bytes: Uint8Array = this.msgpackEncode(message);
                 this.secureDataChannel.send(bytes);
                 break;
             case threema.ChosenTask.RelayedData:
                 // Send bytes through e2e encrypted WebSocket
-                this.relayedDataTask.sendMessage(bytes);
+                this.relayedDataTask.sendMessage(message);
                 break;
         }
     }
