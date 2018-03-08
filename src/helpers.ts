@@ -252,3 +252,11 @@ export function supportsPassive(): boolean {
 export function escapeRegExp(str: string) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
+
+/**
+ * Generate a link to the msgpack visualizer from an Uint8Array containing
+ * msgpack encoded data.
+ */
+export function msgpackVisualizer(bytes: Uint8Array): string {
+    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(bytes as any));
+}
