@@ -241,7 +241,6 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» cannot receive this message.",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive voice messages.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive files.",
-        "CONTACT_BLOCKED":  "You cannot send messages to a blocked contact.",
         "ERROR_OCCURRED": "An error occurred.",
         "FILE_TOO_LARGE": "Files larger than {maxmb} MiB cannot be sent",
         "FILE_TOO_LARGE_WEB": "Currently files larger than 15 MiB cannot be sent through Threema Web",
