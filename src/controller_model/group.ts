@@ -27,7 +27,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     public members: string[];
     public name: string;
     public subject: string;
-    public isLoading = false;
+    public isLoading = false; // TODO: Show loading indicator
 
     private addContactPlaceholder: string;
     private group: threema.GroupReceiver;
