@@ -1607,7 +1607,7 @@ export class WebClientService {
             // if a avatar was set on a conversation
             // convert and copy to the receiver
             for (const conversation of data) {
-                if (conversation.avatar !== undefined) {
+                if (conversation.avatar !== undefined && conversation.avatar !== null) {
                     const receiver = this.receivers.getData({
                         id: conversation.id,
                         type: conversation.type,
