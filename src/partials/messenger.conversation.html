@@ -17,7 +17,7 @@
             <eee-verification-level ng-if="ctrl.type === 'contact'"
                                     contact="ctrl.receiver"></eee-verification-level>
             </div>
-            <div class="conversation-header-details-detail" ng-if="ctrl.type !== 'contact'"
+            <div class="conversation-header-details-detail" ng-if="ctrl.type === 'group' || ctrl.type === 'distributionList'"
                  title="{{ ctrl.receiver.members | idsToNames | escapeHtml }}">
                 <span ng-bind-html="ctrl.receiver.members | idsToNames | escapeHtml | emojify"></span>
             </div>
