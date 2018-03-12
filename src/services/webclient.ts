@@ -494,7 +494,9 @@ export class WebClientService {
                 }
 
                 if (this.config.MSG_DEBUGGING) {
-                    this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, message);
+                    // Deep copy message to prevent issues with JS debugger
+                    const deepcopy = JSON.parse(JSON.stringify(message));
+                    this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
                 }
 
                 // Process data
