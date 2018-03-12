@@ -126,6 +126,8 @@ export class WebClientService {
     private static ARGUMENT_DELETE_TYPE = 'deleteType';
     private static ARGUMENT_ERROR = 'error';
     private static ARGUMENT_MAX_SIZE = 'maxSize';
+    private static DELETE_GROUP_TYPE_LEAVE = 'leave';
+    private static DELETE_GROUP_TYPE_DELETE = 'delete';
     private static DATA_FIELD_BLOB_BLOB = 'blob';
     private static DC_LABEL = 'THREEMA';
 
@@ -1210,8 +1212,7 @@ export class WebClientService {
 
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
-            // TODO: delete type into const
-            [WebClientService.ARGUMENT_DELETE_TYPE]: 'leave',
+            [WebClientService.ARGUMENT_DELETE_TYPE]: WebClientService.DELETE_GROUP_TYPE_LEAVE,
         };
 
         return this._sendDeletePromise(WebClientService.SUB_TYPE_GROUP, args);
@@ -1227,8 +1228,7 @@ export class WebClientService {
 
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
-            // TODO: delete type into const
-            [WebClientService.ARGUMENT_DELETE_TYPE]: 'delete',
+            [WebClientService.ARGUMENT_DELETE_TYPE]: WebClientService.DELETE_GROUP_TYPE_DELETE,
         };
 
         return this._sendDeletePromise(WebClientService.SUB_TYPE_GROUP, args);
