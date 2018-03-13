@@ -918,7 +918,6 @@ class NavigationController {
             const resetPush = true;
             const redirect = true;
             this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
-            this.receiverService.setActive(undefined);
         }, () => {
             // do nothing
         });
@@ -939,7 +938,6 @@ class NavigationController {
             const resetPush = true;
             const redirect = true;
             this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
-            this.receiverService.setActive(undefined);
         }, () => {
             // do nothing
         });
