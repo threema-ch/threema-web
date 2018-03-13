@@ -45,7 +45,7 @@
             </li>
             <li ng-repeat="message in ctrl.messages" id="message-{{message.id}}">
                 <eee-message eee-receiver="ctrl.receiver" eee-type="ctrl.type" eee-message="message"
-                             in-view="$inview  && !ctrl.locked && ctrl.msgRead(message.id)"
+                             in-view="$inview  && !ctrl.locked && ctrl.msgRead(message)"
                              in-view-options="{ considerPageVisibility: true }"></eee-message>
             </li>
             <li ng-if="ctrl.isTyping()" class="typing-indicator">
