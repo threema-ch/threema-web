@@ -340,7 +340,7 @@ angular.module('3ema.container', [])
     class ReceiverMessages {
 
         // The message id used as reference when paging.
-        public referenceMsgId: number = null;
+        public referenceMsgId: string = null;
 
         // Whether a message request has been sent yet.
         public requested = false;
@@ -464,7 +464,7 @@ angular.module('3ema.container', [])
         /**
          * Return the reference msg id for the specified receiver.
          */
-        public getReferenceMsgId(receiver: threema.Receiver): number {
+        public getReferenceMsgId(receiver: threema.Receiver): string {
             return this.getReceiverMessages(receiver).referenceMsgId;
         }
 
@@ -570,13 +570,8 @@ angular.module('3ema.container', [])
 
         /**
          * Update a thumbnail of a message, if a message was found the method will return true
-         *
-         * @param receiver
-         * @param messageId
-         * @param thumbnailImage
-         * @returns {boolean}
          */
-        public setThumbnail(receiver: threema.Receiver, messageId: number, thumbnailImage: string): boolean {
+        public setThumbnail(receiver: threema.Receiver, messageId: string, thumbnailImage: string): boolean {
             const list = this.getList(receiver);
             for (const message of list) {
                 if (message.id === messageId) {
@@ -598,7 +593,7 @@ angular.module('3ema.container', [])
          * Return a boolean indicating whether the message was found and
          * removed, or not.
          */
-        public remove(receiver: threema.Receiver, messageId: number): boolean {
+        public remove(receiver: threema.Receiver, messageId: string): boolean {
             const list = this.getList(receiver);
             for (let i = 0; i < list.length; i++) {
                 if (list[i].id === messageId) {
@@ -625,7 +620,7 @@ angular.module('3ema.container', [])
             return false;
         }
 
-        public bindTemporaryToMessageId(receiver: threema.Receiver, temporaryId: string, messageId: number): boolean {
+        public bindTemporaryToMessageId(receiver: threema.Receiver, temporaryId: string, messageId: string): boolean {
             const list = this.getList(receiver);
             for (const item of list) {
                 if (item.temporaryId === temporaryId) {

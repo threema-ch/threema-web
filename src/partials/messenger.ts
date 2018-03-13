@@ -203,10 +203,10 @@ class ConversationController {
     public receiver: threema.Receiver;
     public type: threema.ReceiverType;
     public message: string = '';
-    public lastReadMsgId: number = 0;
+    public lastReadMsg: threema.Message | null = null;
     public msgReadReportPending = false;
     private hasMore = true;
-    private latestRefMsgId: number = null;
+    private latestRefMsgId: string | null = null;
     private allText: string;
     private messages: threema.Message[];
     public initialData: threema.InitialConversationData = {
@@ -731,16 +731,16 @@ class ConversationController {
      * A message has been seen. Report it to the app, with a small delay to
      * avoid sending too many messages at once.
      */
-    public msgRead(msgId: number): void {
-        if (msgId > this.lastReadMsgId) {
-            this.lastReadMsgId = msgId;
+    public msgRead(message: threema.Message): void {
+        if (this.lastReadMsg === null || message.sortKey > this.lastReadMsg.sortKey) {
+            this.lastReadMsg = message;
         }
         if (!this.msgReadReportPending) {
             this.msgReadReportPending = true;
             const receiver = angular.copy(this.receiver);
             receiver.type = this.type;
             this.$timeout(() => {
-                this.webClientService.requestRead(receiver, this.lastReadMsgId);
+                this.webClientService.requestRead(receiver, this.lastReadMsg);
                 this.msgReadReportPending = false;
             }, 500);
         }

@@ -65,10 +65,11 @@ declare namespace threema {
      */
     interface Message {
         type: MessageType;
-        id: number;
+        id: string;
         body: string;
         thumbnail?: Thumbnail;
-        date: string;
+        date?: string;
+        sortKey: number;
         partnerId: string;
         isOutbox: boolean;
         isStatus: boolean;
@@ -564,17 +565,17 @@ declare namespace threema {
             contains(receiver: Receiver): boolean;
             hasMore(receiver: Receiver): boolean;
             setMore(receiver: Receiver, more: boolean): void;
-            getReferenceMsgId(receiver: Receiver): number;
+            getReferenceMsgId(receiver: Receiver): string;
             isRequested(receiver: Receiver): boolean;
             setRequested(receiver: Receiver): void;
             clearRequested(receiver): void;
             addNewer(receiver: Receiver, messages: Message[]): void;
             addOlder(receiver: Receiver, messages: Message[]): void;
             update(receiver: Receiver, message: Message): boolean;
-            setThumbnail(receiver: Receiver, messageId: number, thumbnailImage: string): boolean;
-            remove(receiver: Receiver, messageId: number): boolean;
+            setThumbnail(receiver: Receiver, messageId: string, thumbnailImage: string): boolean;
+            remove(receiver: Receiver, messageId: string): boolean;
             removeTemporary(receiver: Receiver, temporaryMessageId: string): boolean;
-            bindTemporaryToMessageId(receiver: Receiver, temporaryId: string, messageId: number): boolean;
+            bindTemporaryToMessageId(receiver: Receiver, temporaryId: string, messageId: string): boolean;
             notify(receiver: Receiver, $scope: ng.IScope): void;
             register(receiver: Receiver, $scope: ng.IScope, callback: any): Message[];
             updateFirstUnreadMessage(receiver: Receiver);

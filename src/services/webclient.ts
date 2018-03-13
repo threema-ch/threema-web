@@ -765,7 +765,7 @@ export class WebClientService {
      * New messages are not requested this way, instead they are sent as a
      * message update.
      */
-    public requestMessages(receiver: threema.Receiver): number {
+    public requestMessages(receiver: threema.Receiver): string {
         // If there are no more messages available, stop here.
         if (!this.messages.hasMore(receiver)) {
             this.messages.notify(receiver, this.$rootScope);
@@ -850,7 +850,7 @@ export class WebClientService {
 
         // Create arguments and send request
         const args = {
-            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id.toString(),
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
         };
@@ -862,7 +862,7 @@ export class WebClientService {
     /**
      * Request a blob.
      */
-    public requestBlob(msgId: number, receiver: threema.Receiver): Promise<ArrayBuffer> {
+    public requestBlob(msgId: string, receiver: threema.Receiver): Promise<ArrayBuffer> {
         const cached = this.blobCache.get(msgId + receiver.type);
 
         if (cached !== undefined) {
@@ -883,7 +883,7 @@ export class WebClientService {
 
     /**
      */
-    public requestRead(receiver, newestMessageId: number): void {
+    public requestRead(receiver, newestMessage: threema.Message): void {
         // Check if the receiver has an avatar or the avatar already exists
         // let field: string = highResolution ? 'high' : 'low';
         // let data = this.receivers.getData(receiver);
@@ -898,9 +898,9 @@ export class WebClientService {
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_MESSAGE_ID]: newestMessageId,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: newestMessage.id.toString(),
         };
-        this.$log.debug('Sending read request for', receiver.type, receiver.id, '(msg ' + newestMessageId + ')');
+        this.$log.debug('Sending read request for', receiver.type, receiver.id, '(msg ' + newestMessage.id + ')');
         this._sendRequest(WebClientService.SUB_TYPE_READ, args);
     }
 
@@ -1075,7 +1075,7 @@ export class WebClientService {
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id.toString(),
             [WebClientService.ARGUMENT_MESSAGE_ACKNOWLEDGED]: acknowledged,
         };
         this._sendRequest(WebClientService.SUB_TYPE_ACK, args);
@@ -1093,7 +1093,7 @@ export class WebClientService {
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id.toString(),
         };
         this._sendDelete(WebClientService.SUB_TYPE_MESSAGE, args);
     }
@@ -1624,7 +1624,7 @@ export class WebClientService {
         const temporaryId = args[WebClientService.ARGUMENT_TEMPORARY_ID];
 
         if (data[WebClientService.ARGUMENT_SUCCESS]) {
-            const messageId = data[WebClientService.ARGUMENT_MESSAGE_ID];
+            const messageId: string = data[WebClientService.ARGUMENT_MESSAGE_ID];
             if (receiverType === undefined || receiverId === undefined ||
                 temporaryId === undefined || messageId === undefined) {
                 this.$log.warn('Invalid create received [type, id or temporaryId arg ' +
@@ -1871,7 +1871,7 @@ export class WebClientService {
         // Unpack required argument fields
         const type = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
         const id = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const messageId = args[WebClientService.ARGUMENT_MESSAGE_ID];
+        const messageId: string = args[WebClientService.ARGUMENT_MESSAGE_ID];
 
         if (type === undefined || id === undefined || messageId === undefined ) {
             this.$log.warn('Invalid thumbnail response, argument field missing');
@@ -1904,7 +1904,7 @@ export class WebClientService {
         // Unpack required argument fields
         const receiverType = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
         const receiverId = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const msgId = args[WebClientService.ARGUMENT_MESSAGE_ID];
+        const msgId: string = args[WebClientService.ARGUMENT_MESSAGE_ID];
         if (receiverType === undefined || receiverId === undefined || msgId === undefined) {
             this.$log.warn('Invalid blob response, argument field missing');
             return {
