@@ -47,6 +47,7 @@ angular.module('3ema', [
     'luegg.directives',
     'pascalprecht.translate',
     'ngMaterial',
+    'angularMoment',
 
     // Own
     '3ema.filters',
@@ -133,5 +134,33 @@ angular.module('3ema', [
         };
     }]);
 }])
+
+.run([
+    '$translate',
+    '$log',
+    'amMoment',
+    'moment',
+    ($translate: ng.translate.ITranslateService, $log: ng.ILogService, amMoment, moment) => {
+        const lang = $translate.proposedLanguage() || $translate.use();
+        $log.debug('Setting locale:', lang);
+        moment.updateLocale('en', {
+            longDateFormat : {
+                L: 'MMM Do YYYY',
+            },
+            calendar: {
+                sameElse: 'L, LT',
+            },
+        });
+        moment.updateLocale('de', {
+            longDateFormat : {
+                L: 'Do MMM YYYY',
+            },
+            calendar: {
+                sameElse: 'L, LT',
+            },
+        });
+        amMoment.changeLocale(lang);
+    },
+])
 
 ;

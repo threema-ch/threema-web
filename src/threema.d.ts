@@ -68,7 +68,7 @@ declare namespace threema {
         id: string;
         body: string;
         thumbnail?: Thumbnail;
-        date?: string;
+        date?: number;
         sortKey: number;
         partnerId: string;
         isOutbox: boolean;
