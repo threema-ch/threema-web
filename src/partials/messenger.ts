@@ -436,7 +436,6 @@ class ConversationController {
         if (errorMessage === undefined || errorMessage.length === 0) {
             errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
         }
-
         this.$mdToast.show(
             this.$mdToast.simple()
                 .textContent(errorMessage)
@@ -1269,7 +1268,6 @@ class ReceiverEditController {
     }
 
     public save(): void {
-
         // show loading
         this.loading = true;
 
@@ -1279,7 +1277,7 @@ class ReceiverEditController {
                 this.goBack();
             })
             .catch((errorCode) => {
-                this.showError(errorCode);
+                this.showEditError(errorCode);
             });
     }
 
@@ -1288,13 +1286,17 @@ class ReceiverEditController {
             && this.execute.isRunning();
     }
 
-    public showError(errorCode): void {
+    private showEditError(errorCode: string): void {
+        if (errorCode === undefined) {
+            errorCode = 'unknown';
+        }
         this.$mdDialog.show(
             this.$mdDialog.alert()
                 .clickOutsideToClose(true)
                 .title(this.controllerModel.subject)
-                .textContent(this.$translate.instant('validationError.editReceiver.' + errorCode))
-                .ok(this.$translate.instant('common.OK')));
+                .textContent(this.$translate.instant('validationError.modifyReceiver.' + errorCode))
+                .ok(this.$translate.instant('common.OK')),
+        );
     }
 
     public goBack(): void {
@@ -1371,13 +1373,13 @@ class ReceiverCreateController {
 
     private showAddError(errorCode: string): void {
         if (errorCode === undefined) {
-            errorCode = 'invalid_entry';
+            errorCode = 'unknown';
         }
         this.$mdDialog.show(
             this.$mdDialog.alert()
                 .clickOutsideToClose(true)
                 .title(this.controllerModel.subject)
-                .textContent(this.$translate.instant('validationError.createReceiver.' + errorCode))
+                .textContent(this.$translate.instant('validationError.modifyReceiver.' + errorCode))
                 .ok(this.$translate.instant('common.OK')),
         );
     }
