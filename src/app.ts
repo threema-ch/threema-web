@@ -135,6 +135,13 @@ angular.module('3ema', [
     }]);
 }])
 
+.constant('amTimeAgoConfig', {
+    // After this threshold, display absolute dates instead of relative ones.
+    fullDateThreshold: 21,
+    fullDateThresholdUnit: 'hour',
+    fullDateFormat: 'L, LT',
+})
+
 .run([
     '$translate',
     '$log',
@@ -142,23 +149,20 @@ angular.module('3ema', [
     'moment',
     ($translate: ng.translate.ITranslateService, $log: ng.ILogService, amMoment, moment) => {
         const lang = $translate.proposedLanguage() || $translate.use();
-        $log.debug('Setting locale:', lang);
+
+        // https://momentjs.com/docs/#/customization/
         moment.updateLocale('en', {
             longDateFormat : {
                 L: 'MMM Do YYYY',
-            },
-            calendar: {
-                sameElse: 'L, LT',
             },
         });
         moment.updateLocale('de', {
             longDateFormat : {
                 L: 'Do MMM YYYY',
             },
-            calendar: {
-                sameElse: 'L, LT',
-            },
         });
+
+        $log.debug('Setting locale:', lang);
         amMoment.changeLocale(lang);
     },
 ])
