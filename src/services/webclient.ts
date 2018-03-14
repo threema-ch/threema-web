@@ -688,7 +688,7 @@ export class WebClientService {
     public requestClientInfo(): void {
         this.$log.debug('Sending client info request');
         this._sendRequest(WebClientService.SUB_TYPE_CLIENT_INFO, {
-            userAgent: navigator.userAgent,
+            browser: navigator.userAgent,
         });
     }
 
