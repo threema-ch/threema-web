@@ -101,6 +101,7 @@ export class WebClientService {
     private static SUB_TYPE_GROUP_SYNC = 'groupSync';
     private static SUB_TYPE_BATTERY_STATUS = 'batteryStatus';
     private static SUB_TYPE_CLEAN_RECEIVER_CONVERSATION = 'cleanReceiverConversation';
+    private static SUB_TYPE_CONFIRM_ACTION = 'confirmAction';
     private static ARGUMENT_MODE = 'mode';
     private static ARGUMENT_MODE_REFRESH = 'refresh';
     private static ARGUMENT_MODE_NEW = 'new';
@@ -1435,6 +1436,27 @@ export class WebClientService {
         };
     }
 
+    private _receiveResponseConfirmAction(message: threema.WireMessage): threema.PromiseRequestResult<void> {
+        this.$log.debug('Received receiver response');
+
+        // Unpack and validate args
+        const args = message.args;
+        if (args === undefined) {
+            this.$log.error('Invalid confirmAction response, args missing');
+            return this.promiseRequestError('invalid_response');
+        }
+
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                return { success: true };
+            case false:
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
+            default:
+                this.$log.error('Invalid confirmAction response, success field is not a boolean');
+                return this.promiseRequestError('invalid_response');
+        }
+    }
+
     private _receiveResponseReceivers(message: threema.WireMessage): void {
         this.$log.debug('Received receiver response');
 
@@ -1492,16 +1514,6 @@ export class WebClientService {
             message: message.data.message,
         } as threema.Alert);
 
-    }
-
-    private _receiveGroupSync(message: threema.WireMessage): threema.PromiseRequestResult<any> {
-        this.$log.debug('Received group sync');
-        // TODO: Convert this to confirmAction
-        // to finish the promise
-        return {
-            success: true,
-            data: null,
-        };
     }
 
     /**
@@ -2371,6 +2383,9 @@ export class WebClientService {
         // Dispatch response
         let receiveResult: threema.PromiseRequestResult<any>;
         switch (type) {
+            case WebClientService.SUB_TYPE_CONFIRM_ACTION:
+                receiveResult = this._receiveResponseConfirmAction(message);
+                break;
             case WebClientService.SUB_TYPE_RECEIVER:
                 this._receiveResponseReceivers(message);
                 break;
@@ -2402,9 +2417,6 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_ALERT:
                 this._receiveAlert(message);
-                break;
-            case WebClientService.SUB_TYPE_GROUP_SYNC:
-                receiveResult = this._receiveGroupSync(message);
                 break;
             case WebClientService.SUB_TYPE_BATTERY_STATUS:
                 this._receiveUpdateBatteryStatus(message);
