@@ -176,8 +176,20 @@
         "gif": "GIF"
     },
     "validationError": {
-        "createReceiver": {
-            "invalid_identity": "Ungültige Threema-ID"
+        "modifyReceiver": {
+            "unknown": "Ein unbekannter Fehler ist aufgetreten",
+            "internal_error": "Ein interner Fehler ist aufgetreten",
+            "timeout": "Timeout",
+            "invalid_identity": "Ungültige Threema-ID",
+            "invalid_response": "Ungültige Daten erhalten (Protokollfehler?)",
+            "invalid_contact": "Ungültiger Kontakt",
+            "invalid_group": "Ungültige Gruppe",
+            "invalid_distribution_list": "Ungültige Verteilerliste",
+            "no_group_members": "Keine Gruppenmitglieder definiert",
+            "no_distribution_list_members": "Keine Verteilerlisten-Mitglieder definiert",
+            "not_allowed": "Gruppe kann nicht verändert werden: Sie sind nicht der Administrator",
+            "not_allowed_linked": "Systemkontakt kann nicht verändert werden",
+            "not_allowed_business": "Avatar eines Threema Work Kontaktes kann nicht geändert werden"
         }
     },
     "error": {

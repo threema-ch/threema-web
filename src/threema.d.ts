@@ -416,7 +416,7 @@ declare namespace threema {
 
     interface PromiseRequestResult<T> {
         success: boolean;
-        message?: string;
+        error?: string;
         data?: T;
     }
 

@@ -20,6 +20,7 @@
 
 import * as msgpack from 'msgpack-lite';
 import {hexToU8a, msgpackVisualizer} from '../helpers';
+import {isContactReceiver, isDistributionListReceiver, isGroupReceiver} from '../typeguards';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
 import {FingerPrintService} from './fingerprint';
@@ -1424,7 +1425,17 @@ export class WebClientService {
         this.requestBatteryStatus();
     }
 
-    private _receiveResponseReceivers(message: threema.WireMessage) {
+    /**
+     * Return a PromiseRequestResult with success=false and the specified error code.
+     */
+    private promiseRequestError(error: string): threema.PromiseRequestResult<undefined> {
+        return {
+            success: false,
+            error: error,
+        };
+    }
+
+    private _receiveResponseReceivers(message: threema.WireMessage): void {
         this.$log.debug('Received receiver response');
 
         // Unpack and validate data
@@ -1439,36 +1450,41 @@ export class WebClientService {
         this.registerInitializationStep('receivers');
     }
 
-    private _receiveResponseContactDetail(message: threema.WireMessage): any {
+    private _receiveResponseContactDetail(message: threema.WireMessage): threema.PromiseRequestResult<any> {
         this.$log.debug('Received contact detail');
 
         // Unpack and validate data
+        const args = message.args;
         const data = message.data;
-        if (data === undefined) {
-            this.$log.warn('Invalid contact response, data missing');
-            return;
+        if (args === undefined || data === undefined) {
+            this.$log.error('Invalid contact response, args or data missing');
+            return this.promiseRequestError('invalid_response');
         }
 
-        if (data[WebClientService.ARGUMENT_SUCCESS]) {
-            const contactReceiver = this.receivers.contacts
-                .get(message.args[WebClientService.ARGUMENT_IDENTITY]) as threema.ContactReceiver;
-
-            // get system contact
-            if (data[WebClientService.SUB_TYPE_RECEIVER]) {
-                contactReceiver.systemContact =
-                    data[WebClientService.SUB_TYPE_RECEIVER][WebClientService.ARGUMENT_SYSTEM_CONTACT];
-            }
-
-            return {
-                success: true,
-                contactReceiver: contactReceiver,
-            };
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                const contactReceiver = this.receivers.contacts
+                    .get(args[WebClientService.ARGUMENT_IDENTITY]) as threema.ContactReceiver;
+                if (data[WebClientService.SUB_TYPE_RECEIVER]) {
+                    contactReceiver.systemContact =
+                        data[WebClientService.SUB_TYPE_RECEIVER][WebClientService.ARGUMENT_SYSTEM_CONTACT];
+                }
+                return {
+                    success: true,
+                    data: contactReceiver,
+                };
+            case false:
+                return {
+                    success: false,
+                    error: args[WebClientService.ARGUMENT_ERROR],
+                };
+            default:
+                this.$log.error('Invalid contact response, success field is not a boolean');
+                return this.promiseRequestError('invalid_response');
         }
-
-        return data;
     }
 
-    private _receiveAlert(message: threema.WireMessage): any {
+    private _receiveAlert(message: threema.WireMessage): void {
         this.$log.debug('Received alert from device');
         this.alerts.push({
             source: message.args.source,
@@ -1478,175 +1494,130 @@ export class WebClientService {
 
     }
 
-    private _receiveGroupSync(message: threema.WireMessage): any {
+    private _receiveGroupSync(message: threema.WireMessage): threema.PromiseRequestResult<any> {
         this.$log.debug('Received group sync');
+        // TODO: Convert this to confirmAction
         // to finish the promise
         return {
             success: true,
             data: null,
         };
     }
+
     /**
-     * handling new or modified contact
+     * Process an incoming contact, group or distributionList response.
      */
-    // tslint:disable-next-line: max-line-length
-    private _receiveResponseContact(message: threema.WireMessage): threema.PromiseRequestResult<threema.ContactReceiver> {
-        this.$log.debug('Received contact response');
+    private _receiveResponseReceiver<T extends threema.Receiver>(
+        message: threema.WireMessage,
+        receiverType: threema.ReceiverType,
+    ): threema.PromiseRequestResult<T> {
+        this.$log.debug('Received ' + receiverType + ' response');
+
         // Unpack and validate data
+        const args = message.args;
         const data = message.data;
-
-        if (data === undefined) {
-            this.$log.warn('Invalid add contact response, data missing');
-            return;
+        if (args === undefined || data === undefined) {
+            this.$log.error('Invalid ' + receiverType + ' response, args or data missing');
+            return this.promiseRequestError('invalid_response');
         }
 
-        if (data[WebClientService.ARGUMENT_SUCCESS]
-            && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.ContactReceiver;
-            // Add or update a certain receiver
-            if (receiver.type === undefined) {
-                receiver.type = 'contact';
-            }
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                // Get receiver instance
+                const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as T;
 
-            this.receivers.extendContact(receiver);
+                // Update receiver type if not set
+                if (receiver.type === undefined) {
+                    receiver.type = receiverType;
+                }
 
-            return {
-                success: true,
-                data: receiver,
-            };
+                // Extend models
+                if (isContactReceiver(receiver)) {
+                    this.receivers.extendContact(receiver);
+                } else if (isGroupReceiver(receiver)) {
+                    this.receivers.extendGroup(receiver);
+                } else if (isDistributionListReceiver(receiver)) {
+                    this.receivers.extendDistributionList(receiver);
+                }
+
+                return {
+                    success: true,
+                    data: receiver,
+                };
+            case false:
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
+            default:
+                this.$log.error('Invalid ' + receiverType + ' response, success field is not a boolean');
+                return this.promiseRequestError('invalid_response');
         }
-
-        let msg = null;
-        if (data[WebClientService.ARGUMENT_ERROR] !== undefined) {
-            msg = data[WebClientService.ARGUMENT_ERROR];
-        }
-
-        return {
-            success: false,
-            message: msg,
-        };
     }
 
     /**
-     * handling new or modified group
+     * Handle new or modified contacts.
      */
-    private _receiveResponseGroup(message: threema.WireMessage): threema.PromiseRequestResult<threema.GroupReceiver> {
-        this.$log.debug('Received group response');
-        // Unpack and validate data
-        const data = message.data;
-        if (data === undefined) {
-            this.$log.warn('Invalid create group response, data missing');
-            return;
-        }
-
-        if (data[WebClientService.ARGUMENT_SUCCESS]
-            && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.GroupReceiver;
-            // Add or update a certain receiver
-            if (receiver.type === undefined) {
-                receiver.type = 'group';
-            }
-
-            this.receivers.extendGroup(receiver);
-
-            return {
-                success: true,
-                data: receiver,
-            };
-        }
-
-        let msg = null;
-        if (data[WebClientService.ARGUMENT_ERROR] !== undefined) {
-            msg = data[WebClientService.ARGUMENT_ERROR];
-        }
-
-        return {
-            success: false,
-            message: msg,
-        };
+    private _receiveResponseContact(message: threema.WireMessage):
+                                    threema.PromiseRequestResult<threema.ContactReceiver> {
+        return this._receiveResponseReceiver(message, 'contact');
     }
 
     /**
-     * Handling new or modified group
+     * Handle new or modified groups.
      */
-    // tslint:disable-next-line: max-line-length
-    private _receiveResponseDistributionList(message: threema.WireMessage): threema.PromiseRequestResult<threema.DistributionListReceiver> {
-        this.$log.debug('Received distribution list response');
-        // Unpack and validate data
-        const data = message.data;
-        if (data === undefined) {
-            this.$log.warn('Invalid distribution list response, data missing');
-            return;
-        }
-
-        if (data[WebClientService.ARGUMENT_SUCCESS]
-            && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.DistributionListReceiver;
-            // Add or update a certain receiver
-            if (receiver.type === undefined) {
-                receiver.type = 'distributionList';
-            }
-
-            this.receivers.extendDistributionList(receiver);
-
-            return {
-                success: true,
-                data: receiver,
-            };
-        }
-
-        let msg = null;
-        if (data[WebClientService.ARGUMENT_MESSAGE] !== undefined) {
-            msg = data[WebClientService.ARGUMENT_MESSAGE];
-        }
-
-        return {
-            success: false,
-            message: msg,
-        };
+    private _receiveResponseGroup(message: threema.WireMessage):
+                                  threema.PromiseRequestResult<threema.GroupReceiver> {
+        return this._receiveResponseReceiver(message, 'group');
     }
 
-    private _receiveResponseCreateMessage(message: threema.WireMessage):
-    threema.PromiseRequestResult<string> {
+    /**
+     * Handle new or modified distribution lists.
+     */
+    private _receiveResponseDistributionList(message: threema.WireMessage):
+                                             threema.PromiseRequestResult<threema.DistributionListReceiver> {
+        return this._receiveResponseReceiver(message, 'distributionList');
+    }
+
+    private _receiveResponseCreateMessage(message: threema.WireMessage): threema.PromiseRequestResult<string> {
         this.$log.debug('Received create message response');
+
         // Unpack data and arguments
         const args = message.args;
         const data = message.data;
 
-        if (args === undefined
-            || data === undefined) {
-            this.$log.warn('Invalid create received, arguments or data missing');
-            return;
+        if (args === undefined || data === undefined) {
+            this.$log.warn('Invalid create message received, arguments or data missing');
+            return this.promiseRequestError('invalid_response');
         }
 
-        const receiverType = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
-        const receiverId = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const temporaryId = args[WebClientService.ARGUMENT_TEMPORARY_ID];
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                const receiverType: threema.ReceiverType = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
+                const receiverId: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
+                const temporaryId: string = args[WebClientService.ARGUMENT_TEMPORARY_ID];
 
-        if (data[WebClientService.ARGUMENT_SUCCESS]) {
-            const messageId: string = data[WebClientService.ARGUMENT_MESSAGE_ID];
-            if (receiverType === undefined || receiverId === undefined ||
-                temporaryId === undefined || messageId === undefined) {
-                this.$log.warn('Invalid create received [type, id or temporaryId arg ' +
-                    'or messageId in data missing]');
-                return;
-            }
+                const messageId: string = data[WebClientService.ARGUMENT_MESSAGE_ID];
+                if (receiverType === undefined || receiverId === undefined ||
+                    temporaryId === undefined || messageId === undefined) {
+                    this.$log.warn('Invalid create received [type, id, temporaryId arg ' +
+                        'or messageId in data missing]');
+                    return this.promiseRequestError('invalid_response');
+                }
 
-            this.messages.bindTemporaryToMessageId({
-                type: receiverType,
-                id: receiverId,
-            } as threema.Receiver, temporaryId, messageId);
+                this.messages.bindTemporaryToMessageId(
+                    {
+                        type: receiverType,
+                        id: receiverId,
+                    } as threema.Receiver,
+                    temporaryId,
+                    messageId,
+                );
 
-            return {
-                success: true,
-                data: messageId,
-            };
+                return { success: true, data: messageId };
+            case false:
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
+            default:
+                this.$log.error('Invalid create message response, success field is not a boolean');
+                return this.promiseRequestError('invalid_response');
         }
-
-        return {
-            success: false,
-            message: data[WebClientService.ARGUMENT_ERROR],
-        };
     }
 
     private _receiveResponseConversations(message: threema.WireMessage) {
@@ -1796,26 +1767,20 @@ export class WebClientService {
         }
     }
 
-    private _receiveResponseAvatar(message: threema.WireMessage): any {
+    private _receiveResponseAvatar(message: threema.WireMessage): threema.PromiseRequestResult<any> {
         this.$log.debug('Received avatar response');
 
         // Unpack data and arguments
         const args = message.args;
         if (args === undefined) {
             this.$log.warn('Invalid message response: arguments missing');
-            return {
-                success: false,
-                data: 'invalid_response',
-            };
+            return this.promiseRequestError('invalid_response');
         }
 
         const data = message.data;
         if (data === undefined) {
             // It's ok, a receiver without a avatar
-            return {
-                success: true,
-                data: null,
-            };
+            return { success: true, data: null };
         }
 
         // Unpack required argument fields
@@ -1824,10 +1789,7 @@ export class WebClientService {
         const highResolution = args[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION];
         if (type === undefined || id === undefined || highResolution === undefined) {
             this.$log.warn('Invalid avatar response, argument field missing');
-            return {
-                success: false,
-                data: 'invalid_response',
-            };
+            return this.promiseRequestError('invalid_response');
         }
 
         // Set avatar for receiver according to resolution
@@ -1840,13 +1802,10 @@ export class WebClientService {
         const avatar = this.$filter('bufferToUrl')(data, 'image/png');
         receiverData.avatar[field] = avatar;
 
-        return {
-            success: true,
-            data: avatar,
-        };
+        return { success: true, data: avatar };
     }
 
-    private _receiveResponseThumbnail(message: threema.WireMessage): any {
+    private _receiveResponseThumbnail(message: threema.WireMessage): threema.PromiseRequestResult<any> {
         this.$log.debug('Received thumbnail response');
 
         // Unpack data and arguments
@@ -2385,7 +2344,7 @@ export class WebClientService {
         this.$log.warn('Ignored request with type:', type);
     }
 
-    private _receivePromise(message: any, receiveResult: any) {
+    private _receivePromise(message: any, receiveResult: threema.PromiseRequestResult<any>) {
         if (
             message !== undefined
             && message.args !== undefined
@@ -2394,10 +2353,13 @@ export class WebClientService {
             const promiseId = message.args[WebClientService.ARGUMENT_TEMPORARY_ID];
 
             if (this.requestPromises.has(promiseId)) {
-                if (receiveResult.success) {
-                    this.requestPromises.get(promiseId).resolve(receiveResult.data);
+                const promise = this.requestPromises.get(promiseId);
+                if (receiveResult === null || receiveResult === undefined) {
+                    promise.reject('unknown');
+                } else if (receiveResult.success) {
+                    promise.resolve(receiveResult.data);
                 } else {
-                    this.requestPromises.get(promiseId).reject(receiveResult.message);
+                    promise.reject(receiveResult.error);
                 }
                 // remove from map
                 this.requestPromises.delete(promiseId);
@@ -2407,7 +2369,7 @@ export class WebClientService {
 
     private _receiveResponse(type, message): void {
         // Dispatch response
-        let receiveResult;
+        let receiveResult: threema.PromiseRequestResult<any>;
         switch (type) {
             case WebClientService.SUB_TYPE_RECEIVER:
                 this._receiveResponseReceivers(message);
@@ -2439,7 +2401,7 @@ export class WebClientService {
                 receiveResult = this._receiveResponseContactDetail(message);
                 break;
             case WebClientService.SUB_TYPE_ALERT:
-                receiveResult = this._receiveAlert(message);
+                this._receiveAlert(message);
                 break;
             case WebClientService.SUB_TYPE_GROUP_SYNC:
                 receiveResult = this._receiveGroupSync(message);
@@ -2451,8 +2413,8 @@ export class WebClientService {
                 this.$log.warn('Ignored response with type:', type);
                 return;
         }
-        this._receivePromise(message, receiveResult);
 
+        this._receivePromise(message, receiveResult);
     }
 
     private _receiveUpdate(type, message): void {
@@ -2486,7 +2448,6 @@ export class WebClientService {
         }
 
         this._receivePromise(message, receiveResult);
-
     }
 
     private _receiveCreate(type, message): void {
@@ -2527,7 +2488,6 @@ export class WebClientService {
         }
 
         this._receivePromise(message, receiveResult);
-
     }
 
     /**

@@ -25,6 +25,10 @@ export class ContactService {
         this.webClientService = webClientService;
     }
 
+    /**
+     * Return a promise that resolves if the system contact details of a
+     * ContactReceiver have been fetched or are already present.
+     */
     public requiredDetails(contactReceiver: threema.ContactReceiver): Promise<threema.ContactReceiver> {
         return new Promise((resolve, reject) => {
             if (contactReceiver.systemContact === undefined) {
