@@ -162,7 +162,7 @@ export class MessageService {
             state: 'pending',
             id: undefined,
             body: undefined,
-            date: ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2),
+            date: Math.floor(Date.now() / 1000),
             partnerId: receiver.id,
             isStatus: false,
             quote: undefined,
