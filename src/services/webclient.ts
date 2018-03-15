@@ -2275,7 +2275,7 @@ export class WebClientService {
 
     private _sendPromiseMessage(message: threema.WireMessage, timeout: number = null): Promise<any> {
         // create arguments on wired message
-        if (message.args === undefined) {
+        if (message.args === undefined || message.args === null) {
             message.args = {};
         }
         let promiseId = message.args[WebClientService.ARGUMENT_TEMPORARY_ID];
