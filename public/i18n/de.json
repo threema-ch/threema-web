@@ -178,18 +178,20 @@
     "validationError": {
         "modifyReceiver": {
             "unknown": "Ein unbekannter Fehler ist aufgetreten",
-            "internal_error": "Ein interner Fehler ist aufgetreten",
+            "badRequest": "Ungültige Anfrage (Protokollfehler?)",
             "timeout": "Timeout",
-            "invalid_identity": "Ungültige Threema-ID",
-            "invalid_response": "Ungültige Daten erhalten (Protokollfehler?)",
-            "invalid_contact": "Ungültiger Kontakt",
-            "invalid_group": "Ungültige Gruppe",
-            "invalid_distribution_list": "Ungültige Verteilerliste",
-            "no_group_members": "Keine Gruppenmitglieder definiert",
-            "no_distribution_list_members": "Keine Verteilerlisten-Mitglieder definiert",
-            "not_allowed": "Gruppe kann nicht verändert werden: Sie sind nicht der Administrator",
-            "not_allowed_linked": "Systemkontakt kann nicht verändert werden",
-            "not_allowed_business": "Avatar eines Threema Work Kontaktes kann nicht geändert werden"
+            "internalError": "Ein interner Fehler ist aufgetreten",
+            "invalidIdentity": "Ungültige Threema-ID",
+            "invalidContact": "Ungültiger Kontakt",
+            "invalidGroup": "Ungültige Gruppe",
+            "invalidDistributionList": "Ungültige Verteilerliste",
+            "notAllowed": "Bearbeitung nicht erlaubt",
+            "notAllowedLinked": "Systemkontakt kann nicht verändert werden",
+            "notAllowedBusiness": "Avatar eines Threema Work Kontaktes kann nicht geändert werden",
+            "disabledByPolicy": "Funktion wurde durch den Administrator deaktiviert",
+            "syncFailed": "Gruppen-Synchronisation fehlgeschlagen",
+            "noMembers": "Keine Mitglieder definiert",
+            "alreadyLeft": "Sie haben diese Gruppe bereits verlassen"
         }
     },
     "error": {

@@ -178,18 +178,20 @@
     "validationError": {
         "modifyReceiver": {
             "unknown": "An unknown error occurred",
-            "internal_error": "An internal error occurred",
+            "badRequest": "Invalid request (protocol error?)",
             "timeout": "Request timed out",
-            "invalid_identity": "Invalid Threema-ID",
-            "invalid_response": "Invalid response (protocol error?)",
-            "invalid_contact": "Invalid contact ID",
-            "invalid_group": "Invalid group ID",
-            "invalid_distribution_list": "Invalid distribution list ID",
-            "no_group_members": "No group members defined",
-            "no_distribution_list_members": "No distribution list members defined",
-            "not_allowed": "Group cannot be changed: You're not the admin",
-            "not_allowed_linked": "Contact cannot be changed: It's linked to a system contact",
-            "not_allowed_business": "Contact avatar cannot be changed: It's a Threema Work contact"
+            "internalError": "An internal error occurred",
+            "invalidIdentity": "Invalid Threema-ID",
+            "invalidContact": "Invalid contact ID",
+            "invalidGroup": "Invalid group ID",
+            "invalidDistributionList": "Invalid distribution list ID",
+            "notAllowed": "Modification not allowed",
+            "notAllowedLinked": "Contact cannot be changed: It's linked to a system contact",
+            "notAllowedBusiness": "Contact avatar cannot be changed: It's a Threema Work contact",
+            "disabledByPolicy": "Feature disabled by administrator",
+            "syncFailed": "Group synchronization failed",
+            "noMembers": "No members defined",
+            "alreadyLeft": "You have already left this group"
         }
     },
     "error": {
