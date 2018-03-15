@@ -2542,7 +2542,7 @@ export class WebClientService {
      */
     private handleIncomingMessageBytes(bytes: Uint8Array): void {
         this.$log.debug('New incoming message (' + bytes.byteLength + ' bytes)');
-        if (this.config.MSG_DEBUGGING) {
+        if (this.config.MSGPACK_DEBUGGING) {
             this.$log.debug('Incoming message payload: ' + msgpackVisualizer(bytes));
         }
 

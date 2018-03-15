@@ -32,7 +32,8 @@ export default {
 
     // Debugging options
     DEBUG: false,
-    MSG_DEBUGGING: false,
+    MSG_DEBUGGING: false, // Log all incoming and outgoing messages
+    MSGPACK_DEBUGGING: false, // Log URLs to the msgpack visualizer
     ICE_DEBUGGING: false,
 
 } as threema.Config;

@@ -457,6 +457,7 @@ declare namespace threema {
         PUSH_URL: string;
         DEBUG: boolean;
         MSG_DEBUGGING: boolean;
+        MSGPACK_DEBUGGING: boolean;
         ICE_DEBUGGING: boolean;
     }
 
