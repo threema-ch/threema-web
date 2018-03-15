@@ -46,7 +46,12 @@ declare namespace threema {
                        'status' | 'ballot' | 'file' | 'voipStatus' | 'unknown';
     type MessageState = 'delivered' | 'read' | 'send-failed' | 'sent' | 'user-ack' |
                         'user-dec' | 'pending' | 'sending';
-    type InitializationStep = 'client info' | 'conversations' | 'receivers';
+
+    const enum InitializationStep {
+        ClientInfo = 'client info',
+        Conversations = 'conversations',
+        Receivers = 'receivers',
+    }
 
     interface InitializationStepRoutine {
         requiredSteps: InitializationStep[];

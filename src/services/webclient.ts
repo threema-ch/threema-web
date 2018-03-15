@@ -36,6 +36,9 @@ import {StateService} from './state';
 import {TitleService} from './title';
 import {VersionService} from './version';
 
+// Aliases
+import InitializationStep = threema.InitializationStep;
+
 class WebClientDefault {
     private avatar: threema.AvatarRegistry = {
         group: {
@@ -80,6 +83,7 @@ export class WebClientService {
     private static TYPE_CREATE = 'create';
     private static TYPE_DELETE = 'delete';
     private static SUB_TYPE_RECEIVER = 'receiver';
+    private static SUB_TYPE_RECEIVERS = 'receivers';
     private static SUB_TYPE_CONVERSATIONS = 'conversations';
     private static SUB_TYPE_CONVERSATION = 'conversation';
     private static SUB_TYPE_MESSAGE = 'message';
@@ -495,7 +499,11 @@ export class WebClientService {
 
         // Resolve startup promise once initialization is done
         if (this.startupPromise !== null) {
-            this.runAfterInitializationSteps(['client info', 'conversations', 'receivers'], () => {
+            this.runAfterInitializationSteps([
+                InitializationStep.ClientInfo,
+                InitializationStep.Conversations,
+                InitializationStep.Receivers,
+            ], () => {
                 this.stateService.updateConnectionBuildupState('done');
                 this.startupPromise.resolve();
                 this.startupPromise = null;
@@ -733,11 +741,11 @@ export class WebClientService {
     }
 
     /**
-     * Send a receiver request.
+     * Send a receivers request.
      */
     public requestReceivers(): void {
-        this.$log.debug('Sending receiver request');
-        this._sendRequest(WebClientService.SUB_TYPE_RECEIVER);
+        this.$log.debug('Sending receivers request');
+        this._sendRequest(WebClientService.SUB_TYPE_RECEIVERS);
     }
 
     /**
@@ -1474,18 +1482,18 @@ export class WebClientService {
     }
 
     private _receiveResponseReceivers(message: threema.WireMessage): void {
-        this.$log.debug('Received receiver response');
+        this.$log.debug('Received receivers response');
 
         // Unpack and validate data
         const data = message.data;
         if (data === undefined) {
-            this.$log.warn('Invalid receiver response, data missing');
+            this.$log.warn('Invalid receivers response, data missing');
             return;
         }
 
         // Store receivers
         this.receivers.set(data);
-        this.registerInitializationStep('receivers');
+        this.registerInitializationStep(InitializationStep.Receivers);
     }
 
     private _receiveResponseContactDetail(message: threema.WireMessage): threema.PromiseRequestResult<any> {
@@ -1676,7 +1684,7 @@ export class WebClientService {
             }
         }
         this.updateUnreadCount();
-        this.registerInitializationStep('conversations');
+        this.registerInitializationStep(InitializationStep.Conversations);
     }
 
     private _receiveResponseConversation(message: threema.WireMessage) {
@@ -2096,7 +2104,7 @@ export class WebClientService {
             fingerprint: this.fingerPrintService.generate(this.clientInfo.myAccount.publicKey),
         } as threema.Identity;
 
-        this.registerInitializationStep('client info');
+        this.registerInitializationStep(InitializationStep.ClientInfo);
     }
 
     public setPassword(password: string) {
@@ -2403,17 +2411,18 @@ export class WebClientService {
     }
 
     private _receiveResponse(type, message): void {
-        // Dispatch response
         let receiveResult: threema.PromiseRequestResult<any>;
         switch (type) {
             case WebClientService.SUB_TYPE_CONFIRM_ACTION:
                 receiveResult = this._receiveResponseConfirmAction(message);
                 break;
-            case WebClientService.SUB_TYPE_RECEIVER:
+            case WebClientService.SUB_TYPE_RECEIVERS:
                 this._receiveResponseReceivers(message);
                 break;
             case WebClientService.SUB_TYPE_CONVERSATIONS:
-                this.runAfterInitializationSteps(['receivers'], () => {
+                this.runAfterInitializationSteps([
+                    InitializationStep.Receivers,
+                ], () => {
                     this._receiveResponseConversations(message);
                 });
                 break;
@@ -2453,7 +2462,6 @@ export class WebClientService {
     }
 
     private _receiveUpdate(type, message): void {
-        // Dispatch update
         let receiveResult;
         switch (type) {
             case WebClientService.SUB_TYPE_RECEIVER:
@@ -2486,7 +2494,6 @@ export class WebClientService {
     }
 
     private _receiveCreate(type, message): void {
-        // Dispatch response
         let receiveResult: threema.PromiseRequestResult<any>;
         switch (type) {
             case WebClientService.SUB_TYPE_CONTACT:
@@ -2511,7 +2518,6 @@ export class WebClientService {
     }
 
     private _receiveDelete(type, message): void {
-        // Dispatch update
         let receiveResult;
         switch (type) {
             case WebClientService.SUB_TYPE_CONTACT_DETAIL:
