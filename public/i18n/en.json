@@ -179,7 +179,7 @@
         "modifyReceiver": {
             "unknown": "An unknown error occurred",
             "internal_error": "An internal error occurred",
-            "timeout": "Timed out",
+            "timeout": "Request timed out",
             "invalid_identity": "Invalid Threema-ID",
             "invalid_response": "Invalid response (protocol error?)",
             "invalid_contact": "Invalid contact ID",
