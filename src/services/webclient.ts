@@ -1248,7 +1248,7 @@ export class WebClientService {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
         };
 
-        return this._sendRequestPromise(WebClientService.SUB_TYPE_GROUP_SYNC, args);
+        return this._sendRequestPromise(WebClientService.SUB_TYPE_GROUP_SYNC, args, 10000);
     }
 
     public createDistributionList(members: string[], name: string = null): Promise<threema.DistributionListReceiver> {
@@ -2289,6 +2289,13 @@ export class WebClientService {
         );
     }
 
+    /**
+     * Send a request and return a promise.
+     *
+     * The promise will be resolved if a response arrives with the same temporary ID.
+     *
+     * @param timeout Optional request timeout in ms
+     */
     private _sendRequestPromise(type, args = null, timeout: number = null): Promise<any> {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_REQUEST,

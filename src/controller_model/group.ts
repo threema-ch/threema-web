@@ -224,8 +224,9 @@ export class GroupControllerModel implements threema.ControllerModel {
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((errorCode) => {
                 this.isLoading = false;
+                this.showError(errorCode);
             });
     }
 
@@ -255,5 +256,21 @@ export class GroupControllerModel implements threema.ControllerModel {
 
     public getMembers(): string[] {
         return this.members;
+    }
+
+    /**
+     * Show an error message in a dialog.
+     */
+    private showError(errorCode: string): void {
+        if (errorCode === undefined) {
+            errorCode = 'unknown';
+        }
+        this.$mdDialog.show(
+            this.$mdDialog.alert()
+                .clickOutsideToClose(true)
+                .title(this.group.displayName)
+                .textContent(this.$translate.instant('validationError.modifyReceiver.' + errorCode))
+                .ok(this.$translate.instant('common.OK')),
+        );
     }
 }
