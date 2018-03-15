@@ -1115,12 +1115,14 @@ export class WebClientService {
     }
 
     /**
-     * Send a add Contact request
+     * Add a contact receiver.
      */
     public addContact(threemaId: string): Promise<threema.ContactReceiver> {
-        return this._sendCreatePromise(WebClientService.SUB_TYPE_CONTACT, {
+        const args = null;
+        const data = {
             [WebClientService.ARGUMENT_IDENTITY]: threemaId,
-        });
+        };
+        return this._sendCreatePromise(WebClientService.SUB_TYPE_CONTACT, args, data);
     }
 
     /**
@@ -1163,30 +1165,37 @@ export class WebClientService {
     }
 
     /**
-     * Create a group receiver
+     * Create a group receiver.
      */
-    public createGroup(members: string[],
-                       name: string = null,
-                       avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
+    public createGroup(
+        members: string[],
+        name: string = null,
+        avatar?: ArrayBuffer,
+    ): Promise<threema.GroupReceiver> {
+        const args = null;
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
         } as object;
 
         if (avatar !== undefined) {
-            data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
         }
 
-        return this._sendCreatePromise(WebClientService.SUB_TYPE_GROUP, data);
+        return this._sendCreatePromise(WebClientService.SUB_TYPE_GROUP, args, data);
     }
 
+    /**
+     * Modify a group receiver.
+     */
     public modifyGroup(id: string,
                        members: string[],
                        name?: string,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
         // Prepare payload data
-        const data = {};
-        data[WebClientService.ARGUMENT_MEMBERS] = members;
+        const data = {
+            [WebClientService.ARGUMENT_MEMBERS]: members,
+        } as object;
         if (name !== undefined) {
             data[WebClientService.ARGUMENT_NAME] = name;
         }
@@ -1236,12 +1245,12 @@ export class WebClientService {
         return this._sendDeletePromise(WebClientService.SUB_TYPE_GROUP, args);
     }
 
+    /**
+     * Force-sync a group.
+     */
     public syncGroup(group: threema.GroupReceiver): Promise<any> {
         if (group === null || group === undefined || !group.access.canSync) {
-            return new Promise<any> (
-                (resolve, reject) => {
-                    reject('not allowed');
-                });
+            return Promise.reject('not allowed');
         }
 
         const args = {
@@ -1251,13 +1260,20 @@ export class WebClientService {
         return this._sendRequestPromise(WebClientService.SUB_TYPE_GROUP_SYNC, args, 10000);
     }
 
-    public createDistributionList(members: string[], name: string = null): Promise<threema.DistributionListReceiver> {
+    /**
+     * Create a new distribution list receiver.
+     */
+    public createDistributionList(
+        members: string[],
+        name: string = null,
+    ): Promise<threema.DistributionListReceiver> {
+        const args = null;
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
+        };
 
-        return this._sendCreatePromise(WebClientService.SUB_TYPE_DISTRIBUTION_LIST, data);
+        return this._sendCreatePromise(WebClientService.SUB_TYPE_DISTRIBUTION_LIST, args, data);
     }
 
     public modifyDistributionList(id: string,
@@ -1443,7 +1459,7 @@ export class WebClientService {
         const args = message.args;
         if (args === undefined) {
             this.$log.error('Invalid confirmAction response, args missing');
-            return this.promiseRequestError('invalid_response');
+            return this.promiseRequestError('invalidResponse');
         }
 
         switch (args[WebClientService.ARGUMENT_SUCCESS]) {
@@ -1453,7 +1469,7 @@ export class WebClientService {
                 return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
             default:
                 this.$log.error('Invalid confirmAction response, success field is not a boolean');
-                return this.promiseRequestError('invalid_response');
+                return this.promiseRequestError('invalidResponse');
         }
     }
 
@@ -1480,7 +1496,7 @@ export class WebClientService {
         const data = message.data;
         if (args === undefined || data === undefined) {
             this.$log.error('Invalid contact response, args or data missing');
-            return this.promiseRequestError('invalid_response');
+            return this.promiseRequestError('invalidResponse');
         }
 
         switch (args[WebClientService.ARGUMENT_SUCCESS]) {
@@ -1502,7 +1518,7 @@ export class WebClientService {
                 };
             default:
                 this.$log.error('Invalid contact response, success field is not a boolean');
-                return this.promiseRequestError('invalid_response');
+                return this.promiseRequestError('invalidResponse');
         }
     }
 
@@ -1530,7 +1546,7 @@ export class WebClientService {
         const data = message.data;
         if (args === undefined || data === undefined) {
             this.$log.error('Invalid ' + receiverType + ' response, args or data missing');
-            return this.promiseRequestError('invalid_response');
+            return this.promiseRequestError('invalidResponse');
         }
 
         switch (args[WebClientService.ARGUMENT_SUCCESS]) {
@@ -1560,7 +1576,7 @@ export class WebClientService {
                 return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
             default:
                 this.$log.error('Invalid ' + receiverType + ' response, success field is not a boolean');
-                return this.promiseRequestError('invalid_response');
+                return this.promiseRequestError('invalidResponse');
         }
     }
 
@@ -1597,7 +1613,7 @@ export class WebClientService {
 
         if (args === undefined || data === undefined) {
             this.$log.warn('Invalid create message received, arguments or data missing');
-            return this.promiseRequestError('invalid_response');
+            return this.promiseRequestError('invalidResponse');
         }
 
         switch (args[WebClientService.ARGUMENT_SUCCESS]) {
@@ -1611,7 +1627,7 @@ export class WebClientService {
                     temporaryId === undefined || messageId === undefined) {
                     this.$log.warn('Invalid create received [type, id, temporaryId arg ' +
                         'or messageId in data missing]');
-                    return this.promiseRequestError('invalid_response');
+                    return this.promiseRequestError('invalidResponse');
                 }
 
                 this.messages.bindTemporaryToMessageId(
@@ -1628,7 +1644,7 @@ export class WebClientService {
                 return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
             default:
                 this.$log.error('Invalid create message response, success field is not a boolean');
-                return this.promiseRequestError('invalid_response');
+                return this.promiseRequestError('invalidResponse');
         }
     }
 
@@ -1786,7 +1802,7 @@ export class WebClientService {
         const args = message.args;
         if (args === undefined) {
             this.$log.warn('Invalid message response: arguments missing');
-            return this.promiseRequestError('invalid_response');
+            return this.promiseRequestError('invalidResponse');
         }
 
         const data = message.data;
@@ -1801,7 +1817,7 @@ export class WebClientService {
         const highResolution = args[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION];
         if (type === undefined || id === undefined || highResolution === undefined) {
             this.$log.warn('Invalid avatar response, argument field missing');
-            return this.promiseRequestError('invalid_response');
+            return this.promiseRequestError('invalidResponse');
         }
 
         // Set avatar for receiver according to resolution
@@ -1826,7 +1842,7 @@ export class WebClientService {
             this.$log.warn('Invalid message response: arguments missing');
             return {
                 success: false,
-                data: 'invalid_response',
+                data: 'invalidResponse',
             };
         }
 
@@ -1848,7 +1864,7 @@ export class WebClientService {
             this.$log.warn('Invalid thumbnail response, argument field missing');
             return {
                 success: false,
-                data: 'invalid_response',
+                data: 'invalidResponse',
             };
         }
 
