@@ -1363,7 +1363,7 @@ export class WebClientService {
                     quoteText = message.body;
                     break;
                 case 'location':
-                    quoteText = message.location.poi;
+                    quoteText = message.location.description;
                     break;
                 case 'file':
                 case 'image':
@@ -2211,7 +2211,7 @@ export class WebClientService {
                         body = message.body;
                         break;
                     case 'location':
-                        body = messageTypeString + ': ' + message.location.poi;
+                        body = messageTypeString + ': ' + message.location.description;
                         break;
                     case 'file':
                         if (message.file.type === 'image/gif') {

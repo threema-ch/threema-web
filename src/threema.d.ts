@@ -118,9 +118,10 @@ declare namespace threema {
         lat: number;
         lon: number;
         accuracy: number;
-        address: string;
-        poi: string;
+        description: string;
+        address?: string;
     }
+
     /**
      * All possible receiver types.
      */
