@@ -891,18 +891,9 @@ export class WebClientService {
     }
 
     /**
+     * Mark a message as read.
      */
     public requestRead(receiver, newestMessage: threema.Message): void {
-        // Check if the receiver has an avatar or the avatar already exists
-        // let field: string = highResolution ? 'high' : 'low';
-        // let data = this.receivers.getData(receiver);
-        // if (data && data['avatar'] && data['avatar'][field]) {
-        //     return;
-        // }
-        // if (data && data.hasAvatar === false) {
-        //     return;
-        // }
-
         // Create arguments and send request
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
