@@ -36,7 +36,7 @@ export default [
                         rawText = message.body;
                         break;
                     case 'location':
-                        rawText = message.location.poi;
+                        rawText = message.location.description;
                         break;
                     case 'file':
                         // Prefer caption for file messages, if available
