@@ -27,8 +27,8 @@
 
         <!-- Thumbnails -->
         <span class="in-view-indicator" ng-if="ctrl.type !== 'location'" in-view="ctrl.thumbnailInView($inview)"></span>
-        <img ng-if="ctrl.thumbnail !== null" ng-src="{{ctrl.thumbnail}}">
-        <div ng-if="ctrl.message.thumbnail != undefined" class="thumbnail-loader">
+        <img ng-if="ctrl.thumbnail" ng-src="{{ctrl.thumbnail}}">
+        <div ng-if="ctrl.message.thumbnail && !ctrl.thumbnail" class="thumbnail-loader">
             <img ng-src="{{ ctrl.message.thumbnail.preview | bufferToUrl: 'image/png' }}">
         </div>
 
