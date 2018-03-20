@@ -107,7 +107,6 @@ export class WebClientService {
     private static SUB_TYPE_CLEAN_RECEIVER_CONVERSATION = 'cleanReceiverConversation';
     private static SUB_TYPE_CONFIRM_ACTION = 'confirmAction';
     private static ARGUMENT_MODE = 'mode';
-    private static ARGUMENT_MODE_REFRESH = 'refresh';
     private static ARGUMENT_MODE_NEW = 'new';
     private static ARGUMENT_MODE_MODIFIED = 'modified';
     private static ARGUMENT_MODE_REMOVED = 'removed';
@@ -1971,7 +1970,7 @@ export class WebClientService {
     }
 
     private _receiveUpdateReceiver(message: threema.WireMessage): void {
-        this.$log.debug('Received receiver update');
+        this.$log.debug('Received receiver update or delete');
 
         // Unpack data and arguments
         const args = message.args;
@@ -1984,9 +1983,8 @@ export class WebClientService {
         // Unpack required argument fields
         const type = args[WebClientService.ARGUMENT_RECEIVER_TYPE] as threema.ReceiverType;
         const id = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const mode = args[WebClientService.ARGUMENT_MODE];
-        if (type === undefined || mode === undefined ||
-                (mode !== WebClientService.ARGUMENT_MODE_REFRESH && id === undefined)) {
+        const mode: 'new' | 'modified' | 'removed' = args[WebClientService.ARGUMENT_MODE];
+        if (type === undefined || mode === undefined || id === undefined) {
             this.$log.warn('Invalid receiver update, argument field missing');
             return;
         }
@@ -1998,7 +1996,7 @@ export class WebClientService {
                 // Add or update a certain receiver
                 const updatedReceiver = this.receivers.extend(type, data);
 
-                // remove all cached messages if the receiver was moved to "locked" state
+                // Remove all cached messages if the receiver was moved to "locked" state
                 if (updatedReceiver !== undefined && updatedReceiver.locked) {
                     this.messages.clearReceiverMessages(updatedReceiver);
                 }
@@ -2007,22 +2005,45 @@ export class WebClientService {
                 // Remove a certain receiver
                 (this.receivers.get(type) as Map<string, threema.Receiver>).delete(id);
                 break;
-            case WebClientService.ARGUMENT_MODE_REFRESH:
-                // Refresh lists of receivers
-                if (type === 'me') {
-                    this.receivers.setMe(data);
-                } else if (type === 'contact') {
-                    this.receivers.setContacts(data);
-                } else if (type === 'group') {
-                    this.receivers.setGroups(data);
-                } else if (type === 'distributionList') {
-                    this.receivers.setDistributionLists(data);
-                } else {
-                    this.$log.warn('Unknown receiver type:', type);
-                }
-                break;
             default:
                 this.$log.warn('Invalid receiver response, unknown mode:', mode);
+        }
+    }
+
+    private _receiveUpdateReceivers(message: threema.WireMessage): void {
+        this.$log.debug('Received receivers update');
+
+        // Unpack data and arguments
+        const args = message.args;
+        const data = message.data;
+        if (args === undefined || data === undefined) {
+            this.$log.warn('Invalid receiver update, data or arguments missing');
+            return;
+        }
+
+        // Unpack required argument fields
+        const type = args[WebClientService.ARGUMENT_RECEIVER_TYPE] as threema.ReceiverType;
+        if (type === undefined) {
+            this.$log.warn('Invalid receivers update, argument field missing');
+            return;
+        }
+
+        // Refresh lists of receivers
+        switch (type) {
+            case 'me':
+                this.receivers.setMe(data);
+                break;
+            case 'contact':
+                this.receivers.setContacts(data);
+                break;
+            case 'group':
+                this.receivers.setGroups(data);
+                break;
+            case 'distributionList':
+                this.receivers.setDistributionLists(data);
+                break;
+            default:
+                this.$log.warn('Unknown receiver type:', type);
         }
     }
 
@@ -2466,6 +2487,9 @@ export class WebClientService {
         switch (type) {
             case WebClientService.SUB_TYPE_RECEIVER:
                 this._receiveUpdateReceiver(message);
+                break;
+            case WebClientService.SUB_TYPE_RECEIVERS:
+                this._receiveUpdateReceivers(message);
                 break;
             case WebClientService.SUB_TYPE_MESSAGE:
                 this._receiveUpdateMessage(message);
