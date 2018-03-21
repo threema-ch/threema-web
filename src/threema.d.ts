@@ -406,14 +406,25 @@ declare namespace threema {
         pushToken: string | null;
     }
 
+    const enum BrowserName {
+        Chrome = 'chrome',
+        Firefox = 'firefox',
+        InternetExplorer = 'ie',
+        Edge = 'edge',
+        Opera = 'opera',
+        Safari = 'safari',
+    }
+
     interface BrowserInfo {
         chrome: boolean;
         firefox: boolean;
-        msie: boolean;
+        ie: boolean;
+        edge: boolean;
         opera: boolean;
         safari: boolean;
-        version: string;
-        textInfo: string;
+        name?: BrowserName;
+        version?: string;
+        textInfo?: string;
     }
 
     interface PromiseCallbacks {
