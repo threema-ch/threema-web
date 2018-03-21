@@ -30,6 +30,7 @@ import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
+import {isContactReceiver} from '../typeguards';
 
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
@@ -394,7 +395,7 @@ class ConversationController {
                     initialText: $stateParams.initParams ? $stateParams.initParams.text : '',
                 };
 
-                if (this.receiver.type === 'contact') {
+                if (isContactReceiver(this.receiver)) {
                     this.isTyping = () => this.webClientService.isTyping(this.receiver as threema.ContactReceiver);
                 }
             }

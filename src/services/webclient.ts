@@ -116,7 +116,7 @@ export class WebClientService {
     private static ARGUMENT_REFERENCE_MSG_ID = 'refMsgId';
     private static ARGUMENT_AVATAR = 'avatar';
     private static ARGUMENT_AVATAR_HIGH_RESOLUTION = 'highResolution';
-    private static ARGUMENT_CONTACT_IS_TYPING = 'isTyping';
+    private static ARGUMENT_IS_TYPING = 'isTyping';
     private static ARGUMENT_MESSAGE_ID = 'messageId';
     private static ARGUMENT_HAS_MORE = 'more';
     private static ARGUMENT_MESSAGE_ACKNOWLEDGED = 'acknowledged';
@@ -1098,14 +1098,10 @@ export class WebClientService {
         this._sendDelete(WebClientService.SUB_TYPE_MESSAGE, args);
     }
 
-    public sendMeIsTyping(receiver, isTyping: boolean): void {
-        // Create arguments and send create
-        const args = {
-            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
-            [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_CONTACT_IS_TYPING]: isTyping,
-        };
-        this._sendRequest(WebClientService.SUB_TYPE_TYPING, args);
+    public sendMeIsTyping(receiver: threema.ContactReceiver, isTyping: boolean): void {
+        const args = {[WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id};
+        const data = {[WebClientService.ARGUMENT_IS_TYPING]: isTyping};
+        this._sendUpdate(WebClientService.SUB_TYPE_TYPING, args, data);
     }
 
     public sendKeyPersisted(): void {
@@ -1319,11 +1315,9 @@ export class WebClientService {
 
     /**
      * Return whether the specified contact is currently typing.
-     *
-     * This always returns false for groups and distribution lists.
      */
-    public isTyping(receiver: threema.ContactReceiver): boolean {
-        return this.typing.isTyping(receiver);
+    public isTyping(contact: threema.ContactReceiver): boolean {
+        return this.typing.isTyping(contact);
     }
 
     /**
@@ -2050,17 +2044,23 @@ export class WebClientService {
         }
 
         // Unpack required argument fields
-        const id: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const isTyping: boolean = args[WebClientService.ARGUMENT_CONTACT_IS_TYPING];
-        if (id === undefined || isTyping === undefined) {
+        const identity: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
+        if (identity === undefined) {
             this.$log.warn('Invalid typing update, argument field missing');
+            return;
+        }
+
+        // Unpack required data fields
+        const isTyping: boolean = data[WebClientService.ARGUMENT_IS_TYPING];
+        if (isTyping === undefined) {
+            this.$log.warn('Invalid typing update, data field missing');
             return;
         }
 
         // Store or remove typing notification.
         // Note that we know that the receiver must be a contact, because
         // groups and distribution lists can't type.
-        const receiver = {id: id, type: 'contact'}  as threema.ContactReceiver;
+        const receiver = {id: identity, type: 'contact'}  as threema.ContactReceiver;
         if (isTyping === true) {
             this.typing.setTyping(receiver);
         } else {
@@ -2281,15 +2281,31 @@ export class WebClientService {
         return false;
     }
 
-    private _sendRequest(type, args = null): void {
+    private _sendRequest(type, args?: object, data?: object): void {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_REQUEST,
             subType: type,
         };
-        if (args) {
+        if (args !== undefined) {
             message.args = args;
         }
+        if (data !== undefined) {
+            message.data = data;
+        }
+        this.send(message);
+    }
 
+    private _sendUpdate(type, args?: object, data?: object): void {
+        const message: threema.WireMessage = {
+            type: WebClientService.TYPE_UPDATE,
+            subType: type,
+        };
+        if (args !== undefined) {
+            message.args = args;
+        }
+        if (data !== undefined) {
+            message.data = data;
+        }
         this.send(message);
     }
 
@@ -2338,7 +2354,6 @@ export class WebClientService {
             subType: type,
             args: args,
         };
-
         return this._sendPromiseMessage(message, timeout);
     }
 
@@ -2359,7 +2374,6 @@ export class WebClientService {
             data: data,
             args: args,
         };
-
         return this._sendPromiseMessage(message, timeout);
     }
 
