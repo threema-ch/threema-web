@@ -42,7 +42,10 @@ export class ControllerModelService {
         this.webClientService = webClientService;
     }
 
-    public me(receiver: threema.MeReceiver, mode: ControllerModelMode): threema.ControllerModel {
+    public me(
+        receiver: threema.MeReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.MeReceiver> {
         return new MeControllerModel(
             this.$log,
             this.$translate,
@@ -53,7 +56,10 @@ export class ControllerModelService {
         );
     }
 
-    public contact(receiver: threema.ContactReceiver, mode: ControllerModelMode): threema.ControllerModel {
+    public contact(
+        receiver: threema.ContactReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.ContactReceiver> {
         return new ContactControllerModel(
             this.$log,
             this.$translate,
@@ -64,7 +70,10 @@ export class ControllerModelService {
         );
     }
 
-    public group(receiver: threema.GroupReceiver, mode: ControllerModelMode): threema.ControllerModel {
+    public group(
+        receiver: threema.GroupReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.GroupReceiver> {
         return new GroupControllerModel(
             this.$log,
             this.$translate,
@@ -75,8 +84,10 @@ export class ControllerModelService {
         );
     }
 
-    public distributionList(receiver: threema.DistributionListReceiver,
-                            mode: ControllerModelMode): threema.ControllerModel {
+    public distributionList(
+        receiver: threema.DistributionListReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.DistributionListReceiver> {
         return new DistributionListControllerModel(
             this.$log,
             this.$translate,

@@ -20,7 +20,7 @@ import {WebClientService} from '../services/webclient';
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
 
-export class DistributionListControllerModel implements threema.ControllerModel {
+export class DistributionListControllerModel implements threema.ControllerModel<threema.DistributionListReceiver> {
 
     private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
