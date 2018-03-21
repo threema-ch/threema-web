@@ -16,8 +16,10 @@
  */
 
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
 import {AvatarControllerModel} from './avatar';
+
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
 
 export class GroupControllerModel implements threema.ControllerModel {
 
@@ -34,7 +36,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     private webClientService: WebClientService;
     private avatarController: AvatarControllerModel;
     private mode: ControllerModelMode;
-    private onRemovedCallback: any;
+    private onRemovedCallback: threema.OnRemovedCallback;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
@@ -84,7 +86,7 @@ export class GroupControllerModel implements threema.ControllerModel {
         return this.webClientService.getMaxGroupMemberSize();
     }
 
-    public setOnRemoved(callback: any): void {
+    public setOnRemoved(callback: threema.OnRemovedCallback): void {
         this.onRemovedCallback = callback;
     }
 

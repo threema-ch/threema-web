@@ -16,8 +16,10 @@
  */
 
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
 import {AvatarControllerModel} from './avatar';
+
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
 
 export class ContactControllerModel implements threema.ControllerModel {
 
@@ -26,7 +28,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
 
-    private onRemovedCallback: any;
+    private onRemovedCallback: threema.OnRemovedCallback;
     public firstName: string;
     public lastName: string;
     public identity: string;
@@ -83,7 +85,7 @@ export class ContactControllerModel implements threema.ControllerModel {
         }
     }
 
-    public setOnRemoved(callback: any): void {
+    public setOnRemoved(callback: threema.OnRemovedCallback): void {
         this.onRemovedCallback = callback;
     }
 
@@ -164,7 +166,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     }
 
     public onChangeMembers(identities: string[]): void {
-        return null;
+        // Do nothing
     }
 
     public getMembers(): string[] {
