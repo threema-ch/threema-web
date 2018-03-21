@@ -30,7 +30,9 @@ import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
+
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
 
 class DialogController {
     public static $inject = ['$mdDialog'];

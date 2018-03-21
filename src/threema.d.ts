@@ -426,18 +426,74 @@ declare namespace threema {
         data?: T;
     }
 
+    type OnRemovedCallback = (identity: string) => void;
+
+    const enum ControllerModelMode {
+        NEW = 'new',
+        VIEW = 'view',
+        EDIT = 'edit',
+        CHAT = 'chat',
+    }
+
     interface ControllerModel {
+        /**
+         * The title shown in the header.
+         */
         subject: string;
+
+        /**
+         * Loading state.
+         */
         isLoading: boolean;
-        save(): any;
+
+        /**
+         * Save the changes, return a promise with the receiver.
+         */
+        save(): Promise<Receiver>;
+
+        /**
+         * Delete all messages in this conversation.
+         */
         clean(ev: any): any;
+
+        /**
+         * Validate this receiver.
+         */
         isValid(): boolean;
+
+        /**
+         * Can this receiver be viewed?
+         */
         canView(): boolean;
+
+        /**
+         * Can this receiver be edited?
+         */
         canEdit(): boolean;
+
+        /**
+         * Can this receiver be cleaned?
+         */
         canClean(): boolean;
-        getMode(): number;
-        setOnRemoved(callback: any): void;
+
+        /**
+         * The mode, e.g. view or edit this receiver.
+         */
+        getMode(): ControllerModelMode;
+
+        /**
+         * Set the on removed callback.
+         */
+        setOnRemoved(callback: OnRemovedCallback): void;
+
+        /**
+         * Callback called when the members change.
+         */
         onChangeMembers(identities: string[]): void;
+
+        /**
+         * Return the members of this receiver.
+         */
         getMembers(): string[];
     }
 

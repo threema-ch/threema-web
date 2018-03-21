@@ -16,7 +16,9 @@
  */
 
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
+
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
 
 export class DistributionListControllerModel implements threema.ControllerModel {
 
@@ -32,7 +34,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
     private distributionList: threema.DistributionListReceiver;
     private webClientService: WebClientService;
     private mode: ControllerModelMode;
-    private onRemovedCallback: any;
+    private onRemovedCallback: threema.OnRemovedCallback;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
@@ -72,7 +74,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
         }
     }
 
-    public setOnRemoved(callback: any): void {
+    public setOnRemoved(callback: threema.OnRemovedCallback): void {
         this.onRemovedCallback = callback;
     }
 
