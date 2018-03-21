@@ -195,7 +195,7 @@ class ConversationController {
     private $mdToast: ng.material.IToastService;
 
     // Controller model
-    private controllerModel: threema.ControllerModel;
+    private controllerModel: threema.ControllerModel<threema.Receiver>;
 
     // DOM Elements
     private domChatElement: HTMLElement;
@@ -1084,7 +1084,7 @@ class ReceiverDetailController {
     private isWorkReceiver = false;
     private showBlocked = () => false;
 
-    private controllerModel: threema.ControllerModel;
+    private controllerModel: threema.ControllerModel<threema.Receiver>;
 
     public static $inject = [
         '$log', '$stateParams', '$state', '$mdDialog', '$translate',
@@ -1246,7 +1246,7 @@ class ReceiverEditController {
     private execute: ExecuteService;
     public loading = false;
 
-    private controllerModel: threema.ControllerModel;
+    private controllerModel: threema.ControllerModel<threema.Receiver>;
     public type: string;
 
     public static $inject = [
@@ -1358,7 +1358,7 @@ class ReceiverCreateController {
     public type: string;
     private execute: ExecuteService;
 
-    public controllerModel: threema.ControllerModel;
+    public controllerModel: threema.ControllerModel<threema.Receiver>;
 
     public static $inject = ['$stateParams', '$mdDialog', '$mdToast', '$translate',
         '$timeout', '$state', '$log', 'ControllerModelService'];

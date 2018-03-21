@@ -21,7 +21,7 @@ import {AvatarControllerModel} from './avatar';
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
 
-export class GroupControllerModel implements threema.ControllerModel {
+export class GroupControllerModel implements threema.ControllerModel<threema.GroupReceiver> {
 
     private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;

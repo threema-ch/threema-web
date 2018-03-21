@@ -20,7 +20,7 @@ import {AvatarControllerModel} from './avatar';
 
 import ControllerModelMode = threema.ControllerModelMode;
 
-export class MeControllerModel implements threema.ControllerModel {
+export class MeControllerModel implements threema.ControllerModel<threema.MeReceiver> {
     private logTag: string = '[MeControllerModel]';
 
     // Angular services
@@ -164,7 +164,7 @@ export class MeControllerModel implements threema.ControllerModel {
     /**
      * Save the changes, return a promise with the receiver.
      */
-    public save(): Promise<threema.ContactReceiver> {
+    public save(): Promise<threema.MeReceiver> {
         /*
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:

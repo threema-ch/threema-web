@@ -447,7 +447,7 @@ declare namespace threema {
         CHAT = 'chat',
     }
 
-    interface ControllerModel {
+    interface ControllerModel<T extends BaseReceiver> {
         /**
          * The title shown in the header.
          */
@@ -461,7 +461,7 @@ declare namespace threema {
         /**
          * Save the changes, return a promise with the receiver.
          */
-        save(): Promise<Receiver>;
+        save(): Promise<T>;
 
         /**
          * Delete all messages in this conversation.
