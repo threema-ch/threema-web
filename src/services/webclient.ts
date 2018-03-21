@@ -132,6 +132,9 @@ export class WebClientService {
     private static ARGUMENT_DELETE_TYPE = 'deleteType';
     private static ARGUMENT_ERROR = 'error';
     private static ARGUMENT_MAX_SIZE = 'maxSize';
+    private static ARGUMENT_USER_AGENT = 'userAgent';
+    private static ARGUMENT_BROWSER_NAME = 'browserName';
+    private static ARGUMENT_BROWSER_VERSION = 'browserVersion';
     private static DELETE_GROUP_TYPE_LEAVE = 'leave';
     private static DELETE_GROUP_TYPE_DELETE = 'delete';
     private static DATA_FIELD_BLOB_BLOB = 'blob';
@@ -733,9 +736,17 @@ export class WebClientService {
      */
     public requestClientInfo(): void {
         this.$log.debug('Sending client info request');
-        this._sendRequest(WebClientService.SUB_TYPE_CLIENT_INFO, {
-            userAgent: navigator.userAgent,
-        });
+        const browser = this.browserService.getBrowser();
+        const data: object = {
+            [WebClientService.ARGUMENT_USER_AGENT]: navigator.userAgent,
+        };
+        if (browser.name) {
+            data[WebClientService.ARGUMENT_BROWSER_NAME] = browser.name;
+        }
+        if (browser.version) {
+            data[WebClientService.ARGUMENT_BROWSER_VERSION] = browser.version;
+        }
+        this._sendRequest(WebClientService.SUB_TYPE_CLIENT_INFO, undefined, data);
     }
 
     /**
@@ -2101,13 +2112,13 @@ export class WebClientService {
      */
     private _receiveResponseClientInfo(message: threema.WireMessage): void {
         this.$log.debug('Received client info');
-        const args = message.args;
-        if (args === undefined) {
-            this.$log.warn('Invalid client info, argument field missing');
+        const data = message.data;
+        if (data === undefined) {
+            this.$log.warn('Invalid client info, data field missing');
             return;
         }
 
-        this.clientInfo = args as threema.ClientInfo;
+        this.clientInfo = data as threema.ClientInfo;
         this.$log.debug('Client device:', this.clientInfo.device);
 
         // Store push token

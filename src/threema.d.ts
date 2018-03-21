@@ -558,6 +558,8 @@ declare namespace threema {
 
     interface ClientInfo {
         device: string;
+        os: string;
+        osVersion: string;
         isWork: boolean;
         myPushToken?: string;
         maxGroupSize?: number;
