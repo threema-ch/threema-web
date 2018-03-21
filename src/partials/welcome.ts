@@ -111,9 +111,9 @@ class WelcomeController {
 
         // Determine whether browser warning should be shown
         const browser = browserService.getBrowser();
-        const version = parseFloat(browser.version);
+        const version = browser.version;
         $log.debug('Detected browser:', browser.textInfo);
-        if (isNaN(version)) {
+        if (version === undefined) {
             $log.warn('Could not determine browser version');
             this.showBrowserWarning();
         } else if (browser.chrome === true) {

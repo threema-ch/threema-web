@@ -434,7 +434,7 @@ export class WebClientService {
             if (this.chosenTask === threema.ChosenTask.WebRTC) {
                 // Firefox <53 does not yet support TLS. Skip it, to save allocations.
                 const browser = this.browserService.getBrowser();
-                if (browser.firefox && parseFloat(browser.version) < 53) {
+                if (browser.firefox && browser.version && browser.version < 53) {
                     this.skipIceTls();
                 }
 
