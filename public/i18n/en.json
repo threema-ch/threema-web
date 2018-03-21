@@ -187,7 +187,7 @@
             "invalidDistributionList": "Invalid distribution list ID",
             "notAllowed": "Modification not allowed",
             "notAllowedLinked": "Contact cannot be changed: It's linked to a system contact",
-            "notAllowedBusiness": "Contact avatar cannot be changed: It's a Threema Work contact",
+            "notAllowedBusiness": "Avatar cannot be changed: It's a Threema Gateway contact",
             "disabledByPolicy": "Feature disabled by administrator",
             "syncFailed": "Group synchronization failed",
             "noMembers": "No members defined",
