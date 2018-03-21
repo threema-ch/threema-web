@@ -104,7 +104,6 @@ export class BrowserService {
             this.browser.safari  = /safari/.test(uagent)  && /applewebkit/.test(uagent) && !/chrome/.test(uagent);
             this.browser.opera   = /mozilla/.test(uagent) && /applewebkit/.test(uagent)
                 && /chrome/.test(uagent) && /safari/.test(uagent) && /opr/.test(uagent);
-            this.browser.version = '';
 
             if (this.browser.opera && this.browser.chrome) {
                 this.browser.chrome = false;
@@ -126,12 +125,16 @@ export class BrowserService {
                     }
                     let match = uagent.match(new RegExp('(' + b + ')( |\/)([0-9]+)'));
 
+                    let version;
                     if (match) {
-                        this.browser.version = match[3];
+                        version = match[3];
                     } else {
                         match = uagent.match(new RegExp('rv:([0-9]+)'));
-                        this.browser.version = match ? match[1] : '';
+                        version = match ? match[1] : '';
                     }
+                    const versionInt: number = parseInt(match[3], 10);
+                    this.browser.version = isNaN(versionInt) ? undefined : versionInt;
+
                     break;
                 }
             }

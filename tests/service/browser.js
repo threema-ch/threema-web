@@ -25,7 +25,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(false);
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('firefox');
-        expect(browser.version).toEqual('59');
+        expect(browser.version).toEqual(59);
         expect(browser.textInfo).toEqual('Firefox 59');
     });
 
@@ -40,7 +40,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(false);
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('chrome');
-        expect(browser.version).toEqual('65');
+        expect(browser.version).toEqual(65);
         expect(browser.textInfo).toEqual('Chrome 65');
     });
 
@@ -55,7 +55,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(false);
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('ie');
-        expect(browser.version).toEqual('9');
+        expect(browser.version).toEqual(9);
         expect(browser.textInfo).toEqual('Internet Explorer 9');
     });
 
@@ -70,7 +70,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(false);
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('ie');
-        expect(browser.version).toEqual('11');
+        expect(browser.version).toEqual(11);
         expect(browser.textInfo).toEqual('Internet Explorer 11');
     });
 
@@ -85,7 +85,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(false);
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('edge');
-        expect(browser.version).toEqual('12');
+        expect(browser.version).toEqual(12);
         expect(browser.textInfo).toEqual('Edge 12');
     });
 
@@ -100,7 +100,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(true);
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('opera');
-        expect(browser.version).toEqual('51');
+        expect(browser.version).toEqual(51);
         expect(browser.textInfo).toEqual('Opera 51');
     });
 
@@ -115,7 +115,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(false);
         expect(browser.safari).toBe(true);
         expect(browser.name).toEqual('safari');
-        expect(browser.version).toEqual('7');
+        expect(browser.version).toEqual(7);
         expect(browser.textInfo).toEqual('Safari 7');
     });
 
@@ -130,7 +130,7 @@ describe('BrowserService', function() {
         expect(browser.opera).toBe(false);
         expect(browser.safari).toBe(true);
         expect(browser.name).toEqual('safari');
-        expect(browser.version).toEqual('11');
+        expect(browser.version).toEqual(11);
         expect(browser.textInfo).toEqual('Safari 11');
     });
 
