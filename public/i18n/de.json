@@ -187,7 +187,7 @@
             "invalidDistributionList": "Ungültige Verteilerliste",
             "notAllowed": "Bearbeitung nicht erlaubt",
             "notAllowedLinked": "Systemkontakt kann nicht verändert werden",
-            "notAllowedBusiness": "Avatar eines Threema Work Kontaktes kann nicht geändert werden",
+            "notAllowedBusiness": "Avatar eines Threema Gateway Kontaktes kann nicht geändert werden",
             "disabledByPolicy": "Funktion wurde durch den Administrator deaktiviert",
             "syncFailed": "Gruppen-Synchronisation fehlgeschlagen",
             "noMembers": "Keine Mitglieder definiert",
