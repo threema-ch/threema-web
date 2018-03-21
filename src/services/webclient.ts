@@ -23,7 +23,6 @@ import {hexToU8a, msgpackVisualizer} from '../helpers';
 import {isContactReceiver, isDistributionListReceiver, isGroupReceiver} from '../typeguards';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
-import {FingerPrintService} from './fingerprint';
 import {TrustedKeyStoreService} from './keystore';
 import {MessageService} from './message';
 import {MimeService} from './mime';
@@ -106,6 +105,7 @@ export class WebClientService {
     private static SUB_TYPE_BATTERY_STATUS = 'batteryStatus';
     private static SUB_TYPE_CLEAN_RECEIVER_CONVERSATION = 'cleanReceiverConversation';
     private static SUB_TYPE_CONFIRM_ACTION = 'confirmAction';
+    private static SUB_TYPE_PROFILE = 'profile';
     private static ARGUMENT_MODE = 'mode';
     private static ARGUMENT_MODE_NEW = 'new';
     private static ARGUMENT_MODE_MODIFIED = 'modified';
@@ -116,6 +116,7 @@ export class WebClientService {
     private static ARGUMENT_REFERENCE_MSG_ID = 'refMsgId';
     private static ARGUMENT_AVATAR = 'avatar';
     private static ARGUMENT_AVATAR_HIGH_RESOLUTION = 'highResolution';
+    private static ARGUMENT_NICKNAME = 'nickname';
     private static ARGUMENT_IS_TYPING = 'isTyping';
     private static ARGUMENT_MESSAGE_ID = 'messageId';
     private static ARGUMENT_HAS_MORE = 'more';
@@ -151,7 +152,6 @@ export class WebClientService {
     // Custom services
     private batteryStatusService: BatteryStatusService;
     private browserService: BrowserService;
-    private fingerPrintService: FingerPrintService;
     private messageService: MessageService;
     private mimeService: MimeService;
     private notificationService: NotificationService;
@@ -215,7 +215,7 @@ export class WebClientService {
         '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout',
         'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
-        'TitleService', 'FingerPrintService', 'QrCodeService', 'MimeService', 'ReceiverService',
+        'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
         'VersionService', 'BatteryStatusService',
         'CONFIG',
     ];
@@ -235,7 +235,6 @@ export class WebClientService {
                 pushService: PushService,
                 browserService: BrowserService,
                 titleService: TitleService,
-                fingerPrintService: FingerPrintService,
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
@@ -256,7 +255,6 @@ export class WebClientService {
         // Own services
         this.batteryStatusService = batteryStatusService;
         this.browserService = browserService;
-        this.fingerPrintService = fingerPrintService;
         this.messageService = messageService;
         this.mimeService = mimeService;
         this.notificationService = notificationService;
@@ -502,6 +500,7 @@ export class WebClientService {
                 InitializationStep.ClientInfo,
                 InitializationStep.Conversations,
                 InitializationStep.Receivers,
+                InitializationStep.Profile,
             ], () => {
                 this.stateService.updateConnectionBuildupState('done');
                 this.startupPromise.resolve();
@@ -763,6 +762,14 @@ export class WebClientService {
     public requestBatteryStatus(): void {
         this.$log.debug('Sending battery status request');
         this._sendRequest(WebClientService.SUB_TYPE_BATTERY_STATUS);
+    }
+
+    /**
+     * Send a profile request.
+     */
+    public requestProfile(): void {
+        this.$log.debug('Sending profile request');
+        this._sendRequest(WebClientService.SUB_TYPE_PROFILE);
     }
 
     /**
@@ -1423,12 +1430,13 @@ export class WebClientService {
     }
 
     private _requestInitialData(): void {
-        // if all conversations are reloaded, clear the message cache
+        // If all conversations are reloaded, clear the message cache
         // to get in sync (we dont know if a message was removed, updated etc..)
         this.messages.clear(this.$rootScope);
 
         // Request initial data
         this.requestClientInfo();
+        this.requestProfile();
         this.requestReceivers();
         this.requestConversations();
         this.requestBatteryStatus();
@@ -2108,15 +2116,28 @@ export class WebClientService {
             this.pushService.init(this.pushToken);
         }
 
-        // Set own identity
+        this.registerInitializationStep(InitializationStep.ClientInfo);
+    }
+
+    /**
+     * The peer sends information about the current user profile.
+     */
+    private _receiveResponseProfile(message: threema.WireMessage): void {
+        this.$log.debug('Received profile');
+        const data = message.data;
+        if (data === undefined) {
+            this.$log.warn('Invalid client info, data field missing');
+            return;
+        }
+
         this.profile = {
-            identity: this.clientInfo.myAccount.identity,
-            publicKey: this.clientInfo.myAccount.publicKey,
-            publicNickname: this.clientInfo.myAccount.publicNickname,
-            fingerprint: this.fingerPrintService.generate(this.clientInfo.myAccount.publicKey),
+            identity: data.identity,
+            publicNickname: data.publicNickname,
+            publicKey: data.publicKey,
+            avatar: data.avatar,
         };
 
-        this.registerInitializationStep(InitializationStep.ClientInfo);
+        this.registerInitializationStep(InitializationStep.Profile);
     }
 
     public setPassword(password: string) {
@@ -2310,13 +2331,13 @@ export class WebClientService {
     }
 
     private _sendPromiseMessage(message: threema.WireMessage, timeout: number = null): Promise<any> {
-        // create arguments on wired message
+        // Create arguments on wired message
         if (message.args === undefined || message.args === null) {
             message.args = {};
         }
         let promiseId = message.args[WebClientService.ARGUMENT_TEMPORARY_ID];
         if (promiseId === undefined) {
-            // create a random id to identity the promise
+            // Create a random id to identity the promise
             promiseId = 'p' + Math.random().toString(36).substring(7);
             message.args[WebClientService.ARGUMENT_TEMPORARY_ID] = promiseId;
         }
@@ -2469,6 +2490,9 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_CLIENT_INFO:
                 this._receiveResponseClientInfo(message);
+                break;
+            case WebClientService.SUB_TYPE_PROFILE:
+                this._receiveResponseProfile(message);
                 break;
             case WebClientService.SUB_TYPE_CONTACT_DETAIL:
                 receiveResult = this._receiveResponseContactDetail(message);

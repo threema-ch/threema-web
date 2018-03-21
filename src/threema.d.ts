@@ -51,6 +51,7 @@ declare namespace threema {
         ClientInfo = 'client info',
         Conversations = 'conversations',
         Receivers = 'receivers',
+        Profile = 'profile',
     }
 
     interface InitializationStepRoutine {
@@ -395,7 +396,7 @@ declare namespace threema {
         identity: string;
         publicNickname: string;
         publicKey: ArrayBuffer;
-        fingerprint: string;
+        avatar: Uint8Array;
     }
 
     interface TrustedKeyStoreData {
@@ -544,19 +545,11 @@ declare namespace threema {
         isCharging: boolean;
     }
 
-    interface MyAccount {
-        identity: string;
-        publicKey: ArrayBuffer;
-        publicNickname: string;
-        fingerprint?: string;
-    }
-
     interface ClientInfo {
         device: string;
         isWork: boolean;
         myPushToken?: string;
         maxGroupSize?: number;
-        myAccount: MyAccount;
     }
 
     interface Mention {
