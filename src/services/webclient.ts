@@ -2797,4 +2797,17 @@ export class WebClientService {
         this.titleService.updateUnreadCount(0);
     }
 
+    /**
+     * Return the configuration object from the client info data.
+     */
+    public get appConfig(): threema.AppConfig {
+        return this.clientInfo.configuration;
+    }
+
+    /**
+     * Return the capabilities object from the client info data.
+     */
+    public get appCapabilities(): threema.AppCapabilities {
+        return this.clientInfo.capabilities;
+    }
 }
