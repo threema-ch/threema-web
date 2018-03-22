@@ -130,7 +130,7 @@
         "SYSTEM_CONTACT": "Systemkontakt",
         "EMAIL_ADDRESSES": "E-Mail-Adressen",
         "PHONE_NUMBERS": "Telefonnummern",
-        "EDIT_RECEIVER": "{receiverName} bearbeiten",
+        "EDIT_RECEIVER": "Profil bearbeiten",
         "CREATE_GROUP": "Neue Gruppe",
         "GROUP_SELECT_CONTACTS": "Mitglieder wählen",
         "GROUP_DELETE": "Gruppe löschen",

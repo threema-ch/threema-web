@@ -53,9 +53,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
 
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
-                this.subject = $translate.instant('messenger.EDIT_RECEIVER', {
-                    receiverName: '@NAME@',
-                }).replace('@NAME@', this.group.displayName);
+                this.subject = $translate.instant('messenger.EDIT_RECEIVER');
                 this.name = this.group.displayName;
                 this.members = this.group.members;
                 this.avatarController = new AvatarControllerModel(

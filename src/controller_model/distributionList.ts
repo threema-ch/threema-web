@@ -51,9 +51,7 @@ export class DistributionListControllerModel implements threema.ControllerModel<
 
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
-                this.subject = $translate.instant('messenger.EDIT_RECEIVER', {
-                    receiverName: '@NAME@',
-                }).replace('@NAME@', this.distributionList.displayName);
+                this.subject = $translate.instant('messenger.EDIT_RECEIVER');
                 this.name = this.distributionList.displayName;
                 this.members = this.distributionList.members;
                 break;

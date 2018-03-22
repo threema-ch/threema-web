@@ -31,9 +31,6 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
     // Own services
     private webClientService: WebClientService;
 
-    // Callbacks
-    private onRemovedCallback: threema.OnRemovedCallback;
-
     // Own receiver instance
     private me: threema.MeReceiver;
 
@@ -44,7 +41,7 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
     public subject: string;
     public isLoading = false;
 
-    // Data shown on page
+    // Profile data
     public nickname: string;
 
     // Editing mode
@@ -63,25 +60,18 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
         this.webClientService = webClientService;
         this.mode = mode;
 
+        const profile = webClientService.getProfile();
         switch (mode) {
-            /*case ControllerModelMode.EDIT:
-                this.subject = $translate.instant('messenger.EDIT_RECEIVER', {
-                    receiverName: '@NAME@',
-                }).replace('@NAME@', this.me.displayName);
-                this.firstName = this.me.firstName;
-                this.lastName = this.me.lastName;
+            case ControllerModelMode.EDIT:
+                this.subject = $translate.instant('messenger.EDIT_RECEIVER');
+                this.nickname = profile.publicNickname;
                 this.avatarController = new AvatarControllerModel(
                     this.$log, this.webClientService, this.me,
                 );
-
-                this.access = this.me.access;
-                this.firstNameLabel = this.access.canChangeLastName ?
-                    $translate.instant('messenger.FIRST_NAME') :
-                    $translate.instant('messenger.NAME');
-                break;*/
+                break;
             case ControllerModelMode.VIEW:
                 this.subject = $translate.instant('messenger.MY_THREEMA_ID');
-                this.nickname = webClientService.getProfile().publicNickname;
+                this.nickname = profile.publicNickname;
                 break;
             default:
                 $log.error(this.logTag, 'Invalid controller model mode: ', this.getMode());
@@ -92,7 +82,7 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
      * Set the on removed callback.
      */
     public setOnRemoved(callback: threema.OnRemovedCallback): void {
-        this.onRemovedCallback = callback;
+        // Not applicable
     }
 
     /**
@@ -151,10 +141,8 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
      * Can this receiver be edited?
      */
     public canEdit(): boolean {
-        // The own contact can always be edited
-        // TODO: Restrictions?
-        // return true;
-        return false;
+        // TODO: Restrictions regarding work?
+        return true;
     }
 
     public canShowQr(): boolean {
@@ -162,21 +150,25 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
     }
 
     /**
-     * Save the changes, return a promise with the receiver.
+     * Save the changes, return a promise.
      */
     public save(): Promise<threema.MeReceiver> {
-        /*
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
                 return this.webClientService.modifyProfile(
                     this.nickname,
                     this.avatarController.getAvatar(),
-                );
+                ).then((val) => {
+                    const profile = this.webClientService.getProfile();
+                    profile.publicNickname = this.nickname;
+                    if (this.avatarController.avatarChanged) {
+                        profile.avatar = this.avatarController.getAvatar();
+                    }
+                    return this.me;
+                });
             default:
                 this.$log.error(this.logTag, 'Not allowed to save profile: Invalid mode');
-
+                return Promise.reject('unknown');
         }
-        */
-        return Promise.reject(null);
     }
 }
