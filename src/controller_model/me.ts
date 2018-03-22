@@ -138,11 +138,11 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
     }
 
     /**
-     * Can this receiver be edited?
+     * The profile can be edited if there are no MDM restrictions.
      */
     public canEdit(): boolean {
-        // TODO: Restrictions regarding work?
-        return true;
+        const mdm: threema.MdmRestrictions = this.webClientService.appCapabilities.mdm;
+        return mdm === undefined || !mdm.readonlyProfile;
     }
 
     public canShowQr(): boolean {
