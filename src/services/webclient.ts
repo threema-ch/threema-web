@@ -2118,12 +2118,42 @@ export class WebClientService {
             return;
         }
 
-        this.clientInfo = data as threema.ClientInfo;
+        /**
+         * Return the field if it's not undefined, otherwise return the default.
+         */
+        function getOrDefault<T>(field: T, defaultVal: T): T {
+            if (field === undefined) {
+                return defaultVal;
+            }
+            return field;
+        }
+
+        // Set clientInfo attribute
+        this.clientInfo = {
+            device: data.device,
+            os: data.os,
+            osVersion: data.osVersion,
+            isWork: data.isWork,
+            pushToken: data.pushToken,
+            configuration: {
+                showLocationPreview: getOrDefault<boolean>(data.configuration.showLocationPreview, false),
+                voipEnabled: getOrDefault<boolean>(data.configuration.voipEnabled, true),
+                voipForceTurn: getOrDefault<boolean>(data.configuration.voipForceTurn, false),
+                largeSingleEmoji: getOrDefault<boolean>(data.configuration.largeSingleEmoji, true),
+                showInactiveIds: getOrDefault<boolean>(data.configuration.showInactiveIds, true),
+            },
+            capabilities: {
+                maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
+                distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
+                mdm: data.capabilities.mdm,
+            },
+        };
+
         this.$log.debug('Client device:', this.clientInfo.device);
 
         // Store push token
-        if (this.clientInfo.myPushToken) {
-            this.pushToken = this.clientInfo.myPushToken;
+        if (this.clientInfo.pushToken) {
+            this.pushToken = this.clientInfo.pushToken;
             this.pushService.init(this.pushToken);
         }
 
@@ -2169,7 +2199,6 @@ export class WebClientService {
 
     /**
      * Return the max text length
-     * @returns {number}
      */
     public getMaxTextLength(): number {
         return WebClientService.MAX_TEXT_LENGTH;
@@ -2177,10 +2206,9 @@ export class WebClientService {
 
     /**
      * Returns the max group member size
-     * @returns {number}
      */
     public getMaxGroupMemberSize(): number {
-        return this.clientInfo && this.clientInfo.maxGroupSize ? this.clientInfo.maxGroupSize : 50;
+        return this.clientInfo.capabilities.maxGroupSize;
     }
 
     /**
