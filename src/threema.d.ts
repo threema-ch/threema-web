@@ -561,8 +561,33 @@ declare namespace threema {
         os: string;
         osVersion: string;
         isWork: boolean;
-        myPushToken?: string;
-        maxGroupSize?: number;
+        pushToken?: string;
+        configuration: AppConfig;
+        capabilities: AppCapabilities;
+    }
+
+    interface AppConfig {
+        showLocationPreview: boolean;
+        voipEnabled: boolean;
+        voipForceTurn: boolean;
+        largeSingleEmoji: boolean;
+        showInactiveIds: boolean;
+    }
+
+    interface AppCapabilities {
+        maxGroupSize: number;
+        distributionLists: boolean;
+        mdm?: MdmRestrictions;
+    }
+
+    interface MdmRestrictions {
+        disableAddContact?: boolean;
+        disableCreateGroup?: boolean;
+        disableSaveToGallery?: boolean;
+        disableExport?: boolean;
+        disableMessagePreview?: boolean;
+        disableCalls?: boolean;
+        readonlyProfile?: boolean;
     }
 
     interface Mention {
