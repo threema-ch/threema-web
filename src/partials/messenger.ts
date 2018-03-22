@@ -901,6 +901,7 @@ class NavigationController {
      * Show profile.
      */
     public showProfile(ev): void {
+        this.receiverService.setActive(undefined);
         this.$state.go('messenger.home.detail', this.webClientService.me);
     }
 
@@ -1265,9 +1266,11 @@ class ReceiverEditController {
         const receiver = webClientService.receivers.getData($stateParams);
         switch (receiver.type) {
             case 'me':
-                $log.warn(this.logTag, 'Cannot edit own contact');
-                $state.go('messenger.home');
-                return;
+                this.controllerModel = controllerModelService.me(
+                    receiver as threema.MeReceiver,
+                    ControllerModelMode.EDIT,
+                );
+                break;
             case 'contact':
                 this.controllerModel = controllerModelService.contact(
                     receiver as threema.ContactReceiver,

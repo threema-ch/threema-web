@@ -55,9 +55,7 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
 
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
-                this.subject = $translate.instant('messenger.EDIT_RECEIVER', {
-                    receiverName: '@NAME@',
-                }).replace('@NAME@', this.contact.displayName);
+                this.subject = $translate.instant('messenger.EDIT_RECEIVER');
                 this.firstName = this.contact.firstName;
                 this.lastName = this.contact.lastName;
                 this.avatarController = new AvatarControllerModel(

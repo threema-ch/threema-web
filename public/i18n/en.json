@@ -130,7 +130,7 @@
         "SYSTEM_CONTACT": "System contact",
         "EMAIL_ADDRESSES": "Emails",
         "PHONE_NUMBERS": "Phone numbers",
-        "EDIT_RECEIVER": "Edit {receiverName}",
+        "EDIT_RECEIVER": "Edit profile",
         "CREATE_GROUP": "New group",
         "GROUP_SELECT_CONTACTS": "Select members",
         "GROUP_DELETE": "Delete group",

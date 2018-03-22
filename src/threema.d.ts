@@ -396,7 +396,7 @@ declare namespace threema {
         identity: string;
         publicNickname: string;
         publicKey: ArrayBuffer;
-        avatar: Uint8Array;
+        avatar: ArrayBuffer;
     }
 
     interface TrustedKeyStoreData {

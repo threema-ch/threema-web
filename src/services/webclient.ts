@@ -1332,6 +1332,31 @@ export class WebClientService {
     }
 
     /**
+     * Modify own profile.
+     */
+    public modifyProfile(nickname?: string,
+                         avatar?: ArrayBuffer): Promise<null> {
+
+        // Prepare payload data
+        const data = {};
+        if (nickname !== undefined && nickname !== null) {
+            data[WebClientService.ARGUMENT_NICKNAME] = nickname;
+        }
+        if (avatar !== undefined && avatar !== null) {
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
+        }
+
+        // If no changes happened, resolve the promise immediately.
+        if (Object.keys(data).length === 0) {
+            this.$log.warn(this.logTag, 'Trying to modify profile without any changes');
+            return Promise.resolve(null);
+        }
+
+        // Send update, get back promise
+        return this._sendUpdatePromise(WebClientService.SUB_TYPE_PROFILE, null, data);
+    }
+
+    /**
      * Return whether the specified contact is currently typing.
      */
     public isTyping(contact: threema.ContactReceiver): boolean {
