@@ -20,9 +20,11 @@ import {WebClientService} from '../services/webclient';
 export default [
     '$rootScope',
     '$timeout',
+    '$filter',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
              $timeout: ng.ITimeoutService,
+             $filter: ng.IFilterService,
              webClientService: WebClientService) {
         return {
             restrict: 'E',
@@ -53,15 +55,38 @@ export default [
                     return true;
                 };
 
-                this.getAvatar = () => {
+                /**
+                 * Return path to the default avatar.
+                 */
+                this.getDefaultAvatarUri = (type: threema.ReceiverType, highResolution: boolean) => {
+                    switch (type) {
+                        case 'group':
+                            return highResolution ? 'img/ic_group_picture_big.png' : 'img/ic_group_t.png';
+                        case 'contact':
+                        case 'me':
+                            return highResolution ? 'img/ic_contact_picture_big.png' : 'img/ic_contact_picture_t.png';
+                        case 'distributionList':
+                            return highResolution ? 'img/ic_distribution_list_t.png' : 'img/ic_distribution_list_t.png';
+                    }
+                    return null;
+                };
+
+                this.avatarToUri = (data: ArrayBuffer) => {
+                    if (data === null || data === undefined) {
+                        return '';
+                    }
+                    return ($filter('bufferToUrl') as (data: ArrayBuffer, mime: string) => string)(data, 'image/png');
+                };
+
+                this.getAvatarUri = () => {
                     if (this.avatarExists()) {
-                        return this.receiver.avatar[this.resolution];
+                        return this.avatarToUri(this.receiver.avatar[this.resolution]);
                     } else if (this.highResolution
                         && this.receiver.avatar !== undefined
                         && this.receiver.avatar.low !== undefined) {
-                        return this.receiver.avatar.low;
+                        return this.avatarToUri(this.receiver.avatar.low);
                     }
-                    return webClientService.defaults.getAvatar(this.type, this.highResolution);
+                    return this.getDefaultAvatarUri(this.type, this.highResolution);
                 };
 
                 this.requestAvatar = (inView: boolean) => {
@@ -126,7 +151,7 @@ export default [
                     <img
                          ng-class="ctrl.avatarClass()"
                          ng-style="{ 'background-color': ctrl.backgroundColor }"
-                         ng-src="{{ ctrl.getAvatar() }}"
+                         ng-src="{{ ctrl.getAvatarUri() }}"
                          in-view="ctrl.requestAvatar($inview)"/>
                </div>
             `,

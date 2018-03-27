@@ -106,7 +106,6 @@ angular.module('3ema.container', [])
          * Set receiver data.
          */
         public set(data: threema.Container.ReceiverData) {
-            this.setMe(data['me' as threema.ReceiverType]);
             this.setContacts(data['contact' as threema.ReceiverType]);
             this.setGroups(data['group' as threema.ReceiverType]);
             this.setDistributionLists(data['distributionList' as threema.ReceiverType]);

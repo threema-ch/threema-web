@@ -38,36 +38,6 @@ import {VersionService} from './version';
 // Aliases
 import InitializationStep = threema.InitializationStep;
 
-class WebClientDefault {
-    private avatar: threema.AvatarRegistry = {
-        group: {
-            low: 'img/ic_group_t.png',
-            high: 'img/ic_group_picture_big.png',
-        },
-        contact: {
-            low: 'img/ic_contact_picture_t.png',
-            high: 'img/ic_contact_picture_big.png',
-        },
-        distributionList: {
-            low: 'img/ic_distribution_list_t.png',
-            high: 'img/ic_distribution_list_t.png',
-        },
-    };
-
-    /**
-     * Return path to avatar.
-     *
-     * If the avatar type is invalid, return null.
-     */
-    public getAvatar(type: string, highResolution: boolean): string {
-        const field: string = highResolution ? 'high' : 'low';
-        if (typeof this.avatar[type] === 'undefined') {
-            return null;
-        }
-        return this.avatar[type][field];
-    }
-}
-
 /**
  * This service handles everything related to the communication with the peer.
  */
@@ -184,8 +154,6 @@ export class WebClientService {
     public conversations: threema.Container.Conversations;
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
-    public defaults: WebClientDefault;
-    private profile: threema.Profile;
     private pushToken: string = null;
 
     // Other
@@ -276,9 +244,6 @@ export class WebClientService {
         // Other properties
         this.container = container;
         this.trustedKeyStore = trustedKeyStore;
-
-        // Get default class
-        this.defaults = new WebClientDefault();
 
         // Initialize drafts
         this.drafts = this.container.createDrafts();
@@ -837,16 +802,14 @@ export class WebClientService {
     /**
      * Send an avatar request for the specified receiver.
      */
-    public requestAvatar(receiver: threema.Receiver, highResolution: boolean): Promise<any> {
+    public requestAvatar(receiver: threema.Receiver, highResolution: boolean): Promise<ArrayBuffer> {
         // Check if the receiver has an avatar or the avatar already exists
         const resolution = highResolution ? 'high' : 'low';
         const receiverInfo = this.receivers.getData(receiver);
         if (receiverInfo && receiverInfo.avatar && receiverInfo.avatar[resolution]) {
             // Avatar already exists
             // TODO: Do we get avatar changes via update?
-            return new Promise<any>((e) => {
-                e(receiverInfo.avatar[resolution]);
-            });
+            return Promise.resolve(receiverInfo.avatar[resolution]);
         }
 
         // Create arguments and send request
@@ -1364,13 +1327,6 @@ export class WebClientService {
     }
 
     /**
-     * Return own profile.
-     */
-    public getProfile(): threema.Profile {
-        return this.profile;
-    }
-
-    /**
      * Return the curring quoted message model
      */
     public getQuote(receiver: threema.Receiver): threema.Quote {
@@ -1690,21 +1646,19 @@ export class WebClientService {
         if (data === undefined) {
             this.$log.warn('Invalid conversation response, data missing');
         } else {
-            // if a avatar was set on a conversation
-            // convert and copy to the receiver
+            // If a avatar was set on a conversation, convert and copy to the receiver
             for (const conversation of data) {
                 if (conversation.avatar !== undefined && conversation.avatar !== null) {
-                    const receiver = this.receivers.getData({
+                    const receiver: threema.Receiver = this.receivers.getData({
                         id: conversation.id,
                         type: conversation.type,
-                    } as threema.Receiver);
-                    if (receiver !== undefined
-                            && receiver.avatar === undefined) {
+                    });
+                    if (receiver !== undefined && receiver.avatar === undefined) {
                         receiver.avatar = {
-                            low: this.$filter('bufferToUrl')(conversation.avatar, 'image/png'),
+                            low: conversation.avatar,
                         };
                     }
-                    // reset avatar from object
+                    // Remove avatar from conversation
                     delete conversation.avatar;
                 }
 
@@ -1841,8 +1795,8 @@ export class WebClientService {
             return this.promiseRequestError('invalidResponse');
         }
 
-        const data = message.data;
-        if (data === undefined) {
+        const avatar = message.data;
+        if (avatar === undefined) {
             // It's ok, a receiver without a avatar
             return { success: true, data: null };
         }
@@ -1863,7 +1817,6 @@ export class WebClientService {
             receiverData.avatar = {};
         }
 
-        const avatar = this.$filter('bufferToUrl')(data, 'image/png');
         receiverData.avatar[field] = avatar;
 
         return { success: true, data: avatar };
@@ -2059,9 +2012,6 @@ export class WebClientService {
 
         // Refresh lists of receivers
         switch (type) {
-            case 'me':
-                this.receivers.setMe(data);
-                break;
             case 'contact':
                 this.receivers.setContacts(data);
                 break;
@@ -2196,12 +2146,27 @@ export class WebClientService {
             return;
         }
 
-        this.profile = {
-            identity: data.identity,
+        // Create 'me' receiver with profile + dummy data
+        // TODO: Send both high-res and low-res avatars
+        this.receivers.setMe({
+            type: 'me',
+            id: data.identity,
             publicNickname: data.publicNickname,
+            displayName: data.publicNickname || data.identity,
             publicKey: data.publicKey,
-            avatar: data.avatar,
-        };
+            avatar: {
+                high: data.avatar,
+            },
+            featureLevel: 3,
+            verificationLevel: 3,
+            state: 'ACTIVE',
+            access: {
+                canChangeAvatar: true,
+                canChangeFirstName: true,
+                canChangeLastName: true,
+            },
+            color: '#000000',
+        });
 
         this.registerInitializationStep(InitializationStep.Profile);
     }
@@ -2336,7 +2301,9 @@ export class WebClientService {
                     body = partnerName + ': ' + body;
                 }
                 const tag = conversation.type + '-' + conversation.id;
-                const avatar = (sender.avatar && sender.avatar.low) ? sender.avatar.low : null;
+                const avatar = (sender.avatar && sender.avatar.low)
+                    ? this.$filter('bufferToUrl')(sender.avatar.low, 'image/png')
+                    : null;
                 this.notificationService.showNotification(tag, title, body, avatar, () => {
                     this.$state.go('messenger.home.conversation', {
                         type: conversation.type,

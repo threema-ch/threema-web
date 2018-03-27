@@ -150,7 +150,7 @@ export default [
                                     md-diameter="96"></md-progress-circular>
 
                         </div>
-                        <img ng-src="{{ctrl.avatar}}" ng-show="ctrl.avatar !== null" />
+                        <img ng-src="{{ ctrl.avatar | bufferToUrl:'image/png' }}" ng-show="ctrl.avatar !== null" />
                     </div>
                     <div class="avatar-area-navigation"  layout="row" layout-wrap layout-margin layout-align="center">
 

@@ -983,8 +983,8 @@ class NavigationController {
     /**
      * Return the user profile.
      */
-    public getProfile(): threema.Profile {
-        return this.webClientService.getProfile();
+    public getMe(): threema.MeReceiver {
+        return this.webClientService.me;
     }
 
 }
@@ -1200,7 +1200,7 @@ class ReceiverDetailController {
      * Show the QR code of the public key.
      */
     public showQr(): void {
-        const profile = this.webClientService.getProfile();
+        const profile = this.webClientService.me;
         const $mdDialog = this.$mdDialog;
         $mdDialog.show({
             controllerAs: 'ctrl',
@@ -1213,7 +1213,7 @@ class ReceiverDetailController {
                     errorCorrectionLevel: 'L',
                     size: '400px',
                     data: '3mid:'
-                    + profile.identity
+                    + profile.id
                     + ','
                     + u8aToHex(new Uint8Array(profile.publicKey)),
                 };

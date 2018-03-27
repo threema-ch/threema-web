@@ -94,7 +94,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
 
     public isValid(): boolean {
         return this.members.filter((identity: string) => {
-                return identity !== this.webClientService.getProfile().identity;
+                return identity !== this.webClientService.me.id;
             }).length > 0;
     }
 
@@ -153,7 +153,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
         const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.GROUP_LEAVE'))
             .textContent(this.$translate.instant(
-                this.group.administrator === this.webClientService.getProfile().identity
+                this.group.administrator === this.webClientService.me.id
                     ? 'messenger.GROUP_REALLY_LEAVE_ADMIN'
                     : 'messenger.GROUP_REALLY_LEAVE'))
             .targetEvent(ev)
