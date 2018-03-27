@@ -18,9 +18,11 @@
 import {WebClientService} from '../services/webclient';
 
 export class AvatarControllerModel {
+    private logTag: string = '[AvatarControllerModel]';
+
     private $log: ng.ILogService;
     private avatar: ArrayBuffer = null;
-    private loadAvatar: Promise<string>;
+    private loadAvatar: Promise<ArrayBuffer | null>;
     private onChangeAvatar: (image: ArrayBuffer) => void;
     private _avatarChanged: boolean = false;
 
@@ -30,14 +32,16 @@ export class AvatarControllerModel {
         this.$log = $log;
         this.loadAvatar = new Promise((resolve, reject) => {
             if (receiver === null) {
+                $log.debug(this.logTag, 'loadAvatar: No receiver defined, no avatar');
                 resolve(null);
                 return;
-            }
-            if (receiver.avatar.high === undefined) {
+            } else if (receiver.avatar.high === undefined) {
+                $log.debug(this.logTag, 'loadAvatar: Requesting high res avatar from app');
                 webClientService.requestAvatar(receiver, true)
-                    .then((image: string) => resolve(image))
+                    .then((data: ArrayBuffer) => resolve(data))
                     .catch(() => reject());
             } else {
+                $log.debug(this.logTag, 'loadAvatar: Returning cached version');
                 resolve(receiver.avatar.high);
             }
         });

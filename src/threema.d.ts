@@ -20,10 +20,10 @@ declare const angular: ng.IAngularStatic;
 declare namespace threema {
 
     interface Avatar {
-        // Low resolution avatar path
-        low?: string;
-        // High resolution avatar path
-        high?: string;
+        // Low resolution avatar URI
+        low?: ArrayBuffer;
+        // High resolution avatar URI
+        high?: ArrayBuffer;
     }
 
     interface AvatarRegistry {
@@ -392,13 +392,6 @@ declare namespace threema {
         text: string;
     }
 
-    interface Profile {
-        identity: string;
-        publicNickname: string;
-        publicKey: ArrayBuffer;
-        avatar: ArrayBuffer;
-    }
-
     interface TrustedKeyStoreData {
         ownPublicKey: Uint8Array;
         ownSecretKey: Uint8Array;
@@ -611,7 +604,6 @@ declare namespace threema {
 
     namespace Container {
         interface ReceiverData {
-            me: MeReceiver;
             contacts: ContactReceiver[];
             groups: GroupReceiver[];
             distributionLists: DistributionListReceiver[];

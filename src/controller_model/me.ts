@@ -60,18 +60,16 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
         this.webClientService = webClientService;
         this.mode = mode;
 
-        const profile = webClientService.getProfile();
+        this.nickname = webClientService.me.publicNickname;
         switch (mode) {
             case ControllerModelMode.EDIT:
                 this.subject = $translate.instant('messenger.EDIT_RECEIVER');
-                this.nickname = profile.publicNickname;
                 this.avatarController = new AvatarControllerModel(
                     this.$log, this.webClientService, this.me,
                 );
                 break;
             case ControllerModelMode.VIEW:
                 this.subject = $translate.instant('messenger.MY_THREEMA_ID');
-                this.nickname = profile.publicNickname;
                 break;
             default:
                 $log.error(this.logTag, 'Invalid controller model mode: ', this.getMode());
@@ -159,10 +157,11 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
                     this.nickname,
                     this.avatarController.getAvatar(),
                 ).then((val) => {
-                    const profile = this.webClientService.getProfile();
-                    profile.publicNickname = this.nickname;
+                    // Profile was successfully updated. Update local data.
+                    this.webClientService.me.publicNickname = this.nickname;
+                    this.webClientService.me.displayName = this.nickname;
                     if (this.avatarController.avatarChanged) {
-                        profile.avatar = this.avatarController.getAvatar();
+                        this.webClientService.me.avatar.high = this.avatarController.getAvatar();
                     }
                     return this.me;
                 });

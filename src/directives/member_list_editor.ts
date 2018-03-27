@@ -73,7 +73,7 @@ export default [
                 };
 
                 this.onRemoveMember = (contact: threema.ContactReceiver): boolean => {
-                    if (contact.id === webClientService.getProfile().identity) {
+                    if (contact.id === webClientService.me.id) {
                         return false;
                     }
 
