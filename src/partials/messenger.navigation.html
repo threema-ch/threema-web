@@ -2,7 +2,7 @@
 <div id="navigation-topheader">
     <div class="my-identity">
         <span ng-click="ctrl.showProfile()" ng-cloak translate-attr="{'title': 'messenger.MY_PUBLIC_NICKNAME'}">
-            {{ ctrl.getMe().displayName }}
+            {{ ctrl.getMe().publicNickname || ctrl.getMe().id }}
         </span>
     </div>
 

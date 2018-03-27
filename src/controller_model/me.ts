@@ -155,11 +155,10 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
             case ControllerModelMode.EDIT:
                 return this.webClientService.modifyProfile(
                     this.nickname,
-                    this.avatarController.getAvatar(),
+                    this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
                 ).then((val) => {
                     // Profile was successfully updated. Update local data.
                     this.webClientService.me.publicNickname = this.nickname;
-                    this.webClientService.me.displayName = this.nickname;
                     if (this.avatarController.avatarChanged) {
                         this.webClientService.me.avatar.high = this.avatarController.getAvatar();
                     }
