@@ -1305,7 +1305,7 @@ export class WebClientService {
         if (nickname !== undefined && nickname !== null) {
             data[WebClientService.ARGUMENT_NICKNAME] = nickname;
         }
-        if (avatar !== undefined && avatar !== null) {
+        if (avatar !== undefined) {
             data[WebClientService.ARGUMENT_AVATAR] = avatar;
         }
 

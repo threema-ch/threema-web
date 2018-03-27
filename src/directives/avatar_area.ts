@@ -26,14 +26,12 @@ export default [
     '$window',
     '$timeout',
     '$translate',
-    '$filter',
     '$mdDialog',
     function($rootScope: ng.IRootScopeService,
              $log: ng.ILogService,
              $window: ng.IWindowService,
              $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
-             $filter: ng.IFilterService,
              $mdDialog: ng.material.IDialogService) {
         return {
             restrict: 'EA',
@@ -47,20 +45,14 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.isLoading = false;
-                this.avatar = null;
+                this.avatar = null; // Type: String
 
                 this.imageChanged = function(image: ArrayBuffer, notify = true) {
                     this.isLoading = true;
                     if (notify === true && this.onChange !== undefined) {
                         this.onChange(image);
                     }
-
-                    // convert to a url
-                    if (image === null) {
-                        this.avatar = null;
-                    } else {
-                        this.avatar = $filter<any>('bufferToUrl')(image, 'image/png');
-                    }
+                    this.avatar = image;
                     this.isLoading = false;
                 };
 
@@ -150,7 +142,7 @@ export default [
                                     md-diameter="96"></md-progress-circular>
 
                         </div>
-                        <img ng-src="{{ ctrl.avatar | bufferToUrl:'image/png' }}" ng-show="ctrl.avatar !== null" />
+                        <img ng-src="{{ ctrl.avatar | bufferToUrl:'image/png' }}" ng-if="ctrl.avatar !== null" />
                     </div>
                     <div class="avatar-area-navigation"  layout="row" layout-wrap layout-margin layout-align="center">
 
