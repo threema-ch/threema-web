@@ -111,7 +111,6 @@ export default [
                         .then((buffer: ArrayBuffer) => {
                             $rootScope.$apply(() => {
                                 this.downloading = false;
-                                // this.downloaded = true;
 
                                 switch (this.message.type) {
                                     case 'image':
@@ -128,7 +127,6 @@ export default [
                         .catch((error) => {
                             $log.error('error downloading blob ', error);
                             this.downloading = false;
-                            // this.downloaded = true;
                         });
                 };
 

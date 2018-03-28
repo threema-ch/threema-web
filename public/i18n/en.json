@@ -205,7 +205,9 @@
         "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters).",
         "NOTIFICATION_PERMISSION_DENIED": "You have to grant the notification permission for Threema Web manually in order to receive desktop notifications.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Learn more.",
-        "NOTIFICATION_API_NOT_AVAILABLE": "Your browser does not support desktop notifications."
+        "NOTIFICATION_API_NOT_AVAILABLE": "Your browser does not support desktop notifications.",
+        "BLOB_DOWNLOAD_FAILED": "Could not download file.",
+        "BLOB_DECRYPT_FAILED": "Could not decrypt file."
     },
     "mimeTypes": {
         "apk": "Android package",
