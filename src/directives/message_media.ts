@@ -26,6 +26,7 @@ export default [
     '$rootScope',
     '$mdDialog',
     '$timeout',
+    '$translate',
     '$log',
     '$filter',
     '$window',
@@ -35,6 +36,7 @@ export default [
              $rootScope: ng.IRootScopeService,
              $mdDialog: ng.material.IDialogService,
              $timeout: ng.ITimeoutService,
+             $translate: ng.translate.ITranslateService,
              $log: ng.ILogService,
              $filter: ng.IFilterService,
              $window: ng.IWindowService) {
@@ -201,8 +203,26 @@ export default [
                         })
                         .catch((error) => {
                             $log.error('error downloading blob ', error);
-                            this.downloading = false;
-                            this.downloaded = true;
+                            $rootScope.$apply(() => {
+                                this.downloading = false;
+                                let contentString;
+                                switch (error) {
+                                    case 'blobDownloadFailed':
+                                        contentString = 'error.BLOB_DOWNLOAD_FAILED';
+                                        break;
+                                    case 'blobDecryptFailed':
+                                        contentString = 'error.BLOB_DECRYPT_FAILED';
+                                        break;
+                                    default:
+                                        contentString = 'error.ERROR_OCCURRED';
+                                        break;
+                                }
+                                const confirm = $mdDialog.alert()
+                                    .title($translate.instant('common.ERROR'))
+                                    .textContent($translate.instant(contentString))
+                                    .ok($translate.instant('common.OK'));
+                                $mdDialog.show(confirm);
+                            });
                         });
                 };
 

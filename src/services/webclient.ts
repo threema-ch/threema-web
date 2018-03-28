@@ -1504,10 +1504,7 @@ export class WebClientService {
                     data: contactReceiver,
                 };
             case false:
-                return {
-                    success: false,
-                    error: args[WebClientService.ARGUMENT_ERROR],
-                };
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
             default:
                 this.$log.error('Invalid contact response, success field is not a boolean');
                 return this.promiseRequestError('invalidResponse');
@@ -1861,7 +1858,8 @@ export class WebClientService {
 
         return {
             success: true,
-            data: data};
+            data: data,
+        };
     }
 
     private _receiveResponseBlob(message: threema.WireMessage): threema.PromiseRequestResult<ArrayBuffer> {
@@ -1870,31 +1868,33 @@ export class WebClientService {
         // Unpack data and arguments
         const args = message.args;
         const data = message.data;
-        if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid message response, data or arguments missing');
-            return {
-                success: false,
-            };
+        if (args === undefined ) {
+            this.$log.warn('Invalid message response, arguments missing');
+            return this.promiseRequestError('invalidResponse');
         }
 
         // Unpack required argument fields
         const receiverType = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
         const receiverId = args[WebClientService.ARGUMENT_RECEIVER_ID];
         const msgId: string = args[WebClientService.ARGUMENT_MESSAGE_ID];
-        if (receiverType === undefined || receiverId === undefined || msgId === undefined) {
+        const temporaryId: string = args[WebClientService.ARGUMENT_TEMPORARY_ID];
+        const success: boolean = args[WebClientService.ARGUMENT_SUCCESS];
+        if (receiverType === undefined || receiverId === undefined
+            || msgId === undefined || temporaryId === undefined || success === undefined) {
             this.$log.warn('Invalid blob response, argument field missing');
-            return {
-                success: false,
-            };
+            return this.promiseRequestError('invalidResponse');
+        }
+
+        // Check success flag
+        if (success === false) {
+            return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
         }
 
         // Unpack data
         const buffer: ArrayBuffer = data[WebClientService.DATA_FIELD_BLOB_BLOB];
         if (buffer === undefined) {
             this.$log.warn('Invalid blob response, data field missing');
-            return {
-                success: false,
-            };
+            return this.promiseRequestError('invalidResponse');
         }
 
         this.blobCache.set(msgId + receiverType, buffer);
