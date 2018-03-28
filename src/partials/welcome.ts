@@ -27,6 +27,8 @@ import {StateService} from '../services/state';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 
+import GlobalConnectionState = threema.GlobalConnectionState;
+
 class DialogController {
     // TODO: This is also used in partials/messenger.ts. We could somehow
     // extract it into a separate file.
@@ -328,7 +330,7 @@ class WelcomeController {
                         this.$log.error(this.logTag, 'Session already connected in another tab or window');
                         this.$timeout(() => {
                             this.stateService.updateConnectionBuildupState('already_connected');
-                            this.stateService.state = 'error';
+                            this.stateService.state = GlobalConnectionState.Error;
                         }, 500);
                     }
                     break;
