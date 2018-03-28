@@ -325,7 +325,11 @@ declare namespace threema {
     /**
      * Connection state of the WebRTC peer connection.
      */
-    type GlobalConnectionState = 'ok' | 'warning' | 'error';
+    const enum GlobalConnectionState {
+        Ok = 'ok',
+        Warning = 'warning',
+        Error = 'error',
+    }
 
     /**
      * Type of message to be sent to a receiver.
@@ -591,9 +595,9 @@ declare namespace threema {
     }
 
     const enum ChosenTask {
-        None = 'none',
-        WebRTC = 'webrtc',
-        RelayedData = 'relayed-data',
+        None,
+        WebRTC,
+        RelayedData,
     }
 
     namespace Container {

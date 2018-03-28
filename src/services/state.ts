@@ -17,6 +17,14 @@
 
 import {AsyncEvent} from 'ts-events';
 
+import GlobalConnectionState = threema.GlobalConnectionState;
+import ChosenTask = threema.ChosenTask;
+
+const enum Stage {
+    Signaling,
+    Task,
+}
+
 export class StateService {
 
     private logTag: string = '[StateService]';
@@ -39,7 +47,7 @@ export class StateService {
     public slowConnect = false;
 
     // Global connection state
-    public stage: 'signaling' | 'rtc';
+    private stage: Stage;
     public state: threema.GlobalConnectionState;
     public wasConnected: boolean;
 
@@ -53,25 +61,29 @@ export class StateService {
     /**
      * Signaling connection state.
      */
-    public updateSignalingConnectionState(state: saltyrtc.SignalingState): void {
+    public updateSignalingConnectionState(state: saltyrtc.SignalingState, chosenTask: ChosenTask): void {
         const prevState = this.signalingConnectionState;
         this.signalingConnectionState = state;
-        if (this.stage === 'signaling') {
+        if (this.stage === Stage.Signaling) {
             this.$log.debug(this.logTag, 'Signaling connection state:', prevState, '=>', state);
             switch (state) {
                 case 'new':
                 case 'ws-connecting':
                 case 'server-handshake':
                 case 'peer-handshake':
-                    this.state = 'warning';
+                    this.state = GlobalConnectionState.Warning;
                     break;
                 case 'task':
-                    this.state = 'warning';
-                    this.stage = 'rtc';
+                    if (chosenTask === ChosenTask.RelayedData) {
+                        this.state = GlobalConnectionState.Ok;
+                    } else {
+                        this.state = GlobalConnectionState.Warning;
+                    }
+                    this.stage = Stage.Task;
                     break;
                 case 'closing':
                 case 'closed':
-                    this.state = 'error';
+                    this.state = GlobalConnectionState.Error;
                     break;
                 default:
                     this.$log.warn(this.logTag, 'Ignored signaling connection state change to', state);
@@ -83,23 +95,25 @@ export class StateService {
 
     /**
      * RTC connection state.
+     *
+     * This is only called if the WebRTC task is active.
      */
     public updateRtcConnectionState(state: threema.RTCConnectionState): void {
         const prevState = this.rtcConnectionState;
         this.rtcConnectionState = state;
-        if (this.stage === 'rtc') {
+        if (this.stage === Stage.Task) {
             this.$log.debug(this.logTag, 'RTC connection state:', prevState, '=>', state);
             switch (state) {
                 case 'new':
                 case 'connecting':
-                    this.state = 'warning';
+                    this.state = GlobalConnectionState.Warning;
                     break;
                 case 'connected':
-                    this.state = 'ok';
+                    this.state = GlobalConnectionState.Ok;
                     this.wasConnected = true;
                     break;
                 case 'disconnected':
-                    this.state = 'error';
+                    this.state = GlobalConnectionState.Error;
                     break;
                 default:
                     this.$log.warn(this.logTag, 'Ignored RTC connection state change to', state);
@@ -202,8 +216,8 @@ export class StateService {
         // Reset state
         this.signalingConnectionState = 'new';
         this.rtcConnectionState = 'new';
-        this.stage = 'signaling';
-        this.state = 'error';
+        this.stage = Stage.Signaling;
+        this.state = GlobalConnectionState.Error;
         this.wasConnected = false;
         this.connectionBuildupState = 'connecting';
     }

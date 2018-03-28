@@ -19,6 +19,8 @@ import {ControllerService} from '../services/controller';
 import {StateService} from '../services/state';
 import {WebClientService} from '../services/webclient';
 
+import GlobalConnectionState = threema.GlobalConnectionState;
+
 /**
  * This controller handles state changes globally.
  *
@@ -31,7 +33,7 @@ export class StatusController {
     private logTag: string = '[StatusController]';
 
     // State variable
-    private state: threema.GlobalConnectionState = 'error';
+    private state = GlobalConnectionState.Error;
 
     // Expanded status bar
     public expandStatusBar = false;

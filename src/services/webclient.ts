@@ -381,7 +381,7 @@ export class WebClientService {
                             this.$log.warn(this.logTag, 'Unknown signaling state:', state);
                     }
                 }
-                this.stateService.updateSignalingConnectionState(state);
+                this.stateService.updateSignalingConnectionState(state, this.chosenTask);
             }, 0);
         });
 
@@ -1424,7 +1424,7 @@ export class WebClientService {
 
     private _requestInitialData(): void {
         // If all conversations are reloaded, clear the message cache
-        // to get in sync (we dont know if a message was removed, updated etc..)
+        // to get in sync (we don't know if a message was removed, updated etc..)
         this.messages.clear(this.$rootScope);
 
         // Request initial data
