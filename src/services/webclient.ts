@@ -1840,12 +1840,12 @@ export class WebClientService {
 
     }
 
-    private _receiveUpdateMessage(message: threema.WireMessage): void {
-        this.$log.debug('Received message update');
+    private _receiveUpdateMessages(message: threema.WireMessage): void {
+        this.$log.debug('Received messages update');
 
         // Unpack data and arguments
         const args = message.args;
-        const data: threema.Message = message.data;
+        const data: threema.Message[] = message.data;
         if (args === undefined || data === undefined) {
             this.$log.warn('Invalid message update, data or arguments missing');
             return;
@@ -1862,25 +1862,27 @@ export class WebClientService {
         const receiver = {type: type, id: id} as threema.Receiver;
 
         // React depending on mode
-        switch (mode) {
-            case WebClientService.ARGUMENT_MODE_NEW:
-                this.$log.debug('New message', data.id);
+        for (const msg of data) {
+            switch (mode) {
+                case WebClientService.ARGUMENT_MODE_NEW:
+                    this.$log.debug('New message', msg.id);
 
-                // It's possible that this message already exists (placeholder message on send).
-                // Try to update it first. If not, add it as a new msg.
-                if (!this.messages.update(receiver, data)) {
-                    this.messages.addNewer(receiver, [data]);
-                }
-                break;
-            case WebClientService.ARGUMENT_MODE_MODIFIED:
-                this.$log.debug('Modified message', data.id);
-                this.messages.update(receiver, data);
-                break;
-            case WebClientService.ARGUMENT_MODE_REMOVED:
-                this.messages.remove(receiver, data.id);
-                break;
-            default:
-                this.$log.warn('Invalid message response, unknown mode:', mode);
+                    // It's possible that this message already exists (placeholder message on send).
+                    // Try to update it first. If not, add it as a new msg.
+                    if (!this.messages.update(receiver, msg)) {
+                        this.messages.addNewer(receiver, [msg]);
+                    }
+                    break;
+                case WebClientService.ARGUMENT_MODE_MODIFIED:
+                    this.$log.debug('Modified message', msg.id);
+                    this.messages.update(receiver, msg);
+                    break;
+                case WebClientService.ARGUMENT_MODE_REMOVED:
+                    this.messages.remove(receiver, msg.id);
+                    break;
+                default:
+                    this.$log.warn('Invalid message response, unknown mode:', mode);
+            }
         }
     }
 
@@ -2542,8 +2544,8 @@ export class WebClientService {
             case WebClientService.SUB_TYPE_RECEIVERS:
                 this._receiveUpdateReceivers(message);
                 break;
-            case WebClientService.SUB_TYPE_MESSAGE:
-                this._receiveUpdateMessage(message);
+            case WebClientService.SUB_TYPE_MESSAGES:
+                this._receiveUpdateMessages(message);
                 break;
             case WebClientService.SUB_TYPE_TYPING:
                 this._receiveUpdateTyping(message);
