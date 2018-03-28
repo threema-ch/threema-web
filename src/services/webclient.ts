@@ -1666,74 +1666,6 @@ export class WebClientService {
         this.registerInitializationStep(InitializationStep.Conversations);
     }
 
-    private _receiveResponseConversation(message: threema.WireMessage) {
-        this.$log.debug('Received conversation response');
-        const args = message.args;
-        const data = message.data;
-        if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid conversation response, data or arguments missing');
-            return;
-        }
-
-        // Unpack required argument fields
-        const type: string = args[WebClientService.ARGUMENT_MODE];
-        switch (type) {
-            case WebClientService.ARGUMENT_MODE_NEW:
-                this.conversations.add(data);
-                break;
-            case WebClientService.ARGUMENT_MODE_MODIFIED:
-                // A conversation update *can* mean that a new message arrived.
-                // To find out, we'll look at the unread count. If it has been
-                // incremented, it must be a new message.
-                if (data.unreadCount > 0) {
-
-                    // Find the correct conversation in the conversation list
-                    const conversation = this.conversations.find(data);
-                    if (data === null) {
-                        // Conversation not found, add it!
-                        this.conversations.add(data);
-                        this.onNewMessage(data.latestMessage, conversation);
-                    } else {
-                        // Check for unread count changes
-                        const unreadCountIncreased = data.unreadCount > conversation.unreadCount;
-                        const unreadCountDecreased = data.unreadCount < conversation.unreadCount;
-
-                        // Update the conversation
-                        this.conversations.updateOrAdd(data);
-
-                        // If the unreadcount has increased, we received a new message.
-                        // Otherwise, if it has decreased, hide the notification.
-                        if (unreadCountIncreased) {
-                            this.onNewMessage(data.latestMessage, conversation);
-                        } else if (unreadCountDecreased) {
-                            this.notificationService.hideNotification(data.type + '-' + data.id);
-                        }
-                    }
-
-                } else {
-                    // Update the conversation and hide any notifications
-                    this.conversations.updateOrAdd(data);
-                    this.notificationService.hideNotification(data.type + '-' + data.id);
-                }
-
-                break;
-            case WebClientService.ARGUMENT_MODE_REMOVED:
-                this.conversations.remove(data);
-                // Remove all cached messages
-                this.messages.clearReceiverMessages((data as threema.Receiver));
-                this.receiverListener.forEach((listener: threema.ReceiverListener) => {
-                    this.$log.debug('call on removed listener');
-                    listener.onRemoved(data);
-                });
-                break;
-            default:
-                this.$log.warn('Received conversation without a mode');
-                return;
-        }
-
-        this.updateUnreadCount();
-    }
-
     private _receiveResponseMessages(message: threema.WireMessage): void {
         this.$log.debug('Received message response');
 
@@ -2060,6 +1992,77 @@ export class WebClientService {
         } else {
             this.typing.unsetTyping(receiver);
         }
+    }
+
+    private _receiveUpdateConversation(message: threema.WireMessage) {
+        this.$log.debug('Received conversation update');
+        const args = message.args;
+        const data = message.data;
+        if (args === undefined || data === undefined) {
+            this.$log.warn('Invalid conversation update, data or arguments missing');
+            return;
+        }
+
+        // Add type and id from args to data
+        data.type = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
+        data.id = args[WebClientService.ARGUMENT_RECEIVER_ID];
+
+        // Unpack required argument fields
+        const type: string = args[WebClientService.ARGUMENT_MODE];
+        switch (type) {
+            case WebClientService.ARGUMENT_MODE_NEW:
+                this.conversations.add(data);
+                break;
+            case WebClientService.ARGUMENT_MODE_MODIFIED:
+                // A conversation update *can* mean that a new message arrived.
+                // To find out, we'll look at the unread count. If it has been
+                // incremented, it must be a new message.
+                if (data.unreadCount > 0) {
+                    // Find the correct conversation in the conversation list
+                    const conversation = this.conversations.find(data);
+                    if (data === null) {
+                        // Conversation not found, add it!
+                        this.conversations.add(data);
+                        this.onNewMessage(data.latestMessage, conversation);
+                    } else {
+                        // Check for unread count changes
+                        const unreadCountIncreased = data.unreadCount > conversation.unreadCount;
+                        const unreadCountDecreased = data.unreadCount < conversation.unreadCount;
+
+                        // Update the conversation
+                        this.conversations.updateOrAdd(data);
+
+                        // If the unreadcount has increased, we received a new message.
+                        // Otherwise, if it has decreased, hide the notification.
+                        if (unreadCountIncreased) {
+                            this.onNewMessage(data.latestMessage, conversation);
+                        } else if (unreadCountDecreased) {
+                            this.notificationService.hideNotification(data.type + '-' + data.id);
+                        }
+                    }
+
+                } else {
+                    // Update the conversation and hide any notifications
+                    this.conversations.updateOrAdd(data);
+                    this.notificationService.hideNotification(data.type + '-' + data.id);
+                }
+
+                break;
+            case WebClientService.ARGUMENT_MODE_REMOVED:
+                this.conversations.remove(data);
+                // Remove all cached messages
+                this.messages.clearReceiverMessages((data as threema.Receiver));
+                this.receiverListener.forEach((listener: threema.ReceiverListener) => {
+                    this.$log.debug('call on removed listener');
+                    listener.onRemoved(data);
+                });
+                break;
+            default:
+                this.$log.warn('Received conversation without a mode');
+                return;
+        }
+
+        this.updateUnreadCount();
     }
 
     /**
@@ -2504,9 +2507,6 @@ export class WebClientService {
                     this._receiveResponseConversations(message);
                 });
                 break;
-            case WebClientService.SUB_TYPE_CONVERSATION:
-                this._receiveResponseConversation(message);
-                break;
             case WebClientService.SUB_TYPE_MESSAGE:
                 this._receiveResponseMessages(message);
                 break;
@@ -2556,6 +2556,9 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_TYPING:
                 this._receiveUpdateTyping(message);
+                break;
+            case WebClientService.SUB_TYPE_CONVERSATION:
+                this._receiveUpdateConversation(message);
                 break;
             case WebClientService.SUB_TYPE_BATTERY_STATUS:
                 this._receiveUpdateBatteryStatus(message);
