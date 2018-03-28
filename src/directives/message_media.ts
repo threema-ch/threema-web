@@ -202,7 +202,6 @@ export default [
                             });
                         })
                         .catch((error) => {
-                            $log.error('error downloading blob ', error);
                             $rootScope.$apply(() => {
                                 this.downloading = false;
                                 let contentString;

@@ -125,7 +125,7 @@ export default [
                             });
                         })
                         .catch((error) => {
-                            $log.error('error downloading blob ', error);
+                            $log.error('Error downloading blob:', error);
                             this.downloading = false;
                         });
                 };
