@@ -56,6 +56,7 @@ export class WebClientService {
     private static SUB_TYPE_CONVERSATIONS = 'conversations';
     private static SUB_TYPE_CONVERSATION = 'conversation';
     private static SUB_TYPE_MESSAGE = 'message';
+    private static SUB_TYPE_MESSAGES = 'messages';
     private static SUB_TYPE_TEXT_MESSAGE = 'textMessage';
     private static SUB_TYPE_FILE_MESSAGE = 'fileMessage';
     private static SUB_TYPE_AVATAR = 'avatar';
@@ -794,7 +795,7 @@ export class WebClientService {
         this.$log.debug('Sending message request for', receiver.type, receiver.id,
             'with message id', msgId);
 
-        this._sendRequest(WebClientService.SUB_TYPE_MESSAGE, args);
+        this._sendRequest(WebClientService.SUB_TYPE_MESSAGES, args);
 
         return refMsgId;
     }
@@ -1063,7 +1064,7 @@ export class WebClientService {
     }
 
     /**
-     * Send a message a ack/decline message
+     * Delete a message.
      */
     public deleteMessage(receiver, message: threema.Message): void {
         // Ignore empty text messages
@@ -1076,7 +1077,7 @@ export class WebClientService {
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_MESSAGE_ID]: message.id.toString(),
         };
-        this._sendDelete(WebClientService.SUB_TYPE_MESSAGE, args);
+        this._sendDeletePromise(WebClientService.SUB_TYPE_MESSAGE, args);
     }
 
     public sendMeIsTyping(receiver: threema.ContactReceiver, isTyping: boolean): void {
@@ -1515,7 +1516,7 @@ export class WebClientService {
         this.$log.debug('Received alert from device');
         this.alerts.push({
             source: message.args.source,
-            type: message.data.type,
+            type: message.args.type,
             message: message.data.message,
         } as threema.Alert);
 
@@ -1572,7 +1573,7 @@ export class WebClientService {
     /**
      * Handle new or modified contacts.
      */
-    private _receiveResponseContact(message: threema.WireMessage):
+    private _receiveUpdateContact(message: threema.WireMessage):
                                     threema.PromiseRequestResult<threema.ContactReceiver> {
         return this._receiveResponseReceiver(message, 'contact');
     }
@@ -2002,10 +2003,6 @@ export class WebClientService {
             this.$log.warn('Invalid conversation update, data or arguments missing');
             return;
         }
-
-        // Add type and id from args to data
-        data.type = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
-        data.id = args[WebClientService.ARGUMENT_RECEIVER_ID];
 
         // Unpack required argument fields
         const type: string = args[WebClientService.ARGUMENT_MODE];
@@ -2507,7 +2504,7 @@ export class WebClientService {
                     this._receiveResponseConversations(message);
                 });
                 break;
-            case WebClientService.SUB_TYPE_MESSAGE:
+            case WebClientService.SUB_TYPE_MESSAGES:
                 this._receiveResponseMessages(message);
                 break;
             case WebClientService.SUB_TYPE_AVATAR:
@@ -2527,12 +2524,6 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_CONTACT_DETAIL:
                 receiveResult = this._receiveResponseContactDetail(message);
-                break;
-            case WebClientService.SUB_TYPE_ALERT:
-                this._receiveAlert(message);
-                break;
-            case WebClientService.SUB_TYPE_BATTERY_STATUS:
-                this._receiveUpdateBatteryStatus(message);
                 break;
             default:
                 this.$log.warn('Ignored response with type:', type);
@@ -2564,13 +2555,16 @@ export class WebClientService {
                 this._receiveUpdateBatteryStatus(message);
                 break;
             case WebClientService.SUB_TYPE_CONTACT:
-                receiveResult = this._receiveResponseContact(message);
+                receiveResult = this._receiveUpdateContact(message);
                 break;
             case WebClientService.SUB_TYPE_GROUP:
                 receiveResult = this._receiveResponseGroup(message);
                 break;
             case WebClientService.SUB_TYPE_DISTRIBUTION_LIST:
                 receiveResult = this._receiveResponseDistributionList(message);
+                break;
+            case WebClientService.SUB_TYPE_ALERT:
+                this._receiveAlert(message);
                 break;
             default:
                 this.$log.warn('Ignored update with type:', type);
@@ -2584,7 +2578,7 @@ export class WebClientService {
         let receiveResult: threema.PromiseRequestResult<any>;
         switch (type) {
             case WebClientService.SUB_TYPE_CONTACT:
-                receiveResult = this._receiveResponseContact(message);
+                receiveResult = this._receiveUpdateContact(message);
                 break;
             case WebClientService.SUB_TYPE_GROUP:
                 receiveResult = this._receiveResponseGroup(message);
