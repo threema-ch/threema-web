@@ -26,12 +26,6 @@ declare namespace threema {
         high?: ArrayBuffer;
     }
 
-    interface AvatarRegistry {
-        contact: Avatar;
-        group: Avatar;
-        distributionList: Avatar;
-    }
-
     /**
      * Messages that are sent through the secure data channel as encrypted msgpack bytes.
      */
