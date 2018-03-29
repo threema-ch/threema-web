@@ -24,7 +24,8 @@ import {stringToUtf8a, utf8aToString} from '../helpers';
  *
  * Data is encrypted as follows:
  *
- *     plaintext = <ownPubKey> + <ownSecKey> + <peerPubKey> [+ <pushtoken]
+ *     plaintext = <ownPubKey> + <ownSecKey> + <peerPubKey>
+ *                 [+ <pushtoken-type-prefix> + ':' + <pushtoken>]
  *     encrypted = nacl.secretbox(plaintext, <nonce>, <key>)
  *
  * The data is encrypted using the first 32 bytes of the SHA512 hash of the
@@ -90,12 +91,29 @@ export class TrustedKeyStoreService {
      * storage. Encrypt it using NaCl with the provided password.
      */
     public storeTrustedKey(ownPublicKey: Uint8Array, ownSecretKey: Uint8Array,
-                           peerPublicKey: Uint8Array, pushToken: string | null,
+                           peerPublicKey: Uint8Array,
+                           pushToken: string | null, pushTokenType: threema.PushTokenType | null,
                            password: string): void {
         const nonce: Uint8Array = nacl.randomBytes(nacl.secretbox.nonceLength);
-        const token: Uint8Array = (pushToken == null) ? new Uint8Array(0) : stringToUtf8a(pushToken);
+
+        // Add prefix to push token string
+        let pushTokenString = null;
+        if (pushToken !== null && pushTokenType !== null) {
+            switch (pushTokenType) {
+                case threema.PushTokenType.Gcm:
+                    pushTokenString = threema.PushTokenPrefix.Gcm + ':' + pushToken;
+                    break;
+                case threema.PushTokenType.Apns:
+                    pushTokenString = threema.PushTokenPrefix.Apns + ':' + pushToken;
+                    break;
+            }
+        }
+        const token: Uint8Array = (pushTokenString == null)
+                                ? new Uint8Array(0)
+                                : stringToUtf8a(pushTokenString);
+
         const data = new Uint8Array(3 * 32 + token.byteLength);
-        // TODO public release: Stop storing public key (redundant)
+        // TODO: Stop storing public key (redundant)
         data.set(ownPublicKey, 0);
         data.set(ownSecretKey, 32);
         data.set(peerPublicKey, 64);
@@ -135,12 +153,32 @@ export class TrustedKeyStoreService {
             return null;
         }
 
+        // Parse push token
         const tokenBytes = (decrypted as Uint8Array).slice(96);
+        const tokenString: string | null = tokenBytes.byteLength > 0 ? utf8aToString(tokenBytes) : null;
+        let tokenType = threema.PushTokenType.Gcm;
+        let token: string;
+        if (tokenString[1] === ':') {
+            switch (tokenString[0]) {
+                case threema.PushTokenPrefix.Gcm:
+                    tokenType = threema.PushTokenType.Gcm;
+                    break;
+                case threema.PushTokenPrefix.Apns:
+                    tokenType = threema.PushTokenType.Apns;
+                    break;
+            }
+            token = tokenString.slice(2);
+        } else {
+            // Compat
+            token = tokenString;
+        }
+
         return {
             ownPublicKey: (decrypted as Uint8Array).slice(0, 32),
             ownSecretKey: (decrypted as Uint8Array).slice(32, 64),
             peerPublicKey: (decrypted as Uint8Array).slice(64, 96),
-            pushToken: tokenBytes.byteLength > 0 ? utf8aToString(tokenBytes) : null,
+            pushToken: token,
+            pushTokenType: tokenType,
         };
     }
 

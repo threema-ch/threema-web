@@ -16,6 +16,7 @@
  */
 
 export class PushService {
+    private static ARG_TYPE = 'type';
     private static ARG_TOKEN = 'token';
     private static ARG_SESSION = 'session';
     private static ARG_VERSION = 'version';
@@ -25,6 +26,7 @@ export class PushService {
 
     private url: string;
     private pushToken: string = null;
+    private pushType = threema.PushTokenType.Gcm;
     private version: number = null;
 
     public static $inject = ['$http', '$httpParamSerializerJQLike', 'CONFIG', 'PROTOCOL_VERSION'];
@@ -39,8 +41,9 @@ export class PushService {
     /**
      * Initiate the push service with a push token.
      */
-    public init(pushToken: string): void {
+    public init(pushToken: string, pushTokenType: threema.PushTokenType): void {
         this.pushToken = pushToken;
+        this.pushType = pushTokenType;
     }
 
     /**
@@ -74,6 +77,7 @@ export class PushService {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             data: this.$httpParamSerializerJQLike({
+                [PushService.ARG_TYPE]: this.pushType,
                 [PushService.ARG_SESSION]: sha256(session),
                 [PushService.ARG_TOKEN]: this.pushToken,
                 [PushService.ARG_VERSION]: this.version,

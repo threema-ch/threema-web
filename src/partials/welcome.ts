@@ -271,8 +271,9 @@ class WelcomeController {
         this.setupBroadcastChannel(keyStore.publicKeyHex);
 
         // Initialize push service
-        if (decrypted.pushToken !== null) {
-            this.pushService.init(decrypted.pushToken);
+        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
+            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
+            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
             this.$log.debug(this.logTag, 'Initialize push service');
         }
 
