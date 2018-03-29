@@ -39,7 +39,7 @@ import {stringToUtf8a, utf8aToString} from '../helpers';
  *
  */
 export class TrustedKeyStoreService {
-    private static STORAGE_KEY = 'trusted';
+    private STORAGE_KEY = 'trusted';
 
     private logTag: string = '[TrustedKeyStoreService]';
 
@@ -120,14 +120,14 @@ export class TrustedKeyStoreService {
         data.set(token, 96);
         const encrypted: Uint8Array = nacl.secretbox(data, nonce, this.pwToKey(password));
         this.$log.debug(this.logTag, 'Storing trusted key');
-        this.storage.setItem(TrustedKeyStoreService.STORAGE_KEY, u8aToHex(nonce) + ':' + u8aToHex(encrypted));
+        this.storage.setItem(this.STORAGE_KEY, u8aToHex(nonce) + ':' + u8aToHex(encrypted));
     }
 
     /**
      * Return whether or not a trusted key is stored in local storage.
      */
     public hasTrustedKey(): boolean {
-        const item: string = this.storage.getItem(TrustedKeyStoreService.STORAGE_KEY);
+        const item: string = this.storage.getItem(this.STORAGE_KEY);
         return item !== null && item.length > 96 && item.indexOf(':') !== -1;
     }
 
@@ -136,7 +136,7 @@ export class TrustedKeyStoreService {
      * the provided password.
      */
     public retrieveTrustedKey(password: string): threema.TrustedKeyStoreData | null {
-        const storedValue: string = this.storage.getItem(TrustedKeyStoreService.STORAGE_KEY);
+        const storedValue: string = this.storage.getItem(this.STORAGE_KEY);
         if (storedValue === null) {
             return null;
         }
@@ -156,9 +156,9 @@ export class TrustedKeyStoreService {
         // Parse push token
         const tokenBytes = (decrypted as Uint8Array).slice(96);
         const tokenString: string | null = tokenBytes.byteLength > 0 ? utf8aToString(tokenBytes) : null;
-        let tokenType = threema.PushTokenType.Gcm;
-        let token: string;
-        if (tokenString[1] === ':') {
+        let tokenType: threema.PushTokenType = null;
+        let token: string = null;
+        if (tokenString !== null && tokenString[1] === ':') {
             switch (tokenString[0]) {
                 case threema.PushTokenPrefix.Gcm:
                     tokenType = threema.PushTokenType.Gcm;
@@ -166,11 +166,15 @@ export class TrustedKeyStoreService {
                 case threema.PushTokenPrefix.Apns:
                     tokenType = threema.PushTokenType.Apns;
                     break;
+                default:
+                    this.$log.error(this.logTag, 'Invalid push token type:', tokenString[0]);
+                    return null;
             }
             token = tokenString.slice(2);
-        } else {
+        } else if (tokenString !== null) {
             // Compat
             token = tokenString;
+            tokenType = threema.PushTokenType.Gcm;
         }
 
         return {
@@ -187,6 +191,6 @@ export class TrustedKeyStoreService {
      */
     public clearTrustedKey(): void {
         this.$log.debug(this.logTag, 'Clearing trusted key');
-        this.storage.removeItem(TrustedKeyStoreService.STORAGE_KEY);
+        this.storage.removeItem(this.STORAGE_KEY);
     }
 }
