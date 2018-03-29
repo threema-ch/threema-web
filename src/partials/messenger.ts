@@ -399,7 +399,6 @@ class ConversationController {
                     this.isTyping = () => this.webClientService.isTyping(this.receiver as threema.ContactReceiver);
                 }
             }
-
         } catch (error) {
             $log.error('Could not set receiver and type');
             $log.debug(error.stack);
@@ -733,17 +732,31 @@ class ConversationController {
      * avoid sending too many messages at once.
      */
     public msgRead(message: threema.Message): void {
+        // Update lastReadMsg
         if (this.lastReadMsg === null || message.sortKey > this.lastReadMsg.sortKey) {
             this.lastReadMsg = message;
         }
+
         if (!this.msgReadReportPending) {
+            // Don't send a read message for messages that are already read.
+            // (Note: Ignore own messages since those are always read.)
+            if (!message.isOutbox && !message.unread) {
+                return;
+            }
+
+            // Don't send a read message for conversations that have no unread messages.
+            const conversation = this.webClientService.conversations.find(this.receiver);
+            if (conversation !== null && conversation.unreadCount === 0) {
+                return;
+            }
+
             this.msgReadReportPending = true;
             const receiver = angular.copy(this.receiver);
             receiver.type = this.type;
             this.$timeout(() => {
                 this.webClientService.requestRead(receiver, this.lastReadMsg);
                 this.msgReadReportPending = false;
-            }, 500);
+            }, 300);
         }
     }
 
