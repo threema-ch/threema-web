@@ -390,11 +390,22 @@ declare namespace threema {
         text: string;
     }
 
+    const enum PushTokenType {
+        Gcm = 'gcm',
+        Apns = 'apns',
+    }
+
+    const enum PushTokenPrefix {
+        Gcm = 'g',
+        Apns = 'a',
+    }
+
     interface TrustedKeyStoreData {
         ownPublicKey: Uint8Array;
         ownSecretKey: Uint8Array;
         peerPublicKey: Uint8Array;
         pushToken: string | null;
+        pushTokenType: PushTokenType | null;
     }
 
     const enum BrowserName {
@@ -547,9 +558,14 @@ declare namespace threema {
         isCharging: boolean;
     }
 
+    const enum OperatingSystem {
+        Android = 'android',
+        Ios = 'ios',
+    }
+
     interface ClientInfo {
         device: string;
-        os: string;
+        os: OperatingSystem;
         osVersion: string;
         isWork: boolean;
         pushToken?: string;

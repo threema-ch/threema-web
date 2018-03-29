@@ -156,6 +156,7 @@ export class WebClientService {
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
     private pushToken: string = null;
+    private pushTokenType: threema.PushTokenType = null;
 
     // Other
     private config: threema.Config;
@@ -559,7 +560,7 @@ export class WebClientService {
             this.pushService.sendPush(this.salty.permanentKeyBytes)
                 .catch(() => this.$log.warn('Could not notify app!'))
                 .then(() => {
-                    this.$log.debug('Requested app wakeup');
+                    this.$log.debug('Requested app wakeup via', this.pushTokenType);
                     this.$rootScope.$apply(() => {
                         this.stateService.updateConnectionBuildupState('push');
                     });
@@ -2131,7 +2132,19 @@ export class WebClientService {
         // Store push token
         if (this.clientInfo.pushToken) {
             this.pushToken = this.clientInfo.pushToken;
-            this.pushService.init(this.pushToken);
+            switch (this.clientInfo.os) {
+                case threema.OperatingSystem.Android:
+                    this.pushTokenType = threema.PushTokenType.Gcm;
+                    break;
+                case threema.OperatingSystem.Ios:
+                    this.pushTokenType = threema.PushTokenType.Apns;
+                    break;
+                default:
+                    this.$log.error(this.logTag, 'Invalid operating system in client info');
+            }
+        }
+        if (this.pushToken && this.pushTokenType) {
+            this.pushService.init(this.pushToken, this.pushTokenType);
         }
 
         this.registerInitializationStep(InitializationStep.ClientInfo);
@@ -2327,12 +2340,19 @@ export class WebClientService {
                 this.salty.keyStore.secretKeyBytes,
                 this.salty.peerPermanentKeyBytes,
                 this.pushToken,
+                this.pushTokenType,
                 password,
             );
             this.$log.info('Stored trusted key');
             return true;
         }
         return false;
+    }
+
+    public updatePushToken(token: string, tokenType: threema.PushTokenType): void {
+        this.$log.debug(this.logTag, 'Updating', tokenType, 'push token');
+        this.pushToken = token;
+        this.pushTokenType = tokenType;
     }
 
     private _sendRequest(type, args?: object, data?: object): void {
