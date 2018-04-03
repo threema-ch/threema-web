@@ -246,8 +246,9 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
             case ControllerModelMode.NEW:
                 return this.webClientService.createGroup(
                     this.members,
-                    this.name,
-                    this.avatarController.getAvatar());
+                    (this.name && this.name.length > 0) ? this.name : undefined,
+                    this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
+                );
             default:
                 this.$log.error('not allowed to save group');
 
