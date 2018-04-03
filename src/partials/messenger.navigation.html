@@ -95,7 +95,7 @@
 
                     <section class="message-box">
                         <eee-latest-message
-                            ng-show="!conversation.receiver.isTyping() && conversation.latestMessage"
+                            ng-if="!conversation.receiver.isTyping() && conversation.latestMessage"
                             ng-class="latest-message-text"
                             eee-type="conversation.type"
                             eee-receiver="conversation.receiver"
