@@ -877,6 +877,11 @@ export class WebClientService {
      * Mark a message as read.
      */
     public requestRead(receiver, newestMessage: threema.Message): void {
+        if (newestMessage.id === undefined) {
+            // Message that hasn't been sent yet
+            return;
+        }
+
         // Create arguments and send request
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
