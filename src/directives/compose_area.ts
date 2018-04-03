@@ -374,7 +374,9 @@ export default [
 
                             fileMessages.push(fileMessageData);
                         });
-                        scope.submit('file', fileMessages);
+                        scope
+                            .submit('file', fileMessages)
+                            .catch((msg) => $log.error('Could not send file:', msg));
                         scope.onUploading(false);
 
                     }).catch((ev: ErrorEvent) => {
@@ -437,7 +439,9 @@ export default [
                                 size: blob.size,
                                 data: buffer,
                             };
-                            scope.submit('file', [fileMessageData]);
+                            scope
+                                .submit('file', [fileMessageData])
+                                .catch((msg) => $log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
 
