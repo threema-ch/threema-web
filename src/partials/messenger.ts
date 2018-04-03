@@ -1443,17 +1443,15 @@ class ReceiverCreateController {
     }
 
     public create(): void {
-        // show loading
+        // Show loading indicator
         this.loading = true;
 
-        // validate first
+        // Save, then go to receiver detail page
         this.execute.execute(this.controllerModel.save())
             .then((receiver: threema.Receiver) => {
-                this.$state.go('messenger.home.detail', receiver);
+                this.$state.go('messenger.home.detail', receiver, {location: 'replace'});
             })
-            .catch((errorCode) => {
-                this.showAddError(errorCode);
-            });
+            .catch(this.showAddError.bind(this));
     }
 }
 
