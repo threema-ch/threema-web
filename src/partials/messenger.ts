@@ -460,7 +460,7 @@ class ConversationController {
                     if (success) {
                         resolve();
                     } else {
-                        reject();
+                        reject('Message sending unsuccessful');
                     }
                 }
             };
