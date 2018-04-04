@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasFeature} from '../helpers';
 import {WebClientService} from '../services/webclient';
 
 export default [
@@ -36,7 +37,7 @@ export default [
                 this.allContacts = Array
                     .from(webClientService.contacts.values())
                     .filter((contactReceiver: threema.ContactReceiver) => {
-                        return contactReceiver.featureLevel >= 0;
+                        return hasFeature(contactReceiver, threema.ContactReceiverFeature.GROUP_CHAT);
                     }) as threema.ContactReceiver[];
 
                 this.selectedItemChange = (contactReceiver: threema.ContactReceiver) => {

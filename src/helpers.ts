@@ -260,3 +260,13 @@ export function escapeRegExp(str: string) {
 export function msgpackVisualizer(bytes: Uint8Array): string {
     return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(bytes as any));
 }
+
+/**
+ * Check the featureMask of a contactReceiver
+ */
+export function hasFeature(contactReceiver: threema.ContactReceiver, feature: threema.ContactReceiverFeature): boolean {
+    // tslint:disable:no-bitwise
+    return contactReceiver !== undefined
+        && (contactReceiver.featureMask & feature) !== 0;
+    // tslint:enable:no-bitwise
+}

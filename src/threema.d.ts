@@ -207,7 +207,7 @@ declare namespace threema {
         verificationLevel?: number;
 
         // Feature level (0-3)
-        featureLevel: number | null;
+        featureMask: number | null;
 
         // The identity state
         state: 'ACTIVE' | 'INACTIVE';
@@ -447,6 +447,14 @@ declare namespace threema {
         VIEW = 'view',
         EDIT = 'edit',
         CHAT = 'chat',
+    }
+
+    const enum ContactReceiverFeature {
+        AUDIO = 0x01,
+        GROUP_CHAT = 0x02,
+        BALLOT = 0x04,
+        FILE = 0x08,
+        VOIP = 0x10,
     }
 
     interface ControllerModel<T extends BaseReceiver> {

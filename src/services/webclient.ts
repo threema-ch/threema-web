@@ -19,7 +19,7 @@
 /// <reference types="@saltyrtc/task-relayed-data" />
 
 import * as msgpack from 'msgpack-lite';
-import {hexToU8a, msgpackVisualizer} from '../helpers';
+import {hasFeature, hexToU8a, msgpackVisualizer} from '../helpers';
 import {isContactReceiver, isDistributionListReceiver, isGroupReceiver} from '../typeguards';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
@@ -37,6 +37,7 @@ import {VersionService} from './version';
 
 // Aliases
 import InitializationStep = threema.InitializationStep;
+import ContactReceiverFeature = threema.ContactReceiverFeature;
 
 /**
  * This service handles everything related to the communication with the peer.
@@ -941,20 +942,20 @@ export class WebClientService {
                             return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
                         }
 
-                        // Determine required feature level
-                        let requiredFeatureLevel = 3;
-                        let invalidFeatureLevelMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
+                        // Determine required feature mask
+                        let requiredFeature: ContactReceiverFeature = ContactReceiverFeature.FILE;
+                        let invalidFeatureMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
                         if ((message as threema.FileMessageData).sendAsFile !== true) {
                             // check mime type
                             const mime = (message as threema.FileMessageData).fileType;
 
                             if (this.mimeService.isAudio(mime)) {
-                                requiredFeatureLevel = 1;
-                                invalidFeatureLevelMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
+                                requiredFeature = ContactReceiverFeature.AUDIO;
+                                invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
                             } else if (this.mimeService.isImage(mime)
                                 || this.mimeService.isVideo(mime)) {
-                                requiredFeatureLevel = 0;
-                                invalidFeatureLevelMessage = 'error.MESSAGE_NOT_SUPPORTED';
+                                requiredFeature = ContactReceiverFeature.AUDIO;
+                                invalidFeatureMessage = 'error.MESSAGE_NOT_SUPPORTED';
                             }
                         }
 
@@ -963,7 +964,7 @@ export class WebClientService {
                         // check receiver
                         switch (receiver.type) {
                             case 'distributionList':
-                                return reject(this.$translate.instant(invalidFeatureLevelMessage, {
+                                return reject(this.$translate.instant(invalidFeatureMessage, {
                                     receiverName: receiver.displayName}));
                             case 'group':
                                 const unsupportedMembers = [];
@@ -976,14 +977,15 @@ export class WebClientService {
                                     if (identity !== this.me.id) {
                                         // tslint:disable-next-line: no-shadowed-variable
                                         const contact = this.contacts.get(identity);
-                                        if (contact !== undefined && contact.featureLevel < requiredFeatureLevel) {
+                                        if (contact === undefined
+                                            || !hasFeature(contact, requiredFeature)) {
                                             unsupportedMembers.push(contact.displayName);
                                         }
                                     }
                                 });
 
                                 if (unsupportedMembers.length > 0) {
-                                    return reject(this.$translate.instant(invalidFeatureLevelMessage, {
+                                    return reject(this.$translate.instant(invalidFeatureMessage, {
                                         receiverName: unsupportedMembers.join(',')}));
                                 }
                                 break;
@@ -992,10 +994,10 @@ export class WebClientService {
                                 if (contact === undefined) {
                                     this.$log.error('Cannot retrieve contact');
                                     return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                                } else if (contact.featureLevel < requiredFeatureLevel) {
+                                } else if (!hasFeature(contact, requiredFeature)) {
                                     this.$log.debug('Cannot send message: Feature level mismatch:',
-                                        contact.featureLevel, '<', requiredFeatureLevel);
-                                    return reject(this.$translate.instant(invalidFeatureLevelMessage, {
+                                        contact.featureMask, '!=', requiredFeature);
+                                    return reject(this.$translate.instant(invalidFeatureMessage, {
                                         receiverName: contact.displayName}));
                                 }
                                 break;
@@ -2177,7 +2179,7 @@ export class WebClientService {
             avatar: {
                 high: data.avatar,
             },
-            featureLevel: 3,
+            featureMask: 0xFF,
             verificationLevel: 3,
             state: 'ACTIVE',
             access: {
