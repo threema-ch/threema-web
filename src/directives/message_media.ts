@@ -169,7 +169,7 @@ export default [
                     const receiver: threema.Receiver = this.receiver;
                     this.downloading = true;
                     webClientService.requestBlob(message.id, receiver)
-                        .then((buffer: ArrayBuffer) => {
+                        .then((blobInfo: threema.BlobInfo) => {
                             $rootScope.$apply(() => {
                                 this.downloading = false;
                                 this.downloaded = true;
@@ -177,24 +177,28 @@ export default [
                                 switch (this.message.type) {
                                     case 'image':
                                         const caption = message.caption || '';
-                                        mediaboxService.setMedia(buffer, messageService.getFileName(message), caption);
+                                        mediaboxService.setMedia(
+                                            blobInfo.buffer,
+                                            blobInfo.filename,
+                                            caption,
+                                        );
                                         break;
                                     case 'video':
-                                        saveAs(new Blob([buffer]), messageService.getFileName(message));
+                                        saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
                                         break;
                                     case 'file':
                                         if (this.message.file.type === 'image/gif') {
                                             // show inline
-                                            this.blobBuffer = buffer;
+                                            this.blobBuffer = blobInfo.buffer;
                                             // hide thumbnail
                                             this.showThumbnail = false;
                                         } else {
-                                            saveAs(new Blob([buffer]), messageService.getFileName(message));
+                                            saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
                                         }
                                         break;
                                     case 'audio':
                                         // Show inline
-                                        this.playAudio(buffer);
+                                        this.playAudio(blobInfo.buffer);
                                         break;
                                     default:
                                         $log.warn('Ignored download request for message type', this.message.type);

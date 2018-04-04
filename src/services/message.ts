@@ -107,49 +107,6 @@ export class MessageService {
     }
 
     /**
-     * return the filename of a message (image, audio, file)
-     * used for downloads
-     * @param message
-     * @returns filename string or null
-     */
-    public getFileName(message: threema.Message): string {
-        if (message === undefined
-            || message === null) {
-            return null;
-        }
-
-        const getFileName = (prefix: string, postfix?: string): string => {
-            if (message.id === undefined) {
-                this.$log.warn('missing id on message model');
-                return null;
-            }
-            return prefix
-                + '-' + message.id
-                + (postfix !== undefined ? '.' + postfix : '');
-        };
-
-        switch (message.type) {
-            case 'image':
-                return getFileName('image', 'jpg');
-            case 'video':
-                return getFileName('video', 'mpg');
-            case 'file':
-                if (message.file !== undefined) {
-                    return message.file.name;
-                }
-
-                // should not happen
-                this.$log.warn('file message without file object', message.id);
-                return getFileName('file');
-            case 'audio':
-                return getFileName('audio', 'mp4');
-            default:
-                // ignore file types without a read file
-                return null;
-        }
-    }
-
-    /**
      * Create a message object with a temporaryId
      */
     public createTemporary(receiver: threema.Receiver, msgType: string,

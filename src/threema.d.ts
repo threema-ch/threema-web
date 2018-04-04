@@ -117,6 +117,12 @@ declare namespace threema {
         address?: string;
     }
 
+    interface BlobInfo {
+        buffer: ArrayBuffer;
+        mimetype: string;
+        filename: string;
+    }
+
     /**
      * All possible receiver types.
      */
@@ -285,7 +291,7 @@ declare namespace threema {
         position: number;
         messageCount: number;
         unreadCount: number;
-        latestMessage: Message;
+        latestMessage: Message | null;
         receiver?: Receiver;
         avatar?: ArrayBuffer;
         isMuted?: boolean;

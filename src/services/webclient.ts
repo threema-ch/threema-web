@@ -109,6 +109,8 @@ export class WebClientService {
     private static DELETE_GROUP_TYPE_LEAVE = 'leave';
     private static DELETE_GROUP_TYPE_DELETE = 'delete';
     private static DATA_FIELD_BLOB_BLOB = 'blob';
+    private static DATA_FIELD_BLOB_TYPE = 'type';
+    private static DATA_FIELD_BLOB_NAME = 'name';
     private static DC_LABEL = 'THREEMA';
 
     private logTag: string = '[WebClientService]';
@@ -168,7 +170,7 @@ export class WebClientService {
     private trustedKeyStore: TrustedKeyStoreService;
     public version = null;
 
-    private blobCache = new Map<string, ArrayBuffer>();
+    private blobCache = new Map<string, threema.BlobInfo>();
     private loadingMessages = new Map<string, boolean>();
 
     public receiverListener: threema.ReceiverListener[] = [];
@@ -854,7 +856,7 @@ export class WebClientService {
     /**
      * Request a blob.
      */
-    public requestBlob(msgId: string, receiver: threema.Receiver): Promise<ArrayBuffer> {
+    public requestBlob(msgId: string, receiver: threema.Receiver): Promise<threema.BlobInfo> {
         const cached = this.blobCache.get(msgId + receiver.type);
 
         if (cached !== undefined) {
@@ -1801,7 +1803,7 @@ export class WebClientService {
         };
     }
 
-    private _receiveResponseBlob(message: threema.WireMessage): threema.PromiseRequestResult<ArrayBuffer> {
+    private _receiveResponseBlob(message: threema.WireMessage): threema.PromiseRequestResult<threema.BlobInfo> {
         this.$log.debug('Received blob response');
 
         // Unpack data and arguments
@@ -1830,20 +1832,23 @@ export class WebClientService {
         }
 
         // Unpack data
-        const buffer: ArrayBuffer = data[WebClientService.DATA_FIELD_BLOB_BLOB];
-        if (buffer === undefined) {
+        const blobInfo: threema.BlobInfo = {
+            buffer: data[WebClientService.DATA_FIELD_BLOB_BLOB],
+            mimetype: data[WebClientService.DATA_FIELD_BLOB_TYPE],
+            filename: data[WebClientService.DATA_FIELD_BLOB_NAME],
+        };
+        if (blobInfo.buffer === undefined || blobInfo.mimetype === undefined || blobInfo.filename === undefined) {
             this.$log.warn('Invalid blob response, data field missing');
             return this.promiseRequestError('invalidResponse');
         }
 
-        this.blobCache.set(msgId + receiverType, buffer);
+        this.blobCache.set(msgId + receiverType, blobInfo);
 
         // Download to browser
         return {
             success: true,
-            data: buffer,
+            data: blobInfo,
         };
-
     }
 
     private _receiveUpdateMessages(message: threema.WireMessage): void {

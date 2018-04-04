@@ -108,7 +108,7 @@ export default [
                 this.download = (ev) => {
                     this.downloading = true;
                     webClientService.requestBlob(this.message.id, this.receiver)
-                        .then((buffer: ArrayBuffer) => {
+                        .then((blobInfo: threema.BlobInfo) => {
                             $rootScope.$apply(() => {
                                 this.downloading = false;
 
@@ -117,7 +117,7 @@ export default [
                                     case 'video':
                                     case 'file':
                                     case 'audio':
-                                        saveAs(new Blob([buffer]), messageService.getFileName(this.message));
+                                        saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
                                         break;
                                     default:
                                         $log.warn('Ignored download request for message type', this.message.type);
