@@ -60,6 +60,26 @@ declare namespace threema {
         height: number;
     }
 
+    const enum EventType {
+        Created = 'created',
+        Sent = 'sent',
+        Delivered = 'delivered',
+        Read = 'read',
+        Acked = 'acked',
+        Modified = 'modified',
+    }
+
+    /**
+     * A message event, e.g. when it was delivered, read or modified.
+     */
+    interface MessageEvent {
+        // The event type
+        type: EventType;
+
+        // Unix timestamp in seconds
+        date: number;
+    }
+
     /**
      * A Threema chat message.
      */
@@ -69,6 +89,7 @@ declare namespace threema {
         body: string;
         thumbnail?: Thumbnail;
         date?: number;
+        events?: MessageEvent[];
         sortKey: number;
         partnerId: string;
         isOutbox: boolean;
