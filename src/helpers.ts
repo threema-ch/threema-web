@@ -267,15 +267,16 @@ export function msgpackVisualizer(bytes: Uint8Array): string {
 export function hasFeature(contactReceiver: threema.ContactReceiver,
                            feature: threema.ContactReceiverFeature,
                            $log: ng.ILogService): boolean {
+    const logTag = '[helpers.hasFeature]';
     if (contactReceiver !== undefined) {
         if (contactReceiver.featureMask === 0) {
-            $log.warn(contactReceiver.id, 'featureMask', contactReceiver.featureMask);
+            $log.warn(logTag, contactReceiver.id, 'featureMask', contactReceiver.featureMask);
             return false;
         }
         // tslint:disable:no-bitwise
         return (contactReceiver.featureMask & feature) !== 0;
         // tslint:enable:no-bitwise
     }
-    $log.warn('Cannot check featureMask of a undefined contactReceiver');
+    $log.warn(logTag, 'Cannot check featureMask of a undefined contactReceiver');
     return false;
 }
