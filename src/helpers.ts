@@ -260,3 +260,22 @@ export function escapeRegExp(str: string) {
 export function msgpackVisualizer(bytes: Uint8Array): string {
     return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(bytes as any));
 }
+
+/**
+ * Check the featureMask of a contactReceiver
+ */
+export function hasFeature(contactReceiver: threema.ContactReceiver,
+                           feature: threema.ContactReceiverFeature,
+                           $log: ng.ILogService): boolean {
+    if (contactReceiver !== undefined) {
+        if (contactReceiver.featureMask === 0) {
+            $log.warn(contactReceiver.id, 'featureMask', contactReceiver.featureMask);
+            return false;
+        }
+        // tslint:disable:no-bitwise
+        return (contactReceiver.featureMask & feature) !== 0;
+        // tslint:enable:no-bitwise
+    }
+    $log.warn('Cannot check featureMask of a undefined contactReceiver');
+    return false;
+}
