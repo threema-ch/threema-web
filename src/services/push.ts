@@ -20,8 +20,13 @@ export class PushService {
     private static ARG_TOKEN = 'token';
     private static ARG_SESSION = 'session';
     private static ARG_VERSION = 'version';
+    private static ARG_ENDPOINT = 'endpoint';
+    private static ARG_BUNDLE_ID = 'bundleid';
+
+    private logTag: string = '[PushService]';
 
     private $http: ng.IHttpService;
+    private $log: ng.ILogService;
     private $httpParamSerializerJQLike;
 
     private url: string;
@@ -29,10 +34,11 @@ export class PushService {
     private pushType = threema.PushTokenType.Gcm;
     private version: number = null;
 
-    public static $inject = ['$http', '$httpParamSerializerJQLike', 'CONFIG', 'PROTOCOL_VERSION'];
-    constructor($http: ng.IHttpService, $httpParamSerializerJQLike,
+    public static $inject = ['$http', '$log', '$httpParamSerializerJQLike', 'CONFIG', 'PROTOCOL_VERSION'];
+    constructor($http: ng.IHttpService, $log: ng.ILogService, $httpParamSerializerJQLike,
                 CONFIG: threema.Config, PROTOCOL_VERSION: number) {
         this.$http = $http;
+        this.$log = $log;
         this.$httpParamSerializerJQLike = $httpParamSerializerJQLike;
         this.url = CONFIG.PUSH_URL;
         this.version = PROTOCOL_VERSION;
@@ -42,6 +48,7 @@ export class PushService {
      * Initiate the push service with a push token.
      */
     public init(pushToken: string, pushTokenType: threema.PushTokenType): void {
+        this.$log.info(this.logTag, 'Initialized with', pushTokenType, 'token');
         this.pushToken = pushToken;
         this.pushType = pushTokenType;
     }
@@ -70,25 +77,53 @@ export class PushService {
         }
 
         // Prepare request
+        const data = {
+            [PushService.ARG_TYPE]: this.pushType,
+            [PushService.ARG_SESSION]: sha256(session),
+            [PushService.ARG_VERSION]: this.version,
+        };
+        if (this.pushType === threema.PushTokenType.Apns) {
+            // APNS token format: "<hex-deviceid>;<endpoint>;<bundle-id>"
+            const parts = this.pushToken.split(';');
+            if (parts.length < 3) {
+                this.$log.warn(this.logTag, 'APNS push token contains', parts.length, 'parts, at least 3 are required');
+                return Promise.resolve(false);
+            }
+            data[PushService.ARG_TOKEN] = parts[0];
+            data[PushService.ARG_ENDPOINT] = parts[1];
+            data[PushService.ARG_BUNDLE_ID] = parts[2];
+        } else if (this.pushType === threema.PushTokenType.Gcm) {
+            data[PushService.ARG_TOKEN] = this.pushToken;
+        } else {
+            this.$log.warn(this.logTag, 'Invalid push type');
+            return Promise.resolve(false);
+        }
+
         const request = {
             method: 'POST',
             url: this.url,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            data: this.$httpParamSerializerJQLike({
-                [PushService.ARG_TYPE]: this.pushType,
-                [PushService.ARG_SESSION]: sha256(session),
-                [PushService.ARG_TOKEN]: this.pushToken,
-                [PushService.ARG_VERSION]: this.version,
-            }),
+            data: this.$httpParamSerializerJQLike(data),
         };
 
         // Send push
         return new Promise((resolve) => {
             this.$http(request).then(
-                (successResponse) => resolve(successResponse.status === 204),
-                (errorResponse) => resolve(false),
+                (successResponse) => {
+                    if (successResponse.status === 204) {
+                        this.$log.debug(this.logTag, 'Sent push');
+                        resolve(true);
+                    } else {
+                        this.$log.warn(this.logTag, 'Sending push failed: HTTP ' + successResponse.status);
+                        resolve(false);
+                    }
+                },
+                (errorResponse) => {
+                    this.$log.warn(this.logTag, 'Sending push failed:', errorResponse);
+                    resolve(false);
+                },
             );
         });
     }

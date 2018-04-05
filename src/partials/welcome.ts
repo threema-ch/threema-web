@@ -274,7 +274,6 @@ class WelcomeController {
         if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
             this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
             this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
-            this.$log.debug(this.logTag, 'Initialize push service');
         }
 
         // Reconnect

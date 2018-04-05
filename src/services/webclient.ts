@@ -2360,7 +2360,6 @@ export class WebClientService {
     }
 
     public updatePushToken(token: string, tokenType: threema.PushTokenType): void {
-        this.$log.debug(this.logTag, 'Updating', tokenType, 'push token');
         this.pushToken = token;
         this.pushTokenType = tokenType;
     }
