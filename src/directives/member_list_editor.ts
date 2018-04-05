@@ -33,14 +33,14 @@ export default [
             controller: [function() {
                 const AUTOCOMPLETE_MAX_RESULTS = 20;
 
-                // cache all feature level >= 1 contacts
+                // Cache all contacts with group chat support
                 this.allContacts = Array
                     .from(webClientService.contacts.values())
-                    .filter((contactReceiver: threema.ContactReceiver) => {
-                        return hasFeature(contactReceiver,
-                            threema.ContactReceiverFeature.GROUP_CHAT,
-                            $log);
-                    }) as threema.ContactReceiver[];
+                    .filter((contactReceiver: threema.ContactReceiver) => hasFeature(
+                        contactReceiver,
+                        threema.ContactReceiverFeature.GROUP_CHAT,
+                        $log,
+                    )) as threema.ContactReceiver[];
 
                 this.selectedItemChange = (contactReceiver: threema.ContactReceiver) => {
                     if (contactReceiver !== undefined) {
