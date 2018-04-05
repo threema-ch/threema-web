@@ -978,7 +978,7 @@ export class WebClientService {
                                         // tslint:disable-next-line: no-shadowed-variable
                                         const contact = this.contacts.get(identity);
                                         if (contact === undefined
-                                            || !hasFeature(contact, requiredFeature)) {
+                                            || !hasFeature(contact, requiredFeature, this.$log)) {
                                             unsupportedMembers.push(contact.displayName);
                                         }
                                     }
@@ -994,9 +994,9 @@ export class WebClientService {
                                 if (contact === undefined) {
                                     this.$log.error('Cannot retrieve contact');
                                     return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                                } else if (!hasFeature(contact, requiredFeature)) {
+                                } else if (!hasFeature(contact, requiredFeature, this.$log)) {
                                     this.$log.debug('Cannot send message: Feature level mismatch:',
-                                        contact.featureMask, '!=', requiredFeature);
+                                        contact.featureMask, 'does not include', requiredFeature);
                                     return reject(this.$translate.instant(invalidFeatureMessage, {
                                         receiverName: contact.displayName}));
                                 }

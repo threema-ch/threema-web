@@ -19,8 +19,8 @@ import {hasFeature} from '../helpers';
 import {WebClientService} from '../services/webclient';
 
 export default [
-    'WebClientService',
-    function(webClientService: WebClientService) {
+    '$log', 'WebClientService',
+    function($log: ng.ILogService, webClientService: WebClientService) {
         return {
             restrict: 'EA',
             scope: {},
@@ -37,7 +37,9 @@ export default [
                 this.allContacts = Array
                     .from(webClientService.contacts.values())
                     .filter((contactReceiver: threema.ContactReceiver) => {
-                        return hasFeature(contactReceiver, threema.ContactReceiverFeature.GROUP_CHAT);
+                        return hasFeature(contactReceiver,
+                            threema.ContactReceiverFeature.GROUP_CHAT,
+                            $log);
                     }) as threema.ContactReceiver[];
 
                 this.selectedItemChange = (contactReceiver: threema.ContactReceiver) => {

@@ -206,7 +206,7 @@ declare namespace threema {
         // Verification level integer (1-3)
         verificationLevel?: number;
 
-        // Feature level (0-3)
+        // Feature mask
         featureMask: number | null;
 
         // The identity state
