@@ -64,7 +64,8 @@ export class StateService {
     public updateSignalingConnectionState(state: saltyrtc.SignalingState, chosenTask: ChosenTask): void {
         const prevState = this.signalingConnectionState;
         this.signalingConnectionState = state;
-        if (this.stage === Stage.Signaling) {
+        if (this.stage === Stage.Signaling
+        || (this.stage === Stage.Task && chosenTask === ChosenTask.RelayedData)) {
             this.$log.debug(this.logTag, 'Signaling connection state:', prevState, '=>', state);
             switch (state) {
                 case 'new':
