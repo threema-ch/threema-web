@@ -16,9 +16,9 @@
  */
 
 /**
- * Controller to show or hide the "Android only" note at the bottom of the welcome screen.
+ * Controller to show or hide the "Android / iOS only" note at the bottom of the welcome screen.
  */
-export class AndroidOnlyController {
+export class AndroidIosOnlyController {
     public show: boolean = false;
 
     public static $inject = ['$rootScope'];

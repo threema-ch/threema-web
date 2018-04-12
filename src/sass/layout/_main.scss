@@ -264,7 +264,7 @@ a.click-action {
     @include mouse-hand;
 }
 
-.androidonly {
+.android-ios-only {
     width: 100%;
     margin: 10px auto 0;
     background-color: white;

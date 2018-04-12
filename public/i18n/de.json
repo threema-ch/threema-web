@@ -22,7 +22,7 @@
         "FORGET_SESSION": "gespeicherte Sitzung löschen",
         "BTN_RECONNECT": "Verbindung aufbauen",
         "BROWSER_NOT_SUPPORTED": "Dieser Browser wird nicht unterst\u00fctzt",
-        "ANDROID_ONLY": "Kompatibel mit Threema für Android.",
+        "ANDROID_IOS_ONLY": "Kompatibel mit Threema für Android und iOS.",
         "CONNECTING": "Verbindung wird aufgebaut",
         "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
         "CONNECTING_TO_APP": "Verbindung zu App<br>wird aufgebaut …",

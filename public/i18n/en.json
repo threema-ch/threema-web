@@ -22,7 +22,7 @@
         "FORGET_SESSION": "forget this session",
         "BTN_RECONNECT": "Reconnect",
         "BROWSER_NOT_SUPPORTED": "This browser is not supported",
-        "ANDROID_ONLY": "Compatible with Threema for Android.",
+        "ANDROID_IOS_ONLY": "Compatible with Threema for Android and iOS.",
         "CONNECTING": "Connecting",
         "WAITING_FOR_PUSH": "Waiting for<br>app wakeup …",
         "CONNECTING_TO_APP": "Connection to app is<br>being established …",
