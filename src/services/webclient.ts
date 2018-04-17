@@ -600,7 +600,7 @@ export class WebClientService {
                 redirect: boolean = false): void {
         this.$log.info(this.logTag, 'Disconnecting...');
 
-        if (requestedByUs && this.stateService.rtcConnectionState === 'connected') {
+        if (requestedByUs && this.stateService.state === threema.GlobalConnectionState.Ok) {
             // Ask peer to disconnect too
             this.salty.sendApplicationMessage({type: 'disconnect', forget: deleteStoredData});
         }
