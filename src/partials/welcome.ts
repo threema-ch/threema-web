@@ -133,6 +133,11 @@ class WelcomeController {
                 $log.warn('Opera is too old (' + version + ' < ' + minVersions.OPERA + ')');
                 this.showBrowserWarning();
             }
+        } else if (browser.safari === true) {
+            if (version < minVersions.SAFARI) {
+                $log.warn('Safari is too old (' + version + ' < ' + minVersions.SAFARI + ')');
+                this.showBrowserWarning();
+            }
         } else {
             $log.warn('Non-supported browser, please use Chrome, Firefox or Opera');
             this.showBrowserWarning();
