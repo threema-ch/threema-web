@@ -405,10 +405,16 @@ export class WebClientService {
 
             // If the WebRTC task was chosen, initialize handover.
             if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                // Firefox <53 does not yet support TLS. Skip it, to save allocations.
                 const browser = this.browserService.getBrowser();
+
+                // Firefox <53 does not yet support TLS. Skip it, to save allocations.
                 if (browser.firefox && browser.version && browser.version < 53) {
                     this.skipIceTls();
+                }
+
+                // Safari does not support our dual-stack TURN servers.
+                if (browser.safari) {
+                    this.skipIceDs();
                 }
 
                 this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
@@ -665,6 +671,27 @@ export class WebClientService {
             }
         } else {
             this.$log.debug(this.logTag, 'No fallback TURN TCP server present, keeping TURNS server');
+        }
+    }
+
+    /**
+     * Safari has issues with dual-stack TURN servers:
+     * https://bugs.webkit.org/show_bug.cgi?id=173307#c13
+     * As a workaround, replace ds-turn.threema.ch servers
+     * in the ICE_SERVERS configuration with turn.threema.ch.
+     */
+    public skipIceDs(): void {
+        this.$log.debug(this.logTag, 'Requested to replace DS servers in ICE configuration');
+        const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
+        if (allUrls.some((url) => url.includes('ds-turn.threema.ch'))) {
+            for (const server of this.config.ICE_SERVERS) {
+                // Replace dual stack entries
+                server.urls = server.urls.map((url) => {
+                    return url.replace('ds-turn.threema.ch', 'turn.threema.ch');
+                });
+            }
+        } else {
+            this.$log.debug(this.logTag, 'No ds-turn ICE server present');
         }
     }
 
