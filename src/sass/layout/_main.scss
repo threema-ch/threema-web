@@ -278,7 +278,12 @@ a.click-action {
         vertical-align: middle;
         align-items: center;
         font-weight: 300;
+        white-space: nowrap;
         i.material-icons {
+            margin-right: 8px;
+        }
+        img {
+            height: 26px;
             margin-right: 8px;
         }
     }
