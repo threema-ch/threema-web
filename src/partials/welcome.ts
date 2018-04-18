@@ -76,6 +76,7 @@ class WelcomeController {
     private qrCode;
     private password: string = '';
     private pleaseUpdateAppMsg: string = null;
+    private browser: threema.BrowserInfo;
 
     public static $inject = [
         '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
@@ -112,28 +113,28 @@ class WelcomeController {
         this.config = config;
 
         // Determine whether browser warning should be shown
-        const browser = browserService.getBrowser();
-        const version = browser.version;
-        $log.debug('Detected browser:', browser.textInfo);
+        this.browser = browserService.getBrowser();
+        const version = this.browser.version;
+        $log.debug('Detected browser:', this.browser.textInfo);
         if (version === undefined) {
             $log.warn('Could not determine browser version');
             this.showBrowserWarning();
-        } else if (browser.chrome === true) {
+        } else if (this.browser.chrome === true) {
             if (version < minVersions.CHROME) {
                 $log.warn('Chrome is too old (' + version + ' < ' + minVersions.CHROME + ')');
                 this.showBrowserWarning();
             }
-        } else if (browser.firefox === true) {
+        } else if (this.browser.firefox === true) {
             if (version < minVersions.FF) {
                 $log.warn('Firefox is too old (' + version + ' < ' + minVersions.FF + ')');
                 this.showBrowserWarning();
             }
-        } else if (browser.opera === true) {
+        } else if (this.browser.opera === true) {
             if (version < minVersions.OPERA) {
                 $log.warn('Opera is too old (' + version + ' < ' + minVersions.OPERA + ')');
                 this.showBrowserWarning();
             }
-        } else if (browser.safari === true) {
+        } else if (this.browser.safari === true) {
             if (version < minVersions.SAFARI) {
                 $log.warn('Safari is too old (' + version + ' < ' + minVersions.SAFARI + ')');
                 this.showBrowserWarning();

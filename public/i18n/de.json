@@ -4,7 +4,6 @@
     },
     "welcome": {
         "ABORT": "Abbrechen",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> oder <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a>, um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
         "CONTINUE_ANYWAY": "Trotzdem fortfahren",
         "PLEASE_SCAN": "Scannen Sie den QR-Code mit Ihrer Threema-App",
         "PLEASE_UNLOCK": "Verbindung wiederaufbauen",
@@ -22,6 +21,8 @@
         "FORGET_SESSION": "gespeicherte Sitzung löschen",
         "BTN_RECONNECT": "Verbindung aufbauen",
         "BROWSER_NOT_SUPPORTED": "Dieser Browser wird nicht unterst\u00fctzt",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> oder <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a>, um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
+        "SAFARI": "Safari ist nur kompatibel mit Threema Web für iOS. Android-Nutzer verwenden bitte einen anderen Browser.",
         "ANDROID_IOS_ONLY": "Kompatibel mit Threema für Android und iOS.",
         "CONNECTING": "Verbindung wird aufgebaut",
         "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
@@ -79,7 +80,8 @@
         "ARE_YOU_SURE": "Sind Sie sicher?",
         "SAVE": "Speichern",
         "DONE": "Fertig",
-        "MODIFY": "Ändern"
+        "MODIFY": "Ändern",
+        "NOTE": "Hinweis:"
     },
     "messenger": {
         "VERIFICATION_LEVEL": "Vertrauensstufe",

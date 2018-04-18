@@ -1,6 +1,11 @@
 <div id="welcome">
     <div class="center-block text-center welcome">
         <div ng-if="(ctrl.state === 'connecting' || ctrl.state === 'waiting') && ctrl.mode === 'scan'" class="scan">
+            <div class="ios-only-warning" ng-if="ctrl.browser.safari">
+                <img src="img/safari.svg" alt="Safari">
+                <p><strong translate>common.NOTE</strong> <span translate>welcome.SAFARI</span></p>
+            </div>
+
             <p class="instructions" translate>welcome.PLEASE_SCAN</p>
             <qrcode version="{{ ctrl.qrCode.version }}"
                     id="connecting-code"

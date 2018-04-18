@@ -25,6 +25,24 @@
     }
 
     .scan {
+        .ios-only-warning {
+            display: flex;
+            flex-direction: horizontal;
+            padding: 8px;
+            background-color: $status-warning;
+            margin-bottom: 16px;
+            p {
+                font-size: 0.8em;
+                letter-spacing: -0.2px;
+                line-height: 1.4em;
+                text-align: left;
+            }
+            img {
+                margin-right: 8px;
+                width: 32px;
+            }
+        }
+
         .password-entry {
             margin-top: 16px;
         }
