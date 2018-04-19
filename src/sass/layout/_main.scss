@@ -264,31 +264,6 @@ a.click-action {
     @include mouse-hand;
 }
 
-.android-ios-only {
-    width: 100%;
-    margin: 10px auto 0;
-    background-color: white;
-    text-align: center;
-    border-radius: $material-radius;
-    box-shadow: $material-card-shadow;
-    div {
-        padding: 16px;
-        line-height: 24px;
-        display: inline-flex;
-        vertical-align: middle;
-        align-items: center;
-        font-weight: 300;
-        white-space: nowrap;
-        i.material-icons {
-            margin-right: 8px;
-        }
-        img {
-            height: 26px;
-            margin-right: 8px;
-        }
-    }
-}
-
 
 //show dt as threema green subjects
 .key-values {
