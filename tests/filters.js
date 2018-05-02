@@ -261,6 +261,13 @@ describe('Filters', function() {
             ]);
         });
 
+        it('shows full date with forceFull flag', () => {
+            const d = new Date();
+            const formatted = $filter('unixToTimestring')(d.getTime() / 1000, true);
+            expect(formatted.length > 10).toBe(true);
+            expect(formatted).toContain(d.getFullYear().toString());
+        });
+
         it('shows "yesterday" for yesterday', () => {
             const d1 = new Date();
             const ts = d1.getTime();

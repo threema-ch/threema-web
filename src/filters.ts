@@ -374,21 +374,21 @@ angular.module('3ema.filters', [])
             && date1.getDate() === date2.getDate();
     }
 
-    return (timestamp: number) => {
+    return (timestamp: number, forceFull: boolean = false) => {
         const date = new Date(timestamp * 1000);
 
         const now = new Date();
-        if (isSameDay(date, now)) {
+        if (!forceFull && isSameDay(date, now)) {
             return formatTime(date);
         }
 
         const yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
-        if (isSameDay(date, yesterday)) {
+        if (!forceFull && isSameDay(date, yesterday)) {
             return $translate.instant('date.YESTERDAY') + ', ' + formatTime(date);
         }
 
         let year = '';
-        if (date.getFullYear() !== now.getFullYear()) {
+        if (forceFull || date.getFullYear() !== now.getFullYear()) {
             year = ' ' + date.getFullYear();
         }
         return date.getDate() + '. '
