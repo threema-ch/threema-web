@@ -23,7 +23,7 @@ export default [
                 message: '=eeeMessage',
             },
             template: `
-                <span>{{ message.date | amFromUnix | amCalendar }}</span>
+                <span>{{ message.date | unixToTimestring }}</span>
             `,
         };
     },

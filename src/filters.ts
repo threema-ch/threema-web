@@ -330,4 +330,72 @@ angular.module('3ema.filters', [])
     };
 }])
 
+/**
+ * Format a unix timestamp as a date.
+ */
+.filter('unixToTimestring', ['$translate', function($translate) {
+    function formatTime(date) {
+        return ('00' + date.getHours()).slice(-2) + ':' +
+               ('00' + date.getMinutes()).slice(-2);
+    }
+
+    function formatMonth(num) {
+        switch (num) {
+            case 0x0:
+                return 'date.month_short.JAN';
+            case 0x1:
+                return 'date.month_short.FEB';
+            case 0x2:
+                return 'date.month_short.MAR';
+            case 0x3:
+                return 'date.month_short.APR';
+            case 0x4:
+                return 'date.month_short.MAY';
+            case 0x5:
+                return 'date.month_short.JUN';
+            case 0x6:
+                return 'date.month_short.JUL';
+            case 0x7:
+                return 'date.month_short.AUG';
+            case 0x8:
+                return 'date.month_short.SEP';
+            case 0x9:
+                return 'date.month_short.OCT';
+            case 0xa:
+                return 'date.month_short.NOV';
+            case 0xb:
+                return 'date.month_short.DEC';
+        }
+    }
+
+    function isSameDay(date1, date2) {
+        return date1.getFullYear() === date2.getFullYear()
+            && date1.getMonth() === date2.getMonth()
+            && date1.getDate() === date2.getDate();
+    }
+
+    return (timestamp: number) => {
+        const date = new Date(timestamp * 1000);
+
+        const now = new Date();
+        if (isSameDay(date, now)) {
+            return formatTime(date);
+        }
+
+        const yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
+        if (isSameDay(date, yesterday)) {
+            return $translate.instant('date.YESTERDAY') + ', ' + formatTime(date);
+        }
+
+        let year = '';
+        if (date.getFullYear() !== now.getFullYear()) {
+            year = ' ' + date.getFullYear();
+        }
+        return date.getDate() + '. '
+             + $translate.instant(formatMonth(date.getMonth()))
+             + year + ', '
+             + formatTime(date);
+    };
+}])
+
 ;

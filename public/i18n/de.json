@@ -269,5 +269,22 @@
         "ALERT": "Entladen: {percent}%",
         "LEVEL_LOW": "Der Akkustand Ihres Gerätes ist niedrig ({percent}%).",
         "LEVEL_CRITICAL": "Der Akkustand Ihres Gerätes ist kritisch ({percent}%)!"
+    },
+    "date": {
+        "YESTERDAY": "Gestern",
+        "month_short": {
+            "JAN": "Jan.",
+            "FEB": "Feb.",
+            "MAR": "Mär.",
+            "APR": "Apr.",
+            "MAY": "Mai",
+            "JUN": "Jun.",
+            "JUL": "Jul.",
+            "AUG": "Aug.",
+            "SEP": "Sep.",
+            "OCT": "Okt.",
+            "NOV": "Nov.",
+            "DEC": "Dez."
+        }
     }
 }

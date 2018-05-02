@@ -1,3 +1,7 @@
+afterEach(function () {
+    jasmine.clock().uninstall();
+});
+
 describe('Filters', function() {
 
     let $filter;
@@ -240,6 +244,43 @@ describe('Filters', function() {
         it('if enabled flag is not set, converts newlines', () => {
             const filter = $filter('nlToBr');
             expect(filter('abc\ndef')).toEqual('abc<br>def');
+        });
+    });
+
+    describe('unixToTimestring', function() {
+        this.testPatterns = (cases) => testPatterns('unixToTimestring', cases);
+
+        it('shows only time for today', () => {
+            const d1 = new Date(); d1.setHours(8); d1.setMinutes(7);
+            const d2 = new Date(); d2.setHours(12); d2.setMinutes(14);
+            const d3 = new Date(); d3.setHours(0); d3.setMinutes(0);
+            this.testPatterns([
+                [d1.getTime() / 1000, '08:07'],
+                [d2.getTime() / 1000, '12:14'],
+                [d3.getTime() / 1000, '00:00'],
+            ]);
+        });
+
+        it('shows "yesterday" for yesterday', () => {
+            const d1 = new Date();
+            const ts = d1.getTime();
+            const d2 = new Date(ts - 1000 * 60 * 60 * 24);
+            d2.setHours(8); d2.setMinutes(7);
+            this.testPatterns([
+                [d2.getTime() / 1000, 'date.YESTERDAY, 08:07'],
+            ]);
+        });
+
+        it('shows full datetime for other days', () => {
+            jasmine.clock().install();
+            jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));
+            const now = new Date();
+            const d1 = new Date(2010, 1, 7, 18, 42);
+            const d2 = new Date(now.getFullYear(), 4, 2, 23, 59);
+            this.testPatterns([
+                [d1.getTime() / 1000, '7. date.month_short.FEB 2010, 18:42'],
+                [d2.getTime() / 1000, '2. date.month_short.MAY, 23:59'],
+            ]);
         });
     });
 
