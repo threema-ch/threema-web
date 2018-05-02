@@ -23,10 +23,7 @@ export default [
                 message: '=eeeMessage',
             },
             template: `
-                <span
-                    am-time-ago="message.date | amFromUnix"
-                    title="{{ message.date | amFromUnix | amCalendar }}"
-                ></span>
+                <span>{{ message.date | amFromUnix | amCalendar }}</span>
             `,
         };
     },
