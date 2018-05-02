@@ -45,3 +45,16 @@ md-dialog.send-file-dialog {
         max-width: 100%;
     }
 }
+
+md-dialog.message-history-dialog {
+    md-dialog-content {
+        padding: 24px;
+    }
+
+    .event-type {
+        font-weight: bold;
+    }
+    .event-type:after {
+        content: ':';
+    }
+}

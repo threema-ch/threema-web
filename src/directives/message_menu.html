@@ -34,6 +34,12 @@
                 <span translate>messenger.COPY</span>
             </md-button>
         </md-menu-item>
+        <md-menu-item ng-if="ctrl.message.events">
+            <md-button ng-click="ctrl.showHistory($event)">
+                <md-icon aria-label="Message history" class="material-icons md-24">history</md-icon>
+                <span translate>messenger.MSG_HISTORY</span>
+            </md-button>
+        </md-menu-item>
         <md-menu-item ng-if="ctrl.access.delete">
             <md-button ng-click="ctrl.delete($event)">
             <md-icon aria-label="Delete" class="material-icons md-24">delete</md-icon>

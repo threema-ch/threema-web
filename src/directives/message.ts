@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// tslint:disable:max-line-length
+
 import {MessageService} from '../services/message';
 import {ReceiverService} from '../services/receiver';
 import {WebClientService} from '../services/webclient';
@@ -132,6 +134,49 @@ export default [
 
                 this.isDownloading = () => {
                     return this.downloading;
+                };
+
+                this.showHistory = (ev) => {
+                    const getEvents = () => this.message.events;
+                    $mdDialog.show({
+                        controllerAs: 'ctrl',
+                        controller: function() {
+                            this.getEvents = getEvents;
+                            this.close = () => {
+                                $mdDialog.hide();
+                            };
+                        },
+                        template: `
+                            <md-dialog class="message-history-dialog" translate-attr="{'aria-label': 'messenger.MSG_HISTORY'}">
+                                <form ng-cloak>
+                                    <md-toolbar>
+                                        <div class="md-toolbar-tools">
+                                            <h2 translate>messenger.MSG_HISTORY</h2>
+                                        </div>
+                                    </md-toolbar>
+                                    <md-dialog-content>
+                                        <p ng-repeat="event in ctrl.getEvents()">
+                                            <span class="event-type" ng-if="event.type === 'created'" translate>messenger.MSG_HISTORY_CREATED</span>
+                                            <span class="event-type" ng-if="event.type === 'sent'" translate>messenger.MSG_HISTORY_SENT</span>
+                                            <span class="event-type" ng-if="event.type === 'delivered'" translate>messenger.MSG_HISTORY_DELIVERED</span>
+                                            <span class="event-type" ng-if="event.type === 'read'" translate>messenger.MSG_HISTORY_READ</span>
+                                            <span class="event-type" ng-if="event.type === 'acked'" translate>messenger.MSG_HISTORY_ACKED</span>
+                                            <span class="event-type" ng-if="event.type === 'modified'" translate>messenger.MSG_HISTORY_MODIFIED</span>
+                                            {{ event.date | unixToTimestring:true }}
+                                        </p>
+                                    </md-dialog-content>
+                                    <md-dialog-actions layout="row" >
+                                        <md-button ng-click="ctrl.close()">
+                                            <span translate>common.OK</span>
+                                        </md-button>
+                                    </md-dialog-actions>
+                                </form>
+                            </md-dialog>
+                        `,
+                        parent: angular.element(document.body),
+                        targetEvent: ev,
+                        clickOutsideToClose: true,
+                    });
                 };
             }],
             link: function(scope: any, element: ng.IAugmentedJQuery, attrs) {
