@@ -2056,29 +2056,22 @@ export class WebClientService {
                 // To find out, we'll look at the unread count. If it has been
                 // incremented, it must be a new message.
                 if (data.unreadCount > 0) {
-                    // Find the correct conversation in the conversation list
-                    const conversation = this.conversations.find(data);
-                    if (data === null) {
-                        // Conversation not found, add it!
-                        this.conversations.add(data);
-                        this.onNewMessage(data.latestMessage, conversation);
+                    const oldConversation = this.conversations.updateOrAdd(data);
+                    if (oldConversation === null) {
+                        this.onNewMessage(data.latestMessage, data);
                     } else {
                         // Check for unread count changes
-                        const unreadCountIncreased = data.unreadCount > conversation.unreadCount;
-                        const unreadCountDecreased = data.unreadCount < conversation.unreadCount;
-
-                        // Update the conversation
-                        this.conversations.updateOrAdd(data);
+                        const unreadCountIncreased = data.unreadCount > oldConversation.unreadCount;
+                        const unreadCountDecreased = data.unreadCount < oldConversation.unreadCount;
 
                         // If the unreadcount has increased, we received a new message.
                         // Otherwise, if it has decreased, hide the notification.
                         if (unreadCountIncreased) {
-                            this.onNewMessage(data.latestMessage, conversation);
+                            this.onNewMessage(data.latestMessage, data);
                         } else if (unreadCountDecreased) {
                             this.notificationService.hideNotification(data.type + '-' + data.id);
                         }
                     }
-
                 } else {
                     // Update the conversation and hide any notifications
                     this.conversations.updateOrAdd(data);

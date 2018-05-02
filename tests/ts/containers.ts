@@ -28,7 +28,7 @@ function getConversations(): Conversations {
     return new Conversations(receiverService);
 }
 
-function makeContactConversation(id: string, position: number): threema.ConversationWithPosition {
+function makeContactConversation(id: string, position?: number): threema.ConversationWithPosition {
     return {
         type: 'contact',
         id: id,
@@ -39,8 +39,8 @@ function makeContactConversation(id: string, position: number): threema.Conversa
     };
 }
 
-function simplifyConversation(c: threema.Conversation): Array<string | number> {
-    return [c.id, c.position];
+function getId(c: threema.Conversation): string {
+    return c.id;
 }
 
 describe('Container', () => {
@@ -49,17 +49,17 @@ describe('Container', () => {
         it('find', function() {
             const conversations = getConversations();
             conversations.set([
-                makeContactConversation('1', 0),
-                makeContactConversation('2', 1),
-                makeContactConversation('3', 2),
-                makeContactConversation('4', 3),
+                makeContactConversation('1'),
+                makeContactConversation('2'),
+                makeContactConversation('3'),
+                makeContactConversation('4'),
             ]);
 
             const receiver1: threema.BaseReceiver = { id: '2', type: 'contact' };
             const receiver2: threema.BaseReceiver = { id: '5', type: 'contact' };
             const receiver3: threema.BaseReceiver = { id: '2', type: 'me' };
 
-            expect(conversations.find(receiver1)).toEqual(makeContactConversation('2', 1));
+            expect(conversations.find(receiver1)).toEqual(makeContactConversation('2'));
             expect(conversations.find(receiver2)).toEqual(null);
             expect(conversations.find(receiver3)).toEqual(null);
         });
@@ -69,32 +69,73 @@ describe('Container', () => {
                 const conversations = getConversations();
                 expect(conversations.get()).toEqual([]);
 
-                conversations.add(makeContactConversation('0', 0));
-                expect(conversations.get().map(simplifyConversation)).toEqual([['0', 0]]);
+                conversations.add(makeContactConversation('0'));
+                expect(conversations.get().map(getId)).toEqual(['0']);
 
-                conversations.set([makeContactConversation('1', 1)]);
-                expect(conversations.get().map(simplifyConversation)).toEqual([['1', 1]]);
+                conversations.set([makeContactConversation('1')]);
+                expect(conversations.get().map(getId)).toEqual(['1']);
+            });
+
+            it('clears position field', function() {
+                const conversations = getConversations();
+                conversations.set([makeContactConversation('1', 7)]);
+
+                const expected = makeContactConversation('1');
+                delete expected.position;
+                expect((conversations as any).conversations).toEqual([expected]);
             });
         });
 
         describe('add', function() {
-            it('adds a conversation at the correct location', function() {
+            it('adds a new conversation at the correct location', function() {
                 const conversations = getConversations();
                 expect(conversations.get()).toEqual([]);
 
                 conversations.add(makeContactConversation('0', 0));
                 conversations.add(makeContactConversation('1', 1));
-                expect(conversations.get().map(simplifyConversation)).toEqual([
-                    ['0', 0],
-                    ['1', 1],
-                ]);
+                expect(conversations.get().map(getId)).toEqual(['0', '1']);
 
                 conversations.add(makeContactConversation('2', 1));
-                expect(conversations.get().map(simplifyConversation)).toEqual([
-                    ['0', 0],
-                    ['2', 1],
-                    ['1', 1],
+                expect(conversations.get().map(getId)).toEqual(['0', '2', '1']);
+            });
+        });
+
+        describe('updateOrAdd', function() {
+            it('adds a new conversation at the correct location', function() {
+                const conversations = getConversations();
+                conversations.set([
+                    makeContactConversation('0'),
+                    makeContactConversation('1'),
                 ]);
+                expect(conversations.get().map(getId)).toEqual(['0', '1']);
+
+                conversations.updateOrAdd(makeContactConversation('2', 2));
+                expect(conversations.get().map(getId)).toEqual(['0', '1', '2']);
+
+                conversations.updateOrAdd(makeContactConversation('3', 2));
+                expect(conversations.get().map(getId)).toEqual(['0', '1', '3', '2']);
+            });
+
+            it('moves an existing conversation to the correct location', function() {
+                const conversations = getConversations();
+                conversations.set([
+                    makeContactConversation('0'),
+                    makeContactConversation('1'),
+                    makeContactConversation('2'),
+                ]);
+                expect(conversations.get().map(getId)).toEqual(['0', '1', '2']);
+
+                conversations.updateOrAdd(makeContactConversation('2', 1));
+                expect(conversations.get().map(getId)).toEqual(['0', '2', '1']);
+
+                conversations.updateOrAdd(makeContactConversation('1', 0));
+                expect(conversations.get().map(getId)).toEqual(['1', '0', '2']);
+
+                conversations.updateOrAdd(makeContactConversation('0', 2));
+                expect(conversations.get().map(getId)).toEqual(['1', '2', '0']);
+
+                conversations.updateOrAdd(makeContactConversation('1', 7));
+                expect(conversations.get().map(getId)).toEqual(['2', '0', '1']);
             });
         });
     });

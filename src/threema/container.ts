@@ -250,6 +250,11 @@ export class Conversations implements threema.Container.Conversations {
      * one provided.
      */
     public set(data: threema.Conversation[]): void {
+        for (const conversation of data) {
+            if (conversation.position !== undefined) {
+                delete conversation.position;
+            }
+        }
         this.conversations = data;
     }
 
@@ -269,54 +274,36 @@ export class Conversations implements threema.Container.Conversations {
         return null;
     }
 
+    /**
+     * Add a conversation at the correct position.
+     * Don't check whether the conversation already exists.
+     */
     public add(conversation: threema.ConversationWithPosition): void {
         this.conversations.splice(conversation.position, 0, conversation);
     }
 
-    public updateOrAdd(conversation: threema.ConversationWithPosition): void {
-        let moveDirection = 0;
-        let updated = false;
-        for (const p of this.conversations.keys()) {
-            if (this.receiverService.compare(this.conversations[p], conversation)) {
-                // ok, replace me and break
-                const old = this.conversations[p];
-                if (old.position !== conversation.position) {
-                    // position also changed...
-                    moveDirection = old.position > conversation.position ? -1 : 1;
-                }
-                this.conversations[p] = conversation;
-                updated = true;
+    /**
+     * Add a conversation at the correct position.
+     * If a conversation already exists, replace it and return the old conversation.
+     */
+    public updateOrAdd(conversation: threema.ConversationWithPosition): threema.Conversation | null {
+        let replaced = null;
+        for (const i of this.conversations.keys()) {
+            if (this.receiverService.compare(this.conversations[i], conversation)) {
+                replaced = this.conversations.splice(i, 1)[0];
             }
         }
-
-        // reset the position field to correct the sorting
-        if (moveDirection !== 0) {
-            // reindex
-            let before = true;
-            for (const p in this.conversations) {
-                if (this.receiverService.compare(this.conversations[p], conversation)) {
-                    before = false;
-                } else if (before && moveDirection < 0) {
-                    this.conversations[p].position++;
-                } else if (!before && moveDirection > 0) {
-                    this.conversations[p].position++;
-                }
-            }
-
-            // sort by position field
-            this.conversations.sort(function(convA, convB) {
-                return convA.position - convB.position;
-            });
-        } else if (!updated) {
-            this.add(conversation);
-        }
+        this.add(conversation);
+        return replaced;
     }
 
+    /**
+     * Remove a conversation.
+     */
     public remove(conversation: threema.Conversation): void {
-        for (const p of this.conversations.keys()) {
-            if (this.receiverService.compare(this.conversations[p], conversation)) {
-                // remove conversation from array
-                this.conversations.splice(p, 1);
+        for (const i of this.conversations.keys()) {
+            if (this.receiverService.compare(this.conversations[i], conversation)) {
+                this.conversations.splice(i, 1);
                 return;
             }
         }
