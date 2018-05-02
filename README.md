@@ -50,7 +50,7 @@ Web on a server, please follow the instructions at
 
 To run tests:
 
-    npm run build
+    npm run build && npm run build:tests
     chromium tests/testsuite.html
 
 To run linting checks:
