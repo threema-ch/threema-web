@@ -17,8 +17,11 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// tslint:disable:no-reference
-/// <reference path="../../src/threema.d.ts" />
+import {u8aToHex} from '../../src/helpers';
 
-import './containers';
-import './helpers';
+describe('Helpers', () => {
+    it('u8aToHex', function() {
+        const arr = Uint8Array.of(1, 2, 4, 8, 254, 255);
+        expect(u8aToHex(arr)).toEqual('01020408feff');
+    });
+});

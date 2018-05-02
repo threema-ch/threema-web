@@ -216,7 +216,7 @@ class Receivers implements threema.Container.Receivers {
     }
 }
 
-class Conversations implements threema.Container.Conversations {
+export class Conversations implements threema.Container.Conversations {
 
     private conversations: threema.Conversation[] = [];
 
@@ -245,11 +245,12 @@ class Conversations implements threema.Container.Conversations {
 
     /**
      * Set conversations.
+     *
+     * This will simply overwrite the previous list of conversations with the
+     * one provided.
      */
     public set(data: threema.Conversation[]): void {
-        data.forEach((existingConversation: threema.Conversation) => {
-            this.updateOrAdd(existingConversation);
-        });
+        this.conversations = data;
     }
 
     /**
@@ -257,7 +258,7 @@ class Conversations implements threema.Container.Conversations {
      *
      * Comparison is done by type and id.
      */
-    public find(pattern: threema.Conversation | threema.Receiver): threema.Conversation | null {
+    public find(pattern: threema.Conversation | threema.BaseReceiver): threema.Conversation | null {
         for (const conversation of this.get()) {
             const a = pattern;
             const b = conversation;

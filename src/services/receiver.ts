@@ -16,14 +16,7 @@
  */
 
 export class ReceiverService {
-    private $log: ng.ILogService;
     private activeReceiver: threema.Receiver;
-    public static $inject = ['$log'];
-
-    constructor($log: ng.ILogService) {
-        // Angular services
-        this.$log = $log;
-    }
 
     /**
      * Set the currently active receiver.

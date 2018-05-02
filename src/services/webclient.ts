@@ -1696,9 +1696,8 @@ export class WebClientService {
                     // Remove avatar from conversation
                     delete conversation.avatar;
                 }
-
-                this.conversations.updateOrAdd(conversation);
             }
+            this.conversations.set(data);
         }
         this.updateUnreadCount();
         this.registerInitializationStep(InitializationStep.Conversations);
