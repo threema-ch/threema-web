@@ -303,13 +303,14 @@ declare namespace threema {
         label: string;
         number: string;
     }
+
     /**
      * A conversation.
      */
     interface Conversation {
         type: ReceiverType;
         id: string;
-        position: number;
+        position?: number;
         messageCount: number;
         unreadCount: number;
         latestMessage: Message | null;
@@ -317,6 +318,13 @@ declare namespace threema {
         avatar?: ArrayBuffer;
         isMuted?: boolean;
         isStarred?: boolean;
+    }
+
+    /**
+     * A conversation with a position field, used for updating a conversation.
+     */
+    interface ConversationWithPosition extends Conversation {
+        position: number;
     }
 
     /**

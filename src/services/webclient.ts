@@ -1677,7 +1677,7 @@ export class WebClientService {
 
     private _receiveResponseConversations(message: threema.WireMessage) {
         this.$log.debug('Received conversations response');
-        const data = message.data;
+        const data = message.data as threema.Conversation[];
         if (data === undefined) {
             this.$log.warn('Invalid conversation response, data missing');
         } else {
@@ -2039,7 +2039,7 @@ export class WebClientService {
     private _receiveUpdateConversation(message: threema.WireMessage) {
         this.$log.debug('Received conversation update');
         const args = message.args;
-        const data = message.data;
+        const data = message.data as threema.ConversationWithPosition;
         if (args === undefined || data === undefined) {
             this.$log.warn('Invalid conversation update, data or arguments missing');
             return;
@@ -2089,10 +2089,10 @@ export class WebClientService {
             case WebClientService.ARGUMENT_MODE_REMOVED:
                 this.conversations.remove(data);
                 // Remove all cached messages
-                this.messages.clearReceiverMessages((data as threema.Receiver));
+                this.messages.clearReceiverMessages(data.receiver);
                 this.receiverListener.forEach((listener: threema.ReceiverListener) => {
                     this.$log.debug('call on removed listener');
-                    listener.onRemoved(data);
+                    listener.onRemoved(data.receiver);
                 });
                 break;
             default:

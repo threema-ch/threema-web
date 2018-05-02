@@ -269,11 +269,11 @@ export class Conversations implements threema.Container.Conversations {
         return null;
     }
 
-    public add(conversation: threema.Conversation): void {
+    public add(conversation: threema.ConversationWithPosition): void {
         this.conversations.splice(conversation.position, 0, conversation);
     }
 
-    public updateOrAdd(conversation: threema.Conversation): void {
+    public updateOrAdd(conversation: threema.ConversationWithPosition): void {
         let moveDirection = 0;
         let updated = false;
         for (const p of this.conversations.keys()) {

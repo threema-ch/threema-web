@@ -17,6 +17,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// tslint:disable:no-reference
+/// <reference path="../../src/threema.d.ts" />
+
 import {ReceiverService} from '../../src/services/receiver';
 import {Conversations} from '../../src/threema/container';
 
@@ -25,7 +28,7 @@ function getConversations(): Conversations {
     return new Conversations(receiverService);
 }
 
-function makeContactConversation(id: string, position: number): threema.Conversation {
+function makeContactConversation(id: string, position: number): threema.ConversationWithPosition {
     return {
         type: 'contact',
         id: id,
@@ -71,6 +74,27 @@ describe('Container', () => {
 
                 conversations.set([makeContactConversation('1', 1)]);
                 expect(conversations.get().map(simplifyConversation)).toEqual([['1', 1]]);
+            });
+        });
+
+        describe('add', function() {
+            it('adds a conversation at the correct location', function() {
+                const conversations = getConversations();
+                expect(conversations.get()).toEqual([]);
+
+                conversations.add(makeContactConversation('0', 0));
+                conversations.add(makeContactConversation('1', 1));
+                expect(conversations.get().map(simplifyConversation)).toEqual([
+                    ['0', 0],
+                    ['1', 1],
+                ]);
+
+                conversations.add(makeContactConversation('2', 1));
+                expect(conversations.get().map(simplifyConversation)).toEqual([
+                    ['0', 0],
+                    ['2', 1],
+                    ['1', 1],
+                ]);
             });
         });
     });
