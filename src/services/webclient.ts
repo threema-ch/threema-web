@@ -474,7 +474,7 @@ export class WebClientService {
      * For the WebRTC task, this is called when the DataChannel is open.
      * For the relayed data task, this is called once the connection is established.
      */
-    private onDataChannelOpen(resetFields: boolean) {
+    private onConnectionEstablished(resetFields: boolean) {
         // Reset fields if requested
         if (resetFields) {
             this._resetFields();
@@ -506,6 +506,14 @@ export class WebClientService {
 
         // Notify state service about data loading
         this.stateService.updateConnectionBuildupState('loading');
+
+        // Process pending messages
+        if (this.outgoingMessageQueue.length > 0) {
+            this.$log.debug(this.logTag, 'Sending', this.outgoingMessageQueue.length, 'pending messages');
+            for (const _ of this.outgoingMessageQueue.keys()) {
+                this.send(this.outgoingMessageQueue.pop());
+            }
+        }
     }
 
     /**
@@ -527,7 +535,7 @@ export class WebClientService {
                 WebClientService.DC_LABEL,
                 (event: Event) => {
                     this.$log.debug(this.logTag, 'SecureDataChannel open');
-                    this.onDataChannelOpen(resetFields);
+                    this.onConnectionEstablished(resetFields);
                 },
             );
 
@@ -553,7 +561,7 @@ export class WebClientService {
             });
 
             // The communication channel is now open! Fetch initial data
-            this.onDataChannelOpen(resetFields);
+            this.onConnectionEstablished(resetFields);
         }
     }
 
