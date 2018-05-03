@@ -97,21 +97,28 @@ export class StatusController {
             return;
         }
         this.state = newValue;
+
+        const isWebrtc = this.webClientService.chosenTask === threema.ChosenTask.WebRTC;
+        const isRelayedData = this.webClientService.chosenTask === threema.ChosenTask.RelayedData;
+
         switch (newValue) {
             case 'ok':
                 this.collapseStatusBar();
                 break;
             case 'warning':
-                if (oldValue === 'ok' && this.webClientService.chosenTask === threema.ChosenTask.WebRTC) {
+                if (oldValue === 'ok' && isWebrtc) {
                     this.scheduleStatusBar();
+                }
+                if (this.stateService.wasConnected && isRelayedData) {
+                    this.reconnectIos();
                 }
                 break;
             case 'error':
-                if (this.stateService.wasConnected) {
-                    if (oldValue === 'ok' && this.webClientService.chosenTask === threema.ChosenTask.WebRTC) {
+                if (this.stateService.wasConnected && isWebrtc) {
+                    if (oldValue === 'ok') {
                         this.scheduleStatusBar();
                     }
-                    this.reconnect();
+                    this.reconnectAndroid();
                 }
                 break;
             default:
@@ -139,10 +146,10 @@ export class StatusController {
     }
 
     /**
-     * Attempt to reconnect after a connection loss.
+     * Attempt to reconnect an Android device after a connection loss.
      */
-    private reconnect(): void {
-        this.$log.warn(this.logTag, 'Connection lost. Attempting to reconnect...');
+    private reconnectAndroid(): void {
+        this.$log.warn(this.logTag, 'Connection lost (Android). Attempting to reconnect...');
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;
@@ -230,6 +237,54 @@ export class StatusController {
         doSoftReconnect();
 
         // TODO: Handle server closing state
+    }
+
+    /**
+     * Attempt to reconnect an iOS device after a connection loss.
+     */
+    private reconnectIos(): void {
+        this.$log.warn(this.logTag, 'Connection lost (iOS). Attempting to reconnect...');
+
+        // Get original keys
+        const originalKeyStore = this.webClientService.salty.keyStore;
+        const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+
+        // Handler for failed reconnection attempts
+        const reconnectionFailed = () => {
+            // Reset state
+            this.stateService.reset();
+
+            // Redirect to welcome page
+            this.$state.go('welcome', {
+                initParams: {
+                    keyStore: originalKeyStore,
+                    peerTrustedKey: originalPeerPermanentKeyBytes,
+                },
+            });
+        };
+
+        const deleteStoredData = false;
+        const resetPush = false;
+        const skipPush = true;
+        const redirect = false;
+        const startTimeout = 500; // Delay connecting a bit to wait for old websocket to close
+        this.$log.debug(this.logTag, 'Stopping old connection');
+        this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
+        this.$timeout(() => {
+            this.$log.debug(this.logTag, 'Starting new connection');
+            this.webClientService.init(originalKeyStore, originalPeerPermanentKeyBytes, false);
+            this.webClientService.start(skipPush).then(
+                () => { /* ok */ },
+                (error) => {
+                    this.$log.error(this.logTag, 'Error state:', error);
+                    reconnectionFailed();
+                },
+                // Progress
+                (progress: threema.ConnectionBuildupStateChange) => {
+                    this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
+                },
+            );
+        }, startTimeout);
     }
 
     public wide(): boolean {

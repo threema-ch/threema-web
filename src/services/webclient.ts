@@ -592,8 +592,8 @@ export class WebClientService {
      * Start the webclient service.
      * Return a promise that resolves once connected.
      */
-    public start(): ng.IPromise<any> {
-        this.$log.debug('Starting WebClientService...');
+    public start(skipPush: boolean = false): ng.IPromise<any> {
+        this.$log.debug(this.logTag, 'Starting WebClientService...');
 
         // Promise to track startup state
         this.startupPromise = this.$q.defer();
@@ -603,17 +603,19 @@ export class WebClientService {
         this.salty.connect();
 
         // If push service is available, notify app
-        if (this.pushService.isAvailable()) {
+        if (skipPush === true) {
+            this.$log.debug(this.logTag, 'Skipping push notification');
+        } else if (this.pushService.isAvailable()) {
             this.pushService.sendPush(this.salty.permanentKeyBytes)
-                .catch(() => this.$log.warn('Could not notify app!'))
+                .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
                 .then(() => {
-                    this.$log.debug('Requested app wakeup via', this.pushTokenType);
+                    this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType);
                     this.$rootScope.$apply(() => {
                         this.stateService.updateConnectionBuildupState('push');
                     });
                 });
         } else if (this.trustedKeyStore.hasTrustedKey()) {
-            this.$log.debug('Push service not available');
+            this.$log.debug(this.logTag, 'Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
         }
 
