@@ -480,14 +480,27 @@ export class WebClientService {
             this._resetFields();
         }
 
-        // Resolve startup promise once initialization is done
-        if (this.startupPromise !== null) {
-            this.runAfterInitializationSteps([
+        // Determine whether to request initial data
+        const requestInitialData: boolean =
+            (resetFields === true) ||
+            (this.chosenTask === threema.ChosenTask.WebRTC);
+
+        // Only request initial data if this is not a soft reconnect
+        let requiredInitializationSteps;
+        if (requestInitialData) {
+            requiredInitializationSteps = [
                 InitializationStep.ClientInfo,
                 InitializationStep.Conversations,
                 InitializationStep.Receivers,
                 InitializationStep.Profile,
-            ], () => {
+            ];
+        } else {
+            requiredInitializationSteps = [];
+        }
+
+        // Resolve startup promise once initialization is done
+        if (this.startupPromise !== null) {
+            this.runAfterInitializationSteps(requiredInitializationSteps, () => {
                 this.stateService.updateConnectionBuildupState('done');
                 this.startupPromise.resolve();
                 this.startupPromise = null;
@@ -497,7 +510,9 @@ export class WebClientService {
         }
 
         // Request initial data
-        this._requestInitialData();
+        if (requestInitialData) {
+            this._requestInitialData();
+        }
 
         // Fetch current version
         // Delay it to prevent the dialog from being closed by the messenger constructor,
