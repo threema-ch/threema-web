@@ -151,7 +151,7 @@ export class WebClientService {
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask = null;
     private relayedDataTask: saltyrtc.tasks.relayed_data.RelayedDataTask = null;
     private secureDataChannel: saltyrtc.tasks.webrtc.SecureDataChannel = null;
-    private chosenTask: threema.ChosenTask = threema.ChosenTask.None;
+    public chosenTask: threema.ChosenTask = threema.ChosenTask.None;
 
     // Messenger data
     public messages: threema.Container.Messages;

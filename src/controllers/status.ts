@@ -92,6 +92,7 @@ export class StatusController {
      */
     private onStateChange(newValue: threema.GlobalConnectionState,
                           oldValue: threema.GlobalConnectionState): void {
+        this.$log.debug(this.logTag, 'State change:', oldValue, '->', newValue);
         if (newValue === oldValue) {
             return;
         }
@@ -101,13 +102,13 @@ export class StatusController {
                 this.collapseStatusBar();
                 break;
             case 'warning':
-                if (oldValue === 'ok') {
+                if (oldValue === 'ok' && this.webClientService.chosenTask === threema.ChosenTask.WebRTC) {
                     this.scheduleStatusBar();
                 }
                 break;
             case 'error':
                 if (this.stateService.wasConnected) {
-                    if (oldValue === 'ok') {
+                    if (oldValue === 'ok' && this.webClientService.chosenTask === threema.ChosenTask.WebRTC) {
                         this.scheduleStatusBar();
                     }
                     this.reconnect();
