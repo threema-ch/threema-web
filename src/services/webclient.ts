@@ -446,7 +446,9 @@ export class WebClientService {
 
         // Handle disconnecting of a peer
         this.salty.on('peer-disconnected', (ev: saltyrtc.SaltyRTCEvent) => {
-            this.onPeerDisconnected(ev.data);
+            this.$rootScope.$apply(() => {
+                this.onPeerDisconnected(ev.data);
+            });
         });
 
         // Wait for handover to be finished
