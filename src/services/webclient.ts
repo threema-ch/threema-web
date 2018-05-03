@@ -423,8 +423,8 @@ export class WebClientService {
                     !this.config.ICE_DEBUGGING);
 
                 // On state changes in the PeerConnectionHelper class, let state service know about it
-                this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
-                    this.stateService.updateRtcConnectionState(state);
+                this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
+                    this.stateService.updateTaskConnectionState(state);
                 };
 
                 // Initiate handover
@@ -440,12 +440,13 @@ export class WebClientService {
         // Handle a disconnect request
         this.salty.on('application', (applicationData: any) => {
             if (applicationData.data.type === 'disconnect') {
-                this.$log.debug(this.logTag, 'Disconnecting requested');
-                const deleteStoredData = applicationData.data.forget === true;
-                const resetPush = true;
-                const redirect = true;
-                this.stop(false, deleteStoredData, resetPush, redirect);
+                this.onApplicationDisconnect(applicationData);
             }
+        });
+
+        // Handle disconnecting of a peer
+        this.salty.on('peer-disconnected', (ev: saltyrtc.SaltyRTCEvent) => {
+            this.onPeerDisconnected(ev.data);
         });
 
         // Wait for handover to be finished
@@ -547,6 +548,41 @@ export class WebClientService {
 
             // The communication channel is now open! Fetch initial data
             this.onDataChannelOpen(resetFields);
+        }
+    }
+
+    /**
+     * An 'application' message with type 'disconnect' arrived.
+     */
+    private onApplicationDisconnect(applicationData: any) {
+        this.$log.debug(this.logTag, 'Disconnecting requested');
+        const deleteStoredData = applicationData.data.forget === true;
+        const resetPush = true;
+        const redirect = true;
+        this.stop(false, deleteStoredData, resetPush, redirect);
+    }
+
+    /**
+     * A previously authenticated peer disconnected from the server.
+     */
+    private onPeerDisconnected(peerId: number) {
+        switch (this.chosenTask) {
+            case threema.ChosenTask.RelayedData:
+                if (this.stateService.taskConnectionState === threema.TaskConnectionState.Connected) {
+                    this.stateService.updateTaskConnectionState(threema.TaskConnectionState.Reconnecting);
+                } else {
+                    this.$log.debug(
+                        this.logTag,
+                        'Ignoring peer-disconnected event (state is '
+                        + this.stateService.taskConnectionState + ')',
+                    );
+                }
+                break;
+            default:
+                this.$log.debug(
+                    this.logTag,
+                    'Ignoring peer-disconnected event (chosen task is ' + this.chosenTask + ')',
+                );
         }
     }
 

@@ -17,6 +17,7 @@
 
 import {AsyncEvent} from 'ts-events';
 
+import TaskConnectionState = threema.TaskConnectionState;
 import GlobalConnectionState = threema.GlobalConnectionState;
 import ChosenTask = threema.ChosenTask;
 
@@ -36,9 +37,9 @@ export class StateService {
     // Events
     public evtConnectionBuildupStateChange = new AsyncEvent<threema.ConnectionBuildupStateChange>();
 
-    // WebRTC states
+    // Connection states
     public signalingConnectionState: saltyrtc.SignalingState;
-    public rtcConnectionState: threema.RTCConnectionState;
+    public taskConnectionState: TaskConnectionState;
 
     // Connection buildup state
     public connectionBuildupState: threema.ConnectionBuildupState = 'connecting';
@@ -75,12 +76,12 @@ export class StateService {
                     this.state = GlobalConnectionState.Warning;
                     break;
                 case 'task':
+                    this.stage = Stage.Task;
                     if (chosenTask === ChosenTask.RelayedData) {
-                        this.state = GlobalConnectionState.Ok;
+                        this.updateTaskConnectionState(TaskConnectionState.Connected);
                     } else {
                         this.state = GlobalConnectionState.Warning;
                     }
-                    this.stage = Stage.Task;
                     break;
                 case 'closing':
                 case 'closed':
@@ -95,32 +96,31 @@ export class StateService {
     }
 
     /**
-     * RTC connection state.
-     *
-     * This is only called if the WebRTC task is active.
+     * Task connection state.
      */
-    public updateRtcConnectionState(state: threema.RTCConnectionState): void {
-        const prevState = this.rtcConnectionState;
-        this.rtcConnectionState = state;
+    public updateTaskConnectionState(state: TaskConnectionState): void {
+        const prevState = this.taskConnectionState;
+        this.taskConnectionState = state;
         if (this.stage === Stage.Task) {
-            this.$log.debug(this.logTag, 'RTC connection state:', prevState, '=>', state);
+            this.$log.debug(this.logTag, 'Task connection state:', prevState, '=>', state);
             switch (state) {
-                case 'new':
-                case 'connecting':
+                case TaskConnectionState.New:
+                case TaskConnectionState.Connecting:
+                case TaskConnectionState.Reconnecting:
                     this.state = GlobalConnectionState.Warning;
                     break;
-                case 'connected':
+                case TaskConnectionState.Connected:
                     this.state = GlobalConnectionState.Ok;
                     this.wasConnected = true;
                     break;
-                case 'disconnected':
+                case TaskConnectionState.Disconnected:
                     this.state = GlobalConnectionState.Error;
                     break;
                 default:
-                    this.$log.warn(this.logTag, 'Ignored RTC connection state change to', state);
+                    this.$log.warn(this.logTag, 'Ignored task connection state change to "' + state + '"');
             }
         } else {
-            this.$log.debug(this.logTag, 'Ignored RTC connection state change to "' + state + '"');
+            this.$log.debug(this.logTag, 'Ignored task connection state change to "' + state + '"');
         }
     }
 
@@ -216,7 +216,7 @@ export class StateService {
 
         // Reset state
         this.signalingConnectionState = 'new';
-        this.rtcConnectionState = 'new';
+        this.taskConnectionState = TaskConnectionState.New;
         this.stage = Stage.Signaling;
         this.state = GlobalConnectionState.Error;
         this.wasConnected = false;

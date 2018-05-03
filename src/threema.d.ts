@@ -353,9 +353,15 @@ declare namespace threema {
     }
 
     /**
-     * Connection state of the WebRTC peer connection.
+     * Connection state of the task peer connection.
      */
-    type RTCConnectionState = 'new' | 'connecting' | 'connected' | 'disconnected';
+    const enum TaskConnectionState {
+        New = 'new',
+        Connecting = 'connecting',
+        Connected = 'connected',
+        Reconnecting = 'reconnecting',
+        Disconnected = 'disconnected',
+    }
 
     /**
      * Connection state of the WebRTC peer connection.
