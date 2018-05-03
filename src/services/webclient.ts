@@ -144,6 +144,7 @@ export class WebClientService {
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
     private initialized: Set<threema.InitializationStep> = new Set();
     private stateService: StateService;
+    private lastPush: Date = null;
 
     // SaltyRTC
     private saltyRtcHost: string = null;
@@ -160,6 +161,9 @@ export class WebClientService {
     public alerts: threema.Alert[] = [];
     private pushToken: string = null;
     private pushTokenType: threema.PushTokenType = null;
+
+    // Pending messages when waiting for a responder to connect
+    private outgoingMessageQueue: threema.WireMessage[] = [];
 
     // Other
     private config: threema.Config;
@@ -589,6 +593,32 @@ export class WebClientService {
     }
 
     /**
+     * Send a push message to wake up the peer.
+     * The push message will only be sent if the last push is less than 2 seconds ago.
+     */
+    private sendPush(): void {
+        // Make sure not to flood the target device with pushes
+        const minPushInterval = 2000;
+        const now = new Date();
+        if (this.lastPush !== null && (now.getTime() - this.lastPush.getTime()) < minPushInterval) {
+            this.$log.debug(this.logTag,
+                'Skipping push, last push was requested less than ' + (minPushInterval / 1000) + 's ago');
+            return;
+        }
+        this.lastPush = now;
+
+        // Actually send the push notification
+        this.pushService.sendPush(this.salty.permanentKeyBytes)
+            .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
+            .then(() => {
+                this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType, 'push');
+                this.$rootScope.$apply(() => {
+                    this.stateService.updateConnectionBuildupState('push');
+                });
+            });
+    }
+
+    /**
      * Start the webclient service.
      * Return a promise that resolves once connected.
      */
@@ -604,16 +634,9 @@ export class WebClientService {
 
         // If push service is available, notify app
         if (skipPush === true) {
-            this.$log.debug(this.logTag, 'Skipping push notification');
+            this.$log.debug(this.logTag, 'start(): Skipping push notification');
         } else if (this.pushService.isAvailable()) {
-            this.pushService.sendPush(this.salty.permanentKeyBytes)
-                .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
-                .then(() => {
-                    this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType);
-                    this.$rootScope.$apply(() => {
-                        this.stateService.updateConnectionBuildupState('push');
-                    });
-                });
+            this.sendPush();
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug(this.logTag, 'Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
@@ -2734,7 +2757,18 @@ export class WebClientService {
                 break;
             case threema.ChosenTask.RelayedData:
                 // Send bytes through e2e encrypted WebSocket
-                this.relayedDataTask.sendMessage(message);
+                if (this.salty.state !== 'task') {
+                    this.$log.debug(this.logTag, 'Currently not connected (state='
+                        + this.salty.state + '), putting outgoing message in queue');
+                    this.outgoingMessageQueue.push(message);
+                    if (this.pushService.isAvailable()) {
+                        this.sendPush();
+                    } else {
+                        this.$log.warn(this.logTag, 'Push service not available, cannot wake up peer!');
+                    }
+                } else {
+                    this.relayedDataTask.sendMessage(message);
+                }
                 break;
         }
     }
