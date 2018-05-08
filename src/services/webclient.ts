@@ -619,7 +619,7 @@ export class WebClientService {
      * Send a push message to wake up the peer.
      * The push message will only be sent if the last push is less than 2 seconds ago.
      */
-    private sendPush(): void {
+    private sendPush(wakeupType: threema.WakeupType): void {
         // Make sure not to flood the target device with pushes
         const minPushInterval = 2000;
         const now = new Date();
@@ -631,10 +631,11 @@ export class WebClientService {
         this.lastPush = now;
 
         // Actually send the push notification
-        this.pushService.sendPush(this.salty.permanentKeyBytes)
+        this.pushService.sendPush(this.salty.permanentKeyBytes, wakeupType)
             .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
             .then(() => {
-                this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType, 'push');
+                const wakeupTypeString = wakeupType === threema.WakeupType.FullReconnect ? 'reconnect' : 'wakeup';
+                this.$log.debug(this.logTag, 'Requested app', wakeupTypeString, 'via', this.pushTokenType, 'push');
                 this.$rootScope.$apply(() => {
                     this.stateService.updateConnectionBuildupState('push');
                 });
@@ -659,7 +660,7 @@ export class WebClientService {
         if (skipPush === true) {
             this.$log.debug(this.logTag, 'start(): Skipping push notification');
         } else if (this.pushService.isAvailable()) {
-            this.sendPush();
+            this.sendPush(threema.WakeupType.FullReconnect);
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug(this.logTag, 'Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
@@ -2785,7 +2786,7 @@ export class WebClientService {
                         + this.salty.state + '), putting outgoing message in queue');
                     this.outgoingMessageQueue.push(message);
                     if (this.pushService.isAvailable()) {
-                        this.sendPush();
+                        this.sendPush(threema.WakeupType.Wakeup);
                     } else {
                         this.$log.warn(this.logTag, 'Push service not available, cannot wake up peer!');
                     }

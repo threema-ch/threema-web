@@ -20,6 +20,7 @@ export class PushService {
     private static ARG_TOKEN = 'token';
     private static ARG_SESSION = 'session';
     private static ARG_VERSION = 'version';
+    private static ARG_WAKEUP_TYPE = 'wakeup';
     private static ARG_ENDPOINT = 'endpoint';
     private static ARG_BUNDLE_ID = 'bundleid';
 
@@ -71,7 +72,7 @@ export class PushService {
      * Send a push notification for the specified session (public permanent key
      * of the initiator). The promise is always resolved to a boolean.
      */
-    public sendPush(session: Uint8Array): Promise<boolean> {
+    public sendPush(session: Uint8Array, wakeupType: threema.WakeupType): Promise<boolean> {
         if (!this.isAvailable()) {
             return Promise.resolve(false);
         }
@@ -81,6 +82,7 @@ export class PushService {
             [PushService.ARG_TYPE]: this.pushType,
             [PushService.ARG_SESSION]: sha256(session),
             [PushService.ARG_VERSION]: this.version,
+            [PushService.ARG_WAKEUP_TYPE]: wakeupType,
         };
         if (this.pushType === threema.PushTokenType.Apns) {
             // APNS token format: "<hex-deviceid>;<endpoint>;<bundle-id>"

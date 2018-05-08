@@ -441,6 +441,13 @@ declare namespace threema {
         Apns = 'a',
     }
 
+    const enum WakeupType {
+        // A full reconnect (by entering the password on the main screen).
+        FullReconnect = '0',
+        // A wakeup, as implemented by the iOS app.
+        Wakeup = '1',
+    }
+
     interface TrustedKeyStoreData {
         ownPublicKey: Uint8Array;
         ownSecretKey: Uint8Array;
