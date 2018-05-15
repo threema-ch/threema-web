@@ -46,7 +46,9 @@ export default [
 
                 this.avatarExists = () => {
                     if (this.receiver.avatar === undefined
-                        || this.receiver.avatar[this.resolution] === undefined) {
+                        || this.receiver.avatar === null
+                        || this.receiver.avatar[this.resolution] === undefined
+                        || this.receiver.avatar[this.resolution] === null) {
                         return false;
                     }
                     this.isLoading = false;
