@@ -35,7 +35,7 @@ export class AvatarControllerModel {
                 $log.debug(this.logTag, 'loadAvatar: No receiver defined, no avatar');
                 resolve(null);
                 return;
-            } else if (receiver.avatar.high === undefined) {
+            } else if (receiver.avatar.high === undefined || receiver.avatar.high === null) {
                 $log.debug(this.logTag, 'loadAvatar: Requesting high res avatar from app');
                 webClientService.requestAvatar(receiver, true)
                     .then((data: ArrayBuffer) => resolve(data))

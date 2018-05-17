@@ -46,7 +46,6 @@ export default [
 
                 this.avatarExists = () => {
                     if (this.receiver.avatar === undefined
-                        || this.receiver.avatar === null
                         || this.receiver.avatar[this.resolution] === undefined
                         || this.receiver.avatar[this.resolution] === null) {
                         return false;
@@ -64,15 +63,18 @@ export default [
                     switch (type) {
                         case 'group':
                             return highResolution ? 'img/ic_group_picture_big.png' : 'img/ic_group_t.png';
-                        case 'contact':
-                        case 'me':
-                            return highResolution ? 'img/ic_contact_picture_big.png' : 'img/ic_contact_picture_t.png';
                         case 'distributionList':
                             return highResolution ? 'img/ic_distribution_list_t.png' : 'img/ic_distribution_list_t.png';
+                        case 'contact':
+                        case 'me':
+                        default:
+                            return highResolution ? 'img/ic_contact_picture_big.png' : 'img/ic_contact_picture_t.png';
                     }
-                    return null;
                 };
 
+                /**
+                 * Convert avatar bytes to an URI.
+                 */
                 this.avatarToUri = (data: ArrayBuffer) => {
                     if (data === null || data === undefined) {
                         return '';
@@ -80,14 +82,29 @@ export default [
                     return ($filter('bufferToUrl') as (data: ArrayBuffer, mime: string) => string)(data, 'image/png');
                 };
 
+                /**
+                 * Return an avatar URI.
+                 *
+                 * This will fall back to a low resolution version or to the
+                 * default avatar if no avatar for the desired resolution could
+                 * be found.
+                 */
                 this.getAvatarUri = () => {
+                    /// If an avatar for the chosen resolution exists, convert it to an URI and return
                     if (this.avatarExists()) {
                         return this.avatarToUri(this.receiver.avatar[this.resolution]);
-                    } else if (this.highResolution
+                    }
+
+                    // Otherwise, if we requested a high res avatar but
+                    // there is only a low-res version, show that.
+                    if (this.highResolution
                         && this.receiver.avatar !== undefined
-                        && this.receiver.avatar.low !== undefined) {
+                        && this.receiver.avatar.low !== undefined
+                        && this.receiver.avatar.low !== null) {
                         return this.avatarToUri(this.receiver.avatar.low);
                     }
+
+                    // As a fallback, get the default avatar.
                     return this.getDefaultAvatarUri(this.type, this.highResolution);
                 };
 
