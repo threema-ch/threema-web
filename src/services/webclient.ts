@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// <reference types="@saltyrtc/chunked-dc" />
 /// <reference types="@saltyrtc/task-webrtc" />
 /// <reference types="@saltyrtc/task-relayed-data" />
 
@@ -153,6 +154,11 @@ export class WebClientService {
     private relayedDataTask: saltyrtc.tasks.relayed_data.RelayedDataTask = null;
     private secureDataChannel: saltyrtc.tasks.webrtc.SecureDataChannel = null;
     public chosenTask: threema.ChosenTask = threema.ChosenTask.None;
+
+    // Message chunking
+    private messageSerial = 0;
+    private messageChunkSize = 64 * 1024;
+    private unchunker: chunkedDc.Unchunker = null;
 
     // Messenger data
     public messages: threema.Container.Messages;
@@ -572,7 +578,9 @@ export class WebClientService {
         } else if (this.chosenTask === threema.ChosenTask.RelayedData) {
             // Handle messages directly
             this.relayedDataTask.on('data', (ev: saltyrtc.SaltyRTCEvent) => {
-                this.handleIncomingMessage(ev.data, true);
+                const chunk = new Uint8Array(ev.data);
+                this.$log.debug('[Chunk] Received chunk:', chunk);
+                this.unchunker.add(chunk.buffer);
             });
 
             // The communication channel is now open! Fetch initial data
@@ -1053,9 +1061,11 @@ export class WebClientService {
 
                         break;
                     case 'file':
-                        // validate max file size
-                        if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE) {
-                            return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
+                        // Validate max file size
+                        if (this.chosenTask === threema.ChosenTask.WebRTC) {
+                            if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE) {
+                                return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
+                            }
                         }
 
                         // Determine required feature mask
@@ -1531,6 +1541,10 @@ export class WebClientService {
     private _resetFields(): void {
         // Reset initialization data
         this._resetInitializationSteps();
+
+        // Initialize unchunker
+        this.unchunker = new chunkedDc.Unchunker();
+        this.unchunker.onMessage = this.handleIncomingMessageBytes.bind(this);
 
         // Create container instances
         this.receivers = this.container.createReceivers();
@@ -2775,23 +2789,35 @@ export class WebClientService {
         }
         switch (this.chosenTask) {
             case threema.ChosenTask.WebRTC:
-                // Send bytes through WebRTC DataChannel
-                const bytes: Uint8Array = this.msgpackEncode(message);
-                this.secureDataChannel.send(bytes);
+                {
+                    // Send bytes through WebRTC DataChannel
+                    const bytes: Uint8Array = this.msgpackEncode(message);
+                    this.secureDataChannel.send(bytes);
+                }
                 break;
             case threema.ChosenTask.RelayedData:
-                // Send bytes through e2e encrypted WebSocket
-                if (this.salty.state !== 'task') {
-                    this.$log.debug(this.logTag, 'Currently not connected (state='
-                        + this.salty.state + '), putting outgoing message in queue');
-                    this.outgoingMessageQueue.push(message);
-                    if (this.pushService.isAvailable()) {
-                        this.sendPush(threema.WakeupType.Wakeup);
+                {
+                    // Send bytes through e2e encrypted WebSocket
+                    if (this.salty.state !== 'task') {
+                        this.$log.debug(this.logTag, 'Currently not connected (state='
+                            + this.salty.state + '), putting outgoing message in queue');
+                        this.outgoingMessageQueue.push(message);
+                        if (this.pushService.isAvailable()) {
+                            this.sendPush(threema.WakeupType.Wakeup);
+                        } else {
+                            this.$log.warn(this.logTag, 'Push service not available, cannot wake up peer!');
+                        }
                     } else {
-                        this.$log.warn(this.logTag, 'Push service not available, cannot wake up peer!');
+                        const bytes: Uint8Array = this.msgpackEncode(message);
+                        const chunker = new chunkedDc.Chunker(this.messageSerial, bytes, this.messageChunkSize);
+                        for (const chunk of chunker) {
+                            if (this.config.MSG_DEBUGGING) {
+                                this.$log.debug('[Chunk] Sending chunk:', chunk);
+                            }
+                            this.relayedDataTask.sendMessage(chunk.buffer);
+                        }
+                        this.messageSerial += 1;
                     }
-                } else {
-                    this.relayedDataTask.sendMessage(message);
                 }
                 break;
         }
