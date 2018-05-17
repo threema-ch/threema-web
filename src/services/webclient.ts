@@ -1300,10 +1300,13 @@ export class WebClientService {
             data[WebClientService.ARGUMENT_AVATAR] = avatar;
         }
 
+        // Get contact
+        const contact: threema.ContactReceiver = this.contacts.get(threemaId);
+
         // If no changes happened, resolve the promise immediately.
         if (Object.keys(data).length === 0) {
             this.$log.warn(this.logTag, 'Trying to modify contact without any changes');
-            return Promise.resolve(this.contacts.get(threemaId));
+            return Promise.resolve(contact);
         }
 
         // Send update
@@ -1312,9 +1315,10 @@ export class WebClientService {
         };
         const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, args, data);
 
-        // If necessary, reset avatar to force a avatar reload
+        // If necessary, force an avatar reload
         if (avatar !== undefined) {
             this.contacts.get(threemaId).avatar = {};
+            this.requestAvatar(contact, false);
         }
 
         return promise;
