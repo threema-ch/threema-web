@@ -29,6 +29,8 @@ $loading-ring-thickness: 5px;
     .circle {
         height: $circle-size;
         width: $circle-size;
+        min-width: $circle-size;
+        min-height: $circle-size;
         background-color: grey;
         outline: none;
         position: relative;
@@ -135,7 +137,6 @@ $loading-ring-thickness: 5px;
     .file-message {
         height: $circle-size;
         @include mouse-hand;
-
 
         .message-text {
             padding-top: 8px;
