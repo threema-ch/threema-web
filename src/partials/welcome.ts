@@ -376,7 +376,7 @@ class WelcomeController {
                 // do nothing
             }, () => {
                 // Redirect to Threema website
-                window.location.replace('https://threema.ch/');
+                window.location.replace('https://threema.ch/threema-web');
             });
         });
     }

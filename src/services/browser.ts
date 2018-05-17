@@ -171,4 +171,17 @@ export class BrowserService {
     public isVisible() {
         return this.isPageVisible;
     }
+
+    /**
+     * Return whether the current browser supports the WebRTC task or not.
+     */
+    public supportsWebrtcTask() {
+        if (this.browser === undefined) {
+            this.getBrowser();
+        }
+        if (this.browser.safari) {
+            return false;
+        }
+        return true;
+    }
 }

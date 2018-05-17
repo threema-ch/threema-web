@@ -126,6 +126,7 @@ export class WebClientService {
     private $translate: ng.translate.ITranslateService;
     private $filter: any;
     private $timeout: ng.ITimeoutService;
+    private $mdDialog: ng.material.IDialogService;
 
     // Custom services
     private batteryStatusService: BatteryStatusService;
@@ -198,7 +199,7 @@ export class WebClientService {
     private requestPromises: Map<string, threema.PromiseCallbacks> = new Map();
 
     public static $inject = [
-        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout',
+        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout', '$mdDialog',
         'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
@@ -213,6 +214,7 @@ export class WebClientService {
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,
                 $timeout: ng.ITimeoutService,
+                $mdDialog: ng.material.IDialogService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService,
@@ -237,6 +239,7 @@ export class WebClientService {
         this.$translate = $translate;
         this.$filter = $filter;
         this.$timeout = $timeout;
+        this.$mdDialog = $mdDialog;
 
         // Own services
         this.batteryStatusService = batteryStatusService;
@@ -337,12 +340,20 @@ export class WebClientService {
                 + this.config.SALTYRTC_HOST_SUFFIX;
         }
 
+        // Determine SaltyRTC tasks
+        let tasks;
+        if (this.browserService.supportsWebrtcTask()) {
+            tasks = [this.webrtcTask, this.relayedDataTask];
+        } else {
+            tasks = [this.relayedDataTask];
+        }
+
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()
             .connectTo(this.saltyRtcHost, this.config.SALTYRTC_PORT)
             .withServerKey(this.config.SALTYRTC_SERVER_KEY)
             .withKeyStore(keyStore)
-            .usingTasks([this.webrtcTask, this.relayedDataTask])
+            .usingTasks(tasks)
             .withPingInterval(30);
         if (keyStore !== undefined && peerTrustedKey !== undefined) {
             builder = builder.withTrustedPeerKey(peerTrustedKey);
@@ -473,6 +484,35 @@ export class WebClientService {
         });
         this.salty.on('connection-closed', (ev) => {
             this.$log.warn('Connection closed:', ev);
+        });
+        this.salty.on('no-shared-task', (ev) => {
+            this.$log.warn('No shared task found:', ev.data);
+            const requestedWebrtc = ev.data.requested.filter((t) => t.endsWith('webrtc.tasks.saltyrtc.org')).length > 0;
+            const offeredWebrtc = ev.data.offered.filter((t) => t.endsWith('webrtc.tasks.saltyrtc.org')).length > 0;
+            if (!this.browserService.supportsWebrtcTask() && offeredWebrtc) {
+                this.showWebrtcAndroidWarning();
+            } else {
+                this.$mdDialog.show(this.$mdDialog.alert()
+                    .title('Error')
+                    .htmlContent('No shared SaltyRTC task found')
+                    .ok('OK'));
+            }
+        });
+    }
+
+    /**
+     * Show a WebRTC on Android warning dialog.
+     */
+    private showWebrtcAndroidWarning(): void {
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.alert()
+                .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_ANDROID'))
+                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
+                .ok(this.$translate.instant('welcome.ABORT'));
+            this.$mdDialog.show(confirm).then(() => {
+                // Redirect to Threema website
+                window.location.replace('https://threema.ch/threema-web');
+            });
         });
     }
 

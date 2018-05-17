@@ -26,7 +26,7 @@
   "private": true,
   "homepage": "https://threema.ch/",
   "dependencies": {
-    "@saltyrtc/client": "^0.11.2",
+    "@saltyrtc/client": "^0.11.3",
     "@saltyrtc/task-relayed-data": "^0.2.0",
     "@saltyrtc/task-webrtc": "^0.11.0",
     "@types/angular": "^1.6.45",
@@ -42,7 +42,7 @@
     "angular-animate": "~1.5.10",
     "angular-aria": "~1.5.10",
     "angular-material": "=1.1.1",
-    "angular-messages": "^1.6.10",
+    "angular-messages": "^1.7.0",
     "angular-qrcode": "~6.2.1",
     "angular-route": "~1.5.10",
     "angular-sanitize": "~1.5.10",
