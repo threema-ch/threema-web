@@ -174,7 +174,6 @@ export class NotificationService {
 
     /**
      * Returns if the user has granted the notification permission
-     * @returns {boolean}
      */
     public getNotificationPermission(): boolean {
         return this.notificationPermission;
@@ -182,7 +181,6 @@ export class NotificationService {
 
     /**
      * Returns if the user wants to receive notifications
-     * @returns {boolean}
      */
     public getWantsNotifications(): boolean {
         return this.desktopNotifications;
@@ -190,7 +188,6 @@ export class NotificationService {
 
     /**
      * Returns if the user wants a message preview in the notification
-     * @returns {boolean}
      */
     public getWantsPreview(): boolean {
         return this.notificationPreview;
@@ -198,7 +195,6 @@ export class NotificationService {
 
     /**
      * Returns if the user wants sound when a new message arrives
-     * @returns {boolean}
      */
     public getWantsSound(): boolean {
         return this.notificationSound;
@@ -206,7 +202,6 @@ export class NotificationService {
 
     /**
      * Returns if the notification api is available
-     * @returns {boolean}
      */
     public isNotificationApiAvailable(): boolean {
         return this.notificationAPIAvailable;
@@ -214,7 +209,6 @@ export class NotificationService {
 
     /**
      * Sets if the user wants desktop notifications
-     * @param wantsNotifications
      */
     public setWantsNotifications(wantsNotifications: boolean): void {
         this.$log.debug(this.logTag, 'Requesting notification preference change to', wantsNotifications);
@@ -228,7 +222,6 @@ export class NotificationService {
 
     /**
      * Sets if the user wants a message preview
-     * @param wantsPreview
      */
     public setWantsPreview(wantsPreview: boolean): void {
         this.$log.debug(this.logTag, 'Requesting preview preference change to', wantsPreview);
@@ -238,7 +231,6 @@ export class NotificationService {
 
     /**
      * Sets if the user wants sound when a new message arrives
-     * @param wantsSound
      */
     public setWantsSound(wantsSound: boolean): void {
         this.$log.debug(this.logTag, 'Requesting sound preference change to', wantsSound);
@@ -248,8 +240,6 @@ export class NotificationService {
 
     /**
      * Stores the given key/value pair in local storage
-     * @param key
-     * @param value
      */
     private storeSetting(key: string, value: string): void {
         this.settingsService.storeUntrustedKeyValuePair(key, value);
@@ -257,8 +247,6 @@ export class NotificationService {
 
     /**
      * Retrieves the value for the given key from local storage
-     * @param key
-     * @returns {string}
      */
     private retrieveSetting(key: string): string {
         return this.settingsService.retrieveUntrustedKeyValuePair(key);

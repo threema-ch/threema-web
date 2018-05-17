@@ -2196,6 +2196,9 @@ export class WebClientService {
             return;
         }
 
+        // Get receiver
+        const receiver = this.receivers.getData({type: data.type, id: data.id});
+
         // Unpack required argument fields
         const type: string = args[WebClientService.ARGUMENT_MODE];
         switch (type) {
@@ -2209,7 +2212,7 @@ export class WebClientService {
                 if (data.unreadCount > 0) {
                     const oldConversation = this.conversations.updateOrAdd(data);
                     if (oldConversation === null) {
-                        this.onNewMessage(data.latestMessage, data);
+                        this.onNewMessage(data.latestMessage, data, receiver);
                     } else {
                         // Check for unread count changes
                         const unreadCountIncreased = data.unreadCount > oldConversation.unreadCount;
@@ -2218,7 +2221,7 @@ export class WebClientService {
                         // If the unreadcount has increased, we received a new message.
                         // Otherwise, if it has decreased, hide the notification.
                         if (unreadCountIncreased) {
-                            this.onNewMessage(data.latestMessage, data);
+                            this.onNewMessage(data.latestMessage, data, receiver);
                         } else if (unreadCountDecreased) {
                             this.notificationService.hideNotification(data.type + '-' + data.id);
                         }
@@ -2231,16 +2234,20 @@ export class WebClientService {
 
                 break;
             case WebClientService.ARGUMENT_MODE_REMOVED:
+                // Remove conversation
                 this.conversations.remove(data);
-                // Remove all cached messages
-                this.messages.clearReceiverMessages(data.receiver);
+
+                // Remove all cached messages for the receiver
+                this.messages.clearReceiverMessages(receiver);
+
+                // Call on-removed listener
                 this.receiverListener.forEach((listener: threema.ReceiverListener) => {
-                    this.$log.debug('call on removed listener');
+                    this.$log.debug(this.logTag, 'Call on removed listener');
                     listener.onRemoved(data.receiver);
                 });
                 break;
             default:
-                this.$log.warn('Received conversation without a mode');
+                this.$log.warn(this.logTag, 'Received conversation without a mode');
                 return;
         }
 
@@ -2402,16 +2409,19 @@ export class WebClientService {
     /**
      * Called when a new message arrives.
      */
-    private onNewMessage(message: threema.Message, conversation: threema.Conversation): void {
+    private onNewMessage(
+        message: threema.Message,
+        conversation: threema.Conversation,
+        sender: threema.Receiver,
+    ): void {
         // Ignore message from active receivers (and if the browser tab is visible)
         if (this.browserService.isVisible()
                 && this.receiverService.compare(conversation, this.receiverService.getActive())) {
             return;
         }
-        const sender: threema.Receiver = conversation.receiver;
 
         // Do not show any notifications on private chats
-        if (sender === undefined || sender.locked) {
+        if (sender.locked === true) {
             return;
         }
 
@@ -2434,7 +2444,7 @@ export class WebClientService {
         const partnerName = partner.displayName || ('~' + partner.publicNickname);
 
         // Show notification
-        this.$translate('messenger.MESSAGE_NOTIFICATION_SUBJECT', {messageCount: 1 + conversation.unreadCount})
+        this.$translate('messenger.MESSAGE_NOTIFICATION_SUBJECT', {messageCount: conversation.unreadCount})
             .then((titlePrefix) =>  {
                 const title = `${titlePrefix} ${senderName}`;
                 let body = '';
