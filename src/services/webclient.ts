@@ -46,7 +46,7 @@ import ContactReceiverFeature = threema.ContactReceiverFeature;
 export class WebClientService {
     private static AVATAR_LOW_MAX_SIZE = 48;
     private static MAX_TEXT_LENGTH = 3500;
-    private static MAX_FILE_SIZE = 15 * 1024 * 1024;
+    private static MAX_FILE_SIZE_WEBRTC = 15 * 1024 * 1024;
 
     private static TYPE_REQUEST = 'request';
     private static TYPE_RESPONSE = 'response';
@@ -1063,8 +1063,14 @@ export class WebClientService {
                     case 'file':
                         // Validate max file size
                         if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                            if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE) {
-                                return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
+                            if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE_WEBRTC) {
+                                return reject(this.$translate.instant('error.FILE_TOO_LARGE_WEB'));
+                            }
+                        } else {
+                            if ((message as threema.FileMessageData).size > this.clientInfo.capabilities.maxFileSize) {
+                                return reject(this.$translate.instant('error.FILE_TOO_LARGE', {
+                                    maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
+                                }));
                             }
                         }
 
@@ -1156,7 +1162,7 @@ export class WebClientService {
                     let errorMessage;
                     switch (error) {
                         case 'file_too_large':
-                            errorMessage = this.$translate.instant('error.FILE_TOO_LARGE');
+                            errorMessage = this.$translate.instant('error.FILE_TOO_LARGE_GENERIC');
                             break;
                         case 'blocked':
                             errorMessage = this.$translate.instant('error.CONTACT_BLOCKED');
@@ -2254,6 +2260,7 @@ export class WebClientService {
             },
             capabilities: {
                 maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
+                maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
                 mdm: data.capabilities.mdm,
             },
