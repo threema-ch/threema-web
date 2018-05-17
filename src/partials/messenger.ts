@@ -1000,6 +1000,13 @@ class NavigationController {
         return this.webClientService.me;
     }
 
+    /**
+     * Only show the "create distribution list" button if the app supports it.
+     */
+    public showCreateDistributionListButton(): boolean {
+        return this.webClientService.appCapabilities.distributionLists;
+    }
+
 }
 
 class MessengerController {

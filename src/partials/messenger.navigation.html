@@ -177,6 +177,7 @@
                 <md-icon class="material-icons md-24">group_add</md-icon>
             </md-button>
             <md-button
+                    ng-if="ctrl.showCreateDistributionListButton()"
                     ng-click="ctrl.createDistributionList()"
                     translate-attr="{'aria-label': 'messenger.CREATE_DISTRIBUTION_LIST'}"
                     aria-label="Create Distribution list"
