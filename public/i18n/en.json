@@ -127,6 +127,7 @@
         "MSG_HISTORY_READ": "Read",
         "MSG_HISTORY_ACKED": "Acknowledged",
         "MSG_HISTORY_MODIFIED": "Modified",
+        "NAVIGATE": "Navigate",
         "CONFIRM_FILE_SEND": "Send to «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Optional caption",
         "CONFIRM_SEND_AS_FILE": "Send as file message",

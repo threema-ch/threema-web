@@ -263,6 +263,7 @@
             }
         }
     }
+
     .message-in {
         .message-body {
             position: relative;
@@ -459,4 +460,10 @@
         }
     }
 
+}
+
+md-menu-item {
+    a span {
+        color: $material-grey-dark;
+    }
 }
