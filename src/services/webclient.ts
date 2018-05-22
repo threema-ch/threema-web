@@ -2426,9 +2426,10 @@ export class WebClientService {
         }
 
         // Do not show any notifications on muted chats
-        if (conversation.isMuted === true) {
-            return;
-        }
+        // TODO
+        //if (conversation.isMuted === true) {
+        //    return;
+        //}
 
         // Determine sender and partner name (used for notification)
         let senderName = sender.id;

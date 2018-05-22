@@ -316,7 +316,7 @@ declare namespace threema {
         latestMessage: Message | null;
         receiver?: Receiver;
         avatar?: ArrayBuffer;
-        isMuted?: boolean;
+        notifications?: NotificationSettings;
         isStarred?: boolean;
     }
 
@@ -325,6 +325,32 @@ declare namespace threema {
      */
     interface ConversationWithPosition extends Conversation {
         position: number;
+    }
+
+    interface NotificationSettings {
+        sound: NotificationSound;
+        dnd: NotificationDnd;
+    }
+
+    interface NotificationSound {
+        mode: NotificationSoundMode;
+    }
+
+    const enum NotificationSoundMode {
+        Default = 'default',
+        Muted = 'muted',
+    }
+
+    interface NotificationDnd {
+        mode: NotificationDndMode;
+        until?: number;
+    }
+
+    const enum NotificationDndMode {
+        Off = 'off',
+        On = 'on',
+        Mention = 'mention',
+        Until = 'until',
     }
 
     /**

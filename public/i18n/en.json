@@ -171,7 +171,9 @@
         "THREEMA_BLOCKED_RECEIVER": "blocked",
         "DELETE_THREAD": "Delete chat",
         "DELETE_THREAD_MESSAGE": "{count, plural, one {Do you really want to delete this chat? You will not be able to recover the messages.} other {Do you really want to delete # chat(s)? You will not be able to recover the messages.}}",
-        "MUTED": "No notifications",
+        "MUTED_NONE": "No notifications",
+        "MUTED_MENTION_ONLY": "Only show notification when mentioned",
+        "MUTED_SILENT": "Silent notifications",
         "ALL": "All"
     },
     "messageTypes": {

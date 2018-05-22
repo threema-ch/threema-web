@@ -172,6 +172,9 @@
         "DELETE_THREAD": "Chat löschen",
         "DELETE_THREAD_MESSAGE": "{count, plural, one {Möchten Sie wirklich diesen Chat löschen? Die Nachrichten können nicht wiederhergestellt werden.} other {Möchten Sie wirklich # Chats löschen? Die Nachrichten können nicht wiederhergestellt werden.}}",
         "MUTED": "Keine Benachrichtigungen",
+        "MUTED_NONE": "Keine Benachrichtigungen",
+        "MUTED_MENTION_ONLY": "Nur bei Erwähnung benachrichtigen",
+        "MUTED_SILENT": "Stumme Benachrichtigungen",
         "ALL": "Alle"
     },
     "messageTypes": {

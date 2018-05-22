@@ -193,16 +193,10 @@
                     .disabled {
                         text-decoration: line-through;
                     }
-                    .muted {
+                    .notification-settings {
                         margin: 1px 0 0 4px;
                         padding: 0;
                         height: 20px;
-                        i {
-                            color: $material-grey;
-                            font-size: 20px;
-                            margin: 0;
-                            padding: 0;
-                        }
                     }
                 }
 
@@ -214,7 +208,7 @@
                         flex-direction: row;
                         justify-content: space-between;
                         align-items: center;
-                        color: rgba(0, 0, 0, 0.54); // TODO: Extract color
+                        color: $material-grey;
 
                         .left {
                             white-space: nowrap;

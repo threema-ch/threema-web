@@ -398,4 +398,34 @@ angular.module('3ema.filters', [])
     };
 }])
 
+/**
+ * Return a simplified DND mode.
+ *
+ * This will return either 'on', 'off' or 'mention'.
+ * The 'until' mode will be processed depending on the expiration timestamp.
+ */
+.filter('dndModeSimplified', [function() {
+    return (conversation: threema.Conversation) => {
+        if (!conversation.notifications) {
+            return 'off';
+        }
+        const dnd = conversation.notifications.dnd;
+        switch (dnd.mode) {
+            case threema.NotificationDndMode.On:
+                return 'on';
+            case threema.NotificationDndMode.Mention:
+                return 'mention';
+            case threema.NotificationDndMode.Off:
+                return 'off';
+            case threema.NotificationDndMode.Until:
+                if (!dnd.until || dnd.until <= 0) {
+                    return 'off';
+                }
+                const until: Date = new Date(dnd.until);
+                const now: Date = new Date();
+                return until > now ? 'on' : 'off';
+        }
+    };
+}])
+
 ;

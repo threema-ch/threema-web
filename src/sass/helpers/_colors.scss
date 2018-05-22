@@ -26,3 +26,6 @@ $active-placeholder-color: lightgray;
 .color-status-error {
     color: $status-error;
 }
+
+.material-icons.md-medium-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-medium-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
