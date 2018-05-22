@@ -2407,6 +2407,35 @@ export class WebClientService {
     }
 
     /**
+     * Whether a notification should be triggered.
+     */
+    private shouldNotify(settings: threema.SimplifiedNotificationSettings, message: threema.Message): boolean {
+        if (settings.dnd.enabled) {
+            // Do not show any notifications on muted chats
+            if (settings.dnd.mentionOnly) {
+                let textToSearch = '';
+                if (message.type === 'text') {
+                    textToSearch = message.body;
+                } else if (message.caption) {
+                    textToSearch = message.caption;
+                }
+                let quotedMe = false;
+                if (message.quote) {
+                    textToSearch += ' ' + message.quote.text;
+                    quotedMe = message.quote.identity === this.me.id;
+                }
+                const forMe = textToSearch.indexOf('@[' + this.me.id + ']') !== -1;
+                const forAll = textToSearch.indexOf('@[@@@@@@@@]') !== -1;
+                return forMe || forAll || quotedMe;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * Called when a new message arrives.
      */
     private onNewMessage(
@@ -2425,11 +2454,11 @@ export class WebClientService {
             return;
         }
 
-        // Do not show any notifications on muted chats
-        // TODO
-        //if (conversation.isMuted === true) {
-        //    return;
-        //}
+        // Consider conversation notification settings
+        const simplifiedNotification = this.notificationService.getAppNotificationSettings(conversation);
+        if (!this.shouldNotify(simplifiedNotification, message)) {
+            return;
+        }
 
         // Determine sender and partner name (used for notification)
         let senderName = sender.id;
@@ -2519,7 +2548,7 @@ export class WebClientService {
                         id: conversation.id,
                         initParams: null,
                     });
-                });
+                }, undefined, undefined, simplifiedNotification.sound.muted);
             });
     }
 

@@ -315,10 +315,11 @@ export class NotificationService {
                             avatar: string = '/img/threema-64x64.png',
                             clickCallback?: any,
                             forceShowBody: boolean = false,
-                            overwriteOlder: boolean = false): boolean {
+                            overwriteOlder: boolean = false,
+                            forceMute: boolean = false): boolean {
 
         // Play sound on new message if the user wants to
-        if (this.notificationSound) {
+        if (this.notificationSound && !forceMute) {
             const audio = new Audio(NotificationService.NOTIFICATION_SOUND);
             audio.play();
         }
