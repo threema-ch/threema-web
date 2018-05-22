@@ -343,14 +343,28 @@ declare namespace threema {
 
     interface NotificationDnd {
         mode: NotificationDndMode;
+        mentionOnly?: boolean;
         until?: number;
     }
 
     const enum NotificationDndMode {
         Off = 'off',
         On = 'on',
-        Mention = 'mention',
         Until = 'until',
+    }
+
+    /**
+     * A form of the notification settings where things like the "until" mode
+     * have been processed already.
+     */
+    interface SimplifiedNotificationSettings {
+        sound: {
+            muted: boolean,
+        };
+        dnd: {
+            enabled: boolean,
+            mentionOnly: boolean,
+        };
     }
 
     /**

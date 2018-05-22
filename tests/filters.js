@@ -47,13 +47,13 @@ describe('Filters', function() {
     };
 
     beforeEach(function() {
-
-        // Load 3ema.filters module
+        module('3ema.services');
         module('3ema.filters');
 
-        module(function ($provide) {
+        module(function($provide) {
             $provide.value('WebClientService', webClientServiceMock);
             $provide.value('$translate', translationMock);
+            $provide.constant('$state', null);
         });
 
         // Inject the $filter function
@@ -304,42 +304,42 @@ describe('Filters', function() {
         it('dnd enabled', () => {
             expect(process(
                 {mode: 'on'},
-                {mode: 'default'},
+                {mode: 'default'}
             )).toEqual('on');
         });
 
         it('dnd enabled (no sound)', () => {
             expect(process(
                 {mode: 'on'},
-                {mode: 'muted'},
+                {mode: 'muted'}
             )).toEqual('on');
         });
 
         it('dnd disabled', () => {
             expect(process(
                 {mode: 'off'},
-                {mode: 'default'},
+                {mode: 'default'}
             )).toEqual('off');
         });
 
         it('dnd disabled (no sound)', () => {
             expect(process(
                 {mode: 'off'},
-                {mode: 'muted'},
+                {mode: 'muted'}
             )).toEqual('off');
         });
 
         it('mention only', () => {
             expect(process(
-                {mode: 'mention'},
-                {mode: 'default'},
+                {mode: 'on', mentionOnly: true},
+                {mode: 'default'}
             )).toEqual('mention');
         });
 
         it('mention only (no sound)', () => {
             expect(process(
-                {mode: 'mention'},
-                {mode: 'muted'},
+                {mode: 'on', mentionOnly: true},
+                {mode: 'muted'}
             )).toEqual('mention');
         });
 
@@ -348,7 +348,7 @@ describe('Filters', function() {
             jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));
             expect(process(
                 {mode: 'until', until: +(new Date(2018, 9, 9, 20, 50))},
-                {mode: 'default'},
+                {mode: 'default'}
             )).toEqual('on');
         });
 
@@ -357,7 +357,25 @@ describe('Filters', function() {
             jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));
             expect(process(
                 {mode: 'until', until: +(new Date(2018, 9, 9, 19, 50))},
-                {mode: 'default'},
+                {mode: 'default'}
+            )).toEqual('off');
+        });
+
+        it('until (mention only, not expired)', () => {
+            jasmine.clock().install();
+            jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));
+            expect(process(
+                {mode: 'until', until: +(new Date(2018, 9, 9, 20, 50)), mentionOnly: true},
+                {mode: 'default'}
+            )).toEqual('mention');
+        });
+
+        it('until (mention only, expired)', () => {
+            jasmine.clock().install();
+            jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));
+            expect(process(
+                {mode: 'until', until: +(new Date(2018, 9, 9, 19, 50)), mentionOnly: true},
+                {mode: 'default'}
             )).toEqual('off');
         });
     });

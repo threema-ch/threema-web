@@ -253,6 +253,50 @@ export class NotificationService {
     }
 
     /**
+     * Parse the conversation notification settings and return a simplified version.
+     */
+    public getAppNotificationSettings(conversation: threema.Conversation): threema.SimplifiedNotificationSettings {
+        if (!conversation.notifications) {
+            return {
+                sound: {muted: false},
+                dnd: {enabled: false, mentionOnly: false},
+            };
+        }
+
+        const sound = conversation.notifications.sound;
+        const dnd = conversation.notifications.dnd;
+
+        const simpleSound = {
+            muted: !(sound.mode === threema.NotificationSoundMode.Default),
+        };
+
+        const simpleDnd = {
+            enabled: dnd.mode === threema.NotificationDndMode.On,
+            mentionOnly: (dnd.mentionOnly === undefined || dnd.mentionOnly === null) ? false : dnd.mentionOnly,
+        };
+
+        if (dnd.mode === threema.NotificationDndMode.Until) {
+            if (!dnd.until || dnd.until <= 0) {
+                simpleDnd.enabled = false;
+            } else {
+                const until: Date = new Date(dnd.until);
+                const now: Date = new Date();
+                simpleDnd.enabled = until > now;
+            }
+        }
+
+        // Mention only does not make sense if DND is not enabled at all.
+        if (!simpleDnd.enabled) {
+            simpleDnd.mentionOnly = false;
+        }
+
+        return {
+            sound: simpleSound,
+            dnd: simpleDnd,
+        };
+    }
+
+    /**
      * Notify the user via Desktop Notification API.
      *
      * Return a boolean indicating whether the notification has been shown.
