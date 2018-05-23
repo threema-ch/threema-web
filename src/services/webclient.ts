@@ -619,7 +619,9 @@ export class WebClientService {
             // Handle messages directly
             this.relayedDataTask.on('data', (ev: saltyrtc.SaltyRTCEvent) => {
                 const chunk = new Uint8Array(ev.data);
-                this.$log.debug('[Chunk] Received chunk:', chunk);
+                if (this.config.MSG_DEBUGGING && this.config.DEBUG) {
+                    this.$log.debug('[Chunk] Received chunk:', chunk);
+                }
                 this.unchunker.add(chunk.buffer);
             });
 
