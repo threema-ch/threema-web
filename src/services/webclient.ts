@@ -461,7 +461,7 @@ export class WebClientService {
         // Handle a disconnect request
         this.salty.on('application', (applicationData: any) => {
             if (applicationData.data.type === 'disconnect') {
-                this.onApplicationDisconnect(applicationData);
+                this.onApplicationDisconnect(applicationData.data);
             }
         });
 
@@ -631,12 +631,38 @@ export class WebClientService {
     /**
      * An 'application' message with type 'disconnect' arrived.
      */
-    private onApplicationDisconnect(applicationData: any) {
-        this.$log.debug(this.logTag, 'Disconnecting requested');
-        const deleteStoredData = applicationData.data.forget === true;
+    private onApplicationDisconnect(data: threema.DisconnectMessage) {
+        this.$log.debug(this.logTag, 'Disconnecting requested:', data);
+
+        const deleteStoredData = data.forget === true;
         const resetPush = true;
         const redirect = true;
         this.stop(false, deleteStoredData, resetPush, redirect);
+
+        let message: string;
+        switch (data.reason) {
+            case threema.DisconnectReason.SessionStopped:
+                message = 'connection.SESSION_STOPPED';
+                break;
+            case threema.DisconnectReason.SessionDeleted:
+                message = 'connection.SESSION_DELETED';
+                break;
+            case threema.DisconnectReason.WebclientDisabled:
+                message = 'connection.WEBCLIENT_DISABLED';
+                break;
+            case threema.DisconnectReason.SessionReplaced:
+                message = 'connection.SESSION_REPLACED';
+                break;
+            default:
+                this.$log.warn(this.logTag, 'Unknown disconnect reason:', data.reason);
+        }
+
+        if (message !== undefined) {
+            this.$mdDialog.show(this.$mdDialog.alert()
+                .title(this.$translate.instant('connection.SESSION_CLOSED_TITLE'))
+                .textContent(this.$translate.instant(message))
+                .ok(this.$translate.instant('common.OK')));
+        }
     }
 
     /**

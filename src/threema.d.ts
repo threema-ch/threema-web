@@ -714,6 +714,19 @@ declare namespace threema {
         RelayedData,
     }
 
+    interface DisconnectMessage {
+        type: 'disconnect';
+        forget: boolean;
+        reason: DisconnectReason;
+    }
+
+    const enum DisconnectReason {
+        SessionStopped = 1,
+        SessionDeleted = 2,
+        WebclientDisabled = 3,
+        SessionReplaced = 4,
+    }
+
     namespace Container {
         interface ReceiverData {
             contacts: ContactReceiver[];

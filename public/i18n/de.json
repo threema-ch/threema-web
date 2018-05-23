@@ -300,5 +300,12 @@
             "NOV": "Nov.",
             "DEC": "Dez."
         }
+    },
+    "connection": {
+        "SESSION_CLOSED_TITLE": "Sitzung Geschlossen",
+        "SESSION_STOPPED": "Die Sitzung wurde auf Ihrem Gerät gestoppt.",
+        "SESSION_DELETED": "Die Sitzung wurde auf Ihrem Gerät gelöscht.",
+        "WEBCLIENT_DISABLED": "Threema Web wurde auf Ihrem Gerät deaktiviert.",
+        "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben."
     }
 }

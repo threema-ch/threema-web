@@ -299,5 +299,12 @@
             "NOV": "Nov.",
             "DEC": "Dec."
         }
+    },
+    "connection": {
+        "SESSION_CLOSED_TITLE": "Session Closed",
+        "SESSION_STOPPED": "The session was stopped on your device.",
+        "SESSION_DELETED": "The session was deleted on your device.",
+        "WEBCLIENT_DISABLED": "Threema Web was disabled on your device.",
+        "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window."
     }
 }
