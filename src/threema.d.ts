@@ -682,7 +682,16 @@ declare namespace threema {
         maxGroupSize: number;
         maxFileSize: number;
         distributionLists: boolean;
+        imageFormat: ImageFormat;
         mdm?: MdmRestrictions;
+    }
+
+    /**
+     * MIME types for the images exchanged between app and browser.
+     */
+    interface ImageFormat {
+        avatar: string;
+        thumbnail: string;
     }
 
     interface MdmRestrictions {

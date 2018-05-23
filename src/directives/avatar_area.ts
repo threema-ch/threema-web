@@ -17,6 +17,8 @@
 
 // tslint:disable:max-line-length
 
+import {WebClientService} from '../services/webclient';
+
 /**
  * Support uploading and resizing avatar
  */
@@ -27,12 +29,14 @@ export default [
     '$timeout',
     '$translate',
     '$mdDialog',
+    'WebClientService',
     function($rootScope: ng.IRootScopeService,
              $log: ng.ILogService,
              $window: ng.IWindowService,
              $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
-             $mdDialog: ng.material.IDialogService) {
+             $mdDialog: ng.material.IDialogService,
+             webClientService: WebClientService) {
         return {
             restrict: 'EA',
             scope: true,
@@ -82,6 +86,7 @@ export default [
                         controllerAs: 'ctrl',
                         controller: function() {
                             this.avatar = null;
+                            this.avatarFormat = webClientService.appCapabilities.imageFormat.avatar;
 
                             this.apply = () => {
                                 $mdDialog.hide(this.avatar);
@@ -142,7 +147,7 @@ export default [
                                     md-diameter="96"></md-progress-circular>
 
                         </div>
-                        <img ng-src="{{ ctrl.avatar | bufferToUrl:'image/png' }}" ng-if="ctrl.avatar !== null" />
+                        <img ng-src="{{ ctrl.avatar | bufferToUrl:avatarFormat }}" ng-if="ctrl.avatar !== null" />
                     </div>
                     <div class="avatar-area-navigation"  layout="row" layout-wrap layout-margin layout-align="center">
 

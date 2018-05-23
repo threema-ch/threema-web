@@ -29,7 +29,7 @@
         <span class="in-view-indicator" ng-if="ctrl.type !== 'location'" in-view="ctrl.thumbnailInView($inview)"></span>
         <img ng-if="ctrl.thumbnail" ng-src="{{ctrl.thumbnail}}">
         <div ng-if="ctrl.message.thumbnail && !ctrl.thumbnail" class="thumbnail-loader">
-            <img ng-src="{{ ctrl.message.thumbnail.preview | bufferToUrl: 'image/png' }}">
+            <img ng-src="{{ ctrl.message.thumbnail.preview | bufferToUrl:ctrl.thumbnailFormat }}">
         </div>
 
     </div>
@@ -65,7 +65,7 @@
         <div class="circle"
              ng-class="{active: !ctrl.isDownloading()}"
              ng-if="!ctrl.downloaded"
-             ng-style="{'background-image': 'url({{ctrl.message.thumbnail.preview | bufferToUrl: 'image/png'}})' }">
+             ng-style="{'background-image': 'url({{ ctrl.message.thumbnail.preview | bufferToUrl:ctrl.thumbnailFormat }})' }">
             <i class="material-icons md-24">file_download</i>
             <div class="loading" ng-class="{active: ctrl.isDownloading()}"></div>
         </div>
@@ -73,7 +73,7 @@
         <!-- File type indicator -->
         <div class="circle"
              ng-if="ctrl.downloaded && ctrl.message.thumbnail.preview !== undefined"
-             ng-style="{'background-image': 'url({{ctrl.message.thumbnail.preview | bufferToUrl: 'image/png'}})' }">
+             ng-style="{'background-image': 'url({{ ctrl.message.thumbnail.preview | bufferToUrl:ctrl.thumbnailFormat }})' }">
         </div>
         <div class="circle"
              ng-if="ctrl.downloaded && ctrl.message.thumbnail.preview == undefined">

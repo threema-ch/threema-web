@@ -79,7 +79,8 @@ export default [
                     if (data === null || data === undefined) {
                         return '';
                     }
-                    return ($filter('bufferToUrl') as (data: ArrayBuffer, mime: string) => string)(data, 'image/png');
+                    const filter = $filter('bufferToUrl') as (data: ArrayBuffer, mime: string) => string;
+                    return filter(data, webClientService.appCapabilities.imageFormat.avatar);
                 };
 
                 /**

@@ -68,6 +68,7 @@ export default [
                         || this.isAnimGif);
 
                 this.thumbnail = null;
+                this.thumbnailFormat = webClientService.appCapabilities.imageFormat.thumbnail;
 
                 if (this.message.thumbnail !== undefined) {
                     this.thumbnailStyle = {
@@ -92,8 +93,12 @@ export default [
                         this.thumbnail = null;
                     } else {
                         if (this.thumbnail === null) {
+                            const bufferToUrl = $filter<any>('bufferToUrl');
                             if (this.message.thumbnail.img !== undefined) {
-                                this.thumbnail = $filter<any>('bufferToUrl')(this.message.thumbnail.img, 'image/png');
+                                this.thumbnail = bufferToUrl(
+                                    this.message.thumbnail.img,
+                                    webClientService.appCapabilities.imageFormat.thumbnail,
+                                );
                                 return;
                             } else {
                                 this.thumbnailDownloading = true;
@@ -102,7 +107,10 @@ export default [
                                         this.receiver,
                                         this.message).then((img) => {
                                         $timeout(() => {
-                                            this.thumbnail = $filter<any>('bufferToUrl')(img, 'image/png');
+                                            this.thumbnail = bufferToUrl(
+                                                img,
+                                                webClientService.appCapabilities.imageFormat.thumbnail,
+                                            );
                                             this.thumbnailDownloading = false;
                                         });
                                     });
@@ -180,6 +188,7 @@ export default [
                                         mediaboxService.setMedia(
                                             blobInfo.buffer,
                                             blobInfo.filename,
+                                            blobInfo.mimetype,
                                             caption,
                                         );
                                         break;

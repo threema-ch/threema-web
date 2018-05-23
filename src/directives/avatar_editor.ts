@@ -71,7 +71,8 @@ export default [
                                     type: 'blob',
                                     // max allowed size on device
                                     size: [512, 512],
-                                    circle: 'false',
+                                    circle: false,
+                                    format: 'png',
                                 })
                                     .then((blob: Blob) => {
                                         const fileReader = new FileReader();

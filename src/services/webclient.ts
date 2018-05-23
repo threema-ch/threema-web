@@ -2339,6 +2339,7 @@ export class WebClientService {
                 maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
                 maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
+                imageFormat: data.capabilities.imageFormat,
                 mdm: data.capabilities.mdm,
             },
         };
