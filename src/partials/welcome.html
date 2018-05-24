@@ -36,6 +36,7 @@
                         <md-input-container md-no-float class="md-block">
                             <input type="password"
                                    ng-model="ctrl.password"
+                                   ng-disabled="ctrl.formLocked"
                                    autofocus
                                    aria-label="Password"
                                    translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}"

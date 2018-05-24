@@ -75,6 +75,7 @@ class WelcomeController {
     private mode: 'scan' | 'unlock';
     private qrCode;
     private password: string = '';
+    private formLocked: boolean = false;
     private pleaseUpdateAppMsg: string = null;
     private browser: threema.BrowserInfo;
 
@@ -265,6 +266,9 @@ class WelcomeController {
      * Decrypt the keys and initiate the session.
      */
     private unlockConfirm(): void {
+        // Lock form to prevent further input
+        this.formLocked = true;
+
         const decrypted: threema.TrustedKeyStoreData = this.trustedKeyStore.retrieveTrustedKey(this.password);
         if (decrypted === null) {
             return this.showDecryptionFailed();
@@ -460,6 +464,7 @@ class WelcomeController {
             // Go back to scan mode
             this.mode = 'scan';
             this.password = '';
+            this.formLocked = false;
 
             // Initiate scan
             this.scan();
@@ -523,6 +528,7 @@ class WelcomeController {
 
                 // Clear local password variable
                 this.password = '';
+                this.formLocked = false;
 
                 // Redirect to home
                 this.$timeout(() => this.$state.go('messenger.home'), WelcomeController.REDIRECT_DELAY);
