@@ -2282,6 +2282,25 @@ export class WebClientService {
         this.updateUnreadCount();
     }
 
+    private _receiveUpdateAvatar(message: threema.WireMessage) {
+        this.$log.debug('Received avatar update');
+        const args = message.args;
+        const data = message.data as ArrayBuffer;
+        if (args === undefined) {
+            this.$log.warn('Invalid avatar update, arguments missing');
+            return;
+        }
+
+        // Get receiver
+        const receiver = this.receivers.getData({type: args.type, id: args.id});
+
+        // Set low-res avatar
+        receiver.avatar.low = data;
+
+        // Invalidate high-res avatar
+        receiver.avatar.high = undefined;
+    }
+
     /**
      * Process an incoming battery status message.
      */
@@ -2824,6 +2843,9 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_CONVERSATION:
                 this._receiveUpdateConversation(message);
+                break;
+            case WebClientService.SUB_TYPE_AVATAR:
+                this._receiveUpdateAvatar(message);
                 break;
             case WebClientService.SUB_TYPE_BATTERY_STATUS:
                 this._receiveUpdateBatteryStatus(message);
