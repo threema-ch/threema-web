@@ -113,6 +113,27 @@ angular.module('3ema.filters', [])
 })
 
 /**
+ * Enlarge 1-3 emoji.
+ */
+.filter('enlargeSingleEmoji', function() {
+    const pattern = /<span class="e1 ([^>]*>[^<]*)<\/span>/g;
+    const singleEmojiThreshold = 3;
+    const singleEmojiClassName = 'large-emoji';
+    return function(text, enlarge = false) {
+        if (!enlarge) {
+            return text;
+        }
+        const matches = text.match(pattern);
+        if (matches != null && matches.length >= 1 && matches.length <= singleEmojiThreshold) {
+            if (text.replace(pattern, '').length === 0) {
+                text = text.replace(pattern, '<span class="e1 ' + singleEmojiClassName + ' $1</span>');
+            }
+        }
+        return text;
+    };
+})
+
+/**
  * Convert markdown elements to html elements
  */
 .filter('markify', function() {

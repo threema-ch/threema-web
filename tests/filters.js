@@ -380,4 +380,46 @@ describe('Filters', function() {
         });
     });
 
+    describe('enlargeSingleEmoji', function() {
+        let process = (text) => {
+            return $filter('enlargeSingleEmoji')(text, true)
+        };
+
+        const singleEmojiClassName = 'large-emoji';
+        const crazy = '<span class="e1 e1-people _1f92a" title=":crazy_face:">🤪</span>';
+        const crazyLarge = '<span class="e1 ' + singleEmojiClassName + ' e1-people _1f92a" title=":crazy_face:">🤪</span>';
+        const copyright = '<span class="e1 e1-symbols _00a9" title=":copyright:">©️</span>';
+        const copyrightLarge = '<span class="e1 ' + singleEmojiClassName + ' e1-symbols _00a9" title=":copyright:">©️</span>';
+
+        it('enlarges 1 emoji', () => {
+            expect(process(crazy)).toEqual(crazyLarge);
+        });
+
+        it('enlarges 2 emoji', () => {
+            expect(process(crazy + copyright)).toEqual(crazyLarge + copyrightLarge);
+        });
+
+        it('enlarges 3 emoji', () => {
+            expect(process(crazy + copyright + crazy)).toEqual(crazyLarge + copyrightLarge + crazyLarge);
+        });
+
+        it('does not enlarge 4 emoji', () => {
+            expect(process(crazy + copyright + crazy + copyright)).toEqual(crazy + copyright + crazy + copyright);
+        });
+
+        it('does not enlarge if non-emoji characters are contained', () => {
+            expect(process(crazy + ' ')).toEqual(crazy + ' ');
+            expect(process(crazy + 'a' + crazy)).toEqual(crazy + 'a' + crazy);
+        });
+
+        it('does not modify non emoji text', () => {
+            const text = 'emoji e1 e1-people hello';
+            expect(process(text)).toEqual(text);
+        });
+
+        it('does nothing if enlarge flag is set to false', () => {
+            expect($filter('enlargeSingleEmoji')(crazy, false)).toEqual(crazy);
+        });
+    });
+
 });

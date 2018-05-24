@@ -17,6 +17,8 @@
 
 // tslint:disable:max-line-length
 
+import {WebClientService} from '../services/webclient';
+
 export default [
     function() {
         return {
@@ -27,7 +29,7 @@ export default [
                 multiLine: '=?eeeMultiLine',
             },
             controllerAs: 'ctrl',
-            controller: [function() {
+            controller: ['WebClientService', function(webClientService: WebClientService) {
                 // Get text depending on type
                 let rawText = null;
                 const message = this.message as threema.Message;
@@ -50,15 +52,18 @@ export default [
                         rawText = message.caption;
                         break;
                 }
+
                 // Escaping will be done in the HTML using filters
                 this.text = rawText;
                 if (this.multiLine === undefined) {
                     this.multiLine = true;
                 }
+
+                this.enlargeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
             }],
             template: `
                 <span click-action
-                    ng-bind-html="ctrl.text | escapeHtml | markify | emojify | mentionify | linkify | nlToBr: ctrl.multiLine">
+                    ng-bind-html="ctrl.text | escapeHtml | markify | emojify | enlargeSingleEmoji:ctrl.enlargeSingleEmoji | mentionify | linkify | nlToBr:ctrl.multiLine">
                 </span>
             `,
         };
