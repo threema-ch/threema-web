@@ -2394,6 +2394,7 @@ export class WebClientService {
             featureMask: 0xFF,
             verificationLevel: 3,
             state: 'ACTIVE',
+            hidden: false,
             access: {
                 canChangeAvatar: true,
                 canChangeFirstName: true,
