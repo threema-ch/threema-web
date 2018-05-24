@@ -237,7 +237,18 @@ angular.module('3ema.filters', [])
         for (let i = 0; i < len; i++) {
             binary += String.fromCharCode(bytes[i]);
         }
-        const uri = 'data:' + mimeType + ';base64,' +  btoa(binary);
+        switch (mimeType) {
+            case 'image/jpeg':
+            case 'image/png':
+            case 'image/webp':
+                // OK
+                break;
+            default:
+                $log.warn(logTag, 'Unknown mimeType: ' + mimeType);
+                mimeType = 'image/jpeg';
+                break;
+        }
+        const uri = 'data:' + mimeType + ';base64,' + btoa(binary);
         if (trust) {
             return $sce.trustAsResourceUrl(uri);
         } else {
