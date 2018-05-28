@@ -89,7 +89,7 @@ export class WebClientService {
     private static ARGUMENT_REFERENCE_MSG_ID = 'refMsgId';
     private static ARGUMENT_AVATAR = 'avatar';
     private static ARGUMENT_AVATAR_HIGH_RESOLUTION = 'highResolution';
-    private static ARGUMENT_NICKNAME = 'nickname';
+    private static ARGUMENT_NICKNAME = 'publicNickname';
     private static ARGUMENT_IS_TYPING = 'isTyping';
     private static ARGUMENT_MESSAGE_ID = 'messageId';
     private static ARGUMENT_HAS_MORE = 'more';
