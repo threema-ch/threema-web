@@ -449,7 +449,7 @@ class ConversationController {
     public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): Promise<any> => {
         // Validate whether a connection is available
         return new Promise((resolve, reject) => {
-            if (this.stateService.state !== 'ok') {
+            if (!this.stateService.readyToSubmit(this.webClientService.chosenTask)) {
                 // Invalid connection, show toast and abort
                 this.showError(this.$translate.instant('error.NO_CONNECTION'));
                 return reject();
