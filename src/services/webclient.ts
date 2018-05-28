@@ -1007,9 +1007,14 @@ export class WebClientService {
             return Promise.resolve(receiverInfo.avatar[resolution]);
         }
 
+        // If we're requesting our own avatar, change type from "me" to "contact"
+        let receiverType = receiver.type;
+        if (receiverType === 'me') {
+            receiverType = 'contact';
+        }
         // Create arguments and send request
         const args = {
-            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiverType,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION]: highResolution,
         } as any;
@@ -2321,6 +2326,38 @@ export class WebClientService {
     }
 
     /**
+     * Process an incoming profile update message.
+     */
+    private _receiveUpdateProfile(message: threema.WireMessage): void {
+        this.$log.debug('Received profile update');
+
+        // Unpack data and arguments
+        const data = message.data as threema.ProfileUpdate;
+        if (data === undefined) {
+            this.$log.warn('Invalid profile update message, data missing');
+            return;
+        }
+
+        // Update public nickname
+        if (data.publicNickname !== undefined) {
+            this.me.publicNickname = data.publicNickname;
+            this.me.displayName = this.me.publicNickname || this.me.id;
+        }
+
+        // Update avatar
+        if (data.avatar !== undefined) {
+            if (data.avatar === null) {
+                this.me.avatar = {};
+            } else {
+                this.me.avatar = { high: data.avatar };
+            }
+
+            // Request new low-res avatar
+            this.requestAvatar(this.me, false);
+        }
+    }
+
+    /**
      * The peer sends the device information string. This can be used to
      * identify the active session.
      */
@@ -2393,7 +2430,7 @@ export class WebClientService {
      */
     private _receiveResponseProfile(message: threema.WireMessage): void {
         this.$log.debug('Received profile');
-        const data = message.data;
+        const data = message.data as threema.Profile;
         if (data === undefined) {
             this.$log.warn('Invalid client info, data field missing');
             return;
@@ -2858,6 +2895,9 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_DISTRIBUTION_LIST:
                 receiveResult = this._receiveResponseDistributionList(message);
+                break;
+            case WebClientService.SUB_TYPE_PROFILE:
+                this._receiveUpdateProfile(message);
                 break;
             case WebClientService.SUB_TYPE_ALERT:
                 this._receiveAlert(message);

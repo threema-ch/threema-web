@@ -707,6 +707,16 @@ declare namespace threema {
         readonlyProfile?: boolean;
     }
 
+    interface ProfileUpdate {
+        publicNickname?: string;
+        avatar?: ArrayBuffer;
+    }
+
+    interface Profile extends ProfileUpdate {
+        identity: string;
+        publicKey: ArrayBuffer;
+    }
+
     interface Mention {
         identity: string;
         query: string;
