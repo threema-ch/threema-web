@@ -10,20 +10,20 @@ also changes the protocol version from 1 to 2.
 
 Changes:
 
-* [feature] Add support for iOS ([#58](i58))
-* [feature] Allow viewing and editing your own profile ([#221](i221))
-* [feature] Show message events ([#32](i32))
-* [feature] Large single emoji ([#97](i97))
-* [feature] Show distribution list members ([#472](i472))
+* [feature] Add support for iOS ([#58][i58])
+* [feature] Allow viewing and editing your own profile ([#221][i221])
+* [feature] Show message events ([#32][i32])
+* [feature] Large single emoji ([#97][i97])
+* [feature] Show distribution list members ([#472][i472])
 * [feature] Add "Navigate to" entry to location message context menu
 * [feature] Add support for Safari 11+ (with iOS devices only)
 * [feature] Implement support for new per-conversation notification settings
 * [change] Threema Web protocol version upgrade from 1 to 2
 * [change] When downloading media, filename now contains timestamp
-* [bug] Saving profile without setting picture won't reset it anymore ([#154](i154))
-* [bug] Fix race condition in password field ([#445](i445))
-* [bug] Fix broken conversation preview ([#393](i393))
-* [bug] Make message caption mouse-selectable ([#303](i303))
+* [bug] Saving profile without setting picture won't reset it anymore ([#154][i154])
+* [bug] Fix race condition in password field ([#445][i445])
+* [bug] Fix broken conversation preview ([#393][i393])
+* [bug] Make message caption mouse-selectable ([#303][i303])
 
 Contributors:
 
