@@ -2387,7 +2387,6 @@ export class WebClientService {
             isWork: data.isWork,
             pushToken: data.pushToken,
             configuration: {
-                showLocationPreview: getOrDefault<boolean>(data.configuration.showLocationPreview, false),
                 voipEnabled: getOrDefault<boolean>(data.configuration.voipEnabled, true),
                 voipForceTurn: getOrDefault<boolean>(data.configuration.voipForceTurn, false),
                 largeSingleEmoji: getOrDefault<boolean>(data.configuration.largeSingleEmoji, true),

@@ -674,7 +674,6 @@ declare namespace threema {
     }
 
     interface AppConfig {
-        showLocationPreview: boolean;
         voipEnabled: boolean;
         voipForceTurn: boolean;
         largeSingleEmoji: boolean;
