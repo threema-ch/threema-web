@@ -21,7 +21,7 @@
 <!--- Include as many relevant details about the environment you experienced the bug in. -->
 <!--- Feel free to remove irrelevant lines. -->
 * Threema Web version:
-* Threema for Android version:
-* Threema for Android source: Play Store|Threema Store|Amazon|Pirate Bay|...
+* Threema App version:
 * Browser name and version:
-* Operating system and version:
+* Computer operating system and version:
+* Smartphone operating system and version:
