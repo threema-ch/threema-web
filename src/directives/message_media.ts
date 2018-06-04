@@ -133,11 +133,12 @@ export default [
                 };
 
                 // Play a Audio file in a dialog
-                this.playAudio = (buffer: ArrayBuffer) => {
+                this.playAudio = (blobInfo: threema.BlobInfo) => {
                     $mdDialog.show({
                         controllerAs: 'ctrl',
                         controller: function() {
-                            this.blobBuffer = buffer;
+                            this.blobBuffer = blobInfo.buffer;
+                            this.mimeType = blobInfo.mimetype;
                             this.cancel = () => {
                                 $mdDialog.cancel();
                             };
@@ -152,7 +153,7 @@ export default [
                                     <md-dialog-content layout="row" layout-align="center">
                                         <audio
                                             controls
-                                            autoplay ng-src="{{ ctrl.blobBuffer | bufferToUrl: 'audio/ogg' }}">
+                                            autoplay ng-src="{{ ctrl.blobBuffer | bufferToUrl:ctrl.mimeType }}">
                                             Your browser does not support the <code>audio</code> element.
                                         </audio>
                                     </md-dialog-content>
@@ -207,7 +208,7 @@ export default [
                                         break;
                                     case 'audio':
                                         // Show inline
-                                        this.playAudio(blobInfo.buffer);
+                                        this.playAudio(blobInfo);
                                         break;
                                     default:
                                         $log.warn('Ignored download request for message type', this.message.type);

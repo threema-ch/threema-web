@@ -262,6 +262,10 @@ angular.module('3ema.filters', [])
             case 'image/jpeg':
             case 'image/png':
             case 'image/webp':
+            case 'audio/mp4':
+            case 'audio/aac':
+            case 'audio/ogg':
+            case 'audio/webm':
                 // OK
                 break;
             default:
