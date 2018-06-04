@@ -259,6 +259,7 @@ angular.module('3ema.filters', [])
             binary += String.fromCharCode(bytes[i]);
         }
         switch (mimeType) {
+            case 'image/jpg':
             case 'image/jpeg':
             case 'image/png':
             case 'image/webp':
