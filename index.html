@@ -29,12 +29,16 @@
     <meta name="description" translate translate-attr-content="meta.DESCRIPTION"
           content="Chat from your desktop with Threema Web and have full access to all chats, contacts and media files."/>
 
-    <!-- Webmanifest -->
-    <link rel="manifest" href="manifest.webmanifest">
-
-    <!-- Favicon -->
-    <link rel="icon" href="img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
-    <link rel="shortcut icon" href="img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
+    <!-- Favicon / Webmanifest / Browserconfig -->
+    <link rel="manifest" href="manifest.webmanifest?v=[[VERSION]]">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png?v=[[VERSION]]">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png?v=[[VERSION]]">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png?v=[[VERSION]]">
+    <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg?v=[[VERSION]]" color="#5bbad5">
+    <link rel="shortcut icon" href="img/favicon/favicon.ico?v=[[VERSION]]">
+    <meta name="msapplication-TileColor" content="#313131">
+    <meta name="msapplication-config" content="browserconfig.xml?v=[[VERSION]]">
+    <meta name="theme-color" content="#4f4f4f">
 
     <!-- Angular -->
     <link rel="stylesheet" href="node_modules/angular/angular-csp.css?v=[[VERSION]]">
