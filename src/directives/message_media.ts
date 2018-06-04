@@ -50,6 +50,7 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
+                this.logTag = '[MessageMedia]';
                 this.type = this.message.type;
                 this.downloading = false;
                 this.thumbnailDownloading = false;
@@ -170,8 +171,9 @@ export default [
 
                 // Download function
                 this.download = () => {
+                    $log.debug(this.logTag, 'Download blob');
                     if (this.downloading) {
-                        $log.debug('download already in progress...');
+                        $log.debug(this.logTag, 'Download already in progress...');
                         return;
                     }
                     const message: threema.Message = this.message;
@@ -180,6 +182,7 @@ export default [
                     webClientService.requestBlob(message.id, receiver)
                         .then((blobInfo: threema.BlobInfo) => {
                             $rootScope.$apply(() => {
+                                $log.debug(this.logTag, 'Blob loaded');
                                 this.downloading = false;
                                 this.downloaded = true;
 
@@ -211,7 +214,8 @@ export default [
                                         this.playAudio(blobInfo);
                                         break;
                                     default:
-                                        $log.warn('Ignored download request for message type', this.message.type);
+                                        $log.warn(this.logTag,
+                                            'Ignored download request for message type', this.message.type);
                                 }
                             });
                         })

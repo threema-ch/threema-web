@@ -47,7 +47,7 @@
             <div class="loading" ng-class="{active: ctrl.isDownloading()}"></div>
         </div>
         <!-- Play Indicator -->
-        <div class="circle" ng-click="ctrl.download()" ng-if="ctrl.downloaded">
+        <div class="circle" ng-if="ctrl.downloaded">
             <i class="material-icons md-24">play_arrow</i>
         </div>
         <div class="info" translate>messageTypes.AUDIO_MESSAGE</div>

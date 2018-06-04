@@ -1057,7 +1057,7 @@ export class WebClientService {
 
         if (cached !== undefined) {
 
-            this.$log.debug('Use cached blob');
+            this.$log.debug(this.logTag, 'Use cached blob');
             return new Promise((resolve) => {
                 resolve(cached);
             });
