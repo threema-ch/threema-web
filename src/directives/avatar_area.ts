@@ -50,6 +50,7 @@ export default [
             controller: [function() {
                 this.isLoading = false;
                 this.avatar = null; // Type: String
+                this.avatarFormat = webClientService.appCapabilities.imageFormat.avatar;
 
                 this.imageChanged = function(image: ArrayBuffer, notify = true) {
                     this.isLoading = true;
@@ -86,7 +87,6 @@ export default [
                         controllerAs: 'ctrl',
                         controller: function() {
                             this.avatar = null;
-                            this.avatarFormat = webClientService.appCapabilities.imageFormat.avatar;
 
                             this.apply = () => {
                                 $mdDialog.hide(this.avatar);
@@ -147,7 +147,7 @@ export default [
                                     md-diameter="96"></md-progress-circular>
 
                         </div>
-                        <img ng-src="{{ ctrl.avatar | bufferToUrl:avatarFormat }}" ng-if="ctrl.avatar !== null" />
+                        <img ng-src="{{ ctrl.avatar|bufferToUrl:ctrl.avatarFormat }}" ng-if="ctrl.avatar !== null" />
                     </div>
                     <div class="avatar-area-navigation"  layout="row" layout-wrap layout-margin layout-align="center">
 
