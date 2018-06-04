@@ -3,6 +3,14 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.2][v2.0.0-beta.2] (2018-06-04)
+
+Changes:
+
+* [change] Update icon / favicon for various platforms ([#503][i503])
+* [bug] Fix mime type handling for audio messages
+* [bug] Prevent double-download of audio messages
+
 ### [v2.0.0-beta.1][v2.0.0-beta.1] (2018-05-29)
 
 This is the first beta release with support for Threema Web on iOS devices. It
@@ -452,7 +460,9 @@ First public release.
 [i441]: https://github.com/threema-ch/threema-web/issues/441
 [i445]: https://github.com/threema-ch/threema-web/issues/445
 [i472]: https://github.com/threema-ch/threema-web/issues/472
+[i503]: https://github.com/threema-ch/threema-web/issues/503
 
+[v2.0.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.1...v2.0.0-beta.2
 [v2.0.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0-beta.1
 [v1.8.2]: https://github.com/threema-ch/threema-web/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/threema-ch/threema-web/compare/v1.8.0...v1.8.1
