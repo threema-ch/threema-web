@@ -15,12 +15,21 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FooterController} from './controllers/footer';
-import {StatusController} from './controllers/status';
+/**
+ * Handle footer information.
+ */
+export class FooterController {
+    private config: threema.Config;
 
-angular.module('3ema.controllers', ['3ema.services'])
+    public static $inject = ['CONFIG'];
+    constructor(CONFIG: threema.Config) {
+        this.config = CONFIG;
+    }
 
-.controller('StatusController', StatusController)
-.controller('FooterController', FooterController)
-
-;
+    /**
+     * Return the changelog URL.
+     */
+    public get changelogUrl(): string {
+        return 'https://github.com/threema-ch/threema-web/blob/' + this.config.GIT_BRANCH + '/CHANGELOG.md';
+    }
+}

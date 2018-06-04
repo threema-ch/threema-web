@@ -16,8 +16,6 @@
  */
 
 export class VersionService {
-    public static $inject = ['$log', '$http', '$mdDialog', '$translate', '$window'];
-
     private logTag: string = '[VersionService]';
 
     private $log: ng.ILogService;
@@ -27,18 +25,22 @@ export class VersionService {
     private $window: ng.IWindowService;
 
     private version: string;
+    private config: threema.Config;
     private dialogShowing = false;
 
+    public static $inject = ['$log', '$http', '$mdDialog', '$translate', '$window', 'CONFIG'];
     constructor($log: ng.ILogService,
                 $http: ng.IHttpService,
                 $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
-                $window: ng.IWindowService) {
+                $window: ng.IWindowService,
+                CONFIG: threema.Config) {
         this.$log = $log;
         this.$http = $http;
         this.$mdDialog = $mdDialog;
         this.$translate = $translate;
         this.$window = $window;
+        this.config = CONFIG;
     }
 
     /**
@@ -119,7 +121,9 @@ export class VersionService {
             // Don't show again if dialog is already showing.
             return;
         }
-        const changelogUrl = 'https://github.com/threema-ch/threema-web/blob/master/CHANGELOG.md';
+        const changelogUrl = 'https://github.com/threema-ch/threema-web/blob/'
+                + this.config.GIT_BRANCH
+                + '/CHANGELOG.md';
         const changelogLink = '<a href="' + changelogUrl + '" target="_blank" rel="noopener noreferrer">Changelog</a>';
         const confirm = this.$mdDialog.alert()
             .title(this.$translate.instant('version.NEW_VERSION'))

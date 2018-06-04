@@ -8,6 +8,7 @@ export default {
     // General
     SELF_HOSTED: false,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
+    GIT_BRANCH: 'ios',
 
     // SaltyRTC
     SALTYRTC_HOST: 'saltyrtc-beta.threema.ch',

@@ -36,14 +36,15 @@ import {isContactReceiver} from '../typeguards';
 import ControllerModelMode = threema.ControllerModelMode;
 
 class DialogController {
-    public static $inject = ['$mdDialog'];
-
     public $mdDialog: ng.material.IDialogService;
     public activeElement: HTMLElement | null;
+    public config: threema.Config;
 
-    constructor($mdDialog: ng.material.IDialogService) {
+    public static $inject = ['$mdDialog', 'CONFIG'];
+    constructor($mdDialog: ng.material.IDialogService, CONFIG: threema.Config) {
         this.$mdDialog = $mdDialog;
         this.activeElement = document.activeElement as HTMLElement;
+        this.config = CONFIG;
     }
 
     public cancel(): void {
@@ -76,14 +77,16 @@ class DialogController {
  * Handle sending of files.
  */
 class SendFileController extends DialogController {
-    public static $inject = ['$mdDialog', 'preview'];
+    public static $inject = ['$mdDialog', 'CONFIG', 'preview'];
 
     public caption: string;
     public sendAsFile: boolean = false;
     public preview: threema.FileMessageData | null = null;
 
-    constructor($mdDialog: ng.material.IDialogService, preview: threema.FileMessageData) {
-        super($mdDialog);
+    constructor($mdDialog: ng.material.IDialogService,
+                CONFIG: threema.Config,
+                preview: threema.FileMessageData) {
+        super($mdDialog, CONFIG);
         this.preview = preview;
     }
 

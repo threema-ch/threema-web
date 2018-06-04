@@ -83,9 +83,12 @@
             </div>
             <div id="main-content" ui-view></div>
         </div>
-        <footer>
+        <footer ng-controller="FooterController as ctrl">
             <ul>
-                <li>Version [[VERSION]]</li>
+                <li><a
+                        href="{{ ctrl.changelogUrl }}"
+                        target="_blank"
+                        rel="noopener noreferrer">Version [[VERSION]]</a></li>
                 <li><a
                         href="https://threema.ch/threema-web"
                         target="_blank"
