@@ -123,8 +123,10 @@ class Receivers implements threema.Container.Receivers {
         data.sort((a: threema.Receiver, b: threema.Receiver) => {
             if (a.id.startsWith('*') && !b.id.startsWith('*')) { return 1; }
             if (!a.id.startsWith('*') && b.id.startsWith('*')) { return -1; }
-            if (a.displayName < b.displayName) { return -1; }
-            if (a.displayName > b.displayName) { return 1; }
+            const left = a.displayName.startsWith('~') ? a.displayName.substr(1) : a.displayName;
+            const right = b.displayName.startsWith('~') ? b.displayName.substr(1) : b.displayName;
+            if (left < right) { return -1; }
+            if (left > right) { return 1; }
             return 0;
         });
         this.contacts = new Map(data.map((c) => {
