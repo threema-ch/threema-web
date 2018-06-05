@@ -868,12 +868,20 @@ class NavigationController {
     public isVisible(conversation: threema.Conversation) {
         return conversation.receiver.visible;
     }
+
     public conversations(): threema.Conversation[] {
         return this.webClientService.conversations.get();
     }
 
     public isActive(value: threema.Conversation): boolean {
         return this.receiverService.isConversationActive(value);
+    }
+
+    /**
+     * Return true if the app wants to hide inactive contacts.
+     */
+    public hideInactiveContacts(): boolean {
+        return !this.webClientService.appConfig.showInactiveIDs;
     }
 
     /**

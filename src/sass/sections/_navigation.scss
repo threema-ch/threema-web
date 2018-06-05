@@ -340,6 +340,10 @@
     .contact.inactive {
         opacity: 0.5;
     }
+
+    .hide-inactive .contact.inactive {
+        display: none;
+    }
 }
 
 #navigation-fab {

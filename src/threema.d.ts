@@ -678,7 +678,7 @@ declare namespace threema {
         voipEnabled: boolean;
         voipForceTurn: boolean;
         largeSingleEmoji: boolean;
-        showInactiveIds: boolean;
+        showInactiveIDs: boolean;
     }
 
     interface AppCapabilities {

@@ -2390,7 +2390,7 @@ export class WebClientService {
                 voipEnabled: getOrDefault<boolean>(data.configuration.voipEnabled, true),
                 voipForceTurn: getOrDefault<boolean>(data.configuration.voipForceTurn, false),
                 largeSingleEmoji: getOrDefault<boolean>(data.configuration.largeSingleEmoji, true),
-                showInactiveIds: getOrDefault<boolean>(data.configuration.showInactiveIds, true),
+                showInactiveIDs: getOrDefault<boolean>(data.configuration.showInactiveIDs, true),
             },
             capabilities: {
                 maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
