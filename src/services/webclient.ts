@@ -1756,13 +1756,18 @@ export class WebClientService {
         // Unpack and validate data
         const args = message.args;
         const data = message.data;
-        if (args === undefined || data === undefined) {
+        if (args === undefined) {
             this.$log.error('Invalid ' + receiverType + ' response, args or data missing');
             return this.promiseRequestError('invalidResponse');
         }
 
         switch (args[WebClientService.ARGUMENT_SUCCESS]) {
             case true:
+                if (data === undefined) {
+                    this.$log.error('Invalid ' + receiverType + ' response, args or data missing');
+                    return this.promiseRequestError('invalidResponse');
+                }
+
                 // Get receiver instance
                 const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as T;
 
