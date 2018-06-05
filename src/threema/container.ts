@@ -120,6 +120,13 @@ class Receivers implements threema.Container.Receivers {
      * Set contacts.
      */
     public setContacts(data: threema.ContactReceiver[]): void {
+        data.sort((a: threema.Receiver, b: threema.Receiver) => {
+            if (a.id.startsWith('*') && !b.id.startsWith('*')) { return 1; }
+            if (!a.id.startsWith('*') && b.id.startsWith('*')) { return -1; }
+            if (a.displayName < b.displayName) { return -1; }
+            if (a.displayName > b.displayName) { return 1; }
+            return 0;
+        });
         this.contacts = new Map(data.map((c) => {
             c.type = 'contact';
             return [c.id, c];
