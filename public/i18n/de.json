@@ -11,7 +11,7 @@
         "PLEASE_RELOAD": "Bitte laden Sie die Seite neu.",
         "RELOAD": "Seite neu laden",
         "PASSWORD": "Passwort",
-        "CHOOSE_PASSWORD": "Legen Sie vor dem Scannen ein Passwort fest, um die<br>Sitzung sp\u00e4ter ohne Scannen wiederherzustellen.",
+        "CHOOSE_PASSWORD": "Falls Sie die Sitzung speichern möchten,<br>legen Sie vor dem Scannen ein Passwort fest.",
         "UNLOCK_FAILED_TEXT": "Sie haben das falsche Passwort eingegeben. Die Verbindung kann nicht aufgebaut werden.",
         "ENTER_PASSWORD": "Um die letzte Sitzung wiederherzustellen, <br> geben Sie bitte das entsprechende Passwort ein.",
         "UNLOCK_FAILED_TITLE": "Verbindung aufbauen fehlgeschlagen",
