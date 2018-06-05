@@ -1698,6 +1698,7 @@ export class WebClientService {
         }
 
         // Store receivers
+        this.sortContacts(data.contact);
         this.receivers.set(data);
         this.registerInitializationStep(InitializationStep.Receivers);
     }
@@ -2171,6 +2172,7 @@ export class WebClientService {
         // Refresh lists of receivers
         switch (type) {
             case 'contact':
+                this.sortContacts(data);
                 this.receivers.setContacts(data);
                 break;
             case 'group':
@@ -3131,5 +3133,29 @@ export class WebClientService {
      */
     public get appCapabilities(): threema.AppCapabilities {
         return this.clientInfo.capabilities;
+    }
+
+    /**
+     * Sort a list of contacts in-place.
+     */
+    private sortContacts(contacts: threema.ContactReceiver[]): void {
+        const getSortableName = (name: string) => name.startsWith('~') ? name.substr(1) : name;
+
+        let options;
+        if (this.browserService.supportsExtendedLocaleCompare()) {
+            options = {
+                usage: 'sort',
+                sensitivity: 'variant',
+            };
+        }
+
+        const compareFunc = (a: threema.Receiver, b: threema.Receiver) => {
+            if (a.id.startsWith('*') && !b.id.startsWith('*')) { return 1; }
+            if (!a.id.startsWith('*') && b.id.startsWith('*')) { return -1; }
+            const left = getSortableName(a.displayName);
+            const right = getSortableName(b.displayName);
+            return left.localeCompare(right, undefined, options);
+        };
+        contacts.sort(compareFunc);
     }
 }
