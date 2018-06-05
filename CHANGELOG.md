@@ -3,6 +3,15 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.3][v2.0.0-beta.3] (2018-06-05)
+
+Changes:
+
+* [feature] Hide inactive IDs in contact list ([#4][i4])
+* [change] Link version number at the bottom of the webapp to changelog
+* [bug] Properly sort contacts
+* [bug] Fix error message when adding an invalid contact identity
+
 ### [v2.0.0-beta.2][v2.0.0-beta.2] (2018-06-04)
 
 Changes:
@@ -320,6 +329,7 @@ Contributors:
 
 First public release.
 
+[i4]: https://github.com/threema-ch/threema-web/issues/4
 [i6]: https://github.com/threema-ch/threema-web/issues/6
 [i8]: https://github.com/threema-ch/threema-web/issues/8
 [i11]: https://github.com/threema-ch/threema-web/issues/11
@@ -462,6 +472,7 @@ First public release.
 [i472]: https://github.com/threema-ch/threema-web/issues/472
 [i503]: https://github.com/threema-ch/threema-web/issues/503
 
+[v2.0.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.2...v2.0.0-beta.3
 [v2.0.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.1...v2.0.0-beta.2
 [v2.0.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0-beta.1
 [v1.8.2]: https://github.com/threema-ch/threema-web/compare/v1.8.1...v1.8.2
