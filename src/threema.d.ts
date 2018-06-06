@@ -655,7 +655,7 @@ declare namespace threema {
     }
 
     interface BatteryStatus {
-        percent: number;
+        percent: number | null;
         isCharging: boolean;
     }
 

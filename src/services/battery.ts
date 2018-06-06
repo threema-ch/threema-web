@@ -42,6 +42,12 @@ export class BatteryStatusService {
      * Update the battery status.
      */
     public setStatus(batteryStatus: threema.BatteryStatus): void {
+        // Handle null percent value. This can happen if the battery status could not be determined.
+        if (batteryStatus.percent === null) {
+            this.batteryStatus = null;
+            return;
+        }
+
         this.batteryStatus = batteryStatus;
 
         // Alert if percent drops below a certain threshold
