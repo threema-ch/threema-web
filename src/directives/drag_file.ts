@@ -47,7 +47,7 @@ export default [
                 function fetchFileListContents(fileList: FileList): Promise<Map<File, ArrayBuffer>> {
                     return new Promise((resolve) => {
                         const buffers = new Map<File, ArrayBuffer>();
-                        const next = (file: File, res: ArrayBuffer | null, error?: ErrorEvent) => {
+                        const next = (file: File, res: ArrayBuffer | null, error?: FileReaderProgressEvent) => {
                             buffers.set(file, res);
                             if (buffers.size >= fileList.length) {
                                 resolve(buffers);
@@ -60,16 +60,16 @@ export default [
                         for (let n = 0; n < fileList.length; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
-                            reader.onload = (ev: Event) => {
-                                next(file, (ev.target as FileReader).result);
+                            reader.onload = function(ev: FileReaderProgressEvent) {
+                                next(file, ev.target.result);
                             };
-                            reader.onerror = (ev: ErrorEvent) => {
+                            reader.onerror = function(ev: FileReaderProgressEvent) {
                                 // set a null object
                                 next(file, null, ev);
                             };
-                            reader.onprogress = function(data) {
-                                if (data.lengthComputable) {
-                                    const progress = ((data.loaded / data.total) * 100);
+                            reader.onprogress = function(ev: FileReaderProgressEvent) {
+                                if (ev.lengthComputable) {
+                                    const progress = ((ev.loaded / ev.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileList.length * n);
                                 }
                             };

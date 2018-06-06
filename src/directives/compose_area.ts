@@ -335,16 +335,16 @@ export default [
                         for (let n = 0; n < fileCounter; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
-                            reader.onload = (ev: Event) => {
-                                next(file, (ev.target as FileReader).result, ev);
+                            reader.onload = function(ev: FileReaderProgressEvent) {
+                                next(file, ev.target.result, ev);
                             };
-                            reader.onerror = (ev: ErrorEvent) => {
+                            reader.onerror = function(ev: FileReaderProgressEvent) {
                                 // set a null object
                                 next(file, null, ev);
                             };
-                            reader.onprogress = function(data) {
-                                if (data.lengthComputable) {
-                                    const progress = ((data.loaded / data.total) * 100);
+                            reader.onprogress = function(ev: FileReaderProgressEvent) {
+                                if (ev.lengthComputable) {
+                                    const progress = ((ev.loaded / ev.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileCounter * n);
                                 }
                             };
@@ -417,7 +417,7 @@ export default [
 
                         // Convert blob to arraybuffer
                         const reader = new FileReader();
-                        reader.onload = function() {
+                        reader.onload = function(progressEvent: FileReaderProgressEvent) {
                             const buffer: ArrayBuffer = this.result;
 
                             // Construct file name
