@@ -731,9 +731,9 @@ declare namespace threema {
     }
 
     const enum ChosenTask {
-        None,
-        WebRTC,
-        RelayedData,
+        None = 'none',
+        WebRTC = 'webrtc',
+        RelayedData = 'relayed-data',
     }
 
     interface DisconnectMessage {

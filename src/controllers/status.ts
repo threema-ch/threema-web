@@ -84,7 +84,7 @@ export class StatusController {
      * Return the prefixed status.
      */
     public get statusClass(): string {
-        return 'status-' + this.state;
+        return 'status-task-' + this.webClientService.chosenTask + ' status-' + this.state;
     }
 
     /**

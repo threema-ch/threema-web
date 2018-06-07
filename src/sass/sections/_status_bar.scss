@@ -45,6 +45,7 @@ body {
         }
     }
 }
+
 .status-ok {
     #status-bar {
         background-color: $status-ok;
@@ -56,9 +57,6 @@ body {
 }
 
 .status-warning {
-    //#main {
-    //    border-top: 5px solid $status-warning;
-    //}
     #status-bar {
         background-color: $status-warning;
     }
@@ -74,6 +72,14 @@ body {
     }
     #title .dot {
         fill: $status-error;
+    }
+}
+
+// Use green warning-color for the status bar when using
+// the relayed data task (because connection loss on iOS is expected).
+.status-task-relayed-data {
+    &.status-warning #status-bar {
+        background-color: $status-ok;
     }
 }
 
