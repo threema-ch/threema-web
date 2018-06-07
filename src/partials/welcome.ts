@@ -271,6 +271,7 @@ class WelcomeController {
 
         const decrypted: threema.TrustedKeyStoreData = this.trustedKeyStore.retrieveTrustedKey(this.password);
         if (decrypted === null) {
+            this.formLocked = false;
             return this.showDecryptionFailed();
         }
 
