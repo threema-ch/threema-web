@@ -31,7 +31,7 @@ type MessageConverter = (data: threema.Message) => threema.Message;
  *
  * Only strings can be stored in this set.
  */
-class StringHashSet {
+export class StringHashSet {
     private setObj = {};
     private val = {};
 
@@ -47,7 +47,7 @@ class StringHashSet {
         delete this.setObj[str];
     }
 
-    public values() {
+    public values(): string[] {
         const values = [];
         for (const i in this.setObj) {
             if (this.setObj[i] === this.val) {
@@ -55,6 +55,14 @@ class StringHashSet {
             }
         }
         return values;
+    }
+
+    public clearAll(): void {
+        for (const element in this.setObj) {
+            if (this.setObj.hasOwnProperty(element)) {
+                this.remove(element);
+            }
+        }
     }
 }
 
@@ -726,6 +734,10 @@ class Typing implements threema.Container.Typing {
 
     public unsetTyping(receiver: threema.ContactReceiver): void {
         this.set.remove(this.getReceiverUid(receiver));
+    }
+
+    public clearAll(): void {
+        this.set.clearAll();
     }
 
     public isTyping(receiver: threema.ContactReceiver): boolean {

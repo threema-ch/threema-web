@@ -3163,4 +3163,11 @@ export class WebClientService {
         };
         contacts.sort(compareFunc);
     }
+
+    /**
+     * Clear all "is typing" flags.
+     */
+    public clearIsTypingFlags(): void {
+        this.typing.clearAll();
+    }
 }

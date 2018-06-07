@@ -21,7 +21,7 @@
 /// <reference path="../../src/threema.d.ts" />
 
 import {ReceiverService} from '../../src/services/receiver';
-import {Conversations} from '../../src/threema/container';
+import {Conversations, StringHashSet} from '../../src/threema/container';
 
 function getConversations(): Conversations {
     const receiverService = new ReceiverService();
@@ -137,6 +137,18 @@ describe('Container', () => {
                 conversations.updateOrAdd(makeContactConversation('1', 7));
                 expect(conversations.get().map(getId)).toEqual(['2', '0', '1']);
             });
+        });
+    });
+
+    describe('StringHashSet', () => {
+        it('clearAll', function() {
+            const shs = new StringHashSet();
+            shs.add('hello');
+            shs.add('hello');
+            shs.add('bye');
+            expect(shs.values()).toEqual(['hello', 'bye']);
+            shs.clearAll();
+            expect(shs.values()).toEqual([]);
         });
     });
 

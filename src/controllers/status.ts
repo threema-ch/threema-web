@@ -109,6 +109,9 @@ export class StatusController {
                 if (oldValue === 'ok' && isWebrtc) {
                     this.scheduleStatusBar();
                 }
+                if (this.stateService.wasConnected) {
+                    this.webClientService.clearIsTypingFlags();
+                }
                 if (this.stateService.wasConnected && isRelayedData) {
                     this.reconnectIos();
                 }

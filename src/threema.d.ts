@@ -822,6 +822,7 @@ declare namespace threema {
         interface Typing {
             setTyping(receiver: ContactReceiver): void;
             unsetTyping(receiver: ContactReceiver): void;
+            clearAll(): void;
             isTyping(receiver: ContactReceiver): boolean;
         }
 
