@@ -3,6 +3,20 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.4][v2.0.0-beta.4] (2018-06-11)
+
+Changes:
+
+* [change] iOS: Status bar should stay green on connection loss
+* [bug] When entering the wrong password, re-enable the input field
+* [bug] Clear all "isTyping" flags when connection is lost
+* [bug] Handle unknown battery status
+* [bug] German translation fixes
+
+Contributors:
+
+- [@JanRei][@JanRei]
+
 ### [v2.0.0-beta.3][v2.0.0-beta.3] (2018-06-05)
 
 Changes:
@@ -472,6 +486,7 @@ First public release.
 [i472]: https://github.com/threema-ch/threema-web/issues/472
 [i503]: https://github.com/threema-ch/threema-web/issues/503
 
+[v2.0.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.3...v2.0.0-beta.4
 [v2.0.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.2...v2.0.0-beta.3
 [v2.0.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.1...v2.0.0-beta.2
 [v2.0.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0-beta.1
@@ -510,3 +525,4 @@ First public release.
 [@bluec0re]: https://github.com/bluec0re/
 [@Octoate]: https://github.com/Octoate/
 [@joelfischerr]: https://github.com/joelfischerr/
+[@JanRei]: https://github.com/JanRei/
