@@ -119,7 +119,7 @@ declare namespace threema {
 
     interface VideoInfo {
         duration: number;
-        size: number;
+        size?: number;
     }
 
     interface AudioInfo {
