@@ -1559,23 +1559,9 @@ export class WebClientService {
         this.drafts.removeQuote(receiver);
 
         if (message !== null) {
-            let quoteText;
-            switch (message.type) {
-                case 'text':
-                    quoteText = message.body;
-                    break;
-                case 'location':
-                    quoteText = message.location.description;
-                    break;
-                case 'file':
-                case 'image':
-                    quoteText = message.caption;
-                    break;
-                default:
-                    // Ignore (handled below)
-            }
+            const quoteText = this.messageService.getQuoteText(message);
 
-            if (quoteText !== undefined) {
+            if (quoteText !== undefined && quoteText !== null) {
                 const quote = {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
                     text: quoteText,

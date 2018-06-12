@@ -12,7 +12,7 @@
             ui-sref="messenger.home.conversation({ type: 'contact', id: ctrl.contact.id, initParams: null })"></eee-avatar>
 
     <div class="bubble-triangle"></div>
-    <section class="message-body" ng-class="ctrl.message.type + '-message-body'">
+    <section class="message-body {{ ctrl.message.type + '-message-body' }}">
         <eee-message-contact
             ng-if="ctrl.showName"
             class="message-name"
