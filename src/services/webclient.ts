@@ -571,8 +571,13 @@ export class WebClientService {
         // Process pending messages
         if (this.outgoingMessageQueue.length > 0) {
             this.$log.debug(this.logTag, 'Sending', this.outgoingMessageQueue.length, 'pending messages');
-            for (const _ of this.outgoingMessageQueue.keys()) {
-                this.send(this.outgoingMessageQueue.pop());
+            while (true) {
+                const msg = this.outgoingMessageQueue.shift();
+                if (msg === undefined) {
+                    break;
+                } else {
+                    this.send(msg);
+                }
             }
         }
     }
