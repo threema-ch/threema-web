@@ -43,7 +43,7 @@ export class MessageService {
         if (message !== undefined) {
             access.quote = (message.type === 'text')
                         || (message.type === 'location')
-                        || (message.caption !== undefined);
+                        || (message.caption !== undefined && message.caption !== null && message.caption.length > 0);
             access.copy = access.quote;
 
             if (receiver !== undefined && message.temporaryId === undefined) {
