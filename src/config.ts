@@ -29,7 +29,7 @@ export default {
     }],
 
     // Push
-    PUSH_URL: 'https://push-web-beta.threema.ch/push',
+    PUSH_URL: 'https://push-web.threema.ch/push',
 
     // Debugging options
     DEBUG: false,
