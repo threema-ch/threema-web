@@ -3,6 +3,19 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.5][v2.0.0-beta.5] (2018-06-12)
+
+Changes:
+
+* [feature] Implement "copy to clipboard" functionality
+* [bug] Fix closing of chat when deleting conversation
+* [bug] Fix bug when processing messages that were sent when not connected
+* [bug] Improve scrolling behavior
+
+Contributors:
+
+- [@heckenmann][@heckenmann]
+
 ### [v2.0.0-beta.4][v2.0.0-beta.4] (2018-06-11)
 
 Changes:
@@ -486,6 +499,7 @@ First public release.
 [i472]: https://github.com/threema-ch/threema-web/issues/472
 [i503]: https://github.com/threema-ch/threema-web/issues/503
 
+[v2.0.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.4...v2.0.0-beta.5
 [v2.0.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.3...v2.0.0-beta.4
 [v2.0.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.2...v2.0.0-beta.3
 [v2.0.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.1...v2.0.0-beta.2
@@ -526,3 +540,4 @@ First public release.
 [@Octoate]: https://github.com/Octoate/
 [@joelfischerr]: https://github.com/joelfischerr/
 [@JanRei]: https://github.com/JanRei/
+[@heckenmann]: https://github.com/heckenmann
