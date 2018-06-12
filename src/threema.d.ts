@@ -622,7 +622,7 @@ declare namespace threema {
     }
 
     interface ReceiverListener {
-        onRemoved(receiver: Receiver);
+        onConversationRemoved(receiver: Receiver);
     }
 
     interface Config {

@@ -2283,7 +2283,7 @@ export class WebClientService {
                 // Call on-removed listener
                 this.receiverListener.forEach((listener: threema.ReceiverListener) => {
                     this.$log.debug(this.logTag, 'Call on removed listener');
-                    listener.onRemoved(data.receiver);
+                    listener.onConversationRemoved(receiver);
                 });
                 break;
             default:

@@ -1021,6 +1021,8 @@ class NavigationController {
 }
 
 class MessengerController {
+    private logTag: string = '[MessengerController]';
+
     public name = 'messenger';
     private receiverService: ReceiverService;
     private $state;
@@ -1036,7 +1038,7 @@ class MessengerController {
                 webClientService: WebClientService, controllerService: ControllerService) {
         // Redirect to welcome if necessary
         if (stateService.state === 'error') {
-            $log.debug('MessengerController: WebClient not yet running, redirecting to welcome screen');
+            $log.debug(this.logTag, 'MessengerController: WebClient not yet running, redirecting to welcome screen');
             $state.go('welcome');
             return;
         }
@@ -1064,7 +1066,7 @@ class MessengerController {
         }, true);
 
         this.webClientService.setReceiverListener({
-            onRemoved(receiver: threema.Receiver) {
+            onConversationRemoved(receiver: threema.Receiver) {
                 switch ($state.current.name) {
                     case 'messenger.home.conversation':
                     case 'messenger.home.detail':
@@ -1080,7 +1082,7 @@ class MessengerController {
                         }
                         break;
                     default:
-                        $log.warn('Ignored onRemoved event for state', $state.current.name);
+                        $log.debug(this.logTag, 'Ignored onRemoved event for state', $state.current.name);
                 }
             },
         });
