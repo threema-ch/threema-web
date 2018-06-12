@@ -2995,6 +2995,8 @@ export class WebClientService {
                     }
                 }
                 break;
+            default:
+                this.$log.error(this.logTag, 'Trying to send message, but no chosen task set');
         }
     }
 
