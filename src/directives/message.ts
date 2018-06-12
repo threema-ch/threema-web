@@ -103,8 +103,29 @@ export default [
                     }, () => { /* do nothing */});
                 };
 
-                this.copy = (ev) => {
-                    $log.debug('TODO implement copy');
+                this.copyToClipboard = (ev: MouseEvent) => {
+                    // Get copyable text
+                    const text = messageService.getQuoteText(this.message);
+                    if (text === null) {
+                        return;
+                    }
+
+                    // In order to copy the text to the clipboard,
+                    // put it into a temporary textarea element.
+                    const textArea = document.createElement('textarea');
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        const successful = document.execCommand('copy');
+                        if (!successful) {
+                            $log.warn('Could not copy text to clipboard');
+                        }
+                    } catch (err) {
+                        $log.warn('Could not copy text to clipboard:', err);
+                    }
+                    document.body.removeChild(textArea);
                 };
 
                 this.download = (ev) => {

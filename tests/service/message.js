@@ -24,11 +24,11 @@ describe('MessageService', function() {
         it('invalid arguments', () => {
             test().toEqual(jasmine.objectContaining({
                 quote: false,
+                copy: false,
                 ack: false,
                 dec: false,
                 delete: false,
                 download: false,
-                copy: false,
             }));
         })
 
@@ -48,42 +48,42 @@ describe('MessageService', function() {
                     test({isOutbox: false, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: true, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
 
                     test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
                 });
 
@@ -91,42 +91,42 @@ describe('MessageService', function() {
                     test({isOutbox: false, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: true, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
 
                     test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
                 });
 
@@ -135,11 +135,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: false,
+                                copy: false,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
 
@@ -147,11 +147,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type, caption: 'test'}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: true,
+                                copy: true,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
 
@@ -159,11 +159,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: false,
+                                copy: false,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
 
@@ -172,11 +172,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type, caption: 'test'}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: true,
+                                copy: true,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
                 });

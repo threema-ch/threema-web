@@ -40,35 +40,59 @@ export class MessageService {
     public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess  {
         const access = new MessageAccess();
 
-        if (message !== undefined && receiver !== undefined && message.temporaryId === undefined) {
-            access.quote =  (message.type === 'text')
-                || (message.type === 'location')
-                || (message.caption !== undefined);
-            // disable copy for current version
-            // access.copy = access.quote;
+        if (message !== undefined) {
+            access.quote = (message.type === 'text')
+                        || (message.type === 'location')
+                        || (message.caption !== undefined);
+            access.copy = access.quote;
 
-            if (message !== undefined
-                && message.isOutbox === false
-                && this.receiverService.isContact(receiver)
-                && message.type !== 'voipStatus') {
-                access.ack = message.state !== 'user-ack';
-                access.dec = message.state !== 'user-dec';
-            }
+            if (receiver !== undefined && message.temporaryId === undefined) {
+                if (message.isOutbox === false
+                    && this.receiverService.isContact(receiver)
+                    && message.type !== 'voipStatus') {
+                    access.ack = message.state !== 'user-ack';
+                    access.dec = message.state !== 'user-dec';
+                }
 
-            switch (message.type) {
-                case 'image':
-                case 'video':
-                case 'audio':
-                case 'file':
-                    access.download = true;
-                    break;
-                default:
-                    access.download = false;
+                switch (message.type) {
+                    case 'image':
+                    case 'video':
+                    case 'audio':
+                    case 'file':
+                        access.download = true;
+                        break;
+                    default:
+                        access.download = false;
+                }
+                access.delete = true;
             }
-            access.delete = true;
         }
 
         return access;
+    }
+
+    /**
+     * Return the quotable text in this message, or null.
+     */
+    public getQuoteText(message: threema.Message): string | null {
+        let quoteText = null;
+        if (message !== null && message !== undefined) {
+            switch (message.type) {
+                case 'text':
+                    quoteText = message.body;
+                    break;
+                case 'location':
+                    quoteText = message.location.description;
+                    break;
+                case 'file':
+                case 'image':
+                    quoteText = message.caption;
+                    break;
+                default:
+                    // Ignore (handled below)
+            }
+        }
+        return quoteText;
     }
 
     public showStatusIcon(message: threema.Message, receiver: threema.Receiver): boolean {
