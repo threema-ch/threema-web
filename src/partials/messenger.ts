@@ -1139,8 +1139,8 @@ class ReceiverDetailController {
         this.me = webClientService.me;
 
         // Append group membership
-        if (this.receiver.type === 'contact') {
-            const contactReceiver = this.receiver as threema.ContactReceiver;
+        if (isContactReceiver(this.receiver)) {
+            const contactReceiver = this.receiver;
 
             this.contactService.requiredDetails(contactReceiver)
                 .then(() => {

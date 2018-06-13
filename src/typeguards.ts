@@ -22,20 +22,26 @@
 /**
  * Contact receiver type guard
  */
-export function isContactReceiver(receiver: threema.Receiver): receiver is threema.ContactReceiver {
+export function isContactReceiver(
+    receiver: threema.BaseReceiver,
+): receiver is threema.ContactReceiver {
     return receiver.type === 'contact';
 }
 
 /**
  * Group receiver type guard
  */
-export function isGroupReceiver(receiver: threema.Receiver): receiver is threema.GroupReceiver {
+export function isGroupReceiver(
+    receiver: threema.BaseReceiver,
+): receiver is threema.GroupReceiver {
     return receiver.type === 'group';
 }
 
 /**
  * Distribution list receiver type guard
  */
-export function isDistributionListReceiver(receiver: threema.Receiver): receiver is threema.DistributionListReceiver {
+export function isDistributionListReceiver(
+    receiver: threema.BaseReceiver,
+): receiver is threema.DistributionListReceiver {
     return receiver.type === 'distributionList';
 }

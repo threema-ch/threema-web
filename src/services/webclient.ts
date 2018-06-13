@@ -1112,8 +1112,7 @@ export class WebClientService {
                 // Try to load receiver object
                 const receiverObject = this.receivers.getData(receiver);
                 // Check blocked flag
-                if (receiverObject.type === 'contact'
-                    && (receiverObject as threema.ContactReceiver).isBlocked) {
+                if (isContactReceiver(receiverObject) && receiverObject.isBlocked) {
                     return reject(this.$translate.instant('error.CONTACT_BLOCKED'));
                 }
                 // Decide on subtype
@@ -2547,8 +2546,8 @@ export class WebClientService {
         let senderName = sender.id;
         if (sender.displayName) {
             senderName = sender.displayName;
-        } else if (sender.type === 'contact') {
-            senderName = '~' + (sender as threema.ContactReceiver).publicNickname;
+        } else if (isContactReceiver(sender)) {
+            senderName = '~' + sender.publicNickname;
         }
         const partner = this.receivers.getData({
             id: message.partnerId,

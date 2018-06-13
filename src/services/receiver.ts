@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isContactReceiver} from '../typeguards';
+
 export class ReceiverService {
     private activeReceiver: threema.Receiver;
 
@@ -51,23 +53,8 @@ export class ReceiverService {
             && a.id === b.id;
     }
 
-    public isContact(receiver: threema.Receiver): boolean {
-        return receiver !== undefined
-            && receiver.type === 'contact';
-    }
-
-    public isGroup(receiver: threema.Receiver): boolean {
-        return receiver !== undefined
-            && receiver.type === 'group';
-    }
-
-    public isDistributionList(receiver: threema.Receiver): boolean {
-        return receiver !== undefined
-            && receiver.type === 'distributionList';
-    }
-
     public isBusinessContact(receiver: threema.Receiver): boolean {
-        return this.isContact(receiver)
+        return isContactReceiver(receiver)
             && receiver.id.substr(0, 1) === '*';
 
     }

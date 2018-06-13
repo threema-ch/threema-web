@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isContactReceiver} from '../typeguards';
 import {ReceiverService} from './receiver';
 
 export class MessageAccess {
@@ -48,7 +49,7 @@ export class MessageService {
 
             if (receiver !== undefined && message.temporaryId === undefined) {
                 if (message.isOutbox === false
-                    && this.receiverService.isContact(receiver)
+                    && isContactReceiver(receiver)
                     && message.type !== 'voipStatus') {
                     access.ack = message.state !== 'user-ack';
                     access.dec = message.state !== 'user-dec';
