@@ -29,7 +29,7 @@ export default [
                 const contact: threema.ContactReceiver = this.contact;
 
                 let label;
-                switch (parseInt(this.contact.verificationLevel, 10)) {
+                switch (contact.verificationLevel) {
                     case 1:
                         this.cls = 'level1';
                         label = 'VERIFICATION_LEVEL1_EXPLAIN';

@@ -32,16 +32,24 @@
       div {
         &:nth-of-type(1),
         &:nth-of-type(2) {
-          background-color: #3b84df;
+          background-color: $work-blue;
         }
       }
     }
-
   }
 
   &.level3 {
     div {
         background-color: $status-ok;
+    }
+    &.work {
+      div {
+        &:nth-of-type(1),
+        &:nth-of-type(2),
+        &:nth-of-type(3) {
+          background-color: $work-blue;
+        }
+      }
     }
   }
 
