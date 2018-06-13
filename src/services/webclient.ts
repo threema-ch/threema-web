@@ -178,8 +178,8 @@ export class WebClientService {
     private typingInstance: threema.Container.Typing;
     private drafts: threema.Container.Drafts;
     private pcHelper: PeerConnectionHelper = null;
-    private clientInfo: threema.ClientInfo;
     private trustedKeyStore: TrustedKeyStoreService;
+    public clientInfo: threema.ClientInfo;
     public version = null;
 
     private blobCache = new Map<string, threema.BlobInfo>();

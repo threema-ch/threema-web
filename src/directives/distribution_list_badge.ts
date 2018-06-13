@@ -41,8 +41,7 @@ export default [
             template: `
                 <div class="distribution-list-badge receiver-badge" ng-click="ctrl.click()">
                     <section class="avatar-box">
-                        <eee-avatar eee-type="'distributionList'"
-                                    eee-receiver="ctrl.distributionListReceiver"
+                        <eee-avatar eee-receiver="ctrl.distributionListReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
                     <div class="receiver-badge-name"

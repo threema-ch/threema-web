@@ -55,8 +55,7 @@ export default [
             template: `
                 <div class="contact-badge receiver-badge" ng-click="ctrl.click()">
                     <section class="avatar-box">
-                        <eee-avatar eee-type="'contact'"
-                                    eee-receiver="ctrl.contactReceiver"
+                        <eee-avatar eee-receiver="ctrl.contactReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
                     <div class="receiver-badge-name"

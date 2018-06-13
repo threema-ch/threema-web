@@ -15,7 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isEchoContact, isGatewayContact} from '../receiver_helpers';
 import {WebClientService} from '../services/webclient';
+import {isContactReceiver} from '../typeguards';
 
 export default [
     '$rootScope',
@@ -30,7 +32,6 @@ export default [
             restrict: 'E',
             scope: {},
             bindToController: {
-                type: '=eeeType',
                 receiver: '=eeeReceiver',
                 resolution: '=eeeResolution',
             },
@@ -106,7 +107,7 @@ export default [
                     }
 
                     // As a fallback, get the default avatar.
-                    return this.getDefaultAvatarUri(this.type, this.highResolution);
+                    return this.getDefaultAvatarUri(this.receiver.type, this.highResolution);
                 };
 
                 this.requestAvatar = (inView: boolean) => {
@@ -122,7 +123,7 @@ export default [
                             loadingPromise = $timeout(() => {
                                 // show loading only on high res images!
                                 webClientService.requestAvatar({
-                                    type: this.type,
+                                    type: this.receiver.type,
                                     id: this.receiver.id,
                                 } as threema.Receiver, this.highResolution).then((avatar) => {
                                     $rootScope.$apply(() => {
@@ -142,15 +143,27 @@ export default [
                     }
                 };
 
+                const isWork = webClientService.clientInfo.isWork;
                 this.showWorkIndicator = () => {
-                    return this.type === 'contact'
+                    if (!isContactReceiver(this.receiver)) { return false; }
+                    const contact: threema.ContactReceiver = this.receiver;
+                    return isWork === false
                         && !this.highResolution
-                        && (this.receiver as threema.ContactReceiver).identityType === threema.IdentityType.Work;
+                        && contact.identityType === threema.IdentityType.Work;
+                };
+                this.showHomeIndicator = () => {
+                    if (!isContactReceiver(this.receiver)) { return false; }
+                    const contact: threema.ContactReceiver = this.receiver;
+                    return isWork === true
+                        && !isGatewayContact(contact)
+                        && !isEchoContact(contact)
+                        && contact.identityType === threema.IdentityType.Regular
+                        && !this.highResolution;
                 };
                 this.showBlocked = () => {
-                    return this.type === 'contact'
-                        && !this.highResolution
-                        && (this.receiver as threema.ContactReceiver).isBlocked;
+                    if (!isContactReceiver(this.receiver)) { return false; }
+                    const contact: threema.ContactReceiver = this.receiver;
+                    return !this.highResolution && contact.isBlocked;
                 };
             }],
             template: `
@@ -162,6 +175,11 @@ export default [
                         translate-attr="{'aria-label': 'messenger.THREEMA_WORK_CONTACT',
                             'title': 'messenger.THREEMA_WORK_CONTACT'}">
                         <img src="img/ic_work_round.svg" alt="Threema Work user">
+                    </div>
+                    <div class="home-indicator" ng-if="ctrl.showHomeIndicator()"
+                        translate-attr="{'aria-label': 'messenger.THREEMA_HOME_CONTACT',
+                            'title': 'messenger.THREEMA_HOME_CONTACT'}">
+                        <img src="img/ic_home_round.svg" alt="Private Threema contact">
                     </div>
                     <div class="blocked-indicator"  ng-if="ctrl.showBlocked()"
                         translate-attr="{'aria-label': 'messenger.THREEMA_BLOCKED_RECEIVER',

@@ -59,8 +59,7 @@ export default [
             template: `
                 <div class="group-badge receiver-badge" ng-click="ctrl.click()">
                     <section class="avatar-box">
-                        <eee-avatar eee-type="'group'"
-                                    eee-receiver="ctrl.groupReceiver"
+                        <eee-avatar eee-receiver="ctrl.groupReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
                     <div class="receiver-badge-name"
