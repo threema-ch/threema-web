@@ -324,11 +324,58 @@ angular.module('3ema.filters', [])
                 return 'thumb_up';
             case 'user-dec':
                 return 'thumb_down';
+            case 'timeout':
+                return 'sync_problem';
             default:
                 return '';
         }
     };
 })
+
+/**
+ * Convert message state to title text.
+ */
+.filter('messageStateTitleText', ['$translate', function($translate: ng.translate.ITranslateService) {
+    return (message: threema.Message) => {
+        if (!message) {
+            return null;
+        }
+
+        if (!message.isOutbox) {
+            switch (message.state) {
+                case 'user-ack':
+                    return 'messageStates.WE_ACK';
+                case 'user-dec':
+                    return 'messageStates.WE_DEC';
+                default:
+                    return 'messageStates.UNKNOWN';
+            }
+        }
+        switch (message.state) {
+            case 'pending':
+                return 'messageStates.PENDING';
+            case 'sending':
+                return 'messageStates.SENDING';
+            case 'sent':
+                return 'messageStates.SENT';
+            case 'delivered':
+                return 'messageStates.DELIVERED';
+            case 'read':
+                return 'messageStates.READ';
+            case 'send-failed':
+                return 'messageStates.FAILED';
+            case 'user-ack':
+                return 'messageStates.USER_ACK';
+            case 'user-dec':
+                return 'messageStates.USER_DEC';
+            case 'timeout':
+                return 'messageStates.TIMEOUT';
+            default:
+                return 'messageStates.UNKNOWN';
+        }
+    };
+}])
+
 .filter('fileSize', function() {
     return (size: number) => {
         if (!size) {

@@ -179,6 +179,20 @@
         "MUTED_SILENT": "Stumme Benachrichtigungen",
         "ALL": "Alle"
     },
+    "messageStates": {
+        "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",
+        "WE_DEC": "Sie haben ein Daumen-Runter gesendet",
+        "USER_ACK": "Der Empfänger hat ein Daumen-Hoch gesendet",
+        "USER_DEC": "Der Empfänger hat ein Daumen-Runter gesendet",
+        "PENDING": "Die Nachricht wird auf Ihr Gerät übertragen",
+        "SENDING": "Die Nachricht wird an den Threema-Server übermittelt",
+        "SENT": "Die Nachricht wurde erfolgreich an den Server übermittelt",
+        "DELIVERED": "Die Nachricht ist beim Gerät des Empfängers angekommen",
+        "READ": "Die Nachricht wurde vom Empfänger gelesen",
+        "FAILED": "Die Nachricht konnte nicht gesendet werden",
+        "TIMEOUT": "Die Nachricht konnte nicht auf Ihr Gerät übertragen werden.",
+        "UNKNOWN": ""
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
         "FILE_MESSAGE": "Datei",

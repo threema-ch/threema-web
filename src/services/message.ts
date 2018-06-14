@@ -29,12 +29,20 @@ export class MessageAccess {
 
 export class MessageService {
 
+    // Angular services
     private $log: ng.ILogService;
+    private $timeout: ng.ITimeoutService;
+
+    // Own services
     private receiverService: ReceiverService;
 
-    public static $inject = ['$log', 'ReceiverService'];
-    constructor($log: ng.ILogService, receiverService: ReceiverService) {
+    // Other
+    private timeoutDelaySeconds = 30;
+
+    public static $inject = ['$log', '$timeout', 'ReceiverService'];
+    constructor($log: ng.ILogService, $timeout: ng.ITimeoutService, receiverService: ReceiverService) {
         this.$log = $log;
+        this.$timeout = $timeout;
         this.receiverService = receiverService;
     }
 
@@ -155,6 +163,17 @@ export class MessageService {
             message.body = (messageData as threema.TextMessageData).text;
             message.quote = (messageData as threema.TextMessageData).quote;
         }
+
+        // Add delay for timeout checking
+        this.$timeout(() => {
+            // Set the state to timeout if it is still pending.
+            // Note: If sending the message worked, by now the message object
+            // will have been replaced by a new one and the state change would
+            // have no effect anyways...
+            if (message.state === 'pending') {
+                message.state = 'timeout';
+            }
+        }, this.timeoutDelaySeconds * 1000);
 
         return message;
     }

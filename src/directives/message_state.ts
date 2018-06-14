@@ -28,7 +28,7 @@ export default [
                 message: '=eeeMessage',
             },
             template: `
-                <i class="material-icons md-dark md-14 {{message.state}}">{{ message | messageStateIcon }}</i>
+                <i class="material-icons md-dark md-14 {{message.state}}" title="{{ message | messageStateTitleText | translate }}">{{ message | messageStateIcon }}</i>
             `,
         };
     },

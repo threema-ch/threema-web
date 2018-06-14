@@ -178,6 +178,20 @@
         "MUTED_SILENT": "Silent notifications",
         "ALL": "All"
     },
+    "messageStates": {
+        "WE_ACK": "You sent thumbs-up",
+        "WE_DEC": "You sent thumbs-down",
+        "USER_ACK": "Recipient sent thumbs-up",
+        "USER_DEC": "Recipient sent thumbs-down",
+        "PENDING": "The message is being transferred to your device",
+        "SENDING": "The message is being transferred to the Threema server",
+        "SENT": "The message was delivered to the Threema server",
+        "DELIVERED": "The message was delivered to the recipient's device",
+        "READ": "The message was read by the recipient",
+        "FAILED": "The message could not be sent",
+        "TIMEOUT": "The message could not be transferred to your device.",
+        "UNKNOWN": ""
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
         "FILE_MESSAGE": "File Message",

@@ -45,6 +45,7 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
+                this.logTag = '[MessageDirective]';
                 // Return the contact
                 const getIdentity = function(message: threema.Message) {
                     if (message.isOutbox) {
@@ -120,10 +121,10 @@ export default [
                     try {
                         const successful = document.execCommand('copy');
                         if (!successful) {
-                            $log.warn('Could not copy text to clipboard');
+                            $log.warn(this.logTag, 'Could not copy text to clipboard');
                         }
                     } catch (err) {
-                        $log.warn('Could not copy text to clipboard:', err);
+                        $log.warn(this.logTag, 'Could not copy text to clipboard:', err);
                     }
                     document.body.removeChild(textArea);
                 };
@@ -143,12 +144,12 @@ export default [
                                         saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
                                         break;
                                     default:
-                                        $log.warn('Ignored download request for message type', this.message.type);
+                                        $log.warn(this.logTag, 'Ignored download request for message type', this.message.type);
                                 }
                             });
                         })
                         .catch((error) => {
-                            $log.error('Error downloading blob:', error);
+                            $log.error(this.logTag, 'Error downloading blob:', error);
                             this.downloading = false;
                         });
                 };

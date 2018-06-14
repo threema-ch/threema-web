@@ -405,6 +405,9 @@
                     position: relative;
                     top: 2px;
                 }
+                i.timeout {
+                    color: $status-error;
+                }
             }
 
             md-icon {
