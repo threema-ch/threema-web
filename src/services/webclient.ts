@@ -1082,6 +1082,11 @@ export class WebClientService {
     public requestRead(receiver, newestMessage: threema.Message): void {
         if (newestMessage.id === undefined) {
             // Message that hasn't been sent yet
+            this.$log.warn(this.logTag, 'Called requestRead on a message without id');
+            return;
+        }
+        if (newestMessage.type === 'status') {
+            this.$log.warn(this.logTag, 'Called requestRead on a status message');
             return;
         }
 

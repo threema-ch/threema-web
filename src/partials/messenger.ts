@@ -735,6 +735,11 @@ class ConversationController {
      * avoid sending too many messages at once.
      */
     public msgRead(message: threema.Message): void {
+        // Ignore status messages
+        if (message.type === 'status') {
+            return;
+        }
+
         // Update lastReadMsg
         if (this.lastReadMsg === null || message.sortKey > this.lastReadMsg.sortKey) {
             this.lastReadMsg = message;
