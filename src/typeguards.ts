@@ -45,3 +45,19 @@ export function isDistributionListReceiver(
 ): receiver is threema.DistributionListReceiver {
     return receiver.type === 'distributionList';
 }
+
+/**
+ * Valid receiver types type guard
+ */
+export function isValidReceiverType(
+    receiverType: string,
+): receiverType is threema.ReceiverType {
+    switch (receiverType) {
+        case 'me':
+        case 'contact':
+        case 'group':
+        case 'distributionList':
+            return true;
+    }
+    return false;
+}

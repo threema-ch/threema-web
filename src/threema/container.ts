@@ -371,7 +371,7 @@ class Messages implements threema.Container.Messages {
     /**
      * Ensure that the receiver exists in the receiver map.
      */
-    private lazyCreate(receiver: threema.Receiver): void {
+    private lazyCreate(receiver: threema.BaseReceiver): void {
         // If the type is not yet known, create a new type map.
         if (!this.messages.has(receiver.type)) {
             this.messages.set(receiver.type, new Map());
@@ -389,7 +389,7 @@ class Messages implements threema.Container.Messages {
      *
      * If the receiver is not known yet, it is initialized.
      */
-    private getReceiverMessages(receiver: threema.Receiver): ReceiverMessages {
+    private getReceiverMessages(receiver: threema.BaseReceiver): ReceiverMessages {
         this.lazyCreate(receiver);
         return this.messages.get(receiver.type).get(receiver.id);
     }
@@ -400,7 +400,7 @@ class Messages implements threema.Container.Messages {
      * If the receiver is not known yet, it is initialized with an empty
      * message list.
      */
-    public getList(receiver: threema.Receiver): threema.Message[] {
+    public getList(receiver: threema.BaseReceiver): threema.Message[] {
         return this.getReceiverMessages(receiver).list;
     }
 
@@ -427,7 +427,7 @@ class Messages implements threema.Container.Messages {
     /**
      * Reset the cached messages of a receiver (e.g. the receiver was locked by the mobile)
      */
-    public clearReceiverMessages(receiver: threema.Receiver): number {
+    public clearReceiverMessages(receiver: threema.BaseReceiver): number {
         let cachedMessageCount = 0;
         if (this.messages.has(receiver.type)) {
             const typeMessages = this.messages.get(receiver.type);
@@ -443,7 +443,7 @@ class Messages implements threema.Container.Messages {
     /**
      * Return whether messages from/for the specified receiver are available.
      */
-    public contains(receiver: threema.Receiver): boolean {
+    public contains(receiver: threema.BaseReceiver): boolean {
         return this.messages.has(receiver.type) &&
                this.messages.get(receiver.type).has(receiver.id);
     }
@@ -452,7 +452,7 @@ class Messages implements threema.Container.Messages {
      * Return whether there are more (older) messages available to fetch
      * for the specified receiver.
      */
-    public hasMore(receiver: threema.Receiver): boolean {
+    public hasMore(receiver: threema.BaseReceiver): boolean {
         return this.getReceiverMessages(receiver).more;
     }
 
@@ -461,14 +461,14 @@ class Messages implements threema.Container.Messages {
      *
      * The flag indicates that more (older) messages are available.
      */
-    public setMore(receiver: threema.Receiver, more: boolean): void {
+    public setMore(receiver: threema.BaseReceiver, more: boolean): void {
         this.getReceiverMessages(receiver).more = more;
     }
 
     /**
      * Return the reference msg id for the specified receiver.
      */
-    public getReferenceMsgId(receiver: threema.Receiver): string {
+    public getReferenceMsgId(receiver: threema.BaseReceiver): string {
         return this.getReceiverMessages(receiver).referenceMsgId;
     }
 
@@ -476,14 +476,14 @@ class Messages implements threema.Container.Messages {
      * Return whether the messages for the specified receiver are already
      * requested.
      */
-    public isRequested(receiver: threema.Receiver): boolean {
+    public isRequested(receiver: threema.BaseReceiver): boolean {
         return this.getReceiverMessages(receiver).requested;
     }
 
     /**
      * Set the requested flag for the specified receiver.
      */
-    public setRequested(receiver: threema.Receiver): void {
+    public setRequested(receiver: threema.BaseReceiver): void {
         const messages = this.getReceiverMessages(receiver);
 
         // If a request was already pending, this must be a bug.
@@ -498,7 +498,7 @@ class Messages implements threema.Container.Messages {
     /**
      * Clear the "requested" flag for the specified receiver messages.
      */
-    public clearRequested(receiver): void {
+    public clearRequested(receiver: threema.BaseReceiver): void {
         const messages = this.getReceiverMessages(receiver);
         messages.requested = false;
     }
@@ -508,7 +508,7 @@ class Messages implements threema.Container.Messages {
      *
      * Messages must be sorted ascending by date.
      */
-    public addNewer(receiver: threema.Receiver, messages: threema.Message[]): void {
+    public addNewer(receiver: threema.BaseReceiver, messages: threema.Message[]): void {
         if (messages.length === 0) {
             // do nothing
             return;
@@ -526,7 +526,7 @@ class Messages implements threema.Container.Messages {
      *
      * Messages must be sorted ascending by date (oldest first).
      */
-    public addOlder(receiver: threema.Receiver, messages: threema.Message[]): void {
+    public addOlder(receiver: threema.BaseReceiver, messages: threema.Message[]): void {
         if (messages.length === 0) {
             // do nothing
             return;
@@ -556,7 +556,7 @@ class Messages implements threema.Container.Messages {
      * Return a boolean indicating whether the message was found and
      * replaced, or not.
      */
-    public update(receiver: threema.Receiver, message: threema.Message): boolean {
+    public update(receiver: threema.BaseReceiver, message: threema.Message): boolean {
         const list = this.getList(receiver);
         for (let i = 0; i < list.length; i++) {
             if (list[i].id === message.id) {
@@ -575,7 +575,7 @@ class Messages implements threema.Container.Messages {
     /**
      * Update a thumbnail of a message, if a message was found the method will return true
      */
-    public setThumbnail(receiver: threema.Receiver, messageId: string, thumbnailImage: string): boolean {
+    public setThumbnail(receiver: threema.BaseReceiver, messageId: string, thumbnailImage: string): boolean {
         const list = this.getList(receiver);
         for (const message of list) {
             if (message.id === messageId) {
@@ -597,7 +597,7 @@ class Messages implements threema.Container.Messages {
      * Return a boolean indicating whether the message was found and
      * removed, or not.
      */
-    public remove(receiver: threema.Receiver, messageId: string): boolean {
+    public remove(receiver: threema.BaseReceiver, messageId: string): boolean {
         const list = this.getList(receiver);
         for (let i = 0; i < list.length; i++) {
             if (list[i].id === messageId) {
@@ -613,7 +613,7 @@ class Messages implements threema.Container.Messages {
      * Return a boolean indicating whether the message was found and
      * removed, or not.
      */
-    public removeTemporary(receiver: threema.Receiver, temporaryMessageId: string): boolean {
+    public removeTemporary(receiver: threema.BaseReceiver, temporaryMessageId: string): boolean {
         const list = this.getList(receiver);
         for (let i = 0; i < list.length; i++) {
             if (list[i].temporaryId === temporaryMessageId) {
@@ -624,7 +624,7 @@ class Messages implements threema.Container.Messages {
         return false;
     }
 
-    public bindTemporaryToMessageId(receiver: threema.Receiver, temporaryId: string, messageId: string): boolean {
+    public bindTemporaryToMessageId(receiver: threema.BaseReceiver, temporaryId: string, messageId: string): boolean {
         const list = this.getList(receiver);
         for (const item of list) {
             if (item.temporaryId === temporaryId) {
@@ -644,7 +644,7 @@ class Messages implements threema.Container.Messages {
         return false;
     }
 
-    public notify(receiver: threema.Receiver, $scope: ng.IScope) {
+    public notify(receiver: threema.BaseReceiver, $scope: ng.IScope) {
         $scope.$broadcast('threema.receiver.' + receiver.type + '.' + receiver.id + '.messages',
             this.getList(receiver), this.hasMore(receiver));
     }
@@ -653,12 +653,16 @@ class Messages implements threema.Container.Messages {
      * register a message change notify on the given scope
      * return the CURRENT list of loaded messages
      */
-    public register(receiver: threema.Receiver, $scope: ng.IScope, callback: any): threema.Message[] {
+    public register(receiver: threema.BaseReceiver, $scope: ng.IScope, callback: any): threema.Message[] {
         $scope.$on('threema.receiver.' + receiver.type + '.' + receiver.id + '.messages', callback);
         return this.getList(receiver);
     }
 
-    public updateFirstUnreadMessage(receiver: threema.Receiver): void {
+    /**
+     * Iterate through the list of messages. Remove all "firstUnreadMessage"
+     * entries and insert a new entry just before the oldest unread message.
+     */
+    public updateFirstUnreadMessage(receiver: threema.BaseReceiver): void {
         const receiverMessages = this.getReceiverMessages(receiver);
         if (receiverMessages !== undefined && receiverMessages.list.length > 0) {
             // remove unread

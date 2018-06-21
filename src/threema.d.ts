@@ -797,26 +797,26 @@ declare namespace threema {
 
         interface Messages {
             converter: (data: Message) => Message;
-            getList(receiver: Receiver): Message[];
+            getList(receiver: BaseReceiver): Message[];
             clear($scope: ng.IScope): void;
-            clearReceiverMessages(receiver: Receiver): number;
-            contains(receiver: Receiver): boolean;
-            hasMore(receiver: Receiver): boolean;
-            setMore(receiver: Receiver, more: boolean): void;
-            getReferenceMsgId(receiver: Receiver): string;
-            isRequested(receiver: Receiver): boolean;
-            setRequested(receiver: Receiver): void;
-            clearRequested(receiver): void;
-            addNewer(receiver: Receiver, messages: Message[]): void;
-            addOlder(receiver: Receiver, messages: Message[]): void;
-            update(receiver: Receiver, message: Message): boolean;
-            setThumbnail(receiver: Receiver, messageId: string, thumbnailImage: string): boolean;
-            remove(receiver: Receiver, messageId: string): boolean;
-            removeTemporary(receiver: Receiver, temporaryMessageId: string): boolean;
-            bindTemporaryToMessageId(receiver: Receiver, temporaryId: string, messageId: string): boolean;
-            notify(receiver: Receiver, $scope: ng.IScope): void;
-            register(receiver: Receiver, $scope: ng.IScope, callback: any): Message[];
-            updateFirstUnreadMessage(receiver: Receiver);
+            clearReceiverMessages(receiver: BaseReceiver): number;
+            contains(receiver: BaseReceiver): boolean;
+            hasMore(receiver: BaseReceiver): boolean;
+            setMore(receiver: BaseReceiver, more: boolean): void;
+            getReferenceMsgId(receiver: BaseReceiver): string;
+            isRequested(receiver: BaseReceiver): boolean;
+            setRequested(receiver: BaseReceiver): void;
+            clearRequested(receiver: BaseReceiver): void;
+            addNewer(receiver: BaseReceiver, messages: Message[]): void;
+            addOlder(receiver: BaseReceiver, messages: Message[]): void;
+            update(receiver: BaseReceiver, message: Message): boolean;
+            setThumbnail(receiver: BaseReceiver, messageId: string, thumbnailImage: string): boolean;
+            remove(receiver: BaseReceiver, messageId: string): boolean;
+            removeTemporary(receiver: BaseReceiver, temporaryMessageId: string): boolean;
+            bindTemporaryToMessageId(receiver: BaseReceiver, temporaryId: string, messageId: string): boolean;
+            notify(receiver: BaseReceiver, $scope: ng.IScope): void;
+            register(receiver: BaseReceiver, $scope: ng.IScope, callback: any): Message[];
+            updateFirstUnreadMessage(receiver: BaseReceiver);
         }
 
         interface Typing {

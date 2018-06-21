@@ -21,7 +21,7 @@
 
 import * as msgpack from 'msgpack-lite';
 import {hasFeature, hexToU8a, msgpackVisualizer} from '../helpers';
-import {isContactReceiver, isDistributionListReceiver, isGroupReceiver} from '../typeguards';
+import {isContactReceiver, isDistributionListReceiver, isGroupReceiver, isValidReceiverType} from '../typeguards';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
 import {TrustedKeyStoreService} from './keystore';
@@ -1889,13 +1889,13 @@ export class WebClientService {
     }
 
     private _receiveResponseMessages(message: threema.WireMessage): void {
-        this.$log.debug('Received message response');
+        this.$log.debug('Received messages response');
 
         // Unpack data and arguments
         const args = message.args;
         const data = message.data as threema.Message[];
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid message response, data or arguments missing');
+            this.$log.warn('Invalid messages response, data or arguments missing');
             return;
         }
 
@@ -1904,17 +1904,19 @@ export class WebClientService {
         const id: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
         let more: boolean = args[WebClientService.ARGUMENT_HAS_MORE];
         if (type === undefined || id === undefined || more === undefined) {
-            this.$log.warn('Invalid message response, argument field missing');
+            this.$log.warn('Invalid messages response, argument field missing');
             return;
         }
+        if (!isValidReceiverType(type)) {
+            this.$log.warn('Invalid messages response, unknown receiver type (' + type + ')');
+            return;
+        }
+        const receiver: threema.BaseReceiver = {type: type, id: id};
 
         // If there's no data returned, override `more` field.
         if (data.length === 0) {
             more = false;
         }
-
-        // Check if the page was requested
-        const receiver = {type: type, id: id} as threema.Receiver;
 
         // Set as loaded
         this.loadingMessages.delete(receiver.type + receiver.id);
@@ -2083,7 +2085,11 @@ export class WebClientService {
             this.$log.warn('Invalid message update, argument field missing');
             return;
         }
-        const receiver = {type: type, id: id} as threema.Receiver;
+        if (!isValidReceiverType(type)) {
+            this.$log.warn('Invalid messages update, unknown receiver type (' + type + ')');
+            return;
+        }
+        const receiver: threema.BaseReceiver = {type: type, id: id};
 
         // React depending on mode
         for (const msg of data) {
