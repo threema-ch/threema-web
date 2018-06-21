@@ -186,6 +186,7 @@ class ConversationController {
     private $scope: ng.IScope;
     private $rootScope: ng.IRootScopeService;
     private $filter: ng.IFilterService;
+    private $translate: ng.translate.ITranslateService;
 
     // Own services
     private webClientService: WebClientService;
@@ -206,28 +207,35 @@ class ConversationController {
     // Scrolling
     public showScrollJump: boolean = false;
 
+    // The conversation receiver
     public receiver: threema.Receiver;
     public type: threema.ReceiverType;
+
+    // The conversation messages
+    private messages: threema.Message[];
+
+    // This will be set to true as soon as the initial messages have been loaded
+    private initialized = false;
+
+    // Mentions
+    public allMentions: threema.Mention[] = [];
+    public currentMentions: threema.Mention[] = [];
+    public currentMentionFilterWord = null;
+    public selectedMention: number = null;
+
     public message: string = '';
     public lastReadMsg: threema.Message | null = null;
     public msgReadReportPending = false;
     private hasMore = true;
     private latestRefMsgId: string | null = null;
     private allText: string;
-    private messages: threema.Message[];
     public initialData: threema.InitialConversationData = {
         draft: '',
         initialText: '',
     };
-    private $translate: ng.translate.ITranslateService;
     private locked = false;
     public maxTextLength: number;
     public isTyping = (): boolean => false;
-
-    public allMentions: threema.Mention[] = [];
-    public currentMentions: threema.Mention[] = [];
-    public currentMentionFilterWord = null;
-    public selectedMention: number = null;
 
     private uploading = {
         enabled: false,
@@ -356,23 +364,37 @@ class ConversationController {
 
             if (!this.receiver.locked) {
                 let latestHeight = 0;
-                // update unread count
-                this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
+
+                // Subscribe to messages
                 this.messages = this.webClientService.messages.register(
                     this.receiver,
                     this.$scope,
                     (e, allMessages: threema.Message[], hasMore: boolean) => {
+                        // This function is called every time there are new or removed messages.
+
+                        // Update data
                         this.messages = allMessages;
+                        const wasInitialized = this.initialized;
+                        this.initialized = true;
                         this.hasMore = hasMore;
+
+                        // Update "first unread" divider
+                        if (!wasInitialized) {
+                            this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
+                        }
+
+                        // Autoscroll
                         if (this.latestRefMsgId !== null) {
                             // scroll to div..
-                            this.domChatElement.scrollTop =
-                                this.domChatElement.scrollHeight - latestHeight;
+                            this.domChatElement.scrollTop = this.domChatElement.scrollHeight - latestHeight;
                             this.latestRefMsgId = null;
                         }
                         latestHeight = this.domChatElement.scrollHeight;
                     },
                 );
+
+                // Update "first unread" divider
+                this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
 
                 // Enable mentions only in group chats
                 if (this.type === 'group') {

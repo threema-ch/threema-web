@@ -1931,6 +1931,7 @@ export class WebClientService {
             // Set "more" flag to indicate that more (older) messages are available.
             this.messages.setMore(receiver, more);
 
+            // Notify listeners
             this.messages.notify(receiver, this.$rootScope);
         } else {
             this.$log.warn("Ignoring message response that hasn't been requested");
@@ -2092,16 +2093,17 @@ export class WebClientService {
         const receiver: threema.BaseReceiver = {type: type, id: id};
 
         // React depending on mode
+        let notify = false;
         for (const msg of data) {
             switch (mode) {
                 case WebClientService.ARGUMENT_MODE_NEW:
                     this.$log.debug('New message', msg.id);
-
                     // It's possible that this message already exists (placeholder message on send).
                     // Try to update it first. If not, add it as a new msg.
                     if (!this.messages.update(receiver, msg)) {
                         this.messages.addNewer(receiver, [msg]);
                     }
+                    notify = true;
                     break;
                 case WebClientService.ARGUMENT_MODE_MODIFIED:
                     this.$log.debug('Modified message', msg.id);
@@ -2109,10 +2111,14 @@ export class WebClientService {
                     break;
                 case WebClientService.ARGUMENT_MODE_REMOVED:
                     this.messages.remove(receiver, msg.id);
+                    notify = true;
                     break;
                 default:
                     this.$log.warn('Invalid message response, unknown mode:', mode);
             }
+        }
+        if (notify) {
+            this.messages.notify(receiver, this.$rootScope);
         }
     }
 

@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isFirstUnreadStatusMessage} from '../message_helpers';
 import {ReceiverService} from '../services/receiver';
 
 type ContactMap = Map<string, threema.ContactReceiver>;
@@ -644,14 +645,17 @@ class Messages implements threema.Container.Messages {
         return false;
     }
 
+    /**
+     * Notify listener that messages changed.
+     */
     public notify(receiver: threema.BaseReceiver, $scope: ng.IScope) {
         $scope.$broadcast('threema.receiver.' + receiver.type + '.' + receiver.id + '.messages',
             this.getList(receiver), this.hasMore(receiver));
     }
 
     /**
-     * register a message change notify on the given scope
-     * return the CURRENT list of loaded messages
+     * Register a function that is called every time the messages are added or removed.
+     * Return the CURRENT list of loaded messages.
      */
     public register(receiver: threema.BaseReceiver, $scope: ng.IScope, callback: any): threema.Message[] {
         $scope.$on('threema.receiver.' + receiver.type + '.' + receiver.id + '.messages', callback);
@@ -663,26 +667,25 @@ class Messages implements threema.Container.Messages {
      * entries and insert a new entry just before the oldest unread message.
      */
     public updateFirstUnreadMessage(receiver: threema.BaseReceiver): void {
-        const receiverMessages = this.getReceiverMessages(receiver);
+        const receiverMessages: ReceiverMessages = this.getReceiverMessages(receiver);
         if (receiverMessages !== undefined && receiverMessages.list.length > 0) {
-            // remove unread
-            let removedElements = 0;
             let firstUnreadMessageIndex;
-            receiverMessages.list = receiverMessages.list.filter((message: threema.Message, index: number) => {
-                if (message.type === 'status'
-                    && message.statusType === 'firstUnreadMessage') {
-                    removedElements++;
-                    return false;
-                } else if (firstUnreadMessageIndex === undefined
-                        && !message.isOutbox
-                        && message.unread) {
-                    firstUnreadMessageIndex = index;
+
+            // Remove unread messages
+            // Iterate in reverse, to avoid getting problems when removing items
+            for (let i = receiverMessages.list.length - 1; i >= 0; i--) {
+                const message: threema.Message = receiverMessages.list[i];
+                if (isFirstUnreadStatusMessage(message)) {
+                    receiverMessages.list.splice(i, 1);
+                    if (firstUnreadMessageIndex !== undefined) {
+                        firstUnreadMessageIndex -= 1;
+                    }
+                } else if (!message.isOutbox && message.unread) {
+                    firstUnreadMessageIndex = i;
                 }
-                return true;
-            });
+            }
 
             if (firstUnreadMessageIndex !== undefined) {
-                firstUnreadMessageIndex -= removedElements;
                 receiverMessages.list.splice(firstUnreadMessageIndex, 0 , {
                     type: 'status',
                     isStatus: true,
