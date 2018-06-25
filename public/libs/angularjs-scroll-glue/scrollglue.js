@@ -34,8 +34,19 @@ if(typeof module === "object" && module.exports){
                     const activationState = createActivationState($parse, attrs[attrName], scope);
 
                     function scrollIfGlued() {
-                        if (activationState.getValue() && !direction.isAttached(el)){
+                        console.warn('scrollifglued');
+                        const active = activationState.getValue();
+                        const attached = direction.isAttached(el);
+                        if (active && !attached){
                             direction.scroll(el);
+                        } else {
+                            if (!active) {
+                                console.warn('  nope (inactive)');
+                            } else if (attached) {
+                                console.warn('  nope (attached)');
+                            } else {
+                                console.warn('  nopeeeeeee?!');
+                            }
                         }
                     }
 
@@ -79,6 +90,7 @@ if(typeof module === "object" && module.exports){
             return el.scrollTop + el.clientHeight + 1 >= el.scrollHeight;
         },
         scroll: function(el){
+            console.warn('  scroll');
             el.scrollTop = el.scrollHeight;
         }
     };
