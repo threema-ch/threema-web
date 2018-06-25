@@ -13,52 +13,15 @@ if(typeof module === "object" && module.exports){
     'use strict';
 
     function createActivationState($parse, attr, scope){
-        function unboundState(initValue){
-            var activated = initValue;
-            return {
-                getValue: function(){
-                    return activated;
-                },
-                setValue: function(value){
-                    activated = value;
-                }
-            };
-        }
-
-        function oneWayBindingState(getter, scope){
-            return {
-                getValue: function(){
-                    return getter(scope);
-                },
-                setValue: function(){}
-            };
-        }
-
-        function twoWayBindingState(getter, setter, scope){
-            return {
-                getValue: function(){
-                    return getter(scope);
-                },
-                setValue: function(value){
-                    if(value !== getter(scope)){
-                        scope.$apply(function(){
-                            setter(scope, value);
-                        });
-                    }
-                }
-            };
-        }
-
-        if(attr !== ""){
-            var getter = $parse(attr);
-            if(getter.assign !== undefined){
-                return twoWayBindingState(getter, getter.assign, scope);
-            } else {
-                return oneWayBindingState(getter, scope);
+        var activated = true;
+        return {
+            getValue: function(){
+                return activated;
+            },
+            setValue: function(value){
+                activated = value;
             }
-        } else {
-            return unboundState(true);
-        }
+        };
     }
 
     function createDirective(module, attrName, direction){
@@ -67,11 +30,11 @@ if(typeof module === "object" && module.exports){
                 priority: 1,
                 restrict: 'A',
                 link: function(scope, $el, attrs){
-                    var el = $el[0],
-                        activationState = createActivationState($parse, attrs[attrName], scope);
+                    const el = $el[0];
+                    const activationState = createActivationState($parse, attrs[attrName], scope);
 
                     function scrollIfGlued() {
-                        if(activationState.getValue() && !direction.isAttached(el)){
+                        if (activationState.getValue() && !direction.isAttached(el)){
                             direction.scroll(el);
                         }
                     }
