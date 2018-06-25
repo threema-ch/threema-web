@@ -48,7 +48,6 @@
     "angular-sanitize": "~1.5.10",
     "angular-translate": "~2.13.1",
     "angular-ui-router": "~0.3.2",
-    "angularjs-scroll-glue": "~2.1.0",
     "autolinker": "~0.27.0",
     "babel-es6-polyfill": "~1.1.0",
     "babel-preset-es2015": "~6.14.0",
