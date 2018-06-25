@@ -36,7 +36,7 @@
         </md-card>
     </div>
 
-    <div id="conversation-chat" scroll-glue="!ctrl.showScrollJump" in-view-container ng-show="!ctrl.locked">
+    <div id="conversation-chat" scroll-glue in-view-container ng-show="!ctrl.locked">
         <ul class="chat">
             <li in-view="$inview && !ctrl.locked && ctrl.topOfChat()" class="load-more">
                 <div ng-if="ctrl.hasMoreMessages()" class="loading">

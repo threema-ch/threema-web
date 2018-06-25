@@ -43,7 +43,15 @@ if(typeof module === "object" && module.exports){
                         activationState.setValue(direction.isAttached(el));
                     }
 
-                    scope.$watch(scrollIfGlued);
+                    scope.$watch(() => {
+                        const ctx = this;
+                        if (ctx.watchPromise === undefined) {
+                            ctx.watchPromise = $timeout(() => {
+                                scrollIfGlued();
+                                ctx.watchPromise = undefined;
+                            }, 10, false);
+                        }
+                    });
 
                     $timeout(scrollIfGlued, 0, false);
 
