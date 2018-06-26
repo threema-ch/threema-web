@@ -26,13 +26,18 @@ export default [
     'MessageService',
     'ReceiverService',
     '$mdDialog',
+    '$mdToast',
     '$translate',
     '$rootScope',
     '$log',
-    function(webClientService: WebClientService, messageService: MessageService,
+    function(webClientService: WebClientService,
+             messageService: MessageService,
              receiverService: ReceiverService,
-             $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
-             $rootScope: ng.IRootScopeService, $log: ng.ILogService) {
+             $mdDialog: ng.material.IDialogService,
+             $mdToast: ng.material.IToastService,
+             $translate: ng.translate.ITranslateService,
+             $rootScope: ng.IRootScopeService,
+             $log: ng.ILogService) {
 
         return {
             restrict: 'E',
@@ -114,6 +119,7 @@ export default [
                     // In order to copy the text to the clipboard,
                     // put it into a temporary textarea element.
                     const textArea = document.createElement('textarea');
+                    let toastString = 'messenger.COPY_ERROR';
                     textArea.value = text;
                     document.body.appendChild(textArea);
                     textArea.focus();
@@ -122,11 +128,19 @@ export default [
                         const successful = document.execCommand('copy');
                         if (!successful) {
                             $log.warn(this.logTag, 'Could not copy text to clipboard');
+                        } else {
+                            toastString = 'messenger.COPIED';
                         }
                     } catch (err) {
                         $log.warn(this.logTag, 'Could not copy text to clipboard:', err);
                     }
                     document.body.removeChild(textArea);
+
+                    // Show toast
+                    const toast = $mdToast.simple()
+                        .textContent($translate.instant(toastString))
+                        .position('bottom center');
+                    $mdToast.show(toast);
                 };
 
                 this.download = (ev) => {

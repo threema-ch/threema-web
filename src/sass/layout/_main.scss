@@ -304,6 +304,11 @@ md-toast.md-center {
     left: 50%;
     transform: translate3d(-50%, 0, 0);
 }
+md-toast .md-toast-content {
+    span {
+        text-align: center;
+    }
+}
 
 .md-subheader {
     background-color: transparent;

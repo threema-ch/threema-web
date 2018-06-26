@@ -120,6 +120,8 @@
         "DOWNLOAD": "Download",
         "DOWNLOADING": "Downloading …",
         "COPY": "Copy",
+        "COPIED": "Copied text to clipboard!",
+        "COPY_ERROR": "Error: Could not copy text to clipboard",
         "MSG_HISTORY": "Message History",
         "MSG_HISTORY_CREATED": "Created",
         "MSG_HISTORY_SENT": "Sent",

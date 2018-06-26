@@ -120,6 +120,8 @@
         "DOWNLOAD": "Herunterladen",
         "DOWNLOADING": "Laden …",
         "COPY": "Kopieren",
+        "COPIED": "Inhalt wurde in die Zwischenablage kopiert!",
+        "COPY_ERROR": "Fehler: Konnte Inhalt nicht in die Zwischenablage kopieren",
         "MSG_HISTORY": "Nachrichten-Verlauf",
         "MSG_HISTORY_CREATED": "Erstellt",
         "MSG_HISTORY_SENT": "Gesendet",
