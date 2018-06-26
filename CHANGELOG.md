@@ -3,6 +3,17 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.6][v2.0.0-beta.6] (2018-06-26)
+
+Changes:
+
+* [feature] Show three blue dots for verified Threema Work contacts
+* [feature] Implement non-work indicator for Threema Work users
+* [feature] Add message timeout state
+* [feature] Show a title text for all message state icons
+* [bug] Ignore status messages when marking as unread
+* [bug] Fix "unread messages" indicator
+
 ### [v2.0.0-beta.5][v2.0.0-beta.5] (2018-06-12)
 
 Changes:
@@ -499,6 +510,7 @@ First public release.
 [i472]: https://github.com/threema-ch/threema-web/issues/472
 [i503]: https://github.com/threema-ch/threema-web/issues/503
 
+[v2.0.0-beta.6]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.5...v2.0.0-beta.6
 [v2.0.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.4...v2.0.0-beta.5
 [v2.0.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.3...v2.0.0-beta.4
 [v2.0.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.2...v2.0.0-beta.3
