@@ -181,6 +181,7 @@ export class WebClientService {
     private trustedKeyStore: TrustedKeyStoreService;
     public clientInfo: threema.ClientInfo;
     public version = null;
+    private batteryStatusTimeout: ng.IPromise<void> = null;
 
     private blobCache = new Map<string, threema.BlobInfo>();
     private loadingMessages = new Map<string, boolean>();
@@ -277,6 +278,7 @@ export class WebClientService {
                 }
             },
         );
+        this.stateService.evtGlobalConnectionStateChange.attach(this.handleGlobalConnectionStateChange.bind(this));
     }
 
     get me(): threema.MeReceiver {
@@ -3178,5 +3180,22 @@ export class WebClientService {
      */
     public clearIsTypingFlags(): void {
         this.typing.clearAll();
+    }
+
+    private handleGlobalConnectionStateChange(stateChange: threema.GlobalConnectionStateChange): void {
+        const isOk = stateChange.state === threema.GlobalConnectionState.Ok;
+        const wasOk = stateChange.prevState === threema.GlobalConnectionState.Ok;
+        if (!isOk && wasOk && this.batteryStatusService.dataAvailable) {
+            this.batteryStatusTimeout = this.$timeout(
+                () => {
+                    this.batteryStatusService.clearStatus();
+                    this.batteryStatusTimeout = null;
+                },
+                60000,
+            );
+        } else if (isOk && this.batteryStatusTimeout !== null) {
+            this.$timeout.cancel(this.batteryStatusTimeout);
+            this.batteryStatusTimeout = null;
+        }
     }
 }
