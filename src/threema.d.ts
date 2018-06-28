@@ -415,6 +415,11 @@ declare namespace threema {
         Error = 'error',
     }
 
+    interface GlobalConnectionStateChange {
+        state: GlobalConnectionState;
+        prevState: GlobalConnectionState;
+    }
+
     /**
      * Type of message to be sent to a receiver.
      */

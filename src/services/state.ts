@@ -36,6 +36,7 @@ export class StateService {
 
     // Events
     public evtConnectionBuildupStateChange = new AsyncEvent<threema.ConnectionBuildupStateChange>();
+    public evtGlobalConnectionStateChange = new AsyncEvent<threema.GlobalConnectionStateChange>();
 
     // Connection states
     public signalingConnectionState: saltyrtc.SignalingState;
@@ -49,7 +50,7 @@ export class StateService {
 
     // Global connection state
     private stage: Stage;
-    public state: threema.GlobalConnectionState;
+    private _state: threema.GlobalConnectionState;
     public wasConnected: boolean;
 
     public static $inject = ['$log', '$interval'];
@@ -57,6 +58,22 @@ export class StateService {
         this.$log = $log;
         this.$interval = $interval;
         this.reset();
+    }
+
+    /**
+     * Getters and setters for global connection state.
+     */
+    public get state(): threema.GlobalConnectionState {
+        return this._state;
+    }
+    public set state(state: threema.GlobalConnectionState) {
+        const prevState = this._state;
+        if (prevState === state) {
+            // No need to dispatch any events
+            return;
+        }
+        this._state = state;
+        this.evtGlobalConnectionStateChange.post({state: state, prevState: prevState});
     }
 
     /**

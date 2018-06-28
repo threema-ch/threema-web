@@ -69,13 +69,10 @@ export class StatusController {
         this.webClientService = webClientService;
         this.controllerService = controllerService;
 
-        // Watch state changes
-        $scope.$watch(
-            () => stateService.state,
-            (newValue: threema.GlobalConnectionState, oldValue: threema.GlobalConnectionState) => {
-                if (oldValue !== newValue) {
-                    this.onStateChange(newValue, oldValue);
-                }
+        // Register event handlers
+        this.stateService.evtGlobalConnectionStateChange.attach(
+            (stateChange: threema.GlobalConnectionStateChange) => {
+                this.onStateChange(stateChange.state, stateChange.prevState);
             },
         );
     }
