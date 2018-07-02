@@ -154,6 +154,9 @@ class Receivers implements threema.Container.Receivers {
     public setGroups(data: threema.GroupReceiver[]): void {
         this.groups = new Map(data.map((g) => {
             g.type = 'group';
+            setDefault(g, 'disabled', false);
+            setDefault(g, 'locked', false);
+            setDefault(g, 'visible', true);
             return [g.id, g];
         }) as any) as GroupMap;
     }
@@ -200,6 +203,9 @@ class Receivers implements threema.Container.Receivers {
         let groupReceiver  = this.groups.get(data.id);
         if (groupReceiver === undefined) {
             data.type = 'group';
+            setDefault(data, 'disabled', false);
+            setDefault(data, 'locked', false);
+            setDefault(data, 'visible', true);
             this.groups.set(data.id, data);
             return data;
         }
