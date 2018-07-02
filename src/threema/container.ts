@@ -28,6 +28,15 @@ type ConversationConverter = (data: threema.Conversation) => threema.Conversatio
 type MessageConverter = (data: threema.Message) => threema.Message;
 
 /**
+ * Helper function to set a default value.
+ */
+function setDefault(obj, key: string, defaultValue) {
+    if (obj[key] === undefined) {
+        obj[key] = defaultValue;
+    }
+}
+
+/**
  * A simple HashSet implementation based on a JavaScript object.
  *
  * Only strings can be stored in this set.
@@ -131,6 +140,7 @@ class Receivers implements threema.Container.Receivers {
     public setContacts(data: threema.ContactReceiver[]): void {
         this.contacts = new Map(data.map((c) => {
             c.type = 'contact';
+            setDefault(c, 'color', '#ff00ff');
             return [c.id, c];
         }) as any) as ContactMap;
         if (this.me !== undefined) {
@@ -215,6 +225,7 @@ class Receivers implements threema.Container.Receivers {
         let contactReceiver = this.contacts.get(data.id);
         if (contactReceiver === undefined) {
             data.type = 'contact';
+            setDefault(data, 'color', '#ff00ff');
             this.contacts.set(data.id, data);
             return data;
         }
