@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {escapeRegExp, filter} from './helpers';
+import {bufferToUrl, escapeRegExp, filter} from './helpers';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
@@ -245,6 +245,12 @@ angular.module('3ema.filters', [])
         return padLeft + left + ':' + padRight + right;
     };
 })
+
+/**
+ * Convert an ArrayBuffer to a data URL.
+ *
+ * Warning: Make sure that this is not called repeatedly on big data, or performance will decrease.
+ */
 .filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
     const logTag = '[filters.bufferToUrl]';
     return function(buffer: ArrayBuffer, mimeType: string, trust: boolean = true) {
@@ -252,29 +258,7 @@ angular.module('3ema.filters', [])
             $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
             return '';
         }
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        switch (mimeType) {
-            case 'image/jpg':
-            case 'image/jpeg':
-            case 'image/png':
-            case 'image/webp':
-            case 'audio/mp4':
-            case 'audio/aac':
-            case 'audio/ogg':
-            case 'audio/webm':
-                // OK
-                break;
-            default:
-                $log.warn(logTag, 'Unknown mimeType: ' + mimeType);
-                mimeType = 'image/jpeg';
-                break;
-        }
-        const uri = 'data:' + mimeType + ';base64,' + btoa(binary);
+        const uri = bufferToUrl(buffer, mimeType, (msg: string) => $log.warn(logTag, msg));
         if (trust) {
             return $sce.trustAsResourceUrl(uri);
         } else {

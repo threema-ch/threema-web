@@ -280,3 +280,35 @@ export function hasFeature(contactReceiver: threema.ContactReceiver,
     $log.warn(logTag, 'Cannot check featureMask of a undefined contactReceiver');
     return false;
 }
+
+/**
+ * Convert an ArrayBuffer to a data URL.
+ */
+export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (msg: string) => void) {
+    if (buffer === null || buffer === undefined) {
+        throw new Error('Called bufferToUrl on null or undefined');
+    }
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    switch (mimeType) {
+        case 'image/jpg':
+        case 'image/jpeg':
+        case 'image/png':
+        case 'image/webp':
+        case 'audio/mp4':
+        case 'audio/aac':
+        case 'audio/ogg':
+        case 'audio/webm':
+            // OK
+            break;
+        default:
+            logWarning('bufferToUrl: Unknown mimeType: ' + mimeType);
+            mimeType = 'image/jpeg';
+            break;
+    }
+    return 'data:' + mimeType + ';base64,' + btoa(binary);
+}
