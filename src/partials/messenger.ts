@@ -16,7 +16,7 @@
  */
 
 import {ContactControllerModel} from '../controller_model/contact';
-import {bufferToUrl, supportsPassive, throttle, u8aToHex} from '../helpers';
+import {bufferToUrl, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
@@ -94,7 +94,7 @@ class SendFileController extends DialogController {
         this.previewDataUrl = bufferToUrl(
             this.preview.data,
             this.preview.fileType,
-            (msg) => $log.warn(this.logTag, msg),
+            logAdapter($log.warn, this.logTag),
         );
     }
 

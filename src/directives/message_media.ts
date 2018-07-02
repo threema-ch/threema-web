@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {bufferToUrl} from '../helpers';
+import {bufferToUrl, logAdapter} from '../helpers';
 import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';
 import {WebClientService} from '../services/webclient';
@@ -77,7 +77,7 @@ export default [
                         thumbnailPreviewUri = bufferToUrl(
                             (this.message as threema.Message).thumbnail.preview,
                             webClientService.appCapabilities.imageFormat.thumbnail,
-                            (msg: string) => $log.warn(this.logTag, msg),
+                            logAdapter($log.warn, this.logTag),
                         );
                     }
                     return thumbnailPreviewUri;

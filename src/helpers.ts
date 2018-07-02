@@ -312,3 +312,14 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (
     }
     return 'data:' + mimeType + ';base64,' + btoa(binary);
 }
+
+/**
+ * Adapter for creating a logging function.
+ *
+ * Example usage:
+ *
+ * const logWarning = logAdapter($log.warn, '[AvatarService]');
+ */
+export function logAdapter(logFunc: (...msg: string[]) => void, logTag: string): ((msg: string) => void) {
+    return (msg: string) => logFunc(logTag, msg);
+}
