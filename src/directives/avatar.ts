@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {bufferToUrl, logAdapter} from '../helpers';
 import {isEchoContact, isGatewayContact} from '../receiver_helpers';
 import {WebClientService} from '../services/webclient';
 import {isContactReceiver} from '../typeguards';
@@ -22,11 +23,11 @@ import {isContactReceiver} from '../typeguards';
 export default [
     '$rootScope',
     '$timeout',
-    '$filter',
+    '$log',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
              $timeout: ng.ITimeoutService,
-             $filter: ng.IFilterService,
+             $log: ng.ILogService,
              webClientService: WebClientService) {
         return {
             restrict: 'E',
@@ -37,6 +38,8 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
+                this.logTag = '[Directives.Avatar]';
+
                 this.highResolution = this.resolution === 'high';
                 this.isLoading = this.highResolution;
                 this.backgroundColor = this.receiver.color;
@@ -76,12 +79,20 @@ export default [
                 /**
                  * Convert avatar bytes to an URI.
                  */
+                let avatarUri = null;
                 this.avatarToUri = (data: ArrayBuffer) => {
                     if (data === null || data === undefined) {
                         return '';
                     }
-                    const filter = $filter('bufferToUrl') as (data: ArrayBuffer, mime: string) => string;
-                    return filter(data, webClientService.appCapabilities.imageFormat.avatar);
+                    if (avatarUri === null) {
+                        // Cache avatar image URI
+                        avatarUri = bufferToUrl(
+                            data,
+                            webClientService.appCapabilities.imageFormat.avatar,
+                            logAdapter($log.warn, this.logTag),
+                        );
+                    }
+                    return avatarUri;
                 };
 
                 /**
