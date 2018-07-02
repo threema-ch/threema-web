@@ -95,38 +95,7 @@ if(typeof module === "object" && module.exports){
         }
     };
 
-    var top = {
-        isAttached: function(el){
-            return el.scrollTop <= 1;
-        },
-        scroll: function(el){
-            el.scrollTop = 0;
-        }
-    };
-
-    var right = {
-        isAttached: function(el){
-            return el.scrollLeft + el.clientWidth + 1 >= el.scrollWidth;
-        },
-        scroll: function(el){
-            el.scrollLeft = el.scrollWidth;
-        }
-    };
-
-    var left = {
-        isAttached: function(el){
-            return el.scrollLeft <= 1;
-        },
-        scroll: function(el){
-            el.scrollLeft = 0;
-        }
-    };
-
     var module = angular.module('luegg.directives', []);
 
     createDirective(module, 'scrollGlue', bottom);
-    createDirective(module, 'scrollGlueTop', top);
-    createDirective(module, 'scrollGlueBottom', bottom);
-    createDirective(module, 'scrollGlueLeft', left);
-    createDirective(module, 'scrollGlueRight', right);
 }(angular));
