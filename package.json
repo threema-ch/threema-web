@@ -71,7 +71,7 @@
   "devDependencies": {
     "@types/jasmine": "^2.8.8",
     "angular-mocks": "~1.5.10",
-    "budo": "^11",
+    "budo": "^9",
     "concurrently": "~3.3.0",
     "jasmine": "^3.1.0",
     "jasmine-core": "~2.5.2",
