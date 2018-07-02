@@ -16,7 +16,7 @@
  */
 
 import {ContactControllerModel} from '../controller_model/contact';
-import {supportsPassive, throttle, u8aToHex} from '../helpers';
+import {bufferToUrl, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
@@ -77,17 +77,25 @@ class DialogController {
  * Handle sending of files.
  */
 class SendFileController extends DialogController {
-    public static $inject = ['$mdDialog', 'CONFIG', 'preview'];
+    public static $inject = ['$mdDialog', '$log', 'CONFIG', 'preview'];
+    private logTag: string = '[SendFileController]';
 
     public caption: string;
     public sendAsFile: boolean = false;
-    public preview: threema.FileMessageData | null = null;
+    private preview: threema.FileMessageData | null = null;
+    public previewDataUrl: string | null = null;
 
     constructor($mdDialog: ng.material.IDialogService,
+                $log: ng.ILogService,
                 CONFIG: threema.Config,
                 preview: threema.FileMessageData) {
         super($mdDialog, CONFIG);
         this.preview = preview;
+        this.previewDataUrl = bufferToUrl(
+            this.preview.data,
+            this.preview.fileType,
+            (msg) => $log.warn(this.logTag, msg),
+        );
     }
 
     public send(): void {
@@ -104,7 +112,7 @@ class SendFileController extends DialogController {
     }
 
     public hasPreview(): boolean {
-        return this.preview !== null && this.preview !== undefined;
+        return this.previewDataUrl !== null && this.previewDataUrl !== undefined;
     }
 }
 
@@ -536,7 +544,7 @@ class ConversationController {
                             <md-dialog class="send-file-dialog">
                                 <md-dialog-content class="md-dialog-content">
                                     <h2 class="md-title">${title}</h2>
-                                    <img class="preview" ng-if="ctrl.hasPreview()" ng-src="{{ ctrl.preview.data | bufferToUrl: ctrl.preview.fileType }}" />
+                                    <img class="preview" ng-if="ctrl.hasPreview()" ng-src="{{ ctrl.previewDataUrl }}" />
                                     <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="!${showSendAsFileCheckbox} || ctrl.sendAsFile || ${captionSupported}">
                                         <input maxlength="1000" md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
                                     </md-input-container>
