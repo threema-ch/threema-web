@@ -126,7 +126,7 @@ export default [
                     }
                     // get first
                     fetchFileContent(fileList[0]).then((data: ArrayBuffer) => {
-                        const image = $filter('bufferToUrl')(data, 'image/jpeg', false);
+                        const image = $filter('bufferToUrl')(data, 'image/jpeg', 'avatareditor-upload', false);
                         setImage(image);
                     }).catch((ev: ErrorEvent) => {
                         $log.error(logTag, 'Could not load file:', ev.message);

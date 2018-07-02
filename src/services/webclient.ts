@@ -2641,7 +2641,7 @@ export class WebClientService {
                 }
                 const tag = conversation.type + '-' + conversation.id;
                 const avatar = (sender.avatar && sender.avatar.low)
-                    ? this.$filter('bufferToUrl')(sender.avatar.low, 'image/png')
+                    ? this.$filter('bufferToUrl')(sender.avatar.low, 'image/png', 'notification-avatar')
                     : null;
                 this.notificationService.showNotification(tag, title, body, avatar, () => {
                     this.$state.go('messenger.home.conversation', {

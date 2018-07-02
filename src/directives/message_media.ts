@@ -120,6 +120,7 @@ export default [
                                 this.thumbnail = bufferToUrlFilter(
                                     this.message.thumbnail.img,
                                     webClientService.appCapabilities.imageFormat.thumbnail,
+                                    'messagemedia1',
                                 );
                                 return;
                             } else {
@@ -132,6 +133,7 @@ export default [
                                             this.thumbnail = bufferToUrlFilter(
                                                 img,
                                                 webClientService.appCapabilities.imageFormat.thumbnail,
+                                                'messagemedia2',
                                             );
                                             this.thumbnailDownloading = false;
                                         });
@@ -175,7 +177,7 @@ export default [
                                     <md-dialog-content layout="row" layout-align="center">
                                         <audio
                                             controls
-                                            autoplay ng-src="{{ ctrl.blobBuffer | bufferToUrl:ctrl.mimeType }}">
+                                            autoplay ng-src="{{ ctrl.blobBuffer | bufferToUrl:ctrl.mimeType:'audioplayer' }}">
                                             Your browser does not support the <code>audio</code> element.
                                         </audio>
                                     </md-dialog-content>

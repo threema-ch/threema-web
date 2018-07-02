@@ -253,7 +253,8 @@ angular.module('3ema.filters', [])
  */
 .filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
     const logTag = '[filters.bufferToUrl]';
-    return function(buffer: ArrayBuffer, mimeType: string, trust: boolean = true) {
+    return function(buffer: ArrayBuffer, mimeType: string, tag: string, trust: boolean = true) {
+        console.warn('bufferToUrl:', tag);
         if (!buffer) {
             $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
             return '';
