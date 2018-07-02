@@ -280,7 +280,7 @@ declare namespace threema {
         members: string[];
         administrator: string;
         access: GroupReceiverAccess;
-        createdAt?: string;
+        createdAt: number;
     }
 
     /**

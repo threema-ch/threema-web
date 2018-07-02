@@ -10,7 +10,7 @@
 				<md-card-title-text>
 					<span class="md-headline">
 						<span translate>messenger.GROUP_CREATOR</span>
-						<span ng-if="ctrl.receiver.createdAt"> ({{ctrl.receiver.createdAt}})</span>
+						<span ng-if="ctrl.receiver.createdAt"> ({{ ctrl.receiver.createdAt | unixToTimestring }})</span>
 					</span>
 				</md-card-title-text>
 			</md-card-title>
