@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {bufferToUrl} from '../helpers';
 import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';
 import {WebClientService} from '../services/webclient';
@@ -51,26 +52,46 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.logTag = '[MessageMedia]';
+
                 this.type = this.message.type;
+
+                // Downloading
                 this.downloading = false;
                 this.thumbnailDownloading = false;
                 this.downloaded = false;
-                this.timeout = null as ng.IPromise<void>;
+
+                // Uploading
                 this.uploading = this.message.temporaryId !== undefined
                     && this.message.temporaryId !== null;
+
+                // AnimGIF detection
                 this.isAnimGif = !this.uploading
                     && (this.message as threema.Message).type === 'file'
                     && (this.message as threema.Message).file.type === 'image/gif';
-                // do not show thumbnail in file messages (except anim gif
-                // if a thumbnail in file messages are available, the thumbnail
+
+                // Preview thumbnail
+                let thumbnailPreviewUri = null;
+                this.getThumbnailPreviewUri = () => {
+                    // Cache thumbnail preview URI
+                    if (thumbnailPreviewUri === null) {
+                        thumbnailPreviewUri = bufferToUrl(
+                            (this.message as threema.Message).thumbnail.preview,
+                            webClientService.appCapabilities.imageFormat.thumbnail,
+                            (msg: string) => $log.warn(this.logTag, msg),
+                        );
+                    }
+                    return thumbnailPreviewUri;
+                };
+
+                // Thumbnail loading
+                //
+                // Do not show thumbnail in file messages (except anim gif).
+                // If a thumbnail in file messages are available, the thumbnail
                 // will be shown in the file circle
                 this.showThumbnail = this.message.thumbnail !== undefined
-                    && ((this.message as threema.Message).type !== 'file'
-                        || this.isAnimGif);
-
+                    && ((this.message as threema.Message).type !== 'file' || this.isAnimGif);
                 this.thumbnail = null;
                 this.thumbnailFormat = webClientService.appCapabilities.imageFormat.thumbnail;
-
                 if (this.message.thumbnail !== undefined) {
                     this.thumbnailStyle = {
                         width: this.message.thumbnail.width + 'px',
@@ -94,9 +115,9 @@ export default [
                         this.thumbnail = null;
                     } else {
                         if (this.thumbnail === null) {
-                            const bufferToUrl = $filter<any>('bufferToUrl');
+                            const bufferToUrlFilter = $filter<any>('bufferToUrl');
                             if (this.message.thumbnail.img !== undefined) {
-                                this.thumbnail = bufferToUrl(
+                                this.thumbnail = bufferToUrlFilter(
                                     this.message.thumbnail.img,
                                     webClientService.appCapabilities.imageFormat.thumbnail,
                                 );
@@ -108,7 +129,7 @@ export default [
                                         this.receiver,
                                         this.message).then((img) => {
                                         $timeout(() => {
-                                            this.thumbnail = bufferToUrl(
+                                            this.thumbnail = bufferToUrlFilter(
                                                 img,
                                                 webClientService.appCapabilities.imageFormat.thumbnail,
                                             );

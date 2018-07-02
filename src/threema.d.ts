@@ -55,7 +55,7 @@ declare namespace threema {
 
     interface Thumbnail {
         img?: string;
-        preview: string;
+        preview: ArrayBuffer;
         width: number;
         height: number;
     }
