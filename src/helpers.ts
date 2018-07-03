@@ -323,3 +323,10 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (
 export function logAdapter(logFunc: (...msg: string[]) => void, logTag: string): ((msg: string) => void) {
     return (msg: string) => logFunc(logTag, msg);
 }
+
+/**
+ * Return whether a value is not null and not undefined.
+ */
+export function hasValue(val: any): boolean {
+    return val !== null && val !== undefined;
+}

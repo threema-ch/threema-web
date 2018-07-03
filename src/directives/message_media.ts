@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {bufferToUrl, logAdapter} from '../helpers';
+import {bufferToUrl, hasValue, logAdapter} from '../helpers';
 import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';
 import {WebClientService} from '../services/webclient';
@@ -73,7 +73,7 @@ export default [
                 let thumbnailPreviewUri = null;
                 this.getThumbnailPreviewUri = () => {
                     // Cache thumbnail preview URI
-                    if (thumbnailPreviewUri === null) {
+                    if (thumbnailPreviewUri === null && hasValue(this.message) && hasValue(this.message.thumbnail)) {
                         thumbnailPreviewUri = bufferToUrl(
                             (this.message as threema.Message).thumbnail.preview,
                             webClientService.appCapabilities.imageFormat.thumbnail,
