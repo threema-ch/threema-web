@@ -55,7 +55,7 @@
 
     <!-- Anim GIF -->
     <div class="animgif" ng-if="ctrl.downloaded && ctrl.isAnimGif">
-        <img ng-src="{{ ctrl.blobBuffer | bufferToUrl: 'image/gif'}}" />
+        <img ng-src="{{ ctrl.blobBufferUrl }}" />
     </div>
 
     <!-- Other file messages -->

@@ -222,9 +222,13 @@ export default [
                                         break;
                                     case 'file':
                                         if (this.message.file.type === 'image/gif') {
-                                            // show inline
-                                            this.blobBuffer = blobInfo.buffer;
-                                            // hide thumbnail
+                                            // Show inline
+                                            this.blobBufferUrl = bufferToUrl(
+                                                blobInfo.buffer,
+                                                'image/gif',
+                                                logAdapter($log.warn, this.logTag),
+                                            );
+                                            // Hide thumbnail
                                             this.showThumbnail = false;
                                         } else {
                                             saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
