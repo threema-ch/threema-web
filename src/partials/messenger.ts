@@ -91,11 +91,13 @@ class SendFileController extends DialogController {
                 preview: threema.FileMessageData) {
         super($mdDialog, CONFIG);
         this.preview = preview;
-        this.previewDataUrl = bufferToUrl(
-            this.preview.data,
-            this.preview.fileType,
-            logAdapter($log.warn, this.logTag),
-        );
+        if (preview !== null) {
+            this.previewDataUrl = bufferToUrl(
+                this.preview.data,
+                this.preview.fileType,
+                logAdapter($log.warn, this.logTag),
+            );
+        }
     }
 
     public send(): void {
