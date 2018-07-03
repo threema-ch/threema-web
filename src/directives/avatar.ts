@@ -79,20 +79,23 @@ export default [
                 /**
                  * Convert avatar bytes to an URI.
                  */
-                let avatarUri = null;
-                this.avatarToUri = (data: ArrayBuffer) => {
+                const avatarUri = {
+                    high: null,
+                    low: null,
+                };
+                this.avatarToUri = (data: ArrayBuffer, res: 'high' | 'low') => {
                     if (data === null || data === undefined) {
                         return '';
                     }
-                    if (avatarUri === null) {
+                    if (avatarUri[res] === null) {
                         // Cache avatar image URI
-                        avatarUri = bufferToUrl(
+                        avatarUri[res] = bufferToUrl(
                             data,
                             webClientService.appCapabilities.imageFormat.avatar,
                             logAdapter($log.warn, this.logTag),
                         );
                     }
-                    return avatarUri;
+                    return avatarUri[res];
                 };
 
                 /**
@@ -105,7 +108,7 @@ export default [
                 this.getAvatarUri = () => {
                     /// If an avatar for the chosen resolution exists, convert it to an URI and return
                     if (this.avatarExists()) {
-                        return this.avatarToUri(this.receiver.avatar[this.resolution]);
+                        return this.avatarToUri(this.receiver.avatar[this.resolution], this.resolution);
                     }
 
                     // Otherwise, if we requested a high res avatar but
@@ -114,7 +117,7 @@ export default [
                         && this.receiver.avatar !== undefined
                         && this.receiver.avatar.low !== undefined
                         && this.receiver.avatar.low !== null) {
-                        return this.avatarToUri(this.receiver.avatar.low);
+                        return this.avatarToUri(this.receiver.avatar.low, 'low');
                     }
 
                     // As a fallback, get the default avatar.
