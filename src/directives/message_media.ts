@@ -115,27 +115,26 @@ export default [
                         this.thumbnail = null;
                     } else {
                         if (this.thumbnail === null) {
-                            const bufferToUrlFilter = $filter<any>('bufferToUrl');
-                            if (this.message.thumbnail.img !== undefined) {
-                                this.thumbnail = bufferToUrlFilter(
-                                    this.message.thumbnail.img,
+                            const setThumbnail = (buf: ArrayBuffer) => {
+                                this.thumbnail = bufferToUrl(
+                                    buf,
                                     webClientService.appCapabilities.imageFormat.thumbnail,
+                                    logAdapter($log.warn, this.logTag),
                                 );
+                            };
+
+                            if (this.message.thumbnail.img !== undefined) {
+                                setThumbnail(this.message.thumbnail.img);
                                 return;
                             } else {
                                 this.thumbnailDownloading = true;
                                 loadingThumbnailTimeout = $timeout(() => {
-                                    webClientService.requestThumbnail(
-                                        this.receiver,
-                                        this.message).then((img) => {
-                                        $timeout(() => {
-                                            this.thumbnail = bufferToUrlFilter(
-                                                img,
-                                                webClientService.appCapabilities.imageFormat.thumbnail,
-                                            );
+                                    webClientService
+                                        .requestThumbnail(this.receiver, this.message)
+                                        .then((img) => $timeout(() => {
+                                            setThumbnail(img);
                                             this.thumbnailDownloading = false;
-                                        });
-                                    });
+                                        }));
                                 }, 1000);
                             }
                         }
