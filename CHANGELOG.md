@@ -3,6 +3,16 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.7][v2.0.0-beta.7] (2018-07-03)
+
+Changes:
+
+* [feature] Show a message when copying text to the clipboard ([#517][i517])
+* [change] Hide battery icon after 1 minute without connectivity
+* [change] Disable flashing of "low battery" icon due to browser
+  performance issues ([#519][i519])
+* [bug] Fix a lot of UI performance issues ([#480][i480])
+
 ### [v2.0.0-beta.6][v2.0.0-beta.6] (2018-06-26)
 
 Changes:
@@ -508,8 +518,12 @@ First public release.
 [i441]: https://github.com/threema-ch/threema-web/issues/441
 [i445]: https://github.com/threema-ch/threema-web/issues/445
 [i472]: https://github.com/threema-ch/threema-web/issues/472
+[i480]: https://github.com/threema-ch/threema-web/issues/480
 [i503]: https://github.com/threema-ch/threema-web/issues/503
+[i517]: https://github.com/threema-ch/threema-web/issues/517
+[i519]: https://github.com/threema-ch/threema-web/issues/519
 
+[v2.0.0-beta.7]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.6...v2.0.0-beta.7
 [v2.0.0-beta.6]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.5...v2.0.0-beta.6
 [v2.0.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.4...v2.0.0-beta.5
 [v2.0.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.3...v2.0.0-beta.4
