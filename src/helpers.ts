@@ -299,6 +299,7 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (
         case 'image/jpeg':
         case 'image/png':
         case 'image/webp':
+        case 'image/gif':
         case 'audio/mp4':
         case 'audio/aac':
         case 'audio/ogg':
