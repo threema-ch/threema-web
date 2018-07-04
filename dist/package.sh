@@ -76,7 +76,6 @@ targets=(
     angular-translate/dist/angular-translate.min.js
     angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js
     angular-translate/dist/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.min.js
-    angular-messages/angular-messages.min.js
     sdp/sdp.js
 )
 

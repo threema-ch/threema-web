@@ -8,7 +8,6 @@ LICENSE_FILES=(
     'angular-aria' 'node_modules/angular-aria/LICENSE.md'
     'angular-inview' 'public/libs/angular-inview/LICENSE'
     'angular-material' 'node_modules/angular-material/LICENSE'
-    'angular-messages' 'node_modules/angular-messages/LICENSE.md'
     'angular-qrcode' '.licenses/angular-qrcode'
     'angular-route' 'node_modules/angular-route/LICENSE.md'
     'angular-sanitize' 'node_modules/angular-sanitize/LICENSE.md'
