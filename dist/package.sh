@@ -63,7 +63,8 @@ targets=(
     @saltyrtc/task-relayed-data/dist/saltyrtc-task-relayed-data.es5.js
     webrtc-adapter/out/adapter_no_edge.js
     webrtc-adapter/out/adapter.js
-    qrcode-generator/js/qrcode.js
+    qrcode-generator/qrcode.js
+    qrcode-generator/qrcode_UTF8.js
     angular-qrcode/angular-qrcode.js
     angularjs-scroll-glue/src/scrollglue.js
     angular-material/angular-material.min.js

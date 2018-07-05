@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {getSenderIdentity} from '../helpers/messages';
 import {MessageService} from '../services/message';
 import {ReceiverService} from '../services/receiver';
 import {WebClientService} from '../services/webclient';
@@ -33,80 +34,73 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                // Utilities
-                const getIdentity = function(message) {
-                    // TODO: Get rid of duplication with eeeMessage directive
-                    if (message.isOutbox) {
-                        return webClientService.me.id;
+                this.$onInit = function() {
+
+                    // Conversation properties
+                    this.isGroup = this.type as threema.ReceiverType === 'group';
+                    this.isDistributionList = !this.isGroup
+                        && this.type as threema.ReceiverType === 'distributionList';
+
+                    this.showVoipInfo = this.message
+                        && (this.message as threema.Message).type === 'voipStatus';
+
+                    if (this.showVoipInfo) {
+                        this.statusIcon = 'phone_locked';
+                    } else if (this.isGroup) {
+                        this.statusIcon = 'group';
+                    } else if (this.isDistributionList) {
+                        this.statusIcon = 'forum';
+                    } else if (!this.message.isOutbox) {
+                        this.statusIcon = 'reply';
+                    } else if (messageService.showStatusIcon(this.message, this.receiver)) {
+                        // Show status icon of incoming messages every time
+                        this.statusIcon = $filter('messageStateIcon')(this.message);
+                    } else {
+                        // Do not show a status icon
+                        this.statusIcon = null;
                     }
-                    if (message.partnerId !== null) {
-                        return message.partnerId;
+
+                    // Find sender of latest message
+                    this.contact = null;
+                    if (this.message) {
+                        this.contact = webClientService.contacts.get(
+                            getSenderIdentity(this.message, webClientService.me.id),
+                        );
                     }
-                    return null;
-                };
-                // Conversation properties
 
-                this.isGroup = this.type as threema.ReceiverType === 'group';
-                this.isDistributionList = !this.isGroup
-                    && this.type as threema.ReceiverType === 'distributionList';
+                    // Typing indicator
+                    this.isTyping = () => false;
+                    if (this.isGroup === false
+                        && this.isDistributionList === false
+                        && this.contact !== null) {
+                        this.isTyping = () => {
+                            return webClientService.isTyping(this.contact);
+                        };
+                    }
 
-                this.showVoipInfo = this.message
-                    && (this.message as threema.Message).type === 'voipStatus';
-
-                if (this.showVoipInfo) {
-                    this.statusIcon = 'phone_locked';
-                } else if (this.isGroup) {
-                    this.statusIcon = 'group';
-                } else if (this.isDistributionList) {
-                    this.statusIcon = 'forum';
-                } else if (!this.message.isOutbox) {
-                    this.statusIcon = 'reply';
-                } else if (messageService.showStatusIcon(this.message, this.receiver)) {
-                    // Show status icon of incoming messages every time
-                    this.statusIcon = $filter('messageStateIcon')(this.message);
-                } else {
-                    // Do not show a status icon
-                    this.statusIcon = null;
-                }
-
-                // Find sender of latest message in group chats
-                this.contact = null;
-                if (this.message) {
-                    this.contact = webClientService.contacts.get(getIdentity(this.message));
-                }
-
-                // Typing indicator
-                this.isTyping = () => false;
-                if (this.isGroup === false
-                    && this.isDistributionList === false
-                    && this.contact !== null) {
-                    this.isTyping = () => {
-                        return webClientService.isTyping(this.contact);
+                    this.isHidden = () => {
+                        return this.receiver.locked;
                     };
-                }
 
-                this.isHidden = () => {
-                    return this.receiver.locked;
+                    // Show...
+                    this.showIcon = this.message
+                        && this.message.type !== 'text'
+                        && this.message.type !== 'status';
+
+                    this.getDraft = () => {
+                        return webClientService.getDraft(this.receiver);
+                    };
+
+                    this.showDraft = () => {
+                        if (receiverService.isConversationActive(this.receiver)) {
+                            // Don't show draft if conversation is active
+                            return false;
+                        }
+                        const draft = this.getDraft();
+                        return draft !== undefined && draft !== null;
+                    };
+
                 };
-
-                // Show...
-                this.showIcon = this.message
-                    && this.message.type !== 'text'
-                    && this.message.type !== 'status';
-
-                this.getDraft = () => {
-                    return webClientService.getDraft(this.receiver);
-                };
-
-                this.showDraft = () => {
-                    if (receiverService.isConversationActive(this.receiver)) {
-                        // Don't show draft if conversation is active
-                        return false;
-                    }
-                    const draft = this.getDraft();
-                    return draft !== undefined && draft !== null;
-                };
-
             }],
             templateUrl: 'directives/latest_message.html',
         };

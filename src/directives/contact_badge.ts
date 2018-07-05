@@ -37,20 +37,22 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                if (this.contactReceiver === undefined) {
-                    this.contactReceiver = webClientService.contacts.get(this.identity);
-                } else {
-                    this.identity = this.contactReceiver.id;
-                }
-
-                this.click = () => {
-                    if (this.linked !== undefined
-                        && this.linked === true) {
-                        $state.go('messenger.home.conversation', {type: 'contact', id: this.identity, initParams: null});
+                this.$onInit = function() {
+                    if (this.contactReceiver === undefined) {
+                        this.contactReceiver = webClientService.contacts.get(this.identity);
+                    } else {
+                        this.identity = this.contactReceiver.id;
                     }
-                };
 
-                this.showActions = this.onRemove !== undefined;
+                    this.click = () => {
+                        if (this.linked !== undefined
+                            && this.linked === true) {
+                            $state.go('messenger.home.conversation', {type: 'contact', id: this.identity, initParams: null});
+                        }
+                    };
+
+                    this.showActions = this.onRemove !== undefined;
+                };
             }],
             template: `
                 <div class="contact-badge receiver-badge" ng-click="ctrl.click()">

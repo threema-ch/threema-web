@@ -26,20 +26,22 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                const msg = this.message as threema.Message;
+                this.$onInit = function() {
+                    const msg = this.message as threema.Message;
 
-                this.type = msg.type;
-                this.isGif = msg.file !== undefined && msg.file.type === 'image/gif';
+                    this.type = msg.type;
+                    this.isGif = msg.file !== undefined && msg.file.type === 'image/gif';
 
-                // For audio, video or voip call, retrieve the duration
-                this.duration = null;
-                if (this.message.audio !== undefined) {
-                    this.duration = this.message.audio.duration;
-                } else if (this.message.video !== undefined) {
-                    this.duration = this.message.video.duration;
-                } else if (this.message.voip !== undefined && this.message.voip.duration) {
-                    this.duration = this.message.voip.duration;
-                }
+                    // For audio, video or voip call, retrieve the duration
+                    this.duration = null;
+                    if (msg.audio !== undefined) {
+                        this.duration = msg.audio.duration;
+                    } else if (msg.video !== undefined) {
+                        this.duration = msg.video.duration;
+                    } else if (msg.voip !== undefined && msg.voip.duration) {
+                        this.duration = msg.voip.duration;
+                    }
+                };
             }],
             template: `
                 <span ng-if="ctrl.isGif" class="message-meta-item">GIF</span>

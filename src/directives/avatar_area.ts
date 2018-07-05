@@ -52,91 +52,92 @@ export default [
                 this.avatar = null; // Type: String
                 this.avatarFormat = webClientService.appCapabilities.imageFormat.avatar;
 
-                this.imageChanged = function(image: ArrayBuffer, notify = true) {
-                    this.isLoading = true;
-                    if (notify === true && this.onChange !== undefined) {
-                        this.onChange(image);
+                this.$onInit = function() {
+                    this.imageChanged = function(image: ArrayBuffer, notify = true) {
+                        this.isLoading = true;
+                        if (notify === true && this.onChange !== undefined) {
+                            this.onChange(image);
+                        }
+                        this.avatar = image;
+                        this.isLoading = false;
+                    };
+
+                    if (this.loadAvatar !== undefined) {
+                        this.isLoading = true;
+                        (this.loadAvatar as Promise<ArrayBuffer>)
+                            .then((image: ArrayBuffer) => {
+                                $rootScope.$apply(() => {
+                                    this.avatar = image;
+                                    this.isLoading = false;
+                                });
+                            })
+                            .catch(() => {
+                                $rootScope.$apply(() => {
+                                    this.isLoading = false;
+                                });
+                            });
                     }
-                    this.avatar = image;
-                    this.isLoading = false;
-                };
 
-                if (this.loadAvatar !== undefined) {
-                    this.isLoading = true;
-                    (this.loadAvatar as Promise<ArrayBuffer>)
-                        .then((image: ArrayBuffer) => {
-                            $rootScope.$apply(() => {
-                                this.avatar = image;
-                                this.isLoading = false;
-                            });
+                    this.delete = () => {
+                        this.imageChanged(null, true);
+                    };
+
+                    // show editor in a dialog
+                    this.modify = (ev) => {
+                        $mdDialog.show({
+                            controllerAs: 'ctrl',
+                            controller: function() {
+                                this.avatar = null;
+
+                                this.apply = () => {
+                                    $mdDialog.hide(this.avatar);
+                                };
+
+                                this.cancel = () => {
+                                    $mdDialog.cancel();
+                                };
+
+                                this.changeAvatar = (image: ArrayBuffer) => {
+                                    this.avatar = image;
+                                };
+                            },
+                            template: `
+                                <md-dialog translate-attr="{'aria-label': 'messenger.UPLOAD_AVATAR'}">
+                                    <form ng-cloak>
+                                     <md-toolbar>
+                                      <div class="md-toolbar-tools">
+                                       <h2 translate>messenger.UPLOAD_AVATAR</h2>
+                                       </div>
+                                       </md-toolbar>
+                                        <md-dialog-content>
+                                            <div class="md-dialog-content avatar-area editor">
+                                                <avatar-editor on-change="ctrl.changeAvatar"></avatar-editor>
+                                            </div>
+                                        </md-dialog-content>
+                                        <md-dialog-actions layout="row" >
+                                              <md-button ng-click="ctrl.cancel()">
+                                               <span translate>common.CANCEL</span>
+                                                </md-button>
+                                          <md-button ng-click="ctrl.apply()">
+                                             <span translate>common.OK</span>
+                                          </md-button>
+                                        </md-dialog-actions>
+                                    </form>
+                                </md-dialog>
+
+                            `,
+                            parent: angular.element(document.body),
+                            targetEvent: ev,
+                            clickOutsideToClose: true,
                         })
-                        .catch(() => {
-                            $rootScope.$apply(() => {
-                                this.isLoading = false;
-                            });
-                        });
-                }
-
-                this.delete = () => {
-                    this.imageChanged(null, true);
+                            .then((newImage: ArrayBuffer) => {
+                                // update image only if a image was set or if enable clear is true
+                                if (this.enableClear === true || newImage !== null) {
+                                    this.imageChanged(newImage, true);
+                                }
+                            }, () => null);
+                    };
                 };
-
-                // show editor in a dialog
-                this.modify = (ev) => {
-                    $mdDialog.show({
-                        controllerAs: 'ctrl',
-                        controller: function() {
-                            this.avatar = null;
-
-                            this.apply = () => {
-                                $mdDialog.hide(this.avatar);
-                            };
-
-                            this.cancel = () => {
-                                $mdDialog.cancel();
-                            };
-
-                            this.changeAvatar = (image: ArrayBuffer) => {
-                                this.avatar = image;
-                            };
-                        },
-                        template: `
-                            <md-dialog translate-attr="{'aria-label': 'messenger.UPLOAD_AVATAR'}">
-                                <form ng-cloak>
-                                 <md-toolbar>
-                                  <div class="md-toolbar-tools">
-                                   <h2 translate>messenger.UPLOAD_AVATAR</h2>
-                                   </div>
-                                   </md-toolbar>
-                                    <md-dialog-content>
-                                        <div class="md-dialog-content avatar-area editor">
-                                            <avatar-editor on-change="ctrl.changeAvatar"></avatar-editor>
-                                        </div>
-                                    </md-dialog-content>
-                                    <md-dialog-actions layout="row" >
-                                          <md-button ng-click="ctrl.cancel()">
-                                           <span translate>common.CANCEL</span>
-                                            </md-button>
-                                      <md-button ng-click="ctrl.apply()">
-                                         <span translate>common.OK</span>
-                                      </md-button>
-                                    </md-dialog-actions>
-                                </form>
-                            </md-dialog>
-
-                        `,
-                        parent: angular.element(document.body),
-                        targetEvent: ev,
-                        clickOutsideToClose: true,
-                    })
-                        .then((newImage: ArrayBuffer) => {
-                            // update image only if a image was set or if enable clear is true
-                            if (this.enableClear === true || newImage !== null) {
-                                this.imageChanged(newImage, true);
-                            }
-                        }, () => null);
-                };
-
             }],
             template: `
                 <div class="avatar-area overview">
