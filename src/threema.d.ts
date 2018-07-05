@@ -126,8 +126,24 @@ declare namespace threema {
         duration: number;
     }
 
+    const enum VoipStatus {
+        Missed = 1,
+        Finished = 2,
+        Rejected = 3,
+        Aborted = 4,
+    }
+
+    const enum VoipRejectReason {
+        Unknown = 0,
+        Busy = 1,
+        Timeout = 2,
+        Rejected = 3,
+    }
+
     interface VoipStatusInfo {
-        status: number;
+        status: VoipStatus;
+        duration?: number;
+        reason?: VoipRejectReason;
     }
 
     interface LocationInfo {
