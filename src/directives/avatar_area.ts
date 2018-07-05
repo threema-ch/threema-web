@@ -17,6 +17,7 @@
 
 // tslint:disable:max-line-length
 
+import {bufferToUrl, logAdapter} from '../helpers';
 import {WebClientService} from '../services/webclient';
 
 /**
@@ -25,16 +26,10 @@ import {WebClientService} from '../services/webclient';
 export default [
     '$rootScope',
     '$log',
-    '$window',
-    '$timeout',
-    '$translate',
     '$mdDialog',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
              $log: ng.ILogService,
-             $window: ng.IWindowService,
-             $timeout: ng.ITimeoutService,
-             $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              webClientService: WebClientService) {
         return {
@@ -48,17 +43,25 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
+                const logTag = '[AvatarAreaDirective]';
+
                 this.isLoading = false;
-                this.avatar = null; // Type: String
-                this.avatarFormat = webClientService.appCapabilities.imageFormat.avatar;
+                this.avatar = null; // String
+                const avatarFormat = webClientService.appCapabilities.imageFormat.avatar;
 
                 this.$onInit = function() {
-                    this.imageChanged = function(image: ArrayBuffer, notify = true) {
+                    this.setAvatar = (avatarBytes: ArrayBuffer) => {
+                        this.avatar = (avatarBytes === null)
+                            ? null
+                            : bufferToUrl(avatarBytes, avatarFormat, logAdapter($log.warn, logTag));
+                    };
+
+                    this.imageChanged = (image: ArrayBuffer, notify = true) => {
                         this.isLoading = true;
                         if (notify === true && this.onChange !== undefined) {
                             this.onChange(image);
                         }
-                        this.avatar = image;
+                        this.setAvatar(image);
                         this.isLoading = false;
                     };
 
@@ -67,7 +70,7 @@ export default [
                         (this.loadAvatar as Promise<ArrayBuffer>)
                             .then((image: ArrayBuffer) => {
                                 $rootScope.$apply(() => {
-                                    this.avatar = image;
+                                    this.setAvatar(image);
                                     this.isLoading = false;
                                 });
                             })
@@ -88,18 +91,9 @@ export default [
                             controllerAs: 'ctrl',
                             controller: function() {
                                 this.avatar = null;
-
-                                this.apply = () => {
-                                    $mdDialog.hide(this.avatar);
-                                };
-
-                                this.cancel = () => {
-                                    $mdDialog.cancel();
-                                };
-
-                                this.changeAvatar = (image: ArrayBuffer) => {
-                                    this.avatar = image;
-                                };
+                                this.apply = () => $mdDialog.hide(this.avatar);
+                                this.cancel = () => $mdDialog.cancel();
+                                this.changeAvatar = (image: ArrayBuffer) => this.avatar = image;
                             },
                             template: `
                                 <md-dialog translate-attr="{'aria-label': 'messenger.UPLOAD_AVATAR'}">
@@ -148,7 +142,7 @@ export default [
                                     md-diameter="96"></md-progress-circular>
 
                         </div>
-                        <img ng-src="{{ ctrl.avatar|bufferToUrl:ctrl.avatarFormat }}" ng-if="ctrl.avatar !== null" />
+                        <img ng-src="{{ ctrl.avatar }}" ng-if="ctrl.avatar !== null" />
                     </div>
                     <div class="avatar-area-navigation"  layout="row" layout-wrap layout-margin layout-align="center">
 
