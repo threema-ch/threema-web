@@ -26,7 +26,6 @@ export default [
             scope: {},
             bindToController: {
                 distributionListReceiver: '=eeeDistributionListReceiver',
-                contactReceiver: '=?eeeContactReceiver',
             },
             controllerAs: 'ctrl',
             controller: [function() {

@@ -26,40 +26,43 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                const contact: threema.ContactReceiver = this.contact;
+                this.$onInit = function() {
+                    const contact: threema.ContactReceiver = this.contact;
 
-                let label;
-                switch (contact.verificationLevel) {
-                    case 1:
-                        this.cls = 'level1';
-                        label = 'VERIFICATION_LEVEL1_EXPLAIN';
-                        break;
-                    case 2:
-                        this.cls = 'level2';
-                        if (contact.isWork) {
-                            label = 'VERIFICATION_LEVEL2_WORK_EXPLAIN';
-                        } else {
-                            label = 'VERIFICATION_LEVEL2_EXPLAIN';
-                        }
-                        break;
-                    case 3:
-                        this.cls = 'level3';
-                        label = 'VERIFICATION_LEVEL3_EXPLAIN';
-                        break;
-                    default:
-                        /* ignore, handled on next line */
-                }
+                    let label;
+                    switch (contact.verificationLevel) {
+                        case 1:
+                            this.cls = 'level1';
+                            label = 'VERIFICATION_LEVEL1_EXPLAIN';
+                            break;
+                        case 2:
+                            this.cls = 'level2';
+                            if (contact.isWork) {
+                                label = 'VERIFICATION_LEVEL2_WORK_EXPLAIN';
+                            } else {
+                                label = 'VERIFICATION_LEVEL2_EXPLAIN';
+                            }
+                            break;
+                        case 3:
+                            this.cls = 'level3';
+                            label = 'VERIFICATION_LEVEL3_EXPLAIN';
+                            break;
+                        default:
+                            /* ignore, handled on next line */
+                    }
 
-                if (label === undefined) {
-                    $log.error('invalid verification level', this.level);
-                    return;
-                }
+                    if (label === undefined) {
+                        $log.error('invalid verification level', this.level);
+                        return;
+                    }
 
-                if (contact.isWork) {
-                    // append work class
-                    this.cls += ' work';
-                }
-                this.description = $translate.instant('messenger.' + label);
+                    if (contact.isWork) {
+                        // append work class
+                        this.cls += ' work';
+                    }
+
+                    this.description = $translate.instant('messenger.' + label);
+                };
             }],
             template: `
                 <span class="verification-dots {{ctrl.cls}}" title="{{ctrl.description}}">

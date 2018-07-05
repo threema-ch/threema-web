@@ -27,11 +27,13 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.status = this.message.voip.status;
-                this.duration = this.message.voip.duration;
-                this.reason = this.message.voip.reason;
-                this.incoming = !this.message.isOutbox;
-                this.outgoing = this.message.isOutbox;
+                this.$onInit = function() {
+                    this.status = this.message.voip.status;
+                    this.duration = this.message.voip.duration;
+                    this.reason = this.message.voip.reason;
+                    this.incoming = !this.message.isOutbox;
+                    this.outgoing = this.message.isOutbox;
+                };
             }],
             template: `
                 <p ng-if="ctrl.status === 1">

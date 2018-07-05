@@ -18,6 +18,8 @@
 import {hasFeature} from '../helpers';
 import {WebClientService} from '../services/webclient';
 
+const AUTOCOMPLETE_MAX_RESULTS = 20;
+
 export default [
     '$log', 'WebClientService',
     function($log: ng.ILogService, webClientService: WebClientService) {
@@ -31,8 +33,6 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                const AUTOCOMPLETE_MAX_RESULTS = 20;
-
                 // Cache all contacts with group chat support
                 this.allContacts = Array
                     .from(webClientService.contacts.values())

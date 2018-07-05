@@ -31,29 +31,27 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.showRoleIcon = this.contactReceiver !== undefined;
-                if (this.showRoleIcon) {
-
-                    if (this.contactReceiver.id === this.groupReceiver.administrator) {
-                        this.roleIcon = 'people';
-                        $translate('messenger.GROUP_ROLE_CREATOR')
-                            .then((label) =>  {
-                                this.roleName = label;
-                            });
-                    } else {
-                        this.roleIcon = 'people_outline';
-                        $translate('messenger.GROUP_ROLE_NORMAL')
-                            .then((label) =>  {
-                                this.roleName = label;
-                            });
-                    }
-                }
                 this.click = () => {
                     $state.go('messenger.home.conversation', {
                         type: 'group',
                         id: this.groupReceiver.id,
                         initParams: null,
                     });
+                };
+
+                this.$onInit = function() {
+                    this.showRoleIcon = this.contactReceiver !== undefined;
+                    if (this.showRoleIcon) {
+                        if (this.contactReceiver.id === this.groupReceiver.administrator) {
+                            this.roleIcon = 'people';
+                            $translate('messenger.GROUP_ROLE_CREATOR')
+                                .then((label) => this.roleName = label);
+                        } else {
+                            this.roleIcon = 'people_outline';
+                            $translate('messenger.GROUP_ROLE_NORMAL')
+                                .then((label) => this.roleName = label);
+                        }
+                    }
                 };
             }],
             template: `
