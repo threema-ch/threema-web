@@ -84,8 +84,8 @@ angular.module('3ema.filters', [])
         email: true,
         // Don't link phone numbers (doesn't work reliably)
         phone: false,
-        // Don't link twitter handles
-        twitter: false,
+        // Don't link mentions
+        mention: false,
         // Don't link hashtags
         hashtag: false,
     });
