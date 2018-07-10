@@ -10,13 +10,15 @@ declare namespace __Autolinker {
     hashtag?: boolean | string;
     newWindow?: boolean;
     phone?: boolean;
-    replaceFn?: (autolinker: Autolinker, match: any) => string;
+    replaceFn?: (match: any) => string;
     stripPrefix?: boolean;
+    stripTrailingSlash?: boolean;
     truncate?: number | { length?: number; location?: string; };
-    twitter?: boolean;
-    urls?: boolean | { schemeMatches: boolean; wwwMatches: boolean; tldMatches: boolean; }
+    mention?: 'twitter' | 'instagram' | false;
+    decodePercentEncoding?: boolean;
+    urls?: boolean | { schemeMatches: boolean; wwwMatches: boolean; tldMatches: boolean; };
   }
-  
+
   interface Autolinker {
     getTagBuilder(): any;
     /**
@@ -28,7 +30,7 @@ declare namespace __Autolinker {
      */
     parse(textOrHtml: string): any[];
   }
-  
+
   interface Static {
     new(cfg?: ConfigOptions): Autolinker;
     /**

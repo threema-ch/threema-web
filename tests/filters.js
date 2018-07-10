@@ -422,4 +422,35 @@ describe('Filters', function() {
         });
     });
 
+    describe('linkify', function() {
+        let process = (text) => {
+            return $filter('linkify')(text)
+        };
+
+        it('links http urls', () => {
+            expect(process('hello https://threema.ch/!'))
+                .toEqual('hello <a href="https://threema.ch/" class="autolinked autolinked-url" target="_blank" rel="noopener noreferrer">https://threema.ch</a>!');
+        });
+
+        it('links e-mails', () => {
+            expect(process('hello info@threema.ch!'))
+                .toEqual('hello <a href="mailto:info@threema.ch" class="autolinked autolinked-email" target="_blank" rel="noopener noreferrer">info@threema.ch</a>!');
+        });
+
+        it('does not link phone numbers', () => {
+            const input = 'hello +41791234567';
+            expect(process(input)).toEqual(input);
+        });
+
+        it('does not link mentions', () => {
+            const input = 'hello @threemaapp';
+            expect(process(input)).toEqual(input);
+        });
+
+        it('does not link hashtags', () => {
+            const input = 'hello #threema';
+            expect(process(input)).toEqual(input);
+        });
+    });
+
 });
