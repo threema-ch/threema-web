@@ -15,13 +15,15 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 /**
  * Show a contact receiver with small avatar, name and verification level
  */
 export default [
     '$translate',
     '$state',
-    function($translate, $state: ng.ui.IStateService) {
+    function($translate, $state: UiStateService) {
         return {
             restrict: 'EA',
             scope: {},

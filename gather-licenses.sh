@@ -12,7 +12,7 @@ LICENSE_FILES=(
     'angular-route' 'node_modules/angular-route/LICENSE.md'
     'angular-sanitize' 'node_modules/angular-sanitize/LICENSE.md'
     'angular-translate' 'node_modules/angular-translate/LICENSE'
-    'angular-ui-router' 'node_modules/angular-ui-router/LICENSE'
+    'angular-ui-router' 'node_modules/@uirouter/angularjs/LICENSE'
     'angularjs-scroll-glue' '.licenses/angularjs-scroll-glue'
     'autolinker' 'node_modules/autolinker/LICENSE'
     'babel-es6-polyfill' '.licenses/babel-es6-polyfill'

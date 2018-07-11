@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import {SettingsService} from './settings';
 
 export class NotificationService {
@@ -26,7 +28,7 @@ export class NotificationService {
 
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
 
     private settingsService: SettingsService;
     private logTag = '[NotificationService]';
@@ -48,7 +50,7 @@ export class NotificationService {
     public static $inject = ['$log', '$window', '$state', 'SettingsService'];
 
     constructor($log: ng.ILogService, $window: ng.IWindowService,
-                $state: ng.ui.IStateService, settingsService: SettingsService) {
+                $state: UiStateService, settingsService: SettingsService) {
         this.$log = $log;
         this.$window = $window;
         this.$state = $state;

@@ -72,7 +72,7 @@ targets=(
     croppie/croppie.min.js
     croppie/croppie.css
     autolinker/dist/Autolinker.min.js
-    angular-ui-router/release/angular-ui-router.min.js
+    @uirouter/angularjs/release/angular-ui-router.min.js
     messageformat/messageformat.min.js
     angular-translate/dist/angular-translate.min.js
     angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js

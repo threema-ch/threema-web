@@ -17,6 +17,8 @@
 
 // tslint:disable:max-line-length
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import {WebClientService} from '../services/webclient';
 
 /**
@@ -25,7 +27,7 @@ import {WebClientService} from '../services/webclient';
 export default [
     'WebClientService',
     '$state',
-    function(webClientService: WebClientService, $state: ng.ui.IStateService) {
+    function(webClientService: WebClientService, $state: UiStateService) {
         return {
             restrict: 'EA',
             scope: {},

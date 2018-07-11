@@ -472,24 +472,6 @@ declare namespace threema {
         text: string;
     }
 
-    /**
-     * The $stateParams format used for the welcome controller.
-     */
-    interface WelcomeStateParams extends ng.ui.IStateParamsService {
-        initParams: null | {keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array};
-    }
-
-    interface CreateReceiverStateParams extends ng.ui.IStateParamsService {
-        type: ReceiverType;
-        initParams: null | {identity: string | null};
-    }
-
-    interface ConversationStateParams extends ng.ui.IStateParamsService {
-        type: ReceiverType;
-        id: string;
-        initParams: null | {text: string | null};
-    }
-
     interface Quote {
         identity: string;
         text: string;
