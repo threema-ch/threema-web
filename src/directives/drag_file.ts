@@ -78,14 +78,34 @@ export default [
                     });
                 }
 
+                function detectMimeType(file: File, buffer: ArrayBuffer): string {
+                    const mimeType = file.type;
+                    if (mimeType === 'application/octet-stream') {
+                        // Detection of GIF files fails on macOS, so do it ourselves using magic numbers.
+                        // Header GIF87a: 47 49 46 38 37 61
+                        // Header GIF89a: 47 49 46 38 39 61
+                        const header = new Uint8Array(buffer.slice(0, 6));
+                        if (header[0] === 47 &&
+                            header[1] === 49 &&
+                            header[2] === 46 &&
+                            header[3] === 38 &&
+                            ((header[4] === 37) || (header[4] === 39)) &&
+                            header[5] === 61) {
+                            return 'image/gif';
+                        }
+                    }
+                    return mimeType;
+                }
+
                 function uploadFiles(fileList: FileList): void {
                     scope.onUploading(true, 0, 0);
                     fetchFileListContents(fileList).then((data: Map<File, ArrayBuffer>) => {
                         const fileMessages = [];
                         data.forEach((buffer, file) => {
+                            const mimeType = detectMimeType(file, buffer);
                             const fileMessageData: threema.FileMessageData = {
                                 name: file.name,
-                                fileType: file.type,
+                                fileType: mimeType,
                                 size: file.size,
                                 data: buffer,
                             };
