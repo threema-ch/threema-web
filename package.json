@@ -58,7 +58,7 @@
     "croppie": "~2.4.0",
     "file-saver": "^1.3.8",
     "js-sha256": "~0.3.2",
-    "messageformat": "~1.0.2",
+    "messageformat": "~2",
     "msgpack-lite": "~0.1.26",
     "node-sass": "^4.9.2",
     "sdp": "~1.3.0",
