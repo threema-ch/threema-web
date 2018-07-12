@@ -256,7 +256,7 @@ export default [
             template: `
                 <div class="avatar-editor">
                     <div class="avatar-editor-drag croppie-container"></div>
-                    <div class="avatar-editor-navigation"  layout="column" layout-wrap layout-margin layout-align="center center">
+                    <div class="avatar-editor-navigation" layout="column" layout-wrap layout-margin layout-align="center center">
                         <input class="file-input" type="file" style="visibility: hidden" multiple/>
                           <md-button type="submit" class="file-trigger md-raised">
                             <span translate>messenger.UPLOAD_AVATAR</span>

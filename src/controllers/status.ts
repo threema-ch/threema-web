@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import {ControllerService} from '../services/controller';
 import {StateService} from '../services/state';
 import {WebClientService} from '../services/webclient';
@@ -45,8 +47,8 @@ export class StatusController {
 
     // Angular services
     private $timeout: ng.ITimeoutService;
-    private $state: ng.ui.IStateService;
     private $log: ng.ILogService;
+    private $state: UiStateService;
 
     // Custom services
     private stateService: StateService;
@@ -55,7 +57,7 @@ export class StatusController {
 
     public static $inject = ['$scope', '$timeout', '$log', '$state', 'StateService',
         'WebClientService', 'ControllerService'];
-    constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: ng.ui.IStateService,
+    constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: UiStateService,
                 stateService: StateService, webClientService: WebClientService,
                 controllerService: ControllerService) {
 

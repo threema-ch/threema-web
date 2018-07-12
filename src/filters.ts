@@ -84,8 +84,8 @@ angular.module('3ema.filters', [])
         email: true,
         // Don't link phone numbers (doesn't work reliably)
         phone: false,
-        // Don't link twitter handles
-        twitter: false,
+        // Don't link mentions
+        mention: false,
         // Don't link hashtags
         hashtag: false,
     });
@@ -266,6 +266,7 @@ angular.module('3ema.filters', [])
         }
     };
 }])
+
 .filter('mapLink', function() {
     return function(location: threema.LocationInfo) {
         return 'https://www.openstreetmap.org/?mlat='
@@ -273,6 +274,7 @@ angular.module('3ema.filters', [])
             + location.lon;
     };
 })
+
 /**
  * Convert message state to material icon class.
  */
@@ -481,6 +483,13 @@ angular.module('3ema.filters', [])
         }
         return 'off';
     };
+}])
+
+/**
+ * Mark data as trusted.
+ */
+.filter('unsafeResUrl', ['$sce', function($sce: ng.ISCEService) {
+    return $sce.trustAsResourceUrl;
 }])
 
 ;

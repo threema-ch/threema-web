@@ -126,8 +126,24 @@ declare namespace threema {
         duration: number;
     }
 
+    const enum VoipStatus {
+        Missed = 1,
+        Finished = 2,
+        Rejected = 3,
+        Aborted = 4,
+    }
+
+    const enum VoipRejectReason {
+        Unknown = 0,
+        Busy = 1,
+        Timeout = 2,
+        Rejected = 3,
+    }
+
     interface VoipStatusInfo {
-        status: number;
+        status: VoipStatus;
+        duration?: number;
+        reason?: VoipRejectReason;
     }
 
     interface LocationInfo {
@@ -454,24 +470,6 @@ declare namespace threema {
     interface TextMessageData extends MessageData {
         // Text to be sent
         text: string;
-    }
-
-    /**
-     * The $stateParams format used for the welcome controller.
-     */
-    interface WelcomeStateParams extends ng.ui.IStateParamsService {
-        initParams: null | {keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array};
-    }
-
-    interface CreateReceiverStateParams extends ng.ui.IStateParamsService {
-        type: ReceiverType;
-        initParams: null | {identity: string | null};
-    }
-
-    interface ConversationStateParams extends ng.ui.IStateParamsService {
-        type: ReceiverType;
-        id: string;
-        initParams: null | {text: string | null};
     }
 
     interface Quote {

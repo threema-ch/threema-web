@@ -1,4 +1,6 @@
 /**
+ * Copyright © 2016-2018 Threema GmbH (https://threema.ch/).
+ *
  * This file is part of Threema Web.
  *
  * Threema Web is free software: you can redistribute it and/or modify it
@@ -15,5 +17,14 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare function sha224(val: string | Array<any> | Uint8Array | ArrayBuffer): string;
-declare function sha256(val: string | Array<any> | Uint8Array | ArrayBuffer): string;
+import {sha256} from '../../src/helpers/crypto';
+
+describe('Crypto Helpers', () => {
+    it('sha256', function(done) {
+        const arr = Uint8Array.of(1, 2, 4, 8, 254, 255);
+        sha256(arr.buffer).then((hash) => {
+            expect(hash).toEqual('54caf7192551d011c9018e6e00b0f2d13f71784277d581fc5146182cb8af4181');
+            done();
+        });
+    });
+});

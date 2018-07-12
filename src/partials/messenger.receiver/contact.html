@@ -25,7 +25,7 @@
 				</dd>
 
 				<dt><span translate>messenger.KEY_FINGERPRINT</span></dt>
-				<dd>{{ ctrl.fingerPrint }}</dd>
+				<dd>{{ ctrl.fingerPrint.value || "Loading..." }}</dd>
 
 				<dt><span translate>messenger.NICKNAME</span></dt>
 				<dd ng-if="ctrl.receiver.publicNickname" ng-bind-html="ctrl.receiver.publicNickname | emojify"></dd>
@@ -101,7 +101,7 @@
 		<md-card-content>
 			<ul class="group-list">
 				<li ng-repeat="distributionListReceiver in ctrl.inDistributionLists">
-					<eee-distribution-list-badge eee-distribution-list-receiver="distributionListReceiver" eee-contact-receiver="ctrl.receiver"/>
+					<eee-distribution-list-badge eee-distribution-list-receiver="distributionListReceiver"/>
 				</li>
 			</ul>
 		</md-card-content>

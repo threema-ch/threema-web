@@ -47,10 +47,14 @@ export default [
                             return null;
                     }
                 };
-                this.icon = getIcon(this.message.type);
+
+                this.$onInit = function() {
+                    this.icon = getIcon(this.message.type);
+                    this.altText = this.message.type + ' icon';
+                };
             }],
             template: `
-                <img ng-if="ctrl.icon !== null" ng-src="img/{{ ctrl.icon }}" alt="{{ ctrl.message.type }} icon" />
+                <img ng-if="ctrl.icon !== null" ng-src="img/{{ ctrl.icon }}" alt="{{ ctrl.altText }}" />
             `,
         };
     },

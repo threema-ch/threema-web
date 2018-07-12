@@ -19,6 +19,12 @@
 
 /// <reference path="../types/broadcastchannel.d.ts" />
 
+import {
+    StateParams as UiStateParams,
+    StateProvider as UiStateProvider,
+    StateService as UiStateService,
+} from '@uirouter/angularjs';
+
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
@@ -45,6 +51,10 @@ class DialogController {
     }
 }
 
+interface WelcomeStateParams extends UiStateParams {
+    initParams: null | {keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array};
+}
+
 class WelcomeController {
 
     private static REDIRECT_DELAY = 500;
@@ -53,11 +63,11 @@ class WelcomeController {
 
     // Angular services
     private $scope: ng.IScope;
-    private $state: ng.ui.IStateService;
     private $timeout: ng.ITimeoutService;
     private $interval: ng.IIntervalService;
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
+    private $state: UiStateService;
 
     // Material design services
     private $mdDialog: ng.material.IDialogService;
@@ -84,7 +94,7 @@ class WelcomeController {
         'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService', 'VersionService',
         'BROWSER_MIN_VERSIONS', 'CONFIG', 'ControllerService',
     ];
-    constructor($scope: ng.IScope, $state: ng.ui.IStateService, $stateParams: threema.WelcomeStateParams,
+    constructor($scope: ng.IScope, $state: UiStateService, $stateParams: WelcomeStateParams,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
                 $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
@@ -559,10 +569,9 @@ class WelcomeController {
 
 angular.module('3ema.welcome', [])
 
-.config(['$stateProvider', ($stateProvider: ng.ui.IStateProvider) => {
+.config(['$stateProvider', ($stateProvider: UiStateProvider) => {
 
     $stateProvider
-
         .state('welcome', {
             url: '/welcome',
             templateUrl: 'partials/welcome.html',

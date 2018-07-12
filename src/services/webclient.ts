@@ -19,6 +19,8 @@
 /// <reference types="@saltyrtc/task-webrtc" />
 /// <reference types="@saltyrtc/task-relayed-data" />
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import * as msgpack from 'msgpack-lite';
 import {hasFeature, hexToU8a, msgpackVisualizer} from '../helpers';
 import {isContactReceiver, isDistributionListReceiver, isGroupReceiver, isValidReceiverType} from '../typeguards';
@@ -118,7 +120,7 @@ export class WebClientService {
     private logTag: string = '[WebClientService]';
 
     // Angular services
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
     private $log: ng.ILogService;
     private $rootScope: any;
     private $q: ng.IQService;
@@ -210,7 +212,7 @@ export class WebClientService {
     constructor($log: ng.ILogService,
                 $rootScope: any,
                 $q: ng.IQService,
-                $state: ng.ui.IStateService,
+                $state: UiStateService,
                 $window: ng.IWindowService,
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,

@@ -15,23 +15,14 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {sha256} from '../helpers/crypto';
+// This file contains helper functions related to messages.
+// Try to keep all functions pure!
 
-export class FingerPrintService {
-    private $log: ng.ILogService;
-
-    public static $inject = ['$log'];
-    constructor($log: ng.ILogService) {
-        this.$log = $log;
-    }
-
-    public async generate(publicKey: ArrayBuffer): Promise<string> {
-        if (publicKey !== undefined && publicKey.byteLength === 32) {
-            const sha256PublicKey = await sha256(publicKey);
-            if (sha256PublicKey !== undefined) {
-                return sha256PublicKey.toLowerCase().substr(0, 32);
-            }
-        }
-        return 'undefined/failed';
-    }
+/**
+ * Return the sending identity of a message.
+ */
+export function getSenderIdentity(message: threema.Message, myId: string): string | null {
+    if (message.isOutbox) { return myId; }
+    if (message.partnerId != null) { return message.partnerId; }
+    return null;
 }

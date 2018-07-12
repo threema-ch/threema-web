@@ -9,7 +9,7 @@
     <battery-status></battery-status>
 
     <md-menu md-position-mode="target-right target" md-offset="0 45">
-        <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
             <i class="material-icons md-light md-24">more_vert</i>
         </md-button>
         <md-menu-content width="4">
@@ -45,10 +45,10 @@
 <div id="navigation-header">
     <div class="main">
         <md-nav-bar md-no-ink md-selected-nav-item="ctrl.activeTab" nav-bar-aria-label="navigation links">
-            <md-nav-item md-nav-click="" name="conversations">
+            <md-nav-item md-nav-click="1" name="conversations">
                 <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.CONVERSATIONS">speaker_notes</i>
             </md-nav-item>
-            <md-nav-item md-nav-click="" name="contacts">
+            <md-nav-item md-nav-click="1" name="contacts">
                 <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.CONTACTS">person</i>
             </md-nav-item>
         </md-nav-bar>

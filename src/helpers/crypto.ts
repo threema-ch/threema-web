@@ -15,23 +15,22 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {sha256} from '../helpers/crypto';
+// This file contains helper functions related to crypto.
+// Try to keep all functions pure!
 
-export class FingerPrintService {
-    private $log: ng.ILogService;
+import {u8aToHex} from '../helpers';
 
-    public static $inject = ['$log'];
-    constructor($log: ng.ILogService) {
-        this.$log = $log;
+/**
+ * Calculate the SHA256 hash of the specified bytes.
+ * Throw an Error if the SubtleCrypto API is not available.
+ */
+export async function sha256(bytes: ArrayBuffer): Promise<string> {
+    if (window.crypto === undefined) {
+        throw new Error('window.crypto API not available');
     }
-
-    public async generate(publicKey: ArrayBuffer): Promise<string> {
-        if (publicKey !== undefined && publicKey.byteLength === 32) {
-            const sha256PublicKey = await sha256(publicKey);
-            if (sha256PublicKey !== undefined) {
-                return sha256PublicKey.toLowerCase().substr(0, 32);
-            }
-        }
-        return 'undefined/failed';
+    if (window.crypto.subtle === undefined) {
+        throw new Error('window.subtle API not available');
     }
+    const buf: ArrayBuffer = await crypto.subtle.digest('SHA-256', bytes);
+    return u8aToHex(new Uint8Array(buf));
 }

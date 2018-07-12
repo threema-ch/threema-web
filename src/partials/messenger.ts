@@ -15,6 +15,14 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+    StateParams as UiStateParams,
+    StateProvider as UiStateProvider,
+    StateService as UiStateService,
+    Transition as UiTransition,
+    TransitionService as UiTransitionService,
+} from '@uirouter/angularjs';
+
 import {ContactControllerModel} from '../controller_model/contact';
 import {bufferToUrl, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {ContactService} from '../services/contact';
@@ -184,6 +192,12 @@ class SettingsController {
 
 }
 
+interface ConversationStateParams extends UiStateParams {
+    type: threema.ReceiverType;
+    id: string;
+    initParams: null | {text: string | null};
+}
+
 class ConversationController {
     public name = 'navigation';
     private logTag: string = '[ConversationController]';
@@ -191,7 +205,7 @@ class ConversationController {
     // Angular services
     private $stateParams;
     private $timeout: ng.ITimeoutService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
     private $log: ng.ILogService;
     private $scope: ng.IScope;
     private $rootScope: ng.IRootScopeService;
@@ -254,13 +268,13 @@ class ConversationController {
     };
 
     public static $inject = [
-        '$stateParams', '$state', '$timeout', '$log', '$scope', '$rootScope',
+        '$stateParams', '$timeout', '$log', '$scope', '$rootScope',
         '$mdDialog', '$mdToast', '$translate', '$filter',
+        '$state', '$transitions',
         'WebClientService', 'StateService', 'ReceiverService', 'MimeService', 'VersionService',
         'ControllerModelService',
     ];
-    constructor($stateParams: threema.ConversationStateParams,
-                $state: ng.ui.IStateService,
+    constructor($stateParams: ConversationStateParams,
                 $timeout: ng.ITimeoutService,
                 $log: ng.ILogService,
                 $scope: ng.IScope,
@@ -269,6 +283,8 @@ class ConversationController {
                 $mdToast: ng.material.IToastService,
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,
+                $state: UiStateService,
+                $transitions: UiTransitionService,
                 webClientService: WebClientService,
                 stateService: StateService,
                 receiverService: ReceiverService,
@@ -298,10 +314,11 @@ class ConversationController {
         this.maxTextLength = this.webClientService.getMaxTextLength();
         this.allText = this.$translate.instant('messenger.ALL');
 
-        // On every navigation event, close all dialogs.
-        // Note: Deprecated. When migrating ui-router ($state),
-        // replace with transition hooks.
-        $rootScope.$on('$stateChangeStart', () => this.$mdDialog.cancel());
+        // On every navigation event, close all dialogs using ui-router transition hooks.
+        $transitions.onStart({}, function(trans: UiTransition) {
+            const $mdDialogInner: ng.material.IDialogService = trans.injector().get('$mdDialog');
+            $mdDialogInner.cancel();
+        });
 
         // Check for version updates
         versionService.checkForUpdate();
@@ -838,14 +855,14 @@ class NavigationController {
 
     private $mdDialog;
     private $translate: ng.translate.ITranslateService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
 
     public static $inject = [
         '$log', '$state', '$mdDialog', '$translate',
         'WebClientService', 'StateService', 'ReceiverService', 'TrustedKeyStore',
     ];
 
-    constructor($log: ng.ILogService, $state: ng.ui.IStateService,
+    constructor($log: ng.ILogService, $state: UiStateService,
                 $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, stateService: StateService,
                 receiverService: ReceiverService,
@@ -1135,7 +1152,8 @@ class ReceiverDetailController {
 
     // Angular services
     private $mdDialog: any;
-    private $state: ng.ui.IStateService;
+    private $scope: ng.IScope;
+    private $state: UiStateService;
 
     // Own services
     private fingerPrintService: FingerPrintService;
@@ -1145,7 +1163,7 @@ class ReceiverDetailController {
     public receiver: threema.Receiver;
     public me: threema.MeReceiver;
     public title: string;
-    public fingerPrint?: string;
+    public fingerPrint = { value: null };  // Object, so that data binding works
     private showGroups = false;
     private showDistributionLists = false;
     private inGroups: threema.GroupReceiver[] = [];
@@ -1158,15 +1176,16 @@ class ReceiverDetailController {
     private controllerModel: threema.ControllerModel<threema.Receiver>;
 
     public static $inject = [
-        '$log', '$stateParams', '$state', '$mdDialog', '$translate',
+        '$scope', '$log', '$stateParams', '$state', '$mdDialog', '$translate',
         'WebClientService', 'FingerPrintService', 'ContactService', 'ControllerModelService',
     ];
-    constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService,
+    constructor($scope: ng.IScope, $log: ng.ILogService, $stateParams, $state: UiStateService,
                 $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, fingerPrintService: FingerPrintService,
                 contactService: ContactService, controllerModelService: ControllerModelService) {
 
         this.$mdDialog = $mdDialog;
+        this.$scope = $scope;
         this.$state = $state;
         this.fingerPrintService = fingerPrintService;
         this.contactService = contactService;
@@ -1189,7 +1208,10 @@ class ReceiverDetailController {
                 });
 
             this.isWorkReceiver = contactReceiver.identityType === threema.IdentityType.Work;
-            this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
+
+            this.fingerPrintService
+                .generate(contactReceiver.publicKey)
+                .then(this.setFingerPrint.bind(this));
 
             webClientService.groups.forEach((groupReceiver: threema.GroupReceiver) => {
                 // check if my identity is a member
@@ -1215,12 +1237,16 @@ class ReceiverDetailController {
         switch (this.receiver.type) {
             case 'me':
                 const meReceiver = this.receiver as threema.MeReceiver;
-                this.fingerPrint = this.fingerPrintService.generate(meReceiver.publicKey);
+                this.fingerPrintService
+                    .generate(meReceiver.publicKey)
+                    .then(this.setFingerPrint.bind(this));
                 this.controllerModel = controllerModelService.me(meReceiver, ControllerModelMode.VIEW);
                 break;
             case 'contact':
                 const contactReceiver = this.receiver as threema.ContactReceiver;
-                this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
+                this.fingerPrintService
+                    .generate(contactReceiver.publicKey)
+                    .then(this.setFingerPrint.bind(this));
                 this.controllerModel = controllerModelService
                     .contact(contactReceiver, ControllerModelMode.VIEW);
                 break;
@@ -1245,6 +1271,17 @@ class ReceiverDetailController {
             this.$state.go('messenger.home');
         });
 
+    }
+
+    /**
+     * Set the fingerprint value and run $digest.
+     *
+     * This may only be called from outside the $digest loop
+     * (e.g. from a plain promise callback).
+     */
+    private setFingerPrint(fingerPrint: string): void {
+        this.fingerPrint.value = fingerPrint;
+        this.$scope.$digest();
     }
 
     public chat(): void {
@@ -1309,7 +1346,7 @@ class ReceiverEditController {
     private logTag: string = '[ReceiverEditController]';
 
     public $mdDialog: any;
-    public $state: ng.ui.IStateService;
+    public $state: UiStateService;
     private $translate: ng.translate.ITranslateService;
 
     public title: string;
@@ -1324,7 +1361,7 @@ class ReceiverEditController {
         '$log', '$stateParams', '$state', '$mdDialog',
         '$timeout', '$translate', 'WebClientService', 'ControllerModelService',
     ];
-    constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService,
+    constructor($log: ng.ILogService, $stateParams, $state: UiStateService,
                 $mdDialog, $timeout: ng.ITimeoutService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, controllerModelService: ControllerModelService) {
 
@@ -1413,6 +1450,11 @@ class ReceiverEditController {
     }
 }
 
+interface CreateReceiverStateParams extends UiStateParams {
+    type: threema.ReceiverType;
+    initParams: null | {identity: string | null};
+}
+
 /**
  * Control creating a group or adding contact
  * fields, validate and save routines are implemented in the specific ControllerModel
@@ -1424,7 +1466,7 @@ class ReceiverCreateController {
     private loading = false;
     private $timeout: ng.ITimeoutService;
     private $log: ng.ILogService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
     private $mdToast: any;
     public identity = '';
     private $translate: any;
@@ -1435,8 +1477,8 @@ class ReceiverCreateController {
 
     public static $inject = ['$stateParams', '$mdDialog', '$mdToast', '$translate',
         '$timeout', '$state', '$log', 'ControllerModelService'];
-    constructor($stateParams: threema.CreateReceiverStateParams, $mdDialog, $mdToast, $translate,
-                $timeout: ng.ITimeoutService, $state: ng.ui.IStateService, $log: ng.ILogService,
+    constructor($stateParams: CreateReceiverStateParams, $mdDialog, $mdToast, $translate,
+                $timeout: ng.ITimeoutService, $state: UiStateService, $log: ng.ILogService,
                 controllerModelService: ControllerModelService) {
         this.$mdDialog = $mdDialog;
         this.$timeout = $timeout;
@@ -1514,7 +1556,7 @@ class ReceiverCreateController {
 
 angular.module('3ema.messenger', ['ngMaterial'])
 
-.config(['$stateProvider', function($stateProvider: ng.ui.IStateProvider) {
+.config(['$stateProvider', function($stateProvider: UiStateProvider) {
 
     $stateProvider
 
