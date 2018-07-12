@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {sha256} from '../helpers/crypto';
+
 export class PushService {
     private static ARG_TYPE = 'type';
     private static ARG_TOKEN = 'token';
@@ -72,15 +74,18 @@ export class PushService {
      * Send a push notification for the specified session (public permanent key
      * of the initiator). The promise is always resolved to a boolean.
      */
-    public sendPush(session: Uint8Array, wakeupType: threema.WakeupType): Promise<boolean> {
+    public async sendPush(session: Uint8Array, wakeupType: threema.WakeupType): Promise<boolean> {
         if (!this.isAvailable()) {
-            return Promise.resolve(false);
+            return false;
         }
+
+        // Calculate session hash
+        const sessionHash = await sha256(session.buffer);
 
         // Prepare request
         const data = {
             [PushService.ARG_TYPE]: this.pushType,
-            [PushService.ARG_SESSION]: sha256(session),
+            [PushService.ARG_SESSION]: sessionHash,
             [PushService.ARG_VERSION]: this.version,
             [PushService.ARG_WAKEUP_TYPE]: wakeupType,
         };
@@ -89,7 +94,7 @@ export class PushService {
             const parts = this.pushToken.split(';');
             if (parts.length < 3) {
                 this.$log.warn(this.logTag, 'APNS push token contains', parts.length, 'parts, at least 3 are required');
-                return Promise.resolve(false);
+                return false;
             }
             data[PushService.ARG_TOKEN] = parts[0];
             data[PushService.ARG_ENDPOINT] = parts[1];
@@ -98,7 +103,7 @@ export class PushService {
             data[PushService.ARG_TOKEN] = this.pushToken;
         } else {
             this.$log.warn(this.logTag, 'Invalid push type');
-            return Promise.resolve(false);
+            return false;
         }
 
         const request = {
@@ -127,6 +132,6 @@ export class PushService {
                     resolve(false);
                 },
             );
-        });
+        }) as Promise<boolean>;
     }
 }

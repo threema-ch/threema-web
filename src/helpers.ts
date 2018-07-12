@@ -331,3 +331,10 @@ export function logAdapter(logFunc: (...msg: string[]) => void, logTag: string):
 export function hasValue(val: any): boolean {
     return val !== null && val !== undefined;
 }
+
+/**
+ * Awaitable timeout function.
+ */
+export function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}

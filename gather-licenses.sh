@@ -24,7 +24,6 @@ LICENSE_FILES=(
     'EmojiOne JS' '.licenses/emojione-js'
     'EmojiOne Artwork' '.licenses/emojione-artwork'
     'file-saver' 'node_modules/file-saver/LICENSE.md'
-    'js-sha256' 'node_modules/js-sha256/LICENSE.txt'
     'messageformat' 'node_modules/messageformat/LICENSE'
     'msgpack-lite' 'node_modules/msgpack-lite/LICENSE'
     'node-sass' 'node_modules/node-sass/LICENSE'

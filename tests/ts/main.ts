@@ -21,5 +21,6 @@
 /// <reference path="../../src/threema.d.ts" />
 
 import './containers';
+import './crypto_helpers';
 import './helpers';
 import './receiver_helpers';

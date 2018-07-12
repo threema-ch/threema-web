@@ -1152,6 +1152,7 @@ class ReceiverDetailController {
 
     // Angular services
     private $mdDialog: any;
+    private $scope: ng.IScope;
     private $state: UiStateService;
 
     // Own services
@@ -1162,7 +1163,7 @@ class ReceiverDetailController {
     public receiver: threema.Receiver;
     public me: threema.MeReceiver;
     public title: string;
-    public fingerPrint?: string;
+    public fingerPrint = { value: null };  // Object, so that data binding works
     private showGroups = false;
     private showDistributionLists = false;
     private inGroups: threema.GroupReceiver[] = [];
@@ -1175,15 +1176,16 @@ class ReceiverDetailController {
     private controllerModel: threema.ControllerModel<threema.Receiver>;
 
     public static $inject = [
-        '$log', '$stateParams', '$state', '$mdDialog', '$translate',
+        '$scope', '$log', '$stateParams', '$state', '$mdDialog', '$translate',
         'WebClientService', 'FingerPrintService', 'ContactService', 'ControllerModelService',
     ];
-    constructor($log: ng.ILogService, $stateParams, $state: UiStateService,
+    constructor($scope: ng.IScope, $log: ng.ILogService, $stateParams, $state: UiStateService,
                 $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, fingerPrintService: FingerPrintService,
                 contactService: ContactService, controllerModelService: ControllerModelService) {
 
         this.$mdDialog = $mdDialog;
+        this.$scope = $scope;
         this.$state = $state;
         this.fingerPrintService = fingerPrintService;
         this.contactService = contactService;
@@ -1206,7 +1208,10 @@ class ReceiverDetailController {
                 });
 
             this.isWorkReceiver = contactReceiver.identityType === threema.IdentityType.Work;
-            this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
+
+            this.fingerPrintService
+                .generate(contactReceiver.publicKey)
+                .then(this.setFingerPrint.bind(this));
 
             webClientService.groups.forEach((groupReceiver: threema.GroupReceiver) => {
                 // check if my identity is a member
@@ -1232,12 +1237,16 @@ class ReceiverDetailController {
         switch (this.receiver.type) {
             case 'me':
                 const meReceiver = this.receiver as threema.MeReceiver;
-                this.fingerPrint = this.fingerPrintService.generate(meReceiver.publicKey);
+                this.fingerPrintService
+                    .generate(meReceiver.publicKey)
+                    .then(this.setFingerPrint.bind(this));
                 this.controllerModel = controllerModelService.me(meReceiver, ControllerModelMode.VIEW);
                 break;
             case 'contact':
                 const contactReceiver = this.receiver as threema.ContactReceiver;
-                this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
+                this.fingerPrintService
+                    .generate(contactReceiver.publicKey)
+                    .then(this.setFingerPrint.bind(this));
                 this.controllerModel = controllerModelService
                     .contact(contactReceiver, ControllerModelMode.VIEW);
                 break;
@@ -1262,6 +1271,17 @@ class ReceiverDetailController {
             this.$state.go('messenger.home');
         });
 
+    }
+
+    /**
+     * Set the fingerprint value and run $digest.
+     *
+     * This may only be called from outside the $digest loop
+     * (e.g. from a plain promise callback).
+     */
+    private setFingerPrint(fingerPrint: string): void {
+        this.fingerPrint.value = fingerPrint;
+        this.$scope.$digest();
     }
 
     public chat(): void {

@@ -56,7 +56,6 @@
     "browserify-header": "^0.9.4",
     "croppie": "~2.6.0",
     "file-saver": "^1.3.8",
-    "js-sha256": "~0.3.2",
     "messageformat": "~2",
     "msgpack-lite": "~0.1.26",
     "node-sass": "^4.9.2",
