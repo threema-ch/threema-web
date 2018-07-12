@@ -21,11 +21,8 @@ import TaskConnectionState = threema.TaskConnectionState;
 
 /**
  * Wrapper around the WebRTC PeerConnection.
- *
- * TODO: Convert to regular service?
  */
 export class PeerConnectionHelper {
-
     private logTag: string = '[PeerConnectionHelper]';
 
     // Angular services
