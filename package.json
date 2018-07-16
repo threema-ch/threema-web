@@ -20,6 +20,7 @@
     "lint": "npm run lint:ts && npm run lint:sass",
     "lint:ts": "tslint -c tslint.json --project tsconfig.json --exclude \"**/src/config.ts\"",
     "lint:sass": "sass-lint -v -q",
+    "lint:sass:fix": "sass-lint-auto-fix",
     "clean": "rm -rf js/ build/ dist/app*"
   },
   "keywords": [
@@ -91,6 +92,7 @@
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^2.0.1",
     "sass-lint": "^1.12.1",
+    "sass-lint-auto-fix": "^0.15.1",
     "selenium-webdriver": "^4.0.0-alpha.1",
     "term-color": "^1.0.1",
     "ts-node": "^7.0.1",

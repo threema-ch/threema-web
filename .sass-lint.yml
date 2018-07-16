@@ -1,9 +1,9 @@
 # Linter Options
 options:
   # Don't merge default rules
-  merge-default-rules: false
+  merge-default-rules: true
   # Raise an error if more than 50 warnings are generated
-  max-warnings: 50
+  max-warnings: 0
 
 # File Options
 files:
@@ -11,3 +11,10 @@ files:
 
 # Rule Configuration
 rules:
+  # Style Guide
+  indentation:
+    - 2
+    - size: 4
+  property-sort-order:
+    - 2
+    - order: concentric
