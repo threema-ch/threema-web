@@ -1,0 +1,13 @@
+# Linter Options
+options:
+  # Don't merge default rules
+  merge-default-rules: false
+  # Raise an error if more than 50 warnings are generated
+  max-warnings: 50
+
+# File Options
+files:
+  include: 'src/sass/**/*.s+(a|c)ss'
+
+# Rule Configuration
+rules:
