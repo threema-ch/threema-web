@@ -209,13 +209,13 @@ export default [
                     <div class="blocked-indicator"  ng-if="ctrl.showBlocked()"
                         translate-attr="{'aria-label': 'messenger.THREEMA_BLOCKED_RECEIVER',
                             'title': 'messenger.THREEMA_BLOCKED_RECEIVER'}">
-                        <img src="img/ic_blocked_24px.svg" alt="blocked icon"/>
+                        <img src="img/ic_blocked_24px.svg" alt="blocked icon">
                     </div>
                     <img
                          ng-class="ctrl.avatarClass()"
                          ng-style="{ 'background-color': ctrl.backgroundColor }"
                          ng-src="{{ ctrl.getAvatarUri() }}"
-                         in-view="ctrl.requestAvatar($inview)"/>
+                         in-view="ctrl.requestAvatar($inview)">
                </div>
             `,
         };

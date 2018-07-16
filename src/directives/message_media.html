@@ -55,7 +55,7 @@
 
     <!-- Anim GIF -->
     <div class="animgif" ng-if="ctrl.downloaded && ctrl.isAnimGif">
-        <img ng-src="{{ ctrl.blobBufferUrl }}" />
+        <img ng-src="{{ ctrl.blobBufferUrl }}">
     </div>
 
     <!-- Other file messages -->
@@ -77,7 +77,7 @@
         </div>
         <div class="circle"
              ng-if="ctrl.downloaded && ctrl.message.thumbnail.preview == undefined">
-            <img ng-src="{{ ctrl.message.file.type | mimeTypeIcon }}"/>
+            <img ng-src="{{ ctrl.message.file.type | mimeTypeIcon }}">
         </div>
 
         <!-- File information -->

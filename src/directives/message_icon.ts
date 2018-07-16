@@ -54,7 +54,7 @@ export default [
                 };
             }],
             template: `
-                <img ng-if="ctrl.icon !== null" ng-src="img/{{ ctrl.icon }}" alt="{{ ctrl.altText }}" />
+                <img ng-if="ctrl.icon !== null" ng-src="img/{{ ctrl.icon }}" alt="{{ ctrl.altText }}">
             `,
         };
     },

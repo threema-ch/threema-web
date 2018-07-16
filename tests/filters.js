@@ -130,8 +130,8 @@ describe('Filters', function() {
             this.testPatterns([
                 ['https://en.wikipedia.org/wiki/Java_class_file *nice*',
                  'https://en.wikipedia.org/wiki/Java_class_file <span class="text-bold">nice</span>'],
-                ['<a href="https://threema.ch/>_Threema_</a>',
-                 '<a href="https://threema.ch/><span class="text-italic">Threema</span></a>'],
+                ['<a href="https://threema.ch">_Threema_</a>',
+                 '<a href="https://threema.ch"><span class="text-italic">Threema</span></a>'],
             ]);
         });
 
