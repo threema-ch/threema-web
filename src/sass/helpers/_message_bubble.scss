@@ -13,6 +13,6 @@ $bubble-triangle-size: $main-padding;
   transform: rotate(-45deg);
   width: $bubble-triangle-size;
   height: $bubble-triangle-size;
-  left: ($bubble-triangle-size/2);
+  left: $bubble-triangle-size / 2;
   top: $bubble-triangle-size;
 }

@@ -14,12 +14,11 @@
 }
 
 #main-wrapper {
-    height: 100%;
     margin: 0 auto;
     width: 98vw;
+    height: calc(100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});
     max-width: 450px;
     max-height: 575px;
-    height: calc(100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});
     &.wide {
         max-width: 1500px;
         max-height: inherit;
@@ -35,7 +34,6 @@
 }
 
 #main-wrapper {
-
     // Set min height of messenger
     &.wide #main {
         min-height: 272px;
@@ -46,7 +44,6 @@
         min-height: 620px;
         height: auto;
     }
-
 }
 
 #main-content {
@@ -55,7 +52,6 @@
 }
 
 #messenger {
-
     transition: all 1s ease-out;
     display: flex;
     width: 100%;
@@ -74,9 +70,7 @@
             height: 100%;
             background-color: #efebe9;
 
-            /**
-                Default style for the header in the detail
-             */
+            // Default style for the header in the detail
             .detail-header {
                 box-shadow: 1px 2px 4px -2px rgba(0, 0, 0, 0.2);
                 background-color: $dark-background-color;

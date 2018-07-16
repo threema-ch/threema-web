@@ -39,9 +39,6 @@
     opacity: 0.5;
   }
 
-  /**
-    Contact badge specific rules
-   */
   &.contact-badge {
     .contact-badge-identity {
       flex: 1;
@@ -51,15 +48,9 @@
     }
   }
 
-  /**
-    Distribution List badge specific rules
-   */
   &.distribution-list-badge {
   }
 
-  /**
-    Group badge specific rules
-   */
   &.group-badge {
     .receiver-role {
       flex: 1;
