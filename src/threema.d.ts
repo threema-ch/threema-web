@@ -739,17 +739,11 @@ declare namespace threema {
         RelayedData = 'relayed-data',
     }
 
-    interface DisconnectMessage {
-        type: 'disconnect';
-        forget: boolean;
-        reason: DisconnectReason;
-    }
-
     const enum DisconnectReason {
-        SessionStopped = 1,
-        SessionDeleted = 2,
-        WebclientDisabled = 3,
-        SessionReplaced = 4,
+        SessionStopped = 'stop',
+        SessionDeleted = 'delete',
+        WebclientDisabled = 'disable',
+        SessionReplaced = 'replace',
     }
 
     namespace Container {

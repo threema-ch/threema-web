@@ -61,3 +61,19 @@ export function isValidReceiverType(
     }
     return false;
 }
+
+/**
+ * Valid disconnect reasons type guard
+ */
+export function isValidDisconnectReason(
+    reason: string,
+): reason is threema.DisconnectReason {
+    switch (reason) {
+        case 'stop':
+        case 'delete':
+        case 'disable':
+        case 'replace':
+            return true;
+    }
+    return false;
+}

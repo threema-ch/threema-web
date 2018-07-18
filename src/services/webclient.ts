@@ -22,8 +22,11 @@
 import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import * as msgpack from 'msgpack-lite';
-import {hasFeature, hexToU8a, msgpackVisualizer} from '../helpers';
-import {isContactReceiver, isDistributionListReceiver, isGroupReceiver, isValidReceiverType} from '../typeguards';
+import {hasFeature, hasValue, hexToU8a, msgpackVisualizer} from '../helpers';
+import {
+    isContactReceiver, isDistributionListReceiver, isGroupReceiver,
+    isValidDisconnectReason, isValidReceiverType,
+} from '../typeguards';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
 import {TrustedKeyStoreService} from './keystore';
@@ -81,6 +84,7 @@ export class WebClientService {
     private static SUB_TYPE_CLEAN_RECEIVER_CONVERSATION = 'cleanReceiverConversation';
     private static SUB_TYPE_CONFIRM_ACTION = 'confirmAction';
     private static SUB_TYPE_PROFILE = 'profile';
+    private static SUB_TYPE_CONNECTION_DISCONNECT = 'connectionDisconnect';
     private static ARGUMENT_MODE = 'mode';
     private static ARGUMENT_MODE_NEW = 'new';
     private static ARGUMENT_MODE_MODIFIED = 'modified';
@@ -462,13 +466,6 @@ export class WebClientService {
             }
         });
 
-        // Handle a disconnect request
-        this.salty.on('application', (applicationData: any) => {
-            if (applicationData.data.type === 'disconnect') {
-                this.onApplicationDisconnect(applicationData.data);
-            }
-        });
-
         // Handle disconnecting of a peer
         this.salty.on('peer-disconnected', (ev: saltyrtc.SaltyRTCEvent) => {
             this.$rootScope.$apply(() => {
@@ -636,43 +633,6 @@ export class WebClientService {
 
             // The communication channel is now open! Fetch initial data
             this.onConnectionEstablished(resetFields);
-        }
-    }
-
-    /**
-     * An 'application' message with type 'disconnect' arrived.
-     */
-    private onApplicationDisconnect(data: threema.DisconnectMessage) {
-        this.$log.debug(this.logTag, 'Disconnecting requested:', data);
-
-        const deleteStoredData = data.forget === true;
-        const resetPush = true;
-        const redirect = true;
-        this.stop(false, deleteStoredData, resetPush, redirect);
-
-        let message: string;
-        switch (data.reason) {
-            case threema.DisconnectReason.SessionStopped:
-                message = 'connection.SESSION_STOPPED';
-                break;
-            case threema.DisconnectReason.SessionDeleted:
-                message = 'connection.SESSION_DELETED';
-                break;
-            case threema.DisconnectReason.WebclientDisabled:
-                message = 'connection.WEBCLIENT_DISABLED';
-                break;
-            case threema.DisconnectReason.SessionReplaced:
-                message = 'connection.SESSION_REPLACED';
-                break;
-            default:
-                this.$log.warn(this.logTag, 'Unknown disconnect reason:', data.reason);
-        }
-
-        if (message !== undefined) {
-            this.$mdDialog.show(this.$mdDialog.alert()
-                .title(this.$translate.instant('connection.SESSION_CLOSED_TITLE'))
-                .textContent(this.$translate.instant(message))
-                .ok(this.$translate.instant('common.OK')));
         }
     }
 
@@ -1741,6 +1701,54 @@ export class WebClientService {
             message: message.data.message,
         } as threema.Alert);
 
+    }
+
+    /**
+     * A connectionDisconnect message arrived.
+     */
+    private _receiveConnectionDisconnect(message: threema.WireMessage) {
+        this.$log.debug('Received connectionDisconnect from device');
+
+        if (!hasValue(message.data) || !hasValue(message.data.reason)) {
+            this.$log.warn(this.logTag, 'Invalid connectionDisconnect message: data or reason missing');
+            return;
+        }
+        const reason = message.data.reason;
+
+        this.$log.debug(this.logTag, 'Disconnecting requested: reason=', reason);
+
+        let alertMessage: string;
+        let deleteStoredData: boolean;
+        switch (reason) {
+            case threema.DisconnectReason.SessionStopped:
+                deleteStoredData = false;
+                alertMessage = 'connection.SESSION_STOPPED';
+                break;
+            case threema.DisconnectReason.SessionDeleted:
+                deleteStoredData = true;
+                alertMessage = 'connection.SESSION_DELETED';
+                break;
+            case threema.DisconnectReason.WebclientDisabled:
+                deleteStoredData = false;
+                alertMessage = 'connection.WEBCLIENT_DISABLED';
+                break;
+            case threema.DisconnectReason.SessionReplaced:
+                deleteStoredData = false;
+                alertMessage = 'connection.SESSION_REPLACED';
+                break;
+            default:
+                this.$log.error(this.logTag, 'Unknown disconnect reason:', reason);
+        }
+        const resetPush = true;
+        const redirect = true;
+        this.stop(false, deleteStoredData, resetPush, redirect);
+
+        if (alertMessage !== undefined) {
+            this.$mdDialog.show(this.$mdDialog.alert()
+                .title(this.$translate.instant('connection.SESSION_CLOSED_TITLE'))
+                .textContent(this.$translate.instant(alertMessage))
+                .ok(this.$translate.instant('common.OK')));
+        }
     }
 
     /**
@@ -2918,6 +2926,9 @@ export class WebClientService {
                 break;
             case WebClientService.SUB_TYPE_ALERT:
                 this._receiveAlert(message);
+                break;
+            case WebClientService.SUB_TYPE_CONNECTION_DISCONNECT:
+                this._receiveConnectionDisconnect(message);
                 break;
             default:
                 this.$log.warn('Ignored update with type:', type);
