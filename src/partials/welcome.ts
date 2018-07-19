@@ -464,10 +464,9 @@ class WelcomeController {
 
         this.$mdDialog.show(confirm).then(() =>  {
             // Force-stop the webclient
-            const deleteStoredData = true;
             const resetPush = true;
             const redirect = false;
-            this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
+            this.webClientService.stop(true, threema.DisconnectReason.SessionDeleted, resetPush, redirect);
 
             // Reset state
             this.stateService.updateConnectionBuildupState('new');
