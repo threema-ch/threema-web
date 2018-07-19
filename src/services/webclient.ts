@@ -722,19 +722,20 @@ export class WebClientService {
      * Parameters:
      *
      * - `requestedByUs`: Set this to `false` if the app requested to close the session.
-     * - `deleteStoredData`: Whether to clear any trusted key or push token from the keystore.
+     * - `reason`: The disconnect reason. When this is `SessionDeleted`, the function
+     *             will clear any trusted key or push token from the keystore.
      * - `resetPush`: Whether to reset the push service.
      * - `redirect`: Whether to redirect to the welcome page.
      */
     public stop(requestedByUs: boolean,
-                deleteStoredData: boolean = false,
+                reason: threema.DisconnectReason,
                 resetPush: boolean = true,
                 redirect: boolean = false): void {
         this.$log.info(this.logTag, 'Disconnecting...');
 
         if (requestedByUs && this.stateService.state === threema.GlobalConnectionState.Ok) {
             // Ask peer to disconnect too
-            this.salty.sendApplicationMessage({type: 'disconnect', forget: deleteStoredData});
+            this._sendUpdate(WebClientService.SUB_TYPE_CONNECTION_DISCONNECT, undefined, {reason: reason});
         }
 
         this.stateService.reset();
@@ -743,6 +744,7 @@ export class WebClientService {
         this.resetUnreadCount();
 
         // Clear stored data (trusted key, push token, etc)
+        const deleteStoredData = reason === threema.DisconnectReason.SessionDeleted;
         if (deleteStoredData === true) {
             this.trustedKeyStore.clearTrustedKey();
         }
@@ -779,7 +781,7 @@ export class WebClientService {
             this.pcHelper.close()
                 .then(
                     () => this.$log.debug(this.logTag, 'Peer connection was closed'),
-                    (reason: string) => this.$log.warn(this.logTag, 'Peer connection could not be closed:', reason),
+                    (msg: string) => this.$log.warn(this.logTag, 'Peer connection could not be closed:', msg),
                 )
                 .finally(() => redirectToWelcome());
         } else {
@@ -1718,22 +1720,17 @@ export class WebClientService {
         this.$log.debug(this.logTag, 'Disconnecting requested: reason=', reason);
 
         let alertMessage: string;
-        let deleteStoredData: boolean;
         switch (reason) {
             case threema.DisconnectReason.SessionStopped:
-                deleteStoredData = false;
                 alertMessage = 'connection.SESSION_STOPPED';
                 break;
             case threema.DisconnectReason.SessionDeleted:
-                deleteStoredData = true;
                 alertMessage = 'connection.SESSION_DELETED';
                 break;
             case threema.DisconnectReason.WebclientDisabled:
-                deleteStoredData = false;
                 alertMessage = 'connection.WEBCLIENT_DISABLED';
                 break;
             case threema.DisconnectReason.SessionReplaced:
-                deleteStoredData = false;
                 alertMessage = 'connection.SESSION_REPLACED';
                 break;
             default:
@@ -1741,7 +1738,7 @@ export class WebClientService {
         }
         const resetPush = true;
         const redirect = true;
-        this.stop(false, deleteStoredData, resetPush, redirect);
+        this.stop(false, reason, resetPush, redirect);
 
         if (alertMessage !== undefined) {
             this.$mdDialog.show(this.$mdDialog.alert()
