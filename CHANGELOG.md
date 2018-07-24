@@ -3,6 +3,13 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.8][v2.0.0-beta.8] (2018-07-24)
+
+Changes:
+
+* [change] Upgraded a lot of dependencies ([#522][i522])
+* [change] Some minor protocol changes ([#528][i528])
+
 ### [v2.0.0-beta.7][v2.0.0-beta.7] (2018-07-03)
 
 Changes:
@@ -522,7 +529,10 @@ First public release.
 [i503]: https://github.com/threema-ch/threema-web/issues/503
 [i517]: https://github.com/threema-ch/threema-web/issues/517
 [i519]: https://github.com/threema-ch/threema-web/issues/519
+[i522]: https://github.com/threema-ch/threema-web/issues/522
+[i528]: https://github.com/threema-ch/threema-web/issues/528
 
+[v2.0.0-beta.8]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.7...v2.0.0-beta.8
 [v2.0.0-beta.7]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.6...v2.0.0-beta.7
 [v2.0.0-beta.6]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.5...v2.0.0-beta.6
 [v2.0.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.4...v2.0.0-beta.5
