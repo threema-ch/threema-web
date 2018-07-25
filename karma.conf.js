@@ -10,6 +10,7 @@ module.exports = function(config) {
             'node_modules/angular-animate/angular-animate.min.js',
             'node_modules/angular-material/angular-material.min.js',
             'dist/app.js',
+            'dist/ts-tests.js',
             'tests/filters.js',
             'tests/service/message.js',
             'tests/service/mime.js',
