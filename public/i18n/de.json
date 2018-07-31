@@ -39,7 +39,9 @@
         "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich. Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Kritischer Fehler beim Zugriff auf LocalStorage: {errorMsg}.<br>Bitte starten Sie Ihren Browser neu.",
         "ALREADY_CONNECTED": "Bereits verbunden",
-        "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!"
+        "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!",
+        "VERSION": "Version",
+        "BACKGROUND_IMAGE": "Hintergrundbild"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindungsprobleme",

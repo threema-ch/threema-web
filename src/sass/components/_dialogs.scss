@@ -21,6 +21,11 @@ md-dialog {
     }
     md-dialog-content {
         line-height: 1.3em;
+
+        // If a h2 is the first child of a dialog, remove the top margin
+        .md-dialog-content>h2:first-child {
+            margin-top: 0;
+        }
     }
     .md-subheader-inner {
         padding-left: 0;
