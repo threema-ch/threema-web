@@ -1717,7 +1717,7 @@ export class WebClientService {
         }
         const reason = message.data.reason;
 
-        this.$log.debug(this.logTag, 'Disconnecting requested (reason: ' + reason + ')');
+        this.$log.debug(this.logTag, `Disconnecting requested (reason: ${reason})`);
 
         let alertMessage: string;
         switch (reason) {
