@@ -1717,7 +1717,7 @@ export class WebClientService {
         }
         const reason = message.data.reason;
 
-        this.$log.debug(this.logTag, 'Disconnecting requested: reason=', reason);
+        this.$log.debug(this.logTag, `Disconnecting requested (reason: ${reason})`);
 
         let alertMessage: string;
         switch (reason) {
@@ -1741,10 +1741,15 @@ export class WebClientService {
         this.stop(false, reason, resetPush, redirect);
 
         if (alertMessage !== undefined) {
-            this.$mdDialog.show(this.$mdDialog.alert()
-                .title(this.$translate.instant('connection.SESSION_CLOSED_TITLE'))
-                .textContent(this.$translate.instant(alertMessage))
-                .ok(this.$translate.instant('common.OK')));
+            // The stop() call above may result in a redirect, which will in
+            // turn hide all open dialog boxes.  Therefore, to avoid immediately
+            // hiding the alert box, enqueue dialog at end of event loop.
+            this.$timeout(() => {
+                this.$mdDialog.show(this.$mdDialog.alert()
+                    .title(this.$translate.instant('connection.SESSION_CLOSED_TITLE'))
+                    .textContent(this.$translate.instant(alertMessage))
+                    .ok(this.$translate.instant('common.OK')));
+            }, 0);
         }
     }
 
