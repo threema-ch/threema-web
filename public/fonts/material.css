@@ -51,12 +51,15 @@
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
 /* specific color masks */
-.material-icons.user-dec {
+.material-icons.md-dark.user-dec,
+.material-icons.md-medium-dark.user-dec {
     color: #ff9800;
 }
-.material-icons.user-ack {
+.material-icons.md-dark.user-ack,
+.material-icons.md-medium-dark.user-ack {
     color: #4caf50;
 }
-.material-icons.send-failed {
+.material-icons.md-dark.send-failed,
+.material-icons.md-medium-dark.send-failed {
     color: #d50000;
 }
