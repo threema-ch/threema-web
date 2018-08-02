@@ -24,7 +24,7 @@
         "BROWSER_NOT_SUPPORTED_ANDROID": "Dieser Browser wird von Android-Geräten nicht unterst\u00fctzt",
         "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> oder <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a> (nur mit iOS), um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
         "SAFARI": "Safari ist nur kompatibel mit Threema Web für iOS. Android-Nutzer verwenden bitte einen anderen Browser.",
-        "ANDROID_IOS_ONLY": "Kompatibel mit Threema für Android und iOS.",
+        "ANDROID_IOS_ONLY": "Kompatibel mit Threema für Android.",
         "CONNECTING": "Verbindung wird aufgebaut",
         "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
         "CONNECTING_TO_APP": "Verbindung zu App<br>wird aufgebaut …",

@@ -15,14 +15,18 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AndroidIosOnlyController} from './controllers/android_ios_only';
-import {FooterController} from './controllers/footer';
-import {StatusController} from './controllers/status';
+import {Transition, TransitionService} from '@uirouter/angularjs';
 
-angular.module('3ema.controllers', ['3ema.services'])
+/**
+ * Controller to show or hide the "Android / iOS only" note at the bottom of the welcome screen.
+ */
+export class AndroidIosOnlyController {
+    public show: boolean = false;
 
-.controller('AndroidIosOnlyController', AndroidIosOnlyController)
-.controller('FooterController', FooterController)
-.controller('StatusController', StatusController)
-
-;
+    public static $inject = ['$transitions'];
+    constructor($transitions: TransitionService) {
+        $transitions.onStart({}, (trans: Transition) => {
+            this.show = trans.to().name === 'welcome';
+        });
+    }
+}
