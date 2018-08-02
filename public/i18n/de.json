@@ -43,7 +43,7 @@
         "VERSION": "Version",
         "BACKGROUND_IMAGE": "Hintergrundbild",
         "NEW_VERSION": "Neue Version von Threema Web",
-        "NEW_VERSION_DETAILS": "Diese Version von Threema Web setzt <strong>Threema 3.45 für Android</strong> voraus. Falls Sie eine ältere Threema-Version verwenden, <strong>aktualisieren Sie bitte die App</strong>.<br><br>Wenn Sie die Threema-App nicht aktualisieren können, nutzen Sie vorübergehend die archivierte Version von Threema Web: <a href=\"https://web.threema.ch/archive/1.8.2/\">web.threema.ch/archive/1.8.2</a>",
+        "NEW_VERSION_DETAILS": "Diese Version von Threema Web setzt <strong>Threema 3.5 für Android</strong> voraus. Falls Sie eine ältere Threema-Version verwenden, <strong>aktualisieren Sie bitte die App</strong>.<br><br>Wenn Sie die Threema-App nicht aktualisieren können, nutzen Sie vorübergehend die archivierte Version von Threema Web: <a href=\"https://web.threema.ch/archive/1.8.2/\">web.threema.ch/archive/1.8.2</a>",
         "NOTIFICATION_IOS_BETA": "iOS Beta-User? Bitte benutzen Sie <a href=\"https://web-beta.threema.ch/\">web-beta.threema.ch</a>.",
         "NOTIFICATION_NEW_RELEASE": "Eine neue Version von Threema Web wurde veröffentlicht. Bitte aktualisieren Sie Ihre App oder verwenden Sie die <a href=\"https://web.threema.ch/archive/1.8.2/\">letzte Version</a>."
     },

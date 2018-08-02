@@ -12,10 +12,10 @@ export default {
     VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Die_Mythen.jpg',
     VERSION_MOUNTAIN_HEIGHT: 1898,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
-    GIT_BRANCH: 'ios',
+    GIT_BRANCH: 'master',
 
     // SaltyRTC
-    SALTYRTC_HOST: 'saltyrtc-beta.threema.ch',
+    SALTYRTC_HOST: null,
     SALTYRTC_HOST_PREFIX: 'saltyrtc-',
     SALTYRTC_HOST_SUFFIX: '.threema.ch',
     SALTYRTC_PORT: 443,
