@@ -8,7 +8,8 @@ export default {
     // General
     SELF_HOSTED: false,
     VERSION_MOUNTAIN: 'Grosser Mythen',
-    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Mythen#/media/File:Die_Mythen.jpg',
+    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Mythen',
+    VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Die_Mythen.jpg',
     VERSION_MOUNTAIN_HEIGHT: 1898,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
     GIT_BRANCH: 'ios',
