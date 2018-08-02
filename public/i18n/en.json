@@ -43,7 +43,9 @@
         "VERSION": "Version",
         "BACKGROUND_IMAGE": "Background Image",
         "NEW_VERSION": "New Threema Web Version",
-        "NEW_VERSION_DETAILS": "This version of Threema Web requires <strong>Threema 3.45 for Android</strong>. If you are using an older Threema version, <strong>please update the app</strong>.<br><br>If you are unable to update the Threema app, you can temporarily use the archived version of Threema Web: <a href=\"https://web.threema.ch/archive/1.8.2/\">web.threema.ch/archive/1.8.2</a>"
+        "NEW_VERSION_DETAILS": "This version of Threema Web requires <strong>Threema 3.45 for Android</strong>. If you are using an older Threema version, <strong>please update the app</strong>.<br><br>If you are unable to update the Threema app, you can temporarily use the archived version of Threema Web: <a href=\"https://web.threema.ch/archive/1.8.2/\">web.threema.ch/archive/1.8.2</a>",
+        "NOTIFICATION_IOS_BETA": "Using the iOS beta? Please go to <a href=\"https://web-beta.threema.ch/\">web-beta.threema.ch</a>.",
+        "NOTIFICATION_NEW_RELEASE": "A new version of Threema Web was released. Make sure to update your app or use the <a href=\"/archive/1.8.2/\">previous version of Threema Web</a>."
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",
