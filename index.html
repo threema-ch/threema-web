@@ -57,7 +57,7 @@
 </head>
 
 <body ng-controller="StatusController as ctrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
-    <img src="img/bg1.jpg?v=1" id="background-image" draggable="false">
+    <img src="img/bg.jpg?v=1" id="background-image" draggable="false">
 
     <noscript>
         <img id="logo-noscript" src="img/logo.svg?v=[[VERSION]]"/>
@@ -85,10 +85,7 @@
         </div>
         <footer ng-controller="FooterController as ctrl">
             <ul>
-                <li><a
-                        href="{{ ctrl.changelogUrl }}"
-                        target="_blank"
-                        rel="noopener noreferrer">Version [[VERSION]]</a></li>
+                <li><a ng-click="ctrl.showVersionInfo('[[VERSION]]')">Version [[VERSION]] {{ ctrl.config.VERSION_MOUNTAIN }}</a></li>
                 <li><a
                         href="https://threema.ch/threema-web"
                         target="_blank"

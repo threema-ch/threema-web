@@ -19,11 +19,40 @@
  * Handle footer information.
  */
 export class FooterController {
+    private $mdDialog: ng.material.IDialogService;
+
     private config: threema.Config;
 
-    public static $inject = ['CONFIG'];
-    constructor(CONFIG: threema.Config) {
+    public static $inject = ['CONFIG', '$mdDialog'];
+    constructor(CONFIG: threema.Config, $mdDialog: ng.material.IDialogService) {
+        this.$mdDialog = $mdDialog;
         this.config = CONFIG;
+    }
+
+    public showVersionInfo(version: string): void {
+        this.$mdDialog.show({
+            controller: [
+                '$mdDialog',
+                'CONFIG',
+                function($mdDialog: ng.material.IDialogService, CONFIG: threema.Config) {
+                    this.activeElement = null;
+                    this.version = version;
+                    this.fullVersion = `${version} ${CONFIG.VERSION_MOUNTAIN}`;
+                    this.config = CONFIG;
+                    this.cancel = () => {
+                        $mdDialog.cancel();
+                        if (this.activeElement !== null) {
+                            this.activeElement.focus(); // reset focus
+                        }
+                    };
+                },
+            ],
+            controllerAs: 'ctrl',
+            templateUrl: 'partials/dialog.version.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            fullscreen: true,
+        });
     }
 
     /**

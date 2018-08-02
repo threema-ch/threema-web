@@ -631,6 +631,9 @@ declare namespace threema {
     interface Config {
         SELF_HOSTED: boolean;
         PREV_PROTOCOL_LAST_VERSION: string | null;
+        VERSION_MOUNTAIN: string;
+        VERSION_MOUNTAIN_URL: string;
+        VERSION_MOUNTAIN_HEIGHT: number;
         GIT_BRANCH: string;
         SALTYRTC_PORT: number;
         SALTYRTC_SERVER_KEY: string | null;
