@@ -2101,7 +2101,7 @@ export class WebClientService {
             return;
         }
         if (!isValidReceiverType(type)) {
-            this.$log.warn('Invalid messages update, unknown receiver type (' + type + ')');
+            this.$log.warn(this.logTag, 'Invalid messages update, unknown receiver type (' + type + ')');
             return;
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
@@ -2111,7 +2111,6 @@ export class WebClientService {
         for (const msg of data) {
             switch (mode) {
                 case WebClientService.ARGUMENT_MODE_NEW:
-                    this.$log.debug('New message', msg.id);
                     // It's possible that this message already exists (placeholder message on send).
                     // Try to update it first. If not, add it as a new msg.
                     if (!this.messages.update(receiver, msg)) {
@@ -2120,7 +2119,6 @@ export class WebClientService {
                     notify = true;
                     break;
                 case WebClientService.ARGUMENT_MODE_MODIFIED:
-                    this.$log.debug('Modified message', msg.id);
                     this.messages.update(receiver, msg);
                     break;
                 case WebClientService.ARGUMENT_MODE_REMOVED:
@@ -2128,7 +2126,7 @@ export class WebClientService {
                     notify = true;
                     break;
                 default:
-                    this.$log.warn('Invalid message response, unknown mode:', mode);
+                    this.$log.warn(this.logTag, 'Invalid message response, unknown mode:', mode);
             }
         }
         if (notify) {
