@@ -45,7 +45,8 @@
     }
 
     // Indicators depending on identity type (e.g. Work suitcase)
-    .work-indicator {
+    .work-indicator,
+    .home-indicator {
         $indicator-size: 18px;
         position: absolute;
         top: 48px - $indicator-size;

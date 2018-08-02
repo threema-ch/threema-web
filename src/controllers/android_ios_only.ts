@@ -15,5 +15,18 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare function sha224(val: string | Array<any> | Uint8Array | ArrayBuffer): string;
-declare function sha256(val: string | Array<any> | Uint8Array | ArrayBuffer): string;
+import {Transition, TransitionService} from '@uirouter/angularjs';
+
+/**
+ * Controller to show or hide the "Android / iOS only" note at the bottom of the welcome screen.
+ */
+export class AndroidIosOnlyController {
+    public show: boolean = false;
+
+    public static $inject = ['$transitions'];
+    constructor($transitions: TransitionService) {
+        $transitions.onStart({}, (trans: Transition) => {
+            this.show = trans.to().name === 'welcome';
+        });
+    }
+}

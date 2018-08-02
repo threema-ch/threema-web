@@ -7,10 +7,15 @@ export default {
 
     // General
     SELF_HOSTED: false,
-    PREV_PROTOCOL_LAST_VERSION: null,
+    VERSION_MOUNTAIN: 'Grosser Mythen',
+    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Mythen',
+    VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Die_Mythen.jpg',
+    VERSION_MOUNTAIN_HEIGHT: 1898,
+    PREV_PROTOCOL_LAST_VERSION: '1.8.2',
+    GIT_BRANCH: 'ios',
 
     // SaltyRTC
-    SALTYRTC_HOST: null,
+    SALTYRTC_HOST: 'saltyrtc-beta.threema.ch',
     SALTYRTC_HOST_PREFIX: 'saltyrtc-',
     SALTYRTC_HOST_SUFFIX: '.threema.ch',
     SALTYRTC_PORT: 443,
@@ -31,7 +36,9 @@ export default {
     PUSH_URL: 'https://push-web.threema.ch/push',
 
     // Debugging options
-    MSG_DEBUGGING: false,
+    DEBUG: false,
+    MSG_DEBUGGING: false, // Log all incoming and outgoing messages
+    MSGPACK_DEBUGGING: false, // Log URLs to the msgpack visualizer
     ICE_DEBUGGING: false,
 
 } as threema.Config;

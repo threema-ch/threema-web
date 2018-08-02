@@ -53,10 +53,11 @@ export default [
                 };
 
                 // Listen to Mediabox service events
-                const filter = $filter('bufferToUrl') as (buffer: ArrayBuffer, mimeType: string) => string;
+                const bufferToUrl = $filter('bufferToUrl') as
+                    (buffer: ArrayBuffer, mimeType: string, trust: boolean) => string;
                 mediaboxService.evtMediaChanged.attach((dataAvailable: boolean) => {
                     $rootScope.$apply(() => {
-                        this.imageDataUrl = filter(mediaboxService.data, 'image/jpeg');
+                        this.imageDataUrl = bufferToUrl(mediaboxService.data, mediaboxService.mimetype, true);
                         this.caption = mediaboxService.caption || mediaboxService.filename;
                     });
                 });

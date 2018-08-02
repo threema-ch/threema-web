@@ -15,13 +15,15 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 /**
  * Show a contact receiver with small avatar, name and verification level
  */
 export default [
     '$translate',
     '$state',
-    function($translate, $state: ng.ui.IStateService) {
+    function($translate, $state: UiStateService) {
         return {
             restrict: 'EA',
             scope: {},
@@ -31,23 +33,6 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.showRoleIcon = this.contactReceiver !== undefined;
-                if (this.showRoleIcon) {
-
-                    if (this.contactReceiver.id === this.groupReceiver.administrator) {
-                        this.roleIcon = 'people';
-                        $translate('messenger.GROUP_ROLE_CREATOR')
-                            .then((label) =>  {
-                                this.roleName = label;
-                            });
-                    } else {
-                        this.roleIcon = 'people_outline';
-                        $translate('messenger.GROUP_ROLE_NORMAL')
-                            .then((label) =>  {
-                                this.roleName = label;
-                            });
-                    }
-                }
                 this.click = () => {
                     $state.go('messenger.home.conversation', {
                         type: 'group',
@@ -55,12 +40,26 @@ export default [
                         initParams: null,
                     });
                 };
+
+                this.$onInit = function() {
+                    this.showRoleIcon = this.contactReceiver !== undefined;
+                    if (this.showRoleIcon) {
+                        if (this.contactReceiver.id === this.groupReceiver.administrator) {
+                            this.roleIcon = 'people';
+                            $translate('messenger.GROUP_ROLE_CREATOR')
+                                .then((label) => this.roleName = label);
+                        } else {
+                            this.roleIcon = 'people_outline';
+                            $translate('messenger.GROUP_ROLE_NORMAL')
+                                .then((label) => this.roleName = label);
+                        }
+                    }
+                };
             }],
             template: `
                 <div class="group-badge receiver-badge" ng-click="ctrl.click()">
                     <section class="avatar-box">
-                        <eee-avatar eee-type="'group'"
-                                    eee-receiver="ctrl.groupReceiver"
+                        <eee-avatar eee-receiver="ctrl.groupReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
                     <div class="receiver-badge-name"

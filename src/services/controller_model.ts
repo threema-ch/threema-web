@@ -18,8 +18,11 @@
 import {ContactControllerModel} from '../controller_model/contact';
 import {DistributionListControllerModel} from '../controller_model/distributionList';
 import {GroupControllerModel} from '../controller_model/group';
-import {ControllerModelMode} from '../types/enums';
+import {MeControllerModel} from '../controller_model/me';
 import {WebClientService} from './webclient';
+
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
 
 /**
  * Factory to create ControllerModels
@@ -39,7 +42,24 @@ export class ControllerModelService {
         this.webClientService = webClientService;
     }
 
-    public contact(receiver: threema.ContactReceiver, mode: ControllerModelMode): threema.ControllerModel {
+    public me(
+        receiver: threema.MeReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.MeReceiver> {
+        return new MeControllerModel(
+            this.$log,
+            this.$translate,
+            this.$mdDialog,
+            this.webClientService,
+            mode,
+            receiver,
+        );
+    }
+
+    public contact(
+        receiver: threema.ContactReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.ContactReceiver> {
         return new ContactControllerModel(
             this.$log,
             this.$translate,
@@ -50,7 +70,10 @@ export class ControllerModelService {
         );
     }
 
-    public group(receiver: threema.GroupReceiver, mode: ControllerModelMode): threema.ControllerModel {
+    public group(
+        receiver: threema.GroupReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.GroupReceiver> {
         return new GroupControllerModel(
             this.$log,
             this.$translate,
@@ -61,8 +84,10 @@ export class ControllerModelService {
         );
     }
 
-    public distributionList(receiver: threema.DistributionListReceiver,
-                            mode: ControllerModelMode): threema.ControllerModel {
+    public distributionList(
+        receiver: threema.DistributionListReceiver,
+        mode: ControllerModelMode,
+    ): threema.ControllerModel<threema.DistributionListReceiver> {
         return new DistributionListControllerModel(
             this.$log,
             this.$translate,

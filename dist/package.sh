@@ -56,13 +56,14 @@ targets=(
     msgpack-lite/dist/msgpack.min.js
     tweetnacl/nacl-fast.min.js
     file-saver/FileSaver.min.js
-    js-sha256/build/sha256.min.js
     @saltyrtc/chunked-dc/dist/chunked-dc.es5.js
     @saltyrtc/client/dist/saltyrtc-client.es5.js
     @saltyrtc/task-webrtc/dist/saltyrtc-task-webrtc.es5.js
+    @saltyrtc/task-relayed-data/dist/saltyrtc-task-relayed-data.es5.js
     webrtc-adapter/out/adapter_no_edge.js
     webrtc-adapter/out/adapter.js
-    qrcode-generator/js/qrcode.js
+    qrcode-generator/qrcode.js
+    qrcode-generator/qrcode_UTF8.js
     angular-qrcode/angular-qrcode.js
     angularjs-scroll-glue/src/scrollglue.js
     angular-material/angular-material.min.js
@@ -70,12 +71,11 @@ targets=(
     croppie/croppie.min.js
     croppie/croppie.css
     autolinker/dist/Autolinker.min.js
-    angular-ui-router/release/angular-ui-router.min.js
+    @uirouter/angularjs/release/angular-ui-router.min.js
     messageformat/messageformat.min.js
     angular-translate/dist/angular-translate.min.js
     angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js
     angular-translate/dist/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.min.js
-    angular-messages/angular-messages.min.js
     sdp/sdp.js
 )
 
@@ -90,8 +90,8 @@ done
 echo "+ Update version number..."
 # Note: The `-i.bak` notation is requires so that the sed command works both on Linux
 # and on macOS: https://stackoverflow.com/q/5694228/284318
-sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/version.txt
-rm $DIR/index.html.bak $DIR/troubleshoot/index.html.bak $DIR/dist/app.js.bak $DIR/version.txt.bak
+sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/manifest.webmanifest $DIR/browserconfig.xml $DIR/version.txt
+rm $DIR/index.html.bak $DIR/troubleshoot/index.html.bak $DIR/dist/app.js.bak $DIR/manifest.webmanifest.bak $DIR/browserconfig.xml.bak $DIR/version.txt.bak
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;

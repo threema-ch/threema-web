@@ -7,7 +7,7 @@
     <div id="conversation-header" class="detail-header">
         <ng-include src="'partials/messenger.backbutton.html'"></ng-include>
         <div class="header-avatar" ng-click="ctrl.showReceiver()">
-            <eee-avatar eee-type="ctrl.type" eee-receiver="ctrl.receiver"
+            <eee-avatar eee-receiver="ctrl.receiver"
                         eee-resolution="'low'"></eee-avatar>
         </div>
         <div class="header-details" ng-click="ctrl.showReceiver()">
@@ -36,7 +36,7 @@
         </md-card>
     </div>
 
-    <div id="conversation-chat" scroll-glue in-view-container ng-show="!ctrl.locked">
+    <div id="conversation-chat" scroll-glue="!ctrl.showScrollJump" in-view-container ng-show="!ctrl.locked">
         <ul class="chat">
             <li in-view="$inview && !ctrl.locked && ctrl.topOfChat()" class="load-more">
                 <div ng-if="ctrl.hasMoreMessages()" class="loading">
@@ -45,7 +45,7 @@
             </li>
             <li ng-repeat="message in ctrl.messages" id="message-{{message.id}}">
                 <eee-message eee-receiver="ctrl.receiver" eee-type="ctrl.type" eee-message="message"
-                             in-view="$inview  && !ctrl.locked && ctrl.msgRead(message.id)"
+                             in-view="$inview  && !ctrl.locked && ctrl.msgRead(message)"
                              in-view-options="{ considerPageVisibility: true }"></eee-message>
             </li>
             <li ng-if="ctrl.isTyping()" class="typing-indicator">
@@ -85,8 +85,7 @@
                     ng-class="{selected: ctrl.selectedMention == $index}">
                     <div class="contact-badge receiver-badge" ng-if="mention.isAll">
                         <section class="avatar-box">
-                            <eee-avatar eee-type="'group'"
-                                        eee-receiver="ctrl.receiver"
+                            <eee-avatar eee-receiver="ctrl.receiver"
                                         eee-resolution="'low'"></eee-avatar>
                         </section>
                         <div translate>messenger.ALL</div>

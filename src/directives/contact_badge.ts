@@ -17,6 +17,8 @@
 
 // tslint:disable:max-line-length
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import {WebClientService} from '../services/webclient';
 
 /**
@@ -25,7 +27,7 @@ import {WebClientService} from '../services/webclient';
 export default [
     'WebClientService',
     '$state',
-    function(webClientService: WebClientService, $state: ng.ui.IStateService) {
+    function(webClientService: WebClientService, $state: UiStateService) {
         return {
             restrict: 'EA',
             scope: {},
@@ -37,26 +39,27 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                if (this.contactReceiver === undefined) {
-                    this.contactReceiver = webClientService.contacts.get(this.identity);
-                } else {
-                    this.identity = this.contactReceiver.id;
-                }
-
-                this.click = () => {
-                    if (this.linked !== undefined
-                        && this.linked === true) {
-                        $state.go('messenger.home.conversation', {type: 'contact', id: this.identity, initParams: null});
+                this.$onInit = function() {
+                    if (this.contactReceiver === undefined) {
+                        this.contactReceiver = webClientService.contacts.get(this.identity);
+                    } else {
+                        this.identity = this.contactReceiver.id;
                     }
-                };
 
-                this.showActions = this.onRemove !== undefined;
+                    this.click = () => {
+                        if (this.linked !== undefined
+                            && this.linked === true) {
+                            $state.go('messenger.home.conversation', {type: 'contact', id: this.identity, initParams: null});
+                        }
+                    };
+
+                    this.showActions = this.onRemove !== undefined;
+                };
             }],
             template: `
                 <div class="contact-badge receiver-badge" ng-click="ctrl.click()">
                     <section class="avatar-box">
-                        <eee-avatar eee-type="'contact'"
-                                    eee-receiver="ctrl.contactReceiver"
+                        <eee-avatar eee-receiver="ctrl.contactReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
                     <div class="receiver-badge-name"

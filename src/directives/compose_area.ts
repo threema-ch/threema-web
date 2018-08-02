@@ -87,7 +87,8 @@ export default [
                     from?: number,
                     to?: number,
                     fromBytes?: number,
-                    toBytes?: number } = null;
+                    toBytes?: number,
+                } = null;
 
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
@@ -293,7 +294,7 @@ export default [
                         const text = getText(false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
-                        } else if (ev.keyCode === 190) {
+                        } else if (ev.keyCode === 190 && caretPosition !== null) {
                             // A ':' is pressed, try to parse
                             const currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
                             if (currentWord.realLength > 2
@@ -308,7 +309,7 @@ export default [
                         }
 
                         // Update typing information (use text instead method)
-                        if (text.trim().length === 0) {
+                        if (text.trim().length === 0 || caretPosition === null) {
                             stopTyping();
                             scope.onTyping('');
                         } else {
@@ -335,16 +336,16 @@ export default [
                         for (let n = 0; n < fileCounter; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
-                            reader.onload = (ev: Event) => {
-                                next(file, (ev.target as FileReader).result, ev);
+                            reader.onload = function(ev: FileReaderProgressEvent) {
+                                next(file, ev.target.result, ev);
                             };
-                            reader.onerror = (ev: ErrorEvent) => {
+                            reader.onerror = function(ev: FileReaderProgressEvent) {
                                 // set a null object
                                 next(file, null, ev);
                             };
-                            reader.onprogress = function(data) {
-                                if (data.lengthComputable) {
-                                    const progress = ((data.loaded / data.total) * 100);
+                            reader.onprogress = function(ev: FileReaderProgressEvent) {
+                                if (ev.lengthComputable) {
+                                    const progress = ((ev.loaded / ev.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileCounter * n);
                                 }
                             };
@@ -374,7 +375,9 @@ export default [
 
                             fileMessages.push(fileMessageData);
                         });
-                        scope.submit('file', fileMessages);
+                        scope
+                            .submit('file', fileMessages)
+                            .catch((msg) => $log.error('Could not send file:', msg));
                         scope.onUploading(false);
 
                     }).catch((ev: ErrorEvent) => {
@@ -415,7 +418,7 @@ export default [
 
                         // Convert blob to arraybuffer
                         const reader = new FileReader();
-                        reader.onload = function() {
+                        reader.onload = function(progressEvent: FileReaderProgressEvent) {
                             const buffer: ArrayBuffer = this.result;
 
                             // Construct file name
@@ -437,7 +440,9 @@ export default [
                                 size: blob.size,
                                 data: buffer,
                             };
-                            scope.submit('file', [fileMessageData]);
+                            scope
+                                .submit('file', [fileMessageData])
+                                .catch((msg) => $log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
 

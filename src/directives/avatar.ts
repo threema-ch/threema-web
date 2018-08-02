@@ -15,97 +15,180 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {bufferToUrl, logAdapter} from '../helpers';
+import {isEchoContact, isGatewayContact} from '../receiver_helpers';
 import {WebClientService} from '../services/webclient';
+import {isContactReceiver} from '../typeguards';
 
 export default [
     '$rootScope',
     '$timeout',
+    '$log',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
              $timeout: ng.ITimeoutService,
+             $log: ng.ILogService,
              webClientService: WebClientService) {
         return {
             restrict: 'E',
             scope: {},
             bindToController: {
-                type: '=eeeType',
                 receiver: '=eeeReceiver',
                 resolution: '=eeeResolution',
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.highResolution = this.resolution === 'high';
-                this.isLoading = this.highResolution;
-                this.backgroundColor = this.receiver.color;
+                this.logTag = '[Directives.Avatar]';
+
                 let loadingPromise: ng.IPromise<any> = null;
-                this.avatarClass = () => {
-                    return 'avatar-' + this.resolution + (this.isLoading ? ' is-loading' : '');
+
+                /**
+                 * Convert avatar bytes to an URI.
+                 */
+                const avatarUri = {
+                    high: null,
+                    low: null,
+                };
+                this.avatarToUri = (data: ArrayBuffer, res: 'high' | 'low') => {
+                    if (data === null || data === undefined) {
+                        return '';
+                    }
+                    if (avatarUri[res] === null) {
+                        // Cache avatar image URI
+                        avatarUri[res] = bufferToUrl(
+                            data,
+                            webClientService.appCapabilities.imageFormat.avatar,
+                            logAdapter($log.warn, this.logTag),
+                        );
+                    }
+                    return avatarUri[res];
                 };
 
-                this.avatarExists = () => {
-                    if (this.receiver.avatar === undefined
-                        || this.receiver.avatar[this.resolution] === undefined) {
-                        return false;
-                    }
-                    this.isLoading = false;
-                    // Reset background color
-                    this.backgroundColor = null;
-                    return true;
-                };
+                this.$onInit = function() {
 
-                this.getAvatar = () => {
-                    if (this.avatarExists()) {
-                        return this.receiver.avatar[this.resolution];
-                    } else if (this.highResolution
-                        && this.receiver.avatar !== undefined
-                        && this.receiver.avatar.low !== undefined) {
-                        return this.receiver.avatar.low;
-                    }
-                    return webClientService.defaults.getAvatar(this.type, this.highResolution);
-                };
+                    this.highResolution = this.resolution === 'high';
+                    this.isLoading = this.highResolution;
+                    this.backgroundColor = this.receiver.color;
+                    this.avatarClass = () => {
+                        return 'avatar-' + this.resolution + (this.isLoading ? ' is-loading' : '');
+                    };
 
-                this.requestAvatar = (inView: boolean) => {
-                    if (this.avatarExists()) {
-                        // do not request
-                        return;
-                    }
-
-                    if (inView) {
-                        if (loadingPromise === null) {
-                            // Do not wait on high resolution avatar
-                            const loadingTimeout = this.highResolution ? 0 : 500;
-                            loadingPromise = $timeout(() => {
-                                // show loading only on high res images!
-                                webClientService.requestAvatar({
-                                    type: this.type,
-                                    id: this.receiver.id,
-                                } as threema.Receiver, this.highResolution).then((avatar) => {
-                                    $rootScope.$apply(() => {
-                                        this.isLoading = false;
-                                    });
-                                }).catch(() => {
-                                    $rootScope.$apply(() => {
-                                        this.isLoading = false;
-                                    });
-                                });
-                            }, loadingTimeout);
+                    this.avatarExists = () => {
+                        if (this.receiver.avatar === undefined
+                            || this.receiver.avatar[this.resolution] === undefined
+                            || this.receiver.avatar[this.resolution] === null) {
+                            return false;
                         }
-                    } else if (loadingPromise !== null) {
-                        // Cancel pending avatar loading
-                        $timeout.cancel(loadingPromise);
-                        loadingPromise = null;
-                    }
-                };
+                        this.isLoading = false;
+                        // Reset background color
+                        this.backgroundColor = null;
+                        return true;
+                    };
 
-                this.showWorkIndicator = () => {
-                    return this.type === 'contact'
-                        && !this.highResolution
-                        && (this.receiver as threema.ContactReceiver).identityType === threema.IdentityType.Work;
-                };
-                this.showBlocked = () => {
-                    return this.type === 'contact'
-                        && !this.highResolution
-                        && (this.receiver as threema.ContactReceiver).isBlocked;
+                    /**
+                     * Return path to the default avatar.
+                     */
+                    this.getDefaultAvatarUri = (type: threema.ReceiverType, highResolution: boolean) => {
+                        switch (type) {
+                            case 'group':
+                                return highResolution
+                                    ? 'img/ic_group_picture_big.png'
+                                    : 'img/ic_group_t.png';
+                            case 'distributionList':
+                                return highResolution
+                                    ? 'img/ic_distribution_list_t.png'
+                                    : 'img/ic_distribution_list_t.png';
+                            case 'contact':
+                            case 'me':
+                            default:
+                                return highResolution
+                                    ? 'img/ic_contact_picture_big.png'
+                                    : 'img/ic_contact_picture_t.png';
+                        }
+                    };
+
+                    /**
+                     * Return an avatar URI.
+                     *
+                     * This will fall back to a low resolution version or to the
+                     * default avatar if no avatar for the desired resolution could
+                     * be found.
+                     */
+                    this.getAvatarUri = () => {
+                        /// If an avatar for the chosen resolution exists, convert it to an URI and return
+                        if (this.avatarExists()) {
+                            return this.avatarToUri(this.receiver.avatar[this.resolution], this.resolution);
+                        }
+
+                        // Otherwise, if we requested a high res avatar but
+                        // there is only a low-res version, show that.
+                        if (this.highResolution
+                            && this.receiver.avatar !== undefined
+                            && this.receiver.avatar.low !== undefined
+                            && this.receiver.avatar.low !== null) {
+                            return this.avatarToUri(this.receiver.avatar.low, 'low');
+                        }
+
+                        // As a fallback, get the default avatar.
+                        return this.getDefaultAvatarUri(this.receiver.type, this.highResolution);
+                    };
+
+                    this.requestAvatar = (inView: boolean) => {
+                        if (this.avatarExists()) {
+                            // do not request
+                            return;
+                        }
+
+                        if (inView) {
+                            if (loadingPromise === null) {
+                                // Do not wait on high resolution avatar
+                                const loadingTimeout = this.highResolution ? 0 : 500;
+                                loadingPromise = $timeout(() => {
+                                    // show loading only on high res images!
+                                    webClientService.requestAvatar({
+                                        type: this.receiver.type,
+                                        id: this.receiver.id,
+                                    } as threema.Receiver, this.highResolution).then((avatar) => {
+                                        $rootScope.$apply(() => {
+                                            this.isLoading = false;
+                                        });
+                                    }).catch(() => {
+                                        $rootScope.$apply(() => {
+                                            this.isLoading = false;
+                                        });
+                                    });
+                                }, loadingTimeout);
+                            }
+                        } else if (loadingPromise !== null) {
+                            // Cancel pending avatar loading
+                            $timeout.cancel(loadingPromise);
+                            loadingPromise = null;
+                        }
+                    };
+
+                    const isWork = webClientService.clientInfo.isWork;
+                    this.showWorkIndicator = () => {
+                        if (!isContactReceiver(this.receiver)) { return false; }
+                        const contact: threema.ContactReceiver = this.receiver;
+                        return isWork === false
+                            && !this.highResolution
+                            && contact.identityType === threema.IdentityType.Work;
+                    };
+                    this.showHomeIndicator = () => {
+                        if (!isContactReceiver(this.receiver)) { return false; }
+                        const contact: threema.ContactReceiver = this.receiver;
+                        return isWork === true
+                            && !isGatewayContact(contact)
+                            && !isEchoContact(contact)
+                            && contact.identityType === threema.IdentityType.Regular
+                            && !this.highResolution;
+                    };
+                    this.showBlocked = () => {
+                        if (!isContactReceiver(this.receiver)) { return false; }
+                        const contact: threema.ContactReceiver = this.receiver;
+                        return !this.highResolution && contact.isBlocked;
+                    };
+
                 };
             }],
             template: `
@@ -118,16 +201,21 @@ export default [
                             'title': 'messenger.THREEMA_WORK_CONTACT'}">
                         <img src="img/ic_work_round.svg" alt="Threema Work user">
                     </div>
+                    <div class="home-indicator" ng-if="ctrl.showHomeIndicator()"
+                        translate-attr="{'aria-label': 'messenger.THREEMA_HOME_CONTACT',
+                            'title': 'messenger.THREEMA_HOME_CONTACT'}">
+                        <img src="img/ic_home_round.svg" alt="Private Threema contact">
+                    </div>
                     <div class="blocked-indicator"  ng-if="ctrl.showBlocked()"
                         translate-attr="{'aria-label': 'messenger.THREEMA_BLOCKED_RECEIVER',
                             'title': 'messenger.THREEMA_BLOCKED_RECEIVER'}">
-                        <img src="img/ic_blocked_24px.svg" alt="blocked icon"/>
+                        <img src="img/ic_blocked_24px.svg" alt="blocked icon">
                     </div>
                     <img
                          ng-class="ctrl.avatarClass()"
                          ng-style="{ 'background-color': ctrl.backgroundColor }"
-                         ng-src="{{ ctrl.getAvatar() }}"
-                         in-view="ctrl.requestAvatar($inview)"/>
+                         ng-src="{{ ctrl.getAvatarUri() }}"
+                         in-view="ctrl.requestAvatar($inview)">
                </div>
             `,
         };

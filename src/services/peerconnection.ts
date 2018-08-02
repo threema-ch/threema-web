@@ -15,16 +15,14 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// <reference types="@saltyrtc/task-webrtc" />
 import * as SDPUtils from 'sdp';
+
+import TaskConnectionState = threema.TaskConnectionState;
 
 /**
  * Wrapper around the WebRTC PeerConnection.
- *
- * TODO: Convert to regular service?
  */
 export class PeerConnectionHelper {
-
     private logTag: string = '[PeerConnectionHelper]';
 
     // Angular services
@@ -38,8 +36,8 @@ export class PeerConnectionHelper {
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask;
 
     // Calculated connection state
-    public connectionState: threema.RTCConnectionState = 'new';
-    public onConnectionStateChange: (state: threema.RTCConnectionState) => void = null;
+    public connectionState: TaskConnectionState = TaskConnectionState.New;
+    public onConnectionStateChange: (state: TaskConnectionState) => void = null;
 
     // Internal callback when connection closes
     private onConnectionClosed: () => void = null;
@@ -122,19 +120,19 @@ export class PeerConnectionHelper {
             this.$rootScope.$apply(() => {
                 switch (this.pc.iceConnectionState) {
                     case 'new':
-                        this.setConnectionState('new');
+                        this.setConnectionState(TaskConnectionState.New);
                         break;
                     case 'checking':
                     case 'disconnected':
-                        this.setConnectionState('connecting');
+                        this.setConnectionState(TaskConnectionState.Connecting);
                         break;
                     case 'connected':
                     case 'completed':
-                        this.setConnectionState('connected');
+                        this.setConnectionState(TaskConnectionState.Connected);
                         break;
                     case 'failed':
                     case 'closed':
-                        this.setConnectionState('disconnected');
+                        this.setConnectionState(TaskConnectionState.Disconnected);
                         break;
                     default:
                         this.$log.warn(this.logTag, 'Ignored ICE connection state change to',
@@ -194,13 +192,13 @@ export class PeerConnectionHelper {
     /**
      * Set the connection state and update listeners.
      */
-    private setConnectionState(state: threema.RTCConnectionState) {
+    private setConnectionState(state: TaskConnectionState) {
         if (state !== this.connectionState) {
             this.connectionState = state;
             if (this.onConnectionStateChange !== null) {
                 this.$timeout(() => this.onConnectionStateChange(state), 0);
             }
-            if (this.onConnectionClosed !== null && state === 'disconnected') {
+            if (this.onConnectionClosed !== null && state === TaskConnectionState.Disconnected) {
                 this.$timeout(() => this.onConnectionClosed(), 0);
             }
         }

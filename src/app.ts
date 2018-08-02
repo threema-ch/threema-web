@@ -59,8 +59,8 @@ angular.module('3ema', [
 ])
 
 // Set versions
-.value('VERSION', '0.0.1')
-.value('PROTOCOL_VERSION', 1)
+.value('VERSION', '[[VERSION]]')
+.value('PROTOCOL_VERSION', 2)
 
 // Configuration object
 .constant('CONFIG', config)
@@ -73,6 +73,7 @@ angular.module('3ema', [
     FF: 50,
     CHROME: 45,
     OPERA: 32,
+    SAFARI: 11,
 })
 
 // Set default route

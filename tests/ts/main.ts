@@ -17,12 +17,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'jasmine';
-import {u8aToHex} from '../../src/helpers';
+// tslint:disable:no-reference
+/// <reference path="../../src/threema.d.ts" />
 
-describe('Helpers', () => {
-    it('u8aToHex', function() {
-        const arr = Uint8Array.of(1, 2, 4, 8, 254, 255);
-        expect(u8aToHex(arr)).toEqual('01020408feff');
-    });
-});
+import './containers';
+import './crypto_helpers';
+import './helpers';
+import './receiver_helpers';

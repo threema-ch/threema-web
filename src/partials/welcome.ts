@@ -19,13 +19,22 @@
 
 /// <reference path="../types/broadcastchannel.d.ts" />
 
+import {
+    StateParams as UiStateParams,
+    StateProvider as UiStateProvider,
+    StateService as UiStateService,
+} from '@uirouter/angularjs';
+
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
 import {PushService} from '../services/push';
+import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
+
+import GlobalConnectionState = threema.GlobalConnectionState;
 
 class DialogController {
     // TODO: This is also used in partials/messenger.ts. We could somehow
@@ -43,6 +52,10 @@ class DialogController {
     }
 }
 
+interface WelcomeStateParams extends UiStateParams {
+    initParams: null | {keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array};
+}
+
 class WelcomeController {
 
     private static REDIRECT_DELAY = 500;
@@ -51,11 +64,11 @@ class WelcomeController {
 
     // Angular services
     private $scope: ng.IScope;
-    private $state: ng.ui.IStateService;
     private $timeout: ng.ITimeoutService;
     private $interval: ng.IIntervalService;
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
+    private $state: UiStateService;
 
     // Material design services
     private $mdDialog: ng.material.IDialogService;
@@ -63,9 +76,10 @@ class WelcomeController {
 
     // Custom services
     private webClientService: WebClientService;
-    private TrustedKeyStore: TrustedKeyStoreService;
+    private trustedKeyStore: TrustedKeyStoreService;
     private pushService: PushService;
     private stateService: StateService;
+    private settingsService: SettingsService;
     private config: threema.Config;
 
     // Other
@@ -73,24 +87,29 @@ class WelcomeController {
     private mode: 'scan' | 'unlock';
     private qrCode;
     private password: string = '';
+    private formLocked: boolean = false;
     private pleaseUpdateAppMsg: string = null;
+    private browser: threema.BrowserInfo;
+    private browserWarningShown: boolean = false;
 
     public static $inject = [
         '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
-        'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService', 'VersionService',
-        'BROWSER_MIN_VERSIONS', 'CONFIG', 'ControllerService',
+        'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
+        'VersionService', 'SettingsService', 'ControllerService',
+        'BROWSER_MIN_VERSIONS', 'CONFIG',
     ];
-    constructor($scope: ng.IScope, $state: ng.ui.IStateService, $stateParams: threema.WelcomeStateParams,
+    constructor($scope: ng.IScope, $state: UiStateService, $stateParams: WelcomeStateParams,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
                 $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
-                webClientService: WebClientService, TrustedKeyStore: TrustedKeyStoreService,
+                webClientService: WebClientService, trustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService, pushService: PushService,
                 browserService: BrowserService,
                 versionService: VersionService,
+                settingsService: SettingsService,
+                controllerService: ControllerService,
                 minVersions: threema.BrowserMinVersions,
-                config: threema.Config,
-                controllerService: ControllerService) {
+                config: threema.Config) {
         controllerService.setControllerName('welcome');
         // Angular services
         this.$scope = $scope;
@@ -104,31 +123,37 @@ class WelcomeController {
 
         // Own services
         this.webClientService = webClientService;
-        this.TrustedKeyStore = TrustedKeyStore;
+        this.trustedKeyStore = trustedKeyStore;
         this.stateService = stateService;
         this.pushService = pushService;
+        this.settingsService = settingsService;
         this.config = config;
 
         // Determine whether browser warning should be shown
-        const browser = browserService.getBrowser();
-        const version = parseFloat(browser.version);
-        $log.debug('Detected browser:', browser.textInfo);
-        if (isNaN(version)) {
+        this.browser = browserService.getBrowser();
+        const version = this.browser.version;
+        $log.debug('Detected browser:', this.browser.textInfo);
+        if (version === undefined) {
             $log.warn('Could not determine browser version');
             this.showBrowserWarning();
-        } else if (browser.chrome === true) {
+        } else if (this.browser.chrome === true) {
             if (version < minVersions.CHROME) {
                 $log.warn('Chrome is too old (' + version + ' < ' + minVersions.CHROME + ')');
                 this.showBrowserWarning();
             }
-        } else if (browser.firefox === true) {
+        } else if (this.browser.firefox === true) {
             if (version < minVersions.FF) {
                 $log.warn('Firefox is too old (' + version + ' < ' + minVersions.FF + ')');
                 this.showBrowserWarning();
             }
-        } else if (browser.opera === true) {
+        } else if (this.browser.opera === true) {
             if (version < minVersions.OPERA) {
                 $log.warn('Opera is too old (' + version + ' < ' + minVersions.OPERA + ')');
+                this.showBrowserWarning();
+            }
+        } else if (this.browser.safari === true) {
+            if (version < minVersions.SAFARI) {
+                $log.warn('Safari is too old (' + version + ' < ' + minVersions.SAFARI + ')');
                 this.showBrowserWarning();
             }
         } else {
@@ -136,8 +161,16 @@ class WelcomeController {
             this.showBrowserWarning();
         }
 
+        // Show a "new version info" dialog the first time.
+        if (!this.browserWarningShown) {
+            // The browser warning dialog interferes with the new version dialog, so don't trigger both.
+            if (this.settingsService.retrieveUntrustedKeyValuePair('v2infoShown', false) !== 'yes') {
+                this.showNewVersionInfos();
+            }
+        }
+
         // Determine whether local storage is available
-        if (this.TrustedKeyStore.blocked === true) {
+        if (this.trustedKeyStore.blocked === true) {
             $log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
             this.showLocalStorageWarning();
         }
@@ -161,7 +194,7 @@ class WelcomeController {
         // Determine whether trusted key is available
         let hasTrustedKey = null;
         try {
-            hasTrustedKey = this.TrustedKeyStore.hasTrustedKey();
+            hasTrustedKey = this.trustedKeyStore.hasTrustedKey();
         } catch (e) {
             $log.error('Exception while accessing local storage:', e);
             this.showLocalStorageException(e);
@@ -257,8 +290,12 @@ class WelcomeController {
      * Decrypt the keys and initiate the session.
      */
     private unlockConfirm(): void {
-        const decrypted: threema.TrustedKeyStoreData = this.TrustedKeyStore.retrieveTrustedKey(this.password);
+        // Lock form to prevent further input
+        this.formLocked = true;
+
+        const decrypted: threema.TrustedKeyStoreData = this.trustedKeyStore.retrieveTrustedKey(this.password);
         if (decrypted === null) {
+            this.formLocked = false;
             return this.showDecryptionFailed();
         }
 
@@ -269,9 +306,9 @@ class WelcomeController {
         this.setupBroadcastChannel(keyStore.publicKeyHex);
 
         // Initialize push service
-        if (decrypted.pushToken !== null) {
-            this.pushService.init(decrypted.pushToken);
-            this.$log.debug(this.logTag, 'Initialize push service');
+        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
+            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
+            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
         }
 
         // Reconnect
@@ -328,7 +365,7 @@ class WelcomeController {
                         this.$log.error(this.logTag, 'Session already connected in another tab or window');
                         this.$timeout(() => {
                             this.stateService.updateConnectionBuildupState('already_connected');
-                            this.stateService.state = 'error';
+                            this.stateService.state = GlobalConnectionState.Error;
                         }, 500);
                     }
                     break;
@@ -358,6 +395,7 @@ class WelcomeController {
      * Show a browser warning dialog.
      */
     private showBrowserWarning(): void {
+        this.browserWarningShown = true;
         this.$translate.onReady().then(() => {
             const confirm = this.$mdDialog.confirm()
                 .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
@@ -368,7 +406,7 @@ class WelcomeController {
                 // do nothing
             }, () => {
                 // Redirect to Threema website
-                window.location.replace('https://threema.ch/');
+                window.location.replace('https://threema.ch/threema-web');
             });
         });
     }
@@ -421,10 +459,27 @@ class WelcomeController {
     private showAlreadyConnected(): void {
         this.$translate.onReady().then(() => {
             const confirm = this.$mdDialog.alert()
-            .title(this.$translate.instant('welcome.ALREADY_CONNECTED'))
-            .htmlContent(this.$translate.instant('welcome.ALREADY_CONNECTED_DETAILS'))
-            .ok(this.$translate.instant('common.OK'));
+                .title(this.$translate.instant('welcome.ALREADY_CONNECTED'))
+                .htmlContent(this.$translate.instant('welcome.ALREADY_CONNECTED_DETAILS'))
+                .ok(this.$translate.instant('common.OK'));
             this.$mdDialog.show(confirm);
+        });
+    }
+
+    /**
+     * Show version 2 release information.
+     * TODO: Remove this in next version!
+     */
+    private showNewVersionInfos(): void {
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.alert()
+                .title(this.$translate.instant('welcome.NEW_VERSION'))
+                .htmlContent(this.$translate.instant('welcome.NEW_VERSION_DETAILS'))
+                .ok(this.$translate.instant('common.UNDERSTOOD'));
+            this.$mdDialog.show(confirm).then(() => {
+                // Remember that dialog was dismissed
+                this.settingsService.storeUntrustedKeyValuePair('v2infoShown', 'yes');
+            });
         });
     }
 
@@ -441,10 +496,9 @@ class WelcomeController {
 
         this.$mdDialog.show(confirm).then(() =>  {
             // Force-stop the webclient
-            const deleteStoredData = true;
             const resetPush = true;
             const redirect = false;
-            this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
+            this.webClientService.stop(true, threema.DisconnectReason.SessionDeleted, resetPush, redirect);
 
             // Reset state
             this.stateService.updateConnectionBuildupState('new');
@@ -452,6 +506,7 @@ class WelcomeController {
             // Go back to scan mode
             this.mode = 'scan';
             this.password = '';
+            this.formLocked = false;
 
             // Initiate scan
             this.scan();
@@ -515,6 +570,7 @@ class WelcomeController {
 
                 // Clear local password variable
                 this.password = '';
+                this.formLocked = false;
 
                 // Redirect to home
                 this.$timeout(() => this.$state.go('messenger.home'), WelcomeController.REDIRECT_DELAY);
@@ -544,10 +600,9 @@ class WelcomeController {
 
 angular.module('3ema.welcome', [])
 
-.config(['$stateProvider', ($stateProvider: ng.ui.IStateProvider) => {
+.config(['$stateProvider', ($stateProvider: UiStateProvider) => {
 
     $stateProvider
-
         .state('welcome', {
             url: '/welcome',
             templateUrl: 'partials/welcome.html',

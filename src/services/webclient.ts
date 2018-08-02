@@ -15,11 +15,20 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/// <reference types="@saltyrtc/chunked-dc" />
+/// <reference types="@saltyrtc/task-webrtc" />
+/// <reference types="@saltyrtc/task-relayed-data" />
+
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import * as msgpack from 'msgpack-lite';
-import {hexToU8a} from '../helpers';
+import {hasFeature, hasValue, hexToU8a, msgpackVisualizer} from '../helpers';
+import {
+    isContactReceiver, isDistributionListReceiver, isGroupReceiver,
+    isValidDisconnectReason, isValidReceiverType,
+} from '../typeguards';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
-import {FingerPrintService} from './fingerprint';
 import {TrustedKeyStoreService} from './keystore';
 import {MessageService} from './message';
 import {MimeService} from './mime';
@@ -32,35 +41,9 @@ import {StateService} from './state';
 import {TitleService} from './title';
 import {VersionService} from './version';
 
-class WebClientDefault {
-    private avatar: threema.AvatarRegistry = {
-        group: {
-            low: 'img/ic_group_t.png',
-            high: 'img/ic_group_picture_big.png',
-        },
-        contact: {
-            low: 'img/ic_contact_picture_t.png',
-            high: 'img/ic_contact_picture_big.png',
-        },
-        distributionList: {
-            low: 'img/ic_distribution_list_t.png',
-            high: 'img/ic_distribution_list_t.png',
-        },
-    };
-
-    /**
-     * Return path to avatar.
-     *
-     * If the avatar type is invalid, return null.
-     */
-    public getAvatar(type: string, highResolution: boolean): string {
-        const field: string = highResolution ? 'high' : 'low';
-        if (typeof this.avatar[type] === 'undefined') {
-            return null;
-        }
-        return this.avatar[type][field];
-    }
-}
+// Aliases
+import InitializationStep = threema.InitializationStep;
+import ContactReceiverFeature = threema.ContactReceiverFeature;
 
 /**
  * This service handles everything related to the communication with the peer.
@@ -68,7 +51,7 @@ class WebClientDefault {
 export class WebClientService {
     private static AVATAR_LOW_MAX_SIZE = 48;
     private static MAX_TEXT_LENGTH = 3500;
-    private static MAX_FILE_SIZE = 15 * 1024 * 1024;
+    private static MAX_FILE_SIZE_WEBRTC = 15 * 1024 * 1024;
 
     private static TYPE_REQUEST = 'request';
     private static TYPE_RESPONSE = 'response';
@@ -76,9 +59,11 @@ export class WebClientService {
     private static TYPE_CREATE = 'create';
     private static TYPE_DELETE = 'delete';
     private static SUB_TYPE_RECEIVER = 'receiver';
+    private static SUB_TYPE_RECEIVERS = 'receivers';
     private static SUB_TYPE_CONVERSATIONS = 'conversations';
     private static SUB_TYPE_CONVERSATION = 'conversation';
     private static SUB_TYPE_MESSAGE = 'message';
+    private static SUB_TYPE_MESSAGES = 'messages';
     private static SUB_TYPE_TEXT_MESSAGE = 'textMessage';
     private static SUB_TYPE_FILE_MESSAGE = 'fileMessage';
     private static SUB_TYPE_AVATAR = 'avatar';
@@ -97,8 +82,10 @@ export class WebClientService {
     private static SUB_TYPE_GROUP_SYNC = 'groupSync';
     private static SUB_TYPE_BATTERY_STATUS = 'batteryStatus';
     private static SUB_TYPE_CLEAN_RECEIVER_CONVERSATION = 'cleanReceiverConversation';
+    private static SUB_TYPE_CONFIRM_ACTION = 'confirmAction';
+    private static SUB_TYPE_PROFILE = 'profile';
+    private static SUB_TYPE_CONNECTION_DISCONNECT = 'connectionDisconnect';
     private static ARGUMENT_MODE = 'mode';
-    private static ARGUMENT_MODE_REFRESH = 'refresh';
     private static ARGUMENT_MODE_NEW = 'new';
     private static ARGUMENT_MODE_MODIFIED = 'modified';
     private static ARGUMENT_MODE_REMOVED = 'removed';
@@ -106,8 +93,10 @@ export class WebClientService {
     private static ARGUMENT_RECEIVER_ID = 'id';
     private static ARGUMENT_TEMPORARY_ID = 'temporaryId';
     private static ARGUMENT_REFERENCE_MSG_ID = 'refMsgId';
+    private static ARGUMENT_AVATAR = 'avatar';
     private static ARGUMENT_AVATAR_HIGH_RESOLUTION = 'highResolution';
-    private static ARGUMENT_CONTACT_IS_TYPING = 'isTyping';
+    private static ARGUMENT_NICKNAME = 'publicNickname';
+    private static ARGUMENT_IS_TYPING = 'isTyping';
     private static ARGUMENT_MESSAGE_ID = 'messageId';
     private static ARGUMENT_HAS_MORE = 'more';
     private static ARGUMENT_MESSAGE_ACKNOWLEDGED = 'acknowledged';
@@ -122,13 +111,20 @@ export class WebClientService {
     private static ARGUMENT_DELETE_TYPE = 'deleteType';
     private static ARGUMENT_ERROR = 'error';
     private static ARGUMENT_MAX_SIZE = 'maxSize';
+    private static ARGUMENT_USER_AGENT = 'userAgent';
+    private static ARGUMENT_BROWSER_NAME = 'browserName';
+    private static ARGUMENT_BROWSER_VERSION = 'browserVersion';
+    private static DELETE_GROUP_TYPE_LEAVE = 'leave';
+    private static DELETE_GROUP_TYPE_DELETE = 'delete';
     private static DATA_FIELD_BLOB_BLOB = 'blob';
+    private static DATA_FIELD_BLOB_TYPE = 'type';
+    private static DATA_FIELD_BLOB_NAME = 'name';
     private static DC_LABEL = 'THREEMA';
 
     private logTag: string = '[WebClientService]';
 
     // Angular services
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
     private $log: ng.ILogService;
     private $rootScope: any;
     private $q: ng.IQService;
@@ -136,11 +132,11 @@ export class WebClientService {
     private $translate: ng.translate.ITranslateService;
     private $filter: any;
     private $timeout: ng.ITimeoutService;
+    private $mdDialog: ng.material.IDialogService;
 
     // Custom services
     private batteryStatusService: BatteryStatusService;
     private browserService: BrowserService;
-    private fingerPrintService: FingerPrintService;
     private messageService: MessageService;
     private mimeService: MimeService;
     private notificationService: NotificationService;
@@ -156,21 +152,31 @@ export class WebClientService {
     private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
     private initialized: Set<threema.InitializationStep> = new Set();
     private stateService: StateService;
+    private lastPush: Date = null;
 
     // SaltyRTC
     private saltyRtcHost: string = null;
     public salty: saltyrtc.SaltyRTC = null;
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask = null;
+    private relayedDataTask: saltyrtc.tasks.relayed_data.RelayedDataTask = null;
     private secureDataChannel: saltyrtc.tasks.webrtc.SecureDataChannel = null;
+    public chosenTask: threema.ChosenTask = threema.ChosenTask.None;
+
+    // Message chunking
+    private messageSerial = 0;
+    private messageChunkSize = 64 * 1024;
+    private unchunker: chunkedDc.Unchunker = null;
 
     // Messenger data
     public messages: threema.Container.Messages;
     public conversations: threema.Container.Conversations;
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
-    public defaults: WebClientDefault;
-    private myIdentity: threema.Identity;
     private pushToken: string = null;
+    private pushTokenType: threema.PushTokenType = null;
+
+    // Pending messages when waiting for a responder to connect
+    private outgoingMessageQueue: threema.WireMessage[] = [];
 
     // Other
     private config: threema.Config;
@@ -178,11 +184,12 @@ export class WebClientService {
     private typingInstance: threema.Container.Typing;
     private drafts: threema.Container.Drafts;
     private pcHelper: PeerConnectionHelper = null;
-    private clientInfo: threema.ClientInfo;
     private trustedKeyStore: TrustedKeyStoreService;
+    public clientInfo: threema.ClientInfo;
     public version = null;
+    private batteryStatusTimeout: ng.IPromise<void> = null;
 
-    private blobCache = new Map<string, ArrayBuffer>();
+    private blobCache = new Map<string, threema.BlobInfo>();
     private loadingMessages = new Map<string, boolean>();
 
     public receiverListener: threema.ReceiverListener[] = [];
@@ -199,21 +206,22 @@ export class WebClientService {
     private requestPromises: Map<string, threema.PromiseCallbacks> = new Map();
 
     public static $inject = [
-        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout',
+        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout', '$mdDialog',
         'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
-        'TitleService', 'FingerPrintService', 'QrCodeService', 'MimeService', 'ReceiverService',
+        'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
         'VersionService', 'BatteryStatusService',
         'CONFIG',
     ];
     constructor($log: ng.ILogService,
                 $rootScope: any,
                 $q: ng.IQService,
-                $state: ng.ui.IStateService,
+                $state: UiStateService,
                 $window: ng.IWindowService,
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,
                 $timeout: ng.ITimeoutService,
+                $mdDialog: ng.material.IDialogService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService,
@@ -222,7 +230,6 @@ export class WebClientService {
                 pushService: PushService,
                 browserService: BrowserService,
                 titleService: TitleService,
-                fingerPrintService: FingerPrintService,
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
@@ -239,11 +246,11 @@ export class WebClientService {
         this.$translate = $translate;
         this.$filter = $filter;
         this.$timeout = $timeout;
+        this.$mdDialog = $mdDialog;
 
         // Own services
         this.batteryStatusService = batteryStatusService;
         this.browserService = browserService;
-        this.fingerPrintService = fingerPrintService;
         this.messageService = messageService;
         this.mimeService = mimeService;
         this.notificationService = notificationService;
@@ -263,9 +270,6 @@ export class WebClientService {
         this.container = container;
         this.trustedKeyStore = trustedKeyStore;
 
-        // Get default class
-        this.defaults = new WebClientDefault();
-
         // Initialize drafts
         this.drafts = this.container.createDrafts();
 
@@ -280,6 +284,7 @@ export class WebClientService {
                 }
             },
         );
+        this.stateService.evtGlobalConnectionStateChange.attach(this.handleGlobalConnectionStateChange.bind(this));
     }
 
     get me(): threema.MeReceiver {
@@ -324,6 +329,9 @@ export class WebClientService {
         const maxPacketSize = this.browserService.getBrowser().firefox ? 16384 : 65536;
         this.webrtcTask = new saltyrtcTaskWebrtc.WebRTCTask(true, maxPacketSize);
 
+        // Create Relayed Data task instance
+        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.DEBUG);
+
         // Create new keystore if necessary
         if (!keyStore) {
             keyStore = new saltyrtcClient.KeyStore();
@@ -340,17 +348,30 @@ export class WebClientService {
                 + this.config.SALTYRTC_HOST_SUFFIX;
         }
 
+        // Determine SaltyRTC tasks
+        let tasks;
+        if (this.browserService.supportsWebrtcTask()) {
+            tasks = [this.webrtcTask, this.relayedDataTask];
+        } else {
+            tasks = [this.relayedDataTask];
+        }
+
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()
             .connectTo(this.saltyRtcHost, this.config.SALTYRTC_PORT)
             .withServerKey(this.config.SALTYRTC_SERVER_KEY)
             .withKeyStore(keyStore)
-            .usingTasks([this.webrtcTask])
+            .usingTasks(tasks)
             .withPingInterval(30);
         if (keyStore !== undefined && peerTrustedKey !== undefined) {
             builder = builder.withTrustedPeerKey(peerTrustedKey);
         }
         this.salty = builder.asInitiator();
+
+        if (this.config.DEBUG) {
+            this.$log.debug('Public key:', this.salty.permanentKeyHex);
+            this.$log.debug('Auth token:', this.salty.authTokenHex);
+        }
 
         // We want to know about new responders.
         this.salty.on('new-responder', () => {
@@ -390,130 +411,72 @@ export class WebClientService {
                             this.stateService.updateConnectionBuildupState('closed');
                             break;
                         default:
-                            this.$log.warn('Unknown signaling state:', state);
+                            this.$log.warn(this.logTag, 'Unknown signaling state:', state);
                     }
                 }
-                this.stateService.updateSignalingConnectionState(state);
+                this.stateService.updateSignalingConnectionState(state, this.chosenTask);
             }, 0);
         });
 
-        // Once the connection is established, initiate the peer connection
-        // and start the handover.
+        // Once the connection is established, if this is a WebRTC connection,
+        // initiate the peer connection and start the handover.
         this.salty.once('state-change:task', () => {
-            // Firefox <53 does not yet support TLS. Skip it, to save allocations.
-            const browser = this.browserService.getBrowser();
-            if (browser.firefox && parseFloat(browser.version) < 53) {
-                this.skipIceTls();
+
+            // Determine chosen task
+            const task = this.salty.getTask();
+            if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
+                this.chosenTask = threema.ChosenTask.WebRTC;
+            } else if (task.getName().indexOf('relayed-data.tasks.saltyrtc.org') !== -1) {
+                this.chosenTask = threema.ChosenTask.RelayedData;
+            } else {
+                throw new Error('Invalid or unknown task name: ' + task.getName());
             }
 
-            this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
-                                                     this.$rootScope, this.webrtcTask,
-                                                     this.config.ICE_SERVERS,
-                                                     !this.config.ICE_DEBUGGING);
+            // If the WebRTC task was chosen, initialize handover.
+            if (this.chosenTask === threema.ChosenTask.WebRTC) {
+                const browser = this.browserService.getBrowser();
 
-            // On state changes in the PeerConnectionHelper class, let state service know about it
-            this.pcHelper.onConnectionStateChange = (state: threema.RTCConnectionState) => {
-                this.stateService.updateRtcConnectionState(state);
-            };
+                // Firefox <53 does not yet support TLS. Skip it, to save allocations.
+                if (browser.firefox && browser.version && browser.version < 53) {
+                    this.skipIceTls();
+                }
 
-            // Initiate handover
-            this.webrtcTask.handover(this.pcHelper.peerConnection);
+                // Safari does not support our dual-stack TURN servers.
+                if (browser.safari) {
+                    this.skipIceDs();
+                }
+
+                this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
+                    this.$rootScope, this.webrtcTask,
+                    this.config.ICE_SERVERS,
+                    !this.config.ICE_DEBUGGING);
+
+                // On state changes in the PeerConnectionHelper class, let state service know about it
+                this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
+                    this.stateService.updateTaskConnectionState(state);
+                };
+
+                // Initiate handover
+                this.webrtcTask.handover(this.pcHelper.peerConnection);
+
+            // Otherwise, no handover is necessary.
+            } else {
+                this.onHandover(resetFields);
+                return;
+            }
         });
 
-        // Handle a disconnect request
-        this.salty.on('application', (applicationData: any) => {
-            if (applicationData.data.type === 'disconnect') {
-                this.$log.debug(this.logTag, 'Disconnecting requested');
-                const deleteStoredData = applicationData.data.forget === true;
-                const resetPush = true;
-                const redirect = true;
-                this.stop(false, deleteStoredData, resetPush, redirect);
-            }
+        // Handle disconnecting of a peer
+        this.salty.on('peer-disconnected', (ev: saltyrtc.SaltyRTCEvent) => {
+            this.$rootScope.$apply(() => {
+                this.onPeerDisconnected(ev.data);
+            });
         });
 
         // Wait for handover to be finished
         this.salty.on('handover', () => {
             this.$log.debug(this.logTag, 'Handover done');
-
-            // Initialize NotificationService
-            this.$log.debug(this.logTag, 'Initializing NotificationService...');
-            this.notificationService.init();
-
-            // Create secure data channel
-            this.$log.debug(this.logTag, 'Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
-            this.secureDataChannel = this.pcHelper.createSecureDataChannel(
-                WebClientService.DC_LABEL,
-                (event: Event) => {
-                    this.$log.debug(this.logTag, 'SecureDataChannel open');
-
-                    // Initialize fields
-                    if (resetFields) {
-                        this._resetFields();
-                    }
-
-                    // Resolve startup promise once initialization is done
-                    if (this.startupPromise !== null) {
-                        this.runAfterInitializationSteps(['client info', 'conversations', 'receivers'], () => {
-                            this.stateService.updateConnectionBuildupState('done');
-                            this.startupPromise.resolve();
-                            this.startupPromise = null;
-                            this.startupDone = true;
-                            this._resetInitializationSteps();
-                        });
-                    }
-
-                    // Request initial data
-                    this._requestInitialData();
-
-                    // Fetch current version
-                    // Delay it to prevent the dialog from being closed by the messenger constructor,
-                    // which closes all open dialogs.
-                    this.$timeout(() => this.versionService.checkForUpdate(), 7000);
-
-                    // Notify state service about data loading
-                    this.stateService.updateConnectionBuildupState('loading');
-                },
-            );
-
-            // Handle incoming messages
-            type RTCMessageEvent = (event: MessageEvent) => void;
-            this.secureDataChannel.onmessage = (event: MessageEvent) => {
-                this.$log.debug('New incoming message (' + event.data.byteLength + ' bytes)');
-
-                // Decode bytes
-                const bytes = new Uint8Array(event.data);
-                const message: threema.WireMessage = this.msgpackDecode(bytes);
-
-                // Validate message to keep contract defined by `threema.WireMessage` type
-                if (message.type === undefined) {
-                    this.$log.warn('Ignoring invalid message (no type attribute)');
-                    return;
-                } else if (message.subType === undefined) {
-                    this.$log.warn('Ignoring invalid message (no subType attribute)');
-                    return;
-                }
-
-                if (this.config.MSG_DEBUGGING) {
-                    // Deep copy message to prevent issues with JS debugger
-                    const deepcopy = JSON.parse(JSON.stringify(message));
-                    this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
-                }
-
-                // Process data
-                this.$rootScope.$apply(() => {
-                    this.receive(message);
-                });
-            };
-            this.secureDataChannel.onbufferedamountlow = (e: Event) => {
-                this.$log.debug('Secure data channel: Buffered amount low');
-            };
-            this.secureDataChannel.onerror = (e: ErrorEvent) => {
-                this.$log.warn('Secure data channel: Error:', e.message);
-                this.$log.debug(e);
-            };
-            this.secureDataChannel.onclose = (e: Event) => {
-                this.$log.warn('Secure data channel: Closed');
-            };
+            this.onHandover(resetFields);
         });
 
         // Handle SaltyRTC errors
@@ -523,14 +486,213 @@ export class WebClientService {
         this.salty.on('connection-closed', (ev) => {
             this.$log.warn('Connection closed:', ev);
         });
+        this.salty.on('no-shared-task', (ev) => {
+            this.$log.warn('No shared task found:', ev.data);
+            const requestedWebrtc = ev.data.requested.filter((t) => t.endsWith('webrtc.tasks.saltyrtc.org')).length > 0;
+            const offeredWebrtc = ev.data.offered.filter((t) => t.endsWith('webrtc.tasks.saltyrtc.org')).length > 0;
+            if (!this.browserService.supportsWebrtcTask() && offeredWebrtc) {
+                this.showWebrtcAndroidWarning();
+            } else {
+                this.$mdDialog.show(this.$mdDialog.alert()
+                    .title('Error')
+                    .htmlContent('No shared SaltyRTC task found')
+                    .ok('OK'));
+            }
+        });
+    }
+
+    /**
+     * Show a WebRTC on Android warning dialog.
+     */
+    private showWebrtcAndroidWarning(): void {
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.alert()
+                .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_ANDROID'))
+                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
+                .ok(this.$translate.instant('welcome.ABORT'));
+            this.$mdDialog.show(confirm).then(() => {
+                // Redirect to Threema website
+                window.location.replace('https://threema.ch/threema-web');
+            });
+        });
+    }
+
+    /**
+     * For the WebRTC task, this is called when the DataChannel is open.
+     * For the relayed data task, this is called once the connection is established.
+     */
+    private onConnectionEstablished(resetFields: boolean) {
+        // Reset fields if requested
+        if (resetFields) {
+            this._resetFields();
+        }
+
+        // Determine whether to request initial data
+        const requestInitialData: boolean =
+            (resetFields === true) ||
+            (this.chosenTask === threema.ChosenTask.WebRTC);
+
+        // Only request initial data if this is not a soft reconnect
+        let requiredInitializationSteps;
+        if (requestInitialData) {
+            requiredInitializationSteps = [
+                InitializationStep.ClientInfo,
+                InitializationStep.Conversations,
+                InitializationStep.Receivers,
+                InitializationStep.Profile,
+            ];
+        } else {
+            requiredInitializationSteps = [];
+        }
+
+        // Resolve startup promise once initialization is done
+        if (this.startupPromise !== null) {
+            this.runAfterInitializationSteps(requiredInitializationSteps, () => {
+                this.stateService.updateConnectionBuildupState('done');
+                this.startupPromise.resolve();
+                this.startupPromise = null;
+                this.startupDone = true;
+                this._resetInitializationSteps();
+            });
+        }
+
+        // Request initial data
+        if (requestInitialData) {
+            this._requestInitialData();
+        }
+
+        // Fetch current version
+        // Delay it to prevent the dialog from being closed by the messenger constructor,
+        // which closes all open dialogs.
+        this.$timeout(() => this.versionService.checkForUpdate(), 7000);
+
+        // Notify state service about data loading
+        this.stateService.updateConnectionBuildupState('loading');
+
+        // Process pending messages
+        if (this.outgoingMessageQueue.length > 0) {
+            this.$log.debug(this.logTag, 'Sending', this.outgoingMessageQueue.length, 'pending messages');
+            while (true) {
+                const msg = this.outgoingMessageQueue.shift();
+                if (msg === undefined) {
+                    break;
+                } else {
+                    this.send(msg);
+                }
+            }
+        }
+    }
+
+    /**
+     * Handover done.
+     *
+     * This can either be a real handover to WebRTC (Android), or simply
+     * when the relayed data task takes over (iOS).
+     */
+    private onHandover(resetFields: boolean) {
+        // Initialize NotificationService
+        this.$log.debug(this.logTag, 'Initializing NotificationService...');
+        this.notificationService.init();
+
+        // If the WebRTC task was chosen, initialize the data channel
+        if (this.chosenTask === threema.ChosenTask.WebRTC) {
+            // Create secure data channel
+            this.$log.debug(this.logTag, 'Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
+            this.secureDataChannel = this.pcHelper.createSecureDataChannel(
+                WebClientService.DC_LABEL,
+                (event: Event) => {
+                    this.$log.debug(this.logTag, 'SecureDataChannel open');
+                    this.onConnectionEstablished(resetFields);
+                },
+            );
+
+            // Handle incoming messages
+            this.secureDataChannel.onmessage = (ev: MessageEvent) => {
+                const bytes = new Uint8Array(ev.data);
+                this.handleIncomingMessageBytes(bytes);
+            };
+            this.secureDataChannel.onbufferedamountlow = (ev: Event) => {
+                this.$log.debug('Secure data channel: Buffered amount low');
+            };
+            this.secureDataChannel.onerror = (e: ErrorEvent) => {
+                this.$log.warn('Secure data channel: Error:', e.message);
+                this.$log.debug(e);
+            };
+            this.secureDataChannel.onclose = (ev: Event) => {
+                this.$log.warn('Secure data channel: Closed');
+            };
+        } else if (this.chosenTask === threema.ChosenTask.RelayedData) {
+            // Handle messages directly
+            this.relayedDataTask.on('data', (ev: saltyrtc.SaltyRTCEvent) => {
+                const chunk = new Uint8Array(ev.data);
+                if (this.config.MSG_DEBUGGING && this.config.DEBUG) {
+                    this.$log.debug('[Chunk] Received chunk:', chunk);
+                }
+                this.unchunker.add(chunk.buffer);
+            });
+
+            // The communication channel is now open! Fetch initial data
+            this.onConnectionEstablished(resetFields);
+        }
+    }
+
+    /**
+     * A previously authenticated peer disconnected from the server.
+     */
+    private onPeerDisconnected(peerId: number) {
+        switch (this.chosenTask) {
+            case threema.ChosenTask.RelayedData:
+                if (this.stateService.taskConnectionState === threema.TaskConnectionState.Connected) {
+                    this.stateService.updateTaskConnectionState(threema.TaskConnectionState.Reconnecting);
+                } else {
+                    this.$log.debug(
+                        this.logTag,
+                        'Ignoring peer-disconnected event (state is '
+                        + this.stateService.taskConnectionState + ')',
+                    );
+                }
+                break;
+            default:
+                this.$log.debug(
+                    this.logTag,
+                    'Ignoring peer-disconnected event (chosen task is ' + this.chosenTask + ')',
+                );
+        }
+    }
+
+    /**
+     * Send a push message to wake up the peer.
+     * The push message will only be sent if the last push is less than 2 seconds ago.
+     */
+    private sendPush(wakeupType: threema.WakeupType): void {
+        // Make sure not to flood the target device with pushes
+        const minPushInterval = 2000;
+        const now = new Date();
+        if (this.lastPush !== null && (now.getTime() - this.lastPush.getTime()) < minPushInterval) {
+            this.$log.debug(this.logTag,
+                'Skipping push, last push was requested less than ' + (minPushInterval / 1000) + 's ago');
+            return;
+        }
+        this.lastPush = now;
+
+        // Actually send the push notification
+        this.pushService.sendPush(this.salty.permanentKeyBytes, wakeupType)
+            .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
+            .then(() => {
+                const wakeupTypeString = wakeupType === threema.WakeupType.FullReconnect ? 'reconnect' : 'wakeup';
+                this.$log.debug(this.logTag, 'Requested app', wakeupTypeString, 'via', this.pushTokenType, 'push');
+                this.$rootScope.$apply(() => {
+                    this.stateService.updateConnectionBuildupState('push');
+                });
+            });
     }
 
     /**
      * Start the webclient service.
      * Return a promise that resolves once connected.
      */
-    public start(): ng.IPromise<any> {
-        this.$log.debug('Starting WebClientService...');
+    public start(skipPush: boolean = false): ng.IPromise<any> {
+        this.$log.debug(this.logTag, 'Starting WebClientService...');
 
         // Promise to track startup state
         this.startupPromise = this.$q.defer();
@@ -540,17 +702,12 @@ export class WebClientService {
         this.salty.connect();
 
         // If push service is available, notify app
-        if (this.pushService.isAvailable()) {
-            this.pushService.sendPush(this.salty.permanentKeyBytes)
-                .catch(() => this.$log.warn('Could not notify app!'))
-                .then(() => {
-                    this.$log.debug('Requested app wakeup');
-                    this.$rootScope.$apply(() => {
-                        this.stateService.updateConnectionBuildupState('push');
-                    });
-                });
+        if (skipPush === true) {
+            this.$log.debug(this.logTag, 'start(): Skipping push notification');
+        } else if (this.pushService.isAvailable()) {
+            this.sendPush(threema.WakeupType.FullReconnect);
         } else if (this.trustedKeyStore.hasTrustedKey()) {
-            this.$log.debug('Push service not available');
+            this.$log.debug(this.logTag, 'Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
         }
 
@@ -565,19 +722,20 @@ export class WebClientService {
      * Parameters:
      *
      * - `requestedByUs`: Set this to `false` if the app requested to close the session.
-     * - `deleteStoredData`: Whether to clear any trusted key or push token from the keystore.
+     * - `reason`: The disconnect reason. When this is `SessionDeleted`, the function
+     *             will clear any trusted key or push token from the keystore.
      * - `resetPush`: Whether to reset the push service.
      * - `redirect`: Whether to redirect to the welcome page.
      */
     public stop(requestedByUs: boolean,
-                deleteStoredData: boolean = false,
+                reason: threema.DisconnectReason,
                 resetPush: boolean = true,
                 redirect: boolean = false): void {
         this.$log.info(this.logTag, 'Disconnecting...');
 
-        if (requestedByUs && this.stateService.rtcConnectionState === 'connected') {
+        if (requestedByUs && this.stateService.state === threema.GlobalConnectionState.Ok) {
             // Ask peer to disconnect too
-            this.salty.sendApplicationMessage({type: 'disconnect', forget: deleteStoredData});
+            this._sendUpdate(WebClientService.SUB_TYPE_CONNECTION_DISCONNECT, undefined, {reason: reason});
         }
 
         this.stateService.reset();
@@ -586,6 +744,7 @@ export class WebClientService {
         this.resetUnreadCount();
 
         // Clear stored data (trusted key, push token, etc)
+        const deleteStoredData = reason === threema.DisconnectReason.SessionDeleted;
         if (deleteStoredData === true) {
             this.trustedKeyStore.clearTrustedKey();
         }
@@ -622,7 +781,7 @@ export class WebClientService {
             this.pcHelper.close()
                 .then(
                     () => this.$log.debug(this.logTag, 'Peer connection was closed'),
-                    (reason: string) => this.$log.warn(this.logTag, 'Peer connection could not be closed:', reason),
+                    (msg: string) => this.$log.warn(this.logTag, 'Peer connection could not be closed:', msg),
                 )
                 .finally(() => redirectToWelcome());
         } else {
@@ -646,6 +805,27 @@ export class WebClientService {
             }
         } else {
             this.$log.debug(this.logTag, 'No fallback TURN TCP server present, keeping TURNS server');
+        }
+    }
+
+    /**
+     * Safari has issues with dual-stack TURN servers:
+     * https://bugs.webkit.org/show_bug.cgi?id=173307#c13
+     * As a workaround, replace ds-turn.threema.ch servers
+     * in the ICE_SERVERS configuration with turn.threema.ch.
+     */
+    public skipIceDs(): void {
+        this.$log.debug(this.logTag, 'Requested to replace DS servers in ICE configuration');
+        const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
+        if (allUrls.some((url) => url.includes('ds-turn.threema.ch'))) {
+            for (const server of this.config.ICE_SERVERS) {
+                // Replace dual stack entries
+                server.urls = server.urls.map((url) => {
+                    return url.replace('ds-turn.threema.ch', 'turn.threema.ch');
+                });
+            }
+        } else {
+            this.$log.debug(this.logTag, 'No ds-turn ICE server present');
         }
     }
 
@@ -687,17 +867,25 @@ export class WebClientService {
      */
     public requestClientInfo(): void {
         this.$log.debug('Sending client info request');
-        this._sendRequest(WebClientService.SUB_TYPE_CLIENT_INFO, {
-            browser: navigator.userAgent,
-        });
+        const browser = this.browserService.getBrowser();
+        const data: object = {
+            [WebClientService.ARGUMENT_USER_AGENT]: navigator.userAgent,
+        };
+        if (browser.name) {
+            data[WebClientService.ARGUMENT_BROWSER_NAME] = browser.name;
+        }
+        if (browser.version) {
+            data[WebClientService.ARGUMENT_BROWSER_VERSION] = browser.version;
+        }
+        this._sendRequest(WebClientService.SUB_TYPE_CLIENT_INFO, undefined, data);
     }
 
     /**
-     * Send a receiver request.
+     * Send a receivers request.
      */
     public requestReceivers(): void {
-        this.$log.debug('Sending receiver request');
-        this._sendRequest(WebClientService.SUB_TYPE_RECEIVER);
+        this.$log.debug('Sending receivers request');
+        this._sendRequest(WebClientService.SUB_TYPE_RECEIVERS);
     }
 
     /**
@@ -719,6 +907,14 @@ export class WebClientService {
     }
 
     /**
+     * Send a profile request.
+     */
+    public requestProfile(): void {
+        this.$log.debug('Sending profile request');
+        this._sendRequest(WebClientService.SUB_TYPE_PROFILE);
+    }
+
+    /**
      * Send a message request for the specified receiver.
      *
      * This method will only be called when initializing a conversation in the
@@ -727,7 +923,7 @@ export class WebClientService {
      * New messages are not requested this way, instead they are sent as a
      * message update.
      */
-    public requestMessages(receiver: threema.Receiver): number {
+    public requestMessages(receiver: threema.Receiver): string {
         // If there are no more messages available, stop here.
         if (!this.messages.hasMore(receiver)) {
             this.messages.notify(receiver, this.$rootScope);
@@ -764,7 +960,7 @@ export class WebClientService {
         this.$log.debug('Sending message request for', receiver.type, receiver.id,
             'with message id', msgId);
 
-        this._sendRequest(WebClientService.SUB_TYPE_MESSAGE, args);
+        this._sendRequest(WebClientService.SUB_TYPE_MESSAGES, args);
 
         return refMsgId;
     }
@@ -772,21 +968,24 @@ export class WebClientService {
     /**
      * Send an avatar request for the specified receiver.
      */
-    public requestAvatar(receiver: threema.Receiver, highResolution: boolean): Promise<any> {
+    public requestAvatar(receiver: threema.Receiver, highResolution: boolean): Promise<ArrayBuffer> {
         // Check if the receiver has an avatar or the avatar already exists
         const resolution = highResolution ? 'high' : 'low';
         const receiverInfo = this.receivers.getData(receiver);
         if (receiverInfo && receiverInfo.avatar && receiverInfo.avatar[resolution]) {
             // Avatar already exists
             // TODO: Do we get avatar changes via update?
-            return new Promise<any>((e) => {
-                e(receiverInfo.avatar[resolution]);
-            });
+            return Promise.resolve(receiverInfo.avatar[resolution]);
         }
 
+        // If we're requesting our own avatar, change type from "me" to "contact"
+        let receiverType = receiver.type;
+        if (receiverType === 'me') {
+            receiverType = 'contact';
+        }
         // Create arguments and send request
         const args = {
-            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiverType,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION]: highResolution,
         } as any;
@@ -812,7 +1011,7 @@ export class WebClientService {
 
         // Create arguments and send request
         const args = {
-            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id.toString(),
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
         };
@@ -824,12 +1023,12 @@ export class WebClientService {
     /**
      * Request a blob.
      */
-    public requestBlob(msgId: number, receiver: threema.Receiver): Promise<ArrayBuffer> {
+    public requestBlob(msgId: string, receiver: threema.Receiver): Promise<threema.BlobInfo> {
         const cached = this.blobCache.get(msgId + receiver.type);
 
         if (cached !== undefined) {
 
-            this.$log.debug('Use cached blob');
+            this.$log.debug(this.logTag, 'Use cached blob');
             return new Promise((resolve) => {
                 resolve(cached);
             });
@@ -844,25 +1043,26 @@ export class WebClientService {
     }
 
     /**
+     * Mark a message as read.
      */
-    public requestRead(receiver, newestMessageId: number): void {
-        // Check if the receiver has an avatar or the avatar already exists
-        // let field: string = highResolution ? 'high' : 'low';
-        // let data = this.receivers.getData(receiver);
-        // if (data && data['avatar'] && data['avatar'][field]) {
-        //     return;
-        // }
-        // if (data && data.hasAvatar === false) {
-        //     return;
-        // }
+    public requestRead(receiver, newestMessage: threema.Message): void {
+        if (newestMessage.id === undefined) {
+            // Message that hasn't been sent yet
+            this.$log.warn(this.logTag, 'Called requestRead on a message without id');
+            return;
+        }
+        if (newestMessage.type === 'status') {
+            this.$log.warn(this.logTag, 'Called requestRead on a status message');
+            return;
+        }
 
         // Create arguments and send request
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_MESSAGE_ID]: newestMessageId,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: newestMessage.id.toString(),
         };
-        this.$log.debug('Sending read request for', receiver.type, receiver.id, '(msg ' + newestMessageId + ')');
+        this.$log.debug('Sending read request for', receiver.type, receiver.id, '(msg ' + newestMessage.id + ')');
         this._sendRequest(WebClientService.SUB_TYPE_READ, args);
     }
 
@@ -883,8 +1083,7 @@ export class WebClientService {
                 // Try to load receiver object
                 const receiverObject = this.receivers.getData(receiver);
                 // Check blocked flag
-                if (receiverObject.type === 'contact'
-                    && (receiverObject as threema.ContactReceiver).isBlocked) {
+                if (isContactReceiver(receiverObject) && receiverObject.isBlocked) {
                     return reject(this.$translate.instant('error.CONTACT_BLOCKED'));
                 }
                 // Decide on subtype
@@ -910,25 +1109,33 @@ export class WebClientService {
 
                         break;
                     case 'file':
-                        // validate max file size
-                        if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE) {
-                            return reject(this.$translate.instant('error.FILE_TOO_LARGE'));
+                        // Validate max file size
+                        if (this.chosenTask === threema.ChosenTask.WebRTC) {
+                            if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE_WEBRTC) {
+                                return reject(this.$translate.instant('error.FILE_TOO_LARGE_WEB'));
+                            }
+                        } else {
+                            if ((message as threema.FileMessageData).size > this.clientInfo.capabilities.maxFileSize) {
+                                return reject(this.$translate.instant('error.FILE_TOO_LARGE', {
+                                    maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
+                                }));
+                            }
                         }
 
-                        // Determine required feature level
-                        let requiredFeatureLevel = 3;
-                        let invalidFeatureLevelMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
+                        // Determine required feature mask
+                        let requiredFeature: ContactReceiverFeature = ContactReceiverFeature.FILE;
+                        let invalidFeatureMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
                         if ((message as threema.FileMessageData).sendAsFile !== true) {
                             // check mime type
                             const mime = (message as threema.FileMessageData).fileType;
 
                             if (this.mimeService.isAudio(mime)) {
-                                requiredFeatureLevel = 1;
-                                invalidFeatureLevelMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
+                                requiredFeature = ContactReceiverFeature.AUDIO;
+                                invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
                             } else if (this.mimeService.isImage(mime)
                                 || this.mimeService.isVideo(mime)) {
-                                requiredFeatureLevel = 0;
-                                invalidFeatureLevelMessage = 'error.MESSAGE_NOT_SUPPORTED';
+                                requiredFeature = ContactReceiverFeature.AUDIO;
+                                invalidFeatureMessage = 'error.MESSAGE_NOT_SUPPORTED';
                             }
                         }
 
@@ -937,7 +1144,7 @@ export class WebClientService {
                         // check receiver
                         switch (receiver.type) {
                             case 'distributionList':
-                                return reject(this.$translate.instant(invalidFeatureLevelMessage, {
+                                return reject(this.$translate.instant(invalidFeatureMessage, {
                                     receiverName: receiver.displayName}));
                             case 'group':
                                 const unsupportedMembers = [];
@@ -950,14 +1157,15 @@ export class WebClientService {
                                     if (identity !== this.me.id) {
                                         // tslint:disable-next-line: no-shadowed-variable
                                         const contact = this.contacts.get(identity);
-                                        if (contact !== undefined && contact.featureLevel < requiredFeatureLevel) {
+                                        if (contact === undefined
+                                            || !hasFeature(contact, requiredFeature, this.$log)) {
                                             unsupportedMembers.push(contact.displayName);
                                         }
                                     }
                                 });
 
                                 if (unsupportedMembers.length > 0) {
-                                    return reject(this.$translate.instant(invalidFeatureLevelMessage, {
+                                    return reject(this.$translate.instant(invalidFeatureMessage, {
                                         receiverName: unsupportedMembers.join(',')}));
                                 }
                                 break;
@@ -966,10 +1174,10 @@ export class WebClientService {
                                 if (contact === undefined) {
                                     this.$log.error('Cannot retrieve contact');
                                     return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                                } else if (contact.featureLevel < requiredFeatureLevel) {
+                                } else if (!hasFeature(contact, requiredFeature, this.$log)) {
                                     this.$log.debug('Cannot send message: Feature level mismatch:',
-                                        contact.featureLevel, '<', requiredFeatureLevel);
-                                    return reject(this.$translate.instant(invalidFeatureLevelMessage, {
+                                        contact.featureMask, 'does not include', requiredFeature);
+                                    return reject(this.$translate.instant(invalidFeatureMessage, {
                                         receiverName: contact.displayName}));
                                 }
                                 break;
@@ -1002,7 +1210,7 @@ export class WebClientService {
                     let errorMessage;
                     switch (error) {
                         case 'file_too_large':
-                            errorMessage = this.$translate.instant('error.FILE_TOO_LARGE');
+                            errorMessage = this.$translate.instant('error.FILE_TOO_LARGE_GENERIC');
                             break;
                         case 'blocked':
                             errorMessage = this.$translate.instant('error.CONTACT_BLOCKED');
@@ -1037,14 +1245,14 @@ export class WebClientService {
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id.toString(),
             [WebClientService.ARGUMENT_MESSAGE_ACKNOWLEDGED]: acknowledged,
         };
         this._sendRequest(WebClientService.SUB_TYPE_ACK, args);
     }
 
     /**
-     * Send a message a ack/decline message
+     * Delete a message.
      */
     public deleteMessage(receiver, message: threema.Message): void {
         // Ignore empty text messages
@@ -1055,19 +1263,15 @@ export class WebClientService {
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id,
+            [WebClientService.ARGUMENT_MESSAGE_ID]: message.id.toString(),
         };
-        this._sendDelete(WebClientService.SUB_TYPE_MESSAGE, args);
+        this._sendDeletePromise(WebClientService.SUB_TYPE_MESSAGE, args);
     }
 
-    public sendMeIsTyping(receiver, isTyping: boolean): void {
-        // Create arguments and send create
-        const args = {
-            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
-            [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-            [WebClientService.ARGUMENT_CONTACT_IS_TYPING]: isTyping,
-        };
-        this._sendRequest(WebClientService.SUB_TYPE_TYPING, args);
+    public sendMeIsTyping(receiver: threema.ContactReceiver, isTyping: boolean): void {
+        const args = {[WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id};
+        const data = {[WebClientService.ARGUMENT_IS_TYPING]: isTyping};
+        this._sendUpdate(WebClientService.SUB_TYPE_TYPING, args, data);
     }
 
     public sendKeyPersisted(): void {
@@ -1075,79 +1279,107 @@ export class WebClientService {
     }
 
     /**
-     * Send a add Contact request
+     * Add a contact receiver.
      */
     public addContact(threemaId: string): Promise<threema.ContactReceiver> {
-        return this._sendCreatePromise(WebClientService.SUB_TYPE_CONTACT, {
+        const args = null;
+        const data = {
             [WebClientService.ARGUMENT_IDENTITY]: threemaId,
-        });
+        };
+        return this._sendCreatePromise(WebClientService.SUB_TYPE_CONTACT, args, data);
     }
 
     /**
      * Modify a contact name or a avatar
      */
     public modifyContact(threemaId: string,
-                         firstName: string,
-                         lastName: string,
+                         firstName?: string,
+                         lastName?: string,
                          avatar?: ArrayBuffer): Promise<threema.ContactReceiver> {
-        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, {
-            [WebClientService.ARGUMENT_IDENTITY]: threemaId,
-        }, {
-            [WebClientService.ARGUMENT_FIRST_NAME]: firstName,
-            [WebClientService.ARGUMENT_LAST_NAME]: lastName,
-            [WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION]: avatar,
-        });
-
-        if (avatar !== undefined) {
-            // reset avatar to force a avatar reload
-            this.receivers.getData({
-                type: 'contact',
-                id: threemaId,
-            } as threema.Receiver).avatar = {};
+        // Prepare payload data
+        const data = {};
+        if (firstName !== undefined) {
+            data[WebClientService.ARGUMENT_FIRST_NAME] = firstName;
         }
+        if (lastName !== undefined) {
+            data[WebClientService.ARGUMENT_LAST_NAME] = lastName;
+        }
+        if (avatar !== undefined) {
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
+        }
+
+        // Get contact
+        const contact: threema.ContactReceiver = this.contacts.get(threemaId);
+
+        // If no changes happened, resolve the promise immediately.
+        if (Object.keys(data).length === 0) {
+            this.$log.warn(this.logTag, 'Trying to modify contact without any changes');
+            return Promise.resolve(contact);
+        }
+
+        // Send update
+        const args = {
+            [WebClientService.ARGUMENT_IDENTITY]: threemaId,
+        };
+        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_CONTACT, args, data);
+
+        // If necessary, force an avatar reload
+        if (avatar !== undefined) {
+            this.contacts.get(threemaId).avatar = {};
+            this.requestAvatar(contact, false);
+        }
+
         return promise;
     }
 
     /**
-     * Create a group receiver
+     * Create a group receiver.
      */
-    public createGroup(members: string[],
-                       name: string = null,
-                       avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
+    public createGroup(
+        members: string[],
+        name: string = null,
+        avatar?: ArrayBuffer,
+    ): Promise<threema.GroupReceiver> {
+        const args = null;
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
+        } as object;
 
         if (avatar !== undefined) {
-            data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
         }
 
-        return this._sendCreatePromise(WebClientService.SUB_TYPE_GROUP, data);
+        return this._sendCreatePromise(WebClientService.SUB_TYPE_GROUP, args, data);
     }
 
+    /**
+     * Modify a group receiver.
+     */
     public modifyGroup(id: string,
                        members: string[],
-                       name: string = null,
+                       name?: string,
                        avatar?: ArrayBuffer): Promise<threema.GroupReceiver> {
+        // Prepare payload data
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
-            [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
-
-        if (avatar !== undefined) {
-            data[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION] = avatar;
+        } as object;
+        if (name !== undefined) {
+            data[WebClientService.ARGUMENT_NAME] = name;
         }
-        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, {
-            [WebClientService.ARGUMENT_RECEIVER_ID]: id,
-        }, data);
-
         if (avatar !== undefined) {
-            // reset avatar to force a avatar reload
-            this.receivers.getData({
-                type: 'group',
-                id: id,
-            } as threema.GroupReceiver).avatar = {};
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
+        }
+
+        // Send update
+        const args = {
+            [WebClientService.ARGUMENT_RECEIVER_ID]: id,
+        };
+        const promise = this._sendUpdatePromise(WebClientService.SUB_TYPE_GROUP, args, data);
+
+        // If necessary, reset avatar to force a avatar reload
+        if (avatar !== undefined) {
+            this.groups.get(id).avatar = {};
         }
         return promise;
     }
@@ -1159,8 +1391,7 @@ export class WebClientService {
 
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
-            // TODO: delete type into const
-            [WebClientService.ARGUMENT_DELETE_TYPE]: 'leave',
+            [WebClientService.ARGUMENT_DELETE_TYPE]: WebClientService.DELETE_GROUP_TYPE_LEAVE,
         };
 
         return this._sendDeletePromise(WebClientService.SUB_TYPE_GROUP, args);
@@ -1176,35 +1407,41 @@ export class WebClientService {
 
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
-            // TODO: delete type into const
-            [WebClientService.ARGUMENT_DELETE_TYPE]: 'delete',
+            [WebClientService.ARGUMENT_DELETE_TYPE]: WebClientService.DELETE_GROUP_TYPE_DELETE,
         };
 
         return this._sendDeletePromise(WebClientService.SUB_TYPE_GROUP, args);
     }
 
+    /**
+     * Force-sync a group.
+     */
     public syncGroup(group: threema.GroupReceiver): Promise<any> {
         if (group === null || group === undefined || !group.access.canSync) {
-            return new Promise<any> (
-                (resolve, reject) => {
-                    reject('not allowed');
-                });
+            return Promise.reject('not allowed');
         }
 
         const args = {
             [WebClientService.ARGUMENT_RECEIVER_ID]: group.id,
         };
 
-        return this._sendRequestPromise(WebClientService.SUB_TYPE_GROUP_SYNC, args);
+        return this._sendRequestPromise(WebClientService.SUB_TYPE_GROUP_SYNC, args, 10000);
     }
 
-    public createDistributionList(members: string[], name: string = null): Promise<threema.DistributionListReceiver> {
+    /**
+     * Create a new distribution list receiver.
+     */
+    public createDistributionList(
+        members: string[],
+        name: string = null,
+    ): Promise<threema.DistributionListReceiver> {
+        const args = null;
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
-        } as any;
+        };
 
-        return this._sendCreatePromise(WebClientService.SUB_TYPE_DISTRIBUTION_LIST, data);
+        return this._sendCreatePromise(WebClientService.SUB_TYPE_DISTRIBUTION_LIST, args, data);
     }
 
     public modifyDistributionList(id: string,
@@ -1251,19 +1488,35 @@ export class WebClientService {
     }
 
     /**
-     * Return whether the specified contact is currently typing.
-     *
-     * This always returns false for groups and distribution lists.
+     * Modify own profile.
      */
-    public isTyping(receiver: threema.ContactReceiver): boolean {
-        return this.typing.isTyping(receiver);
+    public modifyProfile(nickname?: string,
+                         avatar?: ArrayBuffer): Promise<null> {
+
+        // Prepare payload data
+        const data = {};
+        if (nickname !== undefined && nickname !== null) {
+            data[WebClientService.ARGUMENT_NICKNAME] = nickname;
+        }
+        if (avatar !== undefined) {
+            data[WebClientService.ARGUMENT_AVATAR] = avatar;
+        }
+
+        // If no changes happened, resolve the promise immediately.
+        if (Object.keys(data).length === 0) {
+            this.$log.warn(this.logTag, 'Trying to modify profile without any changes');
+            return Promise.resolve(null);
+        }
+
+        // Send update, get back promise
+        return this._sendUpdatePromise(WebClientService.SUB_TYPE_PROFILE, null, data);
     }
 
     /**
-     * Return own identity.
+     * Return whether the specified contact is currently typing.
      */
-    public getMyIdentity(): threema.Identity {
-        return this.myIdentity;
+    public isTyping(contact: threema.ContactReceiver): boolean {
+        return this.typing.isTyping(contact);
     }
 
     /**
@@ -1281,23 +1534,9 @@ export class WebClientService {
         this.drafts.removeQuote(receiver);
 
         if (message !== null) {
-            let quoteText;
-            switch (message.type) {
-                case 'text':
-                    quoteText = message.body;
-                    break;
-                case 'location':
-                    quoteText = message.location.poi;
-                    break;
-                case 'file':
-                case 'image':
-                    quoteText = message.caption;
-                    break;
-                default:
-                    // Ignore (handled below)
-            }
+            const quoteText = this.messageService.getQuoteText(message);
 
-            if (quoteText !== undefined) {
+            if (quoteText !== undefined && quoteText !== null) {
                 const quote = {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
                     text: quoteText,
@@ -1347,6 +1586,10 @@ export class WebClientService {
         // Reset initialization data
         this._resetInitializationSteps();
 
+        // Initialize unchunker
+        this.unchunker = new chunkedDc.Unchunker();
+        this.unchunker.onMessage = this.handleIncomingMessageBytes.bind(this);
+
         // Create container instances
         this.receivers = this.container.createReceivers();
         this.conversations = this.container.createConversations();
@@ -1362,349 +1605,311 @@ export class WebClientService {
     }
 
     private _requestInitialData(): void {
-        // if all conversations are reloaded, clear the message cache
-        // to get in sync (we dont know if a message was removed, updated etc..)
+        // If all conversations are reloaded, clear the message cache
+        // to get in sync (we don't know if a message was removed, updated etc..)
         this.messages.clear(this.$rootScope);
 
         // Request initial data
         this.requestClientInfo();
+        this.requestProfile();
         this.requestReceivers();
         this.requestConversations();
         this.requestBatteryStatus();
     }
 
-    private _receiveResponseReceivers(message: threema.WireMessage) {
+    /**
+     * Return a PromiseRequestResult with success=false and the specified error code.
+     */
+    private promiseRequestError(error: string): threema.PromiseRequestResult<undefined> {
+        return {
+            success: false,
+            error: error,
+        };
+    }
+
+    private _receiveResponseConfirmAction(message: threema.WireMessage): threema.PromiseRequestResult<void> {
         this.$log.debug('Received receiver response');
+
+        // Unpack and validate args
+        const args = message.args;
+        if (args === undefined) {
+            this.$log.error('Invalid confirmAction response, args missing');
+            return this.promiseRequestError('invalidResponse');
+        }
+
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                return { success: true };
+            case false:
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
+            default:
+                this.$log.error('Invalid confirmAction response, success field is not a boolean');
+                return this.promiseRequestError('invalidResponse');
+        }
+    }
+
+    private _receiveResponseReceivers(message: threema.WireMessage): void {
+        this.$log.debug('Received receivers response');
 
         // Unpack and validate data
         const data = message.data;
         if (data === undefined) {
-            this.$log.warn('Invalid receiver response, data missing');
+            this.$log.warn('Invalid receivers response, data missing');
             return;
         }
 
         // Store receivers
+        this.sortContacts(data.contact);
         this.receivers.set(data);
-        this.registerInitializationStep('receivers');
+        this.registerInitializationStep(InitializationStep.Receivers);
     }
 
-    private _receiveResponseContactDetail(message: threema.WireMessage): any {
+    private _receiveResponseContactDetail(message: threema.WireMessage): threema.PromiseRequestResult<any> {
         this.$log.debug('Received contact detail');
 
         // Unpack and validate data
+        const args = message.args;
         const data = message.data;
-        if (data === undefined) {
-            this.$log.warn('Invalid contact response, data missing');
-            return;
+        if (args === undefined || data === undefined) {
+            this.$log.error('Invalid contact response, args or data missing');
+            return this.promiseRequestError('invalidResponse');
         }
 
-        if (data[WebClientService.ARGUMENT_SUCCESS]) {
-            const contactReceiver = this.receivers.contacts
-                .get(message.args[WebClientService.ARGUMENT_IDENTITY]) as threema.ContactReceiver;
-
-            // get system contact
-            if (data[WebClientService.SUB_TYPE_RECEIVER]) {
-                contactReceiver.systemContact =
-                    data[WebClientService.SUB_TYPE_RECEIVER][WebClientService.ARGUMENT_SYSTEM_CONTACT];
-            }
-
-            return {
-                success: true,
-                contactReceiver: contactReceiver,
-            };
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                const contactReceiver = this.receivers.contacts
+                    .get(args[WebClientService.ARGUMENT_IDENTITY]) as threema.ContactReceiver;
+                if (data[WebClientService.SUB_TYPE_RECEIVER]) {
+                    contactReceiver.systemContact =
+                        data[WebClientService.SUB_TYPE_RECEIVER][WebClientService.ARGUMENT_SYSTEM_CONTACT];
+                }
+                return {
+                    success: true,
+                    data: contactReceiver,
+                };
+            case false:
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
+            default:
+                this.$log.error('Invalid contact response, success field is not a boolean');
+                return this.promiseRequestError('invalidResponse');
         }
-
-        return data;
     }
 
-    private _receiveAlert(message: threema.WireMessage): any {
+    private _receiveAlert(message: threema.WireMessage): void {
         this.$log.debug('Received alert from device');
         this.alerts.push({
             source: message.args.source,
-            type: message.data.type,
+            type: message.args.type,
             message: message.data.message,
         } as threema.Alert);
 
     }
 
-    private _receiveGroupSync(message: threema.WireMessage): any {
-        this.$log.debug('Received group sync');
-        // to finish the promise
-        return {
-            success: true,
-            data: null,
-        };
-    }
     /**
-     * handling new or modified contact
+     * A connectionDisconnect message arrived.
      */
-    // tslint:disable-next-line: max-line-length
-    private _receiveResponseContact(message: threema.WireMessage): threema.PromiseRequestResult<threema.ContactReceiver> {
-        this.$log.debug('Received contact response');
-        // Unpack and validate data
-        const data = message.data;
+    private _receiveConnectionDisconnect(message: threema.WireMessage) {
+        this.$log.debug('Received connectionDisconnect from device');
 
-        if (data === undefined) {
-            this.$log.warn('Invalid add contact response, data missing');
+        if (!hasValue(message.data) || !hasValue(message.data.reason)) {
+            this.$log.warn(this.logTag, 'Invalid connectionDisconnect message: data or reason missing');
             return;
         }
+        const reason = message.data.reason;
 
-        if (data[WebClientService.ARGUMENT_SUCCESS]
-            && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.ContactReceiver;
-            // Add or update a certain receiver
-            if (receiver.type === undefined) {
-                receiver.type = 'contact';
-            }
+        this.$log.debug(this.logTag, `Disconnecting requested (reason: ${reason})`);
 
-            this.receivers.extendContact(receiver);
-
-            return {
-                success: true,
-                data: receiver,
-            };
+        let alertMessage: string;
+        switch (reason) {
+            case threema.DisconnectReason.SessionStopped:
+                alertMessage = 'connection.SESSION_STOPPED';
+                break;
+            case threema.DisconnectReason.SessionDeleted:
+                alertMessage = 'connection.SESSION_DELETED';
+                break;
+            case threema.DisconnectReason.WebclientDisabled:
+                alertMessage = 'connection.WEBCLIENT_DISABLED';
+                break;
+            case threema.DisconnectReason.SessionReplaced:
+                alertMessage = 'connection.SESSION_REPLACED';
+                break;
+            default:
+                this.$log.error(this.logTag, 'Unknown disconnect reason:', reason);
         }
+        const resetPush = true;
+        const redirect = true;
+        this.stop(false, reason, resetPush, redirect);
 
-        let msg = null;
-        if (data[WebClientService.ARGUMENT_ERROR] !== undefined) {
-            msg = data[WebClientService.ARGUMENT_ERROR];
+        if (alertMessage !== undefined) {
+            // The stop() call above may result in a redirect, which will in
+            // turn hide all open dialog boxes.  Therefore, to avoid immediately
+            // hiding the alert box, enqueue dialog at end of event loop.
+            this.$timeout(() => {
+                this.$mdDialog.show(this.$mdDialog.alert()
+                    .title(this.$translate.instant('connection.SESSION_CLOSED_TITLE'))
+                    .textContent(this.$translate.instant(alertMessage))
+                    .ok(this.$translate.instant('common.OK')));
+            }, 0);
         }
-
-        return {
-            success: false,
-            message: msg,
-        };
-    }
-
-    /**
-     * handling new or modified group
-     */
-    private _receiveResponseGroup(message: threema.WireMessage): threema.PromiseRequestResult<threema.GroupReceiver> {
-        this.$log.debug('Received group response');
-        // Unpack and validate data
-        const data = message.data;
-        if (data === undefined) {
-            this.$log.warn('Invalid create group response, data missing');
-            return;
-        }
-
-        if (data[WebClientService.ARGUMENT_SUCCESS]
-            && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.GroupReceiver;
-            // Add or update a certain receiver
-            if (receiver.type === undefined) {
-                receiver.type = 'group';
-            }
-
-            this.receivers.extendGroup(receiver);
-
-            return {
-                success: true,
-                data: receiver,
-            };
-        }
-
-        let msg = null;
-        if (data[WebClientService.ARGUMENT_ERROR] !== undefined) {
-            msg = data[WebClientService.ARGUMENT_ERROR];
-        }
-
-        return {
-            success: false,
-            message: msg,
-        };
     }
 
     /**
-     * Handling new or modified group
+     * Process an incoming contact, group or distributionList response.
      */
-    // tslint:disable-next-line: max-line-length
-    private _receiveResponseDistributionList(message: threema.WireMessage): threema.PromiseRequestResult<threema.DistributionListReceiver> {
-        this.$log.debug('Received distribution list response');
+    private _receiveResponseReceiver<T extends threema.Receiver>(
+        message: threema.WireMessage,
+        receiverType: threema.ReceiverType,
+    ): threema.PromiseRequestResult<T> {
+        this.$log.debug('Received ' + receiverType + ' response');
+
         // Unpack and validate data
+        const args = message.args;
         const data = message.data;
-        if (data === undefined) {
-            this.$log.warn('Invalid distribution list response, data missing');
-            return;
+        if (args === undefined) {
+            this.$log.error('Invalid ' + receiverType + ' response, args or data missing');
+            return this.promiseRequestError('invalidResponse');
         }
 
-        if (data[WebClientService.ARGUMENT_SUCCESS]
-            && data[WebClientService.SUB_TYPE_RECEIVER] !== undefined) {
-            const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as threema.DistributionListReceiver;
-            // Add or update a certain receiver
-            if (receiver.type === undefined) {
-                receiver.type = 'distributionList';
-            }
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                if (data === undefined) {
+                    this.$log.error('Invalid ' + receiverType + ' response, args or data missing');
+                    return this.promiseRequestError('invalidResponse');
+                }
 
-            this.receivers.extendDistributionList(receiver);
+                // Get receiver instance
+                const receiver = data[WebClientService.SUB_TYPE_RECEIVER] as T;
 
-            return {
-                success: true,
-                data: receiver,
-            };
+                // Update receiver type if not set
+                if (receiver.type === undefined) {
+                    receiver.type = receiverType;
+                }
+
+                // Extend models
+                if (isContactReceiver(receiver)) {
+                    this.receivers.extendContact(receiver);
+                } else if (isGroupReceiver(receiver)) {
+                    this.receivers.extendGroup(receiver);
+                } else if (isDistributionListReceiver(receiver)) {
+                    this.receivers.extendDistributionList(receiver);
+                }
+
+                return {
+                    success: true,
+                    data: receiver,
+                };
+            case false:
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
+            default:
+                this.$log.error('Invalid ' + receiverType + ' response, success field is not a boolean');
+                return this.promiseRequestError('invalidResponse');
         }
-
-        let msg = null;
-        if (data[WebClientService.ARGUMENT_MESSAGE] !== undefined) {
-            msg = data[WebClientService.ARGUMENT_MESSAGE];
-        }
-
-        return {
-            success: false,
-            message: msg,
-        };
     }
 
-    private _receiveResponseCreateMessage(message: threema.WireMessage):
-    threema.PromiseRequestResult<string> {
+    /**
+     * Handle new or modified contacts.
+     */
+    private _receiveUpdateContact(message: threema.WireMessage):
+                                    threema.PromiseRequestResult<threema.ContactReceiver> {
+        return this._receiveResponseReceiver(message, 'contact');
+    }
+
+    /**
+     * Handle new or modified groups.
+     */
+    private _receiveResponseGroup(message: threema.WireMessage):
+                                  threema.PromiseRequestResult<threema.GroupReceiver> {
+        return this._receiveResponseReceiver(message, 'group');
+    }
+
+    /**
+     * Handle new or modified distribution lists.
+     */
+    private _receiveResponseDistributionList(message: threema.WireMessage):
+                                             threema.PromiseRequestResult<threema.DistributionListReceiver> {
+        return this._receiveResponseReceiver(message, 'distributionList');
+    }
+
+    private _receiveResponseCreateMessage(message: threema.WireMessage): threema.PromiseRequestResult<string> {
         this.$log.debug('Received create message response');
+
         // Unpack data and arguments
         const args = message.args;
         const data = message.data;
 
-        if (args === undefined
-            || data === undefined) {
-            this.$log.warn('Invalid create received, arguments or data missing');
-            return;
+        if (args === undefined || data === undefined) {
+            this.$log.warn('Invalid create message received, arguments or data missing');
+            return this.promiseRequestError('invalidResponse');
         }
 
-        const receiverType = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
-        const receiverId = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const temporaryId = args[WebClientService.ARGUMENT_TEMPORARY_ID];
+        switch (args[WebClientService.ARGUMENT_SUCCESS]) {
+            case true:
+                const receiverType: threema.ReceiverType = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
+                const receiverId: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
+                const temporaryId: string = args[WebClientService.ARGUMENT_TEMPORARY_ID];
 
-        if (data[WebClientService.ARGUMENT_SUCCESS]) {
-            const messageId = data[WebClientService.ARGUMENT_MESSAGE_ID];
-            if (receiverType === undefined || receiverId === undefined ||
-                temporaryId === undefined || messageId === undefined) {
-                this.$log.warn('Invalid create received [type, id or temporaryId arg ' +
-                    'or messageId in data missing]');
-                return;
-            }
+                const messageId: string = data[WebClientService.ARGUMENT_MESSAGE_ID];
+                if (receiverType === undefined || receiverId === undefined ||
+                    temporaryId === undefined || messageId === undefined) {
+                    this.$log.warn('Invalid create received [type, id, temporaryId arg ' +
+                        'or messageId in data missing]');
+                    return this.promiseRequestError('invalidResponse');
+                }
 
-            this.messages.bindTemporaryToMessageId({
-                type: receiverType,
-                id: receiverId,
-            } as threema.Receiver, temporaryId, messageId);
+                this.messages.bindTemporaryToMessageId(
+                    {
+                        type: receiverType,
+                        id: receiverId,
+                    } as threema.Receiver,
+                    temporaryId,
+                    messageId,
+                );
 
-            return {
-                success: true,
-                data: messageId,
-            };
+                return { success: true, data: messageId };
+            case false:
+                return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
+            default:
+                this.$log.error('Invalid create message response, success field is not a boolean');
+                return this.promiseRequestError('invalidResponse');
         }
-
-        return {
-            success: false,
-            message: data[WebClientService.ARGUMENT_ERROR],
-        };
     }
 
     private _receiveResponseConversations(message: threema.WireMessage) {
         this.$log.debug('Received conversations response');
-        const data = message.data;
+        const data = message.data as threema.Conversation[];
         if (data === undefined) {
             this.$log.warn('Invalid conversation response, data missing');
         } else {
-            // if a avatar was set on a conversation
-            // convert and copy to the receiver
+            // If a avatar was set on a conversation, convert and copy to the receiver
             for (const conversation of data) {
                 if (conversation.avatar !== undefined && conversation.avatar !== null) {
-                    const receiver = this.receivers.getData({
+                    const receiver: threema.Receiver = this.receivers.getData({
                         id: conversation.id,
                         type: conversation.type,
-                    } as threema.Receiver);
-                    if (receiver !== undefined
-                            && receiver.avatar === undefined) {
+                    });
+                    if (receiver !== undefined && receiver.avatar === undefined) {
                         receiver.avatar = {
-                            low: this.$filter('bufferToUrl')(conversation.avatar, 'image/png'),
+                            low: conversation.avatar,
                         };
                     }
-                    // reset avatar from object
+                    // Remove avatar from conversation
                     delete conversation.avatar;
                 }
-
-                this.conversations.updateOrAdd(conversation);
             }
+            this.conversations.set(data);
         }
         this.updateUnreadCount();
-        this.registerInitializationStep('conversations');
-    }
-
-    private _receiveResponseConversation(message: threema.WireMessage) {
-        this.$log.debug('Received conversation response');
-        const args = message.args;
-        const data = message.data;
-        if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid conversation response, data or arguments missing');
-            return;
-        }
-
-        // Unpack required argument fields
-        const type: string = args[WebClientService.ARGUMENT_MODE];
-        switch (type) {
-            case WebClientService.ARGUMENT_MODE_NEW:
-                this.conversations.add(data);
-                break;
-            case WebClientService.ARGUMENT_MODE_MODIFIED:
-                // A conversation update *can* mean that a new message arrived.
-                // To find out, we'll look at the unread count. If it has been
-                // incremented, it must be a new message.
-                if (data.unreadCount > 0) {
-
-                    // Find the correct conversation in the conversation list
-                    const conversation = this.conversations.find(data);
-                    if (data === null) {
-                        // Conversation not found, add it!
-                        this.conversations.add(data);
-                        this.onNewMessage(data.latestMessage, conversation);
-                    } else {
-                        // Check for unread count changes
-                        const unreadCountIncreased = data.unreadCount > conversation.unreadCount;
-                        const unreadCountDecreased = data.unreadCount < conversation.unreadCount;
-
-                        // Update the conversation
-                        this.conversations.updateOrAdd(data);
-
-                        // If the unreadcount has increased, we received a new message.
-                        // Otherwise, if it has decreased, hide the notification.
-                        if (unreadCountIncreased) {
-                            this.onNewMessage(data.latestMessage, conversation);
-                        } else if (unreadCountDecreased) {
-                            this.notificationService.hideNotification(data.type + '-' + data.id);
-                        }
-                    }
-
-                } else {
-                    // Update the conversation and hide any notifications
-                    this.conversations.updateOrAdd(data);
-                    this.notificationService.hideNotification(data.type + '-' + data.id);
-                }
-
-                break;
-            case WebClientService.ARGUMENT_MODE_REMOVED:
-                this.conversations.remove(data);
-                // Remove all cached messages
-                this.messages.clearReceiverMessages((data as threema.Receiver));
-                this.receiverListener.forEach((listener: threema.ReceiverListener) => {
-                    this.$log.debug('call on removed listener');
-                    listener.onRemoved(data);
-                });
-                break;
-            default:
-                this.$log.warn('Received conversation without a mode');
-                return;
-        }
-
-        this.updateUnreadCount();
+        this.registerInitializationStep(InitializationStep.Conversations);
     }
 
     private _receiveResponseMessages(message: threema.WireMessage): void {
-        this.$log.debug('Received message response');
+        this.$log.debug('Received messages response');
 
         // Unpack data and arguments
         const args = message.args;
         const data = message.data as threema.Message[];
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid message response, data or arguments missing');
+            this.$log.warn('Invalid messages response, data or arguments missing');
             return;
         }
 
@@ -1713,17 +1918,19 @@ export class WebClientService {
         const id: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
         let more: boolean = args[WebClientService.ARGUMENT_HAS_MORE];
         if (type === undefined || id === undefined || more === undefined) {
-            this.$log.warn('Invalid message response, argument field missing');
+            this.$log.warn('Invalid messages response, argument field missing');
             return;
         }
+        if (!isValidReceiverType(type)) {
+            this.$log.warn('Invalid messages response, unknown receiver type (' + type + ')');
+            return;
+        }
+        const receiver: threema.BaseReceiver = {type: type, id: id};
 
         // If there's no data returned, override `more` field.
         if (data.length === 0) {
             more = false;
         }
-
-        // Check if the page was requested
-        const receiver = {type: type, id: id} as threema.Receiver;
 
         // Set as loaded
         this.loadingMessages.delete(receiver.type + receiver.id);
@@ -1738,6 +1945,7 @@ export class WebClientService {
             // Set "more" flag to indicate that more (older) messages are available.
             this.messages.setMore(receiver, more);
 
+            // Notify listeners
             this.messages.notify(receiver, this.$rootScope);
         } else {
             this.$log.warn("Ignoring message response that hasn't been requested");
@@ -1745,26 +1953,20 @@ export class WebClientService {
         }
     }
 
-    private _receiveResponseAvatar(message: threema.WireMessage): any {
+    private _receiveResponseAvatar(message: threema.WireMessage): threema.PromiseRequestResult<any> {
         this.$log.debug('Received avatar response');
 
         // Unpack data and arguments
         const args = message.args;
         if (args === undefined) {
             this.$log.warn('Invalid message response: arguments missing');
-            return {
-                success: false,
-                data: 'invalid_response',
-            };
+            return this.promiseRequestError('invalidResponse');
         }
 
-        const data = message.data;
-        if ( data === undefined) {
+        const avatar = message.data;
+        if (avatar === undefined) {
             // It's ok, a receiver without a avatar
-            return {
-                success: true,
-                data: null,
-            };
+            return { success: true, data: null };
         }
 
         // Unpack required argument fields
@@ -1773,10 +1975,7 @@ export class WebClientService {
         const highResolution = args[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION];
         if (type === undefined || id === undefined || highResolution === undefined) {
             this.$log.warn('Invalid avatar response, argument field missing');
-            return {
-                success: false,
-                data: 'invalid_response',
-            };
+            return this.promiseRequestError('invalidResponse');
         }
 
         // Set avatar for receiver according to resolution
@@ -1786,16 +1985,12 @@ export class WebClientService {
             receiverData.avatar = {};
         }
 
-        const avatar = this.$filter('bufferToUrl')(data, 'image/png');
         receiverData.avatar[field] = avatar;
 
-        return {
-            success: true,
-            data: avatar,
-        };
+        return { success: true, data: avatar };
     }
 
-    private _receiveResponseThumbnail(message: threema.WireMessage): any {
+    private _receiveResponseThumbnail(message: threema.WireMessage): threema.PromiseRequestResult<any> {
         this.$log.debug('Received thumbnail response');
 
         // Unpack data and arguments
@@ -1804,7 +1999,7 @@ export class WebClientService {
             this.$log.warn('Invalid message response: arguments missing');
             return {
                 success: false,
-                data: 'invalid_response',
+                data: 'invalidResponse',
             };
         }
 
@@ -1820,13 +2015,13 @@ export class WebClientService {
         // Unpack required argument fields
         const type = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
         const id = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const messageId = args[WebClientService.ARGUMENT_MESSAGE_ID];
+        const messageId: string = args[WebClientService.ARGUMENT_MESSAGE_ID];
 
         if (type === undefined || id === undefined || messageId === undefined ) {
             this.$log.warn('Invalid thumbnail response, argument field missing');
             return {
                 success: false,
-                data: 'invalid_response',
+                data: 'invalidResponse',
             };
         }
 
@@ -1834,58 +2029,64 @@ export class WebClientService {
 
         return {
             success: true,
-            data: data};
+            data: data,
+        };
     }
 
-    private _receiveResponseBlob(message: threema.WireMessage): threema.PromiseRequestResult<ArrayBuffer> {
+    private _receiveResponseBlob(message: threema.WireMessage): threema.PromiseRequestResult<threema.BlobInfo> {
         this.$log.debug('Received blob response');
 
         // Unpack data and arguments
         const args = message.args;
         const data = message.data;
-        if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid message response, data or arguments missing');
-            return {
-                success: false,
-            };
+        if (args === undefined ) {
+            this.$log.warn('Invalid message response, arguments missing');
+            return this.promiseRequestError('invalidResponse');
         }
 
         // Unpack required argument fields
         const receiverType = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
         const receiverId = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const msgId = args[WebClientService.ARGUMENT_MESSAGE_ID];
-        if (receiverType === undefined || receiverId === undefined || msgId === undefined) {
+        const msgId: string = args[WebClientService.ARGUMENT_MESSAGE_ID];
+        const temporaryId: string = args[WebClientService.ARGUMENT_TEMPORARY_ID];
+        const success: boolean = args[WebClientService.ARGUMENT_SUCCESS];
+        if (receiverType === undefined || receiverId === undefined
+            || msgId === undefined || temporaryId === undefined || success === undefined) {
             this.$log.warn('Invalid blob response, argument field missing');
-            return {
-                success: false,
-            };
+            return this.promiseRequestError('invalidResponse');
+        }
+
+        // Check success flag
+        if (success === false) {
+            return this.promiseRequestError(args[WebClientService.ARGUMENT_ERROR]);
         }
 
         // Unpack data
-        const buffer: ArrayBuffer = data[WebClientService.DATA_FIELD_BLOB_BLOB];
-        if (buffer === undefined) {
+        const blobInfo: threema.BlobInfo = {
+            buffer: data[WebClientService.DATA_FIELD_BLOB_BLOB],
+            mimetype: data[WebClientService.DATA_FIELD_BLOB_TYPE],
+            filename: data[WebClientService.DATA_FIELD_BLOB_NAME],
+        };
+        if (blobInfo.buffer === undefined || blobInfo.mimetype === undefined || blobInfo.filename === undefined) {
             this.$log.warn('Invalid blob response, data field missing');
-            return {
-                success: false,
-            };
+            return this.promiseRequestError('invalidResponse');
         }
 
-        this.blobCache.set(msgId + receiverType, buffer);
+        this.blobCache.set(msgId + receiverType, blobInfo);
 
         // Download to browser
         return {
             success: true,
-            data: buffer,
+            data: blobInfo,
         };
-
     }
 
-    private _receiveUpdateMessage(message: threema.WireMessage): void {
-        this.$log.debug('Received message update');
+    private _receiveUpdateMessages(message: threema.WireMessage): void {
+        this.$log.debug('Received messages update');
 
         // Unpack data and arguments
         const args = message.args;
-        const data: threema.Message = message.data;
+        const data: threema.Message[] = message.data;
         if (args === undefined || data === undefined) {
             this.$log.warn('Invalid message update, data or arguments missing');
             return;
@@ -1899,33 +2100,42 @@ export class WebClientService {
             this.$log.warn('Invalid message update, argument field missing');
             return;
         }
-        const receiver = {type: type, id: id} as threema.Receiver;
+        if (!isValidReceiverType(type)) {
+            this.$log.warn(this.logTag, 'Invalid messages update, unknown receiver type (' + type + ')');
+            return;
+        }
+        const receiver: threema.BaseReceiver = {type: type, id: id};
 
         // React depending on mode
-        switch (mode) {
-            case WebClientService.ARGUMENT_MODE_NEW:
-                this.$log.debug('New message', data.id);
-
-                // It's possible that this message already exists (placeholder message on send).
-                // Try to update it first. If not, add it as a new msg.
-                if (!this.messages.update(receiver, data)) {
-                    this.messages.addNewer(receiver, [data]);
-                }
-                break;
-            case WebClientService.ARGUMENT_MODE_MODIFIED:
-                this.$log.debug('Modified message', data.id);
-                this.messages.update(receiver, data);
-                break;
-            case WebClientService.ARGUMENT_MODE_REMOVED:
-                this.messages.remove(receiver, data.id);
-                break;
-            default:
-                this.$log.warn('Invalid message response, unknown mode:', mode);
+        let notify = false;
+        for (const msg of data) {
+            switch (mode) {
+                case WebClientService.ARGUMENT_MODE_NEW:
+                    // It's possible that this message already exists (placeholder message on send).
+                    // Try to update it first. If not, add it as a new msg.
+                    if (!this.messages.update(receiver, msg)) {
+                        this.messages.addNewer(receiver, [msg]);
+                    }
+                    notify = true;
+                    break;
+                case WebClientService.ARGUMENT_MODE_MODIFIED:
+                    this.messages.update(receiver, msg);
+                    break;
+                case WebClientService.ARGUMENT_MODE_REMOVED:
+                    this.messages.remove(receiver, msg.id);
+                    notify = true;
+                    break;
+                default:
+                    this.$log.warn(this.logTag, 'Invalid message response, unknown mode:', mode);
+            }
+        }
+        if (notify) {
+            this.messages.notify(receiver, this.$rootScope);
         }
     }
 
     private _receiveUpdateReceiver(message: threema.WireMessage): void {
-        this.$log.debug('Received receiver update');
+        this.$log.debug('Received receiver update or delete');
 
         // Unpack data and arguments
         const args = message.args;
@@ -1938,9 +2148,8 @@ export class WebClientService {
         // Unpack required argument fields
         const type = args[WebClientService.ARGUMENT_RECEIVER_TYPE] as threema.ReceiverType;
         const id = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const mode = args[WebClientService.ARGUMENT_MODE];
-        if (type === undefined || mode === undefined ||
-                (mode !== WebClientService.ARGUMENT_MODE_REFRESH && id === undefined)) {
+        const mode: 'new' | 'modified' | 'removed' = args[WebClientService.ARGUMENT_MODE];
+        if (type === undefined || mode === undefined || id === undefined) {
             this.$log.warn('Invalid receiver update, argument field missing');
             return;
         }
@@ -1952,7 +2161,7 @@ export class WebClientService {
                 // Add or update a certain receiver
                 const updatedReceiver = this.receivers.extend(type, data);
 
-                // remove all cached messages if the receiver was moved to "locked" state
+                // Remove all cached messages if the receiver was moved to "locked" state
                 if (updatedReceiver !== undefined && updatedReceiver.locked) {
                     this.messages.clearReceiverMessages(updatedReceiver);
                 }
@@ -1961,22 +2170,43 @@ export class WebClientService {
                 // Remove a certain receiver
                 (this.receivers.get(type) as Map<string, threema.Receiver>).delete(id);
                 break;
-            case WebClientService.ARGUMENT_MODE_REFRESH:
-                // Refresh lists of receivers
-                if (type === 'me') {
-                    this.receivers.setMe(data);
-                } else if (type === 'contact') {
-                    this.receivers.setContacts(data);
-                } else if (type === 'group') {
-                    this.receivers.setGroups(data);
-                } else if (type === 'distributionList') {
-                    this.receivers.setDistributionLists(data);
-                } else {
-                    this.$log.warn('Unknown receiver type:', type);
-                }
-                break;
             default:
                 this.$log.warn('Invalid receiver response, unknown mode:', mode);
+        }
+    }
+
+    private _receiveUpdateReceivers(message: threema.WireMessage): void {
+        this.$log.debug('Received receivers update');
+
+        // Unpack data and arguments
+        const args = message.args;
+        const data = message.data;
+        if (args === undefined || data === undefined) {
+            this.$log.warn('Invalid receiver update, data or arguments missing');
+            return;
+        }
+
+        // Unpack required argument fields
+        const type = args[WebClientService.ARGUMENT_RECEIVER_TYPE] as threema.ReceiverType;
+        if (type === undefined) {
+            this.$log.warn('Invalid receivers update, argument field missing');
+            return;
+        }
+
+        // Refresh lists of receivers
+        switch (type) {
+            case 'contact':
+                this.sortContacts(data);
+                this.receivers.setContacts(data);
+                break;
+            case 'group':
+                this.receivers.setGroups(data);
+                break;
+            case 'distributionList':
+                this.receivers.setDistributionLists(data);
+                break;
+            default:
+                this.$log.warn('Unknown receiver type:', type);
         }
     }
 
@@ -1992,22 +2222,114 @@ export class WebClientService {
         }
 
         // Unpack required argument fields
-        const id: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
-        const isTyping: boolean = args[WebClientService.ARGUMENT_CONTACT_IS_TYPING];
-        if (id === undefined || isTyping === undefined) {
+        const identity: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
+        if (identity === undefined) {
             this.$log.warn('Invalid typing update, argument field missing');
+            return;
+        }
+
+        // Unpack required data fields
+        const isTyping: boolean = data[WebClientService.ARGUMENT_IS_TYPING];
+        if (isTyping === undefined) {
+            this.$log.warn('Invalid typing update, data field missing');
             return;
         }
 
         // Store or remove typing notification.
         // Note that we know that the receiver must be a contact, because
         // groups and distribution lists can't type.
-        const receiver = {id: id, type: 'contact'}  as threema.ContactReceiver;
+        const receiver = {id: identity, type: 'contact'}  as threema.ContactReceiver;
         if (isTyping === true) {
             this.typing.setTyping(receiver);
         } else {
             this.typing.unsetTyping(receiver);
         }
+    }
+
+    private _receiveUpdateConversation(message: threema.WireMessage) {
+        this.$log.debug('Received conversation update');
+        const args = message.args;
+        const data = message.data as threema.ConversationWithPosition;
+        if (args === undefined || data === undefined) {
+            this.$log.warn('Invalid conversation update, data or arguments missing');
+            return;
+        }
+
+        // Get receiver
+        const receiver = this.receivers.getData({type: data.type, id: data.id});
+
+        // Unpack required argument fields
+        const type: string = args[WebClientService.ARGUMENT_MODE];
+        switch (type) {
+            case WebClientService.ARGUMENT_MODE_NEW:
+                this.conversations.add(data);
+                break;
+            case WebClientService.ARGUMENT_MODE_MODIFIED:
+                // A conversation update *can* mean that a new message arrived.
+                // To find out, we'll look at the unread count. If it has been
+                // incremented, it must be a new message.
+                if (data.unreadCount > 0) {
+                    const oldConversation = this.conversations.updateOrAdd(data);
+                    if (oldConversation === null) {
+                        this.onNewMessage(data.latestMessage, data, receiver);
+                    } else {
+                        // Check for unread count changes
+                        const unreadCountIncreased = data.unreadCount > oldConversation.unreadCount;
+                        const unreadCountDecreased = data.unreadCount < oldConversation.unreadCount;
+
+                        // If the unreadcount has increased, we received a new message.
+                        // Otherwise, if it has decreased, hide the notification.
+                        if (unreadCountIncreased) {
+                            this.onNewMessage(data.latestMessage, data, receiver);
+                        } else if (unreadCountDecreased) {
+                            this.notificationService.hideNotification(data.type + '-' + data.id);
+                        }
+                    }
+                } else {
+                    // Update the conversation and hide any notifications
+                    this.conversations.updateOrAdd(data);
+                    this.notificationService.hideNotification(data.type + '-' + data.id);
+                }
+
+                break;
+            case WebClientService.ARGUMENT_MODE_REMOVED:
+                // Remove conversation
+                this.conversations.remove(data);
+
+                // Remove all cached messages for the receiver
+                this.messages.clearReceiverMessages(receiver);
+
+                // Call on-removed listener
+                this.receiverListener.forEach((listener: threema.ReceiverListener) => {
+                    this.$log.debug(this.logTag, 'Call on removed listener');
+                    listener.onConversationRemoved(receiver);
+                });
+                break;
+            default:
+                this.$log.warn(this.logTag, 'Received conversation without a mode');
+                return;
+        }
+
+        this.updateUnreadCount();
+    }
+
+    private _receiveUpdateAvatar(message: threema.WireMessage) {
+        this.$log.debug('Received avatar update');
+        const args = message.args;
+        const data = message.data as ArrayBuffer;
+        if (args === undefined) {
+            this.$log.warn('Invalid avatar update, arguments missing');
+            return;
+        }
+
+        // Get receiver
+        const receiver = this.receivers.getData({type: args.type, id: args.id});
+
+        // Set low-res avatar
+        receiver.avatar.low = data;
+
+        // Invalidate high-res avatar
+        receiver.avatar.high = undefined;
     }
 
     /**
@@ -2030,35 +2352,139 @@ export class WebClientService {
     }
 
     /**
+     * Process an incoming profile update message.
+     */
+    private _receiveUpdateProfile(message: threema.WireMessage): void {
+        this.$log.debug('Received profile update');
+
+        // Unpack data and arguments
+        const data = message.data as threema.ProfileUpdate;
+        if (data === undefined) {
+            this.$log.warn('Invalid profile update message, data missing');
+            return;
+        }
+
+        // Update public nickname
+        if (data.publicNickname !== undefined) {
+            this.me.publicNickname = data.publicNickname;
+            this.me.displayName = this.me.publicNickname || this.me.id;
+        }
+
+        // Update avatar
+        if (data.avatar !== undefined) {
+            if (data.avatar === null) {
+                this.me.avatar = {};
+            } else {
+                this.me.avatar = { high: data.avatar };
+            }
+
+            // Request new low-res avatar
+            this.requestAvatar(this.me, false);
+        }
+    }
+
+    /**
      * The peer sends the device information string. This can be used to
      * identify the active session.
      */
     private _receiveResponseClientInfo(message: threema.WireMessage): void {
         this.$log.debug('Received client info');
-        const args = message.args;
-        if (args === undefined) {
-            this.$log.warn('Invalid client info, argument field missing');
+        const data = message.data;
+        if (data === undefined) {
+            this.$log.warn('Invalid client info, data field missing');
             return;
         }
 
-        this.clientInfo = args as threema.ClientInfo;
+        /**
+         * Return the field if it's not undefined, otherwise return the default.
+         */
+        function getOrDefault<T>(field: T, defaultVal: T): T {
+            if (field === undefined) {
+                return defaultVal;
+            }
+            return field;
+        }
+
+        // Set clientInfo attribute
+        this.clientInfo = {
+            device: data.device,
+            os: data.os,
+            osVersion: data.osVersion,
+            isWork: data.isWork,
+            pushToken: data.pushToken,
+            configuration: {
+                voipEnabled: getOrDefault<boolean>(data.configuration.voipEnabled, true),
+                voipForceTurn: getOrDefault<boolean>(data.configuration.voipForceTurn, false),
+                largeSingleEmoji: getOrDefault<boolean>(data.configuration.largeSingleEmoji, true),
+                showInactiveIDs: getOrDefault<boolean>(data.configuration.showInactiveIDs, true),
+            },
+            capabilities: {
+                maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
+                maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
+                distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
+                imageFormat: data.capabilities.imageFormat,
+                mdm: data.capabilities.mdm,
+            },
+        };
+
         this.$log.debug('Client device:', this.clientInfo.device);
 
         // Store push token
-        if (this.clientInfo.myPushToken) {
-            this.pushToken = this.clientInfo.myPushToken;
-            this.pushService.init(this.pushToken);
+        if (this.clientInfo.pushToken) {
+            this.pushToken = this.clientInfo.pushToken;
+            switch (this.clientInfo.os) {
+                case threema.OperatingSystem.Android:
+                    this.pushTokenType = threema.PushTokenType.Gcm;
+                    break;
+                case threema.OperatingSystem.Ios:
+                    this.pushTokenType = threema.PushTokenType.Apns;
+                    break;
+                default:
+                    this.$log.error(this.logTag, 'Invalid operating system in client info');
+            }
+        }
+        if (this.pushToken && this.pushTokenType) {
+            this.pushService.init(this.pushToken, this.pushTokenType);
         }
 
-        // Set own identity
-        this.myIdentity = {
-            identity: this.clientInfo.myAccount.identity,
-            publicKey: this.clientInfo.myAccount.publicKey,
-            publicNickname: this.clientInfo.myAccount.publicNickname,
-            fingerprint: this.fingerPrintService.generate(this.clientInfo.myAccount.publicKey),
-        } as threema.Identity;
+        this.registerInitializationStep(InitializationStep.ClientInfo);
+    }
 
-        this.registerInitializationStep('client info');
+    /**
+     * The peer sends information about the current user profile.
+     */
+    private _receiveResponseProfile(message: threema.WireMessage): void {
+        this.$log.debug('Received profile');
+        const data = message.data as threema.Profile;
+        if (data === undefined) {
+            this.$log.warn('Invalid client info, data field missing');
+            return;
+        }
+
+        // Create 'me' receiver with profile + dummy data
+        // TODO: Send both high-res and low-res avatars
+        this.receivers.setMe({
+            type: 'me',
+            id: data.identity,
+            publicNickname: data.publicNickname,
+            displayName: data.publicNickname || data.identity,
+            publicKey: data.publicKey,
+            avatar: {
+                high: data.avatar,
+            },
+            featureMask: 0xFF,
+            verificationLevel: 3,
+            state: 'ACTIVE',
+            hidden: false,
+            access: {
+                canChangeAvatar: true,
+                canChangeFirstName: true,
+                canChangeLastName: true,
+            },
+            color: '#000000',
+        });
+
+        this.registerInitializationStep(InitializationStep.Profile);
     }
 
     public setPassword(password: string) {
@@ -2079,7 +2505,6 @@ export class WebClientService {
 
     /**
      * Return the max text length
-     * @returns {number}
      */
     public getMaxTextLength(): number {
         return WebClientService.MAX_TEXT_LENGTH;
@@ -2087,30 +2512,62 @@ export class WebClientService {
 
     /**
      * Returns the max group member size
-     * @returns {number}
      */
     public getMaxGroupMemberSize(): number {
-        return this.clientInfo && this.clientInfo.maxGroupSize ? this.clientInfo.maxGroupSize : 50;
+        return this.clientInfo.capabilities.maxGroupSize;
+    }
+
+    /**
+     * Whether a notification should be triggered.
+     */
+    private shouldNotify(settings: threema.SimplifiedNotificationSettings, message: threema.Message): boolean {
+        if (settings.dnd.enabled) {
+            // Do not show any notifications on muted chats
+            if (settings.dnd.mentionOnly) {
+                let textToSearch = '';
+                if (message.type === 'text') {
+                    textToSearch = message.body;
+                } else if (message.caption) {
+                    textToSearch = message.caption;
+                }
+                let quotedMe = false;
+                if (message.quote) {
+                    textToSearch += ' ' + message.quote.text;
+                    quotedMe = message.quote.identity === this.me.id;
+                }
+                const forMe = textToSearch.indexOf('@[' + this.me.id + ']') !== -1;
+                const forAll = textToSearch.indexOf('@[@@@@@@@@]') !== -1;
+                return forMe || forAll || quotedMe;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 
     /**
      * Called when a new message arrives.
      */
-    private onNewMessage(message: threema.Message, conversation: threema.Conversation): void {
+    private onNewMessage(
+        message: threema.Message,
+        conversation: threema.Conversation,
+        sender: threema.Receiver,
+    ): void {
         // Ignore message from active receivers (and if the browser tab is visible)
         if (this.browserService.isVisible()
                 && this.receiverService.compare(conversation, this.receiverService.getActive())) {
             return;
         }
-        const sender: threema.Receiver = conversation.receiver;
 
         // Do not show any notifications on private chats
-        if (sender === undefined || sender.locked) {
+        if (sender.locked === true) {
             return;
         }
 
-        // Do not show any notifications on muted chats
-        if (conversation.isMuted === true) {
+        // Consider conversation notification settings
+        const simplifiedNotification = this.notificationService.getAppNotificationSettings(conversation);
+        if (!this.shouldNotify(simplifiedNotification, message)) {
             return;
         }
 
@@ -2118,8 +2575,8 @@ export class WebClientService {
         let senderName = sender.id;
         if (sender.displayName) {
             senderName = sender.displayName;
-        } else if (sender.type === 'contact') {
-            senderName = '~' + (sender as threema.ContactReceiver).publicNickname;
+        } else if (isContactReceiver(sender)) {
+            senderName = '~' + sender.publicNickname;
         }
         const partner = this.receivers.getData({
             id: message.partnerId,
@@ -2128,7 +2585,7 @@ export class WebClientService {
         const partnerName = partner.displayName || ('~' + partner.publicNickname);
 
         // Show notification
-        this.$translate('messenger.MESSAGE_NOTIFICATION_SUBJECT', {messageCount: 1 + conversation.unreadCount})
+        this.$translate('messenger.MESSAGE_NOTIFICATION_SUBJECT', {messageCount: conversation.unreadCount})
             .then((titlePrefix) =>  {
                 const title = `${titlePrefix} ${senderName}`;
                 let body = '';
@@ -2144,7 +2601,7 @@ export class WebClientService {
                         body = message.body;
                         break;
                     case 'location':
-                        body = messageTypeString + ': ' + message.location.poi;
+                        body = messageTypeString + ': ' + message.location.description;
                         break;
                     case 'file':
                         if (message.file.type === 'image/gif') {
@@ -2193,14 +2650,16 @@ export class WebClientService {
                     body = partnerName + ': ' + body;
                 }
                 const tag = conversation.type + '-' + conversation.id;
-                const avatar = (sender.avatar && sender.avatar.low) ? sender.avatar.low : null;
+                const avatar = (sender.avatar && sender.avatar.low)
+                    ? this.$filter('bufferToUrl')(sender.avatar.low, 'image/png')
+                    : null;
                 this.notificationService.showNotification(tag, title, body, avatar, () => {
                     this.$state.go('messenger.home.conversation', {
                         type: conversation.type,
                         id: conversation.id,
                         initParams: null,
                     });
-                });
+                }, undefined, undefined, simplifiedNotification.sound.muted);
             });
     }
 
@@ -2215,6 +2674,7 @@ export class WebClientService {
                 this.salty.keyStore.secretKeyBytes,
                 this.salty.peerPermanentKeyBytes,
                 this.pushToken,
+                this.pushTokenType,
                 password,
             );
             this.$log.info('Stored trusted key');
@@ -2223,26 +2683,47 @@ export class WebClientService {
         return false;
     }
 
-    private _sendRequest(type, args = null): void {
+    public updatePushToken(token: string, tokenType: threema.PushTokenType): void {
+        this.pushToken = token;
+        this.pushTokenType = tokenType;
+    }
+
+    private _sendRequest(type, args?: object, data?: object): void {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_REQUEST,
             subType: type,
         };
-        if (args) {
+        if (args !== undefined) {
             message.args = args;
         }
+        if (data !== undefined) {
+            message.data = data;
+        }
+        this.send(message);
+    }
 
+    private _sendUpdate(type, args?: object, data?: object): void {
+        const message: threema.WireMessage = {
+            type: WebClientService.TYPE_UPDATE,
+            subType: type,
+        };
+        if (args !== undefined) {
+            message.args = args;
+        }
+        if (data !== undefined) {
+            message.data = data;
+        }
         this.send(message);
     }
 
     private _sendPromiseMessage(message: threema.WireMessage, timeout: number = null): Promise<any> {
-        // create arguments on wired message
-        if (message.args === undefined) {
+        // Create arguments on wired message
+        if (message.args === undefined || message.args === null) {
             message.args = {};
         }
         let promiseId = message.args[WebClientService.ARGUMENT_TEMPORARY_ID];
         if (promiseId === undefined) {
-            // create a random id to identity the promise
+            // Create a random id to identity the promise
             promiseId = 'p' + Math.random().toString(36).substring(7);
             message.args[WebClientService.ARGUMENT_TEMPORARY_ID] = promiseId;
         }
@@ -2267,13 +2748,19 @@ export class WebClientService {
         );
     }
 
+    /**
+     * Send a request and return a promise.
+     *
+     * The promise will be resolved if a response arrives with the same temporary ID.
+     *
+     * @param timeout Optional request timeout in ms
+     */
     private _sendRequestPromise(type, args = null, timeout: number = null): Promise<any> {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_REQUEST,
             subType: type,
             args: args,
         };
-
         return this._sendPromiseMessage(message, timeout);
     }
 
@@ -2294,7 +2781,6 @@ export class WebClientService {
             data: data,
             args: args,
         };
-
         return this._sendPromiseMessage(message, timeout);
     }
 
@@ -2334,7 +2820,7 @@ export class WebClientService {
         this.$log.warn('Ignored request with type:', type);
     }
 
-    private _receivePromise(message: any, receiveResult: any) {
+    private _receivePromise(message: any, receiveResult: threema.PromiseRequestResult<any>) {
         if (
             message !== undefined
             && message.args !== undefined
@@ -2343,10 +2829,13 @@ export class WebClientService {
             const promiseId = message.args[WebClientService.ARGUMENT_TEMPORARY_ID];
 
             if (this.requestPromises.has(promiseId)) {
-                if (receiveResult.success) {
-                    this.requestPromises.get(promiseId).resolve(receiveResult.data);
+                const promise = this.requestPromises.get(promiseId);
+                if (receiveResult === null || receiveResult === undefined) {
+                    promise.reject('unknown');
+                } else if (receiveResult.success) {
+                    promise.resolve(receiveResult.data);
                 } else {
-                    this.requestPromises.get(promiseId).reject(receiveResult.message);
+                    promise.reject(receiveResult.error);
                 }
                 // remove from map
                 this.requestPromises.delete(promiseId);
@@ -2355,21 +2844,22 @@ export class WebClientService {
     }
 
     private _receiveResponse(type, message): void {
-        // Dispatch response
-        let receiveResult;
+        let receiveResult: threema.PromiseRequestResult<any>;
         switch (type) {
-            case WebClientService.SUB_TYPE_RECEIVER:
+            case WebClientService.SUB_TYPE_CONFIRM_ACTION:
+                receiveResult = this._receiveResponseConfirmAction(message);
+                break;
+            case WebClientService.SUB_TYPE_RECEIVERS:
                 this._receiveResponseReceivers(message);
                 break;
             case WebClientService.SUB_TYPE_CONVERSATIONS:
-                this.runAfterInitializationSteps(['receivers'], () => {
+                this.runAfterInitializationSteps([
+                    InitializationStep.Receivers,
+                ], () => {
                     this._receiveResponseConversations(message);
                 });
                 break;
-            case WebClientService.SUB_TYPE_CONVERSATION:
-                this._receiveResponseConversation(message);
-                break;
-            case WebClientService.SUB_TYPE_MESSAGE:
+            case WebClientService.SUB_TYPE_MESSAGES:
                 this._receiveResponseMessages(message);
                 break;
             case WebClientService.SUB_TYPE_AVATAR:
@@ -2384,44 +2874,46 @@ export class WebClientService {
             case WebClientService.SUB_TYPE_CLIENT_INFO:
                 this._receiveResponseClientInfo(message);
                 break;
+            case WebClientService.SUB_TYPE_PROFILE:
+                this._receiveResponseProfile(message);
+                break;
             case WebClientService.SUB_TYPE_CONTACT_DETAIL:
                 receiveResult = this._receiveResponseContactDetail(message);
-                break;
-            case WebClientService.SUB_TYPE_ALERT:
-                receiveResult = this._receiveAlert(message);
-                break;
-            case WebClientService.SUB_TYPE_GROUP_SYNC:
-                receiveResult = this._receiveGroupSync(message);
-                break;
-            case WebClientService.SUB_TYPE_BATTERY_STATUS:
-                this._receiveUpdateBatteryStatus(message);
                 break;
             default:
                 this.$log.warn('Ignored response with type:', type);
                 return;
         }
-        this._receivePromise(message, receiveResult);
 
+        this._receivePromise(message, receiveResult);
     }
 
     private _receiveUpdate(type, message): void {
-        // Dispatch update
         let receiveResult;
         switch (type) {
             case WebClientService.SUB_TYPE_RECEIVER:
                 this._receiveUpdateReceiver(message);
                 break;
-            case WebClientService.SUB_TYPE_MESSAGE:
-                this._receiveUpdateMessage(message);
+            case WebClientService.SUB_TYPE_RECEIVERS:
+                this._receiveUpdateReceivers(message);
+                break;
+            case WebClientService.SUB_TYPE_MESSAGES:
+                this._receiveUpdateMessages(message);
                 break;
             case WebClientService.SUB_TYPE_TYPING:
                 this._receiveUpdateTyping(message);
+                break;
+            case WebClientService.SUB_TYPE_CONVERSATION:
+                this._receiveUpdateConversation(message);
+                break;
+            case WebClientService.SUB_TYPE_AVATAR:
+                this._receiveUpdateAvatar(message);
                 break;
             case WebClientService.SUB_TYPE_BATTERY_STATUS:
                 this._receiveUpdateBatteryStatus(message);
                 break;
             case WebClientService.SUB_TYPE_CONTACT:
-                receiveResult = this._receiveResponseContact(message);
+                receiveResult = this._receiveUpdateContact(message);
                 break;
             case WebClientService.SUB_TYPE_GROUP:
                 receiveResult = this._receiveResponseGroup(message);
@@ -2429,21 +2921,28 @@ export class WebClientService {
             case WebClientService.SUB_TYPE_DISTRIBUTION_LIST:
                 receiveResult = this._receiveResponseDistributionList(message);
                 break;
+            case WebClientService.SUB_TYPE_PROFILE:
+                this._receiveUpdateProfile(message);
+                break;
+            case WebClientService.SUB_TYPE_ALERT:
+                this._receiveAlert(message);
+                break;
+            case WebClientService.SUB_TYPE_CONNECTION_DISCONNECT:
+                this._receiveConnectionDisconnect(message);
+                break;
             default:
                 this.$log.warn('Ignored update with type:', type);
                 return;
         }
 
         this._receivePromise(message, receiveResult);
-
     }
 
     private _receiveCreate(type, message): void {
-        // Dispatch response
         let receiveResult: threema.PromiseRequestResult<any>;
         switch (type) {
             case WebClientService.SUB_TYPE_CONTACT:
-                receiveResult = this._receiveResponseContact(message);
+                receiveResult = this._receiveUpdateContact(message);
                 break;
             case WebClientService.SUB_TYPE_GROUP:
                 receiveResult = this._receiveResponseGroup(message);
@@ -2464,7 +2963,6 @@ export class WebClientService {
     }
 
     private _receiveDelete(type, message): void {
-        // Dispatch update
         let receiveResult;
         switch (type) {
             case WebClientService.SUB_TYPE_CONTACT_DETAIL:
@@ -2476,7 +2974,6 @@ export class WebClientService {
         }
 
         this._receivePromise(message, receiveResult);
-
     }
 
     /**
@@ -2501,8 +2998,88 @@ export class WebClientService {
         if (this.config.MSG_DEBUGGING) {
             this.$log.debug('[Message] Outgoing:', message.type, '/', message.subType, message);
         }
-        const bytes: Uint8Array = this.msgpackEncode(message);
-        this.secureDataChannel.send(bytes);
+        switch (this.chosenTask) {
+            case threema.ChosenTask.WebRTC:
+                {
+                    // Send bytes through WebRTC DataChannel
+                    const bytes: Uint8Array = this.msgpackEncode(message);
+                    this.secureDataChannel.send(bytes);
+                }
+                break;
+            case threema.ChosenTask.RelayedData:
+                {
+                    // Send bytes through e2e encrypted WebSocket
+                    if (this.salty.state !== 'task') {
+                        this.$log.debug(this.logTag, 'Currently not connected (state='
+                            + this.salty.state + '), putting outgoing message in queue');
+                        this.outgoingMessageQueue.push(message);
+                        if (this.pushService.isAvailable()) {
+                            this.sendPush(threema.WakeupType.Wakeup);
+                        } else {
+                            this.$log.warn(this.logTag, 'Push service not available, cannot wake up peer!');
+                        }
+                    } else {
+                        const bytes: Uint8Array = this.msgpackEncode(message);
+                        const chunker = new chunkedDc.Chunker(this.messageSerial, bytes, this.messageChunkSize);
+                        for (const chunk of chunker) {
+                            if (this.config.MSG_DEBUGGING) {
+                                this.$log.debug('[Chunk] Sending chunk:', chunk);
+                            }
+                            this.relayedDataTask.sendMessage(chunk.buffer);
+                        }
+                        this.messageSerial += 1;
+                    }
+                }
+                break;
+            default:
+                this.$log.error(this.logTag, 'Trying to send message, but no chosen task set');
+        }
+    }
+
+    /**
+     * Handle incoming message bytes from the SecureDataChannel.
+     */
+    private handleIncomingMessageBytes(bytes: Uint8Array): void {
+        this.$log.debug('New incoming message (' + bytes.byteLength + ' bytes)');
+        if (this.config.MSGPACK_DEBUGGING) {
+            this.$log.debug('Incoming message payload: ' + msgpackVisualizer(bytes));
+        }
+
+        // Decode bytes
+        const message: threema.WireMessage = this.msgpackDecode(bytes);
+
+        return this.handleIncomingMessage(message, false);
+    }
+
+    /**
+     * Handle incoming incoming from the SecureDataChannel
+     * or from the relayed data WebSocket.
+     */
+    private handleIncomingMessage(message: threema.WireMessage, log: boolean): void {
+        if (log) {
+            this.$log.debug('New incoming message');
+        }
+
+        // Validate message to keep contract defined by `threema.WireMessage` type
+        if (message.type === undefined) {
+            this.$log.warn('Ignoring invalid message (no type attribute)');
+            return;
+        } else if (message.subType === undefined) {
+            this.$log.warn('Ignoring invalid message (no subType attribute)');
+            return;
+        }
+
+        // If desired, log message type / subtype
+        if (this.config.MSG_DEBUGGING) {
+            // Deep copy message to prevent issues with JS debugger
+            const deepcopy = JSON.parse(JSON.stringify(message));
+            this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
+        }
+
+        // Process data
+        this.$rootScope.$apply(() => {
+            this.receive(message);
+        });
     }
 
     /**
@@ -2573,4 +3150,65 @@ export class WebClientService {
         this.titleService.updateUnreadCount(0);
     }
 
+    /**
+     * Return the configuration object from the client info data.
+     */
+    public get appConfig(): threema.AppConfig {
+        return this.clientInfo.configuration;
+    }
+
+    /**
+     * Return the capabilities object from the client info data.
+     */
+    public get appCapabilities(): threema.AppCapabilities {
+        return this.clientInfo.capabilities;
+    }
+
+    /**
+     * Sort a list of contacts in-place.
+     */
+    private sortContacts(contacts: threema.ContactReceiver[]): void {
+        const getSortableName = (name: string) => name.startsWith('~') ? name.substr(1) : name;
+
+        let options;
+        if (this.browserService.supportsExtendedLocaleCompare()) {
+            options = {
+                usage: 'sort',
+                sensitivity: 'variant',
+            };
+        }
+
+        const compareFunc = (a: threema.Receiver, b: threema.Receiver) => {
+            if (a.id.startsWith('*') && !b.id.startsWith('*')) { return 1; }
+            if (!a.id.startsWith('*') && b.id.startsWith('*')) { return -1; }
+            const left = getSortableName(a.displayName);
+            const right = getSortableName(b.displayName);
+            return left.localeCompare(right, undefined, options);
+        };
+        contacts.sort(compareFunc);
+    }
+
+    /**
+     * Clear all "is typing" flags.
+     */
+    public clearIsTypingFlags(): void {
+        this.typing.clearAll();
+    }
+
+    private handleGlobalConnectionStateChange(stateChange: threema.GlobalConnectionStateChange): void {
+        const isOk = stateChange.state === threema.GlobalConnectionState.Ok;
+        const wasOk = stateChange.prevState === threema.GlobalConnectionState.Ok;
+        if (!isOk && wasOk && this.batteryStatusService.dataAvailable) {
+            this.batteryStatusTimeout = this.$timeout(
+                () => {
+                    this.batteryStatusService.clearStatus();
+                    this.batteryStatusTimeout = null;
+                },
+                60000,
+            );
+        } else if (isOk && this.batteryStatusTimeout !== null) {
+            this.$timeout.cancel(this.batteryStatusTimeout);
+            this.batteryStatusTimeout = null;
+        }
+    }
 }

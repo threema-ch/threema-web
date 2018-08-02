@@ -252,3 +252,89 @@ export function supportsPassive(): boolean {
 export function escapeRegExp(str: string) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
+
+/**
+ * Generate a link to the msgpack visualizer from an Uint8Array containing
+ * msgpack encoded data.
+ */
+export function msgpackVisualizer(bytes: Uint8Array): string {
+    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(bytes as any));
+}
+
+/**
+ * Check the featureMask of a contactReceiver
+ */
+export function hasFeature(contactReceiver: threema.ContactReceiver,
+                           feature: threema.ContactReceiverFeature,
+                           $log: ng.ILogService): boolean {
+    const logTag = '[helpers.hasFeature]';
+    if (contactReceiver !== undefined) {
+        if (contactReceiver.featureMask === 0) {
+            $log.warn(logTag, contactReceiver.id, 'featureMask', contactReceiver.featureMask);
+            return false;
+        }
+        // tslint:disable:no-bitwise
+        return (contactReceiver.featureMask & feature) !== 0;
+        // tslint:enable:no-bitwise
+    }
+    $log.warn(logTag, 'Cannot check featureMask of a undefined contactReceiver');
+    return false;
+}
+
+/**
+ * Convert an ArrayBuffer to a data URL.
+ */
+export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (msg: string) => void) {
+    if (buffer === null || buffer === undefined) {
+        throw new Error('Called bufferToUrl on null or undefined');
+    }
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    switch (mimeType) {
+        case 'image/jpg':
+        case 'image/jpeg':
+        case 'image/png':
+        case 'image/webp':
+        case 'image/gif':
+        case 'audio/mp4':
+        case 'audio/aac':
+        case 'audio/ogg':
+        case 'audio/webm':
+            // OK
+            break;
+        default:
+            logWarning('bufferToUrl: Unknown mimeType: ' + mimeType);
+            mimeType = 'image/jpeg';
+            break;
+    }
+    return 'data:' + mimeType + ';base64,' + btoa(binary);
+}
+
+/**
+ * Adapter for creating a logging function.
+ *
+ * Example usage:
+ *
+ * const logWarning = logAdapter($log.warn, '[AvatarService]');
+ */
+export function logAdapter(logFunc: (...msg: string[]) => void, logTag: string): ((msg: string) => void) {
+    return (msg: string) => logFunc(logTag, msg);
+}
+
+/**
+ * Return whether a value is not null and not undefined.
+ */
+export function hasValue(val: any): boolean {
+    return val !== null && val !== undefined;
+}
+
+/**
+ * Awaitable timeout function.
+ */
+export function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}

@@ -15,11 +15,14 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasFeature} from '../helpers';
 import {WebClientService} from '../services/webclient';
 
+const AUTOCOMPLETE_MAX_RESULTS = 20;
+
 export default [
-    'WebClientService',
-    function(webClientService: WebClientService) {
+    '$log', 'WebClientService',
+    function($log: ng.ILogService, webClientService: WebClientService) {
         return {
             restrict: 'EA',
             scope: {},
@@ -30,14 +33,14 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                const AUTOCOMPLETE_MAX_RESULTS = 20;
-
-                // cache all feature level >= 1 contacts
+                // Cache all contacts with group chat support
                 this.allContacts = Array
                     .from(webClientService.contacts.values())
-                    .filter((contactReceiver: threema.ContactReceiver) => {
-                        return contactReceiver.featureLevel >= 0;
-                    }) as threema.ContactReceiver[];
+                    .filter((contactReceiver: threema.ContactReceiver) => hasFeature(
+                        contactReceiver,
+                        threema.ContactReceiverFeature.GROUP_CHAT,
+                        $log,
+                    )) as threema.ContactReceiver[];
 
                 this.selectedItemChange = (contactReceiver: threema.ContactReceiver) => {
                     if (contactReceiver !== undefined) {
@@ -73,7 +76,7 @@ export default [
                 };
 
                 this.onRemoveMember = (contact: threema.ContactReceiver): boolean => {
-                    if (contact.id === webClientService.getMyIdentity().identity) {
+                    if (contact.id === webClientService.me.id) {
                         return false;
                     }
 

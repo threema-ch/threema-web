@@ -26,17 +26,16 @@ export default [
                 location: '=',
             },
             controllerAs: 'ctrl',
-            controller: [function() {
-                this.label = this.location.address ? this.location.address
-                        : this.location.lat  + ', ' + this.location.lon;
-            }],
+            controller: [function() { /* nothing */ }],
             template: `
-                <div class="file-message">
+                <div class="location-message">
                     <div class="circle">
                         <i class="material-icons md-24">location_on</i>
                     </div>
-                    <div class="info">
-                            {{ctrl.label}}
+                    <div class="location-details">
+                        <div class="description">{{ ctrl.location.description }}</div>
+                        <div class="details" ng-if="ctrl.location.address">{{ ctrl.location.address }}</div>
+                        <div class="details" ng-if="!ctrl.location.address">{{ ctrl.location.lat }}, {{ ctrl.location.lon }}</div>
                     </div>
                 </div>
             `,

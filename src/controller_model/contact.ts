@@ -16,17 +16,19 @@
  */
 
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
 import {AvatarControllerModel} from './avatar';
 
-export class ContactControllerModel implements threema.ControllerModel {
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
+
+export class ContactControllerModel implements threema.ControllerModel<threema.ContactReceiver> {
 
     // Angular services
     private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
 
-    private onRemovedCallback: any;
+    private onRemovedCallback: threema.OnRemovedCallback;
     public firstName: string;
     public lastName: string;
     public identity: string;
@@ -53,9 +55,7 @@ export class ContactControllerModel implements threema.ControllerModel {
 
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
-                this.subject = $translate.instant('messenger.EDIT_RECEIVER', {
-                    receiverName: '@NAME@',
-                }).replace('@NAME@', this.contact.displayName);
+                this.subject = $translate.instant('messenger.EDIT_RECEIVER');
                 this.firstName = this.contact.firstName;
                 this.lastName = this.contact.lastName;
                 this.avatarController = new AvatarControllerModel(
@@ -83,7 +83,7 @@ export class ContactControllerModel implements threema.ControllerModel {
         }
     }
 
-    public setOnRemoved(callback: any): void {
+    public setOnRemoved(callback: threema.OnRemovedCallback): void {
         this.onRemovedCallback = callback;
     }
 
@@ -99,7 +99,7 @@ export class ContactControllerModel implements threema.ControllerModel {
         return this.identity !== undefined && this.identity.length === 8;
     }
 
-    public canView(): boolean {
+    public canChat(): boolean {
         return this.contact.id !== this.webClientService.me.id;
     }
 
@@ -112,7 +112,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     }
 
     public canClean(): boolean {
-        return this.canView();
+        return this.canChat();
     }
 
     public clean(ev: any): any {
@@ -146,6 +146,10 @@ export class ContactControllerModel implements threema.ControllerModel {
             });
     }
 
+    public canShowQr(): boolean {
+        return false;
+    }
+
     public save(): Promise<threema.ContactReceiver> {
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
@@ -153,7 +157,7 @@ export class ContactControllerModel implements threema.ControllerModel {
                     this.contact.id,
                     this.firstName,
                     this.lastName,
-                    this.avatarController.getAvatar(),
+                    this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
                 );
             case ControllerModelMode.NEW:
                 return this.webClientService.addContact(this.identity);
@@ -164,7 +168,7 @@ export class ContactControllerModel implements threema.ControllerModel {
     }
 
     public onChangeMembers(identities: string[]): void {
-        return null;
+        // Do nothing
     }
 
     public getMembers(): string[] {

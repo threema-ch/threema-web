@@ -3,6 +3,105 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.0-beta.8][v2.0.0-beta.8] (2018-07-24)
+
+Changes:
+
+* [change] Upgraded a lot of dependencies ([#522][i522])
+* [change] Some minor protocol changes ([#528][i528])
+
+### [v2.0.0-beta.7][v2.0.0-beta.7] (2018-07-03)
+
+Changes:
+
+* [feature] Show a message when copying text to the clipboard ([#517][i517])
+* [change] Hide battery icon after 1 minute without connectivity
+* [change] Disable flashing of "low battery" icon due to browser
+  performance issues ([#519][i519])
+* [bug] Fix a lot of UI performance issues ([#480][i480])
+
+### [v2.0.0-beta.6][v2.0.0-beta.6] (2018-06-26)
+
+Changes:
+
+* [feature] Show three blue dots for verified Threema Work contacts
+* [feature] Implement non-work indicator for Threema Work users
+* [feature] Add message timeout state
+* [feature] Show a title text for all message state icons
+* [bug] Ignore status messages when marking as unread
+* [bug] Fix "unread messages" indicator
+
+### [v2.0.0-beta.5][v2.0.0-beta.5] (2018-06-12)
+
+Changes:
+
+* [feature] Implement "copy to clipboard" functionality
+* [bug] Fix closing of chat when deleting conversation
+* [bug] Fix bug when processing messages that were sent when not connected
+* [bug] Improve scrolling behavior
+
+Contributors:
+
+- [@heckenmann][@heckenmann]
+
+### [v2.0.0-beta.4][v2.0.0-beta.4] (2018-06-11)
+
+Changes:
+
+* [change] iOS: Status bar should stay green on connection loss
+* [bug] When entering the wrong password, re-enable the input field
+* [bug] Clear all "isTyping" flags when connection is lost
+* [bug] Handle unknown battery status
+* [bug] German translation fixes
+
+Contributors:
+
+- [@JanRei][@JanRei]
+
+### [v2.0.0-beta.3][v2.0.0-beta.3] (2018-06-05)
+
+Changes:
+
+* [feature] Hide inactive IDs in contact list ([#4][i4])
+* [change] Link version number at the bottom of the webapp to changelog
+* [bug] Properly sort contacts
+* [bug] Fix error message when adding an invalid contact identity
+
+### [v2.0.0-beta.2][v2.0.0-beta.2] (2018-06-04)
+
+Changes:
+
+* [change] Update icon / favicon for various platforms ([#503][i503])
+* [bug] Fix mime type handling for audio messages
+* [bug] Prevent double-download of audio messages
+
+### [v2.0.0-beta.1][v2.0.0-beta.1] (2018-05-29)
+
+This is the first beta release with support for Threema Web on iOS devices. It
+also changes the protocol version from 1 to 2.
+
+Changes:
+
+* [feature] Add support for iOS ([#58][i58])
+* [feature] Allow viewing and editing your own profile ([#221][i221])
+* [feature] Show message events ([#32][i32])
+* [feature] Large single emoji ([#97][i97])
+* [feature] Show distribution list members ([#472][i472])
+* [feature] Add "Navigate to" entry to location message context menu
+* [feature] Add support for Safari 11+ (with iOS devices only)
+* [feature] Implement support for new per-conversation notification settings
+* [change] Threema Web protocol version upgrade from 1 to 2
+* [change] When downloading media, filename now contains timestamp
+* [bug] Saving profile without setting picture won't reset it anymore ([#154][i154])
+* [bug] Fix race condition in password field ([#445][i445])
+* [bug] Fix broken conversation preview ([#393][i393])
+* [bug] Make message caption mouse-selectable ([#303][i303])
+
+Contributors:
+
+- [@IndianaDschones][@IndianaDschones]
+- [@ovalseven8][@ovalseven8]
+
 ### [v1.8.2][v1.8.2] (2018-02-21)
 
 Changes:
@@ -285,12 +384,14 @@ Contributors:
 
 First public release.
 
+[i4]: https://github.com/threema-ch/threema-web/issues/4
 [i6]: https://github.com/threema-ch/threema-web/issues/6
 [i8]: https://github.com/threema-ch/threema-web/issues/8
 [i11]: https://github.com/threema-ch/threema-web/issues/11
 [i17]: https://github.com/threema-ch/threema-web/issues/17
 [i20]: https://github.com/threema-ch/threema-web/issues/20
 [i29]: https://github.com/threema-ch/threema-web/issues/29
+[i32]: https://github.com/threema-ch/threema-web/issues/32
 [i38]: https://github.com/threema-ch/threema-web/issues/38
 [i39]: https://github.com/threema-ch/threema-web/issues/39
 [i41]: https://github.com/threema-ch/threema-web/issues/41
@@ -302,6 +403,7 @@ First public release.
 [i50]: https://github.com/threema-ch/threema-web/issues/50
 [i54]: https://github.com/threema-ch/threema-web/issues/54
 [i57]: https://github.com/threema-ch/threema-web/issues/57
+[i58]: https://github.com/threema-ch/threema-web/issues/58
 [i59]: https://github.com/threema-ch/threema-web/issues/59
 [i61]: https://github.com/threema-ch/threema-web/issues/61
 [i64]: https://github.com/threema-ch/threema-web/issues/64
@@ -313,6 +415,7 @@ First public release.
 [i83]: https://github.com/threema-ch/threema-web/issues/83
 [i86]: https://github.com/threema-ch/threema-web/issues/86
 [i90]: https://github.com/threema-ch/threema-web/issues/90
+[i97]: https://github.com/threema-ch/threema-web/issues/97
 [i93]: https://github.com/threema-ch/threema-web/issues/93
 [i102]: https://github.com/threema-ch/threema-web/issues/102
 [i108]: https://github.com/threema-ch/threema-web/issues/108
@@ -332,6 +435,7 @@ First public release.
 [i148]: https://github.com/threema-ch/threema-web/issues/148
 [i150]: https://github.com/threema-ch/threema-web/issues/150
 [i153]: https://github.com/threema-ch/threema-web/issues/153
+[i154]: https://github.com/threema-ch/threema-web/issues/154
 [i156]: https://github.com/threema-ch/threema-web/issues/156
 [i161]: https://github.com/threema-ch/threema-web/issues/161
 [i167]: https://github.com/threema-ch/threema-web/issues/167
@@ -348,6 +452,7 @@ First public release.
 [i205]: https://github.com/threema-ch/threema-web/issues/205
 [i211]: https://github.com/threema-ch/threema-web/issues/211
 [i215]: https://github.com/threema-ch/threema-web/issues/215
+[i221]: https://github.com/threema-ch/threema-web/issues/221
 [i231]: https://github.com/threema-ch/threema-web/issues/231
 [i235]: https://github.com/threema-ch/threema-web/issues/235
 [i237]: https://github.com/threema-ch/threema-web/issues/237
@@ -367,6 +472,7 @@ First public release.
 [i289]: https://github.com/threema-ch/threema-web/issues/289
 [i291]: https://github.com/threema-ch/threema-web/issues/291
 [i296]: https://github.com/threema-ch/threema-web/issues/296
+[i303]: https://github.com/threema-ch/threema-web/issues/303
 [i310]: https://github.com/threema-ch/threema-web/issues/310
 [i311]: https://github.com/threema-ch/threema-web/issues/311
 [i315]: https://github.com/threema-ch/threema-web/issues/315
@@ -403,6 +509,7 @@ First public release.
 [i382]: https://github.com/threema-ch/threema-web/issues/382
 [i385]: https://github.com/threema-ch/threema-web/issues/385
 [i390]: https://github.com/threema-ch/threema-web/issues/390
+[i393]: https://github.com/threema-ch/threema-web/issues/393
 [i396]: https://github.com/threema-ch/threema-web/issues/396
 [i401]: https://github.com/threema-ch/threema-web/issues/401
 [i402]: https://github.com/threema-ch/threema-web/issues/402
@@ -416,7 +523,23 @@ First public release.
 [i435]: https://github.com/threema-ch/threema-web/issues/435
 [i439]: https://github.com/threema-ch/threema-web/issues/439
 [i441]: https://github.com/threema-ch/threema-web/issues/441
+[i445]: https://github.com/threema-ch/threema-web/issues/445
+[i472]: https://github.com/threema-ch/threema-web/issues/472
+[i480]: https://github.com/threema-ch/threema-web/issues/480
+[i503]: https://github.com/threema-ch/threema-web/issues/503
+[i517]: https://github.com/threema-ch/threema-web/issues/517
+[i519]: https://github.com/threema-ch/threema-web/issues/519
+[i522]: https://github.com/threema-ch/threema-web/issues/522
+[i528]: https://github.com/threema-ch/threema-web/issues/528
 
+[v2.0.0-beta.8]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.7...v2.0.0-beta.8
+[v2.0.0-beta.7]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.6...v2.0.0-beta.7
+[v2.0.0-beta.6]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.5...v2.0.0-beta.6
+[v2.0.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.4...v2.0.0-beta.5
+[v2.0.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.3...v2.0.0-beta.4
+[v2.0.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.2...v2.0.0-beta.3
+[v2.0.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.0.0-beta.1...v2.0.0-beta.2
+[v2.0.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0-beta.1
 [v1.8.2]: https://github.com/threema-ch/threema-web/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/threema-ch/threema-web/compare/v1.8.0...v1.8.1
 [v1.8.0]: https://github.com/threema-ch/threema-web/compare/v1.7.0...v1.8.0
@@ -452,3 +575,5 @@ First public release.
 [@bluec0re]: https://github.com/bluec0re/
 [@Octoate]: https://github.com/Octoate/
 [@joelfischerr]: https://github.com/joelfischerr/
+[@JanRei]: https://github.com/JanRei/
+[@heckenmann]: https://github.com/heckenmann

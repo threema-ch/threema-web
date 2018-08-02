@@ -118,7 +118,8 @@
                             width: inherit;
                             height: inherit;
                         }
-                        > .work-indicator {
+                        > .work-indicator,
+                        > .home-indicator {
                             top: 15px;
                             width: 14px;
                             height: 14px;
@@ -256,19 +257,6 @@
             .thumbnail {
                 text-align: center;
                 max-width: 100%;
-                //height: 25vh;
-                //> img {
-                //    height: 100%;
-                //    width: auto;
-                //}
-								//
-                //&.location {
-                //    height: 200px;
-                //    > img {
-                //        height: 100%;
-                //        width: auto;
-                //    }
-                //}
             }
             .message-text {
                 margin-top: 8px;
@@ -276,6 +264,7 @@
             }
         }
     }
+
     .message-in {
         .message-body {
             position: relative;
@@ -355,8 +344,12 @@
             line-height: 1.3em;
 
             a {
-
                 @include mouse-hand;
+            }
+
+            span.e1.large-emoji {
+                transform: scale(1.0);
+                margin: 1px 4px 1px 0px;
             }
         }
 
@@ -368,8 +361,26 @@
                 flex-direction: column;
                 padding: 4px 0;
 
-                .location-poi {
-                    font-size: 80%;
+                .location-message {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+
+                    @include mouse-hand;
+
+                    .location-details {
+                        margin-left: 8px;
+
+                        .description {
+                            margin-bottom: 6px;
+                        }
+
+                        .details {
+                            font-size: 0.9em;
+                            line-height: 1.2em;
+                        }
+                    }
                 }
             }
 
@@ -393,6 +404,9 @@
                 i {
                     position: relative;
                     top: 2px;
+                }
+                i.timeout {
+                    color: $status-error;
                 }
             }
 
@@ -454,4 +468,10 @@
         }
     }
 
+}
+
+md-menu-item {
+    a span {
+        color: $material-grey-dark;
+    }
 }

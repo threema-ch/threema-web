@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isContactReceiver} from '../typeguards';
 import {ReceiverService} from './receiver';
 
 export class MessageAccess {
@@ -28,47 +29,79 @@ export class MessageAccess {
 
 export class MessageService {
 
+    // Angular services
     private $log: ng.ILogService;
+    private $timeout: ng.ITimeoutService;
+
+    // Own services
     private receiverService: ReceiverService;
 
-    public static $inject = ['$log', 'ReceiverService'];
-    constructor($log: ng.ILogService, receiverService: ReceiverService) {
+    // Other
+    private timeoutDelaySeconds = 30;
+
+    public static $inject = ['$log', '$timeout', 'ReceiverService'];
+    constructor($log: ng.ILogService, $timeout: ng.ITimeoutService, receiverService: ReceiverService) {
         this.$log = $log;
+        this.$timeout = $timeout;
         this.receiverService = receiverService;
     }
 
     public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess  {
         const access = new MessageAccess();
 
-        if (message !== undefined && receiver !== undefined && message.temporaryId === undefined) {
-            access.quote =  (message.type === 'text')
-                || (message.type === 'location')
-                || (message.caption !== undefined);
-            // disable copy for current version
-            // access.copy = access.quote;
+        if (message !== undefined) {
+            access.quote = (message.type === 'text')
+                        || (message.type === 'location')
+                        || (message.caption !== undefined && message.caption !== null && message.caption.length > 0);
+            access.copy = access.quote;
 
-            if (message !== undefined
-                && message.isOutbox === false
-                && this.receiverService.isContact(receiver)
-                && message.type !== 'voipStatus') {
-                access.ack = message.state !== 'user-ack';
-                access.dec = message.state !== 'user-dec';
-            }
+            if (receiver !== undefined && message.temporaryId === undefined) {
+                if (message.isOutbox === false
+                    && isContactReceiver(receiver)
+                    && message.type !== 'voipStatus') {
+                    access.ack = message.state !== 'user-ack';
+                    access.dec = message.state !== 'user-dec';
+                }
 
-            switch (message.type) {
-                case 'image':
-                case 'video':
-                case 'audio':
-                case 'file':
-                    access.download = true;
-                    break;
-                default:
-                    access.download = false;
+                switch (message.type) {
+                    case 'image':
+                    case 'video':
+                    case 'audio':
+                    case 'file':
+                        access.download = true;
+                        break;
+                    default:
+                        access.download = false;
+                }
+                access.delete = true;
             }
-            access.delete = true;
         }
 
         return access;
+    }
+
+    /**
+     * Return the quotable text in this message, or null.
+     */
+    public getQuoteText(message: threema.Message): string | null {
+        let quoteText = null;
+        if (message !== null && message !== undefined) {
+            switch (message.type) {
+                case 'text':
+                    quoteText = message.body;
+                    break;
+                case 'location':
+                    quoteText = message.location.description;
+                    break;
+                case 'file':
+                case 'image':
+                    quoteText = message.caption;
+                    break;
+                default:
+                    // Ignore (handled below)
+            }
+        }
+        return quoteText;
     }
 
     public showStatusIcon(message: threema.Message, receiver: threema.Receiver): boolean {
@@ -107,49 +140,6 @@ export class MessageService {
     }
 
     /**
-     * return the filename of a message (image, audio, file)
-     * used for downloads
-     * @param message
-     * @returns filename string or null
-     */
-    public getFileName(message: threema.Message): string {
-        if (message === undefined
-            || message === null) {
-            return null;
-        }
-
-        const getFileName = (prefix: string, postfix?: string): string => {
-            if (message.id === undefined) {
-                this.$log.warn('missing id on message model');
-                return null;
-            }
-            return prefix
-                + '-' + message.id
-                + (postfix !== undefined ? '.' + postfix : '');
-        };
-
-        switch (message.type) {
-            case 'image':
-                return getFileName('image', 'jpg');
-            case 'video':
-                return getFileName('video', 'mpg');
-            case 'file':
-                if (message.file !== undefined) {
-                    return message.file.name;
-                }
-
-                // should not happen
-                this.$log.warn('file message without file object', message.id);
-                return getFileName('file');
-            case 'audio':
-                return getFileName('audio', 'mp4');
-            default:
-                // ignore file types without a read file
-                return null;
-        }
-    }
-
-    /**
      * Create a message object with a temporaryId
      */
     public createTemporary(receiver: threema.Receiver, msgType: string,
@@ -162,7 +152,7 @@ export class MessageService {
             state: 'pending',
             id: undefined,
             body: undefined,
-            date: ('0' + now.getHours()).slice(-2) + ':' + ('0' + now.getMinutes()).slice(-2),
+            date: Math.floor(Date.now() / 1000),
             partnerId: receiver.id,
             isStatus: false,
             quote: undefined,
@@ -173,6 +163,17 @@ export class MessageService {
             message.body = (messageData as threema.TextMessageData).text;
             message.quote = (messageData as threema.TextMessageData).quote;
         }
+
+        // Add delay for timeout checking
+        this.$timeout(() => {
+            // Set the state to timeout if it is still pending.
+            // Note: If sending the message worked, by now the message object
+            // will have been replaced by a new one and the state change would
+            // have no effect anyways...
+            if (message.state === 'pending') {
+                message.state = 'timeout';
+            }
+        }, this.timeoutDelaySeconds * 1000);
 
         return message;
     }

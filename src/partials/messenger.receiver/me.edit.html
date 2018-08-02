@@ -1,0 +1,18 @@
+<div layout="column" layout-wrap layout-margin layout-align="center center">
+    <h3 class="md-headline" translate>messenger.RECEIVER_AVATAR</h3>
+    <avatar-area
+        load-avatar="ctrl.controllerModel.avatarController.loadAvatar"
+        on-change="ctrl.controllerModel.avatarController.onChangeAvatar"
+        color="ctrl.controllerModel.me.color"
+        enable-clear="true">
+    </avatar-area>
+</div>
+
+<md-card>
+    <md-card-content>
+        <md-input-container class="md-block">
+            <label translate>messenger.MY_PUBLIC_NICKNAME</label>
+            <input ng-disabled="ctrl.isSaving()" ng-model="ctrl.controllerModel.nickname" ng-keypress="ctrl.keypress($event)">
+        </md-input-container>
+    </md-card-content>
+</md-card>
