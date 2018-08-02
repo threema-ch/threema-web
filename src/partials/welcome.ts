@@ -29,6 +29,7 @@ import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
 import {PushService} from '../services/push';
+import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
@@ -78,6 +79,7 @@ class WelcomeController {
     private trustedKeyStore: TrustedKeyStoreService;
     private pushService: PushService;
     private stateService: StateService;
+    private settingsService: SettingsService;
     private config: threema.Config;
 
     // Other
@@ -88,11 +90,13 @@ class WelcomeController {
     private formLocked: boolean = false;
     private pleaseUpdateAppMsg: string = null;
     private browser: threema.BrowserInfo;
+    private browserWarningShown: boolean = false;
 
     public static $inject = [
         '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
-        'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService', 'VersionService',
-        'BROWSER_MIN_VERSIONS', 'CONFIG', 'ControllerService',
+        'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
+        'VersionService', 'SettingsService', 'ControllerService',
+        'BROWSER_MIN_VERSIONS', 'CONFIG',
     ];
     constructor($scope: ng.IScope, $state: UiStateService, $stateParams: WelcomeStateParams,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
@@ -102,9 +106,10 @@ class WelcomeController {
                 stateService: StateService, pushService: PushService,
                 browserService: BrowserService,
                 versionService: VersionService,
+                settingsService: SettingsService,
+                controllerService: ControllerService,
                 minVersions: threema.BrowserMinVersions,
-                config: threema.Config,
-                controllerService: ControllerService) {
+                config: threema.Config) {
         controllerService.setControllerName('welcome');
         // Angular services
         this.$scope = $scope;
@@ -121,6 +126,7 @@ class WelcomeController {
         this.trustedKeyStore = trustedKeyStore;
         this.stateService = stateService;
         this.pushService = pushService;
+        this.settingsService = settingsService;
         this.config = config;
 
         // Determine whether browser warning should be shown
@@ -153,6 +159,14 @@ class WelcomeController {
         } else {
             $log.warn('Non-supported browser, please use Chrome, Firefox or Opera');
             this.showBrowserWarning();
+        }
+
+        // Show a "new version info" dialog the first time.
+        if (!this.browserWarningShown) {
+            // The browser warning dialog interferes with the new version dialog, so don't trigger both.
+            if (this.settingsService.retrieveUntrustedKeyValuePair('v2infoShown', false) !== 'yes') {
+                this.showNewVersionInfos();
+            }
         }
 
         // Determine whether local storage is available
@@ -381,6 +395,7 @@ class WelcomeController {
      * Show a browser warning dialog.
      */
     private showBrowserWarning(): void {
+        this.browserWarningShown = true;
         this.$translate.onReady().then(() => {
             const confirm = this.$mdDialog.confirm()
                 .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
@@ -444,10 +459,27 @@ class WelcomeController {
     private showAlreadyConnected(): void {
         this.$translate.onReady().then(() => {
             const confirm = this.$mdDialog.alert()
-            .title(this.$translate.instant('welcome.ALREADY_CONNECTED'))
-            .htmlContent(this.$translate.instant('welcome.ALREADY_CONNECTED_DETAILS'))
-            .ok(this.$translate.instant('common.OK'));
+                .title(this.$translate.instant('welcome.ALREADY_CONNECTED'))
+                .htmlContent(this.$translate.instant('welcome.ALREADY_CONNECTED_DETAILS'))
+                .ok(this.$translate.instant('common.OK'));
             this.$mdDialog.show(confirm);
+        });
+    }
+
+    /**
+     * Show version 2 release information.
+     * TODO: Remove this in next version!
+     */
+    private showNewVersionInfos(): void {
+        this.$translate.onReady().then(() => {
+            const confirm = this.$mdDialog.alert()
+                .title(this.$translate.instant('welcome.NEW_VERSION'))
+                .htmlContent(this.$translate.instant('welcome.NEW_VERSION_DETAILS'))
+                .ok(this.$translate.instant('common.UNDERSTOOD'));
+            this.$mdDialog.show(confirm).then(() => {
+                // Remember that dialog was dismissed
+                this.settingsService.storeUntrustedKeyValuePair('v2infoShown', 'yes');
+            });
         });
     }
 

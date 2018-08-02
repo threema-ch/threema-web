@@ -41,7 +41,9 @@
         "ALREADY_CONNECTED": "Already connected",
         "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!",
         "VERSION": "Version",
-        "BACKGROUND_IMAGE": "Background Image"
+        "BACKGROUND_IMAGE": "Background Image",
+        "NEW_VERSION": "New Threema Web Version",
+        "NEW_VERSION_DETAILS": "This version of Threema Web requires <strong>Threema 3.45 for Android</strong>. If you are using an older Threema version, <strong>please update the app</strong>.<br><br>If you are unable to update the Threema app, you can temporarily use the archived version of Threema Web: <a href=\"https://web.threema.ch/archive/1.8.2/\">web.threema.ch/archive/1.8.2</a>"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",
@@ -79,12 +81,13 @@
         "NO": "No",
         "OK": "Ok",
         "DELETE": "Delete",
-        "EDIT": "Bearbeiten",
+        "EDIT": "Edit",
         "ARE_YOU_SURE": "Are you sure?",
         "SAVE": "Save",
         "DONE": "Done",
         "MODIFY": "Modify",
-        "NOTE": "Note:"
+        "NOTE": "Note:",
+        "UNDERSTOOD": "Understood"
     },
     "messenger": {
         "VERIFICATION_LEVEL": "Verification level",

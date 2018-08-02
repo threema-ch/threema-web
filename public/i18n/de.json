@@ -41,7 +41,9 @@
         "ALREADY_CONNECTED": "Bereits verbunden",
         "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!",
         "VERSION": "Version",
-        "BACKGROUND_IMAGE": "Hintergrundbild"
+        "BACKGROUND_IMAGE": "Hintergrundbild",
+        "NEW_VERSION": "Neue Version von Threema Web",
+        "NEW_VERSION_DETAILS": "Diese Version von Threema Web setzt <strong>Threema 3.45 für Android</strong> voraus. Falls Sie eine ältere Threema-Version verwenden, <strong>aktualisieren Sie bitte die App</strong>.<br><br>Wenn Sie die Threema-App nicht aktualisieren können, nutzen Sie vorübergehend die archivierte Version von Threema Web: <a href=\"https://web.threema.ch/archive/1.8.2/\">web.threema.ch/archive/1.8.2</a>"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindungsprobleme",
@@ -84,7 +86,8 @@
         "SAVE": "Speichern",
         "DONE": "Fertig",
         "MODIFY": "Ändern",
-        "NOTE": "Hinweis:"
+        "NOTE": "Hinweis:",
+        "UNDERSTOOD": "Verstanden"
     },
     "messenger": {
         "VERIFICATION_LEVEL": "Vertrauensstufe",
