@@ -1003,9 +1003,7 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            const resetPush = true;
-            const redirect = true;
-            this.webClientService.stop(true, threema.DisconnectReason.SessionStopped, resetPush, redirect);
+            this.webClientService.stop(threema.DisconnectReason.SessionStopped, true, true, true);
             this.receiverService.setActive(undefined);
         }, () => {
             // do nothing
@@ -1023,9 +1021,7 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            const resetPush = true;
-            const redirect = true;
-            this.webClientService.stop(true, threema.DisconnectReason.SessionDeleted, resetPush, redirect);
+            this.webClientService.stop(threema.DisconnectReason.SessionDeleted, true, true, true);
             this.receiverService.setActive(undefined);
         }, () => {
             // do nothing

@@ -326,6 +326,7 @@
         "SESSION_STOPPED": "Die Sitzung wurde auf Ihrem Gerät gestoppt.",
         "SESSION_DELETED": "Die Sitzung wurde auf Ihrem Gerät gelöscht.",
         "WEBCLIENT_DISABLED": "Threema Web wurde auf Ihrem Gerät deaktiviert.",
-        "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben."
+        "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben.",
+        "SESSION_ERROR": "Die Sitzung wurde auf Grund eines Protokollfehlers beendet."
     }
 }
