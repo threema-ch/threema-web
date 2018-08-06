@@ -61,6 +61,16 @@ export class BatteryStatusService {
             }
         }
 
+        // Reset alert flag if device is plugged in
+        if (this.alertedLow && batteryStatus.isCharging) {
+            this.alertedLow = false;
+            this.notificationService.hideNotification('battery-low');
+        }
+        if (this.alertedCritical && batteryStatus.isCharging) {
+            this.alertedCritical = false;
+            this.notificationService.hideNotification('battery-critical');
+        }
+
         // Reset alert flag if percentage goes above a certain threshold
         const hysteresis = 3;
         if (this.alertedLow && batteryStatus.percent > BatteryStatusService.PERCENT_LOW + hysteresis) {
