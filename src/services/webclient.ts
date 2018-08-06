@@ -565,7 +565,7 @@ export class WebClientService {
         // Stop session
         this.stop(DisconnectReason.SessionError, true, true, true);
 
-        // Show an error dialog
+        // Show an alert
         this.showAlert('connection.SESSION_ERROR');
     }
 
@@ -3305,17 +3305,20 @@ export class WebClientService {
      */
     private receive(message: threema.WireMessage): void {
         // Intercept handshake message
-        // TODO: Remove this after the current iOS beta has been closed
         if (!this.connectionInfoFuture.done) {
-            if (message.type !== WebClientService.TYPE_UPDATE
-                && message.subType !== WebClientService.SUB_TYPE_CONNECTION_INFO) {
-                // We did not receive a handshake message, so we cannot resume a session
-                const warning = `Resumption cancelled, received message ${message.type}/${message.subType}`;
-                this.$log.warn(this.logTag, warning);
-                this.connectionInfoFuture.resolve(null);
-            } else {
-                this._receiveConnectionInfo(message);
+            // Check for unexpected messages
+            if (message.type !== WebClientService.TYPE_UPDATE ||
+                message.subType !== WebClientService.SUB_TYPE_CONNECTION_INFO) {
+                // TODO: Reactivate this and remove the special stop + alert
+                //       once the iOS beta has been closed
+                // this.failSession();
+                this.stop(DisconnectReason.SessionStopped, true, true, true);
+                this.showAlert('Please update the Threema app to use the latest iOS beta version');
+                return;
             }
+
+            // Dispatch and return
+            this._receiveConnectionInfo(message);
             return;
         }
 
