@@ -3,6 +3,14 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.0.1][v2.0.1] (2018-08-07)
+
+Changes:
+
+* [feature] Cancel battery alert when phone is plugged in ([#547][i547])
+* [bug] Fix group / distribution list contact selector ([#550][i550])
+* [bug] Fix troubleshooting background image and favicon
+
 ### [v2.0.0][v2.0.0] (2018-08-02)
 
 This release changes the protocol version from 1 to 2. It provides preliminary
@@ -475,7 +483,10 @@ First public release.
 [i519]: https://github.com/threema-ch/threema-web/issues/519
 [i522]: https://github.com/threema-ch/threema-web/issues/522
 [i528]: https://github.com/threema-ch/threema-web/issues/528
+[i547]: https://github.com/threema-ch/threema-web/issues/547
+[i550]: https://github.com/threema-ch/threema-web/issues/550
 
+[v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0
 [v1.8.2]: https://github.com/threema-ch/threema-web/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/threema-ch/threema-web/compare/v1.8.0...v1.8.1
