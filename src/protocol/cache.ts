@@ -15,25 +15,26 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {SequenceNumber} from './sequence_number';
+
 export type CachedChunk = Uint8Array | null;
 
 /**
- * Contains messages that have not yet been acknowledged,
+ * Contains chunks that have not yet been acknowledged.
  */
 export class ChunkCache {
-    private readonly sequenceNumberMax: number;
-    private _sequenceNumber = 0;
+    private _sequenceNumber: SequenceNumber;
     private _size = 0;
     private cache: CachedChunk[] = [];
 
-    constructor(sequenceNumberMax: number) {
-        this.sequenceNumberMax = sequenceNumberMax;
+    constructor(sequenceNumber: SequenceNumber) {
+        this._sequenceNumber = sequenceNumber;
     }
 
     /**
      * Get the current sequence number (e.g. of the **next** chunk to be added).
      */
-    public get sequenceNumber(): number {
+    public get sequenceNumber(): SequenceNumber {
         return this._sequenceNumber;
     }
 
@@ -67,13 +68,8 @@ export class ChunkCache {
      * Append a chunk to the chunk cache.
      */
     public append(chunk: CachedChunk): void {
-        // Check if the sequence number would overflow
-        if (this._sequenceNumber >= this.sequenceNumberMax) {
-            throw Error('Sequence number overflow');
-        }
-
         // Update sequence number, update size & append chunk
-        ++this._sequenceNumber;
+        this._sequenceNumber.increment();
         this._size += chunk.byteLength;
         this.cache.push(chunk);
     }
@@ -82,13 +78,15 @@ export class ChunkCache {
      * Acknowledge cached chunks and remove those from the cache.
      */
     public acknowledge(theirSequenceNumber: number): void {
-        if (theirSequenceNumber < 0 || theirSequenceNumber > this.sequenceNumberMax) {
+        try {
+            this._sequenceNumber.validate(theirSequenceNumber);
+        } catch (error) {
             throw new Error(`Remote sent us an invalid sequence number: ${theirSequenceNumber}`);
         }
 
         // Calculate the slice start index for the chunk cache
         // Important: Our sequence number is one chunk ahead!
-        const endOffset = theirSequenceNumber + 1 - this._sequenceNumber;
+        const endOffset = theirSequenceNumber + 1 - this._sequenceNumber.get();
         if (endOffset > 0) {
             throw new Error('Remote travelled through time and acknowledged a chunk which is in the future');
         } else if (-endOffset > this.cache.length) {
