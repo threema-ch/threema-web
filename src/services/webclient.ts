@@ -615,9 +615,12 @@ export class WebClientService {
         this.$log.debug(this.logTag, 'Sending connection info');
         if (resumeSession) {
             this._sendConnectionInfo(
-                this.currentConnectionId, this.previousConnectionId, this.previousChunkCache.sequenceNumber);
+                this.currentConnectionId.buffer,
+                this.previousConnectionId.buffer,
+                this.previousChunkCache.sequenceNumber
+            );
         } else {
-            this._sendConnectionInfo(this.currentConnectionId);
+            this._sendConnectionInfo(this.currentConnectionId.buffer);
         }
 
         // Receive connection info
@@ -721,7 +724,8 @@ export class WebClientService {
         // Derive connection ID
         // Note: We need to make sure this is done before any ARP messages can be received
         const box = this.salty.encryptForPeer(new Uint8Array(0), WebClientService.CONNECTION_ID_NONCE);
-        this.currentConnectionId = box.data;
+        // Note: We explicitly copy the data here to be able to use the underlying buffer directly
+        this.currentConnectionId = new Uint8Array(box.data);
 
         // If the WebRTC task was chosen, initialize the data channel
         if (this.chosenTask === threema.ChosenTask.WebRTC) {
@@ -1018,7 +1022,7 @@ export class WebClientService {
     /**
      * Send a connection info update.
      */
-    private _sendConnectionInfo(connectionId: Uint8Array, resumeId?: Uint8Array, sequenceNumber?: number): void {
+    private _sendConnectionInfo(connectionId: ArrayBuffer, resumeId?: ArrayBuffer, sequenceNumber?: number): void {
         const args = undefined;
         const data = {id: connectionId};
         if (resumeId !== undefined && sequenceNumber !== undefined) {
