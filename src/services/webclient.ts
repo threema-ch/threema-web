@@ -628,7 +628,7 @@ export class WebClientService {
 
         // Resend chunks
         for (const chunk of this.currentChunkCache.chunks) {
-            this.sendChunk(chunk, true);
+            this.sendChunk(chunk, true, false);
         }
 
         // Done, yay!
@@ -636,19 +636,19 @@ export class WebClientService {
     }
 
     /**
-     * Schedule (or reschedule) the connection ack to be sent.
+     * Schedule the connection ack to be sent.
      *
      * By default, a connection ack message will be sent after 10 seconds
      * (as defined by the protocol).
      */
     private scheduleConnectionAck(timeout: number = 10000): void {
-        if (this.ackTimer !== null) {
-            clearTimeout(this.ackTimer);
+        // Don't schedule if already running
+        if (this.ackTimer === null) {
+            this.ackTimer = self.setTimeout(() => {
+                this.ackTimer = null;
+                this._sendConnectionAck();
+            }, timeout);
         }
-        this.ackTimer = self.setTimeout(() => {
-            // Send
-            this._sendConnectionAck();
-        }, timeout);
     }
 
     /**
@@ -712,9 +712,6 @@ export class WebClientService {
         this.previousConnectionId = null;
         this.previousIncomingChunkSequenceNumber = null;
         this.previousChunkCache = null;
-
-        // Schedule the periodic ack timer
-        this.scheduleConnectionAck();
 
         // Reset fields and request initial data if not resuming the session
         const requiredInitializationSteps = [];
@@ -1100,8 +1097,10 @@ export class WebClientService {
             sequenceNumber: this.currentIncomingChunkSequenceNumber.get(),
         });
 
-        // Re-schedule sending a connection ack
-        this.scheduleConnectionAck();
+        // Clear pending ack timer (if any)
+        if (this.ackTimer !== null) {
+            clearTimeout(this.ackTimer);
+        }
     }
 
     /**
@@ -3356,6 +3355,10 @@ export class WebClientService {
                 break;
             case threema.ChosenTask.RelayedData:
                 {
+                    // Don't queue handshake messages
+                    // TODO: Add this as a method argument
+                    const canQueue = message.subType !== WebClientService.SUB_TYPE_CONNECTION_INFO;
+
                     // Send bytes through e2e encrypted WebSocket
                     const bytes: Uint8Array = this.msgpackEncode(message);
 
@@ -3364,7 +3367,7 @@ export class WebClientService {
                     const chunker = new chunkedDc.Chunker(messageSequenceNumber, bytes, WebClientService.CHUNK_SIZE);
                     for (const chunk of chunker) {
                         // Send (and cache)
-                        this.sendChunk(chunk, retransmit);
+                        this.sendChunk(chunk, retransmit, canQueue);
                     }
 
                     // Check if we need to request an acknowledgement
@@ -3384,17 +3387,17 @@ export class WebClientService {
     /**
      * Send a chunk via the underlying transport.
      */
-    private sendChunk(chunk: Uint8Array, retransmit: boolean): void {
+    private sendChunk(chunk: Uint8Array, retransmit: boolean, canQueue: boolean): void {
         // TODO: Support for sending in chunks via data channels will be added later
         if (this.chosenTask !== threema.ChosenTask.RelayedData) {
             throw new Error(`Cannot send chunk, not supported by task: ${this.chosenTask}`);
         }
-        const ready = this.previousChunkCache === null;
+        const shouldQueue = canQueue && this.previousChunkCache !== null;
         let chunkCache;
 
-        // Currently not ready? Enqueue in the chunk cache that is pending
-        // to be transferred and send a wakeup push.
-        if (!ready) {
+        // Enqueue in the chunk cache that is pending to be transferred and
+        // send a wakeup push.
+        if (shouldQueue) {
             chunkCache = this.previousChunkCache;
             this.$log.debug(this.logTag, 'Currently not connected, queueing chunk');
             if (this.pushService.isAvailable()) {
@@ -3408,7 +3411,7 @@ export class WebClientService {
 
         // Add to chunk cache
         try {
-            chunkCache.append(retransmit ? null : chunk);
+            chunkCache.append(retransmit ? chunk : null);
         } catch (error) {
             this.$log.error(this.logTag, error);
             this.failSession();
@@ -3416,7 +3419,7 @@ export class WebClientService {
         }
 
         // Send if ready
-        if (ready) {
+        if (!shouldQueue) {
             if (this.config.MSG_DEBUGGING) {
                 this.$log.debug('[Chunk] Sending chunk:', chunk);
             }
@@ -3443,6 +3446,9 @@ export class WebClientService {
 
         // Process chunk
         this.unchunker.add(chunk.buffer);
+
+        // Schedule the periodic ack timer
+        this.scheduleConnectionAck();
     }
 
     /**

@@ -70,7 +70,9 @@ export class ChunkCache {
     public append(chunk: CachedChunk): void {
         // Update sequence number, update size & append chunk
         this._sequenceNumber.increment();
-        this._size += chunk.byteLength;
+        if (chunk !== null) {
+            this._size += chunk.byteLength;
+        }
         this.cache.push(chunk);
     }
 
@@ -95,6 +97,8 @@ export class ChunkCache {
 
         // Slice our cache & recalculate size
         this.cache = endOffset === 0 ? [] : this.cache.slice(endOffset);
-        this._size = this.cache.reduce((sum, chunk) => sum + chunk.byteLength, 0);
+        this._size = this.cache
+            .filter((chunk) => chunk !== null)
+            .reduce((sum, chunk) => sum + chunk.byteLength, 0);
     }
 }

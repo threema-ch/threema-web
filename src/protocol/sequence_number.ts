@@ -59,13 +59,15 @@ export class SequenceNumber {
     }
 
     /**
-     * Increment the sequence number and return the resulting number.
+     * Increment the sequence number and return the sequence number as it was
+     * before it has been incremented.
      */
     public increment(by: number = 1): number {
         if (by < 0) {
             throw new Error('Cannot decrement the sequence number');
         }
-        this.set(this.value + by);
-        return this.get();
+        const value = this.value;
+        this.set(value + by);
+        return value;
     }
 }
