@@ -11,6 +11,11 @@ Changes:
 * [bug] Fix group / distribution list contact selector ([#550][i550])
 * [bug] Fix troubleshooting background image and favicon
 
+Contributors:
+
+- [@iasdeoupxe][@iasdeoupxe]
+- [@SirTyson][@SirTyson]
+
 ### [v2.0.0][v2.0.0] (2018-08-02)
 
 This release changes the protocol version from 1 to 2. It provides preliminary
@@ -525,3 +530,5 @@ First public release.
 [@joelfischerr]: https://github.com/joelfischerr/
 [@JanRei]: https://github.com/JanRei/
 [@heckenmann]: https://github.com/heckenmann
+[@iasdeoupxe]: https://github.com/iasdeoupxe
+[@SirTyson]: https://github.com/SirTyson
