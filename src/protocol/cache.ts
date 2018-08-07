@@ -23,6 +23,7 @@ export type CachedChunk = Uint8Array | null;
 export class ChunkCache {
     private readonly sequenceNumberMax: number;
     private _sequenceNumber = 0;
+    private _size = 0;
     private cache: CachedChunk[] = [];
 
     constructor(sequenceNumberMax: number) {
@@ -37,6 +38,13 @@ export class ChunkCache {
     }
 
     /**
+     * Get the size of currently stored chunks.
+     */
+    public get size(): number {
+        return this._size;
+    }
+
+    /**
      * Get the currently cached chunks.
      */
     public get chunks(): CachedChunk[] {
@@ -47,7 +55,7 @@ export class ChunkCache {
      * Transfer an array of cached chunks to this cache instance.
      */
     public transfer(cache: CachedChunk[]): void {
-        // Add chunks but remove all which are blacklisted
+        // Add chunks but remove all which should not be retransmitted
         for (const chunk of cache) {
             if (chunk !== null) {
                 this.append(chunk);
@@ -64,8 +72,9 @@ export class ChunkCache {
             throw Error('Sequence number overflow');
         }
 
-        // Update sequence number & append chunk
+        // Update sequence number, update size & append chunk
         ++this._sequenceNumber;
+        this._size += chunk.byteLength;
         this.cache.push(chunk);
     }
 
@@ -86,7 +95,8 @@ export class ChunkCache {
             throw new Error('Remote travelled back in time and acknowledged a chunk it has already acknowledged');
         }
 
-        // Slice our cache
+        // Slice our cache & recalculate size
         this.cache = endOffset === 0 ? [] : this.cache.slice(endOffset);
+        this._size = this.cache.reduce((sum, chunk) => sum + chunk.byteLength, 0);
     }
 }
