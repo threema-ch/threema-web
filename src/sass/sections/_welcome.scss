@@ -110,7 +110,7 @@
 
     .loading {
         margin-top: 48px;
-
+		
         md-progress-circular {
             margin: 0 auto;
             svg path {
@@ -134,20 +134,6 @@
             }
         }
 
-        .protocol-updated {
-            font-size: 0.9em;
-            background-color: $status-error;
-            color: white;
-            font-weight: bold;
-            position: absolute;
-            bottom: 148px;
-            padding: 8px 8px;
-            width: calc(100% - 16px);
-            a {
-                color: #9dd0f2;
-            }
-        }
-
         .troubleshoot {
             $troubleshoot-height: 190px;
             height: $troubleshoot-height;
@@ -166,6 +152,15 @@
 
             .forget {
                 margin-top: 8px;
+            }
+            
+            .reload-btn {
+            	margin-top: 20px;
+            	width: 130px;
+            	float: middle;
+            	margin-left: 20px;
+            	margin-right: 20px;
+            	height: 35px
             }
         }
     }
