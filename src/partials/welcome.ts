@@ -476,7 +476,11 @@ class WelcomeController {
 
         this.$mdDialog.show(confirm).then(() =>  {
             // Force-stop the webclient
-            this.webClientService.stop(threema.DisconnectReason.SessionDeleted, true, true, false);
+            this.webClientService.stop(threema.DisconnectReason.SessionDeleted, {
+                send: true,
+                close: true,
+                redirect: false,
+            });
 
             // Reset state
             this.stateService.updateConnectionBuildupState('new');

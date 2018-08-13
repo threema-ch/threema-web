@@ -197,7 +197,11 @@ export class StatusController {
 
         // Function to soft-reconnect. Does not reset the loaded data.
         const doSoftReconnect = () => {
-            this.webClientService.stop(threema.DisconnectReason.SessionStopped, true, false, false);
+            this.webClientService.stop(threema.DisconnectReason.SessionStopped, {
+                send: true,
+                close: false,
+                redirect: false,
+            });
             this.webClientService.init(originalKeyStore, originalPeerPermanentKeyBytes, true);
             this.webClientService.start().then(
                 () => {
@@ -267,7 +271,11 @@ export class StatusController {
         // TODO: Make this more robust and hopefully faster
         const startTimeout = 500;
         this.$log.debug(this.logTag, 'Stopping old connection');
-        this.webClientService.stop(threema.DisconnectReason.SessionStopped, true, false, false);
+        this.webClientService.stop(threema.DisconnectReason.SessionStopped, {
+            send: true,
+            close: false,
+            redirect: false,
+        });
         this.$timeout(() => {
             this.$log.debug(this.logTag, 'Starting new connection');
             this.webClientService.init(originalKeyStore, originalPeerPermanentKeyBytes, true);

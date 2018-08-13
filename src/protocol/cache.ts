@@ -39,14 +39,14 @@ export class ChunkCache {
     }
 
     /**
-     * Get the size of currently stored chunks.
+     * Get the size of currently cached chunks.
      */
     public get size(): number {
         return this._size;
     }
 
     /**
-     * Get the currently cached chunks.
+     * Get a reference to the currently cached chunks.
      */
     public get chunks(): CachedChunk[] {
         return this.cache;
@@ -57,10 +57,9 @@ export class ChunkCache {
      */
     public transfer(cache: CachedChunk[]): void {
         // Add chunks but remove all which should not be retransmitted
+        cache = cache.filter((chunk) => chunk !== null);
         for (const chunk of cache) {
-            if (chunk !== null) {
-                this.append(chunk);
-            }
+            this.append(chunk);
         }
     }
 
@@ -77,9 +76,9 @@ export class ChunkCache {
     }
 
     /**
-     * Acknowledge cached chunks and remove those from the cache.
+     * Prune cached chunks that have been acknowledged.
      */
-    public acknowledge(theirSequenceNumber: number): void {
+    public prune(theirSequenceNumber: number): void {
         try {
             this._sequenceNumber.validate(theirSequenceNumber);
         } catch (error) {

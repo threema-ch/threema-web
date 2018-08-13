@@ -47,6 +47,17 @@ import ContactReceiverFeature = threema.ContactReceiverFeature;
 import DisconnectReason = threema.DisconnectReason;
 
 /**
+ * Payload of a connectionInfo message.
+ */
+interface ResumeInfo {
+    id: Uint8Array;
+    resume?: {
+        id: Uint8Array;
+        sequenceNumber: number;
+    };
+}
+
+/**
  * This service handles everything related to the communication with the peer.
  */
 export class WebClientService {
@@ -593,7 +604,11 @@ export class WebClientService {
      */
     private failSession() {
         // Stop session
-        this.stop(DisconnectReason.SessionError, true, true, true);
+        this.stop(DisconnectReason.SessionError, {
+            send: true,
+            close: true,
+            redirect: true,
+        });
 
         // Show an alert
         this.showAlert('connection.SESSION_ERROR');
@@ -605,7 +620,7 @@ export class WebClientService {
      * Important: Caller must invalidate the cache and connection ID after this
      *            function returned!
      */
-    private resumeSession(remoteInfo: any): void {
+    private resumeSession(remoteInfo: ResumeInfo): void {
         // Ensure we want to resume from the same previous connection
         if (!arraysAreEqual(this.previousConnectionId, remoteInfo.resume.id)) {
             this.$log.info('Cannot resume session: IDs of previous connection do not match');
@@ -613,9 +628,9 @@ export class WebClientService {
             return;
         }
 
-        // Acknowledge chunks that have been received by the remote side
+        // Remove chunks that have been received by the remote side
         try {
-            this.previousChunkCache.acknowledge(remoteInfo.resume.sequenceNumber);
+            this.previousChunkCache.prune(remoteInfo.resume.sequenceNumber);
         } catch (error) {
             // Not recoverable
             this.$log.error(this.logTag, `Unable to resume session: ${error}`);
@@ -904,15 +919,14 @@ export class WebClientService {
      */
     public stop(
         reason: DisconnectReason,
-        send: boolean,
-        close: boolean,
-        redirect: boolean,
+        flags: { send: boolean, close: boolean, redirect: boolean },
     ): void {
         this.$log.info(this.logTag, 'Disconnecting...');
+        let close = flags.close;
         let remove = false;
 
         // A redirect to the welcome page always implies a close
-        if (redirect) {
+        if (flags.redirect) {
             close = true;
         }
 
@@ -928,7 +942,7 @@ export class WebClientService {
         }
 
         // Send disconnect reason to the remote peer if requested
-        if (send && this.stateService.state === threema.GlobalConnectionState.Ok) {
+        if (flags.send && this.stateService.state === threema.GlobalConnectionState.Ok) {
             this._sendUpdate(WebClientService.SUB_TYPE_CONNECTION_DISCONNECT, false, undefined, {reason: reason});
         }
 
@@ -987,7 +1001,7 @@ export class WebClientService {
         }
 
         // Done, redirect now if requested
-        if (redirect) {
+        if (flags.redirect) {
             this.$timeout(() => {
                 this.$state.go('welcome');
             }, 0);
@@ -1966,10 +1980,10 @@ export class WebClientService {
         }
         const sequenceNumber = message.data.sequenceNumber;
 
-        // Acknowledge chunks
+        // Remove chunks which have already been received by the remote side
         const size = this.currentChunkCache.size;
         try {
-            this.currentChunkCache.acknowledge(sequenceNumber);
+            this.currentChunkCache.prune(sequenceNumber);
         } catch (error) {
             this.$log.error(this.logTag, error);
             this.failSession();
@@ -2021,7 +2035,11 @@ export class WebClientService {
         }
 
         // Stop and show an alert on the welcome page
-        this.stop(reason, false, true, true);
+        this.stop(reason, {
+            send: false,
+            close: true,
+            redirect: true,
+        });
         this.showAlert(alertMessage);
     }
 
@@ -3510,7 +3528,11 @@ export class WebClientService {
                 // TODO: Reactivate this and remove the special stop + alert
                 //       once the iOS beta has been closed
                 // this.failSession();
-                this.stop(DisconnectReason.SessionStopped, true, true, true);
+                this.stop(DisconnectReason.SessionStopped, {
+                    send: true,
+                    close: true,
+                    redirect: true,
+                });
                 this.showAlert('Please update the Threema app to use the latest iOS beta version');
                 return;
             }
