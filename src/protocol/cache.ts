@@ -24,7 +24,7 @@ export type CachedChunk = Uint8Array | null;
  */
 export class ChunkCache {
     private _sequenceNumber: SequenceNumber;
-    private _size = 0;
+    private _byteLength = 0;
     private cache: CachedChunk[] = [];
 
     constructor(sequenceNumber: SequenceNumber) {
@@ -39,10 +39,10 @@ export class ChunkCache {
     }
 
     /**
-     * Get the size of currently cached chunks.
+     * Get the total size of currently cached chunks in bytes.
      */
-    public get size(): number {
-        return this._size;
+    public get byteLength(): number {
+        return this._byteLength;
     }
 
     /**
@@ -70,7 +70,7 @@ export class ChunkCache {
         // Update sequence number, update size & append chunk
         this._sequenceNumber.increment();
         if (chunk !== null) {
-            this._size += chunk.byteLength;
+            this._byteLength += chunk.byteLength;
         }
         this.cache.push(chunk);
     }
@@ -96,7 +96,7 @@ export class ChunkCache {
 
         // Slice our cache & recalculate size
         this.cache = endOffset === 0 ? [] : this.cache.slice(endOffset);
-        this._size = this.cache
+        this._byteLength = this.cache
             .filter((chunk) => chunk !== null)
             .reduce((sum, chunk) => sum + chunk.byteLength, 0);
     }

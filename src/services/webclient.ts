@@ -49,13 +49,20 @@ import DisconnectReason = threema.DisconnectReason;
 /**
  * Payload of a connectionInfo message.
  */
-interface ResumeInfo {
-    id: Uint8Array;
+interface ConnectionInfo {
+    id: ArrayBuffer;
     resume?: {
-        id: Uint8Array;
+        id: ArrayBuffer;
         sequenceNumber: number;
     };
 }
+
+const fakeConnectionId = Uint8Array.from([
+    1, 2, 3, 4, 5, 6, 7, 8,
+    1, 2, 3, 4, 5, 6, 7, 8,
+    1, 2, 3, 4, 5, 6, 7, 8,
+    1, 2, 3, 4, 5, 6, 7, 8,
+]);
 
 /**
  * This service handles everything related to the communication with the peer.
@@ -176,7 +183,7 @@ export class WebClientService {
     // Session connection
     private saltyRtcHost: string = null;
     public salty: saltyrtc.SaltyRTC = null;
-    private connectionInfoFuture: Future<any> = null;
+    private connectionInfoFuture: Future<ConnectionInfo> = null;
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask = null;
     private relayedDataTask: saltyrtc.tasks.relayed_data.RelayedDataTask = null;
     private secureDataChannel: saltyrtc.tasks.webrtc.SecureDataChannel = null;
@@ -362,22 +369,12 @@ export class WebClientService {
             this.previousIncomingChunkSequenceNumber = this.currentIncomingChunkSequenceNumber;
             this.previousChunkCache = this.currentChunkCache;
         } else {
-            // Reset the outgoing message sequence number and the unchunker
-            this.outgoingMessageSequenceNumber = new SequenceNumber(
-                0, WebClientService.SEQUENCE_NUMBER_MIN, WebClientService.SEQUENCE_NUMBER_MAX);
-            this.unchunker = new chunkedDc.Unchunker();
-            this.unchunker.onMessage = this.handleIncomingMessageBytes.bind(this);
-
-            // Discard previous connection instances
-            this.previousConnectionId = null;
-            this.previousIncomingChunkSequenceNumber = null;
-            this.previousChunkCache = null;
-
-            // Not resuming
+            // Discard session
+            this.discardSession({ resetMessageSequenceNumber: true });
             resumeSession = false;
         }
 
-        // Initialise connection cashes
+        // Initialise connection caches
         this.currentConnectionId = null;
         this.currentIncomingChunkSequenceNumber = new SequenceNumber(
             0, WebClientService.SEQUENCE_NUMBER_MIN, WebClientService.SEQUENCE_NUMBER_MAX);
@@ -540,8 +537,11 @@ export class WebClientService {
 
         // Wait for handover to be finished
         this.salty.on('handover', () => {
-            this.$log.debug(this.logTag, 'Handover done');
-            this.onHandover(resumeSession);
+            // Ignore handovers requested by non-WebRTC tasks
+            if (this.chosenTask === threema.ChosenTask.WebRTC) {
+                this.$log.debug(this.logTag, 'Handover done');
+                this.onHandover(resumeSession);
+            }
         });
 
         // Handle SaltyRTC errors
@@ -557,10 +557,7 @@ export class WebClientService {
             if (!this.browserService.supportsWebrtcTask() && offeredWebrtc) {
                 this.showWebrtcAndroidWarning();
             } else {
-                this.$mdDialog.show(this.$mdDialog.alert()
-                    .title('Error')
-                    .htmlContent('No shared SaltyRTC task found')
-                    .ok('OK'));
+                this.failSession();
             }
         });
     }
@@ -617,15 +614,37 @@ export class WebClientService {
     /**
      * Resume a session via the previous connection's ID and chunk cache.
      *
+     * Returns whether the connection has been resumed.
+     *
      * Important: Caller must invalidate the cache and connection ID after this
      *            function returned!
      */
-    private resumeSession(remoteInfo: ResumeInfo): void {
-        // Ensure we want to resume from the same previous connection
-        if (!arraysAreEqual(this.previousConnectionId, remoteInfo.resume.id)) {
-            this.$log.info('Cannot resume session: IDs of previous connection do not match');
+    private maybeResumeSession(resumeSession: boolean, remoteInfo: ConnectionInfo): boolean {
+        // Validate connection ID
+        const remoteCurrentConnectionId = new Uint8Array(remoteInfo.id);
+        if (arraysAreEqual(fakeConnectionId, remoteCurrentConnectionId)) {
+            this.$log.debug('Cannot resume session: Remote did not implement deriving the connection ID');
+            // TODO: Remove this once it is implemented properly by the app!
+            return false;
+        }
+        if (!arraysAreEqual(this.currentConnectionId, remoteCurrentConnectionId)) {
+            throw new Error('Derived connection IDs do not match!');
+        }
+
+        // Ensure both local and remote want to resume a session
+        if (!resumeSession || remoteInfo.resume === undefined) {
+            this.$log.debug(this.logTag, `No resumption (local requested: ${resumeSession ? 'yes' : 'no'}, ` +
+                `remote requested: ${remoteInfo.resume ? 'yes' : 'no'}`);
             // Both sides should detect that -> recoverable
-            return;
+            return false;
+        }
+
+        // Ensure we want to resume from the same previous connection
+        const remotePreviousConnectionId = new Uint8Array(remoteInfo.resume.id);
+        if (!arraysAreEqual(this.previousConnectionId, remotePreviousConnectionId)) {
+            // Both sides should detect that -> recoverable
+            this.$log.info('Cannot resume session: IDs of previous connection do not match');
+            return false;
         }
 
         // Remove chunks that have been received by the remote side
@@ -633,9 +652,7 @@ export class WebClientService {
             this.previousChunkCache.prune(remoteInfo.resume.sequenceNumber);
         } catch (error) {
             // Not recoverable
-            this.$log.error(this.logTag, `Unable to resume session: ${error}`);
-            this.failSession();
-            return;
+            throw new Error(`Unable to resume session: ${error}`);
         }
 
         // Transfer the cache (filters chunks which should not be retransmitted)
@@ -646,8 +663,34 @@ export class WebClientService {
             this.sendChunk(chunk, true, false);
         }
 
-        // Done, yay!
-        this.$log.debug(this.logTag, 'Session resumed');
+        // Invalidate the previous connection cache & id
+        // Note: This MUST be done immediately after the session has been
+        //       resumed to prevent re-establishing a session of a connection
+        //       where the handshake has been started but not been completed.
+        this.previousConnectionId = null;
+        this.previousIncomingChunkSequenceNumber = null;
+        this.previousChunkCache = null;
+
+        // Resumed!
+        return true;
+    }
+
+    /**
+     * Discard the session of a previous connection.
+     */
+    private discardSession(flags: { resetMessageSequenceNumber: boolean }): void {
+        // Reset the outgoing message sequence number and the unchunker
+        if (flags.resetMessageSequenceNumber) {
+            this.outgoingMessageSequenceNumber = new SequenceNumber(
+                0, WebClientService.SEQUENCE_NUMBER_MIN, WebClientService.SEQUENCE_NUMBER_MAX);
+        }
+        this.unchunker = new chunkedDc.Unchunker();
+        this.unchunker.onMessage = this.handleIncomingMessageBytes.bind(this);
+
+        // Discard previous connection instances
+        this.previousConnectionId = null;
+        this.previousIncomingChunkSequenceNumber = null;
+        this.previousChunkCache = null;
     }
 
     /**
@@ -688,10 +731,9 @@ export class WebClientService {
         }
 
         // Receive connection info
-        // Note: We can receive the connectionInfo message here, or
-        //       null in case the remote side does not want to resume, or
-        //       an error which should fail the connection.
-        let remoteInfo;
+        // Note: We can receive the connectionInfo message here or
+        //       an error which should fail the session.
+        let remoteInfo: ConnectionInfo;
         try {
             remoteInfo = await this.connectionInfoFuture;
         } catch (error) {
@@ -699,38 +741,26 @@ export class WebClientService {
             this.failSession();
             return;
         }
-        if (remoteInfo !== null) {
-            this.$log.debug(this.logTag, 'Received connection info');
+        this.$log.debug(this.logTag, 'Received connection info');
 
-            // Validate connection ID
-            if (!arraysAreEqual(this.currentConnectionId, remoteInfo.id)) {
-                this.$log.error(this.logTag, 'Derived connection IDs do not match!');
-                this.failSession();
-                return;
-            }
-
-            // Try to resume the session if both local and remote want to resume
-            if (resumeSession && remoteInfo.resume !== undefined) {
-                this.resumeSession(remoteInfo);
-            } else {
-                this.$log.debug(this.logTag, `No resumption (local requested: ${resumeSession ? 'yes' : 'no'}, ` +
-                    `remote requested: ${remoteInfo.resume ? 'yes' : 'no'}`);
-            }
-        } else {
-            this.$log.debug(this.logTag, 'Remote side does not want to resume');
+        // Resume the session (if both requested to resume the same connection)
+        try {
+            resumeSession = this.maybeResumeSession(resumeSession, remoteInfo);
+        } catch (error) {
+            this.$log.error(this.logTag, error);
+            this.failSession();
+            return;
         }
 
-        // Invalidate the previous connection cache & id
-        // Note: This MUST be done immediately after the session has been
-        //       resumed to prevent re-establishing a session of a connection
-        //       where the handshake has been started but not been completed.
-        this.previousConnectionId = null;
-        this.previousIncomingChunkSequenceNumber = null;
-        this.previousChunkCache = null;
-
-        // Reset fields and request initial data if not resuming the session
+        // Not resuming?
         const requiredInitializationSteps = [];
         if (!resumeSession) {
+            // Note: We cannot reset the message sequence number here any more since
+            //       it has already been used for the connectionInfo message.
+            this.discardSession({ resetMessageSequenceNumber: false });
+            this.$log.debug(this.logTag, 'Session discarded');
+
+            // Reset fields
             requiredInitializationSteps.push(
                 InitializationStep.ClientInfo,
                 InitializationStep.Conversations,
@@ -738,6 +768,8 @@ export class WebClientService {
                 InitializationStep.Profile,
             );
             this._resetFields();
+        } else {
+            this.$log.debug(this.logTag, 'Session resumed');
         }
 
         // Resolve startup promise once initialization is done
@@ -1981,7 +2013,7 @@ export class WebClientService {
         const sequenceNumber = message.data.sequenceNumber;
 
         // Remove chunks which have already been received by the remote side
-        const size = this.currentChunkCache.size;
+        const size = this.currentChunkCache.byteLength;
         try {
             this.currentChunkCache.prune(sequenceNumber);
         } catch (error) {
@@ -1989,7 +2021,7 @@ export class WebClientService {
             this.failSession();
             return;
         }
-        this.$log.debug(`Chunk cache size ${size} -> ${this.currentChunkCache.size}`);
+        this.$log.debug(`Chunk cache size ${size} in bytes -> ${this.currentChunkCache.byteLength}`);
 
         // Clear pending ack requests
         if (this.pendingAckRequest !== null && sequenceNumber >= this.pendingAckRequest) {
@@ -2080,10 +2112,8 @@ export class WebClientService {
                 this.connectionInfoFuture.reject(error);
                 return;
             }
-            this.connectionInfoFuture.resolve(message);
-        } else {
-            this.connectionInfoFuture.resolve(null);
         }
+        this.connectionInfoFuture.resolve(message.data);
     }
 
     /**
@@ -3389,11 +3419,14 @@ export class WebClientService {
                     }
 
                     // Check if we need to request an acknowledgement
-                    // Note: We only request if none is pending
+                    // Note: We only request if none is pending.
                     if (this.pendingAckRequest === null &&
-                        this.currentChunkCache.size > WebClientService.CHUNK_CACHE_SIZE_MAX) {
-                        this._requestConnectionAck();
+                        this.currentChunkCache.byteLength > WebClientService.CHUNK_CACHE_SIZE_MAX) {
+                        // Warning: This field MUST be set before requesting the
+                        //          connection ack or you will end up with an
+                        //          infinite recursion.
                         this.pendingAckRequest = this.currentChunkCache.sequenceNumber.get();
+                        this._requestConnectionAck();
                     }
                 }
                 break;
@@ -3525,15 +3558,7 @@ export class WebClientService {
             // Check for unexpected messages
             if (message.type !== WebClientService.TYPE_UPDATE ||
                 message.subType !== WebClientService.SUB_TYPE_CONNECTION_INFO) {
-                // TODO: Reactivate this and remove the special stop + alert
-                //       once the iOS beta has been closed
-                // this.failSession();
-                this.stop(DisconnectReason.SessionStopped, {
-                    send: true,
-                    close: true,
-                    redirect: true,
-                });
-                this.showAlert('Please update the Threema app to use the latest iOS beta version');
+                this.failSession();
                 return;
             }
 
