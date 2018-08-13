@@ -811,14 +811,14 @@ export default [
             template: `
                 <div>
                     <div>
-                        <i class="md-primary emoji-trigger trigger is-enabled material-icons">tag_faces</i>
+                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji">tag_faces</i>
                     </div>
                     <div>
                         <div class="compose" contenteditable translate translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE" autofocus></div>
                     </div>
                     <div>
-                        <i class="md-primary send-trigger trigger material-icons">send</i>
-                        <i class="md-primary file-trigger trigger is-enabled material-icons">attach_file</i>
+                        <i class="md-primary send-trigger trigger material-icons" role="button" aria-label="send">send</i>
+                        <i class="md-primary file-trigger trigger is-enabled material-icons" role="button" aria-label="attach file">attach_file</i>
                         <input class="file-input" type="file" style="visibility: hidden" multiple>
                     </div>
                 </div>
