@@ -57,7 +57,7 @@
 </head>
 
 <body ng-controller="StatusController as ctrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
-    <img src="img/bg.jpg?v=1" id="background-image" draggable="false">
+    <img src="img/bg.jpg?v=1" alt="Background image: Blurred photo of a mountain" id="background-image" draggable="false">
 
     <noscript>
         <img id="logo-noscript" src="img/logo.svg?v=[[VERSION]]"/>
@@ -69,7 +69,7 @@
 
     <div id="main-wrapper" ng-cloak ng-class="{wide: ctrl.wide()}">
         <header>
-            <h1 id="title">
+            <h1 id="title" aria-label="Threema Web Logo">
                 <div id="logo" ng-include src="'img/logo.svg?v=[[VERSION]]'"></div>
             </h1>
         </header>

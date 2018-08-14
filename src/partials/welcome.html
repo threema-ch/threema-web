@@ -46,7 +46,9 @@
                                    translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}"
                                    autocomplete="current-password">
                         </md-input-container>
-                        <md-button type="submit" class="md-raised md-primary"><span translate>welcome.BTN_RECONNECT</span></md-button>
+                        <md-button type="submit" class="md-raised md-primary" translate translate-attr-aria-label="welcome.BTN_RECONNECT">
+                            <span translate aria-hidden="true">welcome.BTN_RECONNECT</span>
+                        </md-button>
                     </form>
                     <p>
                         <span translate>welcome.ALTERNATIVELY</span>

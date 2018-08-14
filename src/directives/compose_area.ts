@@ -830,7 +830,14 @@ export default [
                         <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji">tag_faces</i>
                     </div>
                     <div>
-                        <div class="compose" contenteditable translate translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE" autofocus></div>
+                        <div
+                            class="compose"
+                            contenteditable
+                            autofocus
+                            translate
+                            translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE"
+                            translate-attr-aria-label="messenger.COMPOSE_MESSAGE"
+                        ></div>
                     </div>
                     <div>
                         <i class="md-primary send-trigger trigger material-icons" role="button" aria-label="send">send</i>

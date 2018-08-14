@@ -181,7 +181,8 @@
         "MUTED_NONE": "No notifications",
         "MUTED_MENTION_ONLY": "Only show notification when mentioned",
         "MUTED_SILENT": "Silent notifications",
-        "ALL": "All"
+        "ALL": "All",
+        "LOADING_MESSAGES": "Loading messages…"
     },
     "messageStates": {
         "WE_ACK": "You sent thumbs-up",

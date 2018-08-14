@@ -68,7 +68,8 @@ export default [
 
                     this.highResolution = this.resolution === 'high';
                     this.isLoading = this.highResolution;
-                    this.backgroundColor = this.receiver.color;
+                    this.backgroundColor = (this.receiver as threema.Receiver).color;
+                    this.receiverName = (this.receiver as threema.Receiver).displayName;
                     this.avatarClass = () => {
                         return 'avatar-' + this.resolution + (this.isLoading ? ' is-loading' : '');
                     };
@@ -215,7 +216,8 @@ export default [
                          ng-class="ctrl.avatarClass()"
                          ng-style="{ 'background-color': ctrl.backgroundColor }"
                          ng-src="{{ ctrl.getAvatarUri() }}"
-                         in-view="ctrl.requestAvatar($inview)">
+                         in-view="ctrl.requestAvatar($inview)"
+                         aria-label="avatar {{ ctrl.receiverName }}">
                </div>
             `,
         };

@@ -60,10 +60,10 @@ export default [
             template: `
                 <div class="battery-status" ng-if="ctrl.available()"" ng-class="{'alert': ctrl.alert()}">
                     <md-icon
-                        aria-label="{{ ctrl.description() }}"
+                        aria-label="Battery status: {{ ctrl.description() }}"
                         title="{{ ctrl.description() }}"
                         class="material-icons md-light md-24">{{ ctrl.icon() }}</md-icon>
-                       <span class="battery-percent">{{ ctrl.percent() }}%</span>
+                    <span class="battery-percent" aria-hidden="true">{{ ctrl.percent() }}%</span>
                 </div>
             `,
         };
