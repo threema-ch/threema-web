@@ -200,17 +200,22 @@ class Receivers implements threema.Container.Receivers {
     }
 
     public extendGroup(data: threema.GroupReceiver): threema.GroupReceiver {
+        // Set defaults
+        setDefault(data, 'disabled', false);
+        setDefault(data, 'locked', false);
+        setDefault(data, 'visible', true);
+
+        // Look up group
         let groupReceiver  = this.groups.get(data.id);
+
+        // If group does not yet exist, create it
         if (groupReceiver === undefined) {
             data.type = 'group';
-            setDefault(data, 'disabled', false);
-            setDefault(data, 'locked', false);
-            setDefault(data, 'visible', true);
             this.groups.set(data.id, data);
             return data;
         }
 
-        // update existing object
+        // Otherwise, update existing object
         groupReceiver = angular.extend(groupReceiver, data);
         return groupReceiver;
     }
