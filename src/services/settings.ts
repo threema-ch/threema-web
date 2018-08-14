@@ -60,6 +60,14 @@ export class SettingsService {
     }
 
     /**
+     * Remove settings key-value pair from LocalStorage if it exists.
+     */
+    public removeUntrustedKeyValuePair(key: string): void {
+        this.$log.debug(this.logTag, 'Removing settings key:', key);
+        this.storage.removeItem(SettingsService.STORAGE_KEY_PREFIX + key);
+    }
+
+    /**
      * Return whether key-value pair is present in LocalStorage.
      *
      * Note that this will return `true` for empty values!
