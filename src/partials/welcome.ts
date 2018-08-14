@@ -161,13 +161,9 @@ class WelcomeController {
             this.showBrowserWarning();
         }
 
-        // Show a "new version info" dialog the first time.
-        if (!this.browserWarningShown) {
-            // The browser warning dialog interferes with the new version dialog, so don't trigger both.
-            if (this.settingsService.retrieveUntrustedKeyValuePair('v2infoShown', false) !== 'yes') {
-                this.showNewVersionInfos();
-            }
-        }
+        // Clean up local storage
+        // TODO: Remove this in future version
+        this.settingsService.removeUntrustedKeyValuePair('v2infoShown');
 
         // Determine whether local storage is available
         if (this.trustedKeyStore.blocked === true) {
@@ -463,23 +459,6 @@ class WelcomeController {
                 .htmlContent(this.$translate.instant('welcome.ALREADY_CONNECTED_DETAILS'))
                 .ok(this.$translate.instant('common.OK'));
             this.$mdDialog.show(confirm);
-        });
-    }
-
-    /**
-     * Show version 2 release information.
-     * TODO: Remove this in next version!
-     */
-    private showNewVersionInfos(): void {
-        this.$translate.onReady().then(() => {
-            const confirm = this.$mdDialog.alert()
-                .title(this.$translate.instant('welcome.NEW_VERSION'))
-                .htmlContent(this.$translate.instant('welcome.NEW_VERSION_DETAILS'))
-                .ok(this.$translate.instant('common.UNDERSTOOD'));
-            this.$mdDialog.show(confirm).then(() => {
-                // Remember that dialog was dismissed
-                this.settingsService.storeUntrustedKeyValuePair('v2infoShown', 'yes');
-            });
         });
     }
 

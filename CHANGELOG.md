@@ -16,7 +16,7 @@ Contributors:
 - [@iasdeoupxe][@iasdeoupxe]
 - [@SirTyson][@SirTyson]
 
-### [v2.0.0][v2.0.0] (2018-08-02)
+### [v2.0.0][v2.0.0] Grosser Mythen (2018-08-02)
 
 This release changes the protocol version from 1 to 2. It provides preliminary
 support for iOS devices (currently in beta). It also improves the performance
