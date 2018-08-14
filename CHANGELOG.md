@@ -3,6 +3,15 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+
+### [v2.0.2][v2.0.2] (2018-08-14)
+
+Changes:
+
+* [bug] Fix work indicator ([#558][i558])
+* [bug] Fix status of newly created groups ([#563][i563])
+
+
 ### [v2.0.1][v2.0.1] (2018-08-07)
 
 Changes:
@@ -15,6 +24,7 @@ Contributors:
 
 - [@iasdeoupxe][@iasdeoupxe]
 - [@SirTyson][@SirTyson]
+
 
 ### [v2.0.0][v2.0.0] Grosser Mythen (2018-08-02)
 
@@ -76,11 +86,13 @@ Contributors:
 - [@ovalseven8][@ovalseven8]
 - [@rugk][@rugk]
 
+
 ### [v1.8.1][v1.8.1] (2018-02-06)
 
 Changes:
 
 * [change] Make mentions display-only ([#419][i419])
+
 
 ### [v1.8.0][v1.8.0] (2018-02-06)
 
@@ -96,6 +108,7 @@ Changes:
 Contributors:
 
 - [@rugk][@rugk]
+
 
 ### [v1.7.0][v1.7.0] (2017-11-27)
 
@@ -120,6 +133,7 @@ Contributors:
 * [@lgrahl][@lgrahl]
 * [@Octoate][@Octoate]
 
+
 ### [v1.6.2][v1.6.2] (2017-10-25)
 
 Changes:
@@ -131,12 +145,14 @@ Changes:
 * [bug] Don't display low battery notification when charging ([#359][i359])
 * [bug] Fix image upload for avatar editor ([#358][i358])
 
+
 ### [v1.6.1][v1.6.1] (2017-10-02)
 
 Changes:
 
 * [feature] Show desktop notifications if battery level is low ([#351][i351])
 * [change] Updated STUN/TURN endpoints
+
 
 ### [v1.6.0][v1.6.0] (2017-09-26)
 
@@ -165,6 +181,7 @@ Contributors:
 
 - [@JlnWntr][@JlnWntr]
 
+
 ### [v1.5.0][v1.5.0] (2017-08-29)
 
 Changes:
@@ -180,6 +197,7 @@ Contributors:
 
 - [@IndianaDschones][@IndianaDschones]
 
+
 ### [v1.4.1][v1.4.1] (2017-08-07)
 
 Changes:
@@ -194,6 +212,7 @@ Contributors:
 - [@IndianaDschones][@IndianaDschones]
 - [@rugk][@rugk]
 
+
 ### [v1.4.0][v1.4.0] (2017-07-20)
 
 Changes:
@@ -202,11 +221,13 @@ Changes:
 * [change] Reduce browser CPU usage in conversation ([#264][i264])
 * [bug] Add high DPI versions of emoji spritemaps ([#261][i261])
 
+
 ### [v1.3.1][v1.3.1] (2017-06-22)
 
 Changes:
 
 * [bug] Fix bug when inserting emoji in Chrome ([#256][i256])
+
 
 ### [v1.3.0][v1.3.0] (2017-06-22)
 
@@ -219,6 +240,7 @@ Changes:
 * [bug] When pasting text, only trim newline characters ([#237][i237])
 * [bug] Fix right-to-left support ([#239][i239])
 
+
 ### [v1.2.1][v1.2.1] (2017-05-17)
 
 Changes:
@@ -226,6 +248,7 @@ Changes:
 * [feature] Check for a new version, notify user if version changed ([#183][i183])
 * [bug] Fix line breaks when pasting on Windows ([#134][i134])
 * [bug] Fix path to sound notification file
+
 
 ### [v1.2.0][v1.2.0] (2017-05-17)
 
@@ -247,6 +270,7 @@ Contributors:
 - [@IndianaDschones][@IndianaDschones]
 - [@Pythonix][@Pythonix]
 - [@econic][@econic]
+
 
 ### [v1.1.0][v1.1.0] (2017-03-16)
 
@@ -271,6 +295,7 @@ Contributors:
 * [@IndianaDschones][@IndianaDschones]
 * [@FloThinksPi][@FloThinksPi]
 
+
 ### [v1.0.5][v1.0.5] (2017-03-03)
 
 Changes:
@@ -278,6 +303,7 @@ Changes:
 * [feature] Add diagnostics/troubleshooting page ([#126][i126] / [#127][i127])
 * [bug] Fix bug resulting in slow initial load ([#120][i120])
 * [bug] Add meta description to index.html ([#124][i124])
+
 
 ### [v1.0.4][v1.0.4] (2017-03-01)
 
@@ -296,6 +322,7 @@ Contributors:
 - [@N3dal][@N3dal]
 - [@ovalseven8][@ovalseven8]
 - [@rugk][@rugk]
+
 
 ### [v1.0.3][v1.0.3] (2017-02-23)
 
@@ -490,7 +517,10 @@ First public release.
 [i528]: https://github.com/threema-ch/threema-web/issues/528
 [i547]: https://github.com/threema-ch/threema-web/issues/547
 [i550]: https://github.com/threema-ch/threema-web/issues/550
+[i558]: https://github.com/threema-ch/threema-web/issues/558
+[i563]: https://github.com/threema-ch/threema-web/issues/563
 
+[v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0
 [v1.8.2]: https://github.com/threema-ch/threema-web/compare/v1.8.1...v1.8.2
