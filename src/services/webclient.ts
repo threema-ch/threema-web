@@ -359,6 +359,11 @@ export class WebClientService {
         // Reset state
         this.stateService.reset();
 
+        // Reset fields in case the session should explicitly not be resumed
+        if (!resumeSession) {
+            this._resetFields();
+        }
+
         // Only move the previous connection's instances if the previous
         // connection was successful (and if there was one at all).
         if (resumeSession &&
@@ -633,8 +638,8 @@ export class WebClientService {
 
         // Ensure both local and remote want to resume a session
         if (!resumeSession || remoteInfo.resume === undefined) {
-            this.$log.debug(this.logTag, `No resumption (local requested: ${resumeSession ? 'yes' : 'no'}, ` +
-                `remote requested: ${remoteInfo.resume ? 'yes' : 'no'}`);
+            this.$log.info(this.logTag, `No resumption (local requested: ${resumeSession ? 'yes' : 'no'}, ` +
+                `remote requested: ${remoteInfo.resume ? 'yes' : 'no'})`);
             // Both sides should detect that -> recoverable
             return false;
         }
@@ -744,8 +749,9 @@ export class WebClientService {
         this.$log.debug(this.logTag, 'Received connection info');
 
         // Resume the session (if both requested to resume the same connection)
+        let sessionWasResumed;
         try {
-            resumeSession = this.maybeResumeSession(resumeSession, remoteInfo);
+            sessionWasResumed = this.maybeResumeSession(resumeSession, remoteInfo);
         } catch (error) {
             this.$log.error(this.logTag, error);
             this.failSession();
@@ -754,22 +760,33 @@ export class WebClientService {
 
         // Not resuming?
         const requiredInitializationSteps = [];
-        if (!resumeSession) {
+        if (!resumeSession || !sessionWasResumed) {
             // Note: We cannot reset the message sequence number here any more since
             //       it has already been used for the connectionInfo message.
             this.discardSession({ resetMessageSequenceNumber: false });
             this.$log.debug(this.logTag, 'Session discarded');
 
-            // Reset fields
+            // Set required initialisation steps
             requiredInitializationSteps.push(
                 InitializationStep.ClientInfo,
                 InitializationStep.Conversations,
                 InitializationStep.Receivers,
                 InitializationStep.Profile,
             );
-            this._resetFields();
         } else {
             this.$log.debug(this.logTag, 'Session resumed');
+        }
+
+        // Redirect to the conversation overview in case resuming was enabled
+        // but the session could not be resumed
+        if (resumeSession && !sessionWasResumed) {
+            this.$rootScope.$apply(() => {
+                // TODO: Remove this conditional once we have session
+                //       resumption for Android!
+                if (this.chosenTask === threema.ChosenTask.RelayedData) {
+                    this.$state.go('messenger.home');
+                }
+            });
         }
 
         // Resolve startup promise once initialization is done
@@ -784,7 +801,7 @@ export class WebClientService {
         }
 
         // Request initial data if not resuming the session
-        if (!resumeSession) {
+        if (!resumeSession || !sessionWasResumed) {
             this._requestInitialData();
         }
 
