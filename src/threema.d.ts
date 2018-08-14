@@ -193,7 +193,7 @@ declare namespace threema {
 
     const enum IdentityType {
         Regular = 0,
-        Work,
+        Work = 1,
     }
 
     /**
