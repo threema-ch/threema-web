@@ -2410,7 +2410,7 @@ export class WebClientService {
             device: data.device,
             os: data.os,
             osVersion: data.osVersion,
-            isWork: hasValue(data.isWork) ? data.isWork : false,  // Backwards compat hack, remove after August 2019
+            isWork: hasValue(data.isWork) ? data.isWork : false,  // TODO: Backwards compat hack, remove after 08/2019
             pushToken: data.pushToken,
             configuration: {
                 voipEnabled: getOrDefault<boolean>(data.configuration.voipEnabled, true),
