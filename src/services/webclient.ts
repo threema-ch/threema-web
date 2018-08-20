@@ -3084,6 +3084,7 @@ export class WebClientService {
 
     /**
      * Receive a new incoming decrypted message.
+     * This method runs inside the digest loop.
      */
     private receive(message: threema.WireMessage): void {
         // Dispatch message

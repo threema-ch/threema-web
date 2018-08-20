@@ -470,22 +470,6 @@ angular.module('3ema.filters', [])
 }])
 
 /**
- * Return a simplified DND mode.
- *
- * This will return either 'on', 'off' or 'mention'.
- * The 'until' mode will be processed depending on the expiration timestamp.
- */
-.filter('dndModeSimplified', ['NotificationService', function(notificationService: NotificationService) {
-    return (conversation: threema.Conversation) => {
-        const simplified = notificationService.getAppNotificationSettings(conversation);
-        if (simplified.dnd.enabled) {
-            return simplified.dnd.mentionOnly ? 'mention' : 'on';
-        }
-        return 'off';
-    };
-}])
-
-/**
  * Mark data as trusted.
  */
 .filter('unsafeResUrl', ['$sce', function($sce: ng.ISCEService) {

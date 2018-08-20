@@ -67,6 +67,7 @@
     <p class="empty" ng-if="ctrl.conversations().length === 0" translate>messenger.NO_CONVERSATIONS_FOUND</p>
     <ul>
         <li ng-repeat="conversation in ctrl.conversations() | filter:ctrl.searchConversation"
+            ng-init="dndModeSimplified = ctrl.dndModeSimplified(conversation)"
             ui-sref="messenger.home.conversation({ type: conversation.type, id: conversation.id, initParams: null })"
             class="conversation-wrapper" ng-if="ctrl.isVisible(conversation)">
 
@@ -84,13 +85,13 @@
                     <section class="receiver-box">
                         <span class="title" ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify">
                         </span>
-                        <span class="notification-settings" ng-show="(conversation | dndModeSimplified) === 'on'">
+                        <span class="notification-settings" ng-if="dndModeSimplified === 'on'">
                             <img height="16" width="16" src="img/ic_dnd_total_silence.svg" translate translate-attr-title="messenger.MUTED_NONE">
                         </span>
-                        <span class="notification-settings" ng-show="(conversation | dndModeSimplified) === 'mention'">
+                        <span class="notification-settings" ng-if="dndModeSimplified === 'mention'">
                             <img height="16" width="16" src="img/ic_dnd_mention.svg" translate translate-attr-title="messenger.MUTED_MENTION_ONLY">
                         </span>
-                        <span class="notification-settings" ng-show="(conversation | dndModeSimplified) === 'off' && conversation.notifications && conversation.notifications.sound.mode === 'muted'">
+                        <span class="notification-settings" ng-if="dndModeSimplified === 'off' && conversation.notifications && conversation.notifications.sound.mode === 'muted'">
                             <img height="16" width="16" src="img/ic_notifications_off.svg" translate translate-attr-title="messenger.MUTED_SILENT">
                         </span>
                         <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
