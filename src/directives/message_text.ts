@@ -29,9 +29,9 @@ export default [
                 multiLine: '=?eeeMultiLine',
             },
             controllerAs: 'ctrl',
-            controller: ['WebClientService', function(webClientService: WebClientService) {
+            controller: ['WebClientService', '$filter', function(webClientService: WebClientService, $filter: ng.IFilterService) {
                 // Get text depending on type
-                function getText(message: threema.Message) {
+                function getText(message: threema.Message): string {
                     switch (message.type) {
                         case 'text':
                             return message.body;
@@ -47,20 +47,33 @@ export default [
                     return message.caption;
                 }
 
+                // TODO: Extract filters into helper functions
+                const escapeHtml = $filter('escapeHtml') as any;
+                const markify = $filter('markify') as any;
+                const emojify = $filter('emojify') as any;
+                const enlargeSingleEmoji = $filter('enlargeSingleEmoji') as any;
+                const mentionify = $filter('mentionify') as any;
+                const linkify = $filter('linkify') as any;
+                const nlToBr = $filter('nlToBr') as any;
+
+                /**
+                 * Apply filters to text.
+                 */
+                function processText(text: string, largeSingleEmoji: boolean, multiLine: boolean): string {
+                    return nlToBr(linkify(mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), enlargeSingleEmoji))), multiLine);
+                }
+
                 this.enlargeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
 
                 this.$onInit = function() {
-                    // Escaping will be done in the HTML using filters
-                    this.text = getText(this.message);
                     if (this.multiLine === undefined) {
                         this.multiLine = true;
                     }
+                    this.text = processText(getText(this.message), this.largeSingleEmoji, this.multiLine);
                 };
             }],
             template: `
-                <span click-action
-                    ng-bind-html="ctrl.text | escapeHtml | markify | emojify | enlargeSingleEmoji:ctrl.enlargeSingleEmoji | mentionify | linkify | nlToBr:ctrl.multiLine">
-                </span>
+                <span click-action ng-bind-html="ctrl.text"></span>
             `,
         };
     },
