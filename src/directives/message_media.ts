@@ -135,7 +135,8 @@ export default [
                     if (this.message.thumbnail !== undefined) {
                         this.thumbnailStyle = {
                             width: this.message.thumbnail.width + 'px',
-                            height: this.message.thumbnail.height + 'px' };
+                            height: this.message.thumbnail.height + 'px',
+                        };
                     }
 
                     let loadingThumbnailTimeout = null;
