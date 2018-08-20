@@ -848,6 +848,7 @@ class NavigationController {
     private receiverService: ReceiverService;
     private stateService: StateService;
     private trustedKeyStoreService: TrustedKeyStoreService;
+    private notificationService: NotificationService;
 
     private activeTab: 'contacts' | 'conversations' = 'conversations';
     private searchVisible = false;
@@ -859,13 +860,13 @@ class NavigationController {
 
     public static $inject = [
         '$log', '$state', '$mdDialog', '$translate',
-        'WebClientService', 'StateService', 'ReceiverService', 'TrustedKeyStore',
+        'WebClientService', 'StateService', 'ReceiverService', 'NotificationService', 'TrustedKeyStore',
     ];
 
     constructor($log: ng.ILogService, $state: UiStateService,
                 $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, stateService: StateService,
-                receiverService: ReceiverService,
+                receiverService: ReceiverService, notificationService: NotificationService,
                 trustedKeyStoreService: TrustedKeyStoreService) {
 
         // Redirect to welcome if necessary
@@ -879,6 +880,7 @@ class NavigationController {
         this.receiverService = receiverService;
         this.stateService = stateService;
         this.trustedKeyStoreService = trustedKeyStoreService;
+        this.notificationService = notificationService;
         this.$mdDialog = $mdDialog;
         this.$translate = $translate;
         this.$state = $state;
@@ -1068,6 +1070,20 @@ class NavigationController {
      */
     public showCreateDistributionListButton(): boolean {
         return this.webClientService.appCapabilities.distributionLists;
+    }
+
+    /**
+     * Return a simplified DND mode.
+     *
+     * This will return either 'on', 'off' or 'mention'.
+     * The 'until' mode will be processed depending on the expiration timestamp.
+     */
+    public dndModeSimplified(conversation: threema.Conversation): 'on' | 'mention' | 'off' {
+        const simplified = this.notificationService.getAppNotificationSettings(conversation);
+        if (simplified.dnd.enabled) {
+            return simplified.dnd.mentionOnly ? 'mention' : 'on';
+        }
+        return 'off';
     }
 
 }
