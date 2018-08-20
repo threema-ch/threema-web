@@ -20,6 +20,26 @@ import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
 
+function timeIt(name: string, func) {
+    let counter = 0;
+    let time = 0;
+    return (...args) => {
+        const t0 = performance.now();
+        const ret = func(...args);
+        const t1 = performance.now();
+        counter += 1;
+        time += (t1 - t0);
+        const node = document.querySelector('#filters .' + name);
+        if (node !== null) {
+            node.innerHTML = counter + 'x (' + time + 'ms)';
+        } else {
+            // tslint:disable-next-line:no-console
+            console.warn('timeIt: Node for ' + name + ' is null');
+        }
+        return ret;
+    };
+}
+
 angular.module('3ema.filters', [])
 
 /**
@@ -33,36 +53,36 @@ angular.module('3ema.filters', [])
         '"': '&quot;',
         "'": '&#039;',
     };
-    return (text: string) => {
+    return timeIt('escapeHtml', (text: string) => {
         if (text === undefined || text === null) {
             text = '';
         }
         return text.replace(/[&<>"']/g, (m) => map[m]);
-    };
+    });
 })
 
 /**
  * Replace newline characters with a <br> tag.
  */
 .filter('nlToBr', function() {
-    return (text, enabled: boolean) => {
+    return timeIt('nlToBr', (text, enabled: boolean) => {
         if (enabled || enabled === undefined) {
             text = text.replace(/\n/g, '<br>');
         }
         return text;
-    };
+    });
 })
 
 /**
  * Replace a undefined/null or empty string with a placeholder
  */
 .filter('emptyToPlaceholder', function() {
-    return (text, placeholder: string = '-') => {
+    return timeIt('emptyToPlaceholder', (text, placeholder: string = '-') => {
         if (text === null || text === undefined || text.trim().length === 0) {
             return placeholder;
         }
         return text;
-    };
+    });
 })
 
 /**
@@ -89,7 +109,7 @@ angular.module('3ema.filters', [])
         // Don't link hashtags
         hashtag: false,
     });
-    return (text) => autolinker.link(text);
+    return timeIt('linkify', (text) => autolinker.link(text));
 })
 
 /**
@@ -99,7 +119,7 @@ angular.module('3ema.filters', [])
  * Set the `imgTag` parameter to `true` to use inline PNGs instead of sprites.
  */
 .filter('emojify', function() {
-    return function(text, imgTag = false, greedyMatch = false) {
+    return timeIt('emojify', function(text, imgTag = false, greedyMatch = false) {
         if (text !== null) {
             emojione.sprites = imgTag !== true;
             emojione.emojiSize = '32';
@@ -109,7 +129,7 @@ angular.module('3ema.filters', [])
         } else {
             return text;
         }
-    };
+    });
 })
 
 /**
@@ -119,7 +139,7 @@ angular.module('3ema.filters', [])
     const pattern = /<span class="e1 ([^>]*>[^<]*)<\/span>/g;
     const singleEmojiThreshold = 3;
     const singleEmojiClassName = 'large-emoji';
-    return function(text, enlarge = false) {
+    return timeIt('enlargeSingleEmoji', function(text, enlarge = false) {
         if (!enlarge) {
             return text;
         }
@@ -130,14 +150,14 @@ angular.module('3ema.filters', [])
             }
         }
         return text;
-    };
+    });
 })
 
 /**
  * Convert markdown elements to html elements
  */
 .filter('markify', function() {
-    return function(text) {
+    return timeIt('markify', function(text) {
         if (text !== null) {
             text = text.replace(/\B\*([^\r\n]+?)\*\B/g, '<span class="text-bold">$1</span>');
             text = text.replace(/\b_([^\r\n]+?)_\b/g, '<span class="text-italic">$1</span>');
@@ -145,7 +165,7 @@ angular.module('3ema.filters', [])
             return text;
         }
         return text;
-    };
+    });
 })
 
 /**
@@ -156,7 +176,7 @@ angular.module('3ema.filters', [])
     '$translate',
     'escapeHtmlFilter',
     function(webClientService: WebClientService, $translate: ng.translate.ITranslateService, escapeHtmlFilter) {
-        return(text) => {
+        return timeIt('mentionify', (text) => {
             if (text !== null && text.length > 10) {
                 let result = text.match(/@\[([\*\@a-zA-Z0-9][\@a-zA-Z0-9]{7})\]/g);
                 if (result !== null) {
@@ -192,7 +212,7 @@ angular.module('3ema.filters', [])
                 }
             }
             return text;
-        };
+        });
     },
 ])
 
@@ -200,50 +220,50 @@ angular.module('3ema.filters', [])
  * Reverse an array.
  */
 .filter('reverse', function() {
-    return (list) => list.slice().reverse();
+    return timeIt('reverse', (list) => list.slice().reverse());
 })
 
 /**
  * Return whether receiver has corresponding data.
  */
 .filter('hasData', function() {
-    return function(obj, receivers) {
+    return timeIt('hasData', function(obj, receivers) {
         const valid = (receiver) => receivers.get(receiver.type).has(receiver.id);
         return filter(obj, valid);
-    };
+    });
 })
 
 /**
  * Return whether item has a corresponding contact.
  */
 .filter('hasContact', function() {
-    return function(obj, contacts) {
+    return timeIt('hasContact', function(obj, contacts) {
         const valid = (item) => contacts.has(item.id);
         return filter(obj, valid);
-    };
+    });
 })
 
 /**
  * Return whether contact is not me.
  */
 .filter('isNotMe', ['WebClientService', function(webClientService: WebClientService) {
-    return function(obj: threema.Receiver) {
+    return timeIt('isNotMe', function(obj: threema.Receiver) {
         const valid = (contact: threema.Receiver) => contact.id !== webClientService.receivers.me.id;
         return filter(obj, valid);
-    };
+    });
 }])
 
 /**
  * Filter for duration formatting.
  */
 .filter('duration', function() {
-    return function(seconds) {
+    return timeIt('duration', function(seconds) {
         const left = Math.floor(seconds / 60);
         const right = seconds % 60;
         const padLeft = left < 10 ? '0' : '';
         const padRight = right < 10 ? '0' : '';
         return padLeft + left + ':' + padRight + right;
-    };
+    });
 })
 
 /**
@@ -253,7 +273,7 @@ angular.module('3ema.filters', [])
  */
 .filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
     const logTag = '[filters.bufferToUrl]';
-    return function(buffer: ArrayBuffer, mimeType: string, trust: boolean = true) {
+    return timeIt('bufferToUrl', function(buffer: ArrayBuffer, mimeType: string, trust: boolean = true) {
         if (!buffer) {
             $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
             return '';
@@ -264,22 +284,22 @@ angular.module('3ema.filters', [])
         } else {
             return uri;
         }
-    };
+    });
 }])
 
 .filter('mapLink', function() {
-    return function(location: threema.LocationInfo) {
+    return timeIt('mapLink', function(location: threema.LocationInfo) {
         return 'https://www.openstreetmap.org/?mlat='
             + location.lat + '&mlon='
             + location.lon;
-    };
+    });
 })
 
 /**
  * Convert message state to material icon class.
  */
 .filter('messageStateIcon', function() {
-    return (message: threema.Message) => {
+    return timeIt('messageStateIcon', (message: threema.Message) => {
         if (!message) {
             return '';
         }
@@ -315,14 +335,14 @@ angular.module('3ema.filters', [])
             default:
                 return '';
         }
-    };
+    });
 })
 
 /**
  * Convert message state to title text.
  */
 .filter('messageStateTitleText', ['$translate', function($translate: ng.translate.ITranslateService) {
-    return (message: threema.Message) => {
+    return timeIt('messageStateTitleText', (message: threema.Message) => {
         if (!message) {
             return null;
         }
@@ -359,46 +379,46 @@ angular.module('3ema.filters', [])
             default:
                 return 'messageStates.UNKNOWN';
         }
-    };
+    });
 }])
 
 .filter('fileSize', function() {
-    return (size: number) => {
+    return timeIt('fileSize', (size: number) => {
         if (!size) {
             return '';
         }
         const i = Math.floor( Math.log(size) / Math.log(1024) );
         const x = (size / Math.pow(1024, i)).toFixed(2);
         return (x + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i]);
-    };
+    });
 })
 
 /**
  * Return the MIME type label.
  */
 .filter('mimeTypeLabel', ['MimeService', function(mimeService: MimeService) {
-    return (mimeType: string) => mimeService.getLabel(mimeType);
+    return timeIt('mimeTypeLabel', (mimeType: string) => mimeService.getLabel(mimeType));
 }])
 
 /**
  * Return the MIME type icon URL.
  */
 .filter('mimeTypeIcon', ['MimeService', function(mimeService: MimeService) {
-    return (mimeType: string) => mimeService.getIconUrl(mimeType);
+    return timeIt('mimeTypeIcon', (mimeType: string) => mimeService.getIconUrl(mimeType));
 }])
 
 /**
  * Convert ID-Array to (Display-)Name-String, separated by ','
  */
 .filter('idsToNames', ['WebClientService', function(webClientService: WebClientService) {
-    return(ids: string[]) => {
+    return timeIt('idsToNames', (ids: string[]) => {
         const names: string[] = [];
         for (const id of ids) {
             this.contactReceiver = webClientService.contacts.get(id);
             names.push(this.contactReceiver.displayName);
         }
         return names.join(', ');
-    };
+    });
 }])
 
 /**
@@ -445,7 +465,7 @@ angular.module('3ema.filters', [])
             && date1.getDate() === date2.getDate();
     }
 
-    return (timestamp: number, forceFull: boolean = false) => {
+    return timeIt('unixToTimestring', (timestamp: number, forceFull: boolean = false) => {
         const date = new Date(timestamp * 1000);
 
         const now = new Date();
@@ -466,7 +486,7 @@ angular.module('3ema.filters', [])
              + $translate.instant(formatMonth(date.getMonth()))
              + year + ', '
              + formatTime(date);
-    };
+    });
 }])
 
 /**
@@ -476,13 +496,13 @@ angular.module('3ema.filters', [])
  * The 'until' mode will be processed depending on the expiration timestamp.
  */
 .filter('dndModeSimplified', ['NotificationService', function(notificationService: NotificationService) {
-    return (conversation: threema.Conversation) => {
+    return timeIt('dndModeSimplified', (conversation: threema.Conversation) => {
         const simplified = notificationService.getAppNotificationSettings(conversation);
         if (simplified.dnd.enabled) {
             return simplified.dnd.mentionOnly ? 'mention' : 'on';
         }
         return 'off';
-    };
+    });
 }])
 
 /**
