@@ -94,13 +94,12 @@
                                 <span translate>troubleshooting.ADBLOCKER</span>
                             </li>
                         </ul>
-                        <p class="forget" ng-if="ctrl.state === 'push'">
-                            <span translate>welcome.IF_YOU_WANT</span>
-                            <a href="#" ng-click="ctrl.deleteSession()" translate>welcome.FORGET_SESSION</a>.
-                        </p>
-                        <div class="protocol-updated" ng-if="ctrl.config.PREV_PROTOCOL_LAST_VERSION !== null">
-                            <p ng-bind-html="ctrl.pleaseUpdateAppMsg"></p>
-                        </div>
+                        <md-button class="md-raised md-primary reload-btn" ng-click="ctrl.deleteSession()" ng-if="ctrl.state === 'push'">
+                        	<span translate>welcome.FORGET_SESSION_BTN</span>
+                        </md-button>
+                        <md-button class="md-raised md-primary reload-btn" ng-click="ctrl.reload()">
+                        	<i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+                        </md-button>
                     </div>
                 </div>
             </div>
