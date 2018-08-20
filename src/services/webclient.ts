@@ -216,7 +216,7 @@ export class WebClientService {
     private drafts: threema.Container.Drafts;
     private pcHelper: PeerConnectionHelper = null;
     private trustedKeyStore: TrustedKeyStoreService;
-    public clientInfo: threema.ClientInfo;
+    public clientInfo: threema.ClientInfo = null;
     public version = null;
     private batteryStatusTimeout: ng.IPromise<void> = null;
 
@@ -779,11 +779,14 @@ export class WebClientService {
 
         // Redirect to the conversation overview in case resuming was enabled
         // but the session could not be resumed
-        if (resumeSession && !sessionWasResumed) {
+        if (resumeSession && !sessionWasResumed && this.clientInfo !== null) {
             this.$rootScope.$apply(() => {
                 // TODO: Remove this conditional once we have session
                 //       resumption for Android!
-                if (this.chosenTask === threema.ChosenTask.RelayedData) {
+                if (this.chosenTask !== threema.ChosenTask.RelayedData) {
+                    return;
+                }
+                if (this.$state.includes('messenger')) {
                     this.$state.go('messenger.home');
                 }
             });
@@ -1015,6 +1018,7 @@ export class WebClientService {
 
         // Invalidate and clear caches
         if (close) {
+            this.clientInfo = null;
             this.previousConnectionId = null;
             this.currentConnectionId = null;
             this.previousIncomingChunkSequenceNumber = null;

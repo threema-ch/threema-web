@@ -87,15 +87,15 @@ export class ChunkCache {
 
         // Calculate the slice start index for the chunk cache
         // Important: Our sequence number is one chunk ahead!
-        const endOffset = theirSequenceNumber + 1 - this._sequenceNumber.get();
-        if (endOffset > 0) {
+        const beginOffset = theirSequenceNumber + 1 - this._sequenceNumber.get();
+        if (beginOffset > 0) {
             throw new Error('Remote travelled through time and acknowledged a chunk which is in the future');
-        } else if (-endOffset > this.cache.length) {
+        } else if (-beginOffset > this.cache.length) {
             throw new Error('Remote travelled back in time and acknowledged a chunk it has already acknowledged');
         }
 
         // Slice our cache & recalculate size
-        this.cache = endOffset === 0 ? [] : this.cache.slice(endOffset);
+        this.cache = beginOffset === 0 ? [] : this.cache.slice(beginOffset);
         this._byteLength = this.cache
             .filter((chunk) => chunk !== null)
             .reduce((sum, chunk) => sum + chunk.byteLength, 0);
