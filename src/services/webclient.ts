@@ -326,7 +326,7 @@ export class WebClientService {
         this.stateService.reset();
 
         // Create WebRTC task instance
-        const maxPacketSize = this.browserService.getBrowser().firefox ? 16384 : 65536;
+        const maxPacketSize = this.browserService.getBrowser().isFirefox(false) ? 16384 : 65536;
         this.webrtcTask = new saltyrtcTaskWebrtc.WebRTCTask(true, maxPacketSize);
 
         // Create Relayed Data task instance
@@ -437,12 +437,12 @@ export class WebClientService {
                 const browser = this.browserService.getBrowser();
 
                 // Firefox <53 does not yet support TLS. Skip it, to save allocations.
-                if (browser.firefox && browser.version && browser.version < 53) {
+                if (browser.isFirefox(true) && browser.version < 53) {
                     this.skipIceTls();
                 }
 
                 // Safari does not support our dual-stack TURN servers.
-                if (browser.safari) {
+                if (browser.isSafari(false)) {
                     this.skipIceDs();
                 }
 

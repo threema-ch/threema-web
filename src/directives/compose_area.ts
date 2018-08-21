@@ -367,7 +367,7 @@ export default [
                             };
 
                             // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1240259
-                            if (browserService.getBrowser().firefox) {
+                            if (browserService.getBrowser().isFirefox(false)) {
                                 if (fileMessageData.name.endsWith('.ogg') && fileMessageData.fileType === 'video/ogg') {
                                     fileMessageData.fileType = 'audio/ogg';
                                 }
@@ -634,7 +634,7 @@ export default [
                         span.setAttribute('contenteditable', false);
                     }
 
-                    if (browserService.getBrowser().firefox) {
+                    if (browserService.getBrowser().isFirefox(false)) {
                         // disable object resizing is the only way to disable resizing of
                         // emoji (contenteditable must be true, otherwise the emoji can not
                         // be removed with backspace (in FF))
