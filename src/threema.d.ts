@@ -505,6 +505,7 @@ declare namespace threema {
     const enum BrowserName {
         Chrome = 'chrome',
         Firefox = 'firefox',
+        FirefoxIos = 'fxios',
         InternetExplorer = 'ie',
         Edge = 'edge',
         Opera = 'opera',
@@ -514,6 +515,7 @@ declare namespace threema {
     interface BrowserInfo {
         chrome: boolean;
         firefox: boolean;
+        fxios: boolean;
         ie: boolean;
         edge: boolean;
         opera: boolean;

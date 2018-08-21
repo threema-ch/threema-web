@@ -91,6 +91,7 @@ export class BrowserService {
             this.browser = {
                 chrome: false,
                 firefox: false,
+                fxios: false,
                 ie: false,
                 edge: false,
                 opera: false,
@@ -99,12 +100,14 @@ export class BrowserService {
 
             const uagent = this.$window.navigator.userAgent.toLowerCase();
 
-            this.browser.chrome  = /webkit/.test(uagent) && /chrome/.test(uagent) && !/edge/.test(uagent);
+            this.browser.chrome = /webkit/.test(uagent) && /chrome/.test(uagent) && !/edge/.test(uagent);
             this.browser.firefox = /mozilla/.test(uagent) && /firefox/.test(uagent);
-            this.browser.ie      = (/msie/.test(uagent) || /trident/.test(uagent)) && !/edge/.test(uagent);
-            this.browser.edge    = /edge/.test(uagent);
-            this.browser.safari  = /safari/.test(uagent) && /applewebkit/.test(uagent) && !/chrome/.test(uagent);
-            this.browser.opera   = /mozilla/.test(uagent) && /applewebkit/.test(uagent)
+            this.browser.fxios = /mozilla/.test(uagent) && /fxios/.test(uagent);
+            this.browser.ie = (/msie/.test(uagent) || /trident/.test(uagent)) && !/edge/.test(uagent);
+            this.browser.edge = /edge/.test(uagent);
+            this.browser.safari = /safari/.test(uagent) && /applewebkit/.test(uagent)
+                               && !/chrome/.test(uagent) && !/fxios/.test(uagent);
+            this.browser.opera = /mozilla/.test(uagent) && /applewebkit/.test(uagent)
                 && /chrome/.test(uagent) && /safari/.test(uagent) && /opr/.test(uagent);
 
             if (this.browser.opera && this.browser.chrome) {
@@ -112,7 +115,12 @@ export class BrowserService {
             }
 
             // Mobile detection
-            this.browser.mobile = this.browser.safari && /mobile/.test(uagent);
+            this.browser.mobile = false;
+            if (this.browser.safari && /mobile/.test(uagent)) {
+                this.browser.mobile = true;
+            } else if (this.browser.fxios) {
+                this.browser.mobile = true;
+            }
 
             for (const x in this.browser) {
                 if (this.browser[x]) {
@@ -152,6 +160,10 @@ export class BrowserService {
                 this.browser.name = BrowserName.Firefox;
                 this.browser.textInfo = 'Firefox ' + this.browser.version;
             }
+            if (this.browser.fxios) {
+                this.browser.name = BrowserName.FirefoxIos;
+                this.browser.textInfo = 'Firefox (iOS) ' + this.browser.version;
+            }
             if (this.browser.ie) {
                 this.browser.name = BrowserName.InternetExplorer;
                 this.browser.textInfo = 'Internet Explorer ' + this.browser.version;
@@ -169,7 +181,7 @@ export class BrowserService {
                 this.browser.textInfo = 'Opera ' + this.browser.version;
             }
             if (this.browser.textInfo && this.browser.mobile) {
-                this.browser.textInfo += ' Mobile';
+                this.browser.textInfo += ' [Mobile]';
             }
         }
 
@@ -187,7 +199,7 @@ export class BrowserService {
         if (this.browser === undefined) {
             this.getBrowser();
         }
-        if (this.browser.safari) {
+        if (this.browser.safari || this.browser.fxios) {
             return false;
         }
         return true;

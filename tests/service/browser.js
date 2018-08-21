@@ -20,6 +20,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(true);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(false);
         expect(browser.edge).toBe(false);
         expect(browser.opera).toBe(false);
@@ -28,6 +29,23 @@ describe('BrowserService', function() {
         expect(browser.version).toEqual(59);
         expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Firefox 59');
+    });
+
+    it('fxiosMobile', () => {
+        const ua = 'Mozilla/5.0 (iPad; CPU OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) FxiOS/8.3b5826 Mobile/14A403 Safari/602.1.50';
+        const service = testUserAgent(ua);
+        const browser = service.getBrowser();
+        expect(browser.chrome).toBe(false);
+        expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(true);
+        expect(browser.ie).toBe(false);
+        expect(browser.edge).toBe(false);
+        expect(browser.opera).toBe(false);
+        expect(browser.safari).toBe(false);
+        expect(browser.name).toEqual('fxios');
+        expect(browser.version).toEqual(8);
+        expect(browser.mobile).toBe(true);
+        expect(browser.textInfo).toEqual('Firefox (iOS) 8 [Mobile]');
     });
 
     it('chrome', () => {
@@ -52,6 +70,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(true);
         expect(browser.edge).toBe(false);
         expect(browser.opera).toBe(false);
@@ -68,6 +87,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(true);
         expect(browser.edge).toBe(false);
         expect(browser.opera).toBe(false);
@@ -84,6 +104,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(false);
         expect(browser.edge).toBe(true);
         expect(browser.opera).toBe(false);
@@ -100,6 +121,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(false);
         expect(browser.edge).toBe(false);
         expect(browser.opera).toBe(true);
@@ -116,6 +138,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(false);
         expect(browser.edge).toBe(false);
         expect(browser.opera).toBe(false);
@@ -132,6 +155,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(false);
         expect(browser.edge).toBe(false);
         expect(browser.opera).toBe(false);
@@ -148,6 +172,7 @@ describe('BrowserService', function() {
         const browser = service.getBrowser();
         expect(browser.chrome).toBe(false);
         expect(browser.firefox).toBe(false);
+        expect(browser.fxios).toBe(false);
         expect(browser.ie).toBe(false);
         expect(browser.edge).toBe(false);
         expect(browser.opera).toBe(false);
@@ -155,7 +180,7 @@ describe('BrowserService', function() {
         expect(browser.name).toEqual('safari');
         expect(browser.version).toEqual(10);
         expect(browser.mobile).toBe(true);
-        expect(browser.textInfo).toEqual('Safari 10 Mobile');
+        expect(browser.textInfo).toEqual('Safari 10 [Mobile]');
     });
 
 });
