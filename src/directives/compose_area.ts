@@ -154,6 +154,14 @@ export default [
                 function getText(trim = true) {
                     let text = '';
                     const visitChildNodes = (parentNode: HTMLElement) => {
+                        // When pressing shift-enter and typing more text:
+                        //
+                        // - Firefox and chrome insert a <br> between two text nodes
+                        // - Safari creates two <div>s without any line break in between
+                        //
+                        // Thus, for Safari, we need to detect adjacent <div>s and insert a newline.
+                        let lastNodeType = null;
+
                         // tslint:disable-next-line: prefer-for-of (see #98)
                         for (let i = 0; i < parentNode.childNodes.length; i++) {
                             const node = parentNode.childNodes[i] as HTMLElement;
@@ -161,20 +169,28 @@ export default [
                                 case Node.TEXT_NODE:
                                     // Append text, but strip leading and trailing newlines
                                     text += node.nodeValue.replace(/(^[\r\n]*|[\r\n]*$)/g, '');
+                                    lastNodeType = 'text';
                                     break;
                                 case Node.ELEMENT_NODE:
                                     const tag = node.tagName.toLowerCase();
                                     if (tag === 'div') {
+                                        if (lastNodeType === 'div') {
+                                            text += '\n';
+                                        }
                                         visitChildNodes(node);
+                                        lastNodeType = 'div';
                                         break;
                                     } else if (tag === 'img') {
                                         text += (node as HTMLImageElement).alt;
+                                        lastNodeType = 'img';
                                         break;
                                     } else if (tag === 'br') {
                                         text += '\n';
+                                        lastNodeType = 'br';
                                         break;
                                     } else if (tag === 'span' && node.hasAttribute('text')) {
                                         text += node.getAttributeNode('text').value;
+                                        lastNodeType = 'span';
                                         break;
                                     }
                                 default:
