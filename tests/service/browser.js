@@ -26,6 +26,7 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('firefox');
         expect(browser.version).toEqual(59);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Firefox 59');
     });
 
@@ -41,6 +42,7 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('chrome');
         expect(browser.version).toEqual(65);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Chrome 65');
     });
 
@@ -56,6 +58,7 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('ie');
         expect(browser.version).toEqual(9);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Internet Explorer 9');
     });
 
@@ -71,6 +74,7 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('ie');
         expect(browser.version).toEqual(11);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Internet Explorer 11');
     });
 
@@ -86,6 +90,7 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('edge');
         expect(browser.version).toEqual(12);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Edge 12');
     });
 
@@ -101,6 +106,7 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(false);
         expect(browser.name).toEqual('opera');
         expect(browser.version).toEqual(51);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Opera 51');
     });
 
@@ -116,6 +122,7 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(true);
         expect(browser.name).toEqual('safari');
         expect(browser.version).toEqual(7);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Safari 7');
     });
 
@@ -131,7 +138,24 @@ describe('BrowserService', function() {
         expect(browser.safari).toBe(true);
         expect(browser.name).toEqual('safari');
         expect(browser.version).toEqual(11);
+        expect(browser.mobile).toBe(false);
         expect(browser.textInfo).toEqual('Safari 11');
+    });
+
+    it('safari10Mobile', () => {
+        const ua = 'Mozilla/5.0 (iPad; CPU OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) Version/10.0 Mobile/14A403 Safari/602.1';
+        const service = testUserAgent(ua);
+        const browser = service.getBrowser();
+        expect(browser.chrome).toBe(false);
+        expect(browser.firefox).toBe(false);
+        expect(browser.ie).toBe(false);
+        expect(browser.edge).toBe(false);
+        expect(browser.opera).toBe(false);
+        expect(browser.safari).toBe(true);
+        expect(browser.name).toEqual('safari');
+        expect(browser.version).toEqual(10);
+        expect(browser.mobile).toBe(true);
+        expect(browser.textInfo).toEqual('Safari 10 Mobile');
     });
 
 });

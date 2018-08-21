@@ -519,6 +519,7 @@ declare namespace threema {
         opera: boolean;
         safari: boolean;
         name?: BrowserName;
+        mobile?: boolean;
         version?: number;
         textInfo?: string;
     }

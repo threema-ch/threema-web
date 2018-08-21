@@ -99,17 +99,20 @@ export class BrowserService {
 
             const uagent = this.$window.navigator.userAgent.toLowerCase();
 
-            this.browser.chrome  = /webkit/.test(uagent)  && /chrome/.test(uagent) && !/edge/.test(uagent);
+            this.browser.chrome  = /webkit/.test(uagent) && /chrome/.test(uagent) && !/edge/.test(uagent);
             this.browser.firefox = /mozilla/.test(uagent) && /firefox/.test(uagent);
             this.browser.ie      = (/msie/.test(uagent) || /trident/.test(uagent)) && !/edge/.test(uagent);
             this.browser.edge    = /edge/.test(uagent);
-            this.browser.safari  = /safari/.test(uagent)  && /applewebkit/.test(uagent) && !/chrome/.test(uagent);
+            this.browser.safari  = /safari/.test(uagent) && /applewebkit/.test(uagent) && !/chrome/.test(uagent);
             this.browser.opera   = /mozilla/.test(uagent) && /applewebkit/.test(uagent)
                 && /chrome/.test(uagent) && /safari/.test(uagent) && /opr/.test(uagent);
 
             if (this.browser.opera && this.browser.chrome) {
                 this.browser.chrome = false;
             }
+
+            // Mobile detection
+            this.browser.mobile = this.browser.safari && /mobile/.test(uagent);
 
             for (const x in this.browser) {
                 if (this.browser[x]) {
@@ -164,6 +167,9 @@ export class BrowserService {
             if (this.browser.opera) {
                 this.browser.name = BrowserName.Opera;
                 this.browser.textInfo = 'Opera ' + this.browser.version;
+            }
+            if (this.browser.textInfo && this.browser.mobile) {
+                this.browser.textInfo += ' Mobile';
             }
         }
 
