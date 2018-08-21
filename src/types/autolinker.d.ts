@@ -10,7 +10,7 @@ declare namespace __Autolinker {
     hashtag?: boolean | string;
     newWindow?: boolean;
     phone?: boolean;
-    replaceFn?: (match: any) => string;
+    replaceFn?: (match: any) => string | boolean;
     stripPrefix?: boolean;
     stripTrailingSlash?: boolean;
     truncate?: number | { length?: number; location?: string; };
