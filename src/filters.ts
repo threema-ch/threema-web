@@ -88,6 +88,16 @@ angular.module('3ema.filters', [])
         mention: false,
         // Don't link hashtags
         hashtag: false,
+        // Don't link .zip
+        replaceFn: function(match) {
+            if (match.getType() === 'url') {
+                if (match.getUrl().substr(-3) === 'zip') {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        },
     });
     return (text) => autolinker.link(text);
 })
