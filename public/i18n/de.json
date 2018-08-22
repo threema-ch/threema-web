@@ -52,7 +52,8 @@
         "WAITING_FOR_APP_MANUAL": "Google Play Services nicht installiert. Bitte starten Sie die Sitzung manuell.",
         "CONNECTING_TO_SERVER": "Verbinden mit Server\u2026",
         "CONNECTING_TO_APP": "Verbindung zu App wird aufgebaut\u2026",
-        "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen."
+        "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen.",
+        "RECONNECT_FAILED": "Verbindung zur App fehlgeschlagen."
     },
     "troubleshooting": {
         "SLOW_CONNECT": "Verbindungsaufbau scheint länger zu dauern<br>als normal …",

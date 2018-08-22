@@ -45,6 +45,7 @@ import {SequenceNumber} from '../protocol/sequence_number';
 import InitializationStep = threema.InitializationStep;
 import ContactReceiverFeature = threema.ContactReceiverFeature;
 import DisconnectReason = threema.DisconnectReason;
+import ConnectionBuildupState = threema.ConnectionBuildupState;
 
 /**
  * Payload of a connectionInfo message.
@@ -352,21 +353,25 @@ export class WebClientService {
     /**
      * Initialize the webclient service.
      *
-     * Warning: Do not call this with `resumeSession` set to `false` in case
+     * Warning: Do not call this with `flags.resume` set to `false` in case
      *          messages can be queued by the user.
      */
-    public init(keyStore?: saltyrtc.KeyStore, peerTrustedKey?: Uint8Array, resumeSession = true): void {
-        // Reset state
-        this.stateService.reset();
+    public init(flags: {
+        keyStore?: saltyrtc.KeyStore,
+        peerTrustedKey?: Uint8Array,
+        resume: boolean,
+    }): void {
+        let keyStore = flags.keyStore;
+        let resume = flags.resume;
 
         // Reset fields in case the session should explicitly not be resumed
-        if (!resumeSession) {
+        if (!resume) {
             this._resetFields();
         }
 
         // Only move the previous connection's instances if the previous
         // connection was successful (and if there was one at all).
-        if (resumeSession &&
+        if (resume &&
             this.outgoingMessageSequenceNumber && this.unchunker &&
             this.previousChunkCache === this.currentChunkCache) {
             // Move instances that we need to re-establish a previous session
@@ -376,7 +381,7 @@ export class WebClientService {
         } else {
             // Discard session
             this.discardSession({ resetMessageSequenceNumber: true });
-            resumeSession = false;
+            resume = false;
         }
 
         // Initialise connection caches
@@ -431,8 +436,8 @@ export class WebClientService {
             .withKeyStore(keyStore)
             .usingTasks(tasks)
             .withPingInterval(30);
-        if (keyStore !== undefined && peerTrustedKey !== undefined) {
-            builder = builder.withTrustedPeerKey(peerTrustedKey);
+        if (flags.peerTrustedKey !== undefined) {
+            builder = builder.withTrustedPeerKey(flags.peerTrustedKey);
         }
         this.salty = builder.asInitiator();
         if (this.config.DEBUG) {
@@ -528,7 +533,7 @@ export class WebClientService {
 
             // Otherwise, no handover is necessary.
             } else {
-                this.onHandover(resumeSession);
+                this.onHandover(resume);
                 return;
             }
         });
@@ -545,7 +550,7 @@ export class WebClientService {
             // Ignore handovers requested by non-WebRTC tasks
             if (this.chosenTask === threema.ChosenTask.WebRTC) {
                 this.$log.debug(this.logTag, 'Handover done');
-                this.onHandover(resumeSession);
+                this.onHandover(resume);
             }
         });
 
@@ -606,7 +611,8 @@ export class WebClientService {
      */
     private failSession() {
         // Stop session
-        this.stop(DisconnectReason.SessionError, {
+        this.stop({
+            reason: DisconnectReason.SessionError,
             send: true,
             close: true,
             redirect: true,
@@ -653,20 +659,22 @@ export class WebClientService {
         }
 
         // Remove chunks that have been received by the remote side
+        const size = this.previousChunkCache.byteLength;
+        let result;
+        this.$log.debug(`Pruning cache (local-sn=${this.previousChunkCache.sequenceNumber.get()}, ` +
+            `remote-sn=${remoteInfo.resume.sequenceNumber})`);
         try {
-            this.previousChunkCache.prune(remoteInfo.resume.sequenceNumber);
+            result = this.previousChunkCache.prune(remoteInfo.resume.sequenceNumber);
         } catch (error) {
             // Not recoverable
             throw new Error(`Unable to resume session: ${error}`);
         }
+        this.$log.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
+            `${size} -> ${this.previousChunkCache.byteLength}`);
 
         // Transfer the cache (filters chunks which should not be retransmitted)
-        this.currentChunkCache.transfer(this.previousChunkCache.chunks);
-
-        // Resend chunks
-        for (const chunk of this.currentChunkCache.chunks) {
-            this.sendChunk(chunk, true, false);
-        }
+        const transferred = this.currentChunkCache.transfer(this.previousChunkCache.chunks);
+        this.$log.debug(`Chunk cache transferred (${transferred} chunks)`);
 
         // Invalidate the previous connection cache & id
         // Note: This MUST be done immediately after the session has been
@@ -675,6 +683,13 @@ export class WebClientService {
         this.previousConnectionId = null;
         this.previousIncomingChunkSequenceNumber = null;
         this.previousChunkCache = null;
+
+        // Resend chunks
+        const chunks = this.currentChunkCache.chunks;
+        this.$log.debug(this.logTag, `Sending cached chunks: ${chunks.length}`);
+        for (const chunk of chunks) {
+            this.sendChunk(chunk, true, false);
+        }
 
         // Resumed!
         return true;
@@ -724,14 +739,16 @@ export class WebClientService {
             this.previousConnectionId !== null &&
             this.previousIncomingChunkSequenceNumber !== null &&
             this.previousChunkCache !== null;
-        this.$log.debug(this.logTag, 'Sending connection info');
         if (resumeSession) {
+            const incomingSequenceNumber = this.previousIncomingChunkSequenceNumber.get();
+            this.$log.debug(this.logTag, `Sending connection info (resume=yes, sn-in=${incomingSequenceNumber})`);
             this._sendConnectionInfo(
                 this.currentConnectionId.buffer,
                 this.previousConnectionId.buffer,
-                this.previousIncomingChunkSequenceNumber.get(),
+                incomingSequenceNumber,
             );
         } else {
+            this.$log.debug(this.logTag, 'Sending connection info (resume=no)');
             this._sendConnectionInfo(this.currentConnectionId.buffer);
         }
 
@@ -746,7 +763,14 @@ export class WebClientService {
             this.failSession();
             return;
         }
-        this.$log.debug(this.logTag, 'Received connection info');
+        let outgoingSequenceNumber: string | number = 'n/a';
+        let remoteResume = 'no';
+        if (remoteInfo.resume !== undefined) {
+            outgoingSequenceNumber = remoteInfo.resume.sequenceNumber;
+            remoteResume = 'yes';
+        }
+        this.$log.debug(this.logTag, `Received connection info (resume=${remoteResume}, ` +
+            `sn-out=${outgoingSequenceNumber})`);
 
         // Resume the session (if both requested to resume the same connection)
         let sessionWasResumed;
@@ -838,15 +862,13 @@ export class WebClientService {
         if (this.chosenTask === threema.ChosenTask.WebRTC) {
             // Create secure data channel
             this.$log.debug(this.logTag, 'Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
-            this.secureDataChannel = this.pcHelper.createSecureDataChannel(
-                WebClientService.DC_LABEL,
-                (event: Event) => {
-                    this.$log.debug(this.logTag, 'SecureDataChannel open');
-                    this.onConnectionEstablished(resumeSession).catch((error) => {
-                        this.$log.error(this.logTag, 'Error during handshake:', error);
-                    });
-                },
-            );
+            this.secureDataChannel = this.pcHelper.createSecureDataChannel(WebClientService.DC_LABEL);
+            this.secureDataChannel.onopen = () => {
+                this.$log.debug(this.logTag, 'SecureDataChannel open');
+                this.onConnectionEstablished(resumeSession).catch((error) => {
+                    this.$log.error(this.logTag, 'Error during handshake:', error);
+                });
+            };
 
             // Handle incoming messages
             this.secureDataChannel.onmessage = (ev: MessageEvent) => {
@@ -968,34 +990,41 @@ export class WebClientService {
      *   has been replaced, a protocol error occurred or in case `redirect` has
      *   been set to `true`.
      * @redirect will redirect to the welcome page if set to `true`.
+     * @connectionBuildupState: The connection buildup state the state service
+     *   will be reset to.
      */
     public stop(
-        reason: DisconnectReason,
-        flags: { send: boolean, close: boolean, redirect: boolean },
+        args: {
+            reason: DisconnectReason,
+            send: boolean,
+            close: boolean,
+            redirect: boolean,
+            connectionBuildupState?: ConnectionBuildupState,
+        },
     ): void {
-        this.$log.info(this.logTag, 'Disconnecting...');
-        let close = flags.close;
+        this.$log.info(this.logTag, 'Stopping');
+        let close = args.close;
         let remove = false;
 
         // A redirect to the welcome page always implies a close
-        if (flags.redirect) {
+        if (args.redirect) {
             close = true;
         }
 
         // Session deleted: Force close and delete
-        if (reason === DisconnectReason.SessionDeleted) {
+        if (args.reason === DisconnectReason.SessionDeleted) {
             close = true;
             remove = true;
         }
 
         // Session replaced or error'ed: Force close
-        if (reason === DisconnectReason.SessionReplaced || reason === DisconnectReason.SessionError) {
+        if (args.reason === DisconnectReason.SessionReplaced || args.reason === DisconnectReason.SessionError) {
             close = true;
         }
 
         // Send disconnect reason to the remote peer if requested
-        if (flags.send && this.stateService.state === threema.GlobalConnectionState.Ok) {
-            this._sendUpdate(WebClientService.SUB_TYPE_CONNECTION_DISCONNECT, false, undefined, {reason: reason});
+        if (args.send && this.stateService.state === threema.GlobalConnectionState.Ok) {
+            this._sendUpdate(WebClientService.SUB_TYPE_CONNECTION_DISCONNECT, false, undefined, {reason: args.reason});
         }
 
         // Stop ack timer
@@ -1006,7 +1035,7 @@ export class WebClientService {
         }
 
         // Reset states
-        this.stateService.reset();
+        this.stateService.reset(args.connectionBuildupState);
 
         // Reset the unread count
         this.resetUnreadCount();
@@ -1030,23 +1059,34 @@ export class WebClientService {
             this.$log.debug(this.logTag, 'Session closed (cannot be resumed)');
         } else {
             this.previousChunkCache = this.currentChunkCache;
-            this.$log.debug(this.logTag, 'Session remains open (can be resumed)');
+            this.$log.debug(this.logTag, 'Session remains open (can be resumed at sn-out=' +
+                `${this.previousChunkCache.sequenceNumber.get()})`);
         }
 
         // Close data channel
         if (this.secureDataChannel !== null) {
             this.$log.debug(this.logTag, 'Closing secure datachannel');
+            this.secureDataChannel.onopen = null;
+            this.secureDataChannel.onmessage = null;
+            this.secureDataChannel.onbufferedamountlow = null;
+            this.secureDataChannel.onerror = null;
+            this.secureDataChannel.onclose = null;
             this.secureDataChannel.close();
         }
 
         // Close SaltyRTC connection
+        if (this.relayedDataTask !== null) {
+            this.relayedDataTask.off();
+        }
         if (this.salty !== null) {
             this.$log.debug(this.logTag, 'Closing signaling');
+            this.salty.off();
             this.salty.disconnect();
         }
 
         // Close peer connection
         if (this.pcHelper !== null) {
+            this.pcHelper.onConnectionStateChange = null;
             this.pcHelper.close();
             this.$log.debug(this.logTag, 'Peer connection closed');
         } else {
@@ -1054,7 +1094,7 @@ export class WebClientService {
         }
 
         // Done, redirect now if requested
-        if (flags.redirect) {
+        if (args.redirect) {
             this.$timeout(() => {
                 this.$state.go('welcome');
             }, 0);
@@ -2035,14 +2075,18 @@ export class WebClientService {
 
         // Remove chunks which have already been received by the remote side
         const size = this.currentChunkCache.byteLength;
+        let result;
+        this.$log.debug(`Pruning cache (local-sn=${this.currentChunkCache.sequenceNumber.get()}, ` +
+            `remote-sn=${sequenceNumber})`);
         try {
-            this.currentChunkCache.prune(sequenceNumber);
+            result = this.currentChunkCache.prune(sequenceNumber);
         } catch (error) {
             this.$log.error(this.logTag, error);
             this.failSession();
             return;
         }
-        this.$log.debug(`Chunk cache size ${size} in bytes -> ${this.currentChunkCache.byteLength}`);
+        this.$log.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
+            `${size} -> ${this.currentChunkCache.byteLength}`);
 
         // Clear pending ack requests
         if (this.pendingAckRequest !== null && sequenceNumber >= this.pendingAckRequest) {
@@ -2088,7 +2132,8 @@ export class WebClientService {
         }
 
         // Stop and show an alert on the welcome page
-        this.stop(reason, {
+        this.stop({
+            reason: reason,
             send: false,
             close: true,
             redirect: true,
@@ -3419,6 +3464,9 @@ export class WebClientService {
                 {
                     // Send bytes through WebRTC DataChannel
                     const bytes: Uint8Array = this.msgpackEncode(message);
+                    if (this.config.MSGPACK_DEBUGGING) {
+                        this.$log.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
+                    }
                     this.secureDataChannel.send(bytes);
                 }
                 break;
@@ -3430,6 +3478,9 @@ export class WebClientService {
 
                     // Send bytes through e2e encrypted WebSocket
                     const bytes: Uint8Array = this.msgpackEncode(message);
+                    if (this.config.MSGPACK_DEBUGGING) {
+                        this.$log.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
+                    }
 
                     // Increment the outgoing message sequence number
                     const messageSequenceNumber = this.outgoingMessageSequenceNumber.increment();
@@ -3482,6 +3533,9 @@ export class WebClientService {
         }
 
         // Add to chunk cache
+        if (this.config.MSG_DEBUGGING) {
+            this.$log.debug(`[Chunk] Caching chunk (retransmit=${retransmit}:`, chunk);
+        }
         try {
             chunkCache.append(retransmit ? chunk : null);
         } catch (error) {
@@ -3503,7 +3557,7 @@ export class WebClientService {
      * Handle an incoming chunk from the underlying transport.
      */
     private receiveChunk(chunk: Uint8Array): void {
-        if (this.config.MSG_DEBUGGING && this.config.DEBUG) {
+        if (this.config.MSG_DEBUGGING) {
             this.$log.debug('[Chunk] Received chunk:', chunk);
         }
 

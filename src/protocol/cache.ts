@@ -47,20 +47,25 @@ export class ChunkCache {
 
     /**
      * Get a reference to the currently cached chunks.
+     *
+     * Note: Blacklisted chunks will be filtered automatically.
      */
     public get chunks(): CachedChunk[] {
-        return this.cache;
+        return this.cache.filter((chunk) => chunk !== null);
     }
 
     /**
-     * Transfer an array of cached chunks to this cache instance.
+     * Transfer an array of cached chunks to this cache instance and return the
+     * amount of chunks that have been transferred.
      */
-    public transfer(cache: CachedChunk[]): void {
+    public transfer(cache: CachedChunk[]): number {
         // Add chunks but remove all which should not be retransmitted
         cache = cache.filter((chunk) => chunk !== null);
+        const count = cache.length;
         for (const chunk of cache) {
             this.append(chunk);
         }
+        return count;
     }
 
     /**
@@ -76,9 +81,11 @@ export class ChunkCache {
     }
 
     /**
-     * Prune cached chunks that have been acknowledged.
+     * Prune cached chunks that have been acknowledged. Return the
+     * amount of chunks which have been acknowledged and the amount of
+     * chunks left in the cache.
      */
-    public prune(theirSequenceNumber: number): void {
+    public prune(theirSequenceNumber: number): { acknowledged: number, left: number } {
         try {
             this._sequenceNumber.validate(theirSequenceNumber);
         } catch (error) {
@@ -87,7 +94,7 @@ export class ChunkCache {
 
         // Calculate the slice start index for the chunk cache
         // Important: Our sequence number is one chunk ahead!
-        const beginOffset = theirSequenceNumber + 1 - this._sequenceNumber.get();
+        const beginOffset = theirSequenceNumber - this._sequenceNumber.get();
         if (beginOffset > 0) {
             throw new Error('Remote travelled through time and acknowledged a chunk which is in the future');
         } else if (-beginOffset > this.cache.length) {
@@ -95,9 +102,14 @@ export class ChunkCache {
         }
 
         // Slice our cache & recalculate size
+        const chunkCountBefore = this.cache.length;
         this.cache = beginOffset === 0 ? [] : this.cache.slice(beginOffset);
         this._byteLength = this.cache
             .filter((chunk) => chunk !== null)
             .reduce((sum, chunk) => sum + chunk.byteLength, 0);
+        return {
+            acknowledged: chunkCountBefore + beginOffset,
+            left: this.cache.length,
+        };
     }
 }

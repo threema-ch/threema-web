@@ -258,7 +258,7 @@ export function escapeRegExp(str: string) {
  * msgpack encoded data.
  */
 export function msgpackVisualizer(bytes: Uint8Array): string {
-    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(bytes as any));
+    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(String.fromCharCode.apply(null, bytes)));
 }
 
 /**

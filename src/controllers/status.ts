@@ -22,6 +22,7 @@ import {StateService} from '../services/state';
 import {WebClientService} from '../services/webclient';
 
 import GlobalConnectionState = threema.GlobalConnectionState;
+import DisconnectReason = threema.DisconnectReason;
 
 /**
  * This controller handles state changes globally.
@@ -169,16 +170,18 @@ export class StatusController {
             // Collapse status bar
             this.collapseStatusBar();
 
-            // Reset state
-            this.stateService.reset();
+            // Reset connection & state
+            this.webClientService.stop({
+                reason: DisconnectReason.SessionError,
+                send: false,
+                close: true,
+                redirect: false,
+                connectionBuildupState: 'reconnect_failed',
+            });
 
             // Redirect to welcome page
-            this.$state.go('welcome', {
-                initParams: {
-                    keyStore: originalKeyStore,
-                    peerTrustedKey: originalPeerPermanentKeyBytes,
-                },
-            });
+            // TODO: Add a new state welcome.error (also for iOS)
+            this.$state.go('welcome');
         };
 
         // Handlers for reconnecting timeout
@@ -197,12 +200,17 @@ export class StatusController {
 
         // Function to soft-reconnect. Does not reset the loaded data.
         const doSoftReconnect = () => {
-            this.webClientService.stop(threema.DisconnectReason.SessionStopped, {
+            this.webClientService.stop({
+                reason: DisconnectReason.SessionStopped,
                 send: true,
                 close: false,
                 redirect: false,
             });
-            this.webClientService.init(originalKeyStore, originalPeerPermanentKeyBytes, true);
+            this.webClientService.init({
+                keyStore: originalKeyStore,
+                peerTrustedKey: originalPeerPermanentKeyBytes,
+                resume: true,
+            });
             this.webClientService.start().then(
                 () => {
                     // Cancel timeout
@@ -254,31 +262,39 @@ export class StatusController {
 
         // Handler for failed reconnection attempts
         const reconnectionFailed = () => {
-            // Reset state
-            this.stateService.reset();
+            // Reset connection & state
+            this.webClientService.stop({
+                reason: DisconnectReason.SessionError,
+                send: false,
+                close: true,
+                redirect: false,
+                connectionBuildupState: 'reconnect_failed',
+            });
 
             // Redirect to welcome page
-            this.$state.go('welcome', {
-                initParams: {
-                    keyStore: originalKeyStore,
-                    peerTrustedKey: originalPeerPermanentKeyBytes,
-                },
-            });
+            this.$state.go('welcome');
         };
 
-        const skipPush = true;
         // Delay connecting a bit to wait for old websocket to close
         // TODO: Make this more robust and hopefully faster
+        const skipPush = !this.$state.includes('welcome');
         const startTimeout = 500;
         this.$log.debug(this.logTag, 'Stopping old connection');
-        this.webClientService.stop(threema.DisconnectReason.SessionStopped, {
+        this.webClientService.stop({
+            reason: DisconnectReason.SessionStopped,
             send: true,
             close: false,
             redirect: false,
+            connectionBuildupState: 'push',
         });
         this.$timeout(() => {
             this.$log.debug(this.logTag, 'Starting new connection');
-            this.webClientService.init(originalKeyStore, originalPeerPermanentKeyBytes, true);
+            this.webClientService.init({
+                keyStore: originalKeyStore,
+                peerTrustedKey: originalPeerPermanentKeyBytes,
+                resume: true,
+            });
+
             this.webClientService.start(skipPush).then(
                 () => { /* ok */ },
                 (error) => {

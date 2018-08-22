@@ -401,10 +401,11 @@ declare namespace threema {
      * - loading: Loading initial data
      * - done: Initial loading is finished
      * - closed: Connection is closed
+     * - reconnect_failed: Reconnecting failed after several attempts
      *
      */
     type ConnectionBuildupState = 'new' | 'connecting' | 'push' | 'manual_start' | 'already_connected'
-        | 'waiting' | 'peer_handshake' | 'loading' | 'done' | 'closed';
+        | 'waiting' | 'peer_handshake' | 'loading' | 'done' | 'closed' | 'reconnect_failed';
 
     interface ConnectionBuildupStateChange {
         state: ConnectionBuildupState;

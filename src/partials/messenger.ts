@@ -1009,7 +1009,8 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            this.webClientService.stop(threema.DisconnectReason.SessionStopped, {
+            this.webClientService.stop({
+                reason: threema.DisconnectReason.SessionStopped,
                 send: true,
                 close: true,
                 redirect: true,
@@ -1031,7 +1032,8 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            this.webClientService.stop(threema.DisconnectReason.SessionDeleted, {
+            this.webClientService.stop({
+                reason: threema.DisconnectReason.SessionDeleted,
                 send: true,
                 close: true,
                 redirect: true,
