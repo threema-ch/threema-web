@@ -338,6 +338,17 @@ export class WebClientService {
     get typing(): threema.Container.Typing {
         return this.typingInstance;
     }
+
+    /**
+     * Return whether there are chunks cached from a previous connection that
+     * require immediate sending.
+     */
+    get immediateChunksPending(): boolean {
+        // TODO: Apply the chunk **push** blacklist instead of the chunk cache
+        //       blacklist!
+        return this.previousChunkCache !== null && this.previousChunkCache.chunks.length > 0;
+    }
+
     /**
      * Return QR code payload.
      */
@@ -926,7 +937,7 @@ export class WebClientService {
      * Send a push message to wake up the peer.
      * The push message will only be sent if the last push is less than 2 seconds ago.
      */
-    private sendPush(wakeupType: threema.WakeupType): void {
+    private sendPush(): void {
         // Make sure not to flood the target device with pushes
         const minPushInterval = 2000;
         const now = new Date();
@@ -938,11 +949,10 @@ export class WebClientService {
         this.lastPush = now;
 
         // Actually send the push notification
-        this.pushService.sendPush(this.salty.permanentKeyBytes, wakeupType)
+        this.pushService.sendPush(this.salty.permanentKeyBytes)
             .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
             .then(() => {
-                const wakeupTypeString = wakeupType === threema.WakeupType.FullReconnect ? 'reconnect' : 'wakeup';
-                this.$log.debug(this.logTag, 'Requested app', wakeupTypeString, 'via', this.pushTokenType, 'push');
+                this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType, 'push');
                 this.$rootScope.$apply(() => {
                     this.stateService.updateConnectionBuildupState('push');
                 });
@@ -967,7 +977,7 @@ export class WebClientService {
         if (skipPush === true) {
             this.$log.debug(this.logTag, 'start(): Skipping push notification');
         } else if (this.pushService.isAvailable()) {
-            this.sendPush(threema.WakeupType.FullReconnect);
+            this.sendPush();
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug(this.logTag, 'Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
@@ -3523,8 +3533,10 @@ export class WebClientService {
         if (shouldQueue) {
             chunkCache = this.previousChunkCache;
             this.$log.debug(this.logTag, 'Currently not connected, queueing chunk');
-            if (this.pushService.isAvailable()) {
-                this.sendPush(threema.WakeupType.Wakeup);
+            if (retransmit && this.pushService.isAvailable()) {
+                // TODO: Apply the chunk **push** blacklist instead of the
+                //       retransmit flag!
+                this.sendPush();
             } else {
                 this.$log.warn(this.logTag, 'Push service not available, cannot wake up peer!');
             }

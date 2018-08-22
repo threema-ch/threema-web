@@ -29,7 +29,7 @@ import DisconnectReason = threema.DisconnectReason;
  *
  * It also controls auto-reconnecting and the connection status indicator bar.
  *
- * Status updates should be done through the status service.
+ * Status updates should be done through the state service.
  */
 export class StatusController {
 
@@ -275,9 +275,12 @@ export class StatusController {
             this.$state.go('welcome');
         };
 
+        // Only send a push if never left the 'welcome' page or if there are
+        // one or more cached chunks that require immediate sending.
+        const skipPush = !this.$state.includes('welcome') && !this.webClientService.immediateChunksPending;
+
         // Delay connecting a bit to wait for old websocket to close
         // TODO: Make this more robust and hopefully faster
-        const skipPush = !this.$state.includes('welcome');
         const startTimeout = 500;
         this.$log.debug(this.logTag, 'Stopping old connection');
         this.webClientService.stop({
