@@ -25,6 +25,7 @@ import {
     StateService as UiStateService,
 } from '@uirouter/angularjs';
 
+import {BrowserInfo} from '../helpers/browser_info';
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
@@ -89,7 +90,7 @@ class WelcomeController {
     private password: string = '';
     private formLocked: boolean = false;
     private pleaseUpdateAppMsg: string = null;
-    private browser: threema.BrowserInfo;
+    private browser: BrowserInfo;
     private browserWarningShown: boolean = false;
 
     public static $inject = [
@@ -132,26 +133,26 @@ class WelcomeController {
         // Determine whether browser warning should be shown
         this.browser = browserService.getBrowser();
         const version = this.browser.version;
-        $log.debug('Detected browser:', this.browser.textInfo);
-        if (version === undefined) {
+        $log.debug('Detected browser:', this.browser.description());
+        if (!this.browser.wasDetermined()) {
             $log.warn('Could not determine browser version');
             this.showBrowserWarning();
-        } else if (this.browser.chrome === true) {
+        } else if (this.browser.name === threema.BrowserName.Chrome) {
             if (version < minVersions.CHROME) {
                 $log.warn('Chrome is too old (' + version + ' < ' + minVersions.CHROME + ')');
                 this.showBrowserWarning();
             }
-        } else if (this.browser.firefox === true) {
+        } else if (this.browser.name === threema.BrowserName.Firefox) {
             if (version < minVersions.FF) {
                 $log.warn('Firefox is too old (' + version + ' < ' + minVersions.FF + ')');
                 this.showBrowserWarning();
             }
-        } else if (this.browser.opera === true) {
+        } else if (this.browser.name === threema.BrowserName.Opera) {
             if (version < minVersions.OPERA) {
                 $log.warn('Opera is too old (' + version + ' < ' + minVersions.OPERA + ')');
                 this.showBrowserWarning();
             }
-        } else if (this.browser.safari === true) {
+        } else if (this.browser.name === threema.BrowserName.Safari) {
             if (version < minVersions.SAFARI) {
                 $log.warn('Safari is too old (' + version + ' < ' + minVersions.SAFARI + ')');
                 this.showBrowserWarning();
