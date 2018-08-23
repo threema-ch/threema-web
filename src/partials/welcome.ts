@@ -302,14 +302,8 @@ class WelcomeController {
         // Set up the broadcast channel that checks whether we're already connected in another tab
         this.setupBroadcastChannel(keyStore.publicKeyHex);
 
-        // Initialize push service
-        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
-            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
-            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
-        }
-
         // Reconnect
-        this.reconnect(keyStore, decrypted.peerPublicKey);
+        this.reconnect(keyStore, decrypted);
     }
 
     /**
@@ -381,19 +375,29 @@ class WelcomeController {
     }
 
     /**
-     * Reconnect using a specific keypair and peer public key.
+     * Reconnect using a specific keypair and the decrypted data from the trusted keystore.
      */
-    private reconnect(keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array): void {
+    private reconnect(keyStore: saltyrtc.KeyStore, decrypted: threema.TrustedKeyStoreData): void {
+        // Reset state
         this.webClientService.stop({
             reason: DisconnectReason.SessionStopped,
             send: false,
             close: 'welcome',
         });
+
+        // Initialize push service
+        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
+            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
+            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
+        }
+
+        // Initialize webclient service
         this.webClientService.init({
             keyStore: keyStore,
-            peerTrustedKey: peerTrustedKey,
+            peerTrustedKey: decrypted.peerPublicKey,
             resume: false,
         });
+
         this.start();
     }
 
