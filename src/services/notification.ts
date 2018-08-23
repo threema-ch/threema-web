@@ -299,6 +299,20 @@ export class NotificationService {
     }
 
     /**
+     * Return a simplified DND mode.
+     *
+     * This will return either 'on', 'off' or 'mention'.
+     * The 'until' mode will be processed depending on the expiration timestamp.
+     */
+    public getDndModeSimplified(conversation: threema.Conversation): 'on' | 'mention' | 'off' {
+        const simplified = this.getAppNotificationSettings(conversation);
+        if (simplified.dnd.enabled) {
+            return simplified.dnd.mentionOnly ? 'mention' : 'on';
+        }
+        return 'off';
+    }
+
+    /**
      * Notify the user via Desktop Notification API.
      *
      * Return a boolean indicating whether the notification has been shown.

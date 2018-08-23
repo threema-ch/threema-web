@@ -1079,11 +1079,7 @@ class NavigationController {
      * The 'until' mode will be processed depending on the expiration timestamp.
      */
     public dndModeSimplified(conversation: threema.Conversation): 'on' | 'mention' | 'off' {
-        const simplified = this.notificationService.getAppNotificationSettings(conversation);
-        if (simplified.dnd.enabled) {
-            return simplified.dnd.mentionOnly ? 'mention' : 'on';
-        }
-        return 'off';
+        return this.notificationService.getDndModeSimplified(conversation);
     }
 
 }
