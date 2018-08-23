@@ -56,8 +56,10 @@ export class StatusController {
     private webClientService: WebClientService;
     private controllerService: ControllerService;
 
-    public static $inject = ['$scope', '$timeout', '$log', '$state', 'StateService',
-        'WebClientService', 'ControllerService'];
+    public static $inject = [
+        '$scope', '$timeout', '$log', '$state', 'StateService',
+        'WebClientService', 'ControllerService',
+    ];
     constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: UiStateService,
                 stateService: StateService, webClientService: WebClientService,
                 controllerService: ControllerService) {
@@ -174,14 +176,10 @@ export class StatusController {
             this.webClientService.stop({
                 reason: DisconnectReason.SessionError,
                 send: false,
-                close: true,
-                redirect: false,
+                // TODO: Use welcome.error once we have it
+                close: 'welcome',
                 connectionBuildupState: 'reconnect_failed',
             });
-
-            // Redirect to welcome page
-            // TODO: Add a new state welcome.error (also for iOS)
-            this.$state.go('welcome');
         };
 
         // Handlers for reconnecting timeout
@@ -204,7 +202,6 @@ export class StatusController {
                 reason: DisconnectReason.SessionStopped,
                 send: true,
                 close: false,
-                redirect: false,
             });
             this.webClientService.init({
                 keyStore: originalKeyStore,
@@ -260,25 +257,6 @@ export class StatusController {
         const originalKeyStore = this.webClientService.salty.keyStore;
         const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
 
-        // Handler for failed reconnection attempts
-        const reconnectionFailed = () => {
-            // Reset connection & state
-            this.webClientService.stop({
-                reason: DisconnectReason.SessionError,
-                send: false,
-                close: true,
-                redirect: false,
-                connectionBuildupState: 'reconnect_failed',
-            });
-
-            // Redirect to welcome page
-            this.$state.go('welcome');
-        };
-
-        // Only send a push if never left the 'welcome' page or if there are
-        // one or more cached chunks that require immediate sending.
-        const skipPush = !this.$state.includes('welcome') && !this.webClientService.immediateChunksPending;
-
         // Delay connecting a bit to wait for old websocket to close
         // TODO: Make this more robust and hopefully faster
         const startTimeout = 500;
@@ -287,22 +265,67 @@ export class StatusController {
             reason: DisconnectReason.SessionStopped,
             send: true,
             close: false,
-            redirect: false,
             connectionBuildupState: 'push',
         });
+
+        // Only send a push...
+        const push = ((): { send: boolean, reason?: string } => {
+            // ... if never left the 'welcome' page.
+            if (this.$state.includes('welcome')) {
+                return {
+                    send: true,
+                    reason: 'still on welcome page',
+                };
+            }
+
+            // ... if there is at least one pending request.
+            const pendingRequests = this.webClientService.pendingRequests;
+            if (pendingRequests > 0) {
+                return {
+                    send: true,
+                    reason: `${pendingRequests} pending requests`,
+                };
+            }
+
+            // ... if there are one or more cached chunks that require immediate
+            //     sending.
+            const immediateChunksPending = this.webClientService.immediateChunksPending;
+            if (immediateChunksPending > 0) {
+                return {
+                    send: true,
+                    reason: `${immediateChunksPending} chunks that require acknowledgement`,
+                };
+            }
+
+            // ... otherwise, don't push!
+            return {
+                send: false,
+            };
+        })();
+
         this.$timeout(() => {
-            this.$log.debug(this.logTag, 'Starting new connection');
+            if (push.send) {
+                this.$log.debug(`Starting new connection with push, reason: ${push.reason}`);
+            } else {
+                this.$log.debug('Starting new connection without push');
+            }
             this.webClientService.init({
                 keyStore: originalKeyStore,
                 peerTrustedKey: originalPeerPermanentKeyBytes,
                 resume: true,
             });
 
-            this.webClientService.start(skipPush).then(
+            this.webClientService.start(!push.send).then(
                 () => { /* ok */ },
                 (error) => {
                     this.$log.error(this.logTag, 'Error state:', error);
-                    reconnectionFailed();
+                    this.webClientService.stop({
+                        reason: DisconnectReason.SessionError,
+                        send: false,
+                        // TODO: Use welcome.error once we have it
+                        close: 'welcome',
+                        connectionBuildupState: 'reconnect_failed',
+                    });
                 },
                 // Progress
                 (progress: threema.ConnectionBuildupStateChange) => {

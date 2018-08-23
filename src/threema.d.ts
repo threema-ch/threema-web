@@ -529,11 +529,6 @@ declare namespace threema {
         textInfo?: string;
     }
 
-    interface PromiseCallbacks {
-        resolve: (arg: any) => void;
-        reject: (arg: any) => void;
-    }
-
     interface PromiseRequestResult<T> {
         success: boolean;
         error?: string;
@@ -741,6 +736,13 @@ declare namespace threema {
         word: string;
         // The length of the untrimmed word
         realLength: number;
+    }
+
+    interface WebClientServiceStopArguments {
+        reason: DisconnectReason,
+        send: boolean,
+        close: boolean | string,
+        connectionBuildupState?: ConnectionBuildupState,
     }
 
     const enum ChosenTask {

@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div ng-if="ctrl.state === 'connecting' && ctrl.mode === 'unlock'" class="unlock">
+        <div ng-if="(ctrl.state === 'new' || ctrl.state === 'connecting') && ctrl.mode === 'unlock'" class="unlock">
             <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
             <div class="password-entry">
                 <label>

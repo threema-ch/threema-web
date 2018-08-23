@@ -250,15 +250,14 @@ class WelcomeController {
     /**
      * Initiate a new session by scanning a new QR code.
      */
-    private scan(): void {
+    private scan(stopArguments?: threema.WebClientServiceStopArguments): void {
         this.$log.info(this.logTag, 'Initialize session by scanning QR code...');
 
         // Initialize webclient with new keystore
-        this.webClientService.stop({
+        this.webClientService.stop(stopArguments !== undefined ? stopArguments : {
             reason: DisconnectReason.SessionStopped,
             send: false,
-            close: true,
-            redirect: false,
+            close: 'welcome',
         });
         this.webClientService.init({
             resume: false,
@@ -388,8 +387,7 @@ class WelcomeController {
         this.webClientService.stop({
             reason: DisconnectReason.SessionStopped,
             send: false,
-            close: true,
-            redirect: false,
+            close: 'welcome',
         });
         this.webClientService.init({
             keyStore: keyStore,
@@ -486,21 +484,17 @@ class WelcomeController {
              .cancel(this.$translate.instant('common.CANCEL'));
 
         this.$mdDialog.show(confirm).then(() =>  {
-            // Force-stop the webclient
-            this.webClientService.stop({
-                reason: DisconnectReason.SessionDeleted,
-                send: true,
-                close: true,
-                redirect: false,
-            });
-
             // Go back to scan mode
             this.mode = 'scan';
             this.password = '';
             this.formLocked = false;
 
-            // Initiate scan
-            this.scan();
+            // Force-stop the webclient and initiate scan
+            this.scan({
+                reason: DisconnectReason.SessionDeleted,
+                send: true,
+                close: 'welcome',
+            });
         }, () => {
             // do nothing
         });

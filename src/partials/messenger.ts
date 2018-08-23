@@ -1012,10 +1012,10 @@ class NavigationController {
             this.webClientService.stop({
                 reason: threema.DisconnectReason.SessionStopped,
                 send: true,
-                close: true,
-                redirect: true,
+                // TODO: Use welcome.stopped once we have it
+                close: 'welcome',
+                connectionBuildupState: 'closed',
             });
-            this.receiverService.setActive(undefined);
         }, () => {
             // do nothing
         });
@@ -1035,10 +1035,10 @@ class NavigationController {
             this.webClientService.stop({
                 reason: threema.DisconnectReason.SessionDeleted,
                 send: true,
-                close: true,
-                redirect: true,
+                // TODO: Use welcome.deleted once we have it
+                close: 'welcome',
+                connectionBuildupState: 'closed',
             });
-            this.receiverService.setActive(undefined);
         }, () => {
             // do nothing
         });
