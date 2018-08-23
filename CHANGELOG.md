@@ -4,6 +4,20 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.0.3][v2.0.3] (2018-08-23)
+
+Changes:
+
+* [feature] Add reload button to connect error page ([#545][i545])
+* [change] Refactor browser detection ([#569][i569])
+* [change] UI performance improvements ([#567][i567])
+* [bug] Compose area: Add newline workaround for Safari ([#572][i572])
+
+Contributors:
+
+- [@SirTyson][@SirTyson]
+
+
 ### [v2.0.2][v2.0.2] (2018-08-14)
 
 Changes:
@@ -515,11 +529,16 @@ First public release.
 [i519]: https://github.com/threema-ch/threema-web/issues/519
 [i522]: https://github.com/threema-ch/threema-web/issues/522
 [i528]: https://github.com/threema-ch/threema-web/issues/528
+[i545]: https://github.com/threema-ch/threema-web/issues/545
 [i547]: https://github.com/threema-ch/threema-web/issues/547
 [i550]: https://github.com/threema-ch/threema-web/issues/550
 [i558]: https://github.com/threema-ch/threema-web/issues/558
 [i563]: https://github.com/threema-ch/threema-web/issues/563
+[i567]: https://github.com/threema-ch/threema-web/issues/567
+[i569]: https://github.com/threema-ch/threema-web/issues/569
+[i572]: https://github.com/threema-ch/threema-web/issues/572
 
+[v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
 [v2.0.0]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0
