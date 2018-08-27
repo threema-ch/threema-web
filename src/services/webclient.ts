@@ -1086,7 +1086,6 @@ export class WebClientService {
         // Clear stored data (trusted key, push token, etc) if deleting the session
         if (remove) {
             this.trustedKeyStore.clearTrustedKey();
-            this.pushService.reset();
         }
 
         // Invalidate and clear caches
