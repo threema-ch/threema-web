@@ -2194,7 +2194,6 @@ export class WebClientService {
             send: false,
             // TODO: Use welcome.{reason} once we have it
             close: 'welcome',
-            connectionBuildupState: 'closed',
         });
         this.showAlert(alertMessage);
     }

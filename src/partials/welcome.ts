@@ -258,6 +258,7 @@ class WelcomeController {
             reason: DisconnectReason.SessionStopped,
             send: false,
             close: 'welcome',
+            connectionBuildupState: this.stateService.connectionBuildupState,
         });
         this.webClientService.init({
             resume: false,
@@ -280,6 +281,7 @@ class WelcomeController {
      * Initiate a new session by unlocking a trusted key.
      */
     private unlock(): void {
+        this.stateService.reset('new');
         this.$log.info(this.logTag, 'Initialize session by unlocking trusted key...');
     }
 
@@ -383,6 +385,7 @@ class WelcomeController {
             reason: DisconnectReason.SessionStopped,
             send: false,
             close: 'welcome',
+            connectionBuildupState: this.stateService.connectionBuildupState,
         });
 
         // Initialize push service
