@@ -251,7 +251,7 @@ export class StatusController {
      * Attempt to reconnect an iOS device after a connection loss.
      */
     private reconnectIos(): void {
-        this.$log.warn(this.logTag, 'Connection lost (iOS). Attempting to reconnect...');
+        this.$log.info(this.logTag, 'Connection lost (iOS). Attempting to reconnect...');
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;
