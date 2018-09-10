@@ -12,10 +12,10 @@ export default {
     VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Die_Mythen.jpg',
     VERSION_MOUNTAIN_HEIGHT: 1898,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
-    GIT_BRANCH: 'master',
+    GIT_BRANCH: 'beta',
 
     // SaltyRTC
-    SALTYRTC_HOST: null,
+    SALTYRTC_HOST: 'saltyrtc-beta.threema.ch',
     SALTYRTC_HOST_PREFIX: 'saltyrtc-',
     SALTYRTC_HOST_SUFFIX: '.threema.ch',
     SALTYRTC_PORT: 443,
@@ -33,7 +33,7 @@ export default {
     }],
 
     // Push
-    PUSH_URL: 'https://push-web.threema.ch/push',
+    PUSH_URL: 'https://push-web-beta.threema.ch/push',
 
     // Debugging options
     DEBUG: false,

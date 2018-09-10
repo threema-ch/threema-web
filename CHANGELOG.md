@@ -4,6 +4,13 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.0-beta.1][v2.1.0-beta.1] (2018-09-10)
+
+Changes:
+
+* [feature] Implement ack protocol for session resumption ([#551][i551])
+
+
 ### [v2.0.3][v2.0.3] (2018-08-23)
 
 Changes:
@@ -532,12 +539,14 @@ First public release.
 [i545]: https://github.com/threema-ch/threema-web/issues/545
 [i547]: https://github.com/threema-ch/threema-web/issues/547
 [i550]: https://github.com/threema-ch/threema-web/issues/550
+[i551]: https://github.com/threema-ch/threema-web/issues/551
 [i558]: https://github.com/threema-ch/threema-web/issues/558
 [i563]: https://github.com/threema-ch/threema-web/issues/563
 [i567]: https://github.com/threema-ch/threema-web/issues/567
 [i569]: https://github.com/threema-ch/threema-web/issues/569
 [i572]: https://github.com/threema-ch/threema-web/issues/572
 
+[v2.1.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0-beta.1
 [v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
