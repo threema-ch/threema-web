@@ -258,7 +258,7 @@ export function escapeRegExp(str: string) {
  * msgpack encoded data.
  */
 export function msgpackVisualizer(bytes: Uint8Array): string {
-    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(bytes as any));
+    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(String.fromCharCode.apply(null, bytes)));
 }
 
 /**
@@ -337,4 +337,20 @@ export function hasValue(val: any): boolean {
  */
 export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Compare two Uint8Array instances. Return true if all elements are equal
+ * (compared using ===).
+ */
+export function arraysAreEqual(a1: Uint8Array, a2: Uint8Array): boolean {
+    if (a1.length !== a2.length) {
+        return false;
+    }
+    for (let i = 0; i < a1.length; i++) {
+        if (a1[i] !== a2[i]) {
+            return false;
+        }
+    }
+    return true;
 }

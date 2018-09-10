@@ -43,7 +43,7 @@ export class StateService {
     public taskConnectionState: TaskConnectionState;
 
     // Connection buildup state
-    public connectionBuildupState: threema.ConnectionBuildupState = 'connecting';
+    public connectionBuildupState: threema.ConnectionBuildupState;
     public progress = 0;
     private progressInterval: ng.IPromise<any> = null;
     public slowConnect = false;
@@ -238,8 +238,8 @@ export class StateService {
     /**
      * Reset all states.
      */
-    public reset(): void {
-        this.$log.debug(this.logTag, 'Reset');
+    public reset(connectionBuildupState: threema.ConnectionBuildupState = 'new'): void {
+        this.$log.debug(this.logTag, 'Reset states');
 
         // Reset state
         this.signalingConnectionState = 'new';
@@ -247,6 +247,7 @@ export class StateService {
         this.stage = Stage.Signaling;
         this.state = GlobalConnectionState.Error;
         this.wasConnected = false;
-        this.connectionBuildupState = 'connecting';
+        this.connectionBuildupState = connectionBuildupState;
+        this.progress = 0;
     }
 }

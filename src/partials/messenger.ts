@@ -585,6 +585,9 @@ class ConversationController {
                         `,
                         // tslint:enable:max-line-length
                     }).then((data) => {
+                        // TODO: This should probably be moved into the
+                        //       WebClientService as a specific method for the
+                        //       type.
                         const caption = data.caption;
                         const sendAsFile = data.sendAsFile;
                         contents.forEach((msg: threema.FileMessageData, index: number) => {
@@ -592,7 +595,7 @@ class ConversationController {
                                 msg.caption = caption;
                             }
                             msg.sendAsFile = sendAsFile;
-                            this.webClientService.sendMessage(this.$stateParams, type, msg)
+                            this.webClientService.sendMessage(this.$stateParams, type, true, msg)
                                 .then(() => {
                                     nextCallback(index);
                                 })
@@ -612,7 +615,10 @@ class ConversationController {
                         // remove quote
                         this.webClientService.setQuote(this.receiver);
                         // send message
-                        this.webClientService.sendMessage(this.$stateParams, type, msg)
+                        // TODO: This should probably be moved into the
+                        //       WebClientService as a specific method for the
+                        //       type.
+                        this.webClientService.sendMessage(this.$stateParams, type, true, msg)
                             .then(() => {
                                 nextCallback(index);
                             })
@@ -1003,10 +1009,13 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            const resetPush = true;
-            const redirect = true;
-            this.webClientService.stop(true, threema.DisconnectReason.SessionStopped, resetPush, redirect);
-            this.receiverService.setActive(undefined);
+            this.webClientService.stop({
+                reason: threema.DisconnectReason.SessionStopped,
+                send: true,
+                // TODO: Use welcome.stopped once we have it
+                close: 'welcome',
+                connectionBuildupState: 'closed',
+            });
         }, () => {
             // do nothing
         });
@@ -1023,10 +1032,13 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            const resetPush = true;
-            const redirect = true;
-            this.webClientService.stop(true, threema.DisconnectReason.SessionDeleted, resetPush, redirect);
-            this.receiverService.setActive(undefined);
+            this.webClientService.stop({
+                reason: threema.DisconnectReason.SessionDeleted,
+                send: true,
+                // TODO: Use welcome.deleted once we have it
+                close: 'welcome',
+                connectionBuildupState: 'closed',
+            });
         }, () => {
             // do nothing
         });

@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <div ng-if="ctrl.state === 'connecting' && ctrl.mode === 'unlock'" class="unlock">
+        <div ng-if="(ctrl.state === 'new' || ctrl.state === 'connecting') && ctrl.mode === 'unlock'" class="unlock">
             <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
             <div class="password-entry">
                 <label>
@@ -130,6 +130,17 @@
         <div ng-if="ctrl.state === 'closed'">
             <p class="state error">
                 <strong><span translate>common.ERROR</span>:</strong> <span translate>connecting.CONNECTION_CLOSED</span><br>
+                <span translate>welcome.PLEASE_RELOAD</span>
+            </p>
+            <br>
+            <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
+                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+            </md-button>
+        </div>
+
+        <div ng-if="ctrl.state === 'reconnect_failed'">
+            <p class="state error">
+                <strong><span translate>common.ERROR</span>:</strong> <span translate>connecting.RECONNECT_FAILED</span><br>
                 <span translate>welcome.PLEASE_RELOAD</span>
             </p>
             <br>

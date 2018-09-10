@@ -20,7 +20,6 @@
 /// <reference path="../types/broadcastchannel.d.ts" />
 
 import {
-    StateParams as UiStateParams,
     StateProvider as UiStateProvider,
     StateService as UiStateService,
 } from '@uirouter/angularjs';
@@ -36,6 +35,7 @@ import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 
 import GlobalConnectionState = threema.GlobalConnectionState;
+import DisconnectReason = threema.DisconnectReason;
 
 class DialogController {
     // TODO: This is also used in partials/messenger.ts. We could somehow
@@ -51,10 +51,6 @@ class DialogController {
     public cancel() {
         this.$mdDialog.cancel();
     }
-}
-
-interface WelcomeStateParams extends UiStateParams {
-    initParams: null | {keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array};
 }
 
 class WelcomeController {
@@ -94,12 +90,12 @@ class WelcomeController {
     private browserWarningShown: boolean = false;
 
     public static $inject = [
-        '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
+        '$scope', '$state', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
         'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
         'VersionService', 'SettingsService', 'ControllerService',
         'BROWSER_MIN_VERSIONS', 'CONFIG',
     ];
-    constructor($scope: ng.IScope, $state: UiStateService, $stateParams: WelcomeStateParams,
+    constructor($scope: ng.IScope, $state: UiStateService,
                 $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
                 $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
@@ -129,6 +125,8 @@ class WelcomeController {
         this.pushService = pushService;
         this.settingsService = settingsService;
         this.config = config;
+
+        // TODO: Allow to trigger below behaviour by using state parameters
 
         // Determine whether browser warning should be shown
         this.browser = browserService.getBrowser();
@@ -198,12 +196,7 @@ class WelcomeController {
         }
 
         // Determine connection mode
-        if ($stateParams.initParams !== null) {
-            this.mode = 'unlock';
-            const keyStore = $stateParams.initParams.keyStore;
-            const peerTrustedKey = $stateParams.initParams.peerTrustedKey;
-            this.reconnect(keyStore, peerTrustedKey);
-        } else if (hasTrustedKey) {
+        if (hasTrustedKey) {
             this.mode = 'unlock';
             this.unlock();
         } else {
@@ -257,11 +250,19 @@ class WelcomeController {
     /**
      * Initiate a new session by scanning a new QR code.
      */
-    private scan(): void {
+    private scan(stopArguments?: threema.WebClientServiceStopArguments): void {
         this.$log.info(this.logTag, 'Initialize session by scanning QR code...');
 
         // Initialize webclient with new keystore
-        this.webClientService.init();
+        this.webClientService.stop(stopArguments !== undefined ? stopArguments : {
+            reason: DisconnectReason.SessionStopped,
+            send: false,
+            close: 'welcome',
+            connectionBuildupState: this.stateService.connectionBuildupState,
+        });
+        this.webClientService.init({
+            resume: false,
+        });
 
         // Set up the broadcast channel that checks whether we're already connected in another tab
         this.setupBroadcastChannel(this.webClientService.salty.keyStore.publicKeyHex);
@@ -280,6 +281,7 @@ class WelcomeController {
      * Initiate a new session by unlocking a trusted key.
      */
     private unlock(): void {
+        this.stateService.reset('new');
         this.$log.info(this.logTag, 'Initialize session by unlocking trusted key...');
     }
 
@@ -302,14 +304,8 @@ class WelcomeController {
         // Set up the broadcast channel that checks whether we're already connected in another tab
         this.setupBroadcastChannel(keyStore.publicKeyHex);
 
-        // Initialize push service
-        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
-            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
-            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
-        }
-
         // Reconnect
-        this.reconnect(keyStore, decrypted.peerPublicKey);
+        this.reconnect(keyStore, decrypted);
     }
 
     /**
@@ -381,10 +377,30 @@ class WelcomeController {
     }
 
     /**
-     * Reconnect using a specific keypair and peer public key.
+     * Reconnect using a specific keypair and the decrypted data from the trusted keystore.
      */
-    private reconnect(keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array): void {
-        this.webClientService.init(keyStore, peerTrustedKey);
+    private reconnect(keyStore: saltyrtc.KeyStore, decrypted: threema.TrustedKeyStoreData): void {
+        // Reset state
+        this.webClientService.stop({
+            reason: DisconnectReason.SessionStopped,
+            send: false,
+            close: 'welcome',
+            connectionBuildupState: this.stateService.connectionBuildupState,
+        });
+
+        // Initialize push service
+        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
+            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
+            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
+        }
+
+        // Initialize webclient service
+        this.webClientService.init({
+            keyStore: keyStore,
+            peerTrustedKey: decrypted.peerPublicKey,
+            resume: false,
+        });
+
         this.start();
     }
 
@@ -475,21 +491,17 @@ class WelcomeController {
              .cancel(this.$translate.instant('common.CANCEL'));
 
         this.$mdDialog.show(confirm).then(() =>  {
-            // Force-stop the webclient
-            const resetPush = true;
-            const redirect = false;
-            this.webClientService.stop(true, threema.DisconnectReason.SessionDeleted, resetPush, redirect);
-
-            // Reset state
-            this.stateService.updateConnectionBuildupState('new');
-
             // Go back to scan mode
             this.mode = 'scan';
             this.password = '';
             this.formLocked = false;
 
-            // Initiate scan
-            this.scan();
+            // Force-stop the webclient and initiate scan
+            this.scan({
+                reason: DisconnectReason.SessionDeleted,
+                send: true,
+                close: 'welcome',
+            });
         }, () => {
             // do nothing
         });

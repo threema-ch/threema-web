@@ -74,7 +74,7 @@ export class PushService {
      * Send a push notification for the specified session (public permanent key
      * of the initiator). The promise is always resolved to a boolean.
      */
-    public async sendPush(session: Uint8Array, wakeupType: threema.WakeupType): Promise<boolean> {
+    public async sendPush(session: Uint8Array): Promise<boolean> {
         if (!this.isAvailable()) {
             return false;
         }
@@ -87,7 +87,8 @@ export class PushService {
             [PushService.ARG_TYPE]: this.pushType,
             [PushService.ARG_SESSION]: sessionHash,
             [PushService.ARG_VERSION]: this.version,
-            [PushService.ARG_WAKEUP_TYPE]: wakeupType,
+            // Note: Wakeup type has been obsoleted by connectionInfo
+            [PushService.ARG_WAKEUP_TYPE]: '0',
         };
         if (this.pushType === threema.PushTokenType.Apns) {
             // APNS token format: "<hex-deviceid>;<endpoint>;<bundle-id>"

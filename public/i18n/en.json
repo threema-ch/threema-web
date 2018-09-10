@@ -52,7 +52,8 @@
         "WAITING_FOR_APP_MANUAL": "Google Play Services not installed. Please start the session manually.",
         "CONNECTING_TO_SERVER": "Connecting to server\u2026",
         "CONNECTING_TO_APP": "Connection to app is being established\u2026",
-        "CONNECTION_CLOSED": "Connection to server has been closed."
+        "CONNECTION_CLOSED": "Connection to server has been closed.",
+        "RECONNECT_FAILED": "Connecting to app failed."
     },
     "troubleshooting": {
         "SLOW_CONNECT": "Connecting seems to take longer than usual …",
@@ -325,6 +326,7 @@
         "SESSION_STOPPED": "The session was stopped on your device.",
         "SESSION_DELETED": "The session was deleted on your device.",
         "WEBCLIENT_DISABLED": "Threema Web was disabled on your device.",
-        "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window."
+        "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window.",
+        "SESSION_ERROR": "The session was stopped due to a protocol error."
     }
 }
