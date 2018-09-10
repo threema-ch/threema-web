@@ -2189,12 +2189,23 @@ export class WebClientService {
         }
 
         // Stop and show an alert on the welcome page
+        const isWelcome = this.$state.includes('welcome');
         this.stop({
             reason: reason,
             send: false,
             // TODO: Use welcome.{reason} once we have it
             close: 'welcome',
         });
+
+        // Note: This is required to reset the mode and potentially
+        //       re-establish a connection if needed.
+        // TODO: Remove once we have created pages for each mode on the
+        //       'welcome' page.
+        if (isWelcome) {
+            this.$state.reload().catch((error) => {
+                this.$log.error('Unable to reload state:', error);
+            });
+        }
         this.showAlert(alertMessage);
     }
 
