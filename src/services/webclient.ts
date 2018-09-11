@@ -175,7 +175,7 @@ export class WebClientService {
     // State handling
     private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
     private startupDone: boolean = false;
-    private pendingInitializationStepRoutines: threema.InitializationStepRoutine[] = [];
+    private pendingInitializationStepRoutines: Set<threema.InitializationStepRoutine> = new Set();
     private initialized: Set<threema.InitializationStep> = new Set();
     private stateService: StateService;
     private lastPush: Date = null;
@@ -827,23 +827,37 @@ export class WebClientService {
         }
 
         // If we could not resume for whatever reason
-        const requiredInitializationSteps = [];
         if (!resumeSession || !sessionWasResumed) {
             // Note: We cannot reset the message sequence number here any more since
             //       it has already been used for the connectionInfo message.
             this.discardSession({ resetMessageSequenceNumber: false });
             this.$log.debug(this.logTag, 'Session discarded');
 
-            // Remove all pending promises
+            // Reset fields, blob cache & pending requests in case the session
+            // cannot be resumed
+            this.clearCache();
             this.requestPromises.clear();
 
-            // Set required initialisation steps
-            requiredInitializationSteps.push(
-                InitializationStep.ClientInfo,
-                InitializationStep.Conversations,
-                InitializationStep.Receivers,
-                InitializationStep.Profile,
-            );
+            // Set required initialisation steps if we have finished the
+            // previous connection
+            if (this.startupPromise !== null) {
+                const requiredInitializationSteps = [
+                    InitializationStep.ClientInfo,
+                    InitializationStep.Conversations,
+                    InitializationStep.Receivers,
+                    InitializationStep.Profile,
+                ];
+                this.runAfterInitializationSteps(requiredInitializationSteps, () => {
+                    this.stateService.updateConnectionBuildupState('done');
+                    this.startupPromise.resolve();
+                    this.startupPromise = null;
+                    this.startupDone = true;
+                    this._resetInitializationSteps();
+                });
+            }
+
+            // Request initial data
+            this._requestInitialData();
         } else {
             this.$log.debug(this.logTag, 'Session resumed');
         }
@@ -865,23 +879,6 @@ export class WebClientService {
                     this.$state.go('messenger.home');
                 }
             });
-        }
-
-        // Resolve startup promise once initialization is done
-        if (this.startupPromise !== null) {
-            this.runAfterInitializationSteps(requiredInitializationSteps, () => {
-                this.stateService.updateConnectionBuildupState('done');
-                this.startupPromise.resolve();
-                this.startupPromise = null;
-                this.startupDone = true;
-                this._resetInitializationSteps();
-            });
-        }
-
-        // If we could not resume for whatever reason
-        if (!resumeSession || !sessionWasResumed) {
-            // Request initial data
-            this._requestInitialData();
         }
 
         // Fetch current version
@@ -1008,7 +1005,12 @@ export class WebClientService {
         this.$log.debug(this.logTag, 'Starting WebClientService...');
 
         // Promise to track startup state
-        this.startupPromise = this.$q.defer();
+        if (this.startupPromise !== null) {
+            this.$log.debug(this.logTag, 'Reusing startup promise (was not resolved)');
+        } else {
+            this.$log.debug(this.logTag, 'Creating new startup promise');
+            this.startupPromise = this.$q.defer();
+        }
         this.startupDone = false;
 
         // Connect
@@ -1209,20 +1211,21 @@ export class WebClientService {
         this.initialized.add(name);
 
         // Check pending routines
-        this.pendingInitializationStepRoutines = this.pendingInitializationStepRoutines.filter((routine) => {
-            let isValid = true;
-            for (const requiredStep of routine.requiredSteps) {
-                if (!this.initialized.has(requiredStep)) {
-                    isValid = false;
-                    break;
-                }
-            }
-            if (isValid) {
+        for (const routine of this.pendingInitializationStepRoutines) {
+            const ready = routine.requiredSteps.every((requiredStep) => {
+                return this.initialized.has(requiredStep);
+            });
+
+            if (ready) {
                 this.$log.debug(this.logTag, 'Running routine after initialization "' + name + '" completed');
+
+                // Important: Remove the routine BEFORE calling it to prevent
+                //            it from being called more than once (due to nested
+                //            calls to .registerInitializationStep).
+                this.pendingInitializationStepRoutines.delete(routine);
                 routine.callback();
             }
-            return !isValid;
-        });
+        }
     }
 
     public setReceiverListener(listener: threema.ReceiverListener): void {
@@ -1981,7 +1984,7 @@ export class WebClientService {
     private _resetInitializationSteps(): void {
         this.$log.debug(this.logTag, 'Reset initialization steps');
         this.initialized.clear();
-        this.pendingInitializationStepRoutines = [];
+        this.pendingInitializationStepRoutines = new Set();
     }
 
     /**
@@ -2189,12 +2192,23 @@ export class WebClientService {
         }
 
         // Stop and show an alert on the welcome page
+        const isWelcome = this.$state.includes('welcome');
         this.stop({
             reason: reason,
             send: false,
             // TODO: Use welcome.{reason} once we have it
             close: 'welcome',
         });
+
+        // Note: This is required to reset the mode and potentially
+        //       re-establish a connection if needed.
+        // TODO: Remove once we have created pages for each mode on the
+        //       'welcome' page.
+        if (isWelcome) {
+            this.$state.reload().catch((error) => {
+                this.$log.error('Unable to reload state:', error);
+            });
+        }
         this.showAlert(alertMessage);
     }
 
@@ -3732,7 +3746,7 @@ export class WebClientService {
             if (!this.initialized.has(requiredStep)) {
                 this.$log.debug(this.logTag,
                     'Required initialization step', requiredStep, 'not completed, add pending routine');
-                this.pendingInitializationStepRoutines.push({
+                this.pendingInitializationStepRoutines.add({
                     requiredSteps: requiredSteps,
                     callback: callback,
                 } as threema.InitializationStepRoutine);
