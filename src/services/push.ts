@@ -22,7 +22,6 @@ export class PushService {
     private static ARG_TOKEN = 'token';
     private static ARG_SESSION = 'session';
     private static ARG_VERSION = 'version';
-    private static ARG_WAKEUP_TYPE = 'wakeup';
     private static ARG_ENDPOINT = 'endpoint';
     private static ARG_BUNDLE_ID = 'bundleid';
 
@@ -87,8 +86,6 @@ export class PushService {
             [PushService.ARG_TYPE]: this.pushType,
             [PushService.ARG_SESSION]: sessionHash,
             [PushService.ARG_VERSION]: this.version,
-            // Note: Wakeup type has been obsoleted by connectionInfo
-            [PushService.ARG_WAKEUP_TYPE]: '0',
         };
         if (this.pushType === threema.PushTokenType.Apns) {
             // APNS token format: "<hex-deviceid>;<endpoint>;<bundle-id>"
