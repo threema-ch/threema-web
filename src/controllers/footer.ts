@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isActionTrigger} from '../helpers';
+
 /**
  * Handle footer information.
  */
@@ -29,7 +31,10 @@ export class FooterController {
         this.config = CONFIG;
     }
 
-    public showVersionInfo(version: string): void {
+    public showVersionInfo(version: string, ev?: KeyboardEvent): void {
+        if (ev !== undefined && !isActionTrigger(ev)) {
+            return;
+        }
         this.$mdDialog.show({
             controller: [
                 '$mdDialog',

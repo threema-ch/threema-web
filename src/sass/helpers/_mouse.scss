@@ -1,9 +1,4 @@
 @mixin mouse-hand {
       cursor: pointer;
       cursor: hand;
-
-      &:focus {
-            outline: none;
-            border: 0;
-      }
 }

@@ -354,3 +354,20 @@ export function arraysAreEqual(a1: Uint8Array, a2: Uint8Array): boolean {
     }
     return true;
 }
+
+/*
+ * Return whether this key event should trigger a button.
+ * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+ */
+export function isActionTrigger(ev: KeyboardEvent): boolean {
+    if (ev.key === undefined) {
+        return false;
+    }
+    switch (ev.key) {
+        case 'Enter':
+        case ' ':
+            return true;
+        default:
+            return false;
+    }
+}
