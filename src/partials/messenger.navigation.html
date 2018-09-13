@@ -15,25 +15,25 @@
         <md-menu-content width="4">
             <md-menu-item>
                 <md-button ng-click="ctrl.closeSession()">
-                    <md-icon aria-label="Close session" class="material-icons md-24">exit_to_app</md-icon>
+                    <md-icon aria-hidden="true" class="material-icons md-24">exit_to_app</md-icon>
                     <span translate>common.SESSION_CLOSE</span>
                 </md-button>
             </md-menu-item>
             <md-menu-item ng-if="ctrl.isPersistent()">
                 <md-button ng-click="ctrl.deleteSession()">
-                    <md-icon aria-label="Delete session" class="material-icons md-24">delete</md-icon>
+                    <md-icon aria-hidden="true" class="material-icons md-24">delete</md-icon>
                     <span translate>common.SESSION_DELETE</span>
                 </md-button>
             </md-menu-item>
             <md-menu-item>
                 <md-button ng-click="ctrl.settings()">
-                    <md-icon aria-label="Settings" class="material-icons md-24">settings</md-icon>
+                    <md-icon aria-hidden="true" class="material-icons md-24">settings</md-icon>
                     <span translate>messenger.SETTINGS</span>
                 </md-button>
             </md-menu-item>
             <md-menu-item>
                 <md-button ng-click="ctrl.about()">
-                    <md-icon aria-label="About" class="material-icons md-24">info</md-icon>
+                    <md-icon aria-hidden="true" class="material-icons md-24">info</md-icon>
                     <span translate>messenger.ABOUT</span>
                 </md-button>
             </md-menu-item>
@@ -45,15 +45,15 @@
 <div id="navigation-header">
     <div class="main">
         <md-nav-bar md-no-ink md-selected-nav-item="ctrl.activeTab" nav-bar-aria-label="navigation links">
-            <md-nav-item md-nav-click="1" name="conversations">
+            <md-nav-item md-nav-click="1" name="conversations" aria-label="conversations">
                 <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.CONVERSATIONS">speaker_notes</i>
             </md-nav-item>
-            <md-nav-item md-nav-click="1" name="contacts">
+            <md-nav-item md-nav-click="1" name="contacts" aria-label="contacts">
                 <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.CONTACTS">person</i>
             </md-nav-item>
         </md-nav-bar>
         <span flex></span>
-        <md-button aria-label="Search" class="md-icon-button" ng-click="ctrl.toggleSearch()">
+        <md-button aria-label="search" class="md-icon-button" ng-click="ctrl.toggleSearch()">
             <i class="material-icons md-dark md-24" translate translate-attr-title="messenger.SEARCH">search</i>
         </md-button>
     </div>
@@ -69,21 +69,23 @@
         <li ng-repeat="conversation in ctrl.conversations() | filter:ctrl.searchConversation"
             ng-init="dndModeSimplified = ctrl.dndModeSimplified(conversation)"
             ui-sref="messenger.home.conversation({ type: conversation.type, id: conversation.id, initParams: null })"
-            class="conversation-wrapper" ng-if="ctrl.isVisible(conversation)">
+            aria-label="conversation with {{ conversation.receiver.displayName }}"
+            class="conversation-wrapper"
+            ng-if="ctrl.isVisible(conversation)">
 
             <div class="conversation"
                   ng-class="{'unread': conversation.unreadCount > 0,
                             'starred': conversation.isStarred,
                             'active': ctrl.isActive(conversation)}">
 
-                <section class="avatar-box">
+                <section class="avatar-box" role="button">
                     <eee-avatar eee-receiver="conversation.receiver"
                                 eee-resolution="'low'"></eee-avatar>
                 </section>
 
                 <section class="conversation-box">
                     <section class="receiver-box">
-                        <span class="title" ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify">
+                        <span class="title" ng-class="{'disabled': conversation.receiver.disabled === true}" ng-bind-html="conversation.receiver.displayName | escapeHtml | emojify" role="button">
                         </span>
                         <span class="notification-settings" ng-if="dndModeSimplified === 'on'">
                             <img height="16" width="16" src="img/ic_dnd_total_silence.svg" translate translate-attr-title="messenger.MUTED_NONE">

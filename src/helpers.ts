@@ -338,3 +338,20 @@ export function hasValue(val: any): boolean {
 export function sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+/**
+ * Return whether this key event should trigger a button.
+ * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+ */
+export function isActionTrigger(ev: KeyboardEvent): boolean {
+    if (ev.key === undefined) {
+        return false;
+    }
+    switch (ev.key) {
+        case 'Enter':
+        case ' ':
+            return true;
+        default:
+            return false;
+    }
+}
