@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isActionTrigger} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
 
@@ -528,7 +529,7 @@ export default [
                 }
 
                 // Emoji trigger is clicked
-                function onEmojiTrigger(ev: MouseEvent): void {
+                function onEmojiTrigger(ev: UIEvent): void {
                     ev.stopPropagation();
                     // Toggle visibility of picker
                     if (emojiKeyboard.hasClass('active')) {
@@ -622,14 +623,14 @@ export default [
                 }
 
                 // File trigger is clicked
-                function onFileTrigger(ev: MouseEvent): void {
+                function onFileTrigger(ev: UIEvent): void {
                     ev.preventDefault();
                     ev.stopPropagation();
                     const input = element[0].querySelector('.file-input') as HTMLInputElement;
                     input.click();
                 }
 
-                function onSendTrigger(ev: MouseEvent): boolean {
+                function onSendTrigger(ev: UIEvent): boolean {
                     ev.preventDefault();
                     ev.stopPropagation();
                     return sendText();
@@ -788,15 +789,30 @@ export default [
 
                 // Handle click on emoji trigger
                 emojiTrigger.on('click', onEmojiTrigger);
+                emojiTrigger.on('keypress', (ev: KeyboardEvent) => {
+                    if (isActionTrigger(ev)) {
+                        onEmojiTrigger(ev);
+                    }
+                });
 
                 // Handle click on file trigger
                 fileTrigger.on('click', onFileTrigger);
+                fileTrigger.on('keypress', (ev: KeyboardEvent) => {
+                    if (isActionTrigger(ev)) {
+                        onFileTrigger(ev);
+                    }
+                });
 
                 // Handle file uploads
                 fileInput.on('change', onFileSelected);
 
                 // Handle click on send trigger
                 sendTrigger.on('click', onSendTrigger);
+                sendTrigger.on('keypress', (ev: KeyboardEvent) => {
+                    if (isActionTrigger(ev)) {
+                        onSendTrigger(ev);
+                    }
+                });
 
                 updateView();
 
@@ -827,7 +843,7 @@ export default [
             template: `
                 <div>
                     <div>
-                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji">tag_faces</i>
+                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji" tabindex="0">tag_faces</i>
                     </div>
                     <div>
                         <div
@@ -837,11 +853,12 @@ export default [
                             translate
                             translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE"
                             translate-attr-aria-label="messenger.COMPOSE_MESSAGE"
+                            tabindex="0"
                         ></div>
                     </div>
                     <div>
-                        <i class="md-primary send-trigger trigger material-icons" role="button" aria-label="send">send</i>
-                        <i class="md-primary file-trigger trigger is-enabled material-icons" role="button" aria-label="attach file">attach_file</i>
+                        <i class="md-primary send-trigger trigger material-icons" role="button" aria-label="send" tabindex="0">send</i>
+                        <i class="md-primary file-trigger trigger is-enabled material-icons" role="button" aria-label="attach file" tabindex="0">attach_file</i>
                         <input class="file-input" type="file" style="visibility: hidden" multiple>
                     </div>
                 </div>
