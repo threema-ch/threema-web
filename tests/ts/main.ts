@@ -23,4 +23,5 @@
 import './containers';
 import './crypto_helpers';
 import './helpers';
+import './markup_parser';
 import './receiver_helpers';
