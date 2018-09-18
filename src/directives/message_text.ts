@@ -71,8 +71,8 @@ export default [
                 this.$onInit = function() {
                     // Because this.multiLine and this.linkify are bound using an `@` binding,
                     // they are either undefined or a string. Convert to boolean.
-                    const multiLine = (this.multiLine === undefined || this.multiLine === 'true');
-                    const linkifyText = (this.linkify === undefined || this.linkify === 'true');
+                    const multiLine = (this.multiLine === undefined || this.multiLine !== 'false');
+                    const linkifyText = (this.linkify === undefined || this.linkify !== 'false');
 
                     // Process text once, apply all filter functions
                     this.text = processText(getText(this.message), this.largeSingleEmoji, multiLine, linkifyText);
