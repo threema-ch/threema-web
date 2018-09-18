@@ -3,6 +3,12 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.1.0-beta.3][v2.1.0-beta.3] (2018-09-18)
+
+Changes:
+
+* [bug] Don't linkify latest message excerpt in conversation list ([#544][i544])
+
 
 ### [v2.1.0-beta.2][v2.1.0-beta.2] (2018-09-13)
 
@@ -544,6 +550,7 @@ First public release.
 [i519]: https://github.com/threema-ch/threema-web/issues/519
 [i522]: https://github.com/threema-ch/threema-web/issues/522
 [i528]: https://github.com/threema-ch/threema-web/issues/528
+[i544]: https://github.com/threema-ch/threema-web/issues/544
 [i545]: https://github.com/threema-ch/threema-web/issues/545
 [i547]: https://github.com/threema-ch/threema-web/issues/547
 [i550]: https://github.com/threema-ch/threema-web/issues/550
@@ -558,6 +565,7 @@ First public release.
 
 [v2.1.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0-beta.1
 [v2.1.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.1...v2.1.0-beta.2
+[v2.1.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.2...v2.1.0-beta.3
 [v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
