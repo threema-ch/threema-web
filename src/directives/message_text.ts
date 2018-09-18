@@ -26,7 +26,8 @@ export default [
             scope: {},
             bindToController: {
                 message: '=eeeMessage',
-                multiLine: '=?eeeMultiLine',
+                multiLine: '@?multiLine',
+                linkify: '@?linkify',
             },
             controllerAs: 'ctrl',
             controller: ['WebClientService', '$filter', function(webClientService: WebClientService, $filter: ng.IFilterService) {
@@ -59,17 +60,22 @@ export default [
                 /**
                  * Apply filters to text.
                  */
-                function processText(text: string, largeSingleEmoji: boolean, multiLine: boolean): string {
-                    return nlToBr(linkify(mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), enlargeSingleEmoji))), multiLine);
+                function processText(text: string, largeSingleEmoji: boolean, multiLine: boolean, linkifyText: boolean): string {
+                    const nonLinkified = mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), enlargeSingleEmoji));
+                    const maybeLinkified = linkifyText ? linkify(nonLinkified) : nonLinkified;
+                    return nlToBr(maybeLinkified, multiLine);
                 }
 
                 this.enlargeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
 
                 this.$onInit = function() {
-                    if (this.multiLine === undefined) {
-                        this.multiLine = true;
-                    }
-                    this.text = processText(getText(this.message), this.largeSingleEmoji, this.multiLine);
+                    // Because this.multiLine and this.linkify are bound using an `@` binding,
+                    // they are either undefined or a string. Convert to boolean.
+                    const multiLine = (this.multiLine === undefined || this.multiLine !== 'false');
+                    const linkifyText = (this.linkify === undefined || this.linkify !== 'false');
+
+                    // Process text once, apply all filter functions
+                    this.text = processText(getText(this.message), this.largeSingleEmoji, multiLine, linkifyText);
                 };
             }],
             template: `
