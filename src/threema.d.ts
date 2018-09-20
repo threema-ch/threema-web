@@ -26,12 +26,20 @@ declare namespace threema {
         high?: ArrayBuffer;
     }
 
+    interface WireMessageAcknowledgement {
+        id: string,
+        success: boolean,
+        error?: string,
+    }
+
     /**
      * Messages that are sent through the secure data channel as encrypted msgpack bytes.
      */
     interface WireMessage {
         type: string;
         subType: string;
+        id?: string;
+        ack?: WireMessageAcknowledgement;
         args?: any;
         data?: any;
     }

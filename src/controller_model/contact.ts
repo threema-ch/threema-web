@@ -141,7 +141,9 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
     }

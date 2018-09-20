@@ -595,7 +595,7 @@ class ConversationController {
                                 msg.caption = caption;
                             }
                             msg.sendAsFile = sendAsFile;
-                            this.webClientService.sendMessage(this.$stateParams, type, true, msg)
+                            this.webClientService.sendMessage(this.$stateParams, type, msg)
                                 .then(() => {
                                     nextCallback(index);
                                 })
@@ -618,7 +618,7 @@ class ConversationController {
                         // TODO: This should probably be moved into the
                         //       WebClientService as a specific method for the
                         //       type.
-                        this.webClientService.sendMessage(this.$stateParams, type, true, msg)
+                        this.webClientService.sendMessage(this.$stateParams, type, msg)
                             .then(() => {
                                 nextCallback(index);
                             })
@@ -1225,8 +1225,9 @@ class ReceiverDetailController {
                     this.hasSystemEmails = contactReceiver.systemContact.emails.length > 0;
                     this.hasSystemPhones = contactReceiver.systemContact.phoneNumbers.length > 0;
                 })
-                .catch(() => {
-                    // do nothing
+                .catch((error) => {
+                    // TODO: Redirect or show an alert?
+                    $log.error(this.logTag, `Contact detail request has been rejected: ${error}`);
                 });
 
             this.isWorkReceiver = contactReceiver.identityType === threema.IdentityType.Work;

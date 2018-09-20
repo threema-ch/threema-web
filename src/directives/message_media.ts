@@ -175,7 +175,12 @@ export default [
                                             .then((img) => $timeout(() => {
                                                 setThumbnail(img);
                                                 this.thumbnailDownloading = false;
-                                            }));
+                                            }))
+                                            .catch((error) => {
+                                                // TODO: Handle this properly / show an error message
+                                                const message = `Thumbnail request has been rejected: ${error}`;
+                                                this.$log.error(this.logTag, message);
+                                            });
                                     }, 1000);
                                 }
                             }

@@ -278,12 +278,12 @@ export class StatusController {
                 };
             }
 
-            // ... if there is at least one pending request.
-            const pendingRequests = this.webClientService.pendingRequests;
-            if (pendingRequests > 0) {
+            // ... if there is at least one unacknowledged wire message.
+            const pendingWireMessages = this.webClientService.unacknowledgedWireMessages;
+            if (pendingWireMessages > 0) {
                 return {
                     send: true,
-                    reason: `${pendingRequests} pending requests`,
+                    reason: `${pendingWireMessages} unacknowledged wire messages`,
                 };
             }
 
