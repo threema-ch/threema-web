@@ -3726,15 +3726,6 @@ export class WebClientService {
         callback();
     }
 
-    private currentController: string;
-    public setControllerName(name: string): void {
-        this.currentController = name;
-    }
-
-    public getControllerName(): string {
-        return this.currentController;
-    }
-
     /**
      * Update the unread count in the window title.
      */
