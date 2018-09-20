@@ -3219,7 +3219,6 @@ export class WebClientService {
     private _sendPromiseMessage(
         message: threema.WireMessage,
         retransmit: boolean,
-        timeout: number = null,
     ): Promise<any> {
         // Create arguments on wired message
         if (message.args === undefined || message.args === null) {
@@ -3236,14 +3235,6 @@ export class WebClientService {
         const promise = new Future();
         this.requestPromises.set(promiseId, promise);
 
-        // Schedule rejection (if timeout set)
-        if (timeout !== null && timeout > 0) {
-            this.$timeout(() => {
-                promise.reject('timeout');
-                this.requestPromises.delete(promiseId);
-            }, timeout);
-        }
-
         // Send request & return promise
         this.send(message, retransmit);
         return promise;
@@ -3253,24 +3244,25 @@ export class WebClientService {
      * Send a request and return a promise.
      *
      * The promise will be resolved if a response arrives with the same temporary ID.
-     *
-     * @param timeout Optional request timeout in ms
      */
-    private _sendRequestPromise(type, retransmit: boolean, args = null, timeout: number = null): Promise<any> {
+    private _sendRequestPromise(
+        type: string,
+        retransmit: boolean,
+        args = null,
+    ): Promise<any> {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_REQUEST,
             subType: type,
             args: args,
         };
-        return this._sendPromiseMessage(message, retransmit, timeout);
+        return this._sendPromiseMessage(message, retransmit);
     }
 
     private _sendCreatePromise(
-        type,
+        type: string,
         retransmit: boolean,
         args = null,
         data: any = null,
-        timeout: number = null,
     ): Promise<any> {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_CREATE,
@@ -3278,15 +3270,14 @@ export class WebClientService {
             args: args,
             data: data,
         };
-        return this._sendPromiseMessage(message, retransmit, timeout);
+        return this._sendPromiseMessage(message, retransmit);
     }
 
     private _sendUpdatePromise(
-        type,
+        type: string,
         retransmit: boolean,
         args = null,
         data: any = null,
-        timeout: number = null,
     ): Promise<any> {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_UPDATE,
@@ -3294,36 +3285,14 @@ export class WebClientService {
             data: data,
             args: args,
         };
-        return this._sendPromiseMessage(message, retransmit, timeout);
-    }
-
-    private _sendCreate(type, retransmit: boolean, data, args = null): void {
-        const message: threema.WireMessage = {
-            type: WebClientService.TYPE_CREATE,
-            subType: type,
-            data: data,
-        };
-        if (args) {
-            message.args = args;
-        }
-        this.send(message, retransmit);
-    }
-
-    private _sendDelete(type, retransmit: boolean, args, data = null): void {
-        const message: threema.WireMessage = {
-            type: WebClientService.TYPE_DELETE,
-            subType: type,
-            data: data,
-            args: args,
-        };
-        this.send(message, retransmit);
+        return this._sendPromiseMessage(message, retransmit);
     }
 
     private _sendDeletePromise(
-        type, retransmit: boolean,
-        args,
+        type: string,
+        retransmit: boolean,
+        args = null,
         data: any = null,
-        timeout: number = null,
     ): Promise<any> {
         const message: threema.WireMessage = {
             type: WebClientService.TYPE_DELETE,
@@ -3331,7 +3300,7 @@ export class WebClientService {
             data: data,
             args: args,
         };
-        return this._sendPromiseMessage(message, retransmit, timeout);
+        return this._sendPromiseMessage(message, retransmit);
     }
 
     private _receiveRequest(type, message): void {
