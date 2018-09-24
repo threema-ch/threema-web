@@ -1485,8 +1485,8 @@ export class WebClientService {
         type: threema.MessageContentType,
         retransmit: boolean,
         message: threema.MessageData,
-    ): Promise<Promise<any>> {
-        return new Promise<any> (
+    ): Promise<void> {
+        return new Promise<void> (
             (resolve, reject) => {
                 // Try to load receiver object
                 const receiverObject = this.receivers.getData(receiver);
