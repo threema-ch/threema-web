@@ -3459,20 +3459,6 @@ export class WebClientService {
         this._receivePromise(message, receiveResult);
     }
 
-    private _receiveDelete(type, message): void {
-        let receiveResult;
-        switch (type) {
-            case WebClientService.SUB_TYPE_CONTACT_DETAIL:
-                receiveResult = this._receiveUpdateReceiver(message);
-                break;
-            default:
-                this.$log.warn('Ignored delete with type:', type);
-                return;
-        }
-
-        this._receivePromise(message, receiveResult);
-    }
-
     /**
      * Encode an object using the msgpack format.
      */
