@@ -507,21 +507,6 @@ declare namespace threema {
         Safari = 'safari',
     }
 
-    interface BrowserInfo {
-        chrome: boolean;
-        chromeIos: boolean;
-        firefox: boolean;
-        firefoxIos: boolean;
-        ie: boolean;
-        edge: boolean;
-        opera: boolean;
-        safari: boolean;
-        name?: BrowserName;
-        mobile?: boolean;
-        version?: number;
-        textInfo?: string;
-    }
-
     interface PromiseRequestResult<T> {
         success: boolean;
         error?: string;
