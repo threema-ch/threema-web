@@ -23,7 +23,7 @@ import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import * as msgpack from 'msgpack-lite';
 import {
-    arraysAreEqual, hasFeature, hasValue, hexToU8a, msgpackVisualizer, randomString, stringToUtf8a,
+    arraysAreEqual, hasFeature, hasValue, hexToU8a, msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
 } from '../helpers';
 import {isContactReceiver, isDistributionListReceiver, isGroupReceiver, isValidReceiverType} from '../typeguards';
 import {BatteryStatusService} from './battery';
@@ -706,6 +706,10 @@ export class WebClientService {
             return false;
         }
         if (!arraysAreEqual(this.currentConnectionId, remoteCurrentConnectionId)) {
+            if (this.config.MSG_DEBUGGING) {
+                this.$log.debug(`Local:  ${u8aToHex(this.currentConnectionId)}`);
+                this.$log.debug(`Remote: ${u8aToHex(remoteCurrentConnectionId)}`);
+            }
             throw new Error('Derived connection IDs do not match!');
         }
 
@@ -722,6 +726,10 @@ export class WebClientService {
         if (!arraysAreEqual(this.previousConnectionId, remotePreviousConnectionId)) {
             // Both sides should detect that -> recoverable
             this.$log.info('Cannot resume session: IDs of previous connection do not match');
+            if (this.config.MSG_DEBUGGING) {
+                this.$log.debug(`Local:  ${u8aToHex(this.previousConnectionId)}`);
+                this.$log.debug(`Remote: ${u8aToHex(remotePreviousConnectionId)}`);
+            }
             return false;
         }
 
@@ -2414,11 +2422,17 @@ export class WebClientService {
             future.reject(message.ack.error);
         }
 
+        // Validate data
         const data = message.data as threema.Conversation[];
         if (data === undefined) {
             this.$log.warn('Invalid conversation response, data missing');
-            future.reject('invalidResponse');
-        } else {
+            return future.reject('invalidResponse');
+        }
+
+        // Run delayed...
+        this.runAfterInitializationSteps([
+            InitializationStep.Receivers,
+        ], () => {
             // If a avatar was set on a conversation, convert and copy to the receiver
             for (const conversation of data) {
                 if (conversation.avatar !== undefined && conversation.avatar !== null) {
@@ -2435,12 +2449,13 @@ export class WebClientService {
                     delete conversation.avatar;
                 }
             }
-            this.conversations.set(data);
-            future.resolve();
-        }
 
-        this.updateUnreadCount();
-        this.registerInitializationStep(InitializationStep.Conversations);
+            // Store conversations & done
+            this.conversations.set(data);
+            this.updateUnreadCount();
+            this.registerInitializationStep(InitializationStep.Conversations);
+            future.resolve();
+        });
     }
 
     private _receiveResponseMessages(message: threema.WireMessage): void {
@@ -3493,7 +3508,9 @@ export class WebClientService {
 
         // Handle error (reject future and throw)
         if (error !== undefined) {
-            future.reject('invalidResponse');
+            if (future !== undefined) {
+                future.reject('invalidResponse');
+            }
             throw error;
         }
 
@@ -3521,11 +3538,7 @@ export class WebClientService {
                 this._receiveResponseReceivers(message);
                 break;
             case WebClientService.SUB_TYPE_CONVERSATIONS:
-                this.runAfterInitializationSteps([
-                    InitializationStep.Receivers,
-                ], () => {
-                    this._receiveResponseConversations(message);
-                });
+                this._receiveResponseConversations(message);
                 break;
             case WebClientService.SUB_TYPE_MESSAGES:
                 this._receiveResponseMessages(message);
@@ -3883,7 +3896,7 @@ export class WebClientService {
             // Yes, I really know what I'm doing, thanks eslint...
         }
         if (future !== undefined) {
-            this.$log.warn(`Unhandled message acknowledgement for type ${message.type}: ${message.ack}`);
+            this.$log.warn(`Unhandled message acknowledgement for type ${message.type}:`, message.ack);
             future.reject('unhandled');
         }
     }
