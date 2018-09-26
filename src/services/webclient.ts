@@ -464,6 +464,7 @@ export class WebClientService {
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()
             .connectTo(this.saltyRtcHost, this.config.SALTYRTC_PORT)
+            .withLoggingLevel('warn')
             .withServerKey(this.config.SALTYRTC_SERVER_KEY)
             .withKeyStore(keyStore)
             .usingTasks(tasks)
@@ -861,6 +862,7 @@ export class WebClientService {
         }
 
         // If we could not resume for whatever reason
+        const requiredInitializationSteps = [];
         if (!resumeSession || !sessionWasResumed) {
             // Note: We cannot reset the message sequence number here any more since
             //       it has already been used for the connectionInfo message.
@@ -872,28 +874,30 @@ export class WebClientService {
             this.clearCache();
             this.wireMessageFutures.clear();
 
-            // Set required initialisation steps if we have finished the
-            // previous connection
-            if (this.startupPromise !== null) {
-                const requiredInitializationSteps = [
-                    InitializationStep.ClientInfo,
-                    InitializationStep.Conversations,
-                    InitializationStep.Receivers,
-                    InitializationStep.Profile,
-                ];
-                this.runAfterInitializationSteps(requiredInitializationSteps, () => {
-                    this.stateService.updateConnectionBuildupState('done');
-                    this.startupPromise.resolve();
-                    this.startupPromise = null;
-                    this.startupDone = true;
-                    this._resetInitializationSteps();
-                });
-            }
+            // Set required initialisation steps
+            requiredInitializationSteps.push(
+                InitializationStep.ClientInfo,
+                InitializationStep.Conversations,
+                InitializationStep.Receivers,
+                InitializationStep.Profile,
+            );
 
             // Request initial data
             this._requestInitialData();
         } else {
             this.$log.debug(this.logTag, 'Session resumed');
+        }
+
+        // Schedule required initialisation steps if we have finished the
+        // previous connection
+        if (this.startupPromise !== null) {
+            this.runAfterInitializationSteps(requiredInitializationSteps, () => {
+                this.stateService.updateConnectionBuildupState('done');
+                this.startupPromise.resolve();
+                this.startupPromise = null;
+                this.startupDone = true;
+                this._resetInitializationSteps();
+            });
         }
 
         // In case...
@@ -1112,7 +1116,6 @@ export class WebClientService {
         if (this.ackTimer !== null) {
             self.clearTimeout(this.ackTimer);
             this.ackTimer = null;
-            this.$log.debug(this.logTag, 'Timer stopped');
         }
 
         // Reset states
@@ -1175,7 +1178,7 @@ export class WebClientService {
         if (this.salty !== null) {
             this.$log.debug(this.logTag, 'Closing signaling');
             this.salty.off();
-            this.salty.disconnect();
+            this.salty.disconnect(true);
         }
 
         // Close peer connection
@@ -1259,7 +1262,7 @@ export class WebClientService {
                 //            it from being called more than once (due to nested
                 //            calls to .registerInitializationStep).
                 this.pendingInitializationStepRoutines.delete(routine);
-                routine.callback();
+                routine.callback.apply(this);
             }
         }
     }
@@ -1304,7 +1307,8 @@ export class WebClientService {
 
         // Clear pending ack timer (if any)
         if (this.ackTimer !== null) {
-            clearTimeout(this.ackTimer);
+            self.clearTimeout(this.ackTimer);
+            this.ackTimer = null;
         }
     }
 
@@ -2202,9 +2206,6 @@ export class WebClientService {
         }
         this.$log.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
             `${size} -> ${this.currentChunkCache.byteLength}`);
-        if (this.config.MSG_DEBUGGING) {
-            this.$log.debug(`Chunks that require acknowledgement: ${this.immediateChunksPending}`);
-        }
 
         // Clear pending ack requests
         if (this.pendingAckRequest !== null && sequenceNumber >= this.pendingAckRequest) {
@@ -3743,7 +3744,7 @@ export class WebClientService {
 
         // Add to chunk cache
         if (cache) {
-            if (this.config.MSG_DEBUGGING) {
+            if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
                 this.$log.debug(`[Chunk] Caching chunk (retransmit/push=${retransmit}:`, chunk);
             }
             try {
@@ -3757,7 +3758,7 @@ export class WebClientService {
 
         // Send if ready
         if (!shouldQueue) {
-            if (this.config.MSG_DEBUGGING) {
+            if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
                 this.$log.debug(`[Chunk] Sending chunk (retransmit/push=${retransmit}:`, chunk);
             }
             this.relayedDataTask.sendMessage(chunk.buffer);
@@ -3768,7 +3769,7 @@ export class WebClientService {
      * Handle an incoming chunk from the underlying transport.
      */
     private receiveChunk(chunk: Uint8Array): void {
-        if (this.config.MSG_DEBUGGING) {
+        if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
             this.$log.debug('[Chunk] Received chunk:', chunk);
         }
 
@@ -3913,8 +3914,7 @@ export class WebClientService {
                 return;
             }
         }
-
-        callback();
+        callback.apply(this);
     }
 
     /**
