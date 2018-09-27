@@ -3,6 +3,12 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+### [v2.1.0-beta.4][v2.1.0-beta.4] (2018-09-27)
+
+Changes:
+
+* [bug] Connectivity improvements for iOS ([#597][i597])
+
 ### [v2.1.0-beta.3][v2.1.0-beta.3] (2018-09-18)
 
 Changes:
@@ -562,10 +568,12 @@ First public release.
 [i569]: https://github.com/threema-ch/threema-web/issues/569
 [i572]: https://github.com/threema-ch/threema-web/issues/572
 [i586]: https://github.com/threema-ch/threema-web/issues/586
+[i597]: https://github.com/threema-ch/threema-web/pull/597
 
 [v2.1.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0-beta.1
 [v2.1.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.1...v2.1.0-beta.2
 [v2.1.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.2...v2.1.0-beta.3
+[v2.1.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.3...v2.1.0-beta.4
 [v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
