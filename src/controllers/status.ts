@@ -125,6 +125,9 @@ export class StatusController {
                     }
                     this.reconnectAndroid();
                 }
+                if (this.stateService.wasConnected && isRelayedData) {
+                    this.reconnectIos();
+                }
                 break;
             default:
                 this.$log.error(this.logTag, 'Invalid state change: From', oldValue, 'to', newValue);

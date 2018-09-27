@@ -197,6 +197,7 @@ export class WebClientService {
     private currentIncomingChunkSequenceNumber: SequenceNumber;
     private previousChunkCache: ChunkCache = null;
     private currentChunkCache: ChunkCache = null;
+    private handshakeCompleted: boolean = false;
     private ackTimer: number | null = null;
     private pendingAckRequest: number | null = null;
 
@@ -390,31 +391,36 @@ export class WebClientService {
         resume: boolean,
     }): void {
         let keyStore = flags.keyStore;
-        let resume = flags.resume;
+        let resumeSession = flags.resume;
         this.$log.info(`Initializing (keyStore=${keyStore !== undefined ? 'yes' : 'no'}, peerTrustedKey=` +
-            `${flags.peerTrustedKey !== undefined ? 'yes' : 'no'}, resume=${resume})`);
+            `${flags.peerTrustedKey !== undefined ? 'yes' : 'no'}, resume=${resumeSession})`);
 
         // Reset fields, blob cache & pending requests in case the session
         // should explicitly not be resumed
-        if (!resume) {
+        if (!resumeSession) {
             this.clearCache();
             this.wireMessageFutures.clear();
         }
 
         // Only move the previous connection's instances if the previous
         // connection was successful (and if there was one at all).
-        if (resume &&
-            this.outgoingMessageSequenceNumber && this.unchunker &&
-            this.previousChunkCache === this.currentChunkCache) {
-            // Move instances that we need to re-establish a previous session
-            this.previousConnectionId = this.currentConnectionId;
-            this.previousIncomingChunkSequenceNumber = this.currentIncomingChunkSequenceNumber;
-            this.previousChunkCache = this.currentChunkCache;
+        if (resumeSession) {
+            if (this.previousConnectionId) {
+                this.$log.debug(`Trying to resume previous session (id=${u8aToHex(this.previousConnectionId)}, ` +
+                    `sn-out=${this.previousChunkCache.sequenceNumber.get()})`);
+            } else {
+                resumeSession = false;
+                this.$log.debug('Wanted to resume previous session but none exists');
+            }
         } else {
             // Discard session
             this.discardSession({ resetMessageSequenceNumber: true });
-            resume = false;
+            resumeSession = false;
+            this.$log.debug('Discarded previous session');
         }
+
+        // Reset handshake completed flag
+        this.handshakeCompleted = false;
 
         // Initialise connection caches
         this.currentConnectionId = null;
@@ -566,7 +572,7 @@ export class WebClientService {
 
             // Otherwise, no handover is necessary.
             } else {
-                this.onHandover(resume);
+                this.onHandover(resumeSession);
                 return;
             }
         });
@@ -583,7 +589,7 @@ export class WebClientService {
             // Ignore handovers requested by non-WebRTC tasks
             if (this.chosenTask === threema.ChosenTask.WebRTC) {
                 this.$log.debug(this.logTag, 'Handover done');
-                this.onHandover(resume);
+                this.onHandover(resumeSession);
             }
         });
 
@@ -707,10 +713,8 @@ export class WebClientService {
             return false;
         }
         if (!arraysAreEqual(this.currentConnectionId, remoteCurrentConnectionId)) {
-            if (this.config.MSG_DEBUGGING) {
-                this.$log.debug(`Local:  ${u8aToHex(this.currentConnectionId)}`);
-                this.$log.debug(`Remote: ${u8aToHex(remoteCurrentConnectionId)}`);
-            }
+            this.$log.info(`Cannot resume session: IDs of previous connection do not match (local=`
+                + `${u8aToHex(this.currentConnectionId)}, remote=${u8aToHex(remoteCurrentConnectionId)}`);
             throw new Error('Derived connection IDs do not match!');
         }
 
@@ -726,11 +730,8 @@ export class WebClientService {
         const remotePreviousConnectionId = new Uint8Array(remoteInfo.resume.id);
         if (!arraysAreEqual(this.previousConnectionId, remotePreviousConnectionId)) {
             // Both sides should detect that -> recoverable
-            this.$log.info('Cannot resume session: IDs of previous connection do not match');
-            if (this.config.MSG_DEBUGGING) {
-                this.$log.debug(`Local:  ${u8aToHex(this.previousConnectionId)}`);
-                this.$log.debug(`Remote: ${u8aToHex(remotePreviousConnectionId)}`);
-            }
+            this.$log.info(`Cannot resume session: IDs of previous connection do not match (local=`
+                + `${u8aToHex(this.previousConnectionId)}, remote=${u8aToHex(remotePreviousConnectionId)}`);
             return false;
         }
 
@@ -814,10 +815,6 @@ export class WebClientService {
      */
     private async onConnectionEstablished(resumeSession: boolean) {
         // Send connection info
-        resumeSession = resumeSession &&
-            this.previousConnectionId !== null &&
-            this.previousIncomingChunkSequenceNumber !== null &&
-            this.previousChunkCache !== null;
         if (resumeSession) {
             const incomingSequenceNumber = this.previousIncomingChunkSequenceNumber.get();
             this.$log.debug(this.logTag, `Sending connection info (resume=yes, sn-in=${incomingSequenceNumber})`);
@@ -860,6 +857,9 @@ export class WebClientService {
             this.failSession();
             return;
         }
+
+        // Handshake complete!
+        this.handshakeCompleted = true;
 
         // If we could not resume for whatever reason
         const requiredInitializationSteps = [];
@@ -991,6 +991,7 @@ export class WebClientService {
     private onPeerDisconnected(peerId: number) {
         switch (this.chosenTask) {
             case threema.ChosenTask.RelayedData:
+                // TODO: Fix "Ignoring peer-disconnected event (state is new)"
                 if (this.stateService.taskConnectionState === threema.TaskConnectionState.Connected) {
                     this.stateService.updateTaskConnectionState(threema.TaskConnectionState.Reconnecting);
                 } else {
@@ -1133,12 +1134,8 @@ export class WebClientService {
         if (close) {
             // Clear connection ids & caches
             this.previousConnectionId = null;
-            this.currentConnectionId = null;
             this.previousIncomingChunkSequenceNumber = null;
-            this.currentIncomingChunkSequenceNumber = new SequenceNumber(
-                0, WebClientService.SEQUENCE_NUMBER_MIN, WebClientService.SEQUENCE_NUMBER_MAX);
             this.previousChunkCache = null;
-            this.currentChunkCache = null;
 
             // Reset general client information
             this.clientInfo = null;
@@ -1155,9 +1152,15 @@ export class WebClientService {
             // Closed!
             this.$log.debug(this.logTag, 'Session closed (cannot be resumed)');
         } else {
-            this.previousChunkCache = this.currentChunkCache;
-            this.$log.debug(this.logTag, 'Session remains open (can be resumed at sn-out=' +
-                `${this.previousChunkCache.sequenceNumber.get()})`);
+            // Only reuse a previous chunk cache if the handshake had been
+            // completed
+            if (this.handshakeCompleted) {
+                // Move instances that we need to re-establish a previous session
+                this.previousConnectionId = this.currentConnectionId;
+                this.previousIncomingChunkSequenceNumber = this.currentIncomingChunkSequenceNumber;
+                this.previousChunkCache = this.currentChunkCache;
+            }
+            this.$log.debug(this.logTag, 'Session remains open');
         }
 
         // Close data channel
@@ -1275,7 +1278,6 @@ export class WebClientService {
      * Send a connection info update.
      */
     private _sendConnectionInfo(connectionId: ArrayBuffer, resumeId?: ArrayBuffer, sequenceNumber?: number): void {
-        const args = undefined;
         const data = {id: connectionId};
         if (resumeId !== undefined && sequenceNumber !== undefined) {
             (data as any).resume = {
@@ -1284,7 +1286,7 @@ export class WebClientService {
             };
         }
         // noinspection JSIgnoredPromiseFromCall
-        this.sendUpdateWireMessage(WebClientService.SUB_TYPE_CONNECTION_INFO, false, args, data);
+        this.sendUpdateWireMessage(WebClientService.SUB_TYPE_CONNECTION_INFO, false, undefined, data);
     }
 
     /**
@@ -1757,12 +1759,11 @@ export class WebClientService {
      * Add a contact receiver.
      */
     public addContact(threemaId: string): Promise<threema.ContactReceiver> {
-        const args = null;
         const data = {
             [WebClientService.ARGUMENT_IDENTITY]: threemaId,
         };
         const subType = WebClientService.SUB_TYPE_CONTACT;
-        return this.sendCreateWireMessage(subType, true, args, data);
+        return this.sendCreateWireMessage(subType, true, undefined, data);
     }
 
     /**
@@ -1820,7 +1821,6 @@ export class WebClientService {
         name: string = null,
         avatar?: ArrayBuffer,
     ): Promise<threema.GroupReceiver> {
-        const args = null;
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
@@ -1831,7 +1831,7 @@ export class WebClientService {
         }
 
         const subType = WebClientService.SUB_TYPE_GROUP;
-        return this.sendCreateWireMessage(subType, true, args, data);
+        return this.sendCreateWireMessage(subType, true, undefined, data);
     }
 
     /**
@@ -1919,13 +1919,12 @@ export class WebClientService {
         members: string[],
         name: string = null,
     ): Promise<threema.DistributionListReceiver> {
-        const args = null;
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
         };
         const subType = WebClientService.SUB_TYPE_DISTRIBUTION_LIST;
-        return this.sendCreateWireMessage(subType, true, args, data);
+        return this.sendCreateWireMessage(subType, true, undefined, data);
     }
 
     public modifyDistributionList(
@@ -3497,14 +3496,15 @@ export class WebClientService {
 
         // Get associated future
         const future = this.wireMessageFutures.get(id);
-        if (future === undefined && error === undefined) {
+        if (future !== undefined) {
+            // Remove the future from the map
+            this.wireMessageFutures.delete(id);
+            if (this.config.MSG_DEBUGGING) {
+                this.$log.debug(this.logTag, `Removed wire message future: ${id} -> ` +
+                    `${message.type}/${message.subType}`);
+            }
+        } else if (error === undefined) {
             error = new Error(`Wire message future not found for id: ${id}`);
-        }
-
-        // Remove the future from the map
-        this.wireMessageFutures.delete(id);
-        if (this.config.MSG_DEBUGGING) {
-            this.$log.debug(this.logTag, `Removed wire message future: ${id} -> ${message.type}/${message.subType}`);
         }
 
         // Handle error (reject future and throw)
