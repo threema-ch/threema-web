@@ -140,13 +140,16 @@ export class MessageService {
     }
 
     /**
-     * Create a message object with a temporaryId
+     * Create a message object with a temporary id
      */
-    public createTemporary(receiver: threema.Receiver, msgType: string,
-                           messageData: threema.MessageData): threema.Message {
-        const now = new Date();
+    public createTemporary(
+        temporaryId: string,
+        receiver: threema.Receiver,
+        msgType: string,
+        messageData: threema.MessageData,
+    ): threema.Message {
         const message = {
-            temporaryId: receiver.type + receiver.id + Math.random(),
+            temporaryId: temporaryId,
             type: msgType,
             isOutbox: true,
             state: 'pending',
@@ -165,6 +168,7 @@ export class MessageService {
         }
 
         // Add delay for timeout checking
+        // TODO: This should be removed. It either works or it doesn't. There's nothing in between.
         this.$timeout(() => {
             // Set the state to timeout if it is still pending.
             // Note: If sending the message worked, by now the message object

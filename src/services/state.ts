@@ -228,7 +228,7 @@ export class StateService {
     public readyToSubmit(chosenTask: ChosenTask): boolean {
         switch (chosenTask) {
             case ChosenTask.RelayedData:
-                return this.state === GlobalConnectionState.Ok || this.state === GlobalConnectionState.Warning;
+                return true;
             case ChosenTask.WebRTC:
             default:
                 return this.state === GlobalConnectionState.Ok;

@@ -159,7 +159,8 @@ export default [
                                 });
                             })
                             .catch((error) => {
-                                $log.error(this.logTag, 'Error downloading blob:', error);
+                                // TODO: Handle this properly / show an error message
+                                $log.error(this.logTag, `Error downloading blob: ${error}`);
                                 this.downloading = false;
                             });
                     };

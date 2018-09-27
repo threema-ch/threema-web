@@ -153,7 +153,9 @@ export default [
                                         $rootScope.$apply(() => {
                                             this.isLoading = false;
                                         });
-                                    }).catch(() => {
+                                    }).catch((error) => {
+                                        // TODO: Handle this properly / show an error message
+                                        $log.error(this.logTag, `Avatar request has been rejected: ${error}`);
                                         $rootScope.$apply(() => {
                                             this.isLoading = false;
                                         });

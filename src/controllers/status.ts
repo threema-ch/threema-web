@@ -125,6 +125,9 @@ export class StatusController {
                     }
                     this.reconnectAndroid();
                 }
+                if (this.stateService.wasConnected && isRelayedData) {
+                    this.reconnectIos();
+                }
                 break;
             default:
                 this.$log.error(this.logTag, 'Invalid state change: From', oldValue, 'to', newValue);
@@ -278,12 +281,12 @@ export class StatusController {
                 };
             }
 
-            // ... if there is at least one pending request.
-            const pendingRequests = this.webClientService.pendingRequests;
-            if (pendingRequests > 0) {
+            // ... if there is at least one unacknowledged wire message.
+            const pendingWireMessages = this.webClientService.unacknowledgedWireMessages;
+            if (pendingWireMessages > 0) {
                 return {
                     send: true,
-                    reason: `${pendingRequests} pending requests`,
+                    reason: `${pendingWireMessages} unacknowledged wire messages`,
                 };
             }
 
