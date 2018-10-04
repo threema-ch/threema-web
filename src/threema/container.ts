@@ -331,6 +331,10 @@ export class Conversations implements threema.Container.Conversations {
                 if (returnOld) {
                     previousConversation = copyShallow(this.conversations[i]);
                 }
+
+                // Explicitly set defaults, to be able to override old values
+                setDefault(conversation, 'isStarred', false);
+
                 // Copy properties from new conversation to old conversation
                 Object.assign(this.conversations[i], conversation);
 

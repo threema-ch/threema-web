@@ -23,7 +23,8 @@ import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import * as msgpack from 'msgpack-lite';
 import {
-    arraysAreEqual, hasFeature, hasValue, hexToU8a, msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
+    arraysAreEqual, copyDeep, hasFeature, hasValue, hexToU8a,
+    msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
 } from '../helpers';
 import {isContactReceiver, isDistributionListReceiver, isGroupReceiver, isValidReceiverType} from '../typeguards';
 import {BatteryStatusService} from './battery';
@@ -1815,6 +1816,33 @@ export class WebClientService {
         }
 
         return promise;
+    }
+
+    /*
+     * Modify a conversation.
+     */
+    public modifyConversation(conversation: threema.Conversation, isPinned?: boolean): Promise<null> {
+        const DATA_STARRED = 'isStarred';
+
+        // Prepare payload data
+        const args = {
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: conversation.type,
+            [WebClientService.ARGUMENT_RECEIVER_ID]: conversation.id,
+        };
+        const data = {};
+        if (hasValue(isPinned)) {
+            data[DATA_STARRED] = isPinned;
+        }
+
+        // If no changes happened, resolve the promise immediately.
+        if (Object.keys(data).length === 0) {
+            this.$log.warn(this.logTag, 'Trying to modify conversation without any changes');
+            return Promise.resolve(null);
+        }
+
+        // Send update
+        const subType = WebClientService.SUB_TYPE_CONVERSATION;
+        return this.sendUpdateWireMessage(subType, true, args, data);
     }
 
     /**

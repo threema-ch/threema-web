@@ -6,6 +6,8 @@
 
     <div id="conversation-header" class="detail-header">
         <ng-include src="'partials/messenger.backbutton.html'"></ng-include>
+
+        <!-- Conversation details -->
         <div class="header-avatar" ng-click="ctrl.showReceiver()">
             <eee-avatar eee-receiver="ctrl.receiver"
                         eee-resolution="'low'"></eee-avatar>
@@ -22,7 +24,28 @@
                 <span ng-bind-html="ctrl.receiver.members | idsToNames | escapeHtml | emojify"></span>
             </div>
         </div>
+
+        <!-- Menu -->
+        <div class="header-buttons">
+            <md-button
+                class="md-icon-button"
+                aria-label="Conversation is pinned"
+                translate-attr="{'aria-label': 'messenger.PINNED_CONVERSATION', 'title': 'messenger.PINNED_CONVERSATION'}"
+                ng-if="ctrl.conversation.isStarred"
+                ng-click="ctrl.unpinConversation()">
+                <md-icon><img src="img/ic_pin.svg"></md-icon>
+            </md-button>
+            <md-button
+                class="md-icon-button"
+                aria-label="Conversation is not pinned"
+                translate-attr="{'aria-label': 'messenger.UNPINNED_CONVERSATION', 'title': 'messenger.UNPINNED_CONVERSATION'}"
+                ng-if="!ctrl.conversation.isStarred"
+                ng-click="ctrl.pinConversation()">
+                <md-icon><img src="img/ic_unpin.svg"></md-icon>
+            </md-button>
+        </div>
     </div>
+
     <div id="conversation-is-private" ng-if="ctrl.locked">
         <md-card>
             <md-toolbar class="md-warn">
