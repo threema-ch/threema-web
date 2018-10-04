@@ -1749,7 +1749,6 @@ export class WebClientService {
     }
 
     public sendKeyPersisted(): void {
-        // TODO: This message is not defined in ARP. Remove?
         const subType = WebClientService.SUB_TYPE_KEY_PERSISTED;
         this.sendRequestWireMessage(subType, !this.requiresTemporaryIdBackwardsCompatibility)
             .catch(this.logOnReject(WebClientService.TYPE_REQUEST, subType));
