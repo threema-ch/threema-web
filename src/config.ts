@@ -20,6 +20,7 @@ export default {
     SALTYRTC_HOST_SUFFIX: '.threema.ch',
     SALTYRTC_PORT: 443,
     SALTYRTC_SERVER_KEY: 'b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171',
+    SALTYRTC_LOG_LEVEL: 'warn',
 
     // ICE
     ICE_SERVERS: [{

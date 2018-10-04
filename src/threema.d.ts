@@ -628,6 +628,7 @@ declare namespace threema {
         SALTYRTC_HOST: string | null;
         SALTYRTC_HOST_PREFIX: string | null;
         SALTYRTC_HOST_SUFFIX: string | null;
+        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
         ICE_SERVERS: RTCIceServer[];
         PUSH_URL: string;
         DEBUG: boolean;

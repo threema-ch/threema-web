@@ -438,7 +438,7 @@ export class WebClientService {
 
         // Create WebRTC task instance
         const maxPacketSize = this.browserService.getBrowser().isFirefox(false) ? 16384 : 65536;
-        this.webrtcTask = new saltyrtcTaskWebrtc.WebRTCTask(true, maxPacketSize);
+        this.webrtcTask = new saltyrtcTaskWebrtc.WebRTCTask(true, maxPacketSize, this.config.SALTYRTC_LOG_LEVEL);
 
         // Create Relayed Data task instance
         this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.DEBUG);
@@ -470,7 +470,7 @@ export class WebClientService {
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()
             .connectTo(this.saltyRtcHost, this.config.SALTYRTC_PORT)
-            .withLoggingLevel('warn')
+            .withLoggingLevel(this.config.SALTYRTC_LOG_LEVEL)
             .withServerKey(this.config.SALTYRTC_SERVER_KEY)
             .withKeyStore(keyStore)
             .usingTasks(tasks)
