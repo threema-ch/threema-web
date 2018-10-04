@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {bufferToUrl, escapeRegExp, filter, logAdapter} from './helpers';
+import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
@@ -394,8 +394,12 @@ angular.module('3ema.filters', [])
     return(ids: string[]) => {
         const names: string[] = [];
         for (const id of ids) {
-            this.contactReceiver = webClientService.contacts.get(id);
-            names.push(this.contactReceiver.displayName);
+            const contactReceiver = webClientService.contacts.get(id);
+            if (hasValue(contactReceiver)) {
+                names.push(contactReceiver.displayName);
+            } else {
+                names.push('Unknown');
+            }
         }
         return names.join(', ');
     };
