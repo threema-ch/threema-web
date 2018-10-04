@@ -24,7 +24,7 @@ import {
 } from '@uirouter/angularjs';
 
 import {ContactControllerModel} from '../controller_model/contact';
-import {bufferToUrl, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
+import {bufferToUrl, hasValue, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
@@ -384,7 +384,7 @@ class ConversationController {
                 return;
             }
 
-            // initial set locked state
+            // Initial set locked state
             this.locked = this.receiver.locked;
 
             this.receiverService.setActive(this.receiver);
@@ -442,13 +442,21 @@ class ConversationController {
                     });
                 }
 
+                // Set initial data
                 this.initialData = {
                     draft: webClientService.getDraft(this.receiver),
                     initialText: $stateParams.initParams ? $stateParams.initParams.text : '',
                 };
 
+                // Set isTyping function for contacts
                 if (isContactReceiver(this.receiver)) {
                     this.isTyping = () => this.webClientService.isTyping(this.receiver as threema.ContactReceiver);
+                }
+
+                // Due to a bug in Safari, sometimes the in-view element does not trigger when initially loading a chat.
+                // As a workaround, manually trigger the initial message loading.
+                if (this.webClientService.messages.getList(this.receiver).length === 0) {
+                    this.requestMessages();
                 }
             }
         } catch (error) {
@@ -768,9 +776,10 @@ class ConversationController {
     public requestMessages(): void {
         const refMsgId = this.webClientService.requestMessages(this.$stateParams);
 
-        if (refMsgId !== null
-            && refMsgId !== undefined) {
-            // new message are requested, scroll to refMsgId
+        // TODO: Couldn't this cause a race condition when called twice in parallel?
+        //       Might be related to #277.
+        if (hasValue(refMsgId)) {
+            // New messages are requested, scroll to refMsgId
             this.latestRefMsgId = refMsgId;
         } else {
             this.latestRefMsgId = null;
