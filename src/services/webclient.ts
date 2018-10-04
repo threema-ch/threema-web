@@ -1384,10 +1384,13 @@ export class WebClientService {
      * New messages are not requested this way, instead they are sent as a
      * message update.
      */
-    public requestMessages(receiver: threema.Receiver): string {
+    public requestMessages(receiver: threema.Receiver): string | null {
+        this.$log.debug(this.logTag, 'requestMessages');
+
         // If there are no more messages available, stop here.
         if (!this.messages.hasMore(receiver)) {
             this.messages.notify(receiver, this.$rootScope);
+            this.$log.debug(this.logTag, 'requestMessages: No more messages available');
             return null;
         }
 
@@ -1395,6 +1398,7 @@ export class WebClientService {
 
         // Check if messages have already been requested
         if (this.messages.isRequested(receiver)) {
+            this.$log.debug(this.logTag, 'requestMessages: Already requested');
             return null;
         }
 
