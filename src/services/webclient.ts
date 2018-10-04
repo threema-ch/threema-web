@@ -2853,7 +2853,7 @@ export class WebClientService {
                 // To find out, we'll look at the unread count. If it has been
                 // incremented, it must be a new message.
                 if (data.unreadCount > 0) {
-                    const oldConversation = this.conversations.updateOrAdd(data);
+                    const oldConversation = this.conversations.updateOrAdd(data, true);
                     if (oldConversation === null) {
                         this.onNewMessage(data.latestMessage, data, receiver);
                     } else {
@@ -2871,7 +2871,7 @@ export class WebClientService {
                     }
                 } else {
                     // Update the conversation and hide any notifications
-                    this.conversations.updateOrAdd(data);
+                    this.conversations.updateOrAdd(data, false);
                     this.notificationService.hideNotification(data.type + '-' + data.id);
                 }
 
@@ -3832,7 +3832,7 @@ export class WebClientService {
         // If desired, log message type / subtype
         if (this.config.MSG_DEBUGGING) {
             // Deep copy message to prevent issues with JS debugger
-            const deepcopy = JSON.parse(JSON.stringify(message));
+            const deepcopy = copyDeep(message);
             this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
         }
 
