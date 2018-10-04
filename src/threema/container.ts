@@ -333,6 +333,13 @@ export class Conversations implements threema.Container.Conversations {
                 }
                 // Copy properties from new conversation to old conversation
                 Object.assign(this.conversations[i], conversation);
+
+                // If the position changed, re-sort.
+                if (this.conversations[i].position !== i) {
+                    const tmp = this.conversations.splice(i, 1)[0];
+                    this.conversations.splice(conversation.position, 0, tmp);
+                }
+
                 return previousConversation;
             }
         }
