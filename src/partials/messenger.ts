@@ -805,7 +805,7 @@ class ConversationController {
         }
 
         // Update lastReadMsg
-        if (this.lastReadMsg === null || message.sortKey > this.lastReadMsg.sortKey) {
+        if (this.lastReadMsg === null || message.sortKey >= this.lastReadMsg.sortKey) {
             this.lastReadMsg = message;
         }
 
