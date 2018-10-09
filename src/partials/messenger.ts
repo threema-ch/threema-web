@@ -493,14 +493,15 @@ class ConversationController {
         this.webClientService.setQuote(this.receiver);
     }
 
-    public showError(errorMessage: string, toastLength = 4000) {
+    public showError(errorMessage: string, hideDelayMs = 3000) {
         if (errorMessage === undefined || errorMessage.length === 0) {
             errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
         }
         this.$mdToast.show(
             this.$mdToast.simple()
                 .textContent(errorMessage)
-                .position('bottom center'));
+                .position('bottom center')
+                .hideDelay(hideDelayMs));
     }
     /**
      * Submit function for input field. Can contain text or file data.
