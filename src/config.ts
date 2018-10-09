@@ -3,14 +3,16 @@
  *
  * The various options are explained in the `README.md` file.
  */
+// tslint:disable:max-line-length
 export default {
 
     // General
     SELF_HOSTED: false,
-    VERSION_MOUNTAIN: 'Grosser Mythen',
-    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Mythen',
-    VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Die_Mythen.jpg',
-    VERSION_MOUNTAIN_HEIGHT: 1898,
+    VERSION_MOUNTAIN: 'Glärnisch',
+    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Gl%C3%A4rnisch',
+    VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Glarus_mit_Gl%C3%A4rnisch,_Sicht_Ennetberge_(18948043634).jpg',
+    VERSION_MOUNTAIN_IMAGE_COPYRIGHT: 'CC BY Hans Bühler',
+    VERSION_MOUNTAIN_HEIGHT: 2915,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
     GIT_BRANCH: 'beta',
 
