@@ -609,6 +609,7 @@ class ConversationController {
                                 })
                                 .catch((error) => {
                                     this.$log.error(error);
+                                    // TODO: Should probably be an alert instead of a toast
                                     this.showError(error);
                                     success = false;
                                     nextCallback(index);
@@ -632,6 +633,7 @@ class ConversationController {
                             })
                             .catch((error) => {
                                 this.$log.error(error);
+                                // TODO: Should probably be an alert instead of a toast
                                 this.showError(error);
                                 success = false;
                                 nextCallback(index);
