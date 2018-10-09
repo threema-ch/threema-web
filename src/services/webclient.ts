@@ -1682,6 +1682,7 @@ export class WebClientService {
                         let errorMessage;
                         switch (error) {
                             case 'file_too_large':
+                            case 'fileTooLarge':
                                 errorMessage = this.$translate.instant('error.FILE_TOO_LARGE_GENERIC');
                                 break;
                             case 'blocked':
