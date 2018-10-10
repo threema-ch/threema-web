@@ -1681,7 +1681,7 @@ export class WebClientService {
                         // Determine error message
                         let errorMessage;
                         switch (error) {
-                            case 'file_too_large':
+                            case 'file_too_large': // TODO: deprecated
                             case 'fileTooLarge':
                                 errorMessage = this.$translate.instant('error.FILE_TOO_LARGE_GENERIC');
                                 break;
