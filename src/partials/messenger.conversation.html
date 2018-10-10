@@ -27,22 +27,14 @@
 
         <!-- Menu -->
         <div class="header-buttons">
-            <md-button
-                class="md-icon-button"
-                aria-label="Conversation is pinned"
-                translate-attr="{'aria-label': 'messenger.PINNED_CONVERSATION', 'title': 'messenger.PINNED_CONVERSATION'}"
-                ng-if="ctrl.conversation.isStarred"
-                ng-click="ctrl.unpinConversation()">
-                <md-icon><img src="img/ic_pin.svg"></md-icon>
-            </md-button>
-            <md-button
-                class="md-icon-button"
-                aria-label="Conversation is not pinned"
-                translate-attr="{'aria-label': 'messenger.UNPINNED_CONVERSATION', 'title': 'messenger.UNPINNED_CONVERSATION'}"
-                ng-if="!ctrl.conversation.isStarred"
-                ng-click="ctrl.pinConversation()">
-                <md-icon><img src="img/ic_unpin.svg"></md-icon>
-            </md-button>
+            <toggle-button
+                flag="ctrl.conversation.isStarred"
+                on-enable="ctrl.pinConversation()"
+                on-disable="ctrl.unpinConversation()"
+                label-enabled="messenger.PINNED_CONVERSATION"
+                label-disabled="messenger.UNPINNED_CONVERSATION"
+                icon-enabled="img/ic_pin.svg"
+                icon-disabled="img/ic_unpin.svg">
         </div>
     </div>
 
@@ -63,7 +55,7 @@
         <ul class="chat">
             <li in-view="$inview && !ctrl.locked && ctrl.topOfChat()" class="load-more">
                 <div ng-if="ctrl.hasMoreMessages()" class="loading">
-                    <img ng-src="img/spinner.gif" alt="..." translate translate-attr-aria-label="messenger.LOADING_MESSAGES">
+                    <img src="img/spinner.gif" alt="..." translate translate-attr-aria-label="messenger.LOADING_MESSAGES">
                 </div>
             </li>
             <li ng-repeat="message in ctrl.messages" id="message-{{message.id}}">

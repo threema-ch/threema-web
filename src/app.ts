@@ -19,6 +19,7 @@
 
 import {AsyncEvent} from 'ts-events';
 
+import './components';
 import config from './config';
 import './controllers';
 import './directives';
@@ -50,6 +51,7 @@ angular.module('3ema', [
 
     // Own
     '3ema.filters',
+    '3ema.components',
     '3ema.directives',
     '3ema.container',
     '3ema.services',
@@ -125,6 +127,7 @@ angular.module('3ema', [
             request: (conf) => {
                 if (conf.url.indexOf('partials/') !== -1 ||
                     conf.url.indexOf('directives/') !== -1 ||
+                    conf.url.indexOf('components/') !== -1 ||
                     conf.url.indexOf('i18n/') !== -1) {
                     const separator = conf.url.indexOf('?') === -1 ? '?' : '&';
                     conf.url = conf.url + separator + CACHE_BUST;
