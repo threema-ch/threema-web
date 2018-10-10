@@ -216,6 +216,7 @@
             "badRequest": "Ungültige Anfrage (Protokollfehler?)",
             "timeout": "Timeout",
             "internalError": "Ein interner Fehler ist aufgetreten",
+            "invalidAvatar": "Ungültiger Avatar",
             "invalidIdentity": "Ungültige Threema-ID",
             "invalidContact": "Ungültiger Kontakt",
             "invalidGroup": "Ungültige Gruppe",
