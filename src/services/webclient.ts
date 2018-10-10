@@ -2942,17 +2942,17 @@ export class WebClientService {
     }
 
     private _receiveUpdateContact(message: threema.WireMessage): void {
-        const future = this.popWireMessageFuture(message, true);
+        const future = this.popWireMessageFuture(message);
         this._receiveReplyReceiver(message, 'contact', future);
     }
 
     private _receiveUpdateGroup(message: threema.WireMessage): void {
-        const future = this.popWireMessageFuture(message, true);
+        const future = this.popWireMessageFuture(message);
         this._receiveReplyReceiver(message, 'group', future);
     }
 
     private _receiveUpdateDistributionList(message: threema.WireMessage): void {
-        const future = this.popWireMessageFuture(message, true);
+        const future = this.popWireMessageFuture(message);
         this._receiveReplyReceiver(message, 'distributionList', future);
     }
 
