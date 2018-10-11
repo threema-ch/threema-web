@@ -2936,6 +2936,10 @@ export class WebClientService {
 
         // Get receiver
         const receiver = this.receivers.getData({type: args.type, id: args.id});
+        if (receiver === undefined) {
+            this.$log.error(this.logTag, 'Received avatar update for nonexistent receiver');
+            return;
+        }
 
         // Set low-res avatar
         receiver.avatar.low = data;
