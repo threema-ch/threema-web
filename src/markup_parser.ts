@@ -137,9 +137,9 @@ export function parse(tokens: Token[]): string {
                     throw new Error('Unknown token on stack: ' + token.kind);
             }
         }
-        while (stack.length > 0) {
-            stack.pop();
-        }
+        // Clear stack
+        // https://stackoverflow.com/a/1232046
+        stack.splice(0, stack.length);
         return textBuf;
     };
 
