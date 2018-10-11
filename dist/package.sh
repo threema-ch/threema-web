@@ -43,7 +43,7 @@ cp -R troubleshoot/* $DIR/troubleshoot/
 cp -R src/partials/*.html $DIR/partials/
 cp -R src/partials/messenger.receiver/*.html $DIR/partials/messenger.receiver/
 cp -R src/directives/*.html $DIR/directives/
-cp -R src/components/*.html $DIR/components/
+cp -R src/components/*.html $DIR/components/ 2>/dev/null || :
 
 echo "+ Copy dependencies..."
 targets=(
