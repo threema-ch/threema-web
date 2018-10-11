@@ -3918,7 +3918,7 @@ export class WebClientService {
             try {
                 messageHandler.apply(this, [message.subType, message]);
             } catch (error) {
-                this.$log.error(this.logTag, `Unable to handle incoming wire message: ${error}`);
+                this.$log.error(this.logTag, `Unable to handle incoming wire message: ${error}`, error.stack);
                 return;
             }
         }
