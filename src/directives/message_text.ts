@@ -74,7 +74,7 @@ export default [
                  * Apply filters to text.
                  */
                 function processText(text: string, largeSingleEmoji: boolean, multiLine: boolean, linkifyText: boolean): string {
-                    const nonLinkified = mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), enlargeSingleEmoji));
+                    const nonLinkified = mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), largeSingleEmoji));
                     const maybeLinkified = linkifyText ? linkify(nonLinkified) : nonLinkified;
                     return nlToBr(maybeLinkified, multiLine);
                 }
@@ -97,7 +97,7 @@ export default [
                     );
                 };
 
-                this.enlargeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
+                this.largeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
 
                 this.$onInit = function() {
                     // Process initial text
