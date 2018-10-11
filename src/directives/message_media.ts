@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {saveAs} from 'file-saver';
+
 import {bufferToUrl, hasValue, logAdapter} from '../helpers';
 import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';

@@ -55,7 +55,6 @@ targets=(
     babel-es6-polyfill/browser-polyfill.min.js
     msgpack-lite/dist/msgpack.min.js
     tweetnacl/nacl-fast.min.js
-    file-saver/FileSaver.min.js
     @saltyrtc/chunked-dc/dist/chunked-dc.es5.js
     @saltyrtc/client/dist/saltyrtc-client.es5.js
     @saltyrtc/task-webrtc/dist/saltyrtc-task-webrtc.es5.js

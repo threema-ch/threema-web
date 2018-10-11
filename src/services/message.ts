@@ -46,7 +46,7 @@ export class MessageService {
         this.receiverService = receiverService;
     }
 
-    public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess  {
+    public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess {
         const access = new MessageAccess();
 
         if (message !== undefined) {
