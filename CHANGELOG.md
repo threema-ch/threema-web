@@ -3,17 +3,32 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+
+### [v2.1.0-beta.6][v2.1.0-beta.6] (2018-10-11)
+
+Changes:
+
+* [feature] Implement pinning of conversations ([#361][i361])
+* [change] Make default avatar colors less aggressive
+* [change] New stack based markup parser ([#453][i453] / [#458][i458] / [#590][i590])
+* [bug] Fix marking of read messages with duplicate sort key ([#606][i606])
+* [bug] Compose area: Fix newlines in Safari ([#613][i613])
+* [bug] Fix largeSingleEmoji setting ([#610][i610])
+
+
 ### [v2.1.0-beta.5][v2.1.0-beta.5] (2018-10-04)
 
 Changes:
 
 * [bug] Workaround for conversation loading bug in Safari ([#602][i602])
 
+
 ### [v2.1.0-beta.4][v2.1.0-beta.4] (2018-09-27)
 
 Changes:
 
 * [bug] Connectivity improvements for iOS ([#597][i597])
+
 
 ### [v2.1.0-beta.3][v2.1.0-beta.3] (2018-09-18)
 
@@ -29,6 +44,7 @@ Changes:
 * [bug] Accessibility fixes and improvements ([#562][i562])
 * [bug] Session resumption bugfixes ([#586][i586])
 * [bug] Remove compatibility footer and beta notes
+
 
 ### [v2.1.0-beta.1][v2.1.0-beta.1] (2018-09-10)
 
@@ -524,6 +540,7 @@ First public release.
 [i357]: https://github.com/threema-ch/threema-web/issues/357
 [i358]: https://github.com/threema-ch/threema-web/issues/358
 [i359]: https://github.com/threema-ch/threema-web/issues/359
+[i361]: https://github.com/threema-ch/threema-web/issues/361
 [i362]: https://github.com/threema-ch/threema-web/issues/362
 [i363]: https://github.com/threema-ch/threema-web/issues/363
 [i364]: https://github.com/threema-ch/threema-web/issues/364
@@ -555,6 +572,8 @@ First public release.
 [i439]: https://github.com/threema-ch/threema-web/issues/439
 [i441]: https://github.com/threema-ch/threema-web/issues/441
 [i445]: https://github.com/threema-ch/threema-web/issues/445
+[i453]: https://github.com/threema-ch/threema-web/issues/453
+[i458]: https://github.com/threema-ch/threema-web/issues/458
 [i472]: https://github.com/threema-ch/threema-web/issues/472
 [i480]: https://github.com/threema-ch/threema-web/issues/480
 [i503]: https://github.com/threema-ch/threema-web/issues/503
@@ -574,14 +593,19 @@ First public release.
 [i569]: https://github.com/threema-ch/threema-web/issues/569
 [i572]: https://github.com/threema-ch/threema-web/issues/572
 [i586]: https://github.com/threema-ch/threema-web/issues/586
+[i590]: https://github.com/threema-ch/threema-web/pull/590
 [i597]: https://github.com/threema-ch/threema-web/pull/597
 [i602]: https://github.com/threema-ch/threema-web/pull/602
+[i606]: https://github.com/threema-ch/threema-web/pull/606
+[i610]: https://github.com/threema-ch/threema-web/pull/610
+[i613]: https://github.com/threema-ch/threema-web/pull/613
 
 [v2.1.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0-beta.1
 [v2.1.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.1...v2.1.0-beta.2
 [v2.1.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.2...v2.1.0-beta.3
 [v2.1.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.3...v2.1.0-beta.4
 [v2.1.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.4...v2.1.0-beta.5
+[v2.1.0-beta.6]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.5...v2.1.0-beta.6
 [v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
