@@ -17,7 +17,25 @@
 
 // tslint:disable:max-line-length
 
+import {hasValue} from '../helpers';
 import {WebClientService} from '../services/webclient';
+
+// Get text depending on type
+function getText(message: threema.Message): string {
+    switch (message.type) {
+        case 'text':
+            return message.body;
+        case 'location':
+            return message.location.description;
+        case 'file':
+            // Prefer caption for file messages, if available
+            if (message.caption && message.caption.length > 0) {
+                return message.caption;
+            }
+            return message.file.name;
+    }
+    return message.caption;
+}
 
 export default [
     function() {
@@ -25,29 +43,24 @@ export default [
             restrict: 'EA',
             scope: {},
             bindToController: {
-                message: '=eeeMessage',
+                message: '=',
                 multiLine: '@?multiLine',
                 linkify: '@?linkify',
             },
+            link: function(scope, elem, attrs) {
+                scope.$watch(
+                    () => scope.ctrl.message.id,
+                    (newId, oldId) => {
+                        // Register for message changes. When the ID changes, update the text.
+                        // This prevents processing the text more than once.
+                        if (hasValue(newId) && newId !== oldId) {
+                            scope.ctrl.updateText();
+                        }
+                    },
+                );
+            },
             controllerAs: 'ctrl',
             controller: ['WebClientService', '$filter', function(webClientService: WebClientService, $filter: ng.IFilterService) {
-                // Get text depending on type
-                function getText(message: threema.Message): string {
-                    switch (message.type) {
-                        case 'text':
-                            return message.body;
-                        case 'location':
-                            return message.location.description;
-                        case 'file':
-                            // Prefer caption for file messages, if available
-                            if (message.caption && message.caption.length > 0) {
-                                return message.caption;
-                            }
-                            return message.file.name;
-                    }
-                    return message.caption;
-                }
-
                 // TODO: Extract filters into helper functions
                 const escapeHtml = $filter('escapeHtml') as any;
                 const markify = $filter('markify') as any;
@@ -66,16 +79,29 @@ export default [
                     return nlToBr(maybeLinkified, multiLine);
                 }
 
-                this.enlargeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
-
-                this.$onInit = function() {
+                /**
+                 * Text update function.
+                 */
+                this.updateText = () => {
                     // Because this.multiLine and this.linkify are bound using an `@` binding,
                     // they are either undefined or a string. Convert to boolean.
                     const multiLine = (this.multiLine === undefined || this.multiLine !== 'false');
                     const linkifyText = (this.linkify === undefined || this.linkify !== 'false');
 
                     // Process text once, apply all filter functions
-                    this.text = processText(getText(this.message), this.largeSingleEmoji, multiLine, linkifyText);
+                    this.text = processText(
+                        getText(this.message),
+                        this.largeSingleEmoji,
+                        multiLine,
+                        linkifyText,
+                    );
+                };
+
+                this.enlargeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
+
+                this.$onInit = function() {
+                    // Process initial text
+                    this.updateText();
                 };
             }],
             template: `

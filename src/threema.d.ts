@@ -787,7 +787,7 @@ declare namespace threema {
             set(data: Conversation[]): void;
             find(pattern: Conversation | Receiver): Conversation | null;
             add(conversation: Conversation): void;
-            updateOrAdd(conversation: Conversation): Conversation | null;
+            updateOrAdd(conversation: Conversation, returnOld?: boolean): Conversation | null;
             remove(conversation: Conversation): void;
             setFilter(filter: (data: Conversation[]) => Conversation[]): void;
             setConverter(converter: (data: Conversation) => Conversation): void;

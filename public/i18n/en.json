@@ -182,7 +182,13 @@
         "MUTED_MENTION_ONLY": "Only show notification when mentioned",
         "MUTED_SILENT": "Silent notifications",
         "ALL": "All",
-        "LOADING_MESSAGES": "Loading messages…"
+        "LOADING_MESSAGES": "Loading messages…",
+        "PINNED_CONVERSATION": "Conversation is pinned. Click to unpin.",
+        "UNPINNED_CONVERSATION": "Conversation is not pinned. Click to pin.",
+        "PINNED_CONVERSATION_OK": "Conversation pinned",
+        "PINNED_CONVERSATION_ERROR": "Conversation could not be pinned",
+        "UNPINNED_CONVERSATION_OK": "Conversation unpinned",
+        "UNPINNED_CONVERSATION_ERROR": "Conversation could not be unpinned"
     },
     "messageStates": {
         "WE_ACK": "You sent thumbs-up",

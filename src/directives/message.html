@@ -41,7 +41,7 @@
         <eee-message-text
             ng-if="ctrl.showText"
             class="message-text"
-            eee-message="ctrl.message">
+            message="ctrl.message">
         </eee-message-text>
 
         <div class="message-info">
@@ -60,7 +60,7 @@
 <!-- Status messages -->
 <article ng-if="ctrl.isStatusMessage" class="message message-status">
     <div ng-if="ctrl.message.statusType == 'text'" class="message-body">
-        <eee-message-text class="message-text" eee-message="ctrl.message"></eee-message-text>
+        <eee-message-text class="message-text" message="ctrl.message"></eee-message-text>
     </div>
     <div ng-if="ctrl.message.statusType == 'firstUnreadMessage'" class="unread-separator">
         <div class="line"></div>

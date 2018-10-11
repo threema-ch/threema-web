@@ -23,7 +23,8 @@ import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import * as msgpack from 'msgpack-lite';
 import {
-    arraysAreEqual, hasFeature, hasValue, hexToU8a, msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
+    arraysAreEqual, copyDeep, hasFeature, hasValue, hexToU8a,
+    msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
 } from '../helpers';
 import {isContactReceiver, isDistributionListReceiver, isGroupReceiver, isValidReceiverType} from '../typeguards';
 import {BatteryStatusService} from './battery';
@@ -1817,6 +1818,33 @@ export class WebClientService {
         return promise;
     }
 
+    /*
+     * Modify a conversation.
+     */
+    public modifyConversation(conversation: threema.Conversation, isPinned?: boolean): Promise<null> {
+        const DATA_STARRED = 'isStarred';
+
+        // Prepare payload data
+        const args = {
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: conversation.type,
+            [WebClientService.ARGUMENT_RECEIVER_ID]: conversation.id,
+        };
+        const data = {};
+        if (hasValue(isPinned)) {
+            data[DATA_STARRED] = isPinned;
+        }
+
+        // If no changes happened, resolve the promise immediately.
+        if (Object.keys(data).length === 0) {
+            this.$log.warn(this.logTag, 'Trying to modify conversation without any changes');
+            return Promise.resolve(null);
+        }
+
+        // Send update
+        const subType = WebClientService.SUB_TYPE_CONVERSATION;
+        return this.sendUpdateWireMessage(subType, true, args, data);
+    }
+
     /**
      * Create a group receiver.
      */
@@ -2853,7 +2881,7 @@ export class WebClientService {
                 // To find out, we'll look at the unread count. If it has been
                 // incremented, it must be a new message.
                 if (data.unreadCount > 0) {
-                    const oldConversation = this.conversations.updateOrAdd(data);
+                    const oldConversation = this.conversations.updateOrAdd(data, true);
                     if (oldConversation === null) {
                         this.onNewMessage(data.latestMessage, data, receiver);
                     } else {
@@ -2871,7 +2899,7 @@ export class WebClientService {
                     }
                 } else {
                     // Update the conversation and hide any notifications
-                    this.conversations.updateOrAdd(data);
+                    this.conversations.updateOrAdd(data, false);
                     this.notificationService.hideNotification(data.type + '-' + data.id);
                 }
 
@@ -3832,7 +3860,7 @@ export class WebClientService {
         // If desired, log message type / subtype
         if (this.config.MSG_DEBUGGING) {
             // Deep copy message to prevent issues with JS debugger
-            const deepcopy = JSON.parse(JSON.stringify(message));
+            const deepcopy = copyDeep(message);
             this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
         }
 

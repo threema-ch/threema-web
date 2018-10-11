@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {copyShallow} from '../helpers';
 import {isFirstUnreadStatusMessage} from '../message_helpers';
 import {ReceiverService} from '../services/receiver';
 
@@ -315,17 +316,39 @@ export class Conversations implements threema.Container.Conversations {
 
     /**
      * Add a conversation at the correct position.
-     * If a conversation already exists, replace it and return the old conversation.
+     * If a conversation already exists, update it and – in case returnOld is set –
+     * return a copy of the old conversation.
      */
-    public updateOrAdd(conversation: threema.ConversationWithPosition): threema.Conversation | null {
-        let replaced = null;
+    public updateOrAdd(
+        conversation: threema.ConversationWithPosition,
+        returnOld: boolean = false,
+    ): threema.Conversation | null {
         for (const i of this.conversations.keys()) {
             if (this.receiverService.compare(this.conversations[i], conversation)) {
-                replaced = this.conversations.splice(i, 1)[0];
+                // Conversation already exists!
+                // If `returnOld` is set, create a copy of the old conversation
+                let previousConversation = null;
+                if (returnOld) {
+                    previousConversation = copyShallow(this.conversations[i]);
+                }
+
+                // Explicitly set defaults, to be able to override old values
+                setDefault(conversation, 'isStarred', false);
+
+                // Copy properties from new conversation to old conversation
+                Object.assign(this.conversations[i], conversation);
+
+                // If the position changed, re-sort.
+                if (this.conversations[i].position !== i) {
+                    const tmp = this.conversations.splice(i, 1)[0];
+                    this.conversations.splice(conversation.position, 0, tmp);
+                }
+
+                return previousConversation;
             }
         }
         this.add(conversation);
-        return replaced;
+        return null;
     }
 
     /**

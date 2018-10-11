@@ -183,7 +183,13 @@
         "MUTED_MENTION_ONLY": "Nur bei Erwähnung benachrichtigen",
         "MUTED_SILENT": "Stumme Benachrichtigungen",
         "ALL": "Alle",
-        "LOADING_MESSAGES": "Nachrichten werden geladen…"
+        "LOADING_MESSAGES": "Nachrichten werden geladen…",
+        "PINNED_CONVERSATION": "Unterhaltung ist angepinnt. Klicken, um sie zu entpinnen.",
+        "UNPINNED_CONVERSATION": "Unterhaltung ist nicht angepinnt. Klicken, um sie anzupinnen.",
+        "PINNED_CONVERSATION_OK": "Unterhaltung angepinnt",
+        "PINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht angepinnt werden",
+        "UNPINNED_CONVERSATION_OK": "Unterhaltung entpinnt",
+        "UNPINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht entpinnt werden"
     },
     "messageStates": {
         "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",
