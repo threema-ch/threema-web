@@ -17,6 +17,8 @@
 
 // tslint:disable:max-line-length
 
+import {saveAs} from 'file-saver';
+
 import {getSenderIdentity} from '../helpers/messages';
 import {MessageService} from '../services/message';
 import {ReceiverService} from '../services/receiver';

@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {saveAs} from 'file-saver';
+
 import {MediaboxService} from '../services/mediabox';
 
 export default [
