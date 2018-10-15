@@ -32,11 +32,6 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.contact = () => webClientService.contacts.get(this.quote.identity);
-                this.contact.color = function() {
-                    if (isUndefined(this.contact.color)) {
-                        return '#2C65C9';
-                    }
-                };
             }],
             template: `
                 <div class="message-quote-content" ng-style="{'border-color': ctrl.contact().color}">
