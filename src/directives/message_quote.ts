@@ -15,7 +15,6 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { isUndefined } from '@uirouter/core';
 import {WebClientService} from '../services/webclient';
 
 // tslint:disable:max-line-length
