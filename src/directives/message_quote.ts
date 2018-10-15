@@ -34,7 +34,7 @@ export default [
                 this.contact = () => webClientService.contacts.get(this.quote.identity);
                 this.contact.color = function() {
                     if (isUndefined(this.contact.color)) {
-                        this.contact.color = '#2C65C9';
+                        return '#2C65C9';
                     }
                 };
             }],
