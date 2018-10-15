@@ -3701,6 +3701,9 @@ export class WebClientService {
             this.$log.debug('[Message] Outgoing:', message.type, '/', message.subType, message);
         }
 
+        // TODO: Fix chosenTask may be different between connections in the
+        //       future. Do not rely on it when sending while not being
+        //       connected.
         switch (this.chosenTask) {
             case threema.ChosenTask.WebRTC:
                 {
@@ -3840,17 +3843,15 @@ export class WebClientService {
         // Decode bytes
         const message: threema.WireMessage = this.msgpackDecode(bytes);
 
-        return this.handleIncomingMessage(message, false);
+        return this.handleIncomingMessage(message);
     }
 
     /**
      * Handle incoming incoming from the SecureDataChannel
      * or from the relayed data WebSocket.
      */
-    private handleIncomingMessage(message: threema.WireMessage, log: boolean): void {
-        if (log) {
-            this.$log.debug('New incoming message');
-        }
+    private handleIncomingMessage(message: threema.WireMessage): void {
+        this.$log.debug(`Received ${message.type}/${message.subType} message`);
 
         // Validate message to keep contract defined by `threema.WireMessage` type
         if (message.type === undefined) {
@@ -3884,6 +3885,7 @@ export class WebClientService {
             // Check for unexpected messages
             if (message.type !== WebClientService.TYPE_UPDATE ||
                 message.subType !== WebClientService.SUB_TYPE_CONNECTION_INFO) {
+                this.$log.error(this.logTag, 'Unexpected message before handshake has been completed');
                 this.failSession();
                 return;
             }
