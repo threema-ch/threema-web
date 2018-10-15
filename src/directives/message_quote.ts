@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { isUndefined } from '@uirouter/core';
 import {WebClientService} from '../services/webclient';
 
 // tslint:disable:max-line-length
@@ -31,6 +32,11 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.contact = () => webClientService.contacts.get(this.quote.identity);
+                this.contact.color = function() {
+                    if (isUndefined(this.contact.color)) {
+                        this.contact.color = '#2C65C9';
+                    }
+                };
             }],
             template: `
                 <div class="message-quote-content" ng-style="{'border-color': ctrl.contact().color}">
