@@ -177,7 +177,7 @@ export class WebClientService {
 
     // State handling
     private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
-    private startupDone: boolean = false;
+    public startupDone: boolean = false;
     private pendingInitializationStepRoutines: Set<threema.InitializationStepRoutine> = new Set();
     private initialized: Set<threema.InitializationStep> = new Set();
     private stateService: StateService;

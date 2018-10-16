@@ -64,7 +64,8 @@
 
 <!-- Conversations -->
 <div id="navigation-conversations" class="tab-content" ng-if="ctrl.activeTab == 'conversations'" in-view-container>
-    <p class="empty" ng-if="ctrl.conversations().length === 0" translate>messenger.NO_CONVERSATIONS_FOUND</p>
+    <p class="empty" ng-if="ctrl.conversations().length === 0 && !ctrl.startupDone()" translate>messenger.LOADING_CONVERSATIONS</p>
+    <p class="empty" ng-if="ctrl.conversations().length === 0 && ctrl.startupDone()" translate>messenger.NO_CONVERSATIONS_FOUND</p>
     <ul>
         <li ng-repeat="conversation in ctrl.conversations() | filter:ctrl.searchConversation"
             ng-init="dndModeSimplified = ctrl.dndModeSimplified(conversation)"
