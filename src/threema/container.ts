@@ -141,7 +141,6 @@ class Receivers implements threema.Container.Receivers {
     public setContacts(data: threema.ContactReceiver[]): void {
         this.contacts = new Map(data.map((c) => {
             c.type = 'contact';
-            setDefault(c, 'color', '#f0f0f0');
             return [c.id, c];
         }) as any) as ContactMap;
         if (this.me !== undefined) {
@@ -237,7 +236,6 @@ class Receivers implements threema.Container.Receivers {
         let contactReceiver = this.contacts.get(data.id);
         if (contactReceiver === undefined) {
             data.type = 'contact';
-            setDefault(data, 'color', '#f0f0f0');
             this.contacts.set(data.id, data);
             return data;
         }

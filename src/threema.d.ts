@@ -223,7 +223,7 @@ declare namespace threema {
         displayName: string;
 
         // The color used for the avatar
-        color: string;
+        color?: string;
 
         // The avatar, may be set if already fetched
         avatar?: Avatar;
