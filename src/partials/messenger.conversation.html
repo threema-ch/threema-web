@@ -12,7 +12,7 @@
             <eee-avatar eee-receiver="ctrl.receiver"
                         eee-resolution="'low'"></eee-avatar>
         </div>
-        <div class="header-details" ng-click="ctrl.showReceiver()">
+        <div class="header-details" role="heading" aria-level="1" ng-click="ctrl.showReceiver()">
             <div class="conversation-header-details-name"
                  ng-bind-html="ctrl.receiver.displayName | escapeHtml | emojify"></div>
             <div class="conversation-header-details-detail" ng-if="ctrl.type === 'contact'">

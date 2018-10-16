@@ -21,6 +21,18 @@ For more information, see the [Threema Web
 Whitepaper](https://threema.ch/en/blog/posts/threema-web-whitepaper).
 
 
+## Bug Reports and Feature Requests
+
+If you find a bug in Threema Web or want to request a new feature, feel free to
+[open an issue](https://github.com/threema-ch/threema-web/issues/new) on
+GitHub. Please make sure that your bug report or feature request hasn't already
+been filed by using the search function.
+
+Express your personal opinion regarding priority by reacting with :+1: in a
+particular issue, such as [this one](https://github.com/threema-ch/threema-web/issues/58).
+We will factor this in when scheduling what to do next.
+
+
 ## Development
 
 Threema Web is written using [TypeScript](https://www.typescriptlang.org/) and
