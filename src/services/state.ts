@@ -206,7 +206,7 @@ export class StateService {
                 this.progress = 60;
                 this.progressInterval = this.$interval(() => {
                     if (this.progress < 80) {
-                        this.progress += 5;
+                        this.progress += 4;
                     } else if (this.progress < 90) {
                         this.progress += 2;
                     } else if (this.progress < 99) {
@@ -214,7 +214,7 @@ export class StateService {
                     } else {
                         this.slowConnect = true;
                     }
-                }, 500);
+                }, 600);
                 break;
             case 'done':
                 this.progress = 100;
