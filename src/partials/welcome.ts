@@ -248,6 +248,13 @@ class WelcomeController {
     }
 
     /**
+     * Whether to show troubleshooting hints related to WebRTC.
+     */
+    public get showWebrtcTroubleshooting(): boolean {
+        return this.webClientService.chosenTask === threema.ChosenTask.WebRTC;
+    }
+
+    /**
      * Initiate a new session by scanning a new QR code.
      */
     private scan(stopArguments?: threema.WebClientServiceStopArguments): void {
