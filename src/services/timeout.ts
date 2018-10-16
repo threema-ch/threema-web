@@ -18,6 +18,9 @@
 export class TimeoutService {
     private logTag: string = '[TimeoutService]';
 
+    // Config
+    private config: threema.Config;
+
     // Angular services
     private $log: ng.ILogService;
     private $timeout: ng.ITimeoutService;
@@ -25,20 +28,40 @@ export class TimeoutService {
     // List of registered timeouts
     private timeouts: Set<ng.IPromise<any>> = new Set();
 
-    public static $inject = ['$log', '$timeout'];
-    constructor($log: ng.ILogService, $timeout: ng.ITimeoutService) {
-        // Angular services
+    public static $inject = ['CONFIG', '$log', '$timeout'];
+    constructor(config: threema.Config, $log: ng.ILogService, $timeout: ng.ITimeoutService) {
+        this.config = config;
         this.$log = $log;
         this.$timeout = $timeout;
     }
 
     /**
+     * Log a message on debug log level, but only if the `DEBUG` flag is enabled.
+     */
+    private logDebug(msg: string): void {
+        if (this.config.DEBUG) {
+            this.$log.debug(this.logTag, msg);
+        }
+    }
+
+    /**
      * Register a timeout.
      */
-    public register<T>(fn: (...args: any[]) => T, delay: number, invokeApply: boolean): ng.IPromise<T> {
-        this.$log.debug(this.logTag, 'Registering timeout');
+    public register<T>(fn: (...args: any[]) => T, delay: number, invokeApply: boolean, name?: string): ng.IPromise<T> {
+        this.logDebug('Registering timeout' + (name === undefined ? '' : ` (${name})`));
         const timeout = this.$timeout(fn, delay, invokeApply);
-        timeout.finally(() => this.timeouts.delete(timeout));
+        timeout
+            .then(() => this.timeouts.delete(timeout))
+            .catch((reason) => {
+                if (reason !== 'canceled') { // We can safely ignore cancellation
+                    this.$log.error(this.logTag, 'Registered timeout promise rejected:', reason);
+                }
+            });
+
+        // Stick name onto promise for debugging purposes
+        // tslint:disable-next-line: no-string-literal
+        timeout['_timeout_name'] = name;
+
         this.timeouts.add(timeout);
         return timeout;
     }
@@ -49,8 +72,13 @@ export class TimeoutService {
      * Return true if the task hasn't executed yet and was successfully canceled.
      */
     public cancel<T>(timeout: ng.IPromise<T>): boolean {
-        this.$log.debug(this.logTag, 'Cancelling timeout');
+        // Retrieve name from promise for debugging purposes
+        // tslint:disable-next-line: no-string-literal
+        const name = timeout['_timeout_name'];
+
+        this.logDebug('Cancelling timeout' + (name === undefined ? '' : ` (${name})`));
         const cancelled = this.$timeout.cancel(timeout);
+
         this.timeouts.delete(timeout);
         return cancelled;
     }
@@ -59,7 +87,7 @@ export class TimeoutService {
      * Cancel all pending timeouts.
      */
     public cancelAll() {
-        this.$log.debug(this.logTag, 'Cancelling all timeouts');
+        this.$log.debug(this.logTag, 'Cancelling ' + this.timeouts.size + ' timeouts');
         for (const timeout of this.timeouts) {
             this.$timeout.cancel(timeout);
         }

@@ -36,6 +36,7 @@ import {NotificationService} from '../services/notification';
 import {ReceiverService} from '../services/receiver';
 import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
+import {TimeoutService} from '../services/timeout';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 import {isContactReceiver} from '../typeguards';
@@ -204,7 +205,6 @@ class ConversationController {
 
     // Angular services
     private $stateParams;
-    private $timeout: ng.ITimeoutService;
     private $state: UiStateService;
     private $log: ng.ILogService;
     private $scope: ng.IScope;
@@ -217,6 +217,7 @@ class ConversationController {
     private receiverService: ReceiverService;
     private stateService: StateService;
     private mimeService: MimeService;
+    private timeoutService: TimeoutService;
 
     // Third party services
     private $mdDialog: ng.material.IDialogService;
@@ -269,14 +270,13 @@ class ConversationController {
     };
 
     public static $inject = [
-        '$stateParams', '$timeout', '$log', '$scope', '$rootScope',
+        '$stateParams', '$log', '$scope', '$rootScope',
         '$mdDialog', '$mdToast', '$translate', '$filter',
         '$state', '$transitions',
         'WebClientService', 'StateService', 'ReceiverService', 'MimeService', 'VersionService',
-        'ControllerModelService',
+        'ControllerModelService', 'TimeoutService',
     ];
     constructor($stateParams: ConversationStateParams,
-                $timeout: ng.ITimeoutService,
                 $log: ng.ILogService,
                 $scope: ng.IScope,
                 $rootScope: ng.IRootScopeService,
@@ -291,14 +291,15 @@ class ConversationController {
                 receiverService: ReceiverService,
                 mimeService: MimeService,
                 versionService: VersionService,
-                controllerModelService: ControllerModelService) {
+                controllerModelService: ControllerModelService,
+                timeoutService: TimeoutService) {
         this.$stateParams = $stateParams;
-        this.$timeout = $timeout;
         this.$log = $log;
         this.webClientService = webClientService;
         this.receiverService = receiverService;
         this.stateService = stateService;
         this.mimeService = mimeService;
+        this.timeoutService = timeoutService;
 
         this.$state = $state;
         this.$scope = $scope;
@@ -839,10 +840,10 @@ class ConversationController {
             this.msgReadReportPending = true;
             const receiver = angular.copy(this.receiver);
             receiver.type = this.type;
-            this.$timeout(() => {
+            this.timeoutService.register(() => {
                 this.webClientService.requestRead(receiver, this.lastReadMsg);
                 this.msgReadReportPending = false;
-            }, 300);
+            }, 300, false, 'requestRead');
         }
     }
 

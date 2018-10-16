@@ -20,6 +20,7 @@ import {saveAs} from 'file-saver';
 import {bufferToUrl, hasValue, logAdapter} from '../helpers';
 import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';
+import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
 
 function showAudioDialog(
@@ -64,6 +65,7 @@ export default [
     'WebClientService',
     'MediaboxService',
     'MessageService',
+    'TimeoutService',
     '$rootScope',
     '$mdDialog',
     '$timeout',
@@ -74,6 +76,7 @@ export default [
     function(webClientService: WebClientService,
              mediaboxService: MediaboxService,
              messageService: MessageService,
+             timeoutService: TimeoutService,
              $rootScope: ng.IRootScopeService,
              $mdDialog: ng.material.IDialogService,
              $timeout: ng.ITimeoutService,
@@ -141,7 +144,7 @@ export default [
                         };
                     }
 
-                    let loadingThumbnailTimeout = null;
+                    let loadingThumbnailTimeout: ng.IPromise<void> = null;
 
                     this.wasInView = false;
                     this.thumbnailInView = (inView: boolean) => {
@@ -153,7 +156,7 @@ export default [
                         this.wasInView = inView;
 
                         if (!inView) {
-                            $timeout.cancel(loadingThumbnailTimeout);
+                            timeoutService.cancel(loadingThumbnailTimeout);
                             this.thumbnailDownloading = false;
                             this.thumbnail = null;
                         } else {
@@ -171,7 +174,7 @@ export default [
                                     return;
                                 } else {
                                     this.thumbnailDownloading = true;
-                                    loadingThumbnailTimeout = $timeout(() => {
+                                    loadingThumbnailTimeout = timeoutService.register(() => {
                                         webClientService
                                             .requestThumbnail(this.receiver, this.message)
                                             .then((img) => $timeout(() => {
@@ -183,7 +186,7 @@ export default [
                                                 const message = `Thumbnail request has been rejected: ${error}`;
                                                 this.$log.error(this.logTag, message);
                                             });
-                                    }, 1000);
+                                    }, 1000, false, 'thumbnail');
                                 }
                             }
                         }

@@ -19,6 +19,7 @@ import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import {ControllerService} from '../services/controller';
 import {StateService} from '../services/state';
+import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
 
 import GlobalConnectionState = threema.GlobalConnectionState;
@@ -52,17 +53,18 @@ export class StatusController {
     private $state: UiStateService;
 
     // Custom services
-    private stateService: StateService;
-    private webClientService: WebClientService;
     private controllerService: ControllerService;
+    private stateService: StateService;
+    private timeoutService: TimeoutService;
+    private webClientService: WebClientService;
 
     public static $inject = [
-        '$scope', '$timeout', '$log', '$state', 'StateService',
-        'WebClientService', 'ControllerService',
+        '$scope', '$timeout', '$log', '$state',
+        'ControllerService', 'StateService', 'TimeoutService', 'WebClientService',
     ];
     constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: UiStateService,
-                stateService: StateService, webClientService: WebClientService,
-                controllerService: ControllerService) {
+                controllerService: ControllerService, stateService: StateService,
+                timeoutService: TimeoutService, webClientService: WebClientService) {
 
         // Angular services
         this.$timeout = $timeout;
@@ -70,9 +72,10 @@ export class StatusController {
         this.$state = $state;
 
         // Custom services
-        this.stateService = stateService;
-        this.webClientService = webClientService;
         this.controllerService = controllerService;
+        this.stateService = stateService;
+        this.timeoutService = timeoutService;
+        this.webClientService = webClientService;
 
         // Register event handlers
         this.stateService.evtGlobalConnectionStateChange.attach(
@@ -138,9 +141,9 @@ export class StatusController {
      * Show full status bar with a certain delay.
      */
     private scheduleStatusBar(): void {
-        this.expandStatusBarTimer = this.$timeout(() => {
+        this.expandStatusBarTimer = this.timeoutService.register(() => {
             this.expandStatusBar = true;
-        }, this.expandStatusBarTimeout);
+        }, this.expandStatusBarTimeout, true, 'expandStatusBar');
     }
 
     /**
@@ -149,7 +152,7 @@ export class StatusController {
     private collapseStatusBar(): void {
         this.expandStatusBar = false;
         if (this.expandStatusBarTimer !== null) {
-            this.$timeout.cancel(this.expandStatusBarTimer);
+            this.timeoutService.cancel(this.expandStatusBarTimer);
         }
     }
 

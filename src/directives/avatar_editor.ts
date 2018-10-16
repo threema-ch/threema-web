@@ -23,12 +23,8 @@ import {bufferToUrl, logAdapter} from '../helpers';
  * Support uploading and resizing avatar
  */
 export default [
-    '$window',
-    '$timeout',
-    '$translate',
     '$log',
-    '$mdDialog',
-    function($window, $timeout: ng.ITimeoutService, $translate, $log: ng.ILogService, $mdDialog) {
+    function($log: ng.ILogService) {
         return {
             restrict: 'EA',
             scope: {
@@ -67,7 +63,7 @@ export default [
                                 clearTimeout(updateTimeout);
                             }
 
-                            updateTimeout = setTimeout(() => {
+                            updateTimeout = self.setTimeout(() => {
                                 croppieInstance.result({
                                     type: 'blob',
                                     // max allowed size on device
