@@ -18,6 +18,7 @@
 import {isActionTrigger} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
+import {TimeoutService} from '../services/timeout';
 
 /**
  * The compose area where messages are written.
@@ -25,7 +26,7 @@ import {StringService} from '../services/string';
 export default [
     'BrowserService',
     'StringService',
-    '$window',
+    'TimeoutService',
     '$timeout',
     '$translate',
     '$mdDialog',
@@ -34,7 +35,8 @@ export default [
     '$rootScope',
     function(browserService: BrowserService,
              stringService: StringService,
-             $window, $timeout: ng.ITimeoutService,
+             timeoutService: TimeoutService,
+             $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
@@ -130,7 +132,7 @@ export default [
                     // that we started typing earlier)
                     if (stopTypingTimer !== null) {
                         // Cancel timer
-                        $timeout.cancel(stopTypingTimer);
+                        timeoutService.cancel(stopTypingTimer);
                         stopTypingTimer = null;
 
                         // Send stop typing message
@@ -144,11 +146,11 @@ export default [
                         scope.startTyping();
                     } else {
                         // Cancel timer, we'll re-create it
-                        $timeout.cancel(stopTypingTimer);
+                        timeoutService.cancel(stopTypingTimer);
                     }
 
                     // Define a timeout to send the stopTyping event
-                    stopTypingTimer = $timeout(stopTyping, 10000);
+                    stopTypingTimer = timeoutService.register(stopTyping, 10000, true, 'stopTyping');
                 }
 
                 // Process a DOM node recursively and extract text from compose area.

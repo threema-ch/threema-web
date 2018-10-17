@@ -7,7 +7,14 @@ describe('MessageService', function() {
 
     beforeEach(function() {
 
-        // load threema services
+        // Inject constants
+        module(($provide) => {
+            $provide.constant('CONFIG', {
+                'DEBUG': true,
+            });
+        });
+
+        // Load threema services
         module('3ema.services');
 
         // Inject the MessageService

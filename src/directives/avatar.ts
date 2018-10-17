@@ -17,17 +17,18 @@
 
 import {bufferToUrl, logAdapter} from '../helpers';
 import {isEchoContact, isGatewayContact} from '../receiver_helpers';
+import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
 import {isContactReceiver} from '../typeguards';
 
 export default [
     '$rootScope',
-    '$timeout',
     '$log',
+    'TimeoutService',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
-             $timeout: ng.ITimeoutService,
              $log: ng.ILogService,
+             timeoutService: TimeoutService,
              webClientService: WebClientService) {
         return {
             restrict: 'E',
@@ -144,27 +145,31 @@ export default [
                             if (loadingPromise === null) {
                                 // Do not wait on high resolution avatar
                                 const loadingTimeout = this.highResolution ? 0 : 500;
-                                loadingPromise = $timeout(() => {
+                                loadingPromise = timeoutService.register(() => {
                                     // show loading only on high res images!
                                     webClientService.requestAvatar({
                                         type: this.receiver.type,
                                         id: this.receiver.id,
-                                    } as threema.Receiver, this.highResolution).then((avatar) => {
+                                    } as threema.Receiver, this.highResolution)
+                                    .then((avatar) => {
                                         $rootScope.$apply(() => {
                                             this.isLoading = false;
                                         });
-                                    }).catch((error) => {
+                                        loadingPromise = null;
+                                    })
+                                    .catch((error) => {
                                         // TODO: Handle this properly / show an error message
                                         $log.error(this.logTag, `Avatar request has been rejected: ${error}`);
                                         $rootScope.$apply(() => {
                                             this.isLoading = false;
                                         });
+                                        loadingPromise = null;
                                     });
-                                }, loadingTimeout);
+                                }, loadingTimeout, false, 'avatar');
                             }
                         } else if (loadingPromise !== null) {
                             // Cancel pending avatar loading
-                            $timeout.cancel(loadingPromise);
+                            timeoutService.cancel(loadingPromise);
                             loadingPromise = null;
                         }
                     };

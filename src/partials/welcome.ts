@@ -31,6 +31,7 @@ import {TrustedKeyStoreService} from '../services/keystore';
 import {PushService} from '../services/push';
 import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
+import {TimeoutService} from '../services/timeout';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 
@@ -61,8 +62,6 @@ class WelcomeController {
 
     // Angular services
     private $scope: ng.IScope;
-    private $timeout: ng.ITimeoutService;
-    private $interval: ng.IIntervalService;
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
     private $state: UiStateService;
@@ -77,6 +76,7 @@ class WelcomeController {
     private pushService: PushService;
     private stateService: StateService;
     private settingsService: SettingsService;
+    private timeoutService: TimeoutService;
     private config: threema.Config;
 
     // Other
@@ -90,13 +90,12 @@ class WelcomeController {
     private browserWarningShown: boolean = false;
 
     public static $inject = [
-        '$scope', '$state', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
+        '$scope', '$state', '$log', '$window', '$mdDialog', '$translate',
         'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
-        'VersionService', 'SettingsService', 'ControllerService',
+        'VersionService', 'SettingsService', 'TimeoutService', 'ControllerService',
         'BROWSER_MIN_VERSIONS', 'CONFIG',
     ];
     constructor($scope: ng.IScope, $state: UiStateService,
-                $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
                 $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, trustedKeyStore: TrustedKeyStoreService,
@@ -104,6 +103,7 @@ class WelcomeController {
                 browserService: BrowserService,
                 versionService: VersionService,
                 settingsService: SettingsService,
+                timeoutService: TimeoutService,
                 controllerService: ControllerService,
                 minVersions: threema.BrowserMinVersions,
                 config: threema.Config) {
@@ -111,8 +111,6 @@ class WelcomeController {
         // Angular services
         this.$scope = $scope;
         this.$state = $state;
-        this.$timeout = $timeout;
-        this.$interval = $interval;
         this.$log = $log;
         this.$window = $window;
         this.$mdDialog = $mdDialog;
@@ -124,6 +122,7 @@ class WelcomeController {
         this.stateService = stateService;
         this.pushService = pushService;
         this.settingsService = settingsService;
+        this.timeoutService = timeoutService;
         this.config = config;
 
         // TODO: Allow to trigger below behaviour by using state parameters
@@ -363,10 +362,10 @@ class WelcomeController {
                     // is already active.
                     if (message.key === publicKeyHex && this.stateService.connectionBuildupState !== 'done') {
                         this.$log.error(this.logTag, 'Session already connected in another tab or window');
-                        this.$timeout(() => {
+                        this.timeoutService.register(() => {
                             this.stateService.updateConnectionBuildupState('already_connected');
                             this.stateService.state = GlobalConnectionState.Error;
-                        }, 500);
+                        }, 500, true, 'alreadyConnected');
                     }
                     break;
                 default:
@@ -572,14 +571,24 @@ class WelcomeController {
                 this.formLocked = false;
 
                 // Redirect to home
-                this.$timeout(() => this.$state.go('messenger.home'), WelcomeController.REDIRECT_DELAY);
+                this.timeoutService.register(
+                    () => this.$state.go('messenger.home'),
+                    WelcomeController.REDIRECT_DELAY,
+                    true,
+                    'redirectToHome',
+                );
             },
 
             // If an error occurs...
             (error) => {
                 this.$log.error(this.logTag, 'Error state:', error);
                 // TODO: should probably show an error message instead
-                this.$timeout(() => this.$state.reload(), WelcomeController.REDIRECT_DELAY);
+                this.timeoutService.register(
+                    () => this.$state.reload(),
+                    WelcomeController.REDIRECT_DELAY,
+                    true,
+                    'reloadStateError',
+                );
             },
 
             // State updates
