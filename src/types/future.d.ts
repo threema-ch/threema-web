@@ -40,6 +40,7 @@ interface FutureStatic {
     new<T>(executor?: (resolveFn: (value?: T | PromiseLike<T>) => void,
                        rejectFn: (reason?: any) => void) => void,
     ): Future<T>
+    withMinDuration<T>(promise: Promise<T>, minDuration: Number): Future<T>
 }
 
 declare var Future: FutureStatic;

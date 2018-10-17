@@ -20,6 +20,19 @@ class Future extends Promise {
         this._reject = reject;
     }
 
+    static withMinDuration(promise, minDuration) {
+        const start = new Date();
+        return new Future((resolve, reject) => {
+            promise
+                .then((result) => {
+                    const timediff = new Date() - start;
+                    const delay = Math.max(minDuration - timediff, 0);
+                    self.setTimeout(() => resolve(result), delay);
+                })
+                .catch((error) => reject(error));
+        });
+    }
+
     /**
      * Return whether the future is done (resolved or rejected).
      */
