@@ -156,7 +156,8 @@ angular.module('3ema', [
 
         function enhanceLogging(wrapped) {
             return function(data) {
-                const currentDate = '[' + new Date().toUTCString() + ']';
+                const now = new Date();
+                const currentDate = `[${now.toISOString()}.${now.getMilliseconds()}]`;
                 wrapped.apply(this, [currentDate, ...arguments]);
             };
         }
