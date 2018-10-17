@@ -240,6 +240,10 @@ describe('Markup Parser', () => {
                  'https://example.com/_output_/'],
                 ['https://example.com/*output*/',
                  'https://example.com/*output*/'],
+                ['https://example.com?__twitter_impression=true',
+                 'https://example.com?__twitter_impression=true'],
+                ['https://example.com?_twitter_impression=true',
+                 'https://example.com?_twitter_impression=true'],
             ]);
         });
 

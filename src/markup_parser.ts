@@ -187,7 +187,14 @@ export function parse(tokens: Token[]): string {
                         if (stackTop.kind === TokenType.Text) {
                             textParts.push(stackTop.value);
                         } else if (stackTop.kind === token.kind) {
-                            pushMarkup(textParts, cssClasses[token.kind]);
+                            if (textParts.length > 0) {
+                                pushMarkup(textParts, cssClasses[token.kind]);
+                            } else {
+                                // If this happens, then two markup chars were following each other (e.g. **hello).
+                                // In that case, just keep them as regular text characters, without applying any markup.
+                                const markupChar = markupChars[token.kind];
+                                stack.push({ kind: TokenType.Text, value: markupChar + markupChar });
+                            }
                             hasToken(token.kind, false);
                             break;
                         } else if (isMarkupToken(stackTop.kind)) {
