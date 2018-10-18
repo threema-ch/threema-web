@@ -20,6 +20,18 @@ class Future extends Promise {
         this._reject = reject;
     }
 
+    /**
+     * Wrap a promise to ensure it does not resolve before a minimum
+     * duration.
+     *
+     * Note: The promise will still reject immediately. Furthermore, be
+     *       aware that the promise does not resolve/reject inside of
+     *       an AngularJS digest cycle.
+     *
+     * @param promise the promise or future to be wrapped
+     * @param minDuration the minimum duration before it should be resolved
+     * @returns {Future}
+     */
     static withMinDuration(promise, minDuration) {
         const start = new Date();
         return new Future((resolve, reject) => {
