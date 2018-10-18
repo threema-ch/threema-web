@@ -240,10 +240,12 @@ describe('Markup Parser', () => {
                  'https://example.com/_output_/'],
                 ['https://example.com/*output*/',
                  'https://example.com/*output*/'],
-                ['https://example.com?__twitter_impression=true',
-                 'https://example.com?__twitter_impression=true'],
                 ['https://example.com?_twitter_impression=true',
                  'https://example.com?_twitter_impression=true'],
+                ['https://example.com?__twitter_impression=true',
+                 'https://example.com?__twitter_impression=true'],
+                ['https://example.com?___twitter_impression=true',
+                 'https://example.com?___twitter_impression=true'],
             ]);
         });
 
@@ -251,6 +253,8 @@ describe('Markup Parser', () => {
             testPatterns([
                 ['*invalid markup (do not parse)_', '*invalid markup (do not parse)_'],
                 ['random *asterisk', 'random *asterisk'],
+                ['***three asterisks', '***three asterisks'],
+                ['***three asterisks*', '**<span class="text-bold">three asterisks</span>'],
             ]);
         });
 
