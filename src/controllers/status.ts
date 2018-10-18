@@ -293,16 +293,6 @@ export class StatusController {
                 };
             }
 
-            // ... if there are one or more cached chunks that require immediate
-            //     sending.
-            const immediateChunksPending = this.webClientService.immediateChunksPending;
-            if (immediateChunksPending > 0) {
-                return {
-                    send: true,
-                    reason: `${immediateChunksPending} chunks that require acknowledgement`,
-                };
-            }
-
             // ... otherwise, don't push!
             return {
                 send: false,
