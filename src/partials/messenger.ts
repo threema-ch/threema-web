@@ -1275,8 +1275,10 @@ class ReceiverDetailController {
 
             this.contactService.requiredDetails(contactReceiver)
                 .then(() => {
-                    this.hasSystemEmails = contactReceiver.systemContact.emails.length > 0;
-                    this.hasSystemPhones = contactReceiver.systemContact.phoneNumbers.length > 0;
+                    this.hasSystemEmails = contactReceiver.systemContact !== undefined
+                        && contactReceiver.systemContact.emails.length > 0;
+                    this.hasSystemPhones = contactReceiver.systemContact !== undefined &&
+                        contactReceiver.systemContact.phoneNumbers.length > 0;
                 })
                 .catch((error) => {
                     // TODO: Redirect or show an alert?
