@@ -2723,7 +2723,7 @@ export class WebClientService {
                     if (!this.messages.update(receiver, msg)) {
                         this.messages.addNewer(receiver, [msg]);
 
-                        // If we received a new message, then for sure the contact is not typing anymore.
+                        // If we have received a new message, it is highly unlikely that the contact is still typing
                         this.typing.unsetTyping(receiver);
                     }
                     notify = true;
