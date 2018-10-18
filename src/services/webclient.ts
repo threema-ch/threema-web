@@ -2722,6 +2722,9 @@ export class WebClientService {
                     // Try to update it first. If not, add it as a new msg.
                     if (!this.messages.update(receiver, msg)) {
                         this.messages.addNewer(receiver, [msg]);
+
+                        // If we received a new message, then for sure the contact is not typing anymore.
+                        this.typing.unsetTyping(receiver);
                     }
                     notify = true;
                     break;
