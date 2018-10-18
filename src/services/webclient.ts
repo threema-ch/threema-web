@@ -2181,9 +2181,10 @@ export class WebClientService {
         // Set contact detail
         const contactReceiver = this.receivers.contacts
             .get(args[WebClientService.ARGUMENT_IDENTITY]) as threema.ContactReceiver;
-        if (hasValue(data[WebClientService.SUB_TYPE_RECEIVER])) {
+        const receiver = data[WebClientService.SUB_TYPE_RECEIVER];
+        if (hasValue(receiver)) {
             contactReceiver.systemContact =
-                data[WebClientService.SUB_TYPE_RECEIVER][WebClientService.ARGUMENT_SYSTEM_CONTACT];
+                receiver[WebClientService.ARGUMENT_SYSTEM_CONTACT];
         }
         future.resolve(contactReceiver);
     }
