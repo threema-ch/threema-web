@@ -349,20 +349,6 @@ export class WebClientService {
     }
 
     /**
-     * Return the amount of chunks cached from a previous connection that
-     * require immediate sending.
-     */
-    get immediateChunksPending(): number {
-        // TODO: Apply the chunk **push** blacklist instead of the chunk cache
-        //       blacklist!
-        if (this.previousChunkCache === null) {
-            return 0;
-        } else {
-            return this.previousChunkCache.chunks.length;
-        }
-    }
-
-    /**
      * Return the amount of unacknowledged wire messages.
      */
     get unacknowledgedWireMessages(): number {
@@ -757,7 +743,7 @@ export class WebClientService {
         this.$log.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
             `${size} -> ${this.previousChunkCache.byteLength}`);
         if (this.config.MSG_DEBUGGING) {
-            this.$log.debug(`Chunks that require acknowledgement: ${this.immediateChunksPending}`);
+            this.$log.debug(`Chunks that require acknowledgement: ${this.previousChunkCache.chunks.length}`);
         }
 
         // Transfer the cache (filters chunks which should not be retransmitted)
@@ -3772,7 +3758,7 @@ export class WebClientService {
             throw new Error(`Cannot send chunk, not supported by task: ${this.chosenTask}`);
         }
         const shouldQueue = canQueue && this.previousChunkCache !== null;
-        let chunkCache;
+        let chunkCache: ChunkCache;
 
         // Enqueue in the chunk cache that is pending to be transferred and
         // send a wakeup push.
