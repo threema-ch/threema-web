@@ -32,20 +32,20 @@ export default {
         iconEnabled: '@',
         iconDisabled: '@',
     },
+    controller: function() {
+        this.getLabel = () => this.flag ? this.labelEnabled : this.labelDisabled;
+        this.getIcon = () => this.flag ? this.iconEnabled : this.iconDisabled;
+        this.action = () => this.flag ? this.onDisable() : this.onEnable();
+    },
     template: `
         <md-button
             class="md-icon-button"
-            translate-attr="{'aria-label': $ctrl.labelEnabled, 'title': $ctrl.labelEnabled}"
-            ng-if="$ctrl.flag"
-            ng-click="$ctrl.onDisable()">
-            <md-icon><img ng-src="{{ $ctrl.iconEnabled }}"></md-icon>
-        </md-button>
-        <md-button
-            class="md-icon-button"
-            translate-attr="{'aria-label': $ctrl.labelDisabled, 'title': $ctrl.labelDisabled}"
-            ng-if="!$ctrl.flag"
-            ng-click="$ctrl.onEnable()">
-            <md-icon><img ng-src="{{ $ctrl.iconDisabled }}"></md-icon>
+            translate-attr="{'aria-label': $ctrl.getLabel(), 'title': $ctrl.getLabel()}"
+            role="button"
+            tabindex="0"
+            ng-click="$ctrl.action()"
+            aria-pressed="$ctrl.flag">
+            <md-icon><img ng-src="{{ $ctrl.getIcon() }}"></md-icon>
         </md-button>
     `,
 };

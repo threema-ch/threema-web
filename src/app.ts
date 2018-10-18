@@ -41,6 +41,7 @@ angular.module('3ema', [
     // Angular
     'ngAnimate',
     'ngSanitize',
+    'ngAria',
 
     // 3rd party
     'ui.router',
