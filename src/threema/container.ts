@@ -776,15 +776,15 @@ class Converter {
 class Typing implements threema.Container.Typing {
     private set = new StringHashSet();
 
-    private getReceiverUid(receiver: threema.ContactReceiver): string {
+    private getReceiverUid(receiver: threema.BaseReceiver): string {
         return receiver.type + '-' + receiver.id;
     }
 
-    public setTyping(receiver: threema.ContactReceiver): void {
+    public setTyping(receiver: threema.BaseReceiver): void {
         this.set.add(this.getReceiverUid(receiver));
     }
 
-    public unsetTyping(receiver: threema.ContactReceiver): void {
+    public unsetTyping(receiver: threema.BaseReceiver): void {
         this.set.remove(this.getReceiverUid(receiver));
     }
 
@@ -792,7 +792,7 @@ class Typing implements threema.Container.Typing {
         this.set.clearAll();
     }
 
-    public isTyping(receiver: threema.ContactReceiver): boolean {
+    public isTyping(receiver: threema.BaseReceiver): boolean {
         return this.set.contains(this.getReceiverUid(receiver));
     }
 }

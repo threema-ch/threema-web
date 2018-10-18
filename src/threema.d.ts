@@ -818,10 +818,10 @@ declare namespace threema {
         }
 
         interface Typing {
-            setTyping(receiver: ContactReceiver): void;
-            unsetTyping(receiver: ContactReceiver): void;
+            setTyping(receiver: BaseReceiver): void;
+            unsetTyping(receiver: BaseReceiver): void;
             clearAll(): void;
-            isTyping(receiver: ContactReceiver): boolean;
+            isTyping(receiver: BaseReceiver): boolean;
         }
 
         interface Drafts {
