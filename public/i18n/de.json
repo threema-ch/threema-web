@@ -331,7 +331,7 @@
         }
     },
     "connection": {
-        "SESSION_CLOSED_TITLE": "Sitzung Geschlossen",
+        "SESSION_CLOSED_TITLE": "Sitzung geschlossen",
         "SESSION_STOPPED": "Die Sitzung wurde auf Ihrem Gerät gestoppt.",
         "SESSION_DELETED": "Die Sitzung wurde auf Ihrem Gerät gelöscht.",
         "WEBCLIENT_DISABLED": "Threema Web wurde auf Ihrem Gerät deaktiviert.",
