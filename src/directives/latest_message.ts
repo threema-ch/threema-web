@@ -28,7 +28,7 @@ export default [
             restrict: 'EA',
             scope: {},
             bindToController: {
-                conversation: '<conversation',
+                conversation: '<',
             },
             controllerAs: 'ctrl',
             controller: [function() {
@@ -49,12 +49,13 @@ export default [
                             return 'forum';
                         } else if (!this.conversation.latestMessage.isOutbox) {
                             return 'reply';
-                        } else if (messageService.showStatusIcon(
-                            this.conversation.latestMessage, this.conversation.receiver)
-                        ) {
-                            return $filter('messageStateIcon')(this.conversation.latestMessage);
+                        } else {
+                            const showStatusIcon = messageService.showStatusIcon(
+                                this.conversation.latestMessage,
+                                this.conversation.receiver,
+                            );
+                            return showStatusIcon ? $filter('messageStateIcon')(this.conversation.latestMessage) : null;
                         }
-                        return null;
                     };
 
                     // Find sender of latest message

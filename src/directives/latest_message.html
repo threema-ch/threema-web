@@ -17,9 +17,10 @@
               ng-if="ctrl.isGroup" eee-contact="ctrl.getContact()"></span>
 
         <!-- For non-text-messages, show an icon. -->
-        <span eee-message-icon
-              ng-show="ctrl.showIcon()" class="message-icon"
-              eee-message="ctrl.conversation.latestMessage"></span>
+        <eee-message-icon
+                ng-show="ctrl.showIcon()"
+                class="message-icon"
+                eee-message="ctrl.conversation.latestMessage"></eee-message-icon>
 
         <!-- For voip status messages -->
         <eee-message-voip-status

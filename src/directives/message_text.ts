@@ -51,13 +51,27 @@ export default [
                 scope.$watch(
                     () => scope.ctrl.message.id,
                     (newId, oldId) => {
-                        // Register for message changes. When the ID changes, update the text.
+                        // Register for message ID changes. When it changes, update the text.
                         // This prevents processing the text more than once.
                         if (hasValue(newId) && newId !== oldId) {
                             scope.ctrl.updateText();
                         }
                     },
                 );
+                scope.$watch(
+                    () => scope.ctrl.message.caption,
+                    (newCaption, oldCaption) => {
+                        // Register for message caption changes. When it changes, update the text.
+                        //
+                        // Background: The caption may change because image messages may be sent from the
+                        // app before the image has been downloaded and parsed. That information
+                        // (thumbnail + caption) is sent later on as an update.
+                        if (hasValue(newCaption) && newCaption !== oldCaption) {
+                            scope.ctrl.updateText();
+                        }
+                    },
+                );
+
             },
             controllerAs: 'ctrl',
             controller: ['WebClientService', '$filter', function(webClientService: WebClientService, $filter: ng.IFilterService) {
@@ -89,8 +103,9 @@ export default [
                     const linkifyText = (this.linkify === undefined || this.linkify !== 'false');
 
                     // Process text once, apply all filter functions
+                    const text = getText(this.message);
                     this.text = processText(
-                        getText(this.message),
+                        text,
                         this.largeSingleEmoji,
                         multiLine,
                         linkifyText,

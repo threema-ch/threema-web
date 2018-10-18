@@ -156,7 +156,9 @@ export default [
                         this.wasInView = inView;
 
                         if (!inView) {
-                            timeoutService.cancel(loadingThumbnailTimeout);
+                            if (loadingThumbnailTimeout !== null) {
+                                timeoutService.cancel(loadingThumbnailTimeout);
+                            }
                             this.thumbnailDownloading = false;
                             this.thumbnail = null;
                         } else {
