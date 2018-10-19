@@ -44,7 +44,7 @@ export default {
             role="button"
             tabindex="0"
             ng-click="$ctrl.action()"
-            aria-pressed="$ctrl.flag">
+            aria-pressed="{{$ctrl.flag}}">
             <md-icon><img ng-src="{{ $ctrl.getIcon() }}"></md-icon>
         </md-button>
     `,
