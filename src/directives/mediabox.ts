@@ -60,12 +60,16 @@ export default [
                 // Listen to Mediabox service events
                 mediaboxService.evtMediaChanged.attach((dataAvailable: boolean) => {
                     $rootScope.$apply(() => {
-                        this.imageDataUrl = bufferToUrl(
-                            mediaboxService.data,
-                            mediaboxService.mimetype,
-                            logAdapter($log.debug, this.logTag),
-                        );
-                        this.caption = mediaboxService.caption || mediaboxService.filename;
+                        if (dataAvailable) {
+                            this.imageDataUrl = bufferToUrl(
+                                mediaboxService.data,
+                                mediaboxService.mimetype,
+                                logAdapter($log.debug, this.logTag),
+                            );
+                            this.caption = mediaboxService.caption || mediaboxService.filename;
+                        } else {
+                            this.close();
+                        }
                     });
                 });
             }],
