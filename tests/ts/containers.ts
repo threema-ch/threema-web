@@ -36,6 +36,7 @@ function makeContactConversation(id: string, position?: number): threema.Convers
         messageCount: 5,
         unreadCount: 0,
         latestMessage: null,
+        isStarred: false,
     };
 }
 
@@ -83,6 +84,17 @@ describe('Container', () => {
                 const expected = makeContactConversation('1');
                 delete expected.position;
                 expect((conversations as any).conversations).toEqual([expected]);
+            });
+
+            it('sets defaults', function() {
+                const conversations = getConversations();
+
+                const conversation = makeContactConversation('1', 7);
+                delete conversation.isStarred;
+                conversations.set([conversation]);
+
+                const expected = makeContactConversation('1');
+                expect((conversations as any).conversations[0].isStarred).toEqual(false);
             });
         });
 

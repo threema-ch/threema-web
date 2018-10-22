@@ -286,6 +286,7 @@ export class Conversations implements threema.Container.Conversations {
             if (conversation.position !== undefined) {
                 delete conversation.position;
             }
+            setDefault(conversation, 'isStarred', false);
         }
         this.conversations = data;
     }
