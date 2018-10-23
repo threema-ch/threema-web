@@ -3212,7 +3212,7 @@ export class WebClientService {
         sender: threema.Receiver,
     ): void {
         // Ignore message from active receivers (and if the browser tab is visible)
-        if (this.browserService.isVisible()
+        if (document.hasFocus()
                 && this.receiverService.compare(conversation, this.receiverService.getActive())) {
             return;
         }
