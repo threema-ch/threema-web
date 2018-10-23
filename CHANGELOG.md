@@ -4,6 +4,21 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.0-rc.1][v2.1.0-rc.1] (2018-10-23)
+
+Changes:
+
+* [change] Use window focus instead of page visibility to determine
+  whether messages should be marked as read ([#644][i644])
+* [bug] Hide image preview when redirecting ([#640][i640])
+* [bug] Fix updating of avatars in contact autocomplete box ([#643][i643])
+* [bug] Accessibility fixes ([#639][i639])
+
+Contributors:
+
+- [@MarcoZehe][@MarcoZehe]
+
+
 ### [v2.1.0-beta.7][v2.1.0-beta.7] (2018-10-18)
 
 Changes:
@@ -625,6 +640,10 @@ First public release.
 [i636]: https://github.com/threema-ch/threema-web/pull/636
 [i637]: https://github.com/threema-ch/threema-web/pull/637
 [i638]: https://github.com/threema-ch/threema-web/pull/638
+[i639]: https://github.com/threema-ch/threema-web/pull/639
+[i640]: https://github.com/threema-ch/threema-web/pull/640
+[i643]: https://github.com/threema-ch/threema-web/pull/643
+[i644]: https://github.com/threema-ch/threema-web/pull/644
 
 [v2.1.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0-beta.1
 [v2.1.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.1...v2.1.0-beta.2
@@ -633,6 +652,7 @@ First public release.
 [v2.1.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.4...v2.1.0-beta.5
 [v2.1.0-beta.6]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.5...v2.1.0-beta.6
 [v2.1.0-beta.7]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.6...v2.1.0-beta.7
+[v2.1.0-rc.1]: https://github.com/threema-ch/threema-web/compare/v2.1.0-beta.7...v2.1.0-rc.1
 [v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
 [v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
