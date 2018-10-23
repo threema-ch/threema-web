@@ -11,14 +11,12 @@ Web, you can use Threema on your Desktop without compromising security.
 
 ![Screenshot](https://threema.ch/images/webclient_header.png)
 
-Threema Web establishes a direct connection between Desktop and mobile device
-using [WebRTC](https://webrtc.org/). Signaling is end-to-end encrypted with
-[SaltyRTC](https://saltyrtc.org/). If both devices are in the same network, no
-server is involved when synchronizing messages between the devices, and the
-digital footprint is reduced to the bare minimum.
+Threema Web establishes a connection between Desktop and mobile device using
+[WebRTC](https://webrtc.org/) (Android) or encrypted WebSockets (iOS).
+Signaling and data is end-to-end encrypted with [SaltyRTC](https://saltyrtc.org/).
 
-For more information, see the [Threema Web
-Whitepaper](https://threema.ch/en/blog/posts/threema-web-whitepaper).
+For more information, see the [Threema Cryptography
+Whitepaper](https://threema.ch/press-files/2_documentation/cryptography_whitepaper.pdf).
 
 
 ## Bug Reports and Feature Requests
