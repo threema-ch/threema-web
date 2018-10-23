@@ -17,23 +17,29 @@
 
 // tslint:disable:max-line-length
 
+import {saveAs} from 'file-saver';
+
+import {BrowserInfo} from '../helpers/browser_info';
 import {getSenderIdentity} from '../helpers/messages';
+import {BrowserService} from '../services/browser';
 import {MessageService} from '../services/message';
 import {ReceiverService} from '../services/receiver';
 import {WebClientService} from '../services/webclient';
 
 export default [
-    'WebClientService',
+    'BrowserService',
     'MessageService',
     'ReceiverService',
+    'WebClientService',
     '$mdDialog',
     '$mdToast',
     '$translate',
     '$rootScope',
     '$log',
-    function(webClientService: WebClientService,
+    function(browserService: BrowserService,
              messageService: MessageService,
              receiverService: ReceiverService,
+             webClientService: WebClientService,
              $mdDialog: ng.material.IDialogService,
              $mdToast: ng.material.IToastService,
              $translate: ng.translate.ITranslateService,
@@ -52,6 +58,9 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.logTag = '[MessageDirective]';
+
+                // Determine browser
+                this.browserInfo = browserService.getBrowser();
 
                 this.$onInit = function() {
 
@@ -115,11 +124,26 @@ export default [
                         // In order to copy the text to the clipboard,
                         // put it into a temporary textarea element.
                         const textArea = document.createElement('textarea');
-                        let toastString = 'messenger.COPY_ERROR';
                         textArea.value = text;
                         document.body.appendChild(textArea);
-                        textArea.focus();
-                        textArea.select();
+
+                        if ((this.browserInfo as BrowserInfo).isSafari()) {
+                            // Safari: Create a selection range.
+                            // Inspiration: https://stackoverflow.com/a/34046084/284318
+                            textArea.contentEditable = 'true';
+                            textArea.readOnly = false;
+                            const range = document.createRange();
+                            const selection = self.getSelection();
+                            selection.removeAllRanges();
+                            selection.addRange(range);
+                            textArea.setSelectionRange(0, 999999);
+                        } else {
+                            textArea.focus();
+                            textArea.select();
+                        }
+
+                        // Copy selection to clipboard
+                        let toastString = 'messenger.COPY_ERROR';
                         try {
                             const successful = document.execCommand('copy');
                             if (!successful) {
@@ -159,7 +183,8 @@ export default [
                                 });
                             })
                             .catch((error) => {
-                                $log.error(this.logTag, 'Error downloading blob:', error);
+                                // TODO: Handle this properly / show an error message
+                                $log.error(this.logTag, `Error downloading blob: ${error}`);
                                 this.downloading = false;
                             });
                     };

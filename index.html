@@ -57,7 +57,7 @@
 </head>
 
 <body ng-controller="StatusController as ctrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
-    <img src="img/bg.jpg?v=1" alt="Background image: Blurred photo of a mountain" id="background-image" draggable="false">
+    <img src="img/bg.jpg?v=1" aria-label="Background image: Blurred photo of a mountain" id="background-image" draggable="false">
 
     <noscript>
         <img id="logo-noscript" src="img/logo.svg?v=[[VERSION]]"/>
@@ -82,12 +82,6 @@
                 <status-bar active="ctrl.expandStatusBar"></status-bar>
             </div>
             <div id="main-content" ui-view></div>
-        </div>
-        <div class="android-ios-only" ng-controller="AndroidIosOnlyController as ctrl" ng-show="ctrl.show">
-            <div>
-                <i class="material-icons md-24">android</i>
-                <span translate>welcome.ANDROID_IOS_ONLY</span>
-            </div>
         </div>
         <footer ng-controller="FooterController as ctrl">
             <ul>
@@ -118,6 +112,7 @@
     <script src="libs/emojione/emojione.min.js?v=[[VERSION]]"></script>
     <script src="node_modules/angularjs-scroll-glue/src/scrollglue.js?v=[[VERSION]]"></script>
     <script src="libs/angular-inview/angular-inview.js?v=[[VERSION]]"></script>
+    <script src="libs/future.js?v=[[VERSION]]"></script>
 
     <!-- Translation -->
     <script src="node_modules/messageformat/messageformat.min.js?v=[[VERSION]]"></script>
@@ -128,7 +123,6 @@
     <!-- Other -->
     <script src="node_modules/msgpack-lite/dist/msgpack.min.js?v=[[VERSION]]"></script>
     <script src="node_modules/tweetnacl/nacl-fast.min.js?v=[[VERSION]]"></script>
-    <script src="node_modules/file-saver/FileSaver.min.js?v=[[VERSION]]"></script>
     <script src="node_modules/@saltyrtc/chunked-dc/dist/chunked-dc.es5.js?v=[[VERSION]]"></script>
     <script src="node_modules/@saltyrtc/client/dist/saltyrtc-client.es5.js?v=[[VERSION]]"></script>
     <script src="node_modules/@saltyrtc/task-webrtc/dist/saltyrtc-task-webrtc.es5.js?v=[[VERSION]]"></script>

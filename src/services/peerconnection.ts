@@ -39,9 +39,6 @@ export class PeerConnectionHelper {
     public connectionState: TaskConnectionState = TaskConnectionState.New;
     public onConnectionStateChange: (state: TaskConnectionState) => void = null;
 
-    // Internal callback when connection closes
-    private onConnectionClosed: () => void = null;
-
     // Debugging
     private censorCandidates: boolean;
 
@@ -179,14 +176,10 @@ export class PeerConnectionHelper {
     /**
      * Create a new secure data channel.
      */
-    public createSecureDataChannel(label: string, onopenHandler?): saltyrtc.tasks.webrtc.SecureDataChannel {
+    public createSecureDataChannel(label: string): saltyrtc.tasks.webrtc.SecureDataChannel {
         const dc: RTCDataChannel = this.pc.createDataChannel(label);
         dc.binaryType = 'arraybuffer';
-        const sdc: saltyrtc.tasks.webrtc.SecureDataChannel = this.webrtcTask.wrapDataChannel(dc);
-        if (onopenHandler !== undefined) {
-            sdc.onopen = onopenHandler;
-        }
-        return sdc;
+        return this.webrtcTask.wrapDataChannel(dc);
     }
 
     /**
@@ -198,56 +191,23 @@ export class PeerConnectionHelper {
             if (this.onConnectionStateChange !== null) {
                 this.$timeout(() => this.onConnectionStateChange(state), 0);
             }
-            if (this.onConnectionClosed !== null && state === TaskConnectionState.Disconnected) {
-                this.$timeout(() => this.onConnectionClosed(), 0);
-            }
         }
     }
 
     /**
-     * Close the peer connection.
-     *
-     * Return a promise that resolves once the connection is actually closed.
+     * Unbind all event handler and abruptly close the peer connection.
      */
-    public close(): ng.IPromise<{}> {
-        return this.$q((resolve, reject) => {
-            const signalingClosed = this.pc.signalingState as string === 'closed'; // Legacy
-            const connectionClosed = this.pc.connectionState === 'closed';
-            if (!signalingClosed && !connectionClosed) {
-
-                // If connection state is not yet "disconnected", register a callback
-                // for the disconnect event.
-                if (this.connectionState !== 'disconnected') {
-                    // Disconnect timeout
-                    let timeout: ng.IPromise<any>;
-
-                    // Handle connection closed event
-                    this.onConnectionClosed = () => {
-                        this.$timeout.cancel(timeout);
-                        this.onConnectionClosed = null;
-                        resolve();
-                    };
-
-                    // Launch timeout
-                    timeout = this.$timeout(() => {
-                        this.onConnectionClosed = null;
-                        reject('Timeout');
-                    }, 2000);
-                }
-
-                // Close connection
-                setTimeout(() => {
-                    this.pc.close();
-                }, 0);
-
-                // If connection state is already "disconnected", resolve immediately.
-                if (this.connectionState === 'disconnected') {
-                    resolve();
-                }
-            } else {
-                resolve();
-            }
-        });
+    public close(): void {
+        this.webrtcTask.off();
+        this.pc.onnegotiationneeded = null;
+        this.pc.onconnectionstatechange = null;
+        this.pc.onsignalingstatechange = null;
+        this.pc.onicecandidate = null;
+        this.pc.onicecandidateerror = null;
+        this.pc.oniceconnectionstatechange = null;
+        this.pc.onicegatheringstatechange = null;
+        this.pc.ondatachannel = null;
+        this.pc.close();
     }
 
     /**

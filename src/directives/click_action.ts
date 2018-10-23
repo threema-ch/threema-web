@@ -25,7 +25,12 @@ export default [
     '$state',
     'UriService',
     'WebClientService',
-    function($timeout, $state: UiStateService, uriService: UriService, webClientService: WebClientService) {
+    function(
+        $timeout: ng.ITimeoutService,
+        $state: UiStateService,
+        uriService: UriService,
+        webClientService: WebClientService,
+    ) {
 
         const validateThreemaId = (id: string): boolean => {
             return id !== undefined && id !== null && /^[0-9A-Z]{8}/.test(id);

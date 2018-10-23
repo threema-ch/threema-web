@@ -43,7 +43,7 @@ export class StateService {
     public taskConnectionState: TaskConnectionState;
 
     // Connection buildup state
-    public connectionBuildupState: threema.ConnectionBuildupState = 'connecting';
+    public connectionBuildupState: threema.ConnectionBuildupState;
     public progress = 0;
     private progressInterval: ng.IPromise<any> = null;
     public slowConnect = false;
@@ -206,7 +206,7 @@ export class StateService {
                 this.progress = 60;
                 this.progressInterval = this.$interval(() => {
                     if (this.progress < 80) {
-                        this.progress += 5;
+                        this.progress += 4;
                     } else if (this.progress < 90) {
                         this.progress += 2;
                     } else if (this.progress < 99) {
@@ -214,7 +214,7 @@ export class StateService {
                     } else {
                         this.slowConnect = true;
                     }
-                }, 500);
+                }, 600);
                 break;
             case 'done':
                 this.progress = 100;
@@ -228,7 +228,7 @@ export class StateService {
     public readyToSubmit(chosenTask: ChosenTask): boolean {
         switch (chosenTask) {
             case ChosenTask.RelayedData:
-                return this.state === GlobalConnectionState.Ok || this.state === GlobalConnectionState.Warning;
+                return true;
             case ChosenTask.WebRTC:
             default:
                 return this.state === GlobalConnectionState.Ok;
@@ -238,8 +238,8 @@ export class StateService {
     /**
      * Reset all states.
      */
-    public reset(): void {
-        this.$log.debug(this.logTag, 'Reset');
+    public reset(connectionBuildupState: threema.ConnectionBuildupState = 'new'): void {
+        this.$log.debug(this.logTag, 'Reset states');
 
         // Reset state
         this.signalingConnectionState = 'new';
@@ -247,6 +247,7 @@ export class StateService {
         this.stage = Stage.Signaling;
         this.state = GlobalConnectionState.Error;
         this.wasConnected = false;
-        this.connectionBuildupState = 'connecting';
+        this.connectionBuildupState = connectionBuildupState;
+        this.progress = 0;
     }
 }

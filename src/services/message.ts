@@ -17,6 +17,7 @@
 
 import {isContactReceiver} from '../typeguards';
 import {ReceiverService} from './receiver';
+import {TimeoutService} from './timeout';
 
 export class MessageAccess {
     public quote = false;
@@ -31,22 +32,22 @@ export class MessageService {
 
     // Angular services
     private $log: ng.ILogService;
-    private $timeout: ng.ITimeoutService;
 
     // Own services
     private receiverService: ReceiverService;
+    private timeoutService: TimeoutService;
 
     // Other
     private timeoutDelaySeconds = 30;
 
-    public static $inject = ['$log', '$timeout', 'ReceiverService'];
-    constructor($log: ng.ILogService, $timeout: ng.ITimeoutService, receiverService: ReceiverService) {
+    public static $inject = ['$log', 'ReceiverService', 'TimeoutService'];
+    constructor($log: ng.ILogService, receiverService: ReceiverService, timeoutService: TimeoutService) {
         this.$log = $log;
-        this.$timeout = $timeout;
         this.receiverService = receiverService;
+        this.timeoutService = timeoutService;
     }
 
-    public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess  {
+    public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess {
         const access = new MessageAccess();
 
         if (message !== undefined) {
@@ -140,13 +141,16 @@ export class MessageService {
     }
 
     /**
-     * Create a message object with a temporaryId
+     * Create a message object with a temporary id
      */
-    public createTemporary(receiver: threema.Receiver, msgType: string,
-                           messageData: threema.MessageData): threema.Message {
-        const now = new Date();
+    public createTemporary(
+        temporaryId: string,
+        receiver: threema.Receiver,
+        msgType: string,
+        messageData: threema.MessageData,
+    ): threema.Message {
         const message = {
-            temporaryId: receiver.type + receiver.id + Math.random(),
+            temporaryId: temporaryId,
             type: msgType,
             isOutbox: true,
             state: 'pending',
@@ -165,7 +169,8 @@ export class MessageService {
         }
 
         // Add delay for timeout checking
-        this.$timeout(() => {
+        // TODO: This should be removed once Android has reliable message delivery.
+        this.timeoutService.register(() => {
             // Set the state to timeout if it is still pending.
             // Note: If sending the message worked, by now the message object
             // will have been replaced by a new one and the state change would
@@ -173,7 +178,7 @@ export class MessageService {
             if (message.state === 'pending') {
                 message.state = 'timeout';
             }
-        }, this.timeoutDelaySeconds * 1000);
+        }, this.timeoutDelaySeconds * 1000, true, 'messageTimeout');
 
         return message;
     }

@@ -17,7 +17,25 @@
 
 // tslint:disable:max-line-length
 
+import {hasValue} from '../helpers';
 import {WebClientService} from '../services/webclient';
+
+// Get text depending on type
+function getText(message: threema.Message): string {
+    switch (message.type) {
+        case 'text':
+            return message.body;
+        case 'location':
+            return message.location.description;
+        case 'file':
+            // Prefer caption for file messages, if available
+            if (message.caption && message.caption.length > 0) {
+                return message.caption;
+            }
+            return message.file.name;
+    }
+    return message.caption;
+}
 
 export default [
     function() {
@@ -25,28 +43,38 @@ export default [
             restrict: 'EA',
             scope: {},
             bindToController: {
-                message: '=eeeMessage',
-                multiLine: '=?eeeMultiLine',
+                message: '=',
+                multiLine: '@?multiLine',
+                linkify: '@?linkify',
+            },
+            link: function(scope, elem, attrs) {
+                scope.$watch(
+                    () => scope.ctrl.message.id,
+                    (newId, oldId) => {
+                        // Register for message ID changes. When it changes, update the text.
+                        // This prevents processing the text more than once.
+                        if (hasValue(newId) && newId !== oldId) {
+                            scope.ctrl.updateText();
+                        }
+                    },
+                );
+                scope.$watch(
+                    () => scope.ctrl.message.caption,
+                    (newCaption, oldCaption) => {
+                        // Register for message caption changes. When it changes, update the text.
+                        //
+                        // Background: The caption may change because image messages may be sent from the
+                        // app before the image has been downloaded and parsed. That information
+                        // (thumbnail + caption) is sent later on as an update.
+                        if (hasValue(newCaption) && newCaption !== oldCaption) {
+                            scope.ctrl.updateText();
+                        }
+                    },
+                );
+
             },
             controllerAs: 'ctrl',
             controller: ['WebClientService', '$filter', function(webClientService: WebClientService, $filter: ng.IFilterService) {
-                // Get text depending on type
-                function getText(message: threema.Message): string {
-                    switch (message.type) {
-                        case 'text':
-                            return message.body;
-                        case 'location':
-                            return message.location.description;
-                        case 'file':
-                            // Prefer caption for file messages, if available
-                            if (message.caption && message.caption.length > 0) {
-                                return message.caption;
-                            }
-                            return message.file.name;
-                    }
-                    return message.caption;
-                }
-
                 // TODO: Extract filters into helper functions
                 const escapeHtml = $filter('escapeHtml') as any;
                 const markify = $filter('markify') as any;
@@ -59,17 +87,36 @@ export default [
                 /**
                  * Apply filters to text.
                  */
-                function processText(text: string, largeSingleEmoji: boolean, multiLine: boolean): string {
-                    return nlToBr(linkify(mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), enlargeSingleEmoji))), multiLine);
+                function processText(text: string, largeSingleEmoji: boolean, multiLine: boolean, linkifyText: boolean): string {
+                    const nonLinkified = mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), largeSingleEmoji));
+                    const maybeLinkified = linkifyText ? linkify(nonLinkified) : nonLinkified;
+                    return nlToBr(maybeLinkified, multiLine);
                 }
 
-                this.enlargeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
+                /**
+                 * Text update function.
+                 */
+                this.updateText = () => {
+                    // Because this.multiLine and this.linkify are bound using an `@` binding,
+                    // they are either undefined or a string. Convert to boolean.
+                    const multiLine = (this.multiLine === undefined || this.multiLine !== 'false');
+                    const linkifyText = (this.linkify === undefined || this.linkify !== 'false');
+
+                    // Process text once, apply all filter functions
+                    const text = getText(this.message);
+                    this.text = processText(
+                        text,
+                        this.largeSingleEmoji,
+                        multiLine,
+                        linkifyText,
+                    );
+                };
+
+                this.largeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
 
                 this.$onInit = function() {
-                    if (this.multiLine === undefined) {
-                        this.multiLine = true;
-                    }
-                    this.text = processText(getText(this.message), this.largeSingleEmoji, this.multiLine);
+                    // Process initial text
+                    this.updateText();
                 };
             }],
             template: `

@@ -18,6 +18,7 @@
 import {isActionTrigger} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
+import {TimeoutService} from '../services/timeout';
 
 /**
  * The compose area where messages are written.
@@ -25,7 +26,7 @@ import {StringService} from '../services/string';
 export default [
     'BrowserService',
     'StringService',
-    '$window',
+    'TimeoutService',
     '$timeout',
     '$translate',
     '$mdDialog',
@@ -34,7 +35,8 @@ export default [
     '$rootScope',
     function(browserService: BrowserService,
              stringService: StringService,
-             $window, $timeout: ng.ITimeoutService,
+             timeoutService: TimeoutService,
+             $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
@@ -130,7 +132,7 @@ export default [
                     // that we started typing earlier)
                     if (stopTypingTimer !== null) {
                         // Cancel timer
-                        $timeout.cancel(stopTypingTimer);
+                        timeoutService.cancel(stopTypingTimer);
                         stopTypingTimer = null;
 
                         // Send stop typing message
@@ -144,11 +146,11 @@ export default [
                         scope.startTyping();
                     } else {
                         // Cancel timer, we'll re-create it
-                        $timeout.cancel(stopTypingTimer);
+                        timeoutService.cancel(stopTypingTimer);
                     }
 
                     // Define a timeout to send the stopTyping event
-                    stopTypingTimer = $timeout(stopTyping, 10000);
+                    stopTypingTimer = timeoutService.register(stopTyping, 10000, true, 'stopTyping');
                 }
 
                 // Process a DOM node recursively and extract text from compose area.
@@ -159,9 +161,9 @@ export default [
                         //
                         // - Firefox and chrome insert a <br> between two text nodes
                         // - Safari creates two <div>s without any line break in between
+                        //   (except for the first line, which stays plain text)
                         //
-                        // Thus, for Safari, we need to detect adjacent <div>s and insert a newline.
-                        let lastNodeType = null;
+                        // Thus, for Safari, we need to detect <div>s and insert a newline.
 
                         // tslint:disable-next-line: prefer-for-of (see #98)
                         for (let i = 0; i < parentNode.childNodes.length; i++) {
@@ -170,28 +172,21 @@ export default [
                                 case Node.TEXT_NODE:
                                     // Append text, but strip leading and trailing newlines
                                     text += node.nodeValue.replace(/(^[\r\n]*|[\r\n]*$)/g, '');
-                                    lastNodeType = 'text';
                                     break;
                                 case Node.ELEMENT_NODE:
                                     const tag = node.tagName.toLowerCase();
                                     if (tag === 'div') {
-                                        if (lastNodeType === 'div') {
-                                            text += '\n';
-                                        }
+                                        text += '\n';
                                         visitChildNodes(node);
-                                        lastNodeType = 'div';
                                         break;
                                     } else if (tag === 'img') {
                                         text += (node as HTMLImageElement).alt;
-                                        lastNodeType = 'img';
                                         break;
                                     } else if (tag === 'br') {
                                         text += '\n';
-                                        lastNodeType = 'br';
                                         break;
                                     } else if (tag === 'span' && node.hasAttribute('text')) {
                                         text += node.getAttributeNode('text').value;
-                                        lastNodeType = 'span';
                                         break;
                                     }
                                 default:

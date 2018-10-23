@@ -69,6 +69,11 @@ function inViewDirective ($parse) {
         viewportEventSignal = viewportEventSignal.merge(signalFromEvent(document, 'visibilitychange'));
       }
 
+      // Merged with the page focus/blur events
+      if (options.considerPageFocus) {
+        viewportEventSignal = viewportEventSignal.merge(signalFromEvent(window, 'focus blur'));
+      }
+
       // Merge with container's events signal
       if (container) {
         viewportEventSignal = viewportEventSignal.merge(container.eventsSignal);
@@ -100,8 +105,9 @@ function inViewDirective ($parse) {
         var elementRect = offsetRect(element[0].getBoundingClientRect(), options.offset);
         var isVisible = !!(element[0].offsetWidth || element[0].offsetHeight || element[0].getClientRects().length);
         var documentVisible = !options.considerPageVisibility || document.visibilityState === 'visible' || document.hidden === false;
+        var documentFocussed = !options.considerPageFocus || document.hasFocus();
         var info = {
-          inView: documentVisible && isVisible && intersectRect(elementRect, viewportRect),
+          inView: documentVisible && documentFocussed && isVisible && intersectRect(elementRect, viewportRect),
           event: event,
           element: element,
           elementRect: elementRect,

@@ -24,7 +24,6 @@
         "BROWSER_NOT_SUPPORTED_ANDROID": "This browser is not supported on Android",
         "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> or <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a> (iOS only), otherwise the web client might not work properly.",
         "SAFARI": "Safari is only compatible with Threema Web for iOS.<br>If you are using Android, please use another browser.",
-        "ANDROID_IOS_ONLY": "Compatible with Threema for Android.",
         "CONNECTING": "Connecting",
         "WAITING_FOR_PUSH": "Waiting for<br>app wakeup …",
         "CONNECTING_TO_APP": "Connection to app is<br>being established …",
@@ -42,7 +41,7 @@
         "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!",
         "VERSION": "Version",
         "BACKGROUND_IMAGE": "Background Image",
-        "NOTIFICATION_IOS_BETA": "Using the iOS beta? Please go to <a href=\"https://web-beta.threema.ch/\">web-beta.threema.ch</a>."
+        "NOTIFICATION_IOS_BETA": "To use Threema Web on iOS, you need the newest build (2354), older builds will not work anymore."
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",
@@ -52,7 +51,8 @@
         "WAITING_FOR_APP_MANUAL": "Google Play Services not installed. Please start the session manually.",
         "CONNECTING_TO_SERVER": "Connecting to server\u2026",
         "CONNECTING_TO_APP": "Connection to app is being established\u2026",
-        "CONNECTION_CLOSED": "Connection to server has been closed."
+        "CONNECTION_CLOSED": "Connection to server has been closed.",
+        "RECONNECT_FAILED": "Connecting to app failed."
     },
     "troubleshooting": {
         "SLOW_CONNECT": "Connecting seems to take longer than usual …",
@@ -101,6 +101,7 @@
         "CONVERSATIONS": "Conversations",
         "CONTACTS": "Contacts",
         "NO_CONVERSATIONS_FOUND": "No conversations found.",
+        "LOADING_CONVERSATIONS": "Loading conversations …",
         "ABOUT": "About",
         "SETTINGS": "Settings",
         "HELP": "Help",
@@ -182,7 +183,13 @@
         "MUTED_MENTION_ONLY": "Only show notification when mentioned",
         "MUTED_SILENT": "Silent notifications",
         "ALL": "All",
-        "LOADING_MESSAGES": "Loading messages…"
+        "LOADING_MESSAGES": "Loading messages…",
+        "PINNED_CONVERSATION": "Conversation is pinned. Click to unpin.",
+        "UNPINNED_CONVERSATION": "Conversation is not pinned. Click to pin.",
+        "PINNED_CONVERSATION_OK": "Conversation pinned",
+        "PINNED_CONVERSATION_ERROR": "Conversation could not be pinned",
+        "UNPINNED_CONVERSATION_OK": "Conversation unpinned",
+        "UNPINNED_CONVERSATION_ERROR": "Conversation could not be unpinned"
     },
     "messageStates": {
         "WE_ACK": "You sent thumbs-up",
@@ -215,6 +222,7 @@
             "badRequest": "Invalid request (protocol error?)",
             "timeout": "Request timed out",
             "internalError": "An internal error occurred",
+            "invalidAvatar": "Invalid avatar",
             "invalidIdentity": "Invalid Threema-ID",
             "invalidContact": "Invalid contact ID",
             "invalidGroup": "Invalid group ID",
@@ -326,6 +334,7 @@
         "SESSION_STOPPED": "The session was stopped on your device.",
         "SESSION_DELETED": "The session was deleted on your device.",
         "WEBCLIENT_DISABLED": "Threema Web was disabled on your device.",
-        "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window."
+        "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window.",
+        "SESSION_ERROR": "The session was stopped due to a protocol error."
     }
 }

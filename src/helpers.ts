@@ -258,7 +258,7 @@ export function escapeRegExp(str: string) {
  * msgpack encoded data.
  */
 export function msgpackVisualizer(bytes: Uint8Array): string {
-    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(bytes as any));
+    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(String.fromCharCode.apply(null, bytes)));
 }
 
 /**
@@ -340,6 +340,22 @@ export function sleep(ms: number): Promise<void> {
 }
 
 /**
+ * Compare two Uint8Array instances. Return true if all elements are equal
+ * (compared using ===).
+ */
+export function arraysAreEqual(a1: Uint8Array, a2: Uint8Array): boolean {
+    if (a1.length !== a2.length) {
+        return false;
+    }
+    for (let i = 0; i < a1.length; i++) {
+        if (a1[i] !== a2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/*
  * Return whether this key event should trigger a button.
  * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
  */
@@ -354,4 +370,18 @@ export function isActionTrigger(ev: KeyboardEvent): boolean {
         default:
             return false;
     }
+}
+
+/*
+ * Create a shallow copy of an object.
+ */
+export function copyShallow<T extends object>(obj: T): T {
+    return Object.assign({}, obj);
+}
+
+/**
+ * Create a deep copy of an object by serializing and deserializing it.
+ */
+export function copyDeep<T extends object>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
 }

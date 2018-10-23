@@ -140,7 +140,9 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -178,7 +180,9 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Leaving group failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -212,7 +216,9 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
                     this.onRemovedCallback(this.group.id);
                 }
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Deleting group failed: ${error}`);
                 this.isLoading = false;
             });
     }

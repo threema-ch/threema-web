@@ -10,27 +10,27 @@
     </div>
 
     <!-- Left aligned message content -->
-    <div class="left no-draft no-typing no-hidden" ng-if="ctrl.message">
+    <div class="left no-draft no-typing no-hidden" ng-if="ctrl.conversation.latestMessage">
 
         <!-- If this receiver is a group, show contact name that sent last message. -->
         <span eee-message-contact
-              ng-if="ctrl.isGroup" eee-contact="ctrl.contact"></span>
+              ng-if="ctrl.isGroup" eee-contact="ctrl.getContact()"></span>
 
         <!-- For non-text-messages, show an icon. -->
-        <span eee-message-icon
-              ng-show="ctrl.showIcon" class="message-icon"
-              eee-message="ctrl.message"></span>
+        <eee-message-icon
+                ng-show="ctrl.showIcon()"
+                class="message-icon"
+                eee-message="ctrl.conversation.latestMessage"></eee-message-icon>
 
         <!-- For voip status messages -->
         <eee-message-voip-status
-                ng-if="ctrl.showVoipInfo"
+                ng-if="ctrl.showVoipInfo()"
                 class="message-voip-status"
-                eee-message="ctrl.message">
+                eee-message="ctrl.conversation.latestMessage">
         </eee-message-voip-status>
 
         <!-- For text-messages, show message text excerpt. -->
-        <span eee-message-text class="message-text" eee-message="ctrl.message"
-            eee-multi-line="false"></span>
+        <span eee-message-text class="message-text" message="ctrl.conversation.latestMessage" multi-line="false" linkify="false"></span>
 
     </div>
     <div class="left hidden no-typing">
@@ -44,11 +44,11 @@
     <div class="right">
         <span class="no-draft no-hidden">
             <span eee-message-date
-                  class="message-date" eee-message="ctrl.message"></span>
+                  class="message-date" eee-message="ctrl.conversation.latestMessage"></span>
 
-            <span class="message-state" ng-show="ctrl.statusIcon">
-                 <i class="material-icons md-medium-dark md-14 {{ctrl.message.state}}">
-                     {{ ctrl.statusIcon }}
+            <span class="message-state" ng-show="ctrl.getStatusIcon()">
+                 <i class="material-icons md-medium-dark md-14 {{ctrl.conversation.latestMessage.state}}">
+                     {{ ctrl.getStatusIcon() }}
                  </i>
             </span>
         </span>

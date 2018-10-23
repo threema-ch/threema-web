@@ -125,7 +125,9 @@ export class DistributionListControllerModel implements threema.ControllerModel<
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -163,7 +165,9 @@ export class DistributionListControllerModel implements threema.ControllerModel<
         this.isLoading = true;
         this.webClientService.deleteDistributionList(this.distributionList).then(() => {
             this.isLoading = false;
-        }).catch(() => {
+        }).catch((error) => {
+            // TODO: Handle this properly / show an error message
+            this.$log.error(`Deleting distribution list failed: ${error}`);
             this.isLoading = false;
         });
     }

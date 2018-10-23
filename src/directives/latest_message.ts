@@ -28,71 +28,65 @@ export default [
             restrict: 'EA',
             scope: {},
             bindToController: {
-                type: '=eeeType',
-                message: '=eeeMessage',
-                receiver: '=eeeReceiver',
+                conversation: '<',
             },
             controllerAs: 'ctrl',
             controller: [function() {
                 this.$onInit = function() {
-
                     // Conversation properties
-                    this.isGroup = this.type as threema.ReceiverType === 'group';
-                    this.isDistributionList = !this.isGroup
-                        && this.type as threema.ReceiverType === 'distributionList';
+                    this.isGroup = this.conversation.type === 'group';
+                    this.isDistributionList = !this.isGroup && this.conversation.type === 'distributionList';
 
-                    this.showVoipInfo = this.message
-                        && (this.message as threema.Message).type === 'voipStatus';
+                    // Voip status
+                    this.showVoipInfo = () => this.conversation.latestMessage.type === 'voipStatus';
 
-                    if (this.showVoipInfo) {
-                        this.statusIcon = 'phone_locked';
-                    } else if (this.isGroup) {
-                        this.statusIcon = 'group';
-                    } else if (this.isDistributionList) {
-                        this.statusIcon = 'forum';
-                    } else if (!this.message.isOutbox) {
-                        this.statusIcon = 'reply';
-                    } else if (messageService.showStatusIcon(this.message, this.receiver)) {
-                        // Show status icon of incoming messages every time
-                        this.statusIcon = $filter('messageStateIcon')(this.message);
-                    } else {
-                        // Do not show a status icon
-                        this.statusIcon = null;
-                    }
+                    this.getStatusIcon = () => {
+                        if (this.showVoipInfo()) {
+                            return 'phone_locked';
+                        } else if (this.isGroup) {
+                            return 'group';
+                        } else if (this.isDistributionList) {
+                            return 'forum';
+                        } else if (!this.conversation.latestMessage.isOutbox) {
+                            return 'reply';
+                        } else {
+                            const showStatusIcon = messageService.showStatusIcon(
+                                this.conversation.latestMessage,
+                                this.conversation.receiver,
+                            );
+                            return showStatusIcon ? $filter('messageStateIcon')(this.conversation.latestMessage) : null;
+                        }
+                    };
 
                     // Find sender of latest message
-                    this.contact = null;
-                    if (this.message) {
-                        this.contact = webClientService.contacts.get(
-                            getSenderIdentity(this.message, webClientService.me.id),
+                    this.getContact = () => {
+                        return webClientService.contacts.get(
+                            getSenderIdentity(
+                                (this.conversation as threema.Conversation).latestMessage,
+                                webClientService.me.id,
+                            ),
                         );
-                    }
+                    };
+                    const contact = this.getContact();
 
                     // Typing indicator
                     this.isTyping = () => false;
-                    if (this.isGroup === false
-                        && this.isDistributionList === false
-                        && this.contact !== null) {
-                        this.isTyping = () => {
-                            return webClientService.isTyping(this.contact);
-                        };
+                    if (this.isGroup === false && this.isDistributionList === false && contact !== null) {
+                        this.isTyping = () => webClientService.isTyping(contact);
                     }
 
-                    this.isHidden = () => {
-                        return this.receiver.locked;
-                    };
+                    this.isHidden = () => this.conversation.receiver.locked;
 
                     // Show...
-                    this.showIcon = this.message
-                        && this.message.type !== 'text'
-                        && this.message.type !== 'status';
-
-                    this.getDraft = () => {
-                        return webClientService.getDraft(this.receiver);
+                    this.showIcon = () => {
+                        const message = (this.conversation as threema.Conversation).latestMessage;
+                        return message.type !== 'text' && message.type !== 'status';
                     };
 
+                    // Drafts
+                    this.getDraft = () => webClientService.getDraft(this.conversation.receiver);
                     this.showDraft = () => {
-                        if (receiverService.isConversationActive(this.receiver)) {
+                        if (receiverService.isConversationActive(this.conversation.receiver)) {
                             // Don't show draft if conversation is active
                             return false;
                         }

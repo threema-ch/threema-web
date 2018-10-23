@@ -20,7 +20,6 @@
 /// <reference path="../types/broadcastchannel.d.ts" />
 
 import {
-    StateParams as UiStateParams,
     StateProvider as UiStateProvider,
     StateService as UiStateService,
 } from '@uirouter/angularjs';
@@ -32,10 +31,12 @@ import {TrustedKeyStoreService} from '../services/keystore';
 import {PushService} from '../services/push';
 import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
+import {TimeoutService} from '../services/timeout';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 
 import GlobalConnectionState = threema.GlobalConnectionState;
+import DisconnectReason = threema.DisconnectReason;
 
 class DialogController {
     // TODO: This is also used in partials/messenger.ts. We could somehow
@@ -53,10 +54,6 @@ class DialogController {
     }
 }
 
-interface WelcomeStateParams extends UiStateParams {
-    initParams: null | {keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array};
-}
-
 class WelcomeController {
 
     private static REDIRECT_DELAY = 500;
@@ -65,8 +62,6 @@ class WelcomeController {
 
     // Angular services
     private $scope: ng.IScope;
-    private $timeout: ng.ITimeoutService;
-    private $interval: ng.IIntervalService;
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
     private $state: UiStateService;
@@ -81,6 +76,7 @@ class WelcomeController {
     private pushService: PushService;
     private stateService: StateService;
     private settingsService: SettingsService;
+    private timeoutService: TimeoutService;
     private config: threema.Config;
 
     // Other
@@ -94,13 +90,12 @@ class WelcomeController {
     private browserWarningShown: boolean = false;
 
     public static $inject = [
-        '$scope', '$state', '$stateParams', '$timeout', '$interval', '$log', '$window', '$mdDialog', '$translate',
+        '$scope', '$state', '$log', '$window', '$mdDialog', '$translate',
         'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
-        'VersionService', 'SettingsService', 'ControllerService',
+        'VersionService', 'SettingsService', 'TimeoutService', 'ControllerService',
         'BROWSER_MIN_VERSIONS', 'CONFIG',
     ];
-    constructor($scope: ng.IScope, $state: UiStateService, $stateParams: WelcomeStateParams,
-                $timeout: ng.ITimeoutService, $interval: ng.IIntervalService,
+    constructor($scope: ng.IScope, $state: UiStateService,
                 $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, trustedKeyStore: TrustedKeyStoreService,
@@ -108,6 +103,7 @@ class WelcomeController {
                 browserService: BrowserService,
                 versionService: VersionService,
                 settingsService: SettingsService,
+                timeoutService: TimeoutService,
                 controllerService: ControllerService,
                 minVersions: threema.BrowserMinVersions,
                 config: threema.Config) {
@@ -115,8 +111,6 @@ class WelcomeController {
         // Angular services
         this.$scope = $scope;
         this.$state = $state;
-        this.$timeout = $timeout;
-        this.$interval = $interval;
         this.$log = $log;
         this.$window = $window;
         this.$mdDialog = $mdDialog;
@@ -128,7 +122,10 @@ class WelcomeController {
         this.stateService = stateService;
         this.pushService = pushService;
         this.settingsService = settingsService;
+        this.timeoutService = timeoutService;
         this.config = config;
+
+        // TODO: Allow to trigger below behaviour by using state parameters
 
         // Determine whether browser warning should be shown
         this.browser = browserService.getBrowser();
@@ -198,12 +195,7 @@ class WelcomeController {
         }
 
         // Determine connection mode
-        if ($stateParams.initParams !== null) {
-            this.mode = 'unlock';
-            const keyStore = $stateParams.initParams.keyStore;
-            const peerTrustedKey = $stateParams.initParams.peerTrustedKey;
-            this.reconnect(keyStore, peerTrustedKey);
-        } else if (hasTrustedKey) {
+        if (hasTrustedKey) {
             this.mode = 'unlock';
             this.unlock();
         } else {
@@ -255,13 +247,28 @@ class WelcomeController {
     }
 
     /**
+     * Whether to show troubleshooting hints related to WebRTC.
+     */
+    public get showWebrtcTroubleshooting(): boolean {
+        return this.webClientService.chosenTask === threema.ChosenTask.WebRTC;
+    }
+
+    /**
      * Initiate a new session by scanning a new QR code.
      */
-    private scan(): void {
+    private scan(stopArguments?: threema.WebClientServiceStopArguments): void {
         this.$log.info(this.logTag, 'Initialize session by scanning QR code...');
 
         // Initialize webclient with new keystore
-        this.webClientService.init();
+        this.webClientService.stop(stopArguments !== undefined ? stopArguments : {
+            reason: DisconnectReason.SessionStopped,
+            send: false,
+            close: 'welcome',
+            connectionBuildupState: this.stateService.connectionBuildupState,
+        });
+        this.webClientService.init({
+            resume: false,
+        });
 
         // Set up the broadcast channel that checks whether we're already connected in another tab
         this.setupBroadcastChannel(this.webClientService.salty.keyStore.publicKeyHex);
@@ -280,6 +287,7 @@ class WelcomeController {
      * Initiate a new session by unlocking a trusted key.
      */
     private unlock(): void {
+        this.stateService.reset('new');
         this.$log.info(this.logTag, 'Initialize session by unlocking trusted key...');
     }
 
@@ -302,14 +310,8 @@ class WelcomeController {
         // Set up the broadcast channel that checks whether we're already connected in another tab
         this.setupBroadcastChannel(keyStore.publicKeyHex);
 
-        // Initialize push service
-        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
-            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
-            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
-        }
-
         // Reconnect
-        this.reconnect(keyStore, decrypted.peerPublicKey);
+        this.reconnect(keyStore, decrypted);
     }
 
     /**
@@ -360,10 +362,10 @@ class WelcomeController {
                     // is already active.
                     if (message.key === publicKeyHex && this.stateService.connectionBuildupState !== 'done') {
                         this.$log.error(this.logTag, 'Session already connected in another tab or window');
-                        this.$timeout(() => {
+                        this.timeoutService.register(() => {
                             this.stateService.updateConnectionBuildupState('already_connected');
                             this.stateService.state = GlobalConnectionState.Error;
-                        }, 500);
+                        }, 500, true, 'alreadyConnected');
                     }
                     break;
                 default:
@@ -381,10 +383,30 @@ class WelcomeController {
     }
 
     /**
-     * Reconnect using a specific keypair and peer public key.
+     * Reconnect using a specific keypair and the decrypted data from the trusted keystore.
      */
-    private reconnect(keyStore: saltyrtc.KeyStore, peerTrustedKey: Uint8Array): void {
-        this.webClientService.init(keyStore, peerTrustedKey);
+    private reconnect(keyStore: saltyrtc.KeyStore, decrypted: threema.TrustedKeyStoreData): void {
+        // Reset state
+        this.webClientService.stop({
+            reason: DisconnectReason.SessionStopped,
+            send: false,
+            close: 'welcome',
+            connectionBuildupState: this.stateService.connectionBuildupState,
+        });
+
+        // Initialize push service
+        if (decrypted.pushToken !== null && decrypted.pushTokenType !== null) {
+            this.webClientService.updatePushToken(decrypted.pushToken, decrypted.pushTokenType);
+            this.pushService.init(decrypted.pushToken, decrypted.pushTokenType);
+        }
+
+        // Initialize webclient service
+        this.webClientService.init({
+            keyStore: keyStore,
+            peerTrustedKey: decrypted.peerPublicKey,
+            resume: false,
+        });
+
         this.start();
     }
 
@@ -475,21 +497,17 @@ class WelcomeController {
              .cancel(this.$translate.instant('common.CANCEL'));
 
         this.$mdDialog.show(confirm).then(() =>  {
-            // Force-stop the webclient
-            const resetPush = true;
-            const redirect = false;
-            this.webClientService.stop(true, threema.DisconnectReason.SessionDeleted, resetPush, redirect);
-
-            // Reset state
-            this.stateService.updateConnectionBuildupState('new');
-
             // Go back to scan mode
             this.mode = 'scan';
             this.password = '';
             this.formLocked = false;
 
-            // Initiate scan
-            this.scan();
+            // Force-stop the webclient and initiate scan
+            this.scan({
+                reason: DisconnectReason.SessionDeleted,
+                send: true,
+                close: 'welcome',
+            });
         }, () => {
             // do nothing
         });
@@ -553,14 +571,24 @@ class WelcomeController {
                 this.formLocked = false;
 
                 // Redirect to home
-                this.$timeout(() => this.$state.go('messenger.home'), WelcomeController.REDIRECT_DELAY);
+                this.timeoutService.register(
+                    () => this.$state.go('messenger.home'),
+                    WelcomeController.REDIRECT_DELAY,
+                    true,
+                    'redirectToHome',
+                );
             },
 
             // If an error occurs...
             (error) => {
                 this.$log.error(this.logTag, 'Error state:', error);
                 // TODO: should probably show an error message instead
-                this.$timeout(() => this.$state.reload(), WelcomeController.REDIRECT_DELAY);
+                this.timeoutService.register(
+                    () => this.$state.reload(),
+                    WelcomeController.REDIRECT_DELAY,
+                    true,
+                    'reloadStateError',
+                );
             },
 
             // State updates

@@ -26,12 +26,20 @@ declare namespace threema {
         high?: ArrayBuffer;
     }
 
+    interface WireMessageAcknowledgement {
+        id: string,
+        success: boolean,
+        error?: string,
+    }
+
     /**
      * Messages that are sent through the secure data channel as encrypted msgpack bytes.
      */
     interface WireMessage {
         type: string;
         subType: string;
+        id?: string;
+        ack?: WireMessageAcknowledgement;
         args?: any;
         data?: any;
     }
@@ -401,10 +409,11 @@ declare namespace threema {
      * - loading: Loading initial data
      * - done: Initial loading is finished
      * - closed: Connection is closed
+     * - reconnect_failed: Reconnecting failed after several attempts
      *
      */
     type ConnectionBuildupState = 'new' | 'connecting' | 'push' | 'manual_start' | 'already_connected'
-        | 'waiting' | 'peer_handshake' | 'loading' | 'done' | 'closed';
+        | 'waiting' | 'peer_handshake' | 'loading' | 'done' | 'closed' | 'reconnect_failed';
 
     interface ConnectionBuildupStateChange {
         state: ConnectionBuildupState;
@@ -487,13 +496,6 @@ declare namespace threema {
         Apns = 'a',
     }
 
-    const enum WakeupType {
-        // A full reconnect (by entering the password on the main screen).
-        FullReconnect = '0',
-        // A wakeup, as implemented by the iOS app.
-        Wakeup = '1',
-    }
-
     interface TrustedKeyStoreData {
         ownPublicKey: Uint8Array;
         ownSecretKey: Uint8Array;
@@ -511,26 +513,6 @@ declare namespace threema {
         Edge = 'edge',
         Opera = 'opera',
         Safari = 'safari',
-    }
-
-    interface BrowserInfo {
-        chrome: boolean;
-        chromeIos: boolean;
-        firefox: boolean;
-        firefoxIos: boolean;
-        ie: boolean;
-        edge: boolean;
-        opera: boolean;
-        safari: boolean;
-        name?: BrowserName;
-        mobile?: boolean;
-        version?: number;
-        textInfo?: string;
-    }
-
-    interface PromiseCallbacks {
-        resolve: (arg: any) => void;
-        reject: (arg: any) => void;
     }
 
     interface PromiseRequestResult<T> {
@@ -639,6 +621,7 @@ declare namespace threema {
         VERSION_MOUNTAIN: string;
         VERSION_MOUNTAIN_URL: string;
         VERSION_MOUNTAIN_IMAGE_URL: string;
+        VERSION_MOUNTAIN_IMAGE_COPYRIGHT: string;
         VERSION_MOUNTAIN_HEIGHT: number;
         GIT_BRANCH: string;
         SALTYRTC_PORT: number;
@@ -646,6 +629,7 @@ declare namespace threema {
         SALTYRTC_HOST: string | null;
         SALTYRTC_HOST_PREFIX: string | null;
         SALTYRTC_HOST_SUFFIX: string | null;
+        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
         ICE_SERVERS: RTCIceServer[];
         PUSH_URL: string;
         DEBUG: boolean;
@@ -742,6 +726,13 @@ declare namespace threema {
         realLength: number;
     }
 
+    interface WebClientServiceStopArguments {
+        reason: DisconnectReason,
+        send: boolean,
+        close: boolean | string,
+        connectionBuildupState?: ConnectionBuildupState,
+    }
+
     const enum ChosenTask {
         None = 'none',
         WebRTC = 'webrtc',
@@ -753,6 +744,7 @@ declare namespace threema {
         SessionDeleted = 'delete',
         WebclientDisabled = 'disable',
         SessionReplaced = 'replace',
+        SessionError = 'error',
     }
 
     namespace Container {
@@ -795,7 +787,7 @@ declare namespace threema {
             set(data: Conversation[]): void;
             find(pattern: Conversation | Receiver): Conversation | null;
             add(conversation: Conversation): void;
-            updateOrAdd(conversation: Conversation): Conversation | null;
+            updateOrAdd(conversation: Conversation, returnOld?: boolean): Conversation | null;
             remove(conversation: Conversation): void;
             setFilter(filter: (data: Conversation[]) => Conversation[]): void;
             setConverter(converter: (data: Conversation) => Conversation): void;
@@ -826,10 +818,10 @@ declare namespace threema {
         }
 
         interface Typing {
-            setTyping(receiver: ContactReceiver): void;
-            unsetTyping(receiver: ContactReceiver): void;
+            setTyping(receiver: BaseReceiver): void;
+            unsetTyping(receiver: BaseReceiver): void;
             clearAll(): void;
-            isTyping(receiver: ContactReceiver): boolean;
+            isTyping(receiver: BaseReceiver): boolean;
         }
 
         interface Drafts {

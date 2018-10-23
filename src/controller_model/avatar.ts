@@ -39,7 +39,7 @@ export class AvatarControllerModel {
                 $log.debug(this.logTag, 'loadAvatar: Requesting high res avatar from app');
                 webClientService.requestAvatar(receiver, true)
                     .then((data: ArrayBuffer) => resolve(data))
-                    .catch(() => reject());
+                    .catch((error) => reject(error));
             } else {
                 $log.debug(this.logTag, 'loadAvatar: Returning cached version');
                 resolve(receiver.avatar.high);

@@ -24,7 +24,6 @@
         "BROWSER_NOT_SUPPORTED_ANDROID": "Dieser Browser wird von Android-Geräten nicht unterst\u00fctzt",
         "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> oder <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a> (nur mit iOS), um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
         "SAFARI": "Safari ist nur kompatibel mit Threema Web für iOS. Android-Nutzer verwenden bitte einen anderen Browser.",
-        "ANDROID_IOS_ONLY": "Kompatibel mit Threema für Android.",
         "CONNECTING": "Verbindung wird aufgebaut",
         "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
         "CONNECTING_TO_APP": "Verbindung zu App<br>wird aufgebaut …",
@@ -42,7 +41,7 @@
         "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!",
         "VERSION": "Version",
         "BACKGROUND_IMAGE": "Hintergrundbild",
-        "NOTIFICATION_IOS_BETA": "iOS Beta-User? Bitte benutzen Sie <a href=\"https://web-beta.threema.ch/\">web-beta.threema.ch</a>."
+        "NOTIFICATION_IOS_BETA": "Um Threema Web mit iOS zu nutzen, benötigen Sie die neueste Beta-Version (Build 2354), ältere Versionen werden nicht mehr unterstützt."
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindungsprobleme",
@@ -52,7 +51,8 @@
         "WAITING_FOR_APP_MANUAL": "Google Play Services nicht installiert. Bitte starten Sie die Sitzung manuell.",
         "CONNECTING_TO_SERVER": "Verbinden mit Server\u2026",
         "CONNECTING_TO_APP": "Verbindung zu App wird aufgebaut\u2026",
-        "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen."
+        "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen.",
+        "RECONNECT_FAILED": "Verbindung zur App fehlgeschlagen."
     },
     "troubleshooting": {
         "SLOW_CONNECT": "Verbindungsaufbau scheint länger zu dauern<br>als normal …",
@@ -101,6 +101,7 @@
         "CONVERSATIONS": "Chats",
         "CONTACTS": "Kontakte",
         "NO_CONVERSATIONS_FOUND": "Keine Chats gefunden.",
+        "LOADING_CONVERSATIONS": "Chats werden geladen …",
         "ABOUT": "\u00dcber",
         "SETTINGS": "Einstellungen",
         "HELP": "Hilfe",
@@ -183,7 +184,13 @@
         "MUTED_MENTION_ONLY": "Nur bei Erwähnung benachrichtigen",
         "MUTED_SILENT": "Stumme Benachrichtigungen",
         "ALL": "Alle",
-        "LOADING_MESSAGES": "Nachrichten werden geladen…"
+        "LOADING_MESSAGES": "Nachrichten werden geladen…",
+        "PINNED_CONVERSATION": "Unterhaltung ist angepinnt. Klicken, um sie zu entpinnen.",
+        "UNPINNED_CONVERSATION": "Unterhaltung ist nicht angepinnt. Klicken, um sie anzupinnen.",
+        "PINNED_CONVERSATION_OK": "Unterhaltung angepinnt",
+        "PINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht angepinnt werden",
+        "UNPINNED_CONVERSATION_OK": "Unterhaltung entpinnt",
+        "UNPINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht entpinnt werden"
     },
     "messageStates": {
         "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",
@@ -216,6 +223,7 @@
             "badRequest": "Ungültige Anfrage (Protokollfehler?)",
             "timeout": "Timeout",
             "internalError": "Ein interner Fehler ist aufgetreten",
+            "invalidAvatar": "Ungültiger Avatar",
             "invalidIdentity": "Ungültige Threema-ID",
             "invalidContact": "Ungültiger Kontakt",
             "invalidGroup": "Ungültige Gruppe",
@@ -323,10 +331,11 @@
         }
     },
     "connection": {
-        "SESSION_CLOSED_TITLE": "Sitzung Geschlossen",
+        "SESSION_CLOSED_TITLE": "Sitzung geschlossen",
         "SESSION_STOPPED": "Die Sitzung wurde auf Ihrem Gerät gestoppt.",
         "SESSION_DELETED": "Die Sitzung wurde auf Ihrem Gerät gelöscht.",
         "WEBCLIENT_DISABLED": "Threema Web wurde auf Ihrem Gerät deaktiviert.",
-        "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben."
+        "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben.",
+        "SESSION_ERROR": "Die Sitzung wurde aufgrund eines Protokollfehlers beendet."
     }
 }

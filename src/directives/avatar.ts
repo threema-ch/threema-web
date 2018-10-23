@@ -15,19 +15,20 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {bufferToUrl, logAdapter} from '../helpers';
+import {bufferToUrl, hasValue, logAdapter} from '../helpers';
 import {isEchoContact, isGatewayContact} from '../receiver_helpers';
+import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
 import {isContactReceiver} from '../typeguards';
 
 export default [
     '$rootScope',
-    '$timeout',
     '$log',
+    'TimeoutService',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
-             $timeout: ng.ITimeoutService,
              $log: ng.ILogService,
+             timeoutService: TimeoutService,
              webClientService: WebClientService) {
         return {
             restrict: 'E',
@@ -35,6 +36,48 @@ export default [
             bindToController: {
                 receiver: '=eeeReceiver',
                 resolution: '=eeeResolution',
+            },
+            link: function(scope, elem, attrs) {
+                scope.$watch(
+                    () => scope.ctrl.receiver,
+                    (newReceiver: threema.Receiver, oldReceiver: threema.Receiver) => {
+                        // Register for receiver changes. When something relevant changes, call the update function.
+                        // This prevents processing the avatar more often than necessary.
+
+                        if (!hasValue(newReceiver)) {
+                            // New receiver has no value
+                            return;
+                        }
+                        if (!hasValue(oldReceiver)) {
+                            // New receiver has value, old receiver doesn't
+                            scope.ctrl.update(false);
+                            return;
+                        }
+
+                        // Check for changes in relevant attributes
+                        if (newReceiver.id !== oldReceiver.id ||
+                            newReceiver.type !== oldReceiver.type ||
+                            newReceiver.color !== oldReceiver.color ||
+                            newReceiver.displayName !== oldReceiver.displayName) {
+                            scope.ctrl.update(false);
+                            return;
+                        }
+
+                        // Check for changes in the avatar itself
+                        if (hasValue(newReceiver.avatar)) {
+                            if (hasValue(oldReceiver.avatar)) {
+                                if (newReceiver.avatar.high !== oldReceiver.avatar.high ||
+                                    newReceiver.avatar.low !== oldReceiver.avatar.low) {
+                                    scope.ctrl.update(false);
+                                    return;
+                                }
+                            } else {
+                                scope.ctrl.update(false);
+                                return;
+                            }
+                        }
+                    },
+                );
             },
             controllerAs: 'ctrl',
             controller: [function() {
@@ -50,7 +93,7 @@ export default [
                     low: null,
                 };
                 this.avatarToUri = (data: ArrayBuffer, res: 'high' | 'low') => {
-                    if (data === null || data === undefined) {
+                    if (!hasValue(data)) {
                         return '';
                     }
                     if (avatarUri[res] === null) {
@@ -64,16 +107,35 @@ export default [
                     return avatarUri[res];
                 };
 
-                this.$onInit = function() {
+                /**
+                 * Update data when the receiver changes.
+                 */
+                this.update = (initial: boolean) => {
+                    // Reset avatar cache
+                    avatarUri.high = null;
+                    avatarUri.low = null;
 
+                    // Get receiver
+                    const receiver: threema.Receiver = this.receiver;
+
+                    // Set initial values
                     this.highResolution = this.resolution === 'high';
                     this.isLoading = this.highResolution;
-                    this.backgroundColor = (this.receiver as threema.Receiver).color;
-                    this.receiverName = (this.receiver as threema.Receiver).displayName;
-                    this.avatarClass = () => {
-                        return 'avatar-' + this.resolution + (this.isLoading ? ' is-loading' : '');
-                    };
+                    this.backgroundColor = receiver.color;
+                    this.receiverName = receiver.displayName;
+                };
 
+                this.$onInit = function() {
+                    this.update(true);
+
+                    /**
+                     * Return the CSS class for the avatar.
+                     */
+                    this.avatarClass = () => 'avatar-' + this.resolution + (this.isLoading ? ' is-loading' : '');
+
+                    /**
+                     * Return whether or not an avatar is available.
+                     */
                     this.avatarExists = () => {
                         if (this.receiver.avatar === undefined
                             || this.receiver.avatar[this.resolution] === undefined
@@ -144,25 +206,31 @@ export default [
                             if (loadingPromise === null) {
                                 // Do not wait on high resolution avatar
                                 const loadingTimeout = this.highResolution ? 0 : 500;
-                                loadingPromise = $timeout(() => {
+                                loadingPromise = timeoutService.register(() => {
                                     // show loading only on high res images!
                                     webClientService.requestAvatar({
                                         type: this.receiver.type,
                                         id: this.receiver.id,
-                                    } as threema.Receiver, this.highResolution).then((avatar) => {
+                                    } as threema.Receiver, this.highResolution)
+                                    .then((avatar) => {
                                         $rootScope.$apply(() => {
                                             this.isLoading = false;
                                         });
-                                    }).catch(() => {
+                                        loadingPromise = null;
+                                    })
+                                    .catch((error) => {
+                                        // TODO: Handle this properly / show an error message
+                                        $log.error(this.logTag, `Avatar request has been rejected: ${error}`);
                                         $rootScope.$apply(() => {
                                             this.isLoading = false;
                                         });
+                                        loadingPromise = null;
                                     });
-                                }, loadingTimeout);
+                                }, loadingTimeout, false, 'avatar');
                             }
                         } else if (loadingPromise !== null) {
                             // Cancel pending avatar loading
-                            $timeout.cancel(loadingPromise);
+                            timeoutService.cancel(loadingPromise);
                             loadingPromise = null;
                         }
                     };

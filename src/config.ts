@@ -3,23 +3,26 @@
  *
  * The various options are explained in the `README.md` file.
  */
+// tslint:disable:max-line-length
 export default {
 
     // General
     SELF_HOSTED: false,
-    VERSION_MOUNTAIN: 'Grosser Mythen',
-    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Mythen',
-    VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Die_Mythen.jpg',
-    VERSION_MOUNTAIN_HEIGHT: 1898,
+    VERSION_MOUNTAIN: 'Glärnisch',
+    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Gl%C3%A4rnisch',
+    VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Glarus_mit_Gl%C3%A4rnisch,_Sicht_Ennetberge_(18948043634).jpg',
+    VERSION_MOUNTAIN_IMAGE_COPYRIGHT: 'CC BY Hans Bühler',
+    VERSION_MOUNTAIN_HEIGHT: 2915,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
-    GIT_BRANCH: 'master',
+    GIT_BRANCH: 'beta',
 
     // SaltyRTC
-    SALTYRTC_HOST: null,
+    SALTYRTC_HOST: 'saltyrtc-beta.threema.ch',
     SALTYRTC_HOST_PREFIX: 'saltyrtc-',
     SALTYRTC_HOST_SUFFIX: '.threema.ch',
     SALTYRTC_PORT: 443,
     SALTYRTC_SERVER_KEY: 'b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171',
+    SALTYRTC_LOG_LEVEL: 'warn',
 
     // ICE
     ICE_SERVERS: [{
@@ -33,7 +36,7 @@ export default {
     }],
 
     // Push
-    PUSH_URL: 'https://push-web.threema.ch/push',
+    PUSH_URL: 'https://push-web-beta.threema.ch/push',
 
     // Debugging options
     DEBUG: false,

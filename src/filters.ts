@@ -15,7 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {bufferToUrl, escapeRegExp, filter, logAdapter} from './helpers';
+import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
+import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
@@ -137,15 +138,7 @@ angular.module('3ema.filters', [])
  * Convert markdown elements to html elements
  */
 .filter('markify', function() {
-    return function(text) {
-        if (text !== null) {
-            text = text.replace(/\B\*([^\r\n]+?)\*\B/g, '<span class="text-bold">$1</span>');
-            text = text.replace(/\b_([^\r\n]+?)_\b/g, '<span class="text-italic">$1</span>');
-            text = text.replace(/\B~([^\r\n]+?)~\B/g, '<span class="text-strike">$1</span>');
-            return text;
-        }
-        return text;
-    };
+    return markify;
 })
 
 /**
@@ -394,8 +387,12 @@ angular.module('3ema.filters', [])
     return(ids: string[]) => {
         const names: string[] = [];
         for (const id of ids) {
-            this.contactReceiver = webClientService.contacts.get(id);
-            names.push(this.contactReceiver.displayName);
+            const contactReceiver = webClientService.contacts.get(id);
+            if (hasValue(contactReceiver)) {
+                names.push(contactReceiver.displayName);
+            } else {
+                names.push('Unknown');
+            }
         }
         return names.join(', ');
     };

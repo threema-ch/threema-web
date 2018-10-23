@@ -19,12 +19,8 @@
  * Allow to drag and drop elements, set class to parent object
  */
 export default [
-    '$window',
-    '$timeout',
-    '$translate',
-    '$filter',
     '$log',
-    function($window, $timeout: ng.ITimeoutService, $translate, $filter: ng.IFilterService, $log: ng.ILogService) {
+    function($log: ng.ILogService) {
         return {
             restrict: 'EA',
             scope: {

@@ -89,11 +89,11 @@ export class BrowserInfo {
         }
     }
 
-    public isFirefox(requireVersion: boolean): boolean {
+    public isFirefox(requireVersion: boolean = false): boolean {
         return this.name === threema.BrowserName.Firefox && (!requireVersion || this.version !== null);
     }
 
-    public isSafari(requireVersion: boolean): boolean {
+    public isSafari(requireVersion: boolean = false): boolean {
         return this.name === threema.BrowserName.Safari && (!requireVersion || this.version !== null);
     }
 }

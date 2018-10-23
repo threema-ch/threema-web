@@ -33,7 +33,7 @@ VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\
 DIR="release/threema-web-$VERSION"
 
 echo "+ Create release directory..."
-mkdir -p $DIR/{dist,partials,directives,node_modules,partials/messenger.receiver,troubleshoot}
+mkdir -p $DIR/{dist,partials,directives,components,node_modules,partials/messenger.receiver,troubleshoot}
 
 echo "+ Copy code..."
 cp -R index.html $DIR/
@@ -43,6 +43,7 @@ cp -R troubleshoot/* $DIR/troubleshoot/
 cp -R src/partials/*.html $DIR/partials/
 cp -R src/partials/messenger.receiver/*.html $DIR/partials/messenger.receiver/
 cp -R src/directives/*.html $DIR/directives/
+cp -R src/components/*.html $DIR/components/ 2>/dev/null || :
 
 echo "+ Copy dependencies..."
 targets=(
@@ -55,7 +56,6 @@ targets=(
     babel-es6-polyfill/browser-polyfill.min.js
     msgpack-lite/dist/msgpack.min.js
     tweetnacl/nacl-fast.min.js
-    file-saver/FileSaver.min.js
     @saltyrtc/chunked-dc/dist/chunked-dc.es5.js
     @saltyrtc/client/dist/saltyrtc-client.es5.js
     @saltyrtc/task-webrtc/dist/saltyrtc-task-webrtc.es5.js

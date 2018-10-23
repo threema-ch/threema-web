@@ -15,16 +15,19 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {saveAs} from 'file-saver';
+
+import {bufferToUrl, logAdapter} from '../helpers';
 import {MediaboxService} from '../services/mediabox';
 
 export default [
     '$rootScope',
-    '$filter',
     '$document',
+    '$log',
     'MediaboxService',
     function($rootScope: ng.IRootScopeService,
-             $filter: ng.IFilterService,
              $document: ng.IDocumentService,
+             $log: ng.ILogService,
              mediaboxService: MediaboxService) {
         return {
             restrict: 'E',
@@ -32,6 +35,8 @@ export default [
             bindToController: {},
             controllerAs: 'ctrl',
             controller: [function() {
+                this.logTag = '[MediaboxDirective]';
+
                 // Data attributes
                 this.imageDataUrl = null;
                 this.caption = '';
@@ -53,12 +58,18 @@ export default [
                 };
 
                 // Listen to Mediabox service events
-                const bufferToUrl = $filter('bufferToUrl') as
-                    (buffer: ArrayBuffer, mimeType: string, trust: boolean) => string;
                 mediaboxService.evtMediaChanged.attach((dataAvailable: boolean) => {
                     $rootScope.$apply(() => {
-                        this.imageDataUrl = bufferToUrl(mediaboxService.data, mediaboxService.mimetype, true);
-                        this.caption = mediaboxService.caption || mediaboxService.filename;
+                        if (dataAvailable) {
+                            this.imageDataUrl = bufferToUrl(
+                                mediaboxService.data,
+                                mediaboxService.mimetype,
+                                logAdapter($log.debug, this.logTag),
+                            );
+                            this.caption = mediaboxService.caption || mediaboxService.filename;
+                        } else {
+                            this.close();
+                        }
                     });
                 });
             }],
