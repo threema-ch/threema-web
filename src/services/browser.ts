@@ -25,7 +25,6 @@ export class BrowserService {
     private browser: BrowserInfo;
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
-    private isPageVisible = true;
     private supportsExtendedLocaleCompareCache: boolean;
 
     public static $inject = ['$log', '$window'];
@@ -33,59 +32,6 @@ export class BrowserService {
         // Angular services
         this.$log = $log;
         this.$window = $window;
-        this.initializePageVisibility();
-    }
-
-    private initializePageVisibility() {
-        const onChange = (isVisible: any) => {
-            if (this.isPageVisible !== isVisible) {
-                this.isPageVisible = isVisible;
-            }
-        };
-
-        let pageHiddenKey = 'hidden';
-
-        // add default visibility change listener
-        let defaultListener;
-        if (pageHiddenKey in document) {
-            defaultListener = 'visibilitychange';
-        } else if ('mozHidden' in document) {
-            pageHiddenKey = 'mozHidden';
-            defaultListener = 'mozvisibilitychange';
-        } else if ('webkitHidden' in document) {
-            pageHiddenKey = 'webkitHidden';
-            defaultListener = 'webkitvisibilitychange';
-        } else if ('msHidden' in document) {
-            pageHiddenKey = 'msHidden';
-            defaultListener = 'msvisibilitychange';
-        }
-
-        document.addEventListener(defaultListener, function() {
-            onChange(!this[pageHiddenKey]);
-        });
-
-        // configure other document and window events
-        const map = {
-            focus: true,
-            blur: false,
-        };
-
-        for (const event in map) {
-            if (map[event] !== undefined) {
-                document.addEventListener(event, () => {
-                    onChange(map[event]);
-                }, false);
-
-                window.addEventListener(event, () => {
-                    onChange(map[event]);
-                }, false);
-            }
-        }
-
-        // initial visible state set
-        if (document[pageHiddenKey] !== undefined ) {
-            onChange(!document[pageHiddenKey]);
-        }
     }
 
     public getBrowser(): BrowserInfo {
@@ -181,10 +127,6 @@ export class BrowserService {
         }
 
         return this.browser;
-    }
-
-    public isVisible() {
-        return this.isPageVisible;
     }
 
     /**
