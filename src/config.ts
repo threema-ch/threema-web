@@ -14,10 +14,10 @@ export default {
     VERSION_MOUNTAIN_IMAGE_COPYRIGHT: 'CC BY Hans Bühler',
     VERSION_MOUNTAIN_HEIGHT: 2915,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
-    GIT_BRANCH: 'beta',
+    GIT_BRANCH: 'master',
 
     // SaltyRTC
-    SALTYRTC_HOST: 'saltyrtc-beta.threema.ch',
+    SALTYRTC_HOST: null,
     SALTYRTC_HOST_PREFIX: 'saltyrtc-',
     SALTYRTC_HOST_SUFFIX: '.threema.ch',
     SALTYRTC_PORT: 443,
@@ -36,7 +36,7 @@ export default {
     }],
 
     // Push
-    PUSH_URL: 'https://push-web-beta.threema.ch/push',
+    PUSH_URL: 'https://push-web.threema.ch/push',
 
     // Debugging options
     DEBUG: false,

@@ -40,8 +40,7 @@
         "ALREADY_CONNECTED": "Already connected",
         "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!",
         "VERSION": "Version",
-        "BACKGROUND_IMAGE": "Background Image",
-        "NOTIFICATION_IOS_BETA": "To use Threema Web on iOS, you need the newest build (2354), older builds will not work anymore."
+        "BACKGROUND_IMAGE": "Background Image"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",
