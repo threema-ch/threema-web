@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Transition as UiTransition, TransitionService as UiTransitionService} from '@uirouter/angularjs';
 import {saveAs} from 'file-saver';
 
 import {bufferToUrl, hasValue, logAdapter} from '../helpers';
@@ -69,6 +70,7 @@ export default [
     '$rootScope',
     '$mdDialog',
     '$timeout',
+    '$transitions',
     '$translate',
     '$log',
     '$filter',
@@ -80,6 +82,7 @@ export default [
              $rootScope: ng.IRootScopeService,
              $mdDialog: ng.material.IDialogService,
              $timeout: ng.ITimeoutService,
+             $transitions: UiTransitionService,
              $translate: ng.translate.ITranslateService,
              $log: ng.ILogService,
              $filter: ng.IFilterService,
@@ -95,6 +98,11 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.logTag = '[MessageMedia]';
+
+                // On state transitions, clear mediabox
+                $transitions.onStart({}, function(trans: UiTransition) {
+                    mediaboxService.clearMedia();
+                });
 
                 this.$onInit = function() {
                     this.type = this.message.type;
