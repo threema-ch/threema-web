@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasValue} from '../helpers';
+
 export class MimeService {
     public static $inject = ['$log', '$translate'];
 
@@ -59,6 +61,9 @@ export class MimeService {
     }
 
     private getKey(mimeType: string): string {
+        if (!hasValue(mimeType)) {
+            return null;
+        }
         if (mimeType.startsWith('audio/')) {
             return 'audio';
         }
