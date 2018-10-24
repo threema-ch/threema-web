@@ -164,6 +164,13 @@
                     text-no="Without desktop notifications, we cannot notify you when a new message arrives.">
             </div>
 
+            <div id="check-ws">
+                <h2>Are WebSocket connections possible?</h2>
+                <check
+                    result="$ctrl.resultWs"
+                    text-no="Threema Web must be able to open a working WebSocket connection to the SaltyRTC signaling server.">
+            </div>
+
             <div id="check-pc" ng-if="$ctrl.os === 'android'">
                 <h2>Is WebRTC available?</h2>
                 <check

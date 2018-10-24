@@ -60,6 +60,11 @@ app.controller('ChecksController', function($scope, $timeout) {
         state: 'unknown',
         showLogs: false,
     };
+    this.resultWs = {
+        state: 'unknown',
+        showLogs: false,
+        logs: [],
+    };
     this.resultPc = {
         state: 'unknown',
         showLogs: false,
@@ -142,6 +147,90 @@ app.controller('ChecksController', function($scope, $timeout) {
             this.resultDc.state = 'no';
             this.resultTurn.state = 'no';
         }
+
+        // Check for WebSocket connectivity
+        const subprotocol = 'v1.saltyrtc.org';
+        const path = 'ffffffffffffffff00000000000000000000000000000000ffffffffffffffff';
+        this.resultWs.showLogs = true;
+        const ws = new WebSocket('wss://saltyrtc-ff.threema.ch/' + path, subprotocol);
+        ws.binaryType = 'arraybuffer';
+        ws.addEventListener('open', (event) => {
+            $scope.$apply(() => {
+                this.resultWs.logs.push('Connected');
+            });
+        });
+        ws.addEventListener('message', (event) => {
+            console.log('Message from server ', event.data);
+
+            const success = () => {
+                $scope.$apply(() => {
+                    this.resultWs.state = 'yes';
+                    this.resultWs.logs.push('Received server-hello message');
+                });
+                ws.close(1000);
+            };
+            const fail = (msg) => {
+                $scope.$apply(() => {
+                    this.resultWs.state = 'no';
+                    console.error(msg);
+                    this.resultWs.logs.push(`Invalid server-hello message (${msg})`);
+                });
+                ws.close(1000);
+            };
+
+            // This should be the SaltyRTC server-hello message.
+            const bytes = new Uint8Array(event.data);
+            console.log('Message bytes:', bytes);
+
+            // Validate length
+            let valid;
+            if (bytes.length < 81) {
+                valid = false;
+                return fail(`Invalid length: ${bytes.length}`);
+            }
+
+            // Split up message
+            const nonce = bytes.slice(0, 24);
+            const data = bytes.slice(24);
+
+            // Validate nonce
+            if (nonce[16] !== 0) {
+                return fail('Invalid nonce (source != 0)');
+            }
+            if (nonce[17] !== 0) {
+                return fail('Invalid nonce (destination != 0)');
+            }
+            if (nonce[18] !== 0 || nonce[19] !== 0) {
+                return fail('Invalid nonce (overflow != 0)');
+            }
+
+            // Data should start with 0x82 (fixmap with 2 entries) followed by a string
+            // with either the value "type" or "key".
+            if (data[0] !== 0x82) {
+                return fail('Invalid data (does not start with 0x82)');
+            }
+            if (data[1] === 0xa3 && data[2] === 'k'.charCodeAt(0) && data[3] === 'e'.charCodeAt(0) && data[4] === 'y'.charCodeAt(0)) {
+                return success();
+            }
+            if (data[1] === 0xa4 && data[2] === 't'.charCodeAt(0) && data[3] === 'y'.charCodeAt(0) && data[4] === 'p'.charCodeAt(0) && data[5] === 'e'.charCodeAt(0)) {
+                return success();
+            }
+
+            return fail('Invalid data (bad map key)');
+        });
+        ws.addEventListener('error', (event) => {
+            console.error('WS error:', event);
+            $scope.$apply(() => {
+                this.resultWs.state = 'no';
+                this.resultWs.logs.push('Error');
+            });
+        });
+        ws.addEventListener('close', (event) => {
+            $scope.$apply(() => {
+                this.resultWs.logs.push('Connection closed');
+            });
+        });
+        this.resultWs.logs.push('Connecting');
 
         // Check for TURN connectivity
         let timeout = null;
