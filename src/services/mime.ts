@@ -44,7 +44,7 @@ export class MimeService {
         return this.is(mimeType, this.videoMimeTypes);
     }
 
-    public getLabel(mimeType: string): string {
+    public getLabel(mimeType: string | null): string {
         const key = this.getKey(mimeType);
         if (key !== null) {
             return this.$translate.instant('mimeTypes.' + key);
@@ -60,7 +60,7 @@ export class MimeService {
         return 'img/mime/ic_doc_' + key + '.png';
     }
 
-    private getKey(mimeType: string): string | null {
+    private getKey(mimeType: string | null): string | null {
         if (!hasValue(mimeType)) {
             return null;
         }
