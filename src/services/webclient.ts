@@ -3131,6 +3131,8 @@ export class WebClientService {
             featureMask: 0xFF,
             verificationLevel: 3,
             state: 'ACTIVE',
+            locked: false,
+            visible: true,
             hidden: false,
             access: {
                 canChangeAvatar: true,

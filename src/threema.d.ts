@@ -232,10 +232,10 @@ declare namespace threema {
         access: ReceiverAccess;
 
         // Whether the chat with this receiver is locked. Used for private chats.
-        locked?: boolean;
+        locked: boolean;
 
         // Whether the chat with this receiver is visible. Used for private chats.
-        visible?: boolean;
+        visible: boolean;
     }
 
     /**
