@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasValue} from '../helpers';
 import {WebClientService} from '../services/webclient';
 import {AvatarControllerModel} from './avatar';
 
@@ -52,7 +53,7 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
                 $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
                 mode: ControllerModelMode,
-                me?: threema.MeReceiver) {
+                me: threema.MeReceiver) {
         this.$log = $log;
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
@@ -60,7 +61,7 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
         this.webClientService = webClientService;
         this.mode = mode;
 
-        this.nickname = webClientService.me.publicNickname;
+        this.nickname = webClientService.me.publicNickname || '';  // TODO: Make ARP publicNickname non-optional
         switch (mode) {
             case ControllerModelMode.EDIT:
                 this.subject = $translate.instant('messenger.EDIT_RECEIVER');
@@ -139,7 +140,7 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
      * The profile can be edited if there are no MDM restrictions.
      */
     public canEdit(): boolean {
-        const mdm: threema.MdmRestrictions = this.webClientService.appCapabilities.mdm;
+        const mdm = this.webClientService.appCapabilities.mdm;
         return mdm === undefined || !mdm.readonlyProfile;
     }
 
@@ -160,7 +161,14 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
                     // Profile was successfully updated. Update local data.
                     this.webClientService.me.publicNickname = this.nickname;
                     if (this.avatarController.avatarChanged) {
-                        this.webClientService.me.avatar.high = this.avatarController.getAvatar();
+                        const avatar = this.avatarController.getAvatar();
+                        if (avatar) {
+                            if (!hasValue(this.webClientService.me.avatar)) {
+                                this.webClientService.me.avatar = {high: avatar};
+                            } else {
+                                this.webClientService.me.avatar.high = avatar;
+                            }
+                        }
                     }
                     return this.me;
                 });

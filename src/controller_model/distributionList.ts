@@ -21,6 +21,7 @@ import {WebClientService} from '../services/webclient';
 import ControllerModelMode = threema.ControllerModelMode;
 
 export class DistributionListControllerModel implements threema.ControllerModel<threema.DistributionListReceiver> {
+    private logTag = '[DistributionListControllerModel]';
 
     private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
@@ -31,7 +32,7 @@ export class DistributionListControllerModel implements threema.ControllerModel<
     public isLoading = false;
 
     private addContactPlaceholder: string;
-    private distributionList: threema.DistributionListReceiver;
+    private distributionList: threema.DistributionListReceiver | null;
     private webClientService: WebClientService;
     private mode: ControllerModelMode;
     private onRemovedCallback: threema.OnRemovedCallback;
@@ -44,7 +45,14 @@ export class DistributionListControllerModel implements threema.ControllerModel<
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
 
-        this.distributionList = distributionList;
+        if (distributionList === undefined) {
+            if (mode !== ControllerModelMode.NEW) {
+                throw new Error('DistributionListControllerModel: Distribution list ' +
+                                'may not be undefined for mode ' + mode);
+            }
+        } else {
+            this.distributionList = distributionList;
+        }
         this.mode = mode;
         this.webClientService = webClientService;
         this.addContactPlaceholder = $translate.instant('messenger.DISTRIBUTION_LIST_SELECT_MEMBERS');
@@ -52,14 +60,14 @@ export class DistributionListControllerModel implements threema.ControllerModel<
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
                 this.subject = $translate.instant('messenger.EDIT_RECEIVER');
-                this.name = this.distributionList.displayName;
-                this.members = this.distributionList.members;
+                this.name = this.distributionList!.displayName;
+                this.members = this.distributionList!.members;
                 break;
 
             case ControllerModelMode.VIEW:
             case ControllerModelMode.CHAT:
-                this.subject = this.distributionList.displayName;
-                this.members = this.distributionList.members;
+                this.subject = this.distributionList!.displayName;
+                this.members = this.distributionList!.members;
                 break;
 
             case ControllerModelMode.NEW:
@@ -68,7 +76,7 @@ export class DistributionListControllerModel implements threema.ControllerModel<
                 break;
 
             default:
-                $log.error('Invalid controller model mode: ', this.getMode());
+                $log.error(this.logTag, 'Invalid controller model mode: ', this.getMode());
         }
     }
 
@@ -110,13 +118,17 @@ export class DistributionListControllerModel implements threema.ControllerModel<
         this.$mdDialog.show(confirm).then(() => {
             this.reallyClean();
         }, () => {
-            this.$log.debug('clean canceled');
+            this.$log.debug(this.logTag, 'Clean canceled');
         });
     }
 
     private reallyClean(): any {
+        if (!this.distributionList) {
+            this.$log.error(this.logTag, 'reallyClean: Distribution list is null');
+            return;
+        }
         if (!this.canClean()) {
-            this.$log.error('not allowed to clean this contact');
+            this.$log.error(this.logTag, 'Not allowed to clean this distribution list');
             return;
         }
 
@@ -127,7 +139,7 @@ export class DistributionListControllerModel implements threema.ControllerModel<
             })
             .catch((error) => {
                 // TODO: Handle this properly / show an error message
-                this.$log.error(`Cleaning receiver conversation failed: ${error}`);
+                this.$log.error(this.logTag, `Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -137,7 +149,6 @@ export class DistributionListControllerModel implements threema.ControllerModel<
     }
 
     public delete(ev): void {
-
         const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.DISTRIBUTION_LIST_DELETE'))
             .textContent(this.$translate.instant('messenger.DISTRIBUTION_LIST_DELETE_REALLY'))
@@ -147,27 +158,30 @@ export class DistributionListControllerModel implements threema.ControllerModel<
 
         this.$mdDialog.show(confirm).then(() => {
             this.reallyDelete();
-
-            if (this.onRemovedCallback) {
-                this.onRemovedCallback(this.distributionList.id);
-            }
         }, () => {
-            this.$log.debug('delete canceled');
+            this.$log.debug(this.logTag, 'Delete canceled');
         });
     }
 
     private reallyDelete(): void {
+        if (!this.distributionList) {
+            this.$log.error(this.logTag, 'reallyDelete: Distribution list is null');
+            return;
+        }
         if (!this.distributionList.access.canDelete) {
-            this.$log.error('cannot delete distribution list');
+            this.$log.error(this.logTag, 'Not allowed to delete this distribution list');
             return;
         }
 
         this.isLoading = true;
         this.webClientService.deleteDistributionList(this.distributionList).then(() => {
             this.isLoading = false;
+            if (this.onRemovedCallback && this.distributionList !== null) {
+                this.onRemovedCallback(this.distributionList.id);
+            }
         }).catch((error) => {
             // TODO: Handle this properly / show an error message
-            this.$log.error(`Deleting distribution list failed: ${error}`);
+            this.$log.error(this.logTag, `Deleting distribution list failed: ${error}`);
             this.isLoading = false;
         });
     }
@@ -176,7 +190,7 @@ export class DistributionListControllerModel implements threema.ControllerModel<
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
                 return this.webClientService.modifyDistributionList(
-                    this.distributionList.id,
+                    this.distributionList!.id,
                     this.members,
                     this.name,
                 );
@@ -185,8 +199,8 @@ export class DistributionListControllerModel implements threema.ControllerModel<
                     this.members,
                     this.name);
             default:
-                this.$log.error('not allowed to save distribution list');
-
+                this.$log.error(this.logTag, 'Cannot save distribution list, invalid mode');
+                return Promise.reject('Cannot save distribution list, invalid mode');
         }
     }
 
