@@ -328,7 +328,7 @@ export function logAdapter(logFunc: (...msg: string[]) => void, logTag: string):
 /**
  * Return whether a value is not null and not undefined.
  */
-export function hasValue(val: any): boolean {
+export function hasValue<T>(val?: T | null): val is T {
     return val !== null && val !== undefined;
 }
 
