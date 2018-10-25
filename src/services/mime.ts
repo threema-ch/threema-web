@@ -54,13 +54,13 @@ export class MimeService {
 
     public getIconUrl(mimeType: string): string {
         let key = this.getKey(mimeType);
-        if (key === undefined || key === null || key.length === 0) {
+        if (!hasValue(key) || key.length === 0) {
             key = 'generic';
         }
         return 'img/mime/ic_doc_' + key + '.png';
     }
 
-    private getKey(mimeType: string): string {
+    private getKey(mimeType: string): string | null {
         if (!hasValue(mimeType)) {
             return null;
         }
