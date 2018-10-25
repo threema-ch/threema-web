@@ -235,18 +235,18 @@ export default [
                         }
                     };
 
-                    const isWork = webClientService.clientInfo.isWork;
+                    const isWorkApp = webClientService.clientInfo.isWork;
                     this.showWorkIndicator = () => {
                         if (!isContactReceiver(this.receiver)) { return false; }
                         const contact: threema.ContactReceiver = this.receiver;
-                        return isWork === false
+                        return isWorkApp === false
                             && !this.highResolution
                             && contact.identityType === threema.IdentityType.Work;
                     };
                     this.showHomeIndicator = () => {
                         if (!isContactReceiver(this.receiver)) { return false; }
                         const contact: threema.ContactReceiver = this.receiver;
-                        return isWork === true
+                        return isWorkApp === true
                             && !isGatewayContact(contact)
                             && !isEchoContact(contact)
                             && contact.identityType === threema.IdentityType.Regular
