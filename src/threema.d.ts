@@ -258,7 +258,7 @@ declare namespace threema {
         verificationLevel?: number;
 
         // Feature mask
-        featureMask: number | null;
+        featureMask: number;
 
         // The identity state
         state: 'ACTIVE' | 'INACTIVE';
