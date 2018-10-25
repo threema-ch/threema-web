@@ -661,12 +661,25 @@ declare namespace threema {
     }
 
     interface ClientInfo {
+        // The device name
         device: string;
+
+        // The operating system
         os: OperatingSystem;
+
+        // The operating system version (e.g. "5.1")
         osVersion: string;
+
+        // Whether the app is the *work* variant of Threema
         isWork: boolean;
+
+        // The GCM / APNS push token
         pushToken?: string;
+
+        // The device configuration
         configuration: AppConfig;
+
+        // The device capabilities
         capabilities: AppCapabilities;
     }
 
