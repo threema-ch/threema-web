@@ -31,6 +31,8 @@ function getText(message: threema.Message): string {
             // Prefer caption for file messages, if available
             if (message.caption && message.caption.length > 0) {
                 return message.caption;
+            } else if (message.file.type === 'image/gif') {
+                return 'GIF';
             }
             return message.file.name;
     }
