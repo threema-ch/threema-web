@@ -6,15 +6,15 @@
         </div>
 
         <div class="header-buttons">
-            <md-button aria-label="chat" class="md-icon-button" ng-show="ctrl.controllerModel.canShowQr()" ng-click="ctrl.showQr()">
+            <md-button aria-label="Show QR Code" class="md-icon-button" ng-show="ctrl.controllerModel.canShowQr()" ng-click="ctrl.showQr()">
                 <md-icon><img src="img/ic_qr.svg" alt="QR"></md-icon>
             </md-button>
 
-            <md-button aria-label="chat" class="md-icon-button" ng-show="ctrl.controllerModel.canEdit()" ng-click="ctrl.edit()">
+            <md-button aria-label="Edit contact" class="md-icon-button" ng-show="ctrl.controllerModel.canEdit()" ng-click="ctrl.edit()">
                 <md-icon class="material-icons md-24">mode_edit</md-icon>
             </md-button>
 
-            <md-button aria-label="edit" class="md-icon-button" ng-show="ctrl.controllerModel.canChat()" ng-click="ctrl.chat()">
+            <md-button aria-label="Open Chat" class="md-icon-button" ng-show="ctrl.controllerModel.canChat()" ng-click="ctrl.chat()">
                 <md-icon class="material-icons md-24">message</md-icon>
             </md-button>
         </div>
