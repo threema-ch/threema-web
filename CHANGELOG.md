@@ -3,6 +3,111 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+
+### [v2.1.0][v2.1.0] (2018-10-23)
+
+Changes:
+
+* [feature] Implement ack protocol for iOS session resumption ([#551][i551])
+* [feature] Implement pinning of conversations ([#361][i361])
+* [change] New stack based markup parser ([#453][i453] / [#458][i458] / [#590][i590])
+* [change] Accessibility improvements ([#562][i562] / [#618][i618] / [#622][i622] / [#636][i636])
+* [change] Hide WebRTC troubleshooting when using iOS ([#625][i625])
+* [change] Use window focus instead of page visibility to mark messages as read ([#644][i644])
+* [bug] Don't linkify latest message excerpt in conversation list ([#544][i544])
+* [bug] Workaround for conversation loading bug in Safari ([#602][i602])
+* [bug] Fix marking of read messages with duplicate sort key ([#606][i606])
+* [bug] Compose area: Fix newlines in Safari ([#613][i613])
+* [bug] Fix largeSingleEmoji setting ([#610][i610])
+* [bug] Copy to clipboard: Workaround for Safari on iOS ([#626][i626])
+* [bug] Clear isTyping flag when receiving message ([#637][i637])
+* [bug] Fix updating of message caption ([#638][i638])
+* [bug] Hide image preview when redirecting ([#640][i640])
+* [bug] Fix updating of avatars in contact autocomplete box ([#643][i643])
+
+Contributors:
+
+- [@MarcoZehe][@MarcoZehe]
+
+
+### [v2.0.3][v2.0.3] (2018-08-23)
+
+Changes:
+
+* [feature] Add reload button to connect error page ([#545][i545])
+* [change] Refactor browser detection ([#569][i569])
+* [change] UI performance improvements ([#567][i567])
+* [bug] Compose area: Add newline workaround for Safari ([#572][i572])
+
+Contributors:
+
+- [@SirTyson][@SirTyson]
+
+
+### [v2.0.2][v2.0.2] (2018-08-14)
+
+Changes:
+
+* [bug] Fix work indicator ([#558][i558])
+* [bug] Fix status of newly created groups ([#563][i563])
+
+
+### [v2.0.1][v2.0.1] (2018-08-07)
+
+Changes:
+
+* [feature] Cancel battery alert when phone is plugged in ([#547][i547])
+* [bug] Fix group / distribution list contact selector ([#550][i550])
+* [bug] Fix troubleshooting background image and favicon
+
+Contributors:
+
+- [@iasdeoupxe][@iasdeoupxe]
+- [@SirTyson][@SirTyson]
+
+
+### [v2.0.0][v2.0.0] Grosser Mythen (2018-08-02)
+
+This release changes the protocol version from 1 to 2. It provides preliminary
+support for iOS devices (currently in beta). It also improves the performance
+and responsiveness of Threema Web.
+
+For the detailed list of changes, see the list below.
+
+Changes:
+
+* [feature] Add preliminary support for iOS / Safari, currently in Beta ([#58][i58])
+* [feature] Allow viewing and editing your own profile ([#221][i221])
+* [feature] Show message events ([#32][i32])
+* [feature] Large single emoji ([#97][i97])
+* [feature] Show distribution list members ([#472][i472])
+* [feature] Add "Navigate to" entry to location message context menu
+* [feature] Implement support for new per-conversation notification settings
+* [feature] Hide inactive IDs in contact list ([#4][i4])
+* [feature] Implement "copy to clipboard" functionality
+* [feature] Show three blue dots for verified Threema Work contacts
+* [feature] Implement non-work indicator for Threema Work users
+* [change] Threema Web protocol version upgrade from 1 to 2
+* [change] When downloading media, filename now contains timestamp
+* [bug] Fix a lot of UI performance issues ([#480][i480])
+* [bug] Saving profile without setting picture won't reset it anymore ([#154][i154])
+* [bug] Fix race condition in password field ([#445][i445])
+* [bug] When entering the wrong password, re-enable the input field
+* [bug] Fix broken conversation preview ([#393][i393])
+* [bug] Make message caption mouse-selectable ([#303][i303])
+* [bug] Fix error message when adding an invalid contact identity
+* [bug] Fix closing of chat when deleting conversation
+* [bug] Improve scrolling behavior ([#18][i18])
+* [bug] Fix "unread messages" indicator
+
+Contributors:
+
+- [@heckenmann][@heckenmann]
+- [@IndianaDschones][@IndianaDschones]
+- [@JanRei][@JanRei]
+- [@ovalseven8][@ovalseven8]
+
+
 ### [v1.8.2][v1.8.2] (2018-02-21)
 
 Changes:
@@ -21,11 +126,13 @@ Contributors:
 - [@ovalseven8][@ovalseven8]
 - [@rugk][@rugk]
 
+
 ### [v1.8.1][v1.8.1] (2018-02-06)
 
 Changes:
 
 * [change] Make mentions display-only ([#419][i419])
+
 
 ### [v1.8.0][v1.8.0] (2018-02-06)
 
@@ -41,6 +148,7 @@ Changes:
 Contributors:
 
 - [@rugk][@rugk]
+
 
 ### [v1.7.0][v1.7.0] (2017-11-27)
 
@@ -65,6 +173,7 @@ Contributors:
 * [@lgrahl][@lgrahl]
 * [@Octoate][@Octoate]
 
+
 ### [v1.6.2][v1.6.2] (2017-10-25)
 
 Changes:
@@ -76,12 +185,14 @@ Changes:
 * [bug] Don't display low battery notification when charging ([#359][i359])
 * [bug] Fix image upload for avatar editor ([#358][i358])
 
+
 ### [v1.6.1][v1.6.1] (2017-10-02)
 
 Changes:
 
 * [feature] Show desktop notifications if battery level is low ([#351][i351])
 * [change] Updated STUN/TURN endpoints
+
 
 ### [v1.6.0][v1.6.0] (2017-09-26)
 
@@ -110,6 +221,7 @@ Contributors:
 
 - [@JlnWntr][@JlnWntr]
 
+
 ### [v1.5.0][v1.5.0] (2017-08-29)
 
 Changes:
@@ -125,6 +237,7 @@ Contributors:
 
 - [@IndianaDschones][@IndianaDschones]
 
+
 ### [v1.4.1][v1.4.1] (2017-08-07)
 
 Changes:
@@ -139,6 +252,7 @@ Contributors:
 - [@IndianaDschones][@IndianaDschones]
 - [@rugk][@rugk]
 
+
 ### [v1.4.0][v1.4.0] (2017-07-20)
 
 Changes:
@@ -147,11 +261,13 @@ Changes:
 * [change] Reduce browser CPU usage in conversation ([#264][i264])
 * [bug] Add high DPI versions of emoji spritemaps ([#261][i261])
 
+
 ### [v1.3.1][v1.3.1] (2017-06-22)
 
 Changes:
 
 * [bug] Fix bug when inserting emoji in Chrome ([#256][i256])
+
 
 ### [v1.3.0][v1.3.0] (2017-06-22)
 
@@ -164,6 +280,7 @@ Changes:
 * [bug] When pasting text, only trim newline characters ([#237][i237])
 * [bug] Fix right-to-left support ([#239][i239])
 
+
 ### [v1.2.1][v1.2.1] (2017-05-17)
 
 Changes:
@@ -171,6 +288,7 @@ Changes:
 * [feature] Check for a new version, notify user if version changed ([#183][i183])
 * [bug] Fix line breaks when pasting on Windows ([#134][i134])
 * [bug] Fix path to sound notification file
+
 
 ### [v1.2.0][v1.2.0] (2017-05-17)
 
@@ -192,6 +310,7 @@ Contributors:
 - [@IndianaDschones][@IndianaDschones]
 - [@Pythonix][@Pythonix]
 - [@econic][@econic]
+
 
 ### [v1.1.0][v1.1.0] (2017-03-16)
 
@@ -216,6 +335,7 @@ Contributors:
 * [@IndianaDschones][@IndianaDschones]
 * [@FloThinksPi][@FloThinksPi]
 
+
 ### [v1.0.5][v1.0.5] (2017-03-03)
 
 Changes:
@@ -223,6 +343,7 @@ Changes:
 * [feature] Add diagnostics/troubleshooting page ([#126][i126] / [#127][i127])
 * [bug] Fix bug resulting in slow initial load ([#120][i120])
 * [bug] Add meta description to index.html ([#124][i124])
+
 
 ### [v1.0.4][v1.0.4] (2017-03-01)
 
@@ -241,6 +362,7 @@ Contributors:
 - [@N3dal][@N3dal]
 - [@ovalseven8][@ovalseven8]
 - [@rugk][@rugk]
+
 
 ### [v1.0.3][v1.0.3] (2017-02-23)
 
@@ -285,12 +407,15 @@ Contributors:
 
 First public release.
 
+[i4]: https://github.com/threema-ch/threema-web/issues/4
 [i6]: https://github.com/threema-ch/threema-web/issues/6
 [i8]: https://github.com/threema-ch/threema-web/issues/8
 [i11]: https://github.com/threema-ch/threema-web/issues/11
 [i17]: https://github.com/threema-ch/threema-web/issues/17
+[i18]: https://github.com/threema-ch/threema-web/issues/18
 [i20]: https://github.com/threema-ch/threema-web/issues/20
 [i29]: https://github.com/threema-ch/threema-web/issues/29
+[i32]: https://github.com/threema-ch/threema-web/issues/32
 [i38]: https://github.com/threema-ch/threema-web/issues/38
 [i39]: https://github.com/threema-ch/threema-web/issues/39
 [i41]: https://github.com/threema-ch/threema-web/issues/41
@@ -302,6 +427,7 @@ First public release.
 [i50]: https://github.com/threema-ch/threema-web/issues/50
 [i54]: https://github.com/threema-ch/threema-web/issues/54
 [i57]: https://github.com/threema-ch/threema-web/issues/57
+[i58]: https://github.com/threema-ch/threema-web/issues/58
 [i59]: https://github.com/threema-ch/threema-web/issues/59
 [i61]: https://github.com/threema-ch/threema-web/issues/61
 [i64]: https://github.com/threema-ch/threema-web/issues/64
@@ -313,6 +439,7 @@ First public release.
 [i83]: https://github.com/threema-ch/threema-web/issues/83
 [i86]: https://github.com/threema-ch/threema-web/issues/86
 [i90]: https://github.com/threema-ch/threema-web/issues/90
+[i97]: https://github.com/threema-ch/threema-web/issues/97
 [i93]: https://github.com/threema-ch/threema-web/issues/93
 [i102]: https://github.com/threema-ch/threema-web/issues/102
 [i108]: https://github.com/threema-ch/threema-web/issues/108
@@ -332,6 +459,7 @@ First public release.
 [i148]: https://github.com/threema-ch/threema-web/issues/148
 [i150]: https://github.com/threema-ch/threema-web/issues/150
 [i153]: https://github.com/threema-ch/threema-web/issues/153
+[i154]: https://github.com/threema-ch/threema-web/issues/154
 [i156]: https://github.com/threema-ch/threema-web/issues/156
 [i161]: https://github.com/threema-ch/threema-web/issues/161
 [i167]: https://github.com/threema-ch/threema-web/issues/167
@@ -348,6 +476,7 @@ First public release.
 [i205]: https://github.com/threema-ch/threema-web/issues/205
 [i211]: https://github.com/threema-ch/threema-web/issues/211
 [i215]: https://github.com/threema-ch/threema-web/issues/215
+[i221]: https://github.com/threema-ch/threema-web/issues/221
 [i231]: https://github.com/threema-ch/threema-web/issues/231
 [i235]: https://github.com/threema-ch/threema-web/issues/235
 [i237]: https://github.com/threema-ch/threema-web/issues/237
@@ -367,6 +496,7 @@ First public release.
 [i289]: https://github.com/threema-ch/threema-web/issues/289
 [i291]: https://github.com/threema-ch/threema-web/issues/291
 [i296]: https://github.com/threema-ch/threema-web/issues/296
+[i303]: https://github.com/threema-ch/threema-web/issues/303
 [i310]: https://github.com/threema-ch/threema-web/issues/310
 [i311]: https://github.com/threema-ch/threema-web/issues/311
 [i315]: https://github.com/threema-ch/threema-web/issues/315
@@ -387,6 +517,7 @@ First public release.
 [i357]: https://github.com/threema-ch/threema-web/issues/357
 [i358]: https://github.com/threema-ch/threema-web/issues/358
 [i359]: https://github.com/threema-ch/threema-web/issues/359
+[i361]: https://github.com/threema-ch/threema-web/issues/361
 [i362]: https://github.com/threema-ch/threema-web/issues/362
 [i363]: https://github.com/threema-ch/threema-web/issues/363
 [i364]: https://github.com/threema-ch/threema-web/issues/364
@@ -403,6 +534,7 @@ First public release.
 [i382]: https://github.com/threema-ch/threema-web/issues/382
 [i385]: https://github.com/threema-ch/threema-web/issues/385
 [i390]: https://github.com/threema-ch/threema-web/issues/390
+[i393]: https://github.com/threema-ch/threema-web/issues/393
 [i396]: https://github.com/threema-ch/threema-web/issues/396
 [i401]: https://github.com/threema-ch/threema-web/issues/401
 [i402]: https://github.com/threema-ch/threema-web/issues/402
@@ -416,7 +548,49 @@ First public release.
 [i435]: https://github.com/threema-ch/threema-web/issues/435
 [i439]: https://github.com/threema-ch/threema-web/issues/439
 [i441]: https://github.com/threema-ch/threema-web/issues/441
+[i445]: https://github.com/threema-ch/threema-web/issues/445
+[i453]: https://github.com/threema-ch/threema-web/issues/453
+[i458]: https://github.com/threema-ch/threema-web/issues/458
+[i472]: https://github.com/threema-ch/threema-web/issues/472
+[i480]: https://github.com/threema-ch/threema-web/issues/480
+[i503]: https://github.com/threema-ch/threema-web/issues/503
+[i517]: https://github.com/threema-ch/threema-web/issues/517
+[i519]: https://github.com/threema-ch/threema-web/issues/519
+[i522]: https://github.com/threema-ch/threema-web/issues/522
+[i528]: https://github.com/threema-ch/threema-web/issues/528
+[i544]: https://github.com/threema-ch/threema-web/issues/544
+[i545]: https://github.com/threema-ch/threema-web/issues/545
+[i547]: https://github.com/threema-ch/threema-web/issues/547
+[i550]: https://github.com/threema-ch/threema-web/issues/550
+[i551]: https://github.com/threema-ch/threema-web/issues/551
+[i558]: https://github.com/threema-ch/threema-web/issues/558
+[i562]: https://github.com/threema-ch/threema-web/issues/562
+[i563]: https://github.com/threema-ch/threema-web/issues/563
+[i567]: https://github.com/threema-ch/threema-web/issues/567
+[i569]: https://github.com/threema-ch/threema-web/issues/569
+[i572]: https://github.com/threema-ch/threema-web/issues/572
+[i590]: https://github.com/threema-ch/threema-web/pull/590
+[i597]: https://github.com/threema-ch/threema-web/pull/597
+[i602]: https://github.com/threema-ch/threema-web/pull/602
+[i606]: https://github.com/threema-ch/threema-web/pull/606
+[i610]: https://github.com/threema-ch/threema-web/pull/610
+[i613]: https://github.com/threema-ch/threema-web/pull/613
+[i618]: https://github.com/threema-ch/threema-web/pull/618
+[i622]: https://github.com/threema-ch/threema-web/pull/622
+[i625]: https://github.com/threema-ch/threema-web/pull/625
+[i626]: https://github.com/threema-ch/threema-web/pull/626
+[i636]: https://github.com/threema-ch/threema-web/pull/636
+[i637]: https://github.com/threema-ch/threema-web/pull/637
+[i638]: https://github.com/threema-ch/threema-web/pull/638
+[i640]: https://github.com/threema-ch/threema-web/pull/640
+[i643]: https://github.com/threema-ch/threema-web/pull/643
+[i644]: https://github.com/threema-ch/threema-web/pull/644
 
+[v2.1.0]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0
+[v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
+[v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
+[v2.0.1]: https://github.com/threema-ch/threema-web/compare/v2.0.0...v2.0.1
+[v2.0.0]: https://github.com/threema-ch/threema-web/compare/v1.8.2...v2.0.0
 [v1.8.2]: https://github.com/threema-ch/threema-web/compare/v1.8.1...v1.8.2
 [v1.8.1]: https://github.com/threema-ch/threema-web/compare/v1.8.0...v1.8.1
 [v1.8.0]: https://github.com/threema-ch/threema-web/compare/v1.7.0...v1.8.0
@@ -452,3 +626,8 @@ First public release.
 [@bluec0re]: https://github.com/bluec0re/
 [@Octoate]: https://github.com/Octoate/
 [@joelfischerr]: https://github.com/joelfischerr/
+[@JanRei]: https://github.com/JanRei/
+[@heckenmann]: https://github.com/heckenmann
+[@iasdeoupxe]: https://github.com/iasdeoupxe
+[@SirTyson]: https://github.com/SirTyson
+[@MarcoZehe]: https://github.com/MarcoZehe

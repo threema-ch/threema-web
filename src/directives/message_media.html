@@ -27,9 +27,9 @@
 
         <!-- Thumbnails -->
         <span class="in-view-indicator" ng-if="ctrl.type !== 'location'" in-view="ctrl.thumbnailInView($inview)"></span>
-        <img ng-if="ctrl.thumbnail !== null" ng-src="{{ctrl.thumbnail}}">
-        <div ng-if="ctrl.message.thumbnail != undefined" class="thumbnail-loader">
-            <img ng-src="{{ ctrl.message.thumbnail.preview | bufferToUrl: 'image/png' }}">
+        <img ng-if="ctrl.thumbnail" ng-src="{{ ctrl.thumbnail }}">
+        <div ng-if="ctrl.message.thumbnail && !ctrl.thumbnail" class="thumbnail-loader">
+            <img ng-src="{{ ctrl.getThumbnailPreviewUri() }}">
         </div>
 
     </div>
@@ -47,7 +47,7 @@
             <div class="loading" ng-class="{active: ctrl.isDownloading()}"></div>
         </div>
         <!-- Play Indicator -->
-        <div class="circle" ng-click="ctrl.download()" ng-if="ctrl.downloaded">
+        <div class="circle" ng-if="ctrl.downloaded">
             <i class="material-icons md-24">play_arrow</i>
         </div>
         <div class="info" translate>messageTypes.AUDIO_MESSAGE</div>
@@ -55,7 +55,7 @@
 
     <!-- Anim GIF -->
     <div class="animgif" ng-if="ctrl.downloaded && ctrl.isAnimGif">
-        <img ng-src="{{ ctrl.blobBuffer | bufferToUrl: 'image/gif'}}" />
+        <img ng-src="{{ ctrl.blobBufferUrl }}">
     </div>
 
     <!-- Other file messages -->
@@ -65,7 +65,7 @@
         <div class="circle"
              ng-class="{active: !ctrl.isDownloading()}"
              ng-if="!ctrl.downloaded"
-             ng-style="{'background-image': 'url({{ctrl.message.thumbnail.preview | bufferToUrl: 'image/png'}})' }">
+             ng-style="{'background-image': 'url({{ ctrl.getThumbnailPreviewUri() }})' }">
             <i class="material-icons md-24">file_download</i>
             <div class="loading" ng-class="{active: ctrl.isDownloading()}"></div>
         </div>
@@ -73,11 +73,11 @@
         <!-- File type indicator -->
         <div class="circle"
              ng-if="ctrl.downloaded && ctrl.message.thumbnail.preview !== undefined"
-             ng-style="{'background-image': 'url({{ctrl.message.thumbnail.preview | bufferToUrl: 'image/png'}})' }">
+             ng-style="{'background-image': 'url({{ ctrl.getThumbnailPreviewUri() }})' }">
         </div>
         <div class="circle"
              ng-if="ctrl.downloaded && ctrl.message.thumbnail.preview == undefined">
-            <img ng-src="{{ ctrl.message.file.type | mimeTypeIcon }}"/>
+            <img ng-src="{{ ctrl.message.file.type | mimeTypeIcon }}">
         </div>
 
         <!-- File information -->

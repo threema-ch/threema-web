@@ -17,17 +17,14 @@
 
 // tslint:disable:max-line-length
 
+import {bufferToUrl, logAdapter} from '../helpers';
+
 /**
  * Support uploading and resizing avatar
  */
 export default [
-    '$window',
-    '$timeout',
-    '$translate',
-    '$filter',
     '$log',
-    '$mdDialog',
-    function($window, $timeout: ng.ITimeoutService, $translate, $filter: any, $log: ng.ILogService, $mdDialog) {
+    function($log: ng.ILogService) {
         return {
             restrict: 'EA',
             scope: {
@@ -53,7 +50,7 @@ export default [
                     if (croppieInstance !== null) {
                         return croppieInstance;
                     }
-                    croppieInstance = new Croppie(element[0].querySelector('.croppie-container'), {
+                    croppieInstance = new Croppie(element[0].querySelector('.croppie-target'), {
                         viewport: {
                             type: 'square',
                             width: VIEWPORT_SIZE,
@@ -66,12 +63,13 @@ export default [
                                 clearTimeout(updateTimeout);
                             }
 
-                            updateTimeout = setTimeout(() => {
+                            updateTimeout = self.setTimeout(() => {
                                 croppieInstance.result({
                                     type: 'blob',
                                     // max allowed size on device
                                     size: [512, 512],
-                                    circle: 'false',
+                                    circle: false,
+                                    format: 'png',
                                 })
                                     .then((blob: Blob) => {
                                         const fileReader = new FileReader();
@@ -102,15 +100,15 @@ export default [
                 function fetchFileContent(file: File): Promise<ArrayBuffer> {
                     return new Promise((resolve, reject) => {
                         const reader = new FileReader();
-                        reader.onload = (ev: Event) => {
-                            resolve((ev.target as FileReader).result);
+                        reader.onload = function(ev: FileReaderProgressEvent) {
+                            resolve(ev.target.result);
                         };
-                        reader.onerror = (ev: ErrorEvent) => {
+                        reader.onerror = function(ev: FileReaderProgressEvent) {
                             // set a null object
                             reject(ev);
                         };
-                        reader.onprogress = function(data) {
-                            if (data.lengthComputable) {
+                        reader.onprogress = function(ev: FileReaderProgressEvent) {
+                            if (ev.lengthComputable) {
                                 // TODO implement progress?
                                 // let progress = ((data.loaded / data.total) * 100);
                             }
@@ -125,7 +123,7 @@ export default [
                     }
                     // get first
                     fetchFileContent(fileList[0]).then((data: ArrayBuffer) => {
-                        const image = $filter('bufferToUrl')(data, 'image/jpg', false);
+                        const image = bufferToUrl(data, 'image/jpeg', logAdapter($log.warn, logTag));
                         setImage(image);
                     }).catch((ev: ErrorEvent) => {
                         $log.error(logTag, 'Could not load file:', ev.message);
@@ -254,9 +252,9 @@ export default [
             },
             template: `
                 <div class="avatar-editor">
-                    <div class="avatar-editor-drag croppie-container"></div>
-                    <div class="avatar-editor-navigation"  layout="column" layout-wrap layout-margin layout-align="center center">
-                        <input class="file-input" type="file" style="visibility: hidden" multiple/>
+                    <div class="avatar-editor-drag croppie-target"></div>
+                    <div class="avatar-editor-navigation" layout="column" layout-wrap layout-margin layout-align="center center">
+                        <input class="file-input" type="file" style="visibility: hidden" multiple>
                           <md-button type="submit" class="file-trigger md-raised">
                             <span translate>messenger.UPLOAD_AVATAR</span>
                            </md-button>

@@ -16,9 +16,11 @@
  */
 
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
 
-export class DistributionListControllerModel implements threema.ControllerModel {
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
+
+export class DistributionListControllerModel implements threema.ControllerModel<threema.DistributionListReceiver> {
 
     private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
@@ -32,7 +34,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
     private distributionList: threema.DistributionListReceiver;
     private webClientService: WebClientService;
     private mode: ControllerModelMode;
-    private onRemovedCallback: any;
+    private onRemovedCallback: threema.OnRemovedCallback;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
@@ -49,9 +51,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
 
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
-                this.subject = $translate.instant('messenger.EDIT_RECEIVER', {
-                    receiverName: '@NAME@',
-                }).replace('@NAME@', this.distributionList.displayName);
+                this.subject = $translate.instant('messenger.EDIT_RECEIVER');
                 this.name = this.distributionList.displayName;
                 this.members = this.distributionList.members;
                 break;
@@ -72,7 +72,7 @@ export class DistributionListControllerModel implements threema.ControllerModel 
         }
     }
 
-    public setOnRemoved(callback: any): void {
+    public setOnRemoved(callback: threema.OnRemovedCallback): void {
         this.onRemovedCallback = callback;
     }
 
@@ -82,11 +82,11 @@ export class DistributionListControllerModel implements threema.ControllerModel 
 
     public isValid(): boolean {
         return this.members.filter((identity: string) => {
-                return identity !== this.webClientService.getMyIdentity().identity;
-            }).length > 0;
+            return identity !== this.webClientService.me.id;
+        }).length > 0;
     }
 
-    public canView(): boolean {
+    public canChat(): boolean {
         return true;
     }
 
@@ -125,9 +125,15 @@ export class DistributionListControllerModel implements threema.ControllerModel 
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
+    }
+
+    public canShowQr(): boolean {
+        return false;
     }
 
     public delete(ev): void {
@@ -159,7 +165,9 @@ export class DistributionListControllerModel implements threema.ControllerModel 
         this.isLoading = true;
         this.webClientService.deleteDistributionList(this.distributionList).then(() => {
             this.isLoading = false;
-        }).catch(() => {
+        }).catch((error) => {
+            // TODO: Handle this properly / show an error message
+            this.$log.error(`Deleting distribution list failed: ${error}`);
             this.isLoading = false;
         });
     }

@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {sha256} from '../helpers/crypto';
+
 export class FingerPrintService {
     private $log: ng.ILogService;
 
@@ -23,9 +25,9 @@ export class FingerPrintService {
         this.$log = $log;
     }
 
-    public generate(publicKey: ArrayBuffer): string {
+    public async generate(publicKey: ArrayBuffer): Promise<string> {
         if (publicKey !== undefined && publicKey.byteLength === 32) {
-            const sha256PublicKey = sha256(publicKey);
+            const sha256PublicKey = await sha256(publicKey);
             if (sha256PublicKey !== undefined) {
                 return sha256PublicKey.toLowerCase().substr(0, 32);
             }

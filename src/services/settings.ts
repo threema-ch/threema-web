@@ -43,15 +43,28 @@ export class SettingsService {
 
     /**
      * Retrieve settings key-value pair from LocalStorage.
+     *
+     * If the `alwaysCreate` flag is set to `true`, then the key is created
+     * with an empty value if it does not yet exist.
      */
-    public retrieveUntrustedKeyValuePair(key: string): string {
+    public retrieveUntrustedKeyValuePair(key: string, alwaysCreate: boolean = true): string {
         this.$log.debug(this.logTag, 'Retrieving settings key:', key);
         if (this.hasUntrustedKeyValuePair(key)) {
             return this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + key);
         } else {
-            this.storeUntrustedKeyValuePair(key, '');
+            if (alwaysCreate) {
+                this.storeUntrustedKeyValuePair(key, '');
+            }
             return '';
         }
+    }
+
+    /**
+     * Remove settings key-value pair from LocalStorage if it exists.
+     */
+    public removeUntrustedKeyValuePair(key: string): void {
+        this.$log.debug(this.logTag, 'Removing settings key:', key);
+        this.storage.removeItem(SettingsService.STORAGE_KEY_PREFIX + key);
     }
 
     /**

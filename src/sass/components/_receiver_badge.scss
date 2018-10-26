@@ -7,7 +7,8 @@
                 height: $avatar-size-in-autocomplete;
                 width: auto;
             }
-            .work-indicator {
+            .work-indicator,
+            .home-indicator {
                 // Override configuration.
                 // This is a bit of a hack
                 $indicator-size: 12px;

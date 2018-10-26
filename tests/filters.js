@@ -1,3 +1,7 @@
+afterEach(function () {
+    jasmine.clock().uninstall();
+});
+
 describe('Filters', function() {
 
     let $filter;
@@ -43,13 +47,13 @@ describe('Filters', function() {
     };
 
     beforeEach(function() {
-
-        // Load 3ema.filters module
+        module('3ema.services');
         module('3ema.filters');
 
-        module(function ($provide) {
+        module(function($provide) {
             $provide.value('WebClientService', webClientServiceMock);
             $provide.value('$translate', translationMock);
+            $provide.constant('$state', null);
         });
 
         // Inject the $filter function
@@ -67,87 +71,6 @@ describe('Filters', function() {
         };
     };
 
-    describe('markify', function() {
-
-        this.testPatterns = (cases) => testPatterns('markify', cases);
-
-        it('detects bold text', () => {
-            this.testPatterns([
-                ['*bold text (not italic)*',
-                 '<span class="text-bold">bold text (not italic)</span>'],
-            ]);
-        });
-
-        it('detects italic text', () => {
-            this.testPatterns([
-                ['This text is not italic.',
-                 'This text is not italic.'],
-                ['_This text is italic._',
-                 '<span class="text-italic">This text is italic.</span>'],
-                ['This text is _partially_ italic',
-                 'This text is <span class="text-italic">partially</span> italic'],
-                ['This text has _two_ _italic_ bits',
-                 'This text has <span class="text-italic">two</span> <span class="text-italic">italic</span> bits'],
-            ]);
-
-        });
-
-        it('detects strikethrough text', () => {
-            this.testPatterns([
-                ['so ~strikethrough~', 'so <span class="text-strike">strikethrough</span>'],
-            ]);
-        });
-
-        it('detects mixed markup', () => {
-            this.testPatterns([
-                ['*bold text with _italic_ *',
-                 '<span class="text-bold">bold text with <span class="text-italic">italic</span> </span>'],
-                ['*part bold,* _part italic_',
-                 '<span class="text-bold">part bold,</span> <span class="text-italic">part italic</span>'],
-                ['_italic text with *bold* _',
-                 '<span class="text-italic">italic text with <span class="text-bold">bold</span> </span>'],
-            ]);
-        });
-
-        it('is only applied on word boundaries', () => {
-            this.testPatterns([
-                ['so not_really_italic',
-                 'so not_really_italic'],
-                ['invalid*bold*stuff',
-                 'invalid*bold*stuff'],
-                ['no~strike~through',
-                 'no~strike~through'],
-                ['*bold_but_no~strike~through*',
-                 '<span class="text-bold">bold_but_no~strike~through</span>'],
-            ]);
-        });
-
-        it('does not break URLs', () => {
-            this.testPatterns([
-                ['https://en.wikipedia.org/wiki/Java_class_file *nice*',
-                 'https://en.wikipedia.org/wiki/Java_class_file <span class="text-bold">nice</span>'],
-                ['<a href="https://threema.ch/>_Threema_</a>',
-                 '<a href="https://threema.ch/><span class="text-italic">Threema</span></a>'],
-            ]);
-        });
-
-        it('ignores invalid markup', () => {
-            this.testPatterns([
-                ['*invalid markup (do not parse)_', '*invalid markup (do not parse)_'],
-                ['random *asterisk', 'random *asterisk'],
-            ]);
-        });
-
-        it('ignores markup with \\n (newline)', () => {
-            this.testPatterns([
-                ['*First line\n and a new one. (do not parse)*', '*First line\n and a new one. (do not parse)*'],
-                ['*\nbegins with linebreak. (do not parse)*', '*\nbegins with linebreak. (do not parse)*'],
-                ['*Just some text. But it ends with newline (do not parse)\n*', '*Just some text. But it ends with newline (do not parse)\n*'],
-            ]);
-        });
-
-    });
-
     describe('escapeHtml', function() {
 
         this.testPatterns = (cases) => testPatterns('escapeHtml', cases);
@@ -163,7 +86,6 @@ describe('Filters', function() {
     });
 
     describe('mentionify', function() {
-
 
         this.testPatterns = (cases) => testPatterns('mentionify', cases);
 
@@ -240,6 +162,123 @@ describe('Filters', function() {
         it('if enabled flag is not set, converts newlines', () => {
             const filter = $filter('nlToBr');
             expect(filter('abc\ndef')).toEqual('abc<br>def');
+        });
+    });
+
+    describe('unixToTimestring', function() {
+        this.testPatterns = (cases) => testPatterns('unixToTimestring', cases);
+
+        it('shows only time for today', () => {
+            const d1 = new Date(); d1.setHours(8); d1.setMinutes(7);
+            const d2 = new Date(); d2.setHours(12); d2.setMinutes(14);
+            const d3 = new Date(); d3.setHours(0); d3.setMinutes(0);
+            this.testPatterns([
+                [d1.getTime() / 1000, '08:07'],
+                [d2.getTime() / 1000, '12:14'],
+                [d3.getTime() / 1000, '00:00'],
+            ]);
+        });
+
+        it('shows full date with forceFull flag', () => {
+            const d = new Date();
+            const formatted = $filter('unixToTimestring')(d.getTime() / 1000, true);
+            expect(formatted.length > 10).toBe(true);
+            expect(formatted).toContain(d.getFullYear().toString());
+        });
+
+        it('shows "yesterday" for yesterday', () => {
+            const d1 = new Date();
+            const ts = d1.getTime();
+            const d2 = new Date(ts - 1000 * 60 * 60 * 24);
+            d2.setHours(8); d2.setMinutes(7);
+            this.testPatterns([
+                [d2.getTime() / 1000, 'date.YESTERDAY, 08:07'],
+            ]);
+        });
+
+        it('shows full datetime for other days', () => {
+            jasmine.clock().install();
+            jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));
+            const now = new Date();
+            const d1 = new Date(2010, 1, 7, 18, 42);
+            const d2 = new Date(now.getFullYear(), 4, 2, 23, 59);
+            this.testPatterns([
+                [d1.getTime() / 1000, '7. date.month_short.FEB 2010, 18:42'],
+                [d2.getTime() / 1000, '2. date.month_short.MAY, 23:59'],
+            ]);
+        });
+    });
+
+    describe('enlargeSingleEmoji', function() {
+        let process = (text) => {
+            return $filter('enlargeSingleEmoji')(text, true)
+        };
+
+        const singleEmojiClassName = 'large-emoji';
+        const crazy = '<span class="e1 e1-people _1f92a" title=":crazy_face:">🤪</span>';
+        const crazyLarge = '<span class="e1 ' + singleEmojiClassName + ' e1-people _1f92a" title=":crazy_face:">🤪</span>';
+        const copyright = '<span class="e1 e1-symbols _00a9" title=":copyright:">©️</span>';
+        const copyrightLarge = '<span class="e1 ' + singleEmojiClassName + ' e1-symbols _00a9" title=":copyright:">©️</span>';
+
+        it('enlarges 1 emoji', () => {
+            expect(process(crazy)).toEqual(crazyLarge);
+        });
+
+        it('enlarges 2 emoji', () => {
+            expect(process(crazy + copyright)).toEqual(crazyLarge + copyrightLarge);
+        });
+
+        it('enlarges 3 emoji', () => {
+            expect(process(crazy + copyright + crazy)).toEqual(crazyLarge + copyrightLarge + crazyLarge);
+        });
+
+        it('does not enlarge 4 emoji', () => {
+            expect(process(crazy + copyright + crazy + copyright)).toEqual(crazy + copyright + crazy + copyright);
+        });
+
+        it('does not enlarge if non-emoji characters are contained', () => {
+            expect(process(crazy + ' ')).toEqual(crazy + ' ');
+            expect(process(crazy + 'a' + crazy)).toEqual(crazy + 'a' + crazy);
+        });
+
+        it('does not modify non emoji text', () => {
+            const text = 'emoji e1 e1-people hello';
+            expect(process(text)).toEqual(text);
+        });
+
+        it('does nothing if enlarge flag is set to false', () => {
+            expect($filter('enlargeSingleEmoji')(crazy, false)).toEqual(crazy);
+        });
+    });
+
+    describe('linkify', function() {
+        let process = (text) => {
+            return $filter('linkify')(text)
+        };
+
+        it('links http urls', () => {
+            expect(process('hello https://threema.ch/!'))
+                .toEqual('hello <a href="https://threema.ch/" class="autolinked autolinked-url" target="_blank" rel="noopener noreferrer">https://threema.ch</a>!');
+        });
+
+        it('links e-mails', () => {
+            expect(process('hello info@threema.ch!'))
+                .toEqual('hello <a href="mailto:info@threema.ch" class="autolinked autolinked-email" target="_blank" rel="noopener noreferrer">info@threema.ch</a>!');
+        });
+
+        it('does not link phone numbers', () => {
+            const input = 'hello +41791234567';
+            expect(process(input)).toEqual(input);
+        });
+
+        it('does not link mentions', () => {
+            const input = 'hello @threemaapp';
+            expect(process(input)).toEqual(input);
+        });
+
+        it('does not link hashtags', () => {
+            const input = 'hello #threema';
+            expect(process(input)).toEqual(input);
         });
     });
 

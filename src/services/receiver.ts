@@ -15,15 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class ReceiverService {
-    private $log: ng.ILogService;
-    private activeReceiver: threema.Receiver;
-    public static $inject = ['$log'];
+import {isContactReceiver} from '../typeguards';
 
-    constructor($log: ng.ILogService) {
-        // Angular services
-        this.$log = $log;
-    }
+export class ReceiverService {
+    private activeReceiver: threema.Receiver;
 
     /**
      * Set the currently active receiver.
@@ -58,23 +53,8 @@ export class ReceiverService {
             && a.id === b.id;
     }
 
-    public isContact(receiver: threema.Receiver): boolean {
-        return receiver !== undefined
-            && receiver.type === 'contact';
-    }
-
-    public isGroup(receiver: threema.Receiver): boolean {
-        return receiver !== undefined
-            && receiver.type === 'group';
-    }
-
-    public isDistributionList(receiver: threema.Receiver): boolean {
-        return receiver !== undefined
-            && receiver.type === 'distributionList';
-    }
-
     public isBusinessContact(receiver: threema.Receiver): boolean {
-        return this.isContact(receiver)
+        return isContactReceiver(receiver)
             && receiver.id.substr(0, 1) === '*';
 
     }

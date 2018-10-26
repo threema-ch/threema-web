@@ -39,6 +39,7 @@ export class MediaboxService {
     public data: ArrayBuffer | null = null;
     public caption: string = '';
     public filename: string = '';
+    public mimetype: string = '';
 
     public static $inject = ['$log'];
     constructor($log: ng.ILogService) {
@@ -48,10 +49,11 @@ export class MediaboxService {
     /**
      * Update media data.
      */
-    public setMedia(data: ArrayBuffer, filename: string, caption: string) {
+    public setMedia(data: ArrayBuffer, filename: string, mimetype: string, caption: string) {
         this.$log.debug(this.logTag, 'Media data updated');
         this.data = data;
         this.filename = filename;
+        this.mimetype = mimetype;
         this.caption = caption;
         this.evtMediaChanged.post(data !== null);
     }
@@ -63,6 +65,7 @@ export class MediaboxService {
         this.$log.debug(this.logTag, 'Media data cleared');
         this.data = null;
         this.filename = '';
+        this.mimetype = '';
         this.caption = '';
         this.evtMediaChanged.post(false);
     }

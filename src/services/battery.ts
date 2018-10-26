@@ -42,6 +42,12 @@ export class BatteryStatusService {
      * Update the battery status.
      */
     public setStatus(batteryStatus: threema.BatteryStatus): void {
+        // Handle null percent value. This can happen if the battery status could not be determined.
+        if (batteryStatus.percent === null) {
+            this.clearStatus();
+            return;
+        }
+
         this.batteryStatus = batteryStatus;
 
         // Alert if percent drops below a certain threshold
@@ -55,6 +61,16 @@ export class BatteryStatusService {
             }
         }
 
+        // Reset alert flag if device is plugged in
+        if (this.alertedLow && batteryStatus.isCharging) {
+            this.alertedLow = false;
+            this.notificationService.hideNotification('battery-low');
+        }
+        if (this.alertedCritical && batteryStatus.isCharging) {
+            this.alertedCritical = false;
+            this.notificationService.hideNotification('battery-critical');
+        }
+
         // Reset alert flag if percentage goes above a certain threshold
         const hysteresis = 3;
         if (this.alertedLow && batteryStatus.percent > BatteryStatusService.PERCENT_LOW + hysteresis) {
@@ -65,6 +81,13 @@ export class BatteryStatusService {
             this.alertedCritical = false;
             this.notificationService.hideNotification('battery-critical');
         }
+    }
+
+    /**
+     * Clear the battery status information.
+     */
+    public clearStatus(): void {
+        this.batteryStatus = null;
     }
 
     /**
@@ -116,7 +139,7 @@ export class BatteryStatusService {
         }
 
         const title = this.$translate.instant('common.WARNING');
-        const avatar = 'img/ic_battery_alert-64x64.png';
+        const picture = 'img/ic_battery_alert-64x64.png';
         let tag: string;
         let body: string;
         if (level === 'low') {
@@ -128,7 +151,7 @@ export class BatteryStatusService {
             body = this.$translate.instant('battery.LEVEL_CRITICAL', { percent: this.percent });
             this.notificationService.hideNotification('battery-low');
         }
-        this.notificationService.showNotification(tag, title, body, avatar, undefined, true, true);
+        this.notificationService.showNotification(tag, title, body, picture, undefined, true, true);
     }
 
     public toString(): string {

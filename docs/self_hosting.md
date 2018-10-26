@@ -10,7 +10,7 @@ The following components can be self-hosted:
 - STUN / TURN Server
 
 The push relay server could in theory be self-hosted too, but it won't help as
-the GCM API Key required to dispatch push notifications is not public.
+the GCM / APNs API keys required to dispatch push notifications are not public.
 
 If you have questions, please [open an
 issue](https://github.com/threema-ch/threema-web/issues) on Github.
@@ -65,7 +65,7 @@ You can run any WebRTC-compliant STUN / TURN server, e.g.
 ## Push Relay
 
 While you could in theory host your own version of the push server, it won't
-help much since the GCM API Key required to dispatch push notifications to the
-Threema Android app is not public.
+help much since the GCM / APNs API Keys required to dispatch push notifications
+to the Threema app are not public.
 
 You can review the code on Github though: https://github.com/threema-ch/push-relay

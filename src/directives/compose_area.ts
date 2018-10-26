@@ -15,8 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {isActionTrigger} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
+import {TimeoutService} from '../services/timeout';
 
 /**
  * The compose area where messages are written.
@@ -24,7 +26,7 @@ import {StringService} from '../services/string';
 export default [
     'BrowserService',
     'StringService',
-    '$window',
+    'TimeoutService',
     '$timeout',
     '$translate',
     '$mdDialog',
@@ -33,7 +35,8 @@ export default [
     '$rootScope',
     function(browserService: BrowserService,
              stringService: StringService,
-             $window, $timeout: ng.ITimeoutService,
+             timeoutService: TimeoutService,
+             $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
@@ -87,7 +90,8 @@ export default [
                     from?: number,
                     to?: number,
                     fromBytes?: number,
-                    toBytes?: number } = null;
+                    toBytes?: number,
+                } = null;
 
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
@@ -128,7 +132,7 @@ export default [
                     // that we started typing earlier)
                     if (stopTypingTimer !== null) {
                         // Cancel timer
-                        $timeout.cancel(stopTypingTimer);
+                        timeoutService.cancel(stopTypingTimer);
                         stopTypingTimer = null;
 
                         // Send stop typing message
@@ -142,17 +146,25 @@ export default [
                         scope.startTyping();
                     } else {
                         // Cancel timer, we'll re-create it
-                        $timeout.cancel(stopTypingTimer);
+                        timeoutService.cancel(stopTypingTimer);
                     }
 
                     // Define a timeout to send the stopTyping event
-                    stopTypingTimer = $timeout(stopTyping, 10000);
+                    stopTypingTimer = timeoutService.register(stopTyping, 10000, true, 'stopTyping');
                 }
 
                 // Process a DOM node recursively and extract text from compose area.
                 function getText(trim = true) {
                     let text = '';
                     const visitChildNodes = (parentNode: HTMLElement) => {
+                        // When pressing shift-enter and typing more text:
+                        //
+                        // - Firefox and chrome insert a <br> between two text nodes
+                        // - Safari creates two <div>s without any line break in between
+                        //   (except for the first line, which stays plain text)
+                        //
+                        // Thus, for Safari, we need to detect <div>s and insert a newline.
+
                         // tslint:disable-next-line: prefer-for-of (see #98)
                         for (let i = 0; i < parentNode.childNodes.length; i++) {
                             const node = parentNode.childNodes[i] as HTMLElement;
@@ -164,6 +176,7 @@ export default [
                                 case Node.ELEMENT_NODE:
                                     const tag = node.tagName.toLowerCase();
                                     if (tag === 'div') {
+                                        text += '\n';
                                         visitChildNodes(node);
                                         break;
                                     } else if (tag === 'img') {
@@ -293,7 +306,7 @@ export default [
                         const text = getText(false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
-                        } else if (ev.keyCode === 190) {
+                        } else if (ev.keyCode === 190 && caretPosition !== null) {
                             // A ':' is pressed, try to parse
                             const currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
                             if (currentWord.realLength > 2
@@ -308,7 +321,7 @@ export default [
                         }
 
                         // Update typing information (use text instead method)
-                        if (text.trim().length === 0) {
+                        if (text.trim().length === 0 || caretPosition === null) {
                             stopTyping();
                             scope.onTyping('');
                         } else {
@@ -335,16 +348,16 @@ export default [
                         for (let n = 0; n < fileCounter; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
-                            reader.onload = (ev: Event) => {
-                                next(file, (ev.target as FileReader).result, ev);
+                            reader.onload = function(ev: FileReaderProgressEvent) {
+                                next(file, ev.target.result, ev);
                             };
-                            reader.onerror = (ev: ErrorEvent) => {
+                            reader.onerror = function(ev: FileReaderProgressEvent) {
                                 // set a null object
                                 next(file, null, ev);
                             };
-                            reader.onprogress = function(data) {
-                                if (data.lengthComputable) {
-                                    const progress = ((data.loaded / data.total) * 100);
+                            reader.onprogress = function(ev: FileReaderProgressEvent) {
+                                if (ev.lengthComputable) {
+                                    const progress = ((ev.loaded / ev.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileCounter * n);
                                 }
                             };
@@ -366,7 +379,7 @@ export default [
                             };
 
                             // Workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=1240259
-                            if (browserService.getBrowser().firefox) {
+                            if (browserService.getBrowser().isFirefox(false)) {
                                 if (fileMessageData.name.endsWith('.ogg') && fileMessageData.fileType === 'video/ogg') {
                                     fileMessageData.fileType = 'audio/ogg';
                                 }
@@ -374,7 +387,9 @@ export default [
 
                             fileMessages.push(fileMessageData);
                         });
-                        scope.submit('file', fileMessages);
+                        scope
+                            .submit('file', fileMessages)
+                            .catch((msg) => $log.error('Could not send file:', msg));
                         scope.onUploading(false);
 
                     }).catch((ev: ErrorEvent) => {
@@ -415,7 +430,7 @@ export default [
 
                         // Convert blob to arraybuffer
                         const reader = new FileReader();
-                        reader.onload = function() {
+                        reader.onload = function(progressEvent: FileReaderProgressEvent) {
                             const buffer: ArrayBuffer = this.result;
 
                             // Construct file name
@@ -437,7 +452,9 @@ export default [
                                 size: blob.size,
                                 data: buffer,
                             };
-                            scope.submit('file', [fileMessageData]);
+                            scope
+                                .submit('file', [fileMessageData])
+                                .catch((msg) => $log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
 
@@ -507,7 +524,7 @@ export default [
                 }
 
                 // Emoji trigger is clicked
-                function onEmojiTrigger(ev: MouseEvent): void {
+                function onEmojiTrigger(ev: UIEvent): void {
                     ev.stopPropagation();
                     // Toggle visibility of picker
                     if (emojiKeyboard.hasClass('active')) {
@@ -601,14 +618,14 @@ export default [
                 }
 
                 // File trigger is clicked
-                function onFileTrigger(ev: MouseEvent): void {
+                function onFileTrigger(ev: UIEvent): void {
                     ev.preventDefault();
                     ev.stopPropagation();
                     const input = element[0].querySelector('.file-input') as HTMLInputElement;
                     input.click();
                 }
 
-                function onSendTrigger(ev: MouseEvent): boolean {
+                function onSendTrigger(ev: UIEvent): boolean {
                     ev.preventDefault();
                     ev.stopPropagation();
                     return sendText();
@@ -629,7 +646,7 @@ export default [
                         span.setAttribute('contenteditable', false);
                     }
 
-                    if (browserService.getBrowser().firefox) {
+                    if (browserService.getBrowser().isFirefox(false)) {
                         // disable object resizing is the only way to disable resizing of
                         // emoji (contenteditable must be true, otherwise the emoji can not
                         // be removed with backspace (in FF))
@@ -767,15 +784,30 @@ export default [
 
                 // Handle click on emoji trigger
                 emojiTrigger.on('click', onEmojiTrigger);
+                emojiTrigger.on('keypress', (ev: KeyboardEvent) => {
+                    if (isActionTrigger(ev)) {
+                        onEmojiTrigger(ev);
+                    }
+                });
 
                 // Handle click on file trigger
                 fileTrigger.on('click', onFileTrigger);
+                fileTrigger.on('keypress', (ev: KeyboardEvent) => {
+                    if (isActionTrigger(ev)) {
+                        onFileTrigger(ev);
+                    }
+                });
 
                 // Handle file uploads
                 fileInput.on('change', onFileSelected);
 
                 // Handle click on send trigger
                 sendTrigger.on('click', onSendTrigger);
+                sendTrigger.on('keypress', (ev: KeyboardEvent) => {
+                    if (isActionTrigger(ev)) {
+                        onSendTrigger(ev);
+                    }
+                });
 
                 updateView();
 
@@ -806,14 +838,22 @@ export default [
             template: `
                 <div>
                     <div>
-                        <i class="md-primary emoji-trigger trigger is-enabled material-icons">tag_faces</i>
+                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji" tabindex="0">tag_faces</i>
                     </div>
                     <div>
-                        <div class="compose" contenteditable translate translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE" autofocus></div>
+                        <div
+                            class="compose"
+                            contenteditable
+                            autofocus
+                            translate
+                            translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE"
+                            translate-attr-aria-label="messenger.COMPOSE_MESSAGE"
+                            tabindex="0"
+                        ></div>
                     </div>
                     <div>
-                        <i class="md-primary send-trigger trigger material-icons">send</i>
-                        <i class="md-primary file-trigger trigger is-enabled material-icons">attach_file</i>
+                        <i class="md-primary send-trigger trigger material-icons" role="button" aria-label="send" tabindex="0">send</i>
+                        <i class="md-primary file-trigger trigger is-enabled material-icons" role="button" aria-label="attach file" tabindex="0">attach_file</i>
                         <input class="file-input" type="file" style="visibility: hidden" multiple>
                     </div>
                 </div>

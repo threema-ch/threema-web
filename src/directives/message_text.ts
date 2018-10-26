@@ -17,49 +17,112 @@
 
 // tslint:disable:max-line-length
 
+import {hasValue} from '../helpers';
+import {WebClientService} from '../services/webclient';
+
+// Get text depending on type
+function getText(message: threema.Message): string {
+    switch (message.type) {
+        case 'text':
+            return message.body;
+        case 'location':
+            return message.location.description;
+        case 'file':
+            // Prefer caption for file messages, if available
+            if (message.caption && message.caption.length > 0) {
+                return message.caption;
+            } else if (message.file.type === 'image/gif') {
+                return 'GIF';
+            }
+            return message.file.name;
+    }
+    return message.caption;
+}
+
 export default [
     function() {
         return {
             restrict: 'EA',
             scope: {},
             bindToController: {
-                message: '=eeeMessage',
-                multiLine: '=?eeeMultiLine',
+                message: '=',
+                multiLine: '@?multiLine',
+                linkify: '@?linkify',
+            },
+            link: function(scope, elem, attrs) {
+                scope.$watch(
+                    () => scope.ctrl.message.id,
+                    (newId, oldId) => {
+                        // Register for message ID changes. When it changes, update the text.
+                        // This prevents processing the text more than once.
+                        if (hasValue(newId) && newId !== oldId) {
+                            scope.ctrl.updateText();
+                        }
+                    },
+                );
+                scope.$watch(
+                    () => scope.ctrl.message.caption,
+                    (newCaption, oldCaption) => {
+                        // Register for message caption changes. When it changes, update the text.
+                        //
+                        // Background: The caption may change because image messages may be sent from the
+                        // app before the image has been downloaded and parsed. That information
+                        // (thumbnail + caption) is sent later on as an update.
+                        if (hasValue(newCaption) && newCaption !== oldCaption) {
+                            scope.ctrl.updateText();
+                        }
+                    },
+                );
+
             },
             controllerAs: 'ctrl',
-            controller: [function() {
-                // Get text depending on type
-                let rawText = null;
-                const message = this.message as threema.Message;
-                switch (message.type) {
-                    case 'text':
-                        rawText = message.body;
-                        break;
-                    case 'location':
-                        rawText = message.location.poi;
-                        break;
-                    case 'file':
-                        // Prefer caption for file messages, if available
-                        if (message.caption && message.caption.length > 0) {
-                            rawText = message.caption;
-                        } else {
-                            rawText = message.file.name;
-                        }
-                        break;
-                    default:
-                        rawText = message.caption;
-                        break;
+            controller: ['WebClientService', '$filter', function(webClientService: WebClientService, $filter: ng.IFilterService) {
+                // TODO: Extract filters into helper functions
+                const escapeHtml = $filter('escapeHtml') as any;
+                const markify = $filter('markify') as any;
+                const emojify = $filter('emojify') as any;
+                const enlargeSingleEmoji = $filter('enlargeSingleEmoji') as any;
+                const mentionify = $filter('mentionify') as any;
+                const linkify = $filter('linkify') as any;
+                const nlToBr = $filter('nlToBr') as any;
+
+                /**
+                 * Apply filters to text.
+                 */
+                function processText(text: string, largeSingleEmoji: boolean, multiLine: boolean, linkifyText: boolean): string {
+                    const nonLinkified = mentionify(enlargeSingleEmoji(emojify(markify(escapeHtml(text))), largeSingleEmoji));
+                    const maybeLinkified = linkifyText ? linkify(nonLinkified) : nonLinkified;
+                    return nlToBr(maybeLinkified, multiLine);
                 }
-                // Escaping will be done in the HTML using filters
-                this.text = rawText;
-                if (this.multiLine === undefined) {
-                    this.multiLine = true;
-                }
+
+                /**
+                 * Text update function.
+                 */
+                this.updateText = () => {
+                    // Because this.multiLine and this.linkify are bound using an `@` binding,
+                    // they are either undefined or a string. Convert to boolean.
+                    const multiLine = (this.multiLine === undefined || this.multiLine !== 'false');
+                    const linkifyText = (this.linkify === undefined || this.linkify !== 'false');
+
+                    // Process text once, apply all filter functions
+                    const text = getText(this.message);
+                    this.text = processText(
+                        text,
+                        this.largeSingleEmoji,
+                        multiLine,
+                        linkifyText,
+                    );
+                };
+
+                this.largeSingleEmoji = webClientService.appConfig.largeSingleEmoji;
+
+                this.$onInit = function() {
+                    // Process initial text
+                    this.updateText();
+                };
             }],
             template: `
-                <span click-action
-                    ng-bind-html="ctrl.text | escapeHtml | markify | emojify | mentionify | linkify | nlToBr: ctrl.multiLine">
-                </span>
+                <span click-action ng-bind-html="ctrl.text"></span>
             `,
         };
     },

@@ -43,7 +43,7 @@
 
     // Set min height of welcome screen
     &:not(.wide) #main {
-        min-height: 560px;
+        min-height: 620px;
         height: auto;
     }
 
@@ -264,7 +264,7 @@ a.click-action {
     @include mouse-hand;
 }
 
-.androidonly {
+.android-ios-only {
     width: 100%;
     margin: 10px auto 0;
     background-color: white;
@@ -278,7 +278,12 @@ a.click-action {
         vertical-align: middle;
         align-items: center;
         font-weight: 300;
+        white-space: nowrap;
         i.material-icons {
+            margin-right: 8px;
+        }
+        img {
+            height: 26px;
             margin-right: 8px;
         }
     }
@@ -323,6 +328,11 @@ a.click-action {
 md-toast.md-center {
     left: 50%;
     transform: translate3d(-50%, 0, 0);
+}
+md-toast .md-toast-content {
+    span {
+        text-align: center;
+    }
 }
 
 .md-subheader {

@@ -15,12 +15,19 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {
+    StateParams as UiStateParams,
+    StateProvider as UiStateProvider,
+    StateService as UiStateService,
+    Transition as UiTransition,
+    TransitionService as UiTransitionService,
+} from '@uirouter/angularjs';
+
 import {ContactControllerModel} from '../controller_model/contact';
-import {supportsPassive, throttle} from '../helpers';
+import {bufferToUrl, hasValue, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
-import {ExecuteService} from '../services/execute';
 import {FingerPrintService} from '../services/fingerprint';
 import {TrustedKeyStoreService} from '../services/keystore';
 import {MimeService} from '../services/mime';
@@ -28,19 +35,24 @@ import {NotificationService} from '../services/notification';
 import {ReceiverService} from '../services/receiver';
 import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
+import {TimeoutService} from '../services/timeout';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
+import {isContactReceiver} from '../typeguards';
+
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
 
 class DialogController {
-    public static $inject = ['$mdDialog'];
-
     public $mdDialog: ng.material.IDialogService;
     public activeElement: HTMLElement | null;
+    public config: threema.Config;
 
-    constructor($mdDialog: ng.material.IDialogService) {
+    public static $inject = ['$mdDialog', 'CONFIG'];
+    constructor($mdDialog: ng.material.IDialogService, CONFIG: threema.Config) {
         this.$mdDialog = $mdDialog;
         this.activeElement = document.activeElement as HTMLElement;
+        this.config = CONFIG;
     }
 
     public cancel(): void {
@@ -73,15 +85,27 @@ class DialogController {
  * Handle sending of files.
  */
 class SendFileController extends DialogController {
-    public static $inject = ['$mdDialog', 'preview'];
+    public static $inject = ['$mdDialog', '$log', 'CONFIG', 'preview'];
+    private logTag: string = '[SendFileController]';
 
     public caption: string;
     public sendAsFile: boolean = false;
-    public preview: threema.FileMessageData | null = null;
+    private preview: threema.FileMessageData | null = null;
+    public previewDataUrl: string | null = null;
 
-    constructor($mdDialog: ng.material.IDialogService, preview: threema.FileMessageData) {
-        super($mdDialog);
+    constructor($mdDialog: ng.material.IDialogService,
+                $log: ng.ILogService,
+                CONFIG: threema.Config,
+                preview: threema.FileMessageData) {
+        super($mdDialog, CONFIG);
         this.preview = preview;
+        if (preview !== null) {
+            this.previewDataUrl = bufferToUrl(
+                this.preview.data,
+                this.preview.fileType,
+                logAdapter($log.warn, this.logTag),
+            );
+        }
     }
 
     public send(): void {
@@ -98,7 +122,7 @@ class SendFileController extends DialogController {
     }
 
     public hasPreview(): boolean {
-        return this.preview !== null && this.preview !== undefined;
+        return this.previewDataUrl !== null && this.previewDataUrl !== undefined;
     }
 }
 
@@ -168,31 +192,38 @@ class SettingsController {
 
 }
 
+interface ConversationStateParams extends UiStateParams {
+    type: threema.ReceiverType;
+    id: string;
+    initParams: null | {text: string | null};
+}
+
 class ConversationController {
     public name = 'navigation';
     private logTag: string = '[ConversationController]';
 
     // Angular services
     private $stateParams;
-    private $timeout: ng.ITimeoutService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
     private $log: ng.ILogService;
     private $scope: ng.IScope;
     private $rootScope: ng.IRootScopeService;
     private $filter: ng.IFilterService;
+    private $translate: ng.translate.ITranslateService;
 
     // Own services
     private webClientService: WebClientService;
     private receiverService: ReceiverService;
     private stateService: StateService;
     private mimeService: MimeService;
+    private timeoutService: TimeoutService;
 
     // Third party services
     private $mdDialog: ng.material.IDialogService;
     private $mdToast: ng.material.IToastService;
 
     // Controller model
-    private controllerModel: threema.ControllerModel;
+    private controllerModel: threema.ControllerModel<threema.Receiver>;
 
     // DOM Elements
     private domChatElement: HTMLElement;
@@ -200,28 +231,36 @@ class ConversationController {
     // Scrolling
     public showScrollJump: boolean = false;
 
+    // The conversation receiver
     public receiver: threema.Receiver;
+    public conversation: threema.Conversation;
     public type: threema.ReceiverType;
-    public message: string = '';
-    public lastReadMsgId: number = 0;
-    public msgReadReportPending = false;
-    private hasMore = true;
-    private latestRefMsgId: number = null;
-    private allText: string;
-    private messages: threema.Message[];
-    public initialData: threema.InitialConversationData = {
-        draft: '',
-        initialText: '',
-    };
-    private $translate: ng.translate.ITranslateService;
-    private locked = false;
-    public maxTextLength: number;
-    public isTyping = (): boolean => false;
 
+    // The conversation messages
+    private messages: threema.Message[];
+
+    // This will be set to true as soon as the initial messages have been loaded
+    private initialized = false;
+
+    // Mentions
     public allMentions: threema.Mention[] = [];
     public currentMentions: threema.Mention[] = [];
     public currentMentionFilterWord = null;
     public selectedMention: number = null;
+
+    public message: string = '';
+    public lastReadMsg: threema.Message | null = null;
+    public msgReadReportPending = false;
+    private hasMore = true;
+    private latestRefMsgId: string | null = null;
+    private allText: string;
+    public initialData: threema.InitialConversationData = {
+        draft: '',
+        initialText: '',
+    };
+    private locked = false;
+    public maxTextLength: number;
+    public isTyping = (): boolean => false;
 
     private uploading = {
         enabled: false,
@@ -230,35 +269,36 @@ class ConversationController {
     };
 
     public static $inject = [
-        '$stateParams', '$state', '$timeout', '$log', '$scope', '$rootScope',
-        '$mdDialog', '$mdToast', '$location', '$translate', '$filter',
+        '$stateParams', '$log', '$scope', '$rootScope',
+        '$mdDialog', '$mdToast', '$translate', '$filter',
+        '$state', '$transitions',
         'WebClientService', 'StateService', 'ReceiverService', 'MimeService', 'VersionService',
-        'ControllerModelService',
+        'ControllerModelService', 'TimeoutService',
     ];
-    constructor($stateParams: threema.ConversationStateParams,
-                $state: ng.ui.IStateService,
-                $timeout: ng.ITimeoutService,
+    constructor($stateParams: ConversationStateParams,
                 $log: ng.ILogService,
                 $scope: ng.IScope,
                 $rootScope: ng.IRootScopeService,
                 $mdDialog: ng.material.IDialogService,
                 $mdToast: ng.material.IToastService,
-                $location,
                 $translate: ng.translate.ITranslateService,
                 $filter: ng.IFilterService,
+                $state: UiStateService,
+                $transitions: UiTransitionService,
                 webClientService: WebClientService,
                 stateService: StateService,
                 receiverService: ReceiverService,
                 mimeService: MimeService,
                 versionService: VersionService,
-                controllerModelService: ControllerModelService) {
+                controllerModelService: ControllerModelService,
+                timeoutService: TimeoutService) {
         this.$stateParams = $stateParams;
-        this.$timeout = $timeout;
         this.$log = $log;
         this.webClientService = webClientService;
         this.receiverService = receiverService;
         this.stateService = stateService;
         this.mimeService = mimeService;
+        this.timeoutService = timeoutService;
 
         this.$state = $state;
         this.$scope = $scope;
@@ -275,10 +315,11 @@ class ConversationController {
         this.maxTextLength = this.webClientService.getMaxTextLength();
         this.allText = this.$translate.instant('messenger.ALL');
 
-        // On every navigation event, close all dialogs.
-        // Note: Deprecated. When migrating ui-router ($state),
-        // replace with transition hooks.
-        $rootScope.$on('$stateChangeStart', () => this.$mdDialog.cancel());
+        // On every navigation event, close all dialogs using ui-router transition hooks.
+        $transitions.onStart({}, function(trans: UiTransition) {
+            const $mdDialogInner: ng.material.IDialogService = trans.injector().get('$mdDialog');
+            $mdDialogInner.cancel();
+        });
 
         // Check for version updates
         versionService.checkForUpdate();
@@ -302,9 +343,10 @@ class ConversationController {
             }, 100, this), supportsPassive() ? {passive: true} : false);
         }
 
-        // Set receiver and type
+        // Set receiver, conversation and type
         try {
             this.receiver = webClientService.receivers.getData({type: $stateParams.type, id: $stateParams.id});
+            this.conversation = this.webClientService.conversations.find(this.receiver);
             this.type = $stateParams.type;
 
             if (this.receiver.type === undefined) {
@@ -315,9 +357,9 @@ class ConversationController {
             const mode = ControllerModelMode.CHAT;
             switch (this.receiver.type) {
                 case 'me':
-                    $log.warn(this.logTag, 'Cannot chat with own contact');
-                    $state.go('messenger.home');
-                    return;
+                    this.controllerModel = controllerModelService.me(
+                        this.receiver as threema.MeReceiver, mode);
+                    break;
                 case 'contact':
                     this.controllerModel = controllerModelService.contact(
                         this.receiver as threema.ContactReceiver, mode);
@@ -337,37 +379,51 @@ class ConversationController {
                     return;
             }
 
-            // Check if this receiver may be viewed
-            if (this.controllerModel.canView() === false) {
-                $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
+            // Check if this receiver may be chatted with
+            if (this.controllerModel.canChat() === false) {
+                $log.warn(this.logTag, 'Cannot chat with this receiver, redirecting to home');
                 $state.go('messenger.home');
                 return;
             }
 
-            // initial set locked state
+            // Initial set locked state
             this.locked = this.receiver.locked;
 
             this.receiverService.setActive(this.receiver);
 
             if (!this.receiver.locked) {
                 let latestHeight = 0;
-                // update unread count
-                this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
+
+                // Subscribe to messages
                 this.messages = this.webClientService.messages.register(
                     this.receiver,
                     this.$scope,
                     (e, allMessages: threema.Message[], hasMore: boolean) => {
+                        // This function is called every time there are new or removed messages.
+
+                        // Update data
                         this.messages = allMessages;
+                        const wasInitialized = this.initialized;
+                        this.initialized = true;
                         this.hasMore = hasMore;
+
+                        // Update "first unread" divider
+                        if (!wasInitialized) {
+                            this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
+                        }
+
+                        // Autoscroll
                         if (this.latestRefMsgId !== null) {
                             // scroll to div..
-                            this.domChatElement.scrollTop =
-                                this.domChatElement.scrollHeight - latestHeight;
+                            this.domChatElement.scrollTop = this.domChatElement.scrollHeight - latestHeight;
                             this.latestRefMsgId = null;
                         }
                         latestHeight = this.domChatElement.scrollHeight;
                     },
                 );
+
+                // Update "first unread" divider
+                this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
 
                 // Enable mentions only in group chats
                 if (this.type === 'group') {
@@ -388,16 +444,23 @@ class ConversationController {
                     });
                 }
 
+                // Set initial data
                 this.initialData = {
                     draft: webClientService.getDraft(this.receiver),
                     initialText: $stateParams.initParams ? $stateParams.initParams.text : '',
                 };
 
-                if (this.receiver.type === 'contact') {
+                // Set isTyping function for contacts
+                if (isContactReceiver(this.receiver)) {
                     this.isTyping = () => this.webClientService.isTyping(this.receiver as threema.ContactReceiver);
                 }
-            }
 
+                // Due to a bug in Safari, sometimes the in-view element does not trigger when initially loading a chat.
+                // As a workaround, manually trigger the initial message loading.
+                if (this.webClientService.messages.getList(this.receiver).length === 0) {
+                    this.requestMessages();
+                }
+            }
         } catch (error) {
             $log.error('Could not set receiver and type');
             $log.debug(error.stack);
@@ -432,16 +495,25 @@ class ConversationController {
         this.webClientService.setQuote(this.receiver);
     }
 
-    public showError(errorMessage: string, toastLength = 4000) {
+    public showError(errorMessage?: string, hideDelayMs = 3000) {
         if (errorMessage === undefined || errorMessage.length === 0) {
             errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
         }
-
         this.$mdToast.show(
             this.$mdToast.simple()
                 .textContent(errorMessage)
-                .position('bottom center'));
+                .position('bottom center')
+                .hideDelay(hideDelayMs));
     }
+
+    public showMessage(msgTranslation: string, hideDelayMs = 3000) {
+        this.$mdToast.show(
+            this.$mdToast.simple()
+                .textContent(this.$translate.instant(msgTranslation))
+                .position('bottom center')
+                .hideDelay(hideDelayMs));
+    }
+
     /**
      * Submit function for input field. Can contain text or file data.
      * Return whether sending was successful.
@@ -449,7 +521,7 @@ class ConversationController {
     public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): Promise<any> => {
         // Validate whether a connection is available
         return new Promise((resolve, reject) => {
-            if (this.stateService.state !== 'ok') {
+            if (!this.stateService.readyToSubmit(this.webClientService.chosenTask)) {
                 // Invalid connection, show toast and abort
                 this.showError(this.$translate.instant('error.NO_CONNECTION'));
                 return reject();
@@ -460,7 +532,7 @@ class ConversationController {
                     if (success) {
                         resolve();
                     } else {
-                        reject();
+                        reject('Message sending unsuccessful');
                     }
                 }
             };
@@ -511,7 +583,7 @@ class ConversationController {
                             <md-dialog class="send-file-dialog">
                                 <md-dialog-content class="md-dialog-content">
                                     <h2 class="md-title">${title}</h2>
-                                    <img class="preview" ng-if="ctrl.hasPreview()" ng-src="{{ ctrl.preview.data | bufferToUrl: ctrl.preview.fileType }}" />
+                                    <img class="preview" ng-if="ctrl.hasPreview()" ng-src="{{ ctrl.previewDataUrl }}">
                                     <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="!${showSendAsFileCheckbox} || ctrl.sendAsFile || ${captionSupported}">
                                         <input maxlength="1000" md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
                                     </md-input-container>
@@ -533,6 +605,9 @@ class ConversationController {
                         `,
                         // tslint:enable:max-line-length
                     }).then((data) => {
+                        // TODO: This should probably be moved into the
+                        //       WebClientService as a specific method for the
+                        //       type.
                         const caption = data.caption;
                         const sendAsFile = data.sendAsFile;
                         contents.forEach((msg: threema.FileMessageData, index: number) => {
@@ -546,6 +621,7 @@ class ConversationController {
                                 })
                                 .catch((error) => {
                                     this.$log.error(error);
+                                    // TODO: Should probably be an alert instead of a toast
                                     this.showError(error);
                                     success = false;
                                     nextCallback(index);
@@ -560,12 +636,16 @@ class ConversationController {
                         // remove quote
                         this.webClientService.setQuote(this.receiver);
                         // send message
+                        // TODO: This should probably be moved into the
+                        //       WebClientService as a specific method for the
+                        //       type.
                         this.webClientService.sendMessage(this.$stateParams, type, msg)
                             .then(() => {
                                 nextCallback(index);
                             })
                             .catch((error) => {
                                 this.$log.error(error);
+                                // TODO: Should probably be an alert instead of a toast
                                 this.showError(error);
                                 success = false;
                                 nextCallback(index);
@@ -710,9 +790,10 @@ class ConversationController {
     public requestMessages(): void {
         const refMsgId = this.webClientService.requestMessages(this.$stateParams);
 
-        if (refMsgId !== null
-            && refMsgId !== undefined) {
-            // new message are requested, scroll to refMsgId
+        // TODO: Couldn't this cause a race condition when called twice in parallel?
+        //       Might be related to #277.
+        if (hasValue(refMsgId)) {
+            // New messages are requested, scroll to refMsgId
             this.latestRefMsgId = refMsgId;
         } else {
             this.latestRefMsgId = null;
@@ -731,18 +812,37 @@ class ConversationController {
      * A message has been seen. Report it to the app, with a small delay to
      * avoid sending too many messages at once.
      */
-    public msgRead(msgId: number): void {
-        if (msgId > this.lastReadMsgId) {
-            this.lastReadMsgId = msgId;
+    public msgRead(message: threema.Message): void {
+        // Ignore status messages
+        if (message.type === 'status') {
+            return;
         }
+
+        // Update lastReadMsg
+        if (this.lastReadMsg === null || message.sortKey >= this.lastReadMsg.sortKey) {
+            this.lastReadMsg = message;
+        }
+
         if (!this.msgReadReportPending) {
+            // Don't send a read message for messages that are already read.
+            // (Note: Ignore own messages since those are always read.)
+            if (!message.isOutbox && !message.unread) {
+                return;
+            }
+
+            // Don't send a read message for conversations that have no unread messages.
+            const conversation = this.webClientService.conversations.find(this.receiver);
+            if (conversation !== null && conversation.unreadCount === 0) {
+                return;
+            }
+
             this.msgReadReportPending = true;
             const receiver = angular.copy(this.receiver);
             receiver.type = this.type;
-            this.$timeout(() => {
-                this.webClientService.requestRead(receiver, this.lastReadMsgId);
+            this.timeoutService.register(() => {
+                this.webClientService.requestRead(receiver, this.lastReadMsg);
                 this.msgReadReportPending = false;
-            }, 500);
+            }, 300, false, 'requestRead');
         }
     }
 
@@ -767,6 +867,32 @@ class ConversationController {
         const chat = this.domChatElement;
         this.showScrollJump = chat.scrollHeight - (chat.scrollTop + chat.offsetHeight) > 10;
     }
+
+    /**
+     * Mark the current conversation as pinned.
+     */
+    public pinConversation(): void {
+        this.webClientService
+            .modifyConversation(this.conversation, true)
+            .then(() => this.showMessage('messenger.PINNED_CONVERSATION_OK'))
+            .catch((msg) => {
+                this.showMessage('messenger.PINNED_CONVERSATION_ERROR');
+                this.$log.error(this.logTag, 'Pinning conversation failed: ' + msg);
+            });
+    }
+
+    /**
+     * Mark the current conversation as not pinned.
+     */
+    public unpinConversation(): void {
+        this.webClientService
+            .modifyConversation(this.conversation, false)
+            .then(() => this.showMessage('messenger.UNPINNED_CONVERSATION_OK'))
+            .catch((msg) => {
+                this.showMessage('messenger.UNPINNED_CONVERSATION_ERROR');
+                this.$log.error(this.logTag, 'Unpinning conversation failed: ' + msg);
+            });
+    }
 }
 
 class NavigationController {
@@ -777,6 +903,7 @@ class NavigationController {
     private receiverService: ReceiverService;
     private stateService: StateService;
     private trustedKeyStoreService: TrustedKeyStoreService;
+    private notificationService: NotificationService;
 
     private activeTab: 'contacts' | 'conversations' = 'conversations';
     private searchVisible = false;
@@ -784,17 +911,17 @@ class NavigationController {
 
     private $mdDialog;
     private $translate: ng.translate.ITranslateService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
 
     public static $inject = [
         '$log', '$state', '$mdDialog', '$translate',
-        'WebClientService', 'StateService', 'ReceiverService', 'TrustedKeyStore',
+        'WebClientService', 'StateService', 'ReceiverService', 'NotificationService', 'TrustedKeyStore',
     ];
 
-    constructor($log: ng.ILogService, $state: ng.ui.IStateService,
+    constructor($log: ng.ILogService, $state: UiStateService,
                 $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, stateService: StateService,
-                receiverService: ReceiverService,
+                receiverService: ReceiverService, notificationService: NotificationService,
                 trustedKeyStoreService: TrustedKeyStoreService) {
 
         // Redirect to welcome if necessary
@@ -808,6 +935,7 @@ class NavigationController {
         this.receiverService = receiverService;
         this.stateService = stateService;
         this.trustedKeyStoreService = trustedKeyStoreService;
+        this.notificationService = notificationService;
         this.$mdDialog = $mdDialog;
         this.$translate = $translate;
         this.$state = $state;
@@ -851,12 +979,24 @@ class NavigationController {
     public isVisible(conversation: threema.Conversation) {
         return conversation.receiver.visible;
     }
+
     public conversations(): threema.Conversation[] {
         return this.webClientService.conversations.get();
     }
 
     public isActive(value: threema.Conversation): boolean {
         return this.receiverService.isConversationActive(value);
+    }
+
+    public startupDone(): boolean {
+        return this.webClientService.startupDone;
+    }
+
+    /**
+     * Return true if the app wants to hide inactive contacts.
+     */
+    public hideInactiveContacts(): boolean {
+        return !this.webClientService.appConfig.showInactiveIDs;
     }
 
     /**
@@ -897,6 +1037,14 @@ class NavigationController {
     }
 
     /**
+     * Show profile.
+     */
+    public showProfile(ev): void {
+        this.receiverService.setActive(undefined);
+        this.$state.go('messenger.home.detail', this.webClientService.me);
+    }
+
+    /**
      * Return whether a trusted key is available.
      */
     public isPersistent(): boolean {
@@ -914,11 +1062,13 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            const deleteStoredData = false;
-            const resetPush = true;
-            const redirect = true;
-            this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
-            this.receiverService.setActive(undefined);
+            this.webClientService.stop({
+                reason: threema.DisconnectReason.SessionStopped,
+                send: true,
+                // TODO: Use welcome.stopped once we have it
+                close: 'welcome',
+                connectionBuildupState: 'closed',
+            });
         }, () => {
             // do nothing
         });
@@ -935,11 +1085,13 @@ class NavigationController {
             .ok(this.$translate.instant('common.YES'))
             .cancel(this.$translate.instant('common.CANCEL'));
         this.$mdDialog.show(confirm).then(() => {
-            const deleteStoredData = true;
-            const resetPush = true;
-            const redirect = true;
-            this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
-            this.receiverService.setActive(undefined);
+            this.webClientService.stop({
+                reason: threema.DisconnectReason.SessionDeleted,
+                send: true,
+                // TODO: Use welcome.deleted once we have it
+                close: 'welcome',
+                connectionBuildupState: 'closed',
+            });
         }, () => {
             // do nothing
         });
@@ -963,6 +1115,7 @@ class NavigationController {
             type: 'distributionList',
         });
     }
+
     /**
      * Toggle search bar.
      */
@@ -970,16 +1123,35 @@ class NavigationController {
         this.searchVisible = !this.searchVisible;
     }
 
-    public getMyIdentity(): threema.Identity {
-        return this.webClientService.getMyIdentity();
+    /**
+     * Return the user profile.
+     */
+    public getMe(): threema.MeReceiver {
+        return this.webClientService.me;
     }
 
-    public showMyIdentity(): boolean {
-        return this.getMyIdentity() !== undefined;
+    /**
+     * Only show the "create distribution list" button if the app supports it.
+     */
+    public showCreateDistributionListButton(): boolean {
+        return this.webClientService.appCapabilities.distributionLists;
     }
+
+    /**
+     * Return a simplified DND mode.
+     *
+     * This will return either 'on', 'off' or 'mention'.
+     * The 'until' mode will be processed depending on the expiration timestamp.
+     */
+    public dndModeSimplified(conversation: threema.Conversation): 'on' | 'mention' | 'off' {
+        return this.notificationService.getDndModeSimplified(conversation);
+    }
+
 }
 
 class MessengerController {
+    private logTag: string = '[MessengerController]';
+
     public name = 'messenger';
     private receiverService: ReceiverService;
     private $state;
@@ -995,7 +1167,7 @@ class MessengerController {
                 webClientService: WebClientService, controllerService: ControllerService) {
         // Redirect to welcome if necessary
         if (stateService.state === 'error') {
-            $log.debug('MessengerController: WebClient not yet running, redirecting to welcome screen');
+            $log.debug(this.logTag, 'MessengerController: WebClient not yet running, redirecting to welcome screen');
             $state.go('welcome');
             return;
         }
@@ -1023,7 +1195,7 @@ class MessengerController {
         }, true);
 
         this.webClientService.setReceiverListener({
-            onRemoved(receiver: threema.Receiver) {
+            onConversationRemoved(receiver: threema.Receiver) {
                 switch ($state.current.name) {
                     case 'messenger.home.conversation':
                     case 'messenger.home.detail':
@@ -1034,12 +1206,12 @@ class MessengerController {
                             if ($state.params.type === receiver.type
                                 && $state.params.id === receiver.id) {
                                 // conversation or sub form is open, redirect to home!
-                                $state.go('messenger.home', null, {location: 'replace'});
+                                $state.go('messenger.home');
                             }
                         }
                         break;
                     default:
-                        $log.warn('Ignored onRemoved event for state', $state.current.name);
+                        $log.debug(this.logTag, 'Ignored onRemoved event for state', $state.current.name);
                 }
             },
         });
@@ -1053,14 +1225,20 @@ class MessengerController {
 class ReceiverDetailController {
     private logTag: string = '[ReceiverDetailController]';
 
-    public $mdDialog: any;
-    public $state: ng.ui.IStateService;
+    // Angular services
+    private $mdDialog: any;
+    private $scope: ng.IScope;
+    private $state: UiStateService;
+
+    // Own services
+    private fingerPrintService: FingerPrintService;
+    private contactService: ContactService;
+    private webClientService: WebClientService;
+
     public receiver: threema.Receiver;
     public me: threema.MeReceiver;
     public title: string;
-    public fingerPrint?: string;
-    private fingerPrintService: FingerPrintService;
-    private contactService: ContactService;
+    public fingerPrint = { value: null };  // Object, so that data binding works
     private showGroups = false;
     private showDistributionLists = false;
     private inGroups: threema.GroupReceiver[] = [];
@@ -1070,39 +1248,49 @@ class ReceiverDetailController {
     private isWorkReceiver = false;
     private showBlocked = () => false;
 
-    private controllerModel: threema.ControllerModel;
+    private controllerModel: threema.ControllerModel<threema.Receiver>;
 
     public static $inject = [
-        '$log', '$stateParams', '$state', '$mdDialog',
+        '$scope', '$log', '$stateParams', '$state', '$mdDialog', '$translate',
         'WebClientService', 'FingerPrintService', 'ContactService', 'ControllerModelService',
     ];
-    constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService, $mdDialog: ng.material.IDialogService,
+    constructor($scope: ng.IScope, $log: ng.ILogService, $stateParams, $state: UiStateService,
+                $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, fingerPrintService: FingerPrintService,
                 contactService: ContactService, controllerModelService: ControllerModelService) {
 
         this.$mdDialog = $mdDialog;
+        this.$scope = $scope;
         this.$state = $state;
         this.fingerPrintService = fingerPrintService;
         this.contactService = contactService;
+        this.webClientService = webClientService;
 
         this.receiver = webClientService.receivers.getData($stateParams);
         this.me = webClientService.me;
 
-        // Append members
-        if (this.receiver.type === 'contact') {
-            const contactReceiver = this.receiver as threema.ContactReceiver;
+        // Append group membership
+        if (isContactReceiver(this.receiver)) {
+            const contactReceiver = this.receiver;
 
             this.contactService.requiredDetails(contactReceiver)
                 .then(() => {
-                    this.hasSystemEmails = contactReceiver.systemContact.emails.length > 0;
-                    this.hasSystemPhones = contactReceiver.systemContact.phoneNumbers.length > 0;
+                    this.hasSystemEmails = contactReceiver.systemContact !== undefined
+                        && contactReceiver.systemContact.emails.length > 0;
+                    this.hasSystemPhones = contactReceiver.systemContact !== undefined &&
+                        contactReceiver.systemContact.phoneNumbers.length > 0;
                 })
-                .catch(() => {
-                    // do nothing
+                .catch((error) => {
+                    // TODO: Redirect or show an alert?
+                    $log.error(this.logTag, `Contact detail request has been rejected: ${error}`);
                 });
 
             this.isWorkReceiver = contactReceiver.identityType === threema.IdentityType.Work;
-            this.fingerPrint = this.fingerPrintService.generate(contactReceiver.publicKey);
+
+            this.fingerPrintService
+                .generate(contactReceiver.publicKey)
+                .then(this.setFingerPrint.bind(this));
+
             webClientService.groups.forEach((groupReceiver: threema.GroupReceiver) => {
                 // check if my identity is a member
                 if (groupReceiver.members.indexOf(contactReceiver.id) !== -1) {
@@ -1126,12 +1314,19 @@ class ReceiverDetailController {
 
         switch (this.receiver.type) {
             case 'me':
-                $log.warn(this.logTag, 'Cannot view own contact');
-                $state.go('messenger.home');
-                return;
+                const meReceiver = this.receiver as threema.MeReceiver;
+                this.fingerPrintService
+                    .generate(meReceiver.publicKey)
+                    .then(this.setFingerPrint.bind(this));
+                this.controllerModel = controllerModelService.me(meReceiver, ControllerModelMode.VIEW);
+                break;
             case 'contact':
+                const contactReceiver = this.receiver as threema.ContactReceiver;
+                this.fingerPrintService
+                    .generate(contactReceiver.publicKey)
+                    .then(this.setFingerPrint.bind(this));
                 this.controllerModel = controllerModelService
-                    .contact(this.receiver as threema.ContactReceiver, ControllerModelMode.VIEW);
+                    .contact(contactReceiver, ControllerModelMode.VIEW);
                 break;
             case 'group':
                 this.controllerModel = controllerModelService
@@ -1148,19 +1343,23 @@ class ReceiverDetailController {
                 return;
         }
 
-        // If this receiver may not be viewed, navigate to "home" view
-        if (this.controllerModel.canView() === false) {
-            $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
-            this.$state.go('messenger.home');
-            return;
-        }
-
-        // If this receiver is removed, navigate to "home" view
+        // If this receiver was removed, navigate to "home" view
         this.controllerModel.setOnRemoved((receiverId: string) => {
             $log.warn(this.logTag, 'Receiver removed, redirecting to home');
             this.$state.go('messenger.home');
         });
 
+    }
+
+    /**
+     * Set the fingerprint value and run $digest.
+     *
+     * This may only be called from outside the $digest loop
+     * (e.g. from a plain promise callback).
+     */
+    private setFingerPrint(fingerPrint: string): void {
+        this.fingerPrint.value = fingerPrint;
+        this.$scope.$digest();
     }
 
     public chat(): void {
@@ -1182,6 +1381,35 @@ class ReceiverDetailController {
         });
     }
 
+    /**
+     * Show the QR code of the public key.
+     */
+    public showQr(): void {
+        const profile = this.webClientService.me;
+        const $mdDialog = this.$mdDialog;
+        $mdDialog.show({
+            controllerAs: 'ctrl',
+            controller: [function() {
+               this.cancel = () =>  {
+                   $mdDialog.cancel();
+               };
+               this.profile = profile;
+               this.qrCode = {
+                    errorCorrectionLevel: 'L',
+                    size: '400px',
+                    data: '3mid:'
+                    + profile.id
+                    + ','
+                    + u8aToHex(new Uint8Array(profile.publicKey)),
+                };
+            }],
+            templateUrl: 'partials/dialog.qr.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            fullscreen: true,
+        });
+    }
+
     public goBack(): void {
         window.history.back();
     }
@@ -1196,25 +1424,26 @@ class ReceiverEditController {
     private logTag: string = '[ReceiverEditController]';
 
     public $mdDialog: any;
-    public $state: ng.ui.IStateService;
+    private $scope: ng.IScope;
+    public $state: UiStateService;
     private $translate: ng.translate.ITranslateService;
 
     public title: string;
     private $timeout: ng.ITimeoutService;
-    private execute: ExecuteService;
-    public loading = false;
+    private future: Future<threema.Receiver>;
 
-    private controllerModel: threema.ControllerModel;
+    private controllerModel: threema.ControllerModel<threema.Receiver>;
     public type: string;
 
     public static $inject = [
-        '$log', '$stateParams', '$state', '$mdDialog',
+        '$log', '$scope', '$stateParams', '$state', '$mdDialog',
         '$timeout', '$translate', 'WebClientService', 'ControllerModelService',
     ];
-    constructor($log: ng.ILogService, $stateParams, $state: ng.ui.IStateService,
+    constructor($log: ng.ILogService, $scope: ng.IScope, $stateParams, $state: UiStateService,
                 $mdDialog, $timeout: ng.ITimeoutService, $translate: ng.translate.ITranslateService,
                 webClientService: WebClientService, controllerModelService: ControllerModelService) {
 
+        this.$scope = $scope;
         this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$timeout = $timeout;
@@ -1223,9 +1452,11 @@ class ReceiverEditController {
         const receiver = webClientService.receivers.getData($stateParams);
         switch (receiver.type) {
             case 'me':
-                $log.warn(this.logTag, 'Cannot edit own contact');
-                $state.go('messenger.home');
-                return;
+                this.controllerModel = controllerModelService.me(
+                    receiver as threema.MeReceiver,
+                    ControllerModelMode.EDIT,
+                );
+                break;
             case 'contact':
                 this.controllerModel = controllerModelService.contact(
                     receiver as threema.ContactReceiver,
@@ -1251,15 +1482,6 @@ class ReceiverEditController {
                 return;
         }
         this.type = receiver.type;
-
-        // If this receiver may not be viewed, navigate to "home" view
-        if (this.controllerModel.canView() === false) {
-            $log.warn(this.logTag, 'Cannot view this receiver, redirecting to home');
-            this.$state.go('messenger.home');
-            return;
-        }
-
-        this.execute = new ExecuteService($log, $timeout, 1000);
     }
 
     public keypress($event: KeyboardEvent): void {
@@ -1269,37 +1491,45 @@ class ReceiverEditController {
     }
 
     public save(): void {
-
-        // show loading
-        this.loading = true;
-
-        // validate first
-        this.execute.execute(this.controllerModel.save())
-            .then((receiver: threema.Receiver) => {
-                this.goBack();
+        this.future = Future.withMinDuration(this.controllerModel.save(), 100);
+        this.future
+            .then(() => {
+                this.$scope.$apply(() => {
+                    this.goBack();
+                });
             })
             .catch((errorCode) => {
-                this.showError(errorCode);
+                this.$scope.$apply(() => {
+                    this.showEditError(errorCode);
+                });
             });
     }
 
     public isSaving(): boolean {
-        return this.execute !== undefined
-            && this.execute.isRunning();
+        return this.future !== undefined && !this.future.done;
     }
 
-    public showError(errorCode): void {
+    private showEditError(errorCode: string): void {
+        if (errorCode === undefined) {
+            errorCode = 'unknown';
+        }
         this.$mdDialog.show(
             this.$mdDialog.alert()
                 .clickOutsideToClose(true)
                 .title(this.controllerModel.subject)
-                .textContent(this.$translate.instant('validationError.editReceiver.' + errorCode))
-                .ok(this.$translate.instant('common.OK')));
+                .textContent(this.$translate.instant('validationError.modifyReceiver.' + errorCode))
+                .ok(this.$translate.instant('common.OK')),
+        );
     }
 
     public goBack(): void {
         window.history.back();
     }
+}
+
+interface CreateReceiverStateParams extends UiStateParams {
+    type: threema.ReceiverType;
+    initParams: null | {identity: string | null};
 }
 
 /**
@@ -1310,24 +1540,25 @@ class ReceiverCreateController {
     private logTag: string = '[ReceiverEditController]';
 
     public $mdDialog: any;
-    private loading = false;
+    private $scope: ng.IScope;
     private $timeout: ng.ITimeoutService;
     private $log: ng.ILogService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
     private $mdToast: any;
     public identity = '';
     private $translate: any;
     public type: string;
-    private execute: ExecuteService;
+    private future: Future<threema.Receiver>;
 
-    public controllerModel: threema.ControllerModel;
+    public controllerModel: threema.ControllerModel<threema.Receiver>;
 
-    public static $inject = ['$stateParams', '$mdDialog', '$mdToast', '$translate',
+    public static $inject = ['$stateParams', '$mdDialog', '$scope', '$mdToast', '$translate',
         '$timeout', '$state', '$log', 'ControllerModelService'];
-    constructor($stateParams: threema.CreateReceiverStateParams, $mdDialog, $mdToast, $translate,
-                $timeout: ng.ITimeoutService, $state: ng.ui.IStateService, $log: ng.ILogService,
+    constructor($stateParams: CreateReceiverStateParams, $mdDialog, $scope: ng.IScope, $mdToast, $translate,
+                $timeout: ng.ITimeoutService, $state: UiStateService, $log: ng.ILogService,
                 controllerModelService: ControllerModelService) {
         this.$mdDialog = $mdDialog;
+        this.$scope = $scope;
         this.$timeout = $timeout;
         this.$state = $state;
         this.$log = $log;
@@ -1356,11 +1587,10 @@ class ReceiverCreateController {
             default:
                 this.$log.error('invalid type', this.type);
         }
-        this.execute = new ExecuteService($log, $timeout, 1000);
     }
 
     public isSaving(): boolean {
-        return this.execute.isRunning();
+        return this.future !== undefined && !this.future.done;
     }
 
     public goBack(): void {
@@ -1371,13 +1601,13 @@ class ReceiverCreateController {
 
     private showAddError(errorCode: string): void {
         if (errorCode === undefined) {
-            errorCode = 'invalid_entry';
+            errorCode = 'unknown';
         }
         this.$mdDialog.show(
             this.$mdDialog.alert()
                 .clickOutsideToClose(true)
                 .title(this.controllerModel.subject)
-                .textContent(this.$translate.instant('validationError.createReceiver.' + errorCode))
+                .textContent(this.$translate.instant('validationError.modifyReceiver.' + errorCode))
                 .ok(this.$translate.instant('common.OK')),
         );
     }
@@ -1389,23 +1619,25 @@ class ReceiverCreateController {
     }
 
     public create(): void {
-        // show loading
-        this.loading = true;
-
-        // validate first
-        this.execute.execute(this.controllerModel.save())
+        // Save, then go to receiver detail page
+        this.future = Future.withMinDuration(this.controllerModel.save(), 100);
+        this.future
             .then((receiver: threema.Receiver) => {
-                this.$state.go('messenger.home.detail', receiver, {location: 'replace'});
+                this.$scope.$apply(() => {
+                    this.$state.go('messenger.home.detail', receiver, {location: 'replace'});
+                });
             })
             .catch((errorCode) => {
-                this.showAddError(errorCode);
+                this.$scope.$apply(() => {
+                    this.showAddError(errorCode);
+                });
             });
     }
 }
 
 angular.module('3ema.messenger', ['ngMaterial'])
 
-.config(['$stateProvider', function($stateProvider: ng.ui.IStateProvider) {
+.config(['$stateProvider', function($stateProvider: UiStateProvider) {
 
     $stateProvider
 

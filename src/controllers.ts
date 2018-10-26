@@ -15,12 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AndroidOnlyController} from './controllers/android_only';
+import {FooterController} from './controllers/footer';
 import {StatusController} from './controllers/status';
 
 angular.module('3ema.controllers', ['3ema.services'])
 
-.controller('AndroidOnlyController', AndroidOnlyController)
+.controller('FooterController', FooterController)
 .controller('StatusController', StatusController)
 
 ;

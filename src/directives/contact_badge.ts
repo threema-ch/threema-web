@@ -17,6 +17,9 @@
 
 // tslint:disable:max-line-length
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
+import {hasValue} from '../helpers';
 import {WebClientService} from '../services/webclient';
 
 /**
@@ -25,7 +28,7 @@ import {WebClientService} from '../services/webclient';
 export default [
     'WebClientService',
     '$state',
-    function(webClientService: WebClientService, $state: ng.ui.IStateService) {
+    function(webClientService: WebClientService, $state: UiStateService) {
         return {
             restrict: 'EA',
             scope: {},
@@ -35,14 +38,30 @@ export default [
                 linked: '=?eeeLinked',
                 onRemove: '=?eeeOnRemove',
             },
+            link: function(scope, elem, attrs) {
+                // Manual change detection: Identity
+                scope.$watch(
+                    () => scope.ctrl.identity,
+                    (newIdentity, oldIdentity) => {
+                        if (hasValue(newIdentity) && newIdentity !== oldIdentity) {
+                            scope.ctrl.updateReceiverData();
+                        }
+                    },
+                );
+                // Manual change detection: Contact receiver
+                scope.$watch(
+                    () => scope.ctrl.contactReceiver,
+                    (newReceiver, oldReceiver) => {
+                        if (hasValue(newReceiver)) {
+                            if (!hasValue(oldReceiver) || newReceiver.id !== oldReceiver.id) {
+                                scope.ctrl.updateReceiverData();
+                            }
+                        }
+                    },
+                );
+            },
             controllerAs: 'ctrl',
             controller: [function() {
-                if (this.contactReceiver === undefined) {
-                    this.contactReceiver = webClientService.contacts.get(this.identity);
-                } else {
-                    this.identity = this.contactReceiver.id;
-                }
-
                 this.click = () => {
                     if (this.linked !== undefined
                         && this.linked === true) {
@@ -51,12 +70,24 @@ export default [
                 };
 
                 this.showActions = this.onRemove !== undefined;
+
+                this.updateReceiverData = () => {
+                    // Either a receiver or an identity is set
+                    if (this.contactReceiver === undefined) {
+                        this.contactReceiver = webClientService.contacts.get(this.identity);
+                    } else {
+                        this.identity = this.contactReceiver.id;
+                    }
+                };
+
+                this.$onInit = function() {
+                    this.updateReceiverData();
+                };
             }],
             template: `
                 <div class="contact-badge receiver-badge" ng-click="ctrl.click()">
                     <section class="avatar-box">
-                        <eee-avatar eee-type="'contact'"
-                                    eee-receiver="ctrl.contactReceiver"
+                        <eee-avatar eee-receiver="ctrl.contactReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
                     <div class="receiver-badge-name"

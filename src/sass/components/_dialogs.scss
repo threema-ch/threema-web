@@ -21,6 +21,11 @@ md-dialog {
     }
     md-dialog-content {
         line-height: 1.3em;
+
+        // If a h2 is the first child of a dialog, remove the top margin
+        .md-dialog-content>h2:first-child {
+            margin-top: 0;
+        }
     }
     .md-subheader-inner {
         padding-left: 0;
@@ -43,5 +48,18 @@ md-dialog.send-file-dialog {
         margin: 0px auto;
         max-height: 250px;
         max-width: 100%;
+    }
+}
+
+md-dialog.message-history-dialog {
+    md-dialog-content {
+        padding: 24px;
+    }
+
+    .event-type {
+        font-weight: bold;
+    }
+    .event-type:after {
+        content: ':';
     }
 }

@@ -15,8 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {escapeRegExp, filter} from './helpers';
+import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
+import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
+import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
 
 angular.module('3ema.filters', [])
@@ -83,8 +85,8 @@ angular.module('3ema.filters', [])
         email: true,
         // Don't link phone numbers (doesn't work reliably)
         phone: false,
-        // Don't link twitter handles
-        twitter: false,
+        // Don't link mentions
+        mention: false,
         // Don't link hashtags
         hashtag: false,
     });
@@ -112,18 +114,31 @@ angular.module('3ema.filters', [])
 })
 
 /**
- * Convert markdown elements to html elements
+ * Enlarge 1-3 emoji.
  */
-.filter('markify', function() {
-    return function(text) {
-        if (text !== null) {
-            text = text.replace(/\B\*([^\r\n]+?)\*\B/g, '<span class="text-bold">$1</span>');
-            text = text.replace(/\b_([^\r\n]+?)_\b/g, '<span class="text-italic">$1</span>');
-            text = text.replace(/\B~([^\r\n]+?)~\B/g, '<span class="text-strike">$1</span>');
+.filter('enlargeSingleEmoji', function() {
+    const pattern = /<span class="e1 ([^>]*>[^<]*)<\/span>/g;
+    const singleEmojiThreshold = 3;
+    const singleEmojiClassName = 'large-emoji';
+    return function(text, enlarge = false) {
+        if (!enlarge) {
             return text;
+        }
+        const matches = text.match(pattern);
+        if (matches != null && matches.length >= 1 && matches.length <= singleEmojiThreshold) {
+            if (text.replace(pattern, '').length === 0) {
+                text = text.replace(pattern, '<span class="e1 ' + singleEmojiClassName + ' $1</span>');
+            }
         }
         return text;
     };
+})
+
+/**
+ * Convert markdown elements to html elements
+ */
+.filter('markify', function() {
+    return markify;
 })
 
 /**
@@ -223,6 +238,12 @@ angular.module('3ema.filters', [])
         return padLeft + left + ':' + padRight + right;
     };
 })
+
+/**
+ * Convert an ArrayBuffer to a data URL.
+ *
+ * Warning: Make sure that this is not called repeatedly on big data, or performance will decrease.
+ */
 .filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
     const logTag = '[filters.bufferToUrl]';
     return function(buffer: ArrayBuffer, mimeType: string, trust: boolean = true) {
@@ -230,13 +251,7 @@ angular.module('3ema.filters', [])
             $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
             return '';
         }
-        let binary = '';
-        const bytes = new Uint8Array(buffer);
-        const len = bytes.byteLength;
-        for (let i = 0; i < len; i++) {
-            binary += String.fromCharCode(bytes[i]);
-        }
-        const uri = 'data:' + mimeType + ';base64,' +  btoa(binary);
+        const uri = bufferToUrl(buffer, mimeType, logAdapter($log.warn, logTag));
         if (trust) {
             return $sce.trustAsResourceUrl(uri);
         } else {
@@ -244,6 +259,7 @@ angular.module('3ema.filters', [])
         }
     };
 }])
+
 .filter('mapLink', function() {
     return function(location: threema.LocationInfo) {
         return 'https://www.openstreetmap.org/?mlat='
@@ -251,6 +267,7 @@ angular.module('3ema.filters', [])
             + location.lon;
     };
 })
+
 /**
  * Convert message state to material icon class.
  */
@@ -286,11 +303,58 @@ angular.module('3ema.filters', [])
                 return 'thumb_up';
             case 'user-dec':
                 return 'thumb_down';
+            case 'timeout':
+                return 'sync_problem';
             default:
                 return '';
         }
     };
 })
+
+/**
+ * Convert message state to title text.
+ */
+.filter('messageStateTitleText', ['$translate', function($translate: ng.translate.ITranslateService) {
+    return (message: threema.Message) => {
+        if (!message) {
+            return null;
+        }
+
+        if (!message.isOutbox) {
+            switch (message.state) {
+                case 'user-ack':
+                    return 'messageStates.WE_ACK';
+                case 'user-dec':
+                    return 'messageStates.WE_DEC';
+                default:
+                    return 'messageStates.UNKNOWN';
+            }
+        }
+        switch (message.state) {
+            case 'pending':
+                return 'messageStates.PENDING';
+            case 'sending':
+                return 'messageStates.SENDING';
+            case 'sent':
+                return 'messageStates.SENT';
+            case 'delivered':
+                return 'messageStates.DELIVERED';
+            case 'read':
+                return 'messageStates.READ';
+            case 'send-failed':
+                return 'messageStates.FAILED';
+            case 'user-ack':
+                return 'messageStates.USER_ACK';
+            case 'user-dec':
+                return 'messageStates.USER_DEC';
+            case 'timeout':
+                return 'messageStates.TIMEOUT';
+            default:
+                return 'messageStates.UNKNOWN';
+        }
+    };
+}])
+
 .filter('fileSize', function() {
     return (size: number) => {
         if (!size) {
@@ -323,11 +387,90 @@ angular.module('3ema.filters', [])
     return(ids: string[]) => {
         const names: string[] = [];
         for (const id of ids) {
-            this.contactReceiver = webClientService.contacts.get(id);
-            names.push(this.contactReceiver.displayName);
+            const contactReceiver = webClientService.contacts.get(id);
+            if (hasValue(contactReceiver)) {
+                names.push(contactReceiver.displayName);
+            } else {
+                names.push('Unknown');
+            }
         }
         return names.join(', ');
     };
+}])
+
+/**
+ * Format a unix timestamp as a date.
+ */
+.filter('unixToTimestring', ['$translate', function($translate) {
+    function formatTime(date) {
+        return ('00' + date.getHours()).slice(-2) + ':' +
+               ('00' + date.getMinutes()).slice(-2);
+    }
+
+    function formatMonth(num) {
+        switch (num) {
+            case 0x0:
+                return 'date.month_short.JAN';
+            case 0x1:
+                return 'date.month_short.FEB';
+            case 0x2:
+                return 'date.month_short.MAR';
+            case 0x3:
+                return 'date.month_short.APR';
+            case 0x4:
+                return 'date.month_short.MAY';
+            case 0x5:
+                return 'date.month_short.JUN';
+            case 0x6:
+                return 'date.month_short.JUL';
+            case 0x7:
+                return 'date.month_short.AUG';
+            case 0x8:
+                return 'date.month_short.SEP';
+            case 0x9:
+                return 'date.month_short.OCT';
+            case 0xa:
+                return 'date.month_short.NOV';
+            case 0xb:
+                return 'date.month_short.DEC';
+        }
+    }
+
+    function isSameDay(date1, date2) {
+        return date1.getFullYear() === date2.getFullYear()
+            && date1.getMonth() === date2.getMonth()
+            && date1.getDate() === date2.getDate();
+    }
+
+    return (timestamp: number, forceFull: boolean = false) => {
+        const date = new Date(timestamp * 1000);
+
+        const now = new Date();
+        if (!forceFull && isSameDay(date, now)) {
+            return formatTime(date);
+        }
+
+        const yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
+        if (!forceFull && isSameDay(date, yesterday)) {
+            return $translate.instant('date.YESTERDAY') + ', ' + formatTime(date);
+        }
+
+        let year = '';
+        if (forceFull || date.getFullYear() !== now.getFullYear()) {
+            year = ' ' + date.getFullYear();
+        }
+        return date.getDate() + '. '
+             + $translate.instant(formatMonth(date.getMonth()))
+             + year + ', '
+             + formatTime(date);
+    };
+}])
+
+/**
+ * Mark data as trusted.
+ */
+.filter('unsafeResUrl', ['$sce', function($sce: ng.ISCEService) {
+    return $sce.trustAsResourceUrl;
 }])
 
 ;

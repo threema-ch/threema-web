@@ -16,10 +16,12 @@
  */
 
 import {WebClientService} from '../services/webclient';
-import {ControllerModelMode} from '../types/enums';
 import {AvatarControllerModel} from './avatar';
 
-export class GroupControllerModel implements threema.ControllerModel {
+// Type aliases
+import ControllerModelMode = threema.ControllerModelMode;
+
+export class GroupControllerModel implements threema.ControllerModel<threema.GroupReceiver> {
 
     private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
@@ -27,14 +29,14 @@ export class GroupControllerModel implements threema.ControllerModel {
     public members: string[];
     public name: string;
     public subject: string;
-    public isLoading = false;
+    public isLoading = false; // TODO: Show loading indicator
 
     private addContactPlaceholder: string;
     private group: threema.GroupReceiver;
     private webClientService: WebClientService;
     private avatarController: AvatarControllerModel;
     private mode: ControllerModelMode;
-    private onRemovedCallback: any;
+    private onRemovedCallback: threema.OnRemovedCallback;
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
                 webClientService: WebClientService,
@@ -51,9 +53,7 @@ export class GroupControllerModel implements threema.ControllerModel {
 
         switch (this.getMode()) {
             case ControllerModelMode.EDIT:
-                this.subject = $translate.instant('messenger.EDIT_RECEIVER', {
-                    receiverName: '@NAME@',
-                }).replace('@NAME@', this.group.displayName);
+                this.subject = $translate.instant('messenger.EDIT_RECEIVER');
                 this.name = this.group.displayName;
                 this.members = this.group.members;
                 this.avatarController = new AvatarControllerModel(
@@ -84,7 +84,7 @@ export class GroupControllerModel implements threema.ControllerModel {
         return this.webClientService.getMaxGroupMemberSize();
     }
 
-    public setOnRemoved(callback: any): void {
+    public setOnRemoved(callback: threema.OnRemovedCallback): void {
         this.onRemovedCallback = callback;
     }
 
@@ -94,11 +94,11 @@ export class GroupControllerModel implements threema.ControllerModel {
 
     public isValid(): boolean {
         return this.members.filter((identity: string) => {
-                return identity !== this.webClientService.getMyIdentity().identity;
+                return identity !== this.webClientService.me.id;
             }).length > 0;
     }
 
-    public canView(): boolean {
+    public canChat(): boolean {
         return true;
     }
 
@@ -111,7 +111,7 @@ export class GroupControllerModel implements threema.ControllerModel {
     }
 
     public canClean(): boolean {
-        return this.canView();
+        return this.canChat();
     }
 
     public clean(ev: any): any {
@@ -140,16 +140,22 @@ export class GroupControllerModel implements threema.ControllerModel {
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
+    }
+
+    public canShowQr(): boolean {
+        return false;
     }
 
     public leave(ev): void {
         const confirm = this.$mdDialog.confirm()
             .title(this.$translate.instant('messenger.GROUP_LEAVE'))
             .textContent(this.$translate.instant(
-                this.group.administrator === this.webClientService.getMyIdentity().identity
+                this.group.administrator === this.webClientService.me.id
                     ? 'messenger.GROUP_REALLY_LEAVE_ADMIN'
                     : 'messenger.GROUP_REALLY_LEAVE'))
             .targetEvent(ev)
@@ -174,7 +180,9 @@ export class GroupControllerModel implements threema.ControllerModel {
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Leaving group failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -208,7 +216,9 @@ export class GroupControllerModel implements threema.ControllerModel {
                     this.onRemovedCallback(this.group.id);
                 }
             })
-            .catch(() => {
+            .catch((error) => {
+                // TODO: Handle this properly / show an error message
+                this.$log.error(`Deleting group failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -224,8 +234,9 @@ export class GroupControllerModel implements threema.ControllerModel {
             .then(() => {
                 this.isLoading = false;
             })
-            .catch(() => {
+            .catch((errorCode) => {
                 this.isLoading = false;
+                this.showError(errorCode);
             });
     }
 
@@ -236,14 +247,14 @@ export class GroupControllerModel implements threema.ControllerModel {
                     this.group.id,
                     this.members,
                     this.name,
-                    this.avatarController.getAvatar(),
+                    this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
                 );
             case ControllerModelMode.NEW:
-
                 return this.webClientService.createGroup(
                     this.members,
-                    this.name,
-                    this.avatarController.getAvatar());
+                    (this.name && this.name.length > 0) ? this.name : undefined,
+                    this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
+                );
             default:
                 this.$log.error('not allowed to save group');
 
@@ -256,5 +267,21 @@ export class GroupControllerModel implements threema.ControllerModel {
 
     public getMembers(): string[] {
         return this.members;
+    }
+
+    /**
+     * Show an error message in a dialog.
+     */
+    private showError(errorCode: string): void {
+        if (errorCode === undefined) {
+            errorCode = 'unknown';
+        }
+        this.$mdDialog.show(
+            this.$mdDialog.alert()
+                .clickOutsideToClose(true)
+                .title(this.group.displayName)
+                .textContent(this.$translate.instant('validationError.modifyReceiver.' + errorCode))
+                .ok(this.$translate.instant('common.OK')),
+        );
     }
 }

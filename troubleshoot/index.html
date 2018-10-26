@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
 
-    Copyright © 2016-2018 Threema GmbH (https://threema.ch/).
+    Copyright © 2017-2018 Threema GmbH (https://threema.ch/).
 
     This file is part of Threema Web.
 
@@ -24,13 +24,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
-    <meta name="robots" content="noindex" />
+    <meta name="robots" content="noindex">
 
     <title>Threema Web Diagnostics</title>
 
     <!-- Favicon -->
-    <link rel="icon" href="../img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
-    <link rel="shortcut icon" href="../img/favicon.ico?v=[[VERSION]]" type="image/x-icon"/>
+    <link rel="icon" href="../img/favicon/favicon.ico?v=[[VERSION]]" type="image/x-icon">
+    <link rel="shortcut icon" href="../img/favicon/favicon.ico?v=[[VERSION]]" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="stylesheet" href="../fonts/roboto.css?v=[[VERSION]]" type="text/css">
@@ -72,8 +72,8 @@
             margin: 0px auto 16px;
         }
 
-        h1 { margin-top: 0; font-weight: 500; }
-        h2 { font-weight: 300; }
+        h1 { margin-top: 0; font-size: 30px; font-weight: 500; }
+        h2 { font-weight: 300; font-size: 22px; }
         p { font-weight: 300; }
 
         .status span {
@@ -90,6 +90,17 @@
 
         .small { font-size: 0.8em; font-weight: 300; }
 
+        .log-data {
+            background-color: #eee;
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        .log-data p {
+            margin: 4px 0;
+            font-family: monospace;
+        }
+
         footer {
             color: white;
             font-weight: 300;
@@ -99,12 +110,14 @@
     </style>
 
     <!-- JS -->
+    <script src="../node_modules/angular/angular.js?v=[[VERSION]]"></script>
+    <script src="../node_modules/angular-sanitize/angular-sanitize.min.js?v=[[VERSION]]"></script>
     <script src="../node_modules/webrtc-adapter/out/adapter.js?v=[[VERSION]]"></script>
     <script src="../node_modules/sdp/sdp.js?v=[[VERSION]]"></script>
     <script src="troubleshoot.js?v=[[VERSION]]"></script>
 </head>
-<body>
-    <img src="../img/bg1.jpg?v=[[VERSION]]" id="background-image" draggable="false" alt="" />
+<body ng-app="troubleshoot">
+    <img src="../img/bg.jpg?v=[[VERSION]]" id="background-image" draggable="false" alt="">
 
     <header>
         <div id="title">
@@ -114,109 +127,74 @@
         </div>
     </header>
 
-    <div id="wrapper">
+    <div id="wrapper" ng-controller="ChecksController as $ctrl">
 
-        <h1>Threema Web Diagnostics</h1>
+        <h1 ng-if="$ctrl.state === 'init'">Threema Web Diagnostics</h1>
+        <h1 ng-if="$ctrl.state === 'check'">Threema Web Diagnostics ({{ $ctrl.os | osName }})</h1>
 
-        <p id="help-text">This test will check your browser for compatibility problems. It
-        will also check whether WebRTC connection buildup using STUN/TURN works.</p>
+        <p ng-if="$ctrl.state === 'init'">This test will check your browser for
+        compatibility or configuration problems.</p>
 
-        <button id="start">Start Test</button>
+        <p ng-if="$ctrl.state === 'init'">What type of mobile device do you use?</p>
 
-        <div id="checks" class="hidden">
-            <h2>Is JavaScript enabled?</h2>
-            <div id="status-js">
-                <div class="status status-no">
-                    <i class="material-icons md-36">error</i> <span class="text">No</span>
-                </div>
-                <div class="status status-yes hidden">
-                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-                </div>
+        <div ng-if="$ctrl.state === 'init'">
+            <button role="button" aria-label="Android" ng-click="$ctrl.start('android')">Android</button>
+            <button role="button" aria-label="iOS" ng-click="$ctrl.start('ios')">iOS</button>
+        </div>
+
+        <div id="checks" ng-if="$ctrl.state === 'check'">
+
+            <div id="check-js">
+                <h2>Is JavaScript enabled?</h2>
+                <check
+                    result="$ctrl.resultJs">
             </div>
 
-            <h2>Is WebRTC available?</h2>
-            <div id="status-pc">
-                <div class="status status-unknown">
-                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
-                </div>
-                <div class="status status-no hidden">
-                    <i class="material-icons md-36">error</i> <span class="text">No</span>
-                    <p class="small">RTCPeerConnection is a part of WebRTC.<br>Threema Web cannot work without it.</p>
-                </div>
-                <div class="status status-yes hidden">
-                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-                </div>
+            <div id="check-ls">
+                <h2>Is LocalStorage available?</h2>
+                <check
+                    result="$ctrl.resultLs"
+                    text-no="Without LocalStorage, persistent sessions and settings<br>cannot be stored in the browser.<br>See the <a href='https://threema.ch/faq/web_browser_settings'>FAQ</a> for information on how to fix this.">
             </div>
 
-            <h2>Are WebRTC DataChannels available?</h2>
-            <div id="status-dc">
-                <div class="status status-unknown">
-                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
-                </div>
-                <div class="status status-no hidden">
-                    <i class="material-icons md-36">error</i> <span class="text">No</span>
-                    <p class="small">RTCDataChannel is a part of WebRTC.<br>Threema Web cannot work without it.</p>
-                </div>
-                <div class="status status-yes hidden">
-                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-                </div>
+            <div id="check-dn">
+                <h2>Are desktop notifications available?</h2>
+                <check
+                    result="$ctrl.resultDn"
+                    text-no="Without desktop notifications, we cannot notify you when a new message arrives.">
             </div>
 
-            <h2>Is LocalStorage available?</h2>
-            <div id="status-ls">
-                <div class="status status-unknown">
-                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
-                </div>
-                <div class="status status-no hidden">
-                    <i class="material-icons md-36">error</i> <span class="text">No</span>
-                    <p class="small">Without LocalStorage, persistent sessions and settings<br>cannot be stored in the browser.<br>
-                    See the <a href="https://threema.ch/faq/web_browser_settings">FAQ</a> for information on how to fix this.</p>
-                </div>
-                <div class="status status-yes hidden">
-                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-                </div>
+            <div id="check-ws">
+                <h2>Are WebSocket connections possible?</h2>
+                <check
+                    result="$ctrl.resultWs"
+                    text-no="Threema Web must be able to open a working WebSocket connection to the SaltyRTC signaling server.">
             </div>
 
-            <h2>Are desktop notifications available?</h2>
-            <div id="status-dn">
-                <div class="status status-unknown">
-                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
-                </div>
-                <div class="status status-no hidden">
-                    <i class="material-icons md-36">error</i> <span class="text">No</span>
-                    <p class="small">Without desktop notifications, we cannot notify you when a new message arrives.</p>
-                </div>
-                <div class="status status-yes hidden">
-                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-                </div>
+            <div id="check-pc" ng-if="$ctrl.os === 'android'">
+                <h2>Is WebRTC available?</h2>
+                <check
+                    result="$ctrl.resultPc"
+                    text-no="RTCPeerConnection is a part of WebRTC.<br>Threema Web cannot work without it.">
             </div>
 
-            <h2>Does TURN work?</h2>
-            <div id="status-turn">
-                <div class="status status-unknown">
-                    <i class="material-icons md-36">help</i> <span class="text">Unknown</span>
-                </div>
-                <div class="status status-no hidden">
-                    <i class="material-icons md-36">error</i> <span class="text">No</span>
-                    <p class="small hidden">It looks like TURN traffic is being blocked by your firewall.<br>
-                    Without TURN, connections can only be established if your computer<br>
-                    and your phone are in the same network.</p>
-                </div>
-                <div class="status status-yes hidden">
-                    <i class="material-icons md-36">check_circle</i> <span class="text">Yes</span>
-                </div>
-                <div class="status status-test hidden">
-                    <img src="loading.gif" alt="Loading...">
-                </div>
-                <div class="results hidden">
-                    <p>Results:</p>
-                    <p class="result-data"></p>
-                </div>
+            <div id="check-dc" ng-if="$ctrl.os === 'android'">
+                <h2>Are WebRTC DataChannels available?</h2>
+                <check
+                    result="$ctrl.resultDc"
+                    text-no="RTCDataChannel is a part of WebRTC.<br>Threema Web cannot work without it.">
+            </div>
+
+            <div id="check-turn" ng-if="$ctrl.os === 'android'">
+                <h2>Does TURN work?</h2>
+                <check
+                    result="$ctrl.resultTurn"
+                    text-no="It looks like TURN traffic is being blocked by your firewall.<br>Without TURN, connections can only be established if your computer<br>and your phone are in the same network.">
             </div>
         </div>
     </div>
     <footer>
-        &copy; 2017 Threema GmbH
+        &copy; 2017&ndash;2018 Threema GmbH
     </footer>
 </body>
 </html>

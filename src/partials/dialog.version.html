@@ -1,0 +1,34 @@
+<md-dialog aria-label="About">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Version {{ ctrl.fullVersion }}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon aria-label="Close dialog" class="material-icons md-24">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h2 translate>welcome.VERSION</h2>
+                <p>{{ ctrl.version }}</p>
+
+                <h2 translate>welcome.BACKGROUND_IMAGE</h2>
+                <p><a ng-href="{{ ctrl.config.VERSION_MOUNTAIN_URL }}" target="_blank" rel="noopener noreferrer">{{ ctrl.config.VERSION_MOUNTAIN }} ({{ ctrl.config.VERSION_MOUNTAIN_HEIGHT }}m)</a> / <a ng-href="{{ ctrl.config.VERSION_MOUNTAIN_IMAGE_URL }}" target="_blank" rel="noopener noreferrer">Source Image</a> ({{ ctrl.config.VERSION_MOUNTAIN_IMAGE_COPYRIGHT }})</p>
+
+                <h2 translate>about.CHANGELOG</h2>
+                <p>
+                    <span translate>about.CHANGELOG_LINK_BEFORE</span>
+                    <a href="https://github.com/threema-ch/threema-web/blob/{{ ctrl.config.GIT_BRANCH }}/CHANGELOG.md"
+                       target="_blank" rel="noopener noreferrer" translate>about.CHANGELOG_LINK_TEXT</a><span translate>about.CHANGELOG_LINK_AFTER</span>
+                </p>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="ctrl.cancel()"><span translate>common.CLOSE</span></md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

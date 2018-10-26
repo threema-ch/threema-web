@@ -6,11 +6,13 @@
 
     <div id="conversation-header" class="detail-header">
         <ng-include src="'partials/messenger.backbutton.html'"></ng-include>
+
+        <!-- Conversation details -->
         <div class="header-avatar" ng-click="ctrl.showReceiver()">
-            <eee-avatar eee-type="ctrl.type" eee-receiver="ctrl.receiver"
+            <eee-avatar eee-receiver="ctrl.receiver"
                         eee-resolution="'low'"></eee-avatar>
         </div>
-        <div class="header-details" ng-click="ctrl.showReceiver()">
+        <div class="header-details" role="heading" aria-level="1" ng-click="ctrl.showReceiver()">
             <div class="conversation-header-details-name"
                  ng-bind-html="ctrl.receiver.displayName | escapeHtml | emojify"></div>
             <div class="conversation-header-details-detail" ng-if="ctrl.type === 'contact'">
@@ -22,7 +24,20 @@
                 <span ng-bind-html="ctrl.receiver.members | idsToNames | escapeHtml | emojify"></span>
             </div>
         </div>
+
+        <!-- Menu -->
+        <div class="header-buttons">
+            <toggle-button
+                flag="ctrl.conversation.isStarred"
+                on-enable="ctrl.pinConversation()"
+                on-disable="ctrl.unpinConversation()"
+                label-enabled="messenger.PINNED_CONVERSATION"
+                label-disabled="messenger.UNPINNED_CONVERSATION"
+                icon-enabled="img/ic_pin.svg"
+                icon-disabled="img/ic_unpin.svg">
+        </div>
     </div>
+
     <div id="conversation-is-private" ng-if="ctrl.locked">
         <md-card>
             <md-toolbar class="md-warn">
@@ -36,17 +51,17 @@
         </md-card>
     </div>
 
-    <div id="conversation-chat" scroll-glue in-view-container ng-show="!ctrl.locked">
+    <div id="conversation-chat" scroll-glue="!ctrl.showScrollJump" in-view-container ng-show="!ctrl.locked">
         <ul class="chat">
             <li in-view="$inview && !ctrl.locked && ctrl.topOfChat()" class="load-more">
                 <div ng-if="ctrl.hasMoreMessages()" class="loading">
-                    <img ng-src="img/spinner.gif" alt="...">
+                    <img src="img/spinner.gif" alt="..." translate translate-attr-aria-label="messenger.LOADING_MESSAGES">
                 </div>
             </li>
             <li ng-repeat="message in ctrl.messages" id="message-{{message.id}}">
                 <eee-message eee-receiver="ctrl.receiver" eee-type="ctrl.type" eee-message="message"
-                             in-view="$inview  && !ctrl.locked && ctrl.msgRead(message.id)"
-                             in-view-options="{ considerPageVisibility: true }"></eee-message>
+                             in-view="$inview  && !ctrl.locked && ctrl.msgRead(message)"
+                             in-view-options="{ considerPageFocus: true }"></eee-message>
             </li>
             <li ng-if="ctrl.isTyping()" class="typing-indicator">
                 <!-- Non status messages -->
@@ -62,7 +77,7 @@
     </div>
 
     <div id="scrolljump" ng-click="ctrl.scrollDown()" ng-if="ctrl.showScrollJump && !ctrl.receiver.locked"
-         translate translate-attr-title="messenger.SCROLL_DOWN">
+         translate translate-attr-title="messenger.SCROLL_DOWN" role="button" aria-label="scroll to bottom" tabindex="0">
         <svg x="0" y="0" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 50 50" width="100" height="100" style="fill: rgb(66, 66, 66);"><g fill="none" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="sans-serif" font-weight="normal" font-size="12" text-anchor="start" mix-blend-mode="normal"><g><g><path d="M0,50l0,-50l50,0l0,50z" fill="none"/><path d="M25,46.5c-11.87412,0 -21.5,-9.62588 -21.5,-21.5l0,0c0,-11.87412 9.62588,-21.5 21.5,-21.5l0,0c11.87412,0 21.5,9.62588 21.5,21.5l0,0c0,11.87412 -9.62588,21.5 -21.5,21.5z" fill="#ffffff"/><g fill="#424242"><path d="M25,0.16c-13.69656,0 -24.84,11.14344 -24.84,24.84c0,13.69764 11.14344,24.84 24.84,24.84c13.69764,0 24.84,-11.14236 24.84,-24.84c0,-13.69656 -11.14236,-24.84 -24.84,-24.84z M36.56356,22.52356l-10.8,10.8c-0.2106,0.2106 -0.48708,0.31644 -0.76356,0.31644c-0.27648,0 -0.55296,-0.10584 -0.76356,-0.31644l-10.8,-10.8c-0.42228,-0.42228 -0.42228,-1.10484 0,-1.52712c0.42228,-0.42228 1.10484,-0.42228 1.52712,0l10.03644,10.03644l10.03644,-10.03644c0.42228,-0.42228 1.10484,-0.42228 1.52712,0c0.42228,0.42228 0.42228,1.10484 0,1.52712z"/></g></g></g></g></svg>
     </div>
 
@@ -85,8 +100,7 @@
                     ng-class="{selected: ctrl.selectedMention == $index}">
                     <div class="contact-badge receiver-badge" ng-if="mention.isAll">
                         <section class="avatar-box">
-                            <eee-avatar eee-type="'group'"
-                                        eee-receiver="ctrl.receiver"
+                            <eee-avatar eee-receiver="ctrl.receiver"
                                         eee-resolution="'low'"></eee-avatar>
                         </section>
                         <div translate>messenger.ALL</div>

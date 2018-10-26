@@ -4,7 +4,6 @@
     },
     "welcome": {
         "ABORT": "Abbrechen",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> oder <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
         "CONTINUE_ANYWAY": "Trotzdem fortfahren",
         "PLEASE_SCAN": "Scannen Sie den QR-Code mit Ihrer Threema-App",
         "PLEASE_UNLOCK": "Verbindung wiederaufbauen",
@@ -12,17 +11,19 @@
         "PLEASE_RELOAD": "Bitte laden Sie die Seite neu.",
         "RELOAD": "Seite neu laden",
         "PASSWORD": "Passwort",
-        "CHOOSE_PASSWORD": "Legen Sie vor dem Scannen ein Passwort fest, um die<br>Sitzung sp\u00e4ter ohne Scannen wiederherzustellen.",
+        "CHOOSE_PASSWORD": "Falls Sie die Sitzung speichern möchten,<br>legen Sie vor dem Scannen ein Passwort fest.",
         "UNLOCK_FAILED_TEXT": "Sie haben das falsche Passwort eingegeben. Die Verbindung kann nicht aufgebaut werden.",
         "ENTER_PASSWORD": "Um die letzte Sitzung wiederherzustellen, <br> geben Sie bitte das entsprechende Passwort ein.",
         "UNLOCK_FAILED_TITLE": "Verbindung aufbauen fehlgeschlagen",
         "ALTERNATIVELY": "Alternativ:",
-        "UNLOCK_FAILED_FORGOTTEN": "Haben Sie Ihr Passwort vergessen? W\u00e4hlen Sie \"Verbindung abbrechen\" und setzen Sie ein neues Passwort.",
-        "IF_YOU_WANT": "Wenn Sie möchten, können Sie die",
+        "UNLOCK_FAILED_FORGOTTEN": "Haben Sie Ihr Passwort vergessen? W\u00e4hlen Sie \"gespeicherte Sitzung l\u00f6schen\" und setzen Sie ein neues Passwort.",
         "FORGET_SESSION": "gespeicherte Sitzung löschen",
+        "FORGET_SESSION_BTN": "Sitzung vergessen",
         "BTN_RECONNECT": "Verbindung aufbauen",
         "BROWSER_NOT_SUPPORTED": "Dieser Browser wird nicht unterst\u00fctzt",
-        "ANDROID_ONLY": "Kompatibel mit Threema für Android.",
+        "BROWSER_NOT_SUPPORTED_ANDROID": "Dieser Browser wird von Android-Geräten nicht unterst\u00fctzt",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> oder <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a> (nur mit iOS), um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
+        "SAFARI": "Safari ist nur kompatibel mit Threema Web für iOS. Android-Nutzer verwenden bitte einen anderen Browser.",
         "CONNECTING": "Verbindung wird aufgebaut",
         "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
         "CONNECTING_TO_APP": "Verbindung zu App<br>wird aufgebaut …",
@@ -37,7 +38,9 @@
         "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich. Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Kritischer Fehler beim Zugriff auf LocalStorage: {errorMsg}.<br>Bitte starten Sie Ihren Browser neu.",
         "ALREADY_CONNECTED": "Bereits verbunden",
-        "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!"
+        "ALREADY_CONNECTED_DETAILS": "Sie sind bereits in einem anderen Tab oder Fenster mit Threema Web verbunden!",
+        "VERSION": "Version",
+        "BACKGROUND_IMAGE": "Hintergrundbild"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindungsprobleme",
@@ -47,7 +50,8 @@
         "WAITING_FOR_APP_MANUAL": "Google Play Services nicht installiert. Bitte starten Sie die Sitzung manuell.",
         "CONNECTING_TO_SERVER": "Verbinden mit Server\u2026",
         "CONNECTING_TO_APP": "Verbindung zu App wird aufgebaut\u2026",
-        "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen."
+        "CONNECTION_CLOSED": "Server-Verbindung wurde geschlossen.",
+        "RECONNECT_FAILED": "Verbindung zur App fehlgeschlagen."
     },
     "troubleshooting": {
         "SLOW_CONNECT": "Verbindungsaufbau scheint länger zu dauern<br>als normal …",
@@ -79,7 +83,8 @@
         "ARE_YOU_SURE": "Sind Sie sicher?",
         "SAVE": "Speichern",
         "DONE": "Fertig",
-        "MODIFY": "Ändern"
+        "MODIFY": "Ändern",
+        "NOTE": "Hinweis:"
     },
     "messenger": {
         "VERIFICATION_LEVEL": "Vertrauensstufe",
@@ -95,6 +100,7 @@
         "CONVERSATIONS": "Chats",
         "CONTACTS": "Kontakte",
         "NO_CONVERSATIONS_FOUND": "Keine Chats gefunden.",
+        "LOADING_CONVERSATIONS": "Chats werden geladen …",
         "ABOUT": "\u00dcber",
         "SETTINGS": "Einstellungen",
         "HELP": "Hilfe",
@@ -115,8 +121,18 @@
         "GROUP_ROLE_NORMAL": "Mitglied",
         "GROUP_ROLE_CREATOR": "Ersteller",
         "DOWNLOAD": "Herunterladen",
-        "COPY": "Kopieren",
         "DOWNLOADING": "Laden …",
+        "COPY": "Kopieren",
+        "COPIED": "Inhalt wurde in die Zwischenablage kopiert!",
+        "COPY_ERROR": "Fehler: Konnte Inhalt nicht in die Zwischenablage kopieren",
+        "MSG_HISTORY": "Nachrichten-Verlauf",
+        "MSG_HISTORY_CREATED": "Erstellt",
+        "MSG_HISTORY_SENT": "Gesendet",
+        "MSG_HISTORY_DELIVERED": "Zugestellt",
+        "MSG_HISTORY_READ": "Gelesen",
+        "MSG_HISTORY_ACKED": "Bestätigt",
+        "MSG_HISTORY_MODIFIED": "Geändert",
+        "NAVIGATE": "Navigieren",
         "CONFIRM_FILE_SEND": "Senden an «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Optionale Beschriftung",
         "CONFIRM_SEND_AS_FILE": "Als Datei senden",
@@ -130,7 +146,7 @@
         "SYSTEM_CONTACT": "Systemkontakt",
         "EMAIL_ADDRESSES": "E-Mail-Adressen",
         "PHONE_NUMBERS": "Telefonnummern",
-        "EDIT_RECEIVER": "{receiverName} bearbeiten",
+        "EDIT_RECEIVER": "Profil bearbeiten",
         "CREATE_GROUP": "Neue Gruppe",
         "GROUP_SELECT_CONTACTS": "Mitglieder wählen",
         "GROUP_DELETE": "Gruppe löschen",
@@ -154,15 +170,40 @@
         "PRIVATE_CHAT_DESCRIPTION": "Private Unterhaltungen werden in Threema Web nicht unterstützt.",
         "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Nachricht aufteilen.",
         "MESSAGE_TOO_LONG_SPLIT_BODY": "Es werden maximal {max} Zeichen pro Nachricht unterstützt, wollen Sie die Nachricht in {count} separate Nachrichten aufteilen?",
-        "BALLOT_MESSAGES_NOT_SUPPORTED": "Umfragen werden in Threema Web derzeit nicht untersützt.",
+        "BALLOT_MESSAGES_NOT_SUPPORTED": "Umfragen werden in Threema Web derzeit nicht unterstützt.",
         "UNKNOWN_MESSAGE_TYPE": "Unbekannter Nachrichtentyp",
         "NICKNAME": "Nickname",
         "THREEMA_WORK_CONTACT": "Threema Work Nutzer",
+        "THREEMA_HOME_CONTACT": "Privater Threema-Kontakt",
         "THREEMA_BLOCKED_RECEIVER": "blockiert",
         "DELETE_THREAD": "Chat löschen",
         "DELETE_THREAD_MESSAGE": "{count, plural, one {Möchten Sie wirklich diesen Chat löschen? Die Nachrichten können nicht wiederhergestellt werden.} other {Möchten Sie wirklich # Chats löschen? Die Nachrichten können nicht wiederhergestellt werden.}}",
         "MUTED": "Keine Benachrichtigungen",
-        "ALL": "Alle"
+        "MUTED_NONE": "Keine Benachrichtigungen",
+        "MUTED_MENTION_ONLY": "Nur bei Erwähnung benachrichtigen",
+        "MUTED_SILENT": "Stumme Benachrichtigungen",
+        "ALL": "Alle",
+        "LOADING_MESSAGES": "Nachrichten werden geladen…",
+        "PINNED_CONVERSATION": "Unterhaltung ist angepinnt. Klicken, um sie zu entpinnen.",
+        "UNPINNED_CONVERSATION": "Unterhaltung ist nicht angepinnt. Klicken, um sie anzupinnen.",
+        "PINNED_CONVERSATION_OK": "Unterhaltung angepinnt",
+        "PINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht angepinnt werden",
+        "UNPINNED_CONVERSATION_OK": "Unterhaltung entpinnt",
+        "UNPINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht entpinnt werden"
+    },
+    "messageStates": {
+        "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",
+        "WE_DEC": "Sie haben ein Daumen-Runter gesendet",
+        "USER_ACK": "Der Empfänger hat ein Daumen-Hoch gesendet",
+        "USER_DEC": "Der Empfänger hat ein Daumen-Runter gesendet",
+        "PENDING": "Die Nachricht wird auf Ihr Gerät übertragen",
+        "SENDING": "Die Nachricht wird an den Threema-Server übermittelt",
+        "SENT": "Die Nachricht wurde erfolgreich an den Server übermittelt",
+        "DELIVERED": "Die Nachricht ist beim Gerät des Empfängers angekommen",
+        "READ": "Die Nachricht wurde vom Empfänger gelesen",
+        "FAILED": "Die Nachricht konnte nicht gesendet werden",
+        "TIMEOUT": "Die Nachricht konnte nicht auf Ihr Gerät übertragen werden.",
+        "UNKNOWN": ""
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
@@ -176,8 +217,23 @@
         "gif": "GIF"
     },
     "validationError": {
-        "createReceiver": {
-            "invalid_identity": "Ungültige Threema-ID"
+        "modifyReceiver": {
+            "unknown": "Ein unbekannter Fehler ist aufgetreten",
+            "badRequest": "Ungültige Anfrage (Protokollfehler?)",
+            "timeout": "Timeout",
+            "internalError": "Ein interner Fehler ist aufgetreten",
+            "invalidAvatar": "Ungültiger Avatar",
+            "invalidIdentity": "Ungültige Threema-ID",
+            "invalidContact": "Ungültiger Kontakt",
+            "invalidGroup": "Ungültige Gruppe",
+            "invalidDistributionList": "Ungültige Verteilerliste",
+            "notAllowed": "Bearbeitung nicht erlaubt",
+            "notAllowedLinked": "Systemkontakt kann nicht verändert werden",
+            "notAllowedBusiness": "Avatar eines Threema Gateway Kontaktes kann nicht geändert werden",
+            "disabledByPolicy": "Funktion wurde durch den Administrator deaktiviert",
+            "syncFailed": "Gruppen-Synchronisation fehlgeschlagen",
+            "noMembers": "Keine Mitglieder definiert",
+            "alreadyLeft": "Sie haben diese Gruppe bereits verlassen"
         }
     },
     "error": {
@@ -186,11 +242,15 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Sprachnachrichten erhalten.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
-        "FILE_TOO_LARGE": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",
+        "FILE_TOO_LARGE": "Dateien grösser als {maxmb} MiB können nicht versendet werden",
+        "FILE_TOO_LARGE_WEB": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",
+        "FILE_TOO_LARGE_GENERIC": "Datei kann nicht gesendet werden, weil sie zu gross ist",
         "TEXT_TOO_LONG": "Diese Nachricht ist zu lang und kann nicht gesendet werden (Maximale Länge {max} Zeichen).",
         "NOTIFICATION_PERMISSION_DENIED": "Sie müssen die Benachrichtigungsberechtigung für Threema Web manuell erteilen, um Desktopbenachrichtigungen erhalten zu können.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Mehr erfahren.",
-        "NOTIFICATION_API_NOT_AVAILABLE": "Ihr Browser unterstützt keine Desktopbenachrichtigungen."
+        "NOTIFICATION_API_NOT_AVAILABLE": "Ihr Browser unterstützt keine Desktopbenachrichtigungen.",
+        "BLOB_DOWNLOAD_FAILED": "Datei konnte nicht heruntergeladen werden",
+        "BLOB_DECRYPT_FAILED": "Datei konnte nicht entschlüsselt werden"
     },
     "mimeTypes": {
         "apk": "Android-Paket",
@@ -216,7 +276,7 @@
         "SOURCE_CODE": "Der Quellcode und die Lizenzbedingungen finden sich auf GitHub:",
         "EMOJI_ART": "Verwendete Emoji stammen von <a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>",
         "NOTIFICATION_SOUNDS": "Benachrichtigunstöne &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
-        "LICENSE_LINK_BEFORE": "Lizenzen von verwendeten Open Source Komponenten können",
+        "LICENSE_LINK_BEFORE": "Lizenzen von verwendeten Open-Source-Komponenten können",
         "LICENSE_LINK_TEXT": "im Quellcode",
         "LICENSE_LINK_AFTER": "gefunden werden",
         "CHANGELOG": "Änderungsprotokoll",
@@ -235,7 +295,7 @@
     },
     "version": {
         "NEW_VERSION": "Neue Version Verfügbar",
-        "NEW_VERSION_BODY": "Eine neue Version von Threema Web ({version}) ist verfügbar. Mehr Informationen finden Sie im {changelog}. Drücken Sie \"OK\" um das Update zu aktivieren."
+        "NEW_VERSION_BODY": "Eine neue Version von Threema Web ({version}) ist verfügbar. Mehr Informationen finden Sie im {changelog}. Drücken Sie \"OK\", um das Update zu aktivieren."
     },
     "voip": {
         "CALL_MISSED": "Verpasster Anruf",
@@ -250,5 +310,30 @@
         "ALERT": "Entladen: {percent}%",
         "LEVEL_LOW": "Der Akkustand Ihres Gerätes ist niedrig ({percent}%).",
         "LEVEL_CRITICAL": "Der Akkustand Ihres Gerätes ist kritisch ({percent}%)!"
+    },
+    "date": {
+        "YESTERDAY": "Gestern",
+        "month_short": {
+            "JAN": "Jan.",
+            "FEB": "Feb.",
+            "MAR": "Mär.",
+            "APR": "Apr.",
+            "MAY": "Mai",
+            "JUN": "Jun.",
+            "JUL": "Jul.",
+            "AUG": "Aug.",
+            "SEP": "Sep.",
+            "OCT": "Okt.",
+            "NOV": "Nov.",
+            "DEC": "Dez."
+        }
+    },
+    "connection": {
+        "SESSION_CLOSED_TITLE": "Sitzung geschlossen",
+        "SESSION_STOPPED": "Die Sitzung wurde auf Ihrem Gerät gestoppt.",
+        "SESSION_DELETED": "Die Sitzung wurde auf Ihrem Gerät gelöscht.",
+        "WEBCLIENT_DISABLED": "Threema Web wurde auf Ihrem Gerät deaktiviert.",
+        "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben.",
+        "SESSION_ERROR": "Die Sitzung wurde aufgrund eines Protokollfehlers beendet."
     }
 }

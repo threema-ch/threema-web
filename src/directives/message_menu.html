@@ -1,6 +1,6 @@
 <!-- Non status messages -->
 <md-menu md-position-mode="target-right target" md-offset="0 45">
-    <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+    <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
         <i class="material-icons md-dark md-24">more_vert</i>
     </md-button>
     <md-menu-content width="1">
@@ -18,7 +18,7 @@
         </md-menu-item>
         <md-menu-item ng-if="ctrl.access.quote">
             <md-button ng-click="ctrl.quote()">
-            <md-icon aria-label="Decline" class="material-icons md-24">format_quote</md-icon>
+            <md-icon aria-label="Quote" class="material-icons md-24">format_quote</md-icon>
             <span translate>messenger.QUOTE</span>
             </md-button>
         </md-menu-item>
@@ -29,9 +29,21 @@
             </md-button>
         </md-menu-item>
         <md-menu-item ng-if="ctrl.access.copy">
-            <md-button ng-click="ctrl.copy($event)">
+            <md-button ng-click="ctrl.copyToClipboard($event)">
                 <md-icon aria-label="Copy" class="material-icons md-24">content_copy</md-icon>
                 <span translate>messenger.COPY</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="ctrl.message.events">
+            <md-button ng-click="ctrl.showHistory($event)">
+                <md-icon aria-label="Message history" class="material-icons md-24">history</md-icon>
+                <span translate>messenger.MSG_HISTORY</span>
+            </md-button>
+        </md-menu-item>
+        <md-menu-item ng-if="ctrl.message.type === 'location'">
+            <md-button href="https://www.openstreetmap.org/directions?route=%3B{{ ctrl.message.location.lat }}%2C{{ ctrl.message.location.lon }}#map=14/{{ ctrl.message.location.lat }}/{{ ctrl.message.location.lon }}" target='_blank' rel='noopener noreferrer'>
+                <md-icon aria-label="Navigate" class="material-icons md-24">directions</md-icon>
+                <span translate>messenger.NAVIGATE</span>
             </md-button>
         </md-menu-item>
         <md-menu-item ng-if="ctrl.access.delete">

@@ -15,16 +15,14 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/// <reference types="@saltyrtc/task-webrtc" />
 import * as SDPUtils from 'sdp';
+
+import TaskConnectionState = threema.TaskConnectionState;
 
 /**
  * Wrapper around the WebRTC PeerConnection.
- *
- * TODO: Convert to regular service?
  */
 export class PeerConnectionHelper {
-
     private logTag: string = '[PeerConnectionHelper]';
 
     // Angular services
@@ -38,11 +36,8 @@ export class PeerConnectionHelper {
     private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask;
 
     // Calculated connection state
-    public connectionState: threema.RTCConnectionState = 'new';
-    public onConnectionStateChange: (state: threema.RTCConnectionState) => void = null;
-
-    // Internal callback when connection closes
-    private onConnectionClosed: () => void = null;
+    public connectionState: TaskConnectionState = TaskConnectionState.New;
+    public onConnectionStateChange: (state: TaskConnectionState) => void = null;
 
     // Debugging
     private censorCandidates: boolean;
@@ -122,19 +117,19 @@ export class PeerConnectionHelper {
             this.$rootScope.$apply(() => {
                 switch (this.pc.iceConnectionState) {
                     case 'new':
-                        this.setConnectionState('new');
+                        this.setConnectionState(TaskConnectionState.New);
                         break;
                     case 'checking':
                     case 'disconnected':
-                        this.setConnectionState('connecting');
+                        this.setConnectionState(TaskConnectionState.Connecting);
                         break;
                     case 'connected':
                     case 'completed':
-                        this.setConnectionState('connected');
+                        this.setConnectionState(TaskConnectionState.Connected);
                         break;
                     case 'failed':
                     case 'closed':
-                        this.setConnectionState('disconnected');
+                        this.setConnectionState(TaskConnectionState.Disconnected);
                         break;
                     default:
                         this.$log.warn(this.logTag, 'Ignored ICE connection state change to',
@@ -181,75 +176,38 @@ export class PeerConnectionHelper {
     /**
      * Create a new secure data channel.
      */
-    public createSecureDataChannel(label: string, onopenHandler?): saltyrtc.tasks.webrtc.SecureDataChannel {
+    public createSecureDataChannel(label: string): saltyrtc.tasks.webrtc.SecureDataChannel {
         const dc: RTCDataChannel = this.pc.createDataChannel(label);
         dc.binaryType = 'arraybuffer';
-        const sdc: saltyrtc.tasks.webrtc.SecureDataChannel = this.webrtcTask.wrapDataChannel(dc);
-        if (onopenHandler !== undefined) {
-            sdc.onopen = onopenHandler;
-        }
-        return sdc;
+        return this.webrtcTask.wrapDataChannel(dc);
     }
 
     /**
      * Set the connection state and update listeners.
      */
-    private setConnectionState(state: threema.RTCConnectionState) {
+    private setConnectionState(state: TaskConnectionState) {
         if (state !== this.connectionState) {
             this.connectionState = state;
             if (this.onConnectionStateChange !== null) {
                 this.$timeout(() => this.onConnectionStateChange(state), 0);
             }
-            if (this.onConnectionClosed !== null && state === 'disconnected') {
-                this.$timeout(() => this.onConnectionClosed(), 0);
-            }
         }
     }
 
     /**
-     * Close the peer connection.
-     *
-     * Return a promise that resolves once the connection is actually closed.
+     * Unbind all event handler and abruptly close the peer connection.
      */
-    public close(): ng.IPromise<{}> {
-        return this.$q((resolve, reject) => {
-            const signalingClosed = this.pc.signalingState as string === 'closed'; // Legacy
-            const connectionClosed = this.pc.connectionState === 'closed';
-            if (!signalingClosed && !connectionClosed) {
-
-                // If connection state is not yet "disconnected", register a callback
-                // for the disconnect event.
-                if (this.connectionState !== 'disconnected') {
-                    // Disconnect timeout
-                    let timeout: ng.IPromise<any>;
-
-                    // Handle connection closed event
-                    this.onConnectionClosed = () => {
-                        this.$timeout.cancel(timeout);
-                        this.onConnectionClosed = null;
-                        resolve();
-                    };
-
-                    // Launch timeout
-                    timeout = this.$timeout(() => {
-                        this.onConnectionClosed = null;
-                        reject('Timeout');
-                    }, 2000);
-                }
-
-                // Close connection
-                setTimeout(() => {
-                    this.pc.close();
-                }, 0);
-
-                // If connection state is already "disconnected", resolve immediately.
-                if (this.connectionState === 'disconnected') {
-                    resolve();
-                }
-            } else {
-                resolve();
-            }
-        });
+    public close(): void {
+        this.webrtcTask.off();
+        this.pc.onnegotiationneeded = null;
+        this.pc.onconnectionstatechange = null;
+        this.pc.onsignalingstatechange = null;
+        this.pc.onicecandidate = null;
+        this.pc.onicecandidateerror = null;
+        this.pc.oniceconnectionstatechange = null;
+        this.pc.onicegatheringstatechange = null;
+        this.pc.ondatachannel = null;
+        this.pc.close();
     }
 
     /**

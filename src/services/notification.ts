@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import {SettingsService} from './settings';
 
 export class NotificationService {
@@ -26,7 +28,7 @@ export class NotificationService {
 
     private $log: ng.ILogService;
     private $window: ng.IWindowService;
-    private $state: ng.ui.IStateService;
+    private $state: UiStateService;
 
     private settingsService: SettingsService;
     private logTag = '[NotificationService]';
@@ -48,7 +50,7 @@ export class NotificationService {
     public static $inject = ['$log', '$window', '$state', 'SettingsService'];
 
     constructor($log: ng.ILogService, $window: ng.IWindowService,
-                $state: ng.ui.IStateService, settingsService: SettingsService) {
+                $state: UiStateService, settingsService: SettingsService) {
         this.$log = $log;
         this.$window = $window;
         this.$state = $state;
@@ -174,7 +176,6 @@ export class NotificationService {
 
     /**
      * Returns if the user has granted the notification permission
-     * @returns {boolean}
      */
     public getNotificationPermission(): boolean {
         return this.notificationPermission;
@@ -182,7 +183,6 @@ export class NotificationService {
 
     /**
      * Returns if the user wants to receive notifications
-     * @returns {boolean}
      */
     public getWantsNotifications(): boolean {
         return this.desktopNotifications;
@@ -190,7 +190,6 @@ export class NotificationService {
 
     /**
      * Returns if the user wants a message preview in the notification
-     * @returns {boolean}
      */
     public getWantsPreview(): boolean {
         return this.notificationPreview;
@@ -198,7 +197,6 @@ export class NotificationService {
 
     /**
      * Returns if the user wants sound when a new message arrives
-     * @returns {boolean}
      */
     public getWantsSound(): boolean {
         return this.notificationSound;
@@ -206,7 +204,6 @@ export class NotificationService {
 
     /**
      * Returns if the notification api is available
-     * @returns {boolean}
      */
     public isNotificationApiAvailable(): boolean {
         return this.notificationAPIAvailable;
@@ -214,7 +211,6 @@ export class NotificationService {
 
     /**
      * Sets if the user wants desktop notifications
-     * @param wantsNotifications
      */
     public setWantsNotifications(wantsNotifications: boolean): void {
         this.$log.debug(this.logTag, 'Requesting notification preference change to', wantsNotifications);
@@ -228,7 +224,6 @@ export class NotificationService {
 
     /**
      * Sets if the user wants a message preview
-     * @param wantsPreview
      */
     public setWantsPreview(wantsPreview: boolean): void {
         this.$log.debug(this.logTag, 'Requesting preview preference change to', wantsPreview);
@@ -238,7 +233,6 @@ export class NotificationService {
 
     /**
      * Sets if the user wants sound when a new message arrives
-     * @param wantsSound
      */
     public setWantsSound(wantsSound: boolean): void {
         this.$log.debug(this.logTag, 'Requesting sound preference change to', wantsSound);
@@ -248,8 +242,6 @@ export class NotificationService {
 
     /**
      * Stores the given key/value pair in local storage
-     * @param key
-     * @param value
      */
     private storeSetting(key: string, value: string): void {
         this.settingsService.storeUntrustedKeyValuePair(key, value);
@@ -257,11 +249,67 @@ export class NotificationService {
 
     /**
      * Retrieves the value for the given key from local storage
-     * @param key
-     * @returns {string}
      */
     private retrieveSetting(key: string): string {
         return this.settingsService.retrieveUntrustedKeyValuePair(key);
+    }
+
+    /**
+     * Parse the conversation notification settings and return a simplified version.
+     */
+    public getAppNotificationSettings(conversation: threema.Conversation): threema.SimplifiedNotificationSettings {
+        if (!conversation.notifications) {
+            return {
+                sound: {muted: false},
+                dnd: {enabled: false, mentionOnly: false},
+            };
+        }
+
+        const sound = conversation.notifications.sound;
+        const dnd = conversation.notifications.dnd;
+
+        const simpleSound = {
+            muted: !(sound.mode === threema.NotificationSoundMode.Default),
+        };
+
+        const simpleDnd = {
+            enabled: dnd.mode === threema.NotificationDndMode.On,
+            mentionOnly: (dnd.mentionOnly === undefined || dnd.mentionOnly === null) ? false : dnd.mentionOnly,
+        };
+
+        if (dnd.mode === threema.NotificationDndMode.Until) {
+            if (!dnd.until || dnd.until <= 0) {
+                simpleDnd.enabled = false;
+            } else {
+                const until: Date = new Date(dnd.until);
+                const now: Date = new Date();
+                simpleDnd.enabled = until > now;
+            }
+        }
+
+        // Mention only does not make sense if DND is not enabled at all.
+        if (!simpleDnd.enabled) {
+            simpleDnd.mentionOnly = false;
+        }
+
+        return {
+            sound: simpleSound,
+            dnd: simpleDnd,
+        };
+    }
+
+    /**
+     * Return a simplified DND mode.
+     *
+     * This will return either 'on', 'off' or 'mention'.
+     * The 'until' mode will be processed depending on the expiration timestamp.
+     */
+    public getDndModeSimplified(conversation: threema.Conversation): 'on' | 'mention' | 'off' {
+        const simplified = this.getAppNotificationSettings(conversation);
+        if (simplified.dnd.enabled) {
+            return simplified.dnd.mentionOnly ? 'mention' : 'on';
+        }
+        return 'off';
     }
 
     /**
@@ -283,10 +331,11 @@ export class NotificationService {
                             avatar: string = '/img/threema-64x64.png',
                             clickCallback?: any,
                             forceShowBody: boolean = false,
-                            overwriteOlder: boolean = false): boolean {
+                            overwriteOlder: boolean = false,
+                            forceMute: boolean = false): boolean {
 
         // Play sound on new message if the user wants to
-        if (this.notificationSound) {
+        if (this.notificationSound && !forceMute) {
             const audio = new Audio(NotificationService.NOTIFICATION_SOUND);
             audio.play();
         }

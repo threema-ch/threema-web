@@ -33,7 +33,7 @@ export default [
                 this.contact = () => webClientService.contacts.get(this.quote.identity);
             }],
             template: `
-                <div class="message-quote-content" ng-style="{'border-color': ctrl.contact().color}">
+                <div class="message-quote-content" ng-style="{'border-color': ctrl.contact().color}" role="blockquote">
                     <span class="message-name" ng-style="{'color': ctrl.contact().color}"
                         ng-bind-html="ctrl.contact().displayName | escapeHtml | emojify"></span>
                     <span class="message-quote" ng-bind-html="ctrl.quote.text | escapeHtml | markify | emojify | linkify | mentionify | nlToBr"></span>

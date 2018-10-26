@@ -15,5 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare function sha224(val: string | Array<any> | Uint8Array | ArrayBuffer): string;
-declare function sha256(val: string | Array<any> | Uint8Array | ArrayBuffer): string;
+// This file contains helper functions related to messages.
+// Try to keep all functions pure!
+
+/**
+ * Return wether a message is a "first unread" status message.
+ */
+export function isFirstUnreadStatusMessage(message: threema.Message) {
+    return message.type === 'status' && message.statusType === 'firstUnreadMessage';
+}

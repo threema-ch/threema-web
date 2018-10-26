@@ -1,6 +1,11 @@
 <div id="welcome">
     <div class="center-block text-center welcome">
         <div ng-if="(ctrl.state === 'connecting' || ctrl.state === 'waiting') && ctrl.mode === 'scan'" class="scan">
+            <div class="ios-only-warning" ng-if="ctrl.browser.safari">
+                <img src="img/safari.svg" alt="Safari">
+                <p><strong translate>common.NOTE</strong> <span translate>welcome.SAFARI</span></p>
+            </div>
+
             <p class="instructions" translate>welcome.PLEASE_SCAN</p>
             <qrcode version="{{ ctrl.qrCode.version }}"
                     id="connecting-code"
@@ -8,12 +13,12 @@
                     size="{{ ctrl.qrCode.size }}" data="{{ ctrl.qrCode.data }}"></qrcode>
             <div class="password-entry">
                 <label>
-                    <p translate>welcome.CHOOSE_PASSWORD</p>
+                    <p translate id="aria-label-password-create">welcome.CHOOSE_PASSWORD</p>
                     <form autocomplete="off">
                         <md-input-container md-no-float class="md-block">
                             <input type="password"
                                    ng-model="ctrl.password"
-                                   aria-label="Password"
+                                   aria-labelledby="aria-label-password-create"
                                    translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}"
                                    autocomplete="new-password">
                         </md-input-container>
@@ -22,21 +27,24 @@
             </div>
         </div>
 
-        <div ng-if="ctrl.state === 'connecting' && ctrl.mode === 'unlock'" class="unlock">
+        <div ng-if="(ctrl.state === 'new' || ctrl.state === 'connecting') && ctrl.mode === 'unlock'" class="unlock">
             <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
             <div class="password-entry">
                 <label>
-                    <p translate>welcome.ENTER_PASSWORD</p>
+                    <p translate id="aria-label-password-reconnecte">welcome.ENTER_PASSWORD</p>
                     <form ng-submit="ctrl.unlockConfirm()">
                         <md-input-container md-no-float class="md-block">
                             <input type="password"
                                    ng-model="ctrl.password"
+                                   ng-disabled="ctrl.formLocked"
                                    autofocus
-                                   aria-label="Password"
-                                   translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}"
+                                   aria-labelledby="aria-label-password-reconnect"
+                                   translate-attr="{'placeholder': 'welcome.PASSWORD'}"
                                    autocomplete="current-password">
                         </md-input-container>
-                        <md-button type="submit" class="md-raised md-primary"><span translate>welcome.BTN_RECONNECT</span></md-button>
+                        <md-button type="submit" class="md-raised md-primary" translate translate-attr-aria-label="welcome.BTN_RECONNECT">
+                            <span translate aria-hidden="true">welcome.BTN_RECONNECT</span>
+                        </md-button>
                     </form>
                     <p>
                         <span translate>welcome.ALTERNATIVELY</span>
@@ -49,9 +57,9 @@
         <div ng-if="ctrl.showLoadingIndicator">
             <h2 class="instructions" translate>welcome.CONNECTING</h2>
             <div class="loading">
-                <md-progress-circular md-mode="determinate" value="{{ ctrl.progress }}" md-diameter="250">
+                <md-progress-circular md-mode="determinate" value="{{ ctrl.progress }}" md-diameter="250" ng-aria-disable>
                 </md-progress-circular>
-                <div class="info">
+                <div class="info" aria-live="polite" ng-aria-disable>
                     <p class="percentage">{{ ctrl.progress }}%</p>
                     <p ng-if="ctrl.state === 'push'" translate>welcome.WAITING_FOR_PUSH</p>
                     <p ng-if="ctrl.state === 'peer_handshake'" translate>welcome.CONNECTING_TO_APP</p>
@@ -75,22 +83,21 @@
                                 <i class="material-icons md-dark md-14">help</i>
                                 <span translate>troubleshooting.SESSION_DELETED</span>
                             </li>
-                            <li ng-if="ctrl.state === 'peer_handshake'">
+                            <li ng-if="ctrl.state === 'peer_handshake' && ctrl.showWebrtcTroubleshooting">
                                 <i class="material-icons md-dark md-14">help</i>
                                 <span translate>troubleshooting.PLUGIN</span>
                             </li>
-                            <li ng-if="ctrl.state === 'peer_handshake'">
+                            <li ng-if="ctrl.state === 'peer_handshake' && ctrl.showWebrtcTroubleshooting">
                                 <i class="material-icons md-dark md-14">help</i>
                                 <span translate>troubleshooting.ADBLOCKER</span>
                             </li>
                         </ul>
-                        <p class="forget" ng-if="ctrl.state === 'push'">
-                            <span translate>welcome.IF_YOU_WANT</span>
-                            <a href="#" ng-click="ctrl.deleteSession()" translate>welcome.FORGET_SESSION</a>.
-                        </p>
-                        <div class="protocol-updated" ng-if="ctrl.config.PREV_PROTOCOL_LAST_VERSION !== null">
-                            <p ng-bind-html="ctrl.pleaseUpdateAppMsg"></p>
-                        </div>
+                        <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.deleteSession()" ng-if="ctrl.state === 'push'" aria-labelledby="aria-label-forget">
+                           <span translate id="aria-label-forget">welcome.FORGET_SESSION_BTN</span>
+                        </md-button>
+                        <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
+                            <i class="material-icons">refresh</i> <span translate id="aria-label-reload">welcome.RELOAD</span>
+                        </md-button>
                     </div>
                 </div>
             </div>
@@ -121,6 +128,17 @@
         <div ng-if="ctrl.state === 'closed'">
             <p class="state error">
                 <strong><span translate>common.ERROR</span>:</strong> <span translate>connecting.CONNECTION_CLOSED</span><br>
+                <span translate>welcome.PLEASE_RELOAD</span>
+            </p>
+            <br>
+            <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
+                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+            </md-button>
+        </div>
+
+        <div ng-if="ctrl.state === 'reconnect_failed'">
+            <p class="state error">
+                <strong><span translate>common.ERROR</span>:</strong> <span translate>connecting.RECONNECT_FAILED</span><br>
                 <span translate>welcome.PLEASE_RELOAD</span>
             </p>
             <br>

@@ -15,104 +15,69 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {BrowserInfo} from '../helpers/browser_info';
+
+import BrowserName = threema.BrowserName;
+
 export class BrowserService {
-    private browser: threema.BrowserInfo;
+    private logTag: string = '[BrowserService]';
+
+    private browser: BrowserInfo;
     private $log: ng.ILogService;
-    private isPageVisible = true;
+    private $window: ng.IWindowService;
+    private supportsExtendedLocaleCompareCache: boolean;
 
-    public static $inject = ['$log'];
-
-    constructor($log: ng.ILogService) {
+    public static $inject = ['$log', '$window'];
+    constructor($log: ng.ILogService, $window: ng.IWindowService) {
         // Angular services
         this.$log = $log;
-        this.initializePageVisibility();
+        this.$window = $window;
     }
 
-    private initializePageVisibility() {
-        const onChange = (isVisible: any) => {
-            if (this.isPageVisible !== isVisible) {
-                this.isPageVisible = isVisible;
-            }
-        };
-
-        let pageHiddenKey = 'hidden';
-
-        // add default visibility change listener
-        let defaultListener;
-        if (pageHiddenKey in document) {
-            defaultListener = 'visibilitychange';
-        } else if ('mozHidden' in document) {
-            pageHiddenKey = 'mozHidden';
-            defaultListener = 'mozvisibilitychange';
-        } else if ('webkitHidden' in document) {
-            pageHiddenKey = 'webkitHidden';
-            defaultListener = 'webkitvisibilitychange';
-        } else if ('msHidden' in document) {
-            pageHiddenKey = 'msHidden';
-            defaultListener = 'msvisibilitychange';
-        }
-
-        document.addEventListener(defaultListener, function() {
-            onChange(!this[pageHiddenKey]);
-        });
-
-        // configure other document and window events
-        const map = {
-            focus: true,
-            blur: false,
-        };
-
-        for (const event in map) {
-            if (map[event] !== undefined) {
-                document.addEventListener(event, () => {
-                    onChange(map[event]);
-                }, false);
-
-                window.addEventListener(event, () => {
-                    onChange(map[event]);
-                }, false);
-            }
-        }
-
-        // initial visible state set
-        if (document[pageHiddenKey] !== undefined ) {
-            onChange(!document[pageHiddenKey]);
-        }
-    }
-
-    public getBrowser(): threema.BrowserInfo {
+    public getBrowser(): BrowserInfo {
         if (this.browser === undefined) {
-            this.browser = {
+            const browser = {
                 chrome: false,
+                chromeIos: false,
                 firefox: false,
-                msie: false,
+                firefoxIos: false,
+                ie: false,
+                edge: false,
                 opera: false,
                 safari: false,
-                version: '',
-                textInfo: 'Unknown',
-            } as threema.BrowserInfo;
+            };
 
-            const uagent = navigator.userAgent.toLowerCase();
+            const uagent = this.$window.navigator.userAgent.toLowerCase();
 
-            this.browser.chrome  = /webkit/.test(uagent)  && /chrome/.test(uagent) && !/edge/.test(uagent);
-            this.browser.firefox = /mozilla/.test(uagent) && /firefox/.test(uagent);
-            this.browser.msie    = /msie/.test(uagent) || /trident/.test(uagent) || /edge/.test(uagent);
-            this.browser.safari  = /safari/.test(uagent)  && /applewebkit/.test(uagent) && !/chrome/.test(uagent);
-            this.browser.opera   = /mozilla/.test(uagent) && /applewebkit/.test(uagent)
+            browser.chrome = /webkit/.test(uagent) && /chrome/.test(uagent) && !/edge/.test(uagent);
+            browser.chromeIos = /mozilla/.test(uagent) && /crios/.test(uagent);
+            browser.firefox = /mozilla/.test(uagent) && /firefox/.test(uagent);
+            browser.firefoxIos = /mozilla/.test(uagent) && /fxios/.test(uagent);
+            browser.ie = (/msie/.test(uagent) || /trident/.test(uagent)) && !/edge/.test(uagent);
+            browser.edge = /edge/.test(uagent);
+            browser.safari = /safari/.test(uagent) && /applewebkit/.test(uagent)
+                          && !/chrome/.test(uagent) && !/fxios/.test(uagent) && !/crios/.test(uagent);
+            browser.opera = /mozilla/.test(uagent) && /applewebkit/.test(uagent)
                 && /chrome/.test(uagent) && /safari/.test(uagent) && /opr/.test(uagent);
-            this.browser.version = '';
 
-            if (this.browser.opera && this.browser.chrome) {
-                this.browser.chrome = false;
+            if (browser.opera && browser.chrome) {
+                browser.chrome = false;
             }
 
-            for (const x in this.browser) {
-                if (this.browser[x]) {
+            let version = null;
+            for (const x in browser) {
+                if (browser[x]) {
                     let b;
-                    if (x === 'msie') {
-                        b = 'msie|edge';
+                    if (x === 'ie') {
+                        b = 'msie';
+                    } else if (x === 'edge') {
+                        b = 'edge';
                     } else if (x === 'opera') {
                         b = 'opr';
+                    } else if (x === 'firefoxIos') {
+                        b = 'fxios';
+                    } else if (x === 'chromeIos') {
+                        b = 'crios';
                     } else if (x === 'safari') {
                         b = 'version';
                     } else {
@@ -120,27 +85,82 @@ export class BrowserService {
                     }
                     let match = uagent.match(new RegExp('(' + b + ')( |\/)([0-9]+)'));
 
+                    let versionString;
                     if (match) {
-                        this.browser.version = match[3];
+                        versionString = match[3];
                     } else {
                         match = uagent.match(new RegExp('rv:([0-9]+)'));
-                        this.browser.version = match ? match[1] : '';
+                        versionString = match ? match[1] : '';
                     }
+                    const versionInt: number = parseInt(versionString, 10);
+                    version = isNaN(versionInt) ? undefined : versionInt;
+
                     break;
                 }
             }
 
-            if (this.browser.chrome) { this.browser.textInfo = 'Chrome ' + this.browser.version; }
-            if (this.browser.firefox) { this.browser.textInfo = 'Firefox ' + this.browser.version; }
-            if (this.browser.msie) { this.browser.textInfo = 'IE/Edge ' + this.browser.version; }
-            if (this.browser.safari) { this.browser.textInfo = 'Safari ' + this.browser.version; }
-            if (this.browser.opera) { this.browser.textInfo = 'Opera ' + this.browser.version; }
+            if (browser.chrome) {
+                this.browser = new BrowserInfo(uagent, BrowserName.Chrome, version);
+            }
+            if (browser.chromeIos) {
+                this.browser = new BrowserInfo(uagent, BrowserName.ChromeIos, version, true);
+            }
+            if (browser.firefox) {
+                this.browser = new BrowserInfo(uagent, BrowserName.Firefox, version);
+            }
+            if (browser.firefoxIos) {
+                this.browser = new BrowserInfo(uagent, BrowserName.FirefoxIos, version, true);
+            }
+            if (browser.ie) {
+                this.browser = new BrowserInfo(uagent, BrowserName.InternetExplorer, version);
+            }
+            if (browser.edge) {
+                this.browser = new BrowserInfo(uagent, BrowserName.Edge, version);
+            }
+            if (browser.safari) {
+                const mobile = /mobile/.test(uagent);
+                this.browser = new BrowserInfo(uagent, BrowserName.Safari, version, mobile);
+            }
+            if (browser.opera) {
+                this.browser = new BrowserInfo(uagent, BrowserName.Opera, version);
+            }
         }
 
         return this.browser;
     }
 
-    public isVisible() {
-        return this.isPageVisible;
+    /**
+     * Return whether the current browser supports the WebRTC task or not.
+     */
+    public supportsWebrtcTask() {
+        if (this.browser === undefined) {
+            this.getBrowser();
+        }
+        return this.browser.supportsWebrtcTask();
+    }
+
+    /**
+     * Return whether the browser supports extended `string.localeCompare` options.
+     */
+    public supportsExtendedLocaleCompare() {
+        if (this.supportsExtendedLocaleCompareCache !== undefined) {
+            return this.supportsExtendedLocaleCompareCache;
+        }
+
+        function getSupport(): boolean {
+            try {
+                'foo'.localeCompare('bar', 'i');
+            } catch (e) {
+                return e.name === 'RangeError';
+            }
+            return false;
+        }
+
+        const support = getSupport();
+        this.supportsExtendedLocaleCompareCache = support;
+        this.$log.debug(this.logTag, 'Browser',
+            support ? 'supports' : 'does not support',
+            'extended locale compare options');
+        return support;
     }
 }

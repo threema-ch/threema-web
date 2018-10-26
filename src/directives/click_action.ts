@@ -14,6 +14,9 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import {UriService} from '../services/uri';
 import {WebClientService} from '../services/webclient';
 
@@ -22,7 +25,12 @@ export default [
     '$state',
     'UriService',
     'WebClientService',
-    function($timeout, $state: ng.ui.IStateService, uriService: UriService, webClientService: WebClientService) {
+    function(
+        $timeout: ng.ITimeoutService,
+        $state: UiStateService,
+        uriService: UriService,
+        webClientService: WebClientService,
+    ) {
 
         const validateThreemaId = (id: string): boolean => {
             return id !== undefined && id !== null && /^[0-9A-Z]{8}/.test(id);

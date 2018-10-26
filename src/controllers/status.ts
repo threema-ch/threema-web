@@ -15,23 +15,29 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {StateService as UiStateService} from '@uirouter/angularjs';
+
 import {ControllerService} from '../services/controller';
 import {StateService} from '../services/state';
+import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
+
+import GlobalConnectionState = threema.GlobalConnectionState;
+import DisconnectReason = threema.DisconnectReason;
 
 /**
  * This controller handles state changes globally.
  *
  * It also controls auto-reconnecting and the connection status indicator bar.
  *
- * Status updates should be done through the status service.
+ * Status updates should be done through the state service.
  */
 export class StatusController {
 
     private logTag: string = '[StatusController]';
 
     // State variable
-    private state: threema.GlobalConnectionState = 'error';
+    private state = GlobalConnectionState.Error;
 
     // Expanded status bar
     public expandStatusBar = false;
@@ -43,19 +49,22 @@ export class StatusController {
 
     // Angular services
     private $timeout: ng.ITimeoutService;
-    private $state: ng.ui.IStateService;
     private $log: ng.ILogService;
+    private $state: UiStateService;
 
     // Custom services
-    private stateService: StateService;
-    private webClientService: WebClientService;
     private controllerService: ControllerService;
+    private stateService: StateService;
+    private timeoutService: TimeoutService;
+    private webClientService: WebClientService;
 
-    public static $inject = ['$scope', '$timeout', '$log', '$state', 'StateService',
-        'WebClientService', 'ControllerService'];
-    constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: ng.ui.IStateService,
-                stateService: StateService, webClientService: WebClientService,
-                controllerService: ControllerService) {
+    public static $inject = [
+        '$scope', '$timeout', '$log', '$state',
+        'ControllerService', 'StateService', 'TimeoutService', 'WebClientService',
+    ];
+    constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: UiStateService,
+                controllerService: ControllerService, stateService: StateService,
+                timeoutService: TimeoutService, webClientService: WebClientService) {
 
         // Angular services
         this.$timeout = $timeout;
@@ -63,17 +72,15 @@ export class StatusController {
         this.$state = $state;
 
         // Custom services
-        this.stateService = stateService;
-        this.webClientService = webClientService;
         this.controllerService = controllerService;
+        this.stateService = stateService;
+        this.timeoutService = timeoutService;
+        this.webClientService = webClientService;
 
-        // Watch state changes
-        $scope.$watch(
-            () => stateService.state,
-            (newValue: threema.GlobalConnectionState, oldValue: threema.GlobalConnectionState) => {
-                if (oldValue !== newValue) {
-                    this.onStateChange(newValue, oldValue);
-                }
+        // Register event handlers
+        this.stateService.evtGlobalConnectionStateChange.attach(
+            (stateChange: threema.GlobalConnectionStateChange) => {
+                this.onStateChange(stateChange.state, stateChange.prevState);
             },
         );
     }
@@ -82,7 +89,7 @@ export class StatusController {
      * Return the prefixed status.
      */
     public get statusClass(): string {
-        return 'status-' + this.state;
+        return 'status-task-' + this.webClientService.chosenTask + ' status-' + this.state;
     }
 
     /**
@@ -90,25 +97,39 @@ export class StatusController {
      */
     private onStateChange(newValue: threema.GlobalConnectionState,
                           oldValue: threema.GlobalConnectionState): void {
+        this.$log.debug(this.logTag, 'State change:', oldValue, '->', newValue);
         if (newValue === oldValue) {
             return;
         }
         this.state = newValue;
+
+        const isWebrtc = this.webClientService.chosenTask === threema.ChosenTask.WebRTC;
+        const isRelayedData = this.webClientService.chosenTask === threema.ChosenTask.RelayedData;
+
         switch (newValue) {
             case 'ok':
                 this.collapseStatusBar();
                 break;
             case 'warning':
-                if (oldValue === 'ok') {
+                if (oldValue === 'ok' && isWebrtc) {
                     this.scheduleStatusBar();
+                }
+                if (this.stateService.wasConnected) {
+                    this.webClientService.clearIsTypingFlags();
+                }
+                if (this.stateService.wasConnected && isRelayedData) {
+                    this.reconnectIos();
                 }
                 break;
             case 'error':
-                if (this.stateService.wasConnected) {
+                if (this.stateService.wasConnected && isWebrtc) {
                     if (oldValue === 'ok') {
                         this.scheduleStatusBar();
                     }
-                    this.reconnect();
+                    this.reconnectAndroid();
+                }
+                if (this.stateService.wasConnected && isRelayedData) {
+                    this.reconnectIos();
                 }
                 break;
             default:
@@ -120,9 +141,9 @@ export class StatusController {
      * Show full status bar with a certain delay.
      */
     private scheduleStatusBar(): void {
-        this.expandStatusBarTimer = this.$timeout(() => {
+        this.expandStatusBarTimer = this.timeoutService.register(() => {
             this.expandStatusBar = true;
-        }, this.expandStatusBarTimeout);
+        }, this.expandStatusBarTimeout, true, 'expandStatusBar');
     }
 
     /**
@@ -131,15 +152,15 @@ export class StatusController {
     private collapseStatusBar(): void {
         this.expandStatusBar = false;
         if (this.expandStatusBarTimer !== null) {
-            this.$timeout.cancel(this.expandStatusBarTimer);
+            this.timeoutService.cancel(this.expandStatusBarTimer);
         }
     }
 
     /**
-     * Attempt to reconnect after a connection loss.
+     * Attempt to reconnect an Android device after a connection loss.
      */
-    private reconnect(): void {
-        this.$log.warn(this.logTag, 'Connection lost. Attempting to reconnect...');
+    private reconnectAndroid(): void {
+        this.$log.warn(this.logTag, 'Connection lost (Android). Attempting to reconnect...');
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;
@@ -157,15 +178,13 @@ export class StatusController {
             // Collapse status bar
             this.collapseStatusBar();
 
-            // Reset state
-            this.stateService.reset();
-
-            // Redirect to welcome page
-            this.$state.go('welcome', {
-                initParams: {
-                    keyStore: originalKeyStore,
-                    peerTrustedKey: originalPeerPermanentKeyBytes,
-                },
+            // Reset connection & state
+            this.webClientService.stop({
+                reason: DisconnectReason.SessionError,
+                send: false,
+                // TODO: Use welcome.error once we have it
+                close: 'welcome',
+                connectionBuildupState: 'reconnect_failed',
             });
         };
 
@@ -185,11 +204,16 @@ export class StatusController {
 
         // Function to soft-reconnect. Does not reset the loaded data.
         const doSoftReconnect = () => {
-            const deleteStoredData = false;
-            const resetPush = false;
-            const redirect = false;
-            this.webClientService.stop(true, deleteStoredData, resetPush, redirect);
-            this.webClientService.init(originalKeyStore, originalPeerPermanentKeyBytes, false);
+            this.webClientService.stop({
+                reason: DisconnectReason.SessionStopped,
+                send: true,
+                close: false,
+            });
+            this.webClientService.init({
+                keyStore: originalKeyStore,
+                peerTrustedKey: originalPeerPermanentKeyBytes,
+                resume: true,
+            });
             this.webClientService.start().then(
                 () => {
                     // Cancel timeout
@@ -227,6 +251,84 @@ export class StatusController {
         doSoftReconnect();
 
         // TODO: Handle server closing state
+    }
+
+    /**
+     * Attempt to reconnect an iOS device after a connection loss.
+     */
+    private reconnectIos(): void {
+        this.$log.info(this.logTag, 'Connection lost (iOS). Attempting to reconnect...');
+
+        // Get original keys
+        const originalKeyStore = this.webClientService.salty.keyStore;
+        const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+
+        // Delay connecting a bit to wait for old websocket to close
+        // TODO: Make this more robust and hopefully faster
+        const startTimeout = 500;
+        this.$log.debug(this.logTag, 'Stopping old connection');
+        this.webClientService.stop({
+            reason: DisconnectReason.SessionStopped,
+            send: true,
+            close: false,
+            connectionBuildupState: 'push',
+        });
+
+        // Only send a push...
+        const push = ((): { send: boolean, reason?: string } => {
+            // ... if never left the 'welcome' page.
+            if (this.$state.includes('welcome')) {
+                return {
+                    send: true,
+                    reason: 'still on welcome page',
+                };
+            }
+
+            // ... if there is at least one unacknowledged wire message.
+            const pendingWireMessages = this.webClientService.unacknowledgedWireMessages;
+            if (pendingWireMessages > 0) {
+                return {
+                    send: true,
+                    reason: `${pendingWireMessages} unacknowledged wire messages`,
+                };
+            }
+
+            // ... otherwise, don't push!
+            return {
+                send: false,
+            };
+        })();
+
+        this.$timeout(() => {
+            if (push.send) {
+                this.$log.debug(`Starting new connection with push, reason: ${push.reason}`);
+            } else {
+                this.$log.debug('Starting new connection without push');
+            }
+            this.webClientService.init({
+                keyStore: originalKeyStore,
+                peerTrustedKey: originalPeerPermanentKeyBytes,
+                resume: true,
+            });
+
+            this.webClientService.start(!push.send).then(
+                () => { /* ok */ },
+                (error) => {
+                    this.$log.error(this.logTag, 'Error state:', error);
+                    this.webClientService.stop({
+                        reason: DisconnectReason.SessionError,
+                        send: false,
+                        // TODO: Use welcome.error once we have it
+                        close: 'welcome',
+                        connectionBuildupState: 'reconnect_failed',
+                    });
+                },
+                // Progress
+                (progress: threema.ConnectionBuildupStateChange) => {
+                    this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
+                },
+            );
+        }, startTimeout);
     }
 
     public wide(): boolean {

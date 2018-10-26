@@ -7,7 +7,14 @@ describe('MessageService', function() {
 
     beforeEach(function() {
 
-        // load threema services
+        // Inject constants
+        module(($provide) => {
+            $provide.constant('CONFIG', {
+                'DEBUG': true,
+            });
+        });
+
+        // Load threema services
         module('3ema.services');
 
         // Inject the MessageService
@@ -24,11 +31,11 @@ describe('MessageService', function() {
         it('invalid arguments', () => {
             test().toEqual(jasmine.objectContaining({
                 quote: false,
+                copy: false,
                 ack: false,
                 dec: false,
                 delete: false,
                 download: false,
-                copy: false,
             }));
         })
 
@@ -48,42 +55,42 @@ describe('MessageService', function() {
                     test({isOutbox: false, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: true, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
 
                     test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
                 });
 
@@ -91,42 +98,42 @@ describe('MessageService', function() {
                     test({isOutbox: false, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: true, type: 'text'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
                     test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: false,
                             dec: true && canAckDec,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
 
 
                     test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver)
                         .toEqual(jasmine.objectContaining({
                             quote: true,
+                            copy: true,
                             ack: true && canAckDec,
                             dec: false,
                             delete: true,
                             download: false,
-                            copy: false,
                         }));
                 });
 
@@ -135,11 +142,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: false,
+                                copy: false,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
 
@@ -147,11 +154,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type, caption: 'test'}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: true,
+                                copy: true,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
 
@@ -159,11 +166,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: false,
+                                copy: false,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
 
@@ -172,11 +179,11 @@ describe('MessageService', function() {
                         test({isOutbox: false, type: type, caption: 'test'}, receiver)
                             .toEqual(jasmine.objectContaining({
                                 quote: true,
+                                copy: true,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
                                 delete: true,
                                 download: true,
-                                copy: false,
                             }));
                     });
                 });
@@ -255,65 +262,4 @@ describe('MessageService', function() {
         });
     });
 
-    describe('getFileName', () => {
-        it('image', () => {
-            expect(messageService.getFileName({type: 'image', id: '123'}))
-                .toEqual('image-123.jpg');
-        });
-
-        it('audio', () => {
-            expect(messageService.getFileName({type: 'audio', id: '123'}))
-                .toEqual('audio-123.mp4');
-        });
-
-        it('video', () => {
-            expect(messageService.getFileName({type: 'video', id: '123'}))
-                .toEqual('video-123.mpg');
-        });
-
-        it('file', () => {
-            expect(messageService.getFileName({type: 'file', id: '123', file: {
-                type: 'xyz',
-                name: 'the-quick-fox.xyz'
-            }})).toEqual('the-quick-fox.xyz');
-        });
-
-        it('file without file object', () => {
-            expect(messageService.getFileName({type: 'file', id: '123'}))
-                .toEqual('file-123');
-        });
-
-        it('text', () => {
-            expect(messageService.getFileName({type: 'text', id: '123'}))
-                .toEqual(null);
-        });
-
-        it('no file types', () => {
-            ['text', 'location', 'status', 'ballot'].forEach((type) => {
-                expect(messageService.getFileName({type: type, id: '123'}))
-                    .toEqual(null);
-            });
-        });
-
-        it('no type', () => {
-            expect(messageService.getFileName({id: 1}))
-                .toEqual(null);
-        });
-        it('no id', () => {
-            expect(messageService.getFileName({type: 'image'}))
-                .toEqual(null);
-        });
-
-        it('no type', () => {
-            expect(messageService.getFileName({id: 1}))
-                .toEqual(null);
-        });
-        it('no message', () => {
-            expect(messageService.getFileName(null))
-                .toEqual(null);
-            expect(messageService.getFileName())
-                .toEqual(null);
-        });
-
-    });
 });

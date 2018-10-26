@@ -4,7 +4,6 @@
     },
     "welcome": {
         "ABORT": "Abort",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a> or <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, otherwise the web client might not work properly.",
         "CONTINUE_ANYWAY": "Continue anyway",
         "PLEASE_SCAN": "Scan this QR code with your Threema app",
         "PLEASE_UNLOCK": "Reconnecting session",
@@ -12,17 +11,19 @@
         "PLEASE_RELOAD": "Please reload the page to try again.",
         "RELOAD": "Reload page",
         "PASSWORD": "Password",
-        "CHOOSE_PASSWORD": "To stay logged in, please enter<br>a session password before scanning.",
+        "CHOOSE_PASSWORD": "If you want to stay logged in, please enter<br>a session password before scanning.",
         "UNLOCK_FAILED_TEXT": "You entered the wrong password, the session cannot be restored.",
         "ENTER_PASSWORD": "To reconnect to your previous session,<br>please enter the password:",
         "UNLOCK_FAILED_TITLE": "Unlocking failed",
         "ALTERNATIVELY": "Alternatively,",
         "UNLOCK_FAILED_FORGOTTEN": "If you can't remember your password, simply choose \"forget this session\", and set a new password.",
-        "IF_YOU_WANT": "If you want, you can",
         "FORGET_SESSION": "forget this session",
+        "FORGET_SESSION_BTN": "forget session",
         "BTN_RECONNECT": "Reconnect",
         "BROWSER_NOT_SUPPORTED": "This browser is not supported",
-        "ANDROID_ONLY": "Compatible with Threema for Android.",
+        "BROWSER_NOT_SUPPORTED_ANDROID": "This browser is not supported on Android",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> or <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a> (iOS only), otherwise the web client might not work properly.",
+        "SAFARI": "Safari is only compatible with Threema Web for iOS.<br>If you are using Android, please use another browser.",
         "CONNECTING": "Connecting",
         "WAITING_FOR_PUSH": "Waiting for<br>app wakeup …",
         "CONNECTING_TO_APP": "Connection to app is<br>being established …",
@@ -37,7 +38,9 @@
         "LOCAL_STORAGE_MISSING_DETAILS": "Access to LocalStorage not possible. This can occur if your browser is configured to reject cookies, or if you installed a browser add-on that blocks access to LocalStorage. Please allow local storage in your browser settings or disable any add-ons you might have installed.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Critical error when accessing LocalStorage: {errorMsg}.<br>Try restarting your browser.",
         "ALREADY_CONNECTED": "Already connected",
-        "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!"
+        "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!",
+        "VERSION": "Version",
+        "BACKGROUND_IMAGE": "Background Image"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",
@@ -47,7 +50,8 @@
         "WAITING_FOR_APP_MANUAL": "Google Play Services not installed. Please start the session manually.",
         "CONNECTING_TO_SERVER": "Connecting to server\u2026",
         "CONNECTING_TO_APP": "Connection to app is being established\u2026",
-        "CONNECTION_CLOSED": "Connection to server has been closed."
+        "CONNECTION_CLOSED": "Connection to server has been closed.",
+        "RECONNECT_FAILED": "Connecting to app failed."
     },
     "troubleshooting": {
         "SLOW_CONNECT": "Connecting seems to take longer than usual …",
@@ -75,11 +79,12 @@
         "NO": "No",
         "OK": "Ok",
         "DELETE": "Delete",
-        "EDIT": "Bearbeiten",
+        "EDIT": "Edit",
         "ARE_YOU_SURE": "Are you sure?",
         "SAVE": "Save",
         "DONE": "Done",
-        "MODIFY": "Modify"
+        "MODIFY": "Modify",
+        "NOTE": "Note:"
     },
     "messenger": {
         "VERIFICATION_LEVEL": "Verification level",
@@ -95,6 +100,7 @@
         "CONVERSATIONS": "Conversations",
         "CONTACTS": "Contacts",
         "NO_CONVERSATIONS_FOUND": "No conversations found.",
+        "LOADING_CONVERSATIONS": "Loading conversations …",
         "ABOUT": "About",
         "SETTINGS": "Settings",
         "HELP": "Help",
@@ -115,8 +121,18 @@
         "GROUP_ROLE_NORMAL": "Member",
         "GROUP_ROLE_CREATOR": "Creator",
         "DOWNLOAD": "Download",
-        "COPY": "Copy",
         "DOWNLOADING": "Downloading …",
+        "COPY": "Copy",
+        "COPIED": "Text copied to clipboard!",
+        "COPY_ERROR": "Error: Could not copy text to clipboard",
+        "MSG_HISTORY": "Message History",
+        "MSG_HISTORY_CREATED": "Created",
+        "MSG_HISTORY_SENT": "Sent",
+        "MSG_HISTORY_DELIVERED": "Delivered",
+        "MSG_HISTORY_READ": "Read",
+        "MSG_HISTORY_ACKED": "Acknowledged",
+        "MSG_HISTORY_MODIFIED": "Modified",
+        "NAVIGATE": "Navigate",
         "CONFIRM_FILE_SEND": "Send to «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Optional caption",
         "CONFIRM_SEND_AS_FILE": "Send as file message",
@@ -130,7 +146,7 @@
         "SYSTEM_CONTACT": "System contact",
         "EMAIL_ADDRESSES": "Emails",
         "PHONE_NUMBERS": "Phone numbers",
-        "EDIT_RECEIVER": "Edit {receiverName}",
+        "EDIT_RECEIVER": "Edit profile",
         "CREATE_GROUP": "New group",
         "GROUP_SELECT_CONTACTS": "Select members",
         "GROUP_DELETE": "Delete group",
@@ -158,11 +174,35 @@
         "UNKNOWN_MESSAGE_TYPE": "Unknown message type",
         "NICKNAME": "Nickname",
         "THREEMA_WORK_CONTACT": "Threema Work user",
+        "THREEMA_HOME_CONTACT": "Private Threema contact",
         "THREEMA_BLOCKED_RECEIVER": "blocked",
         "DELETE_THREAD": "Delete chat",
         "DELETE_THREAD_MESSAGE": "{count, plural, one {Do you really want to delete this chat? You will not be able to recover the messages.} other {Do you really want to delete # chat(s)? You will not be able to recover the messages.}}",
-        "MUTED": "No notifications",
-        "ALL": "All"
+        "MUTED_NONE": "No notifications",
+        "MUTED_MENTION_ONLY": "Only show notification when mentioned",
+        "MUTED_SILENT": "Silent notifications",
+        "ALL": "All",
+        "LOADING_MESSAGES": "Loading messages…",
+        "PINNED_CONVERSATION": "Conversation is pinned. Click to unpin.",
+        "UNPINNED_CONVERSATION": "Conversation is not pinned. Click to pin.",
+        "PINNED_CONVERSATION_OK": "Conversation pinned",
+        "PINNED_CONVERSATION_ERROR": "Conversation could not be pinned",
+        "UNPINNED_CONVERSATION_OK": "Conversation unpinned",
+        "UNPINNED_CONVERSATION_ERROR": "Conversation could not be unpinned"
+    },
+    "messageStates": {
+        "WE_ACK": "You sent thumbs-up",
+        "WE_DEC": "You sent thumbs-down",
+        "USER_ACK": "Recipient sent thumbs-up",
+        "USER_DEC": "Recipient sent thumbs-down",
+        "PENDING": "The message is being transferred to your device",
+        "SENDING": "The message is being transferred to the Threema server",
+        "SENT": "The message was delivered to the Threema server",
+        "DELIVERED": "The message was delivered to the recipient's device",
+        "READ": "The message was read by the recipient",
+        "FAILED": "The message could not be sent",
+        "TIMEOUT": "The message could not be transferred to your device.",
+        "UNKNOWN": ""
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
@@ -176,8 +216,23 @@
         "gif": "GIF"
     },
     "validationError": {
-        "createReceiver": {
-            "invalid_identity": "Invalid Threema-ID"
+        "modifyReceiver": {
+            "unknown": "An unknown error occurred",
+            "badRequest": "Invalid request (protocol error?)",
+            "timeout": "Request timed out",
+            "internalError": "An internal error occurred",
+            "invalidAvatar": "Invalid avatar",
+            "invalidIdentity": "Invalid Threema-ID",
+            "invalidContact": "Invalid contact ID",
+            "invalidGroup": "Invalid group ID",
+            "invalidDistributionList": "Invalid distribution list ID",
+            "notAllowed": "Modification not allowed",
+            "notAllowedLinked": "Contact cannot be changed: It's linked to a system contact",
+            "notAllowedBusiness": "Avatar cannot be changed: It's a Threema Gateway contact",
+            "disabledByPolicy": "Feature disabled by administrator",
+            "syncFailed": "Group synchronization failed",
+            "noMembers": "No members defined",
+            "alreadyLeft": "You have already left this group"
         }
     },
     "error": {
@@ -186,11 +241,15 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive voice messages.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» cannot receive files.",
         "ERROR_OCCURRED": "An error occurred.",
-        "FILE_TOO_LARGE": "Currently files larger than 15 MiB cannot be sent through Threema Web",
+        "FILE_TOO_LARGE": "Files larger than {maxmb} MiB cannot be sent",
+        "FILE_TOO_LARGE_WEB": "Currently files larger than 15 MiB cannot be sent through Threema Web",
+        "FILE_TOO_LARGE_GENERIC": "File is too large to be sent",
         "TEXT_TOO_LONG": "This message is too long and cannot be sent (Max length {max} characters).",
         "NOTIFICATION_PERMISSION_DENIED": "You have to grant the notification permission for Threema Web manually in order to receive desktop notifications.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Learn more.",
-        "NOTIFICATION_API_NOT_AVAILABLE": "Your browser does not support desktop notifications."
+        "NOTIFICATION_API_NOT_AVAILABLE": "Your browser does not support desktop notifications.",
+        "BLOB_DOWNLOAD_FAILED": "Could not download file.",
+        "BLOB_DECRYPT_FAILED": "Could not decrypt file."
     },
     "mimeTypes": {
         "apk": "Android package",
@@ -250,5 +309,30 @@
         "ALERT": "Discharging: {percent}%",
         "LEVEL_LOW": "Your device battery level is low ({percent}%).",
         "LEVEL_CRITICAL": "Your device battery level is critical ({percent}%)!"
+    },
+    "date": {
+        "YESTERDAY": "Yesterday",
+        "month_short": {
+            "JAN": "Jan.",
+            "FEB": "Feb.",
+            "MAR": "Mar.",
+            "APR": "Apr.",
+            "MAY": "May",
+            "JUN": "Jun.",
+            "JUL": "Jul.",
+            "AUG": "Aug.",
+            "SEP": "Sep.",
+            "OCT": "Oct.",
+            "NOV": "Nov.",
+            "DEC": "Dec."
+        }
+    },
+    "connection": {
+        "SESSION_CLOSED_TITLE": "Session Closed",
+        "SESSION_STOPPED": "The session was stopped on your device.",
+        "SESSION_DELETED": "The session was deleted on your device.",
+        "WEBCLIENT_DISABLED": "Threema Web was disabled on your device.",
+        "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window.",
+        "SESSION_ERROR": "The session was stopped due to a protocol error."
     }
 }

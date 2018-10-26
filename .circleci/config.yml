@@ -8,6 +8,7 @@ references:
           - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
     - run: npm install
     - run: npm run build
+    - run: npm run build:tests
     - run: npm test
     - save_cache:
         key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}

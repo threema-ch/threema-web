@@ -15,9 +15,19 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum ControllerModelMode {
-    NEW = 1,
-    VIEW = 2,
-    EDIT = 3,
-    CHAT = 4,
+// This file contains helper functions related to receivers.
+// Try to keep all functions pure!
+
+/**
+ * Return wether a contact is a Threema Gateway contact.
+ */
+export function isGatewayContact(receiver: threema.ContactReceiver) {
+    return receiver.id.startsWith('*');
+}
+
+/**
+ * Return wether a contact is the ECHOECHO test contact.
+ */
+export function isEchoContact(receiver: threema.ContactReceiver) {
+    return receiver.id === 'ECHOECHO';
 }

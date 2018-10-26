@@ -22,6 +22,7 @@ footer {
 
             a {
                 color: white !important;
+                @include mouse-hand;
                 &:hover {
                     text-decoration: underline;
                 }

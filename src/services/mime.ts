@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasValue} from '../helpers';
+
 export class MimeService {
     public static $inject = ['$log', '$translate'];
 
@@ -42,7 +44,7 @@ export class MimeService {
         return this.is(mimeType, this.videoMimeTypes);
     }
 
-    public getLabel(mimeType: string): string {
+    public getLabel(mimeType: string | null): string {
         const key = this.getKey(mimeType);
         if (key !== null) {
             return this.$translate.instant('mimeTypes.' + key);
@@ -52,13 +54,16 @@ export class MimeService {
 
     public getIconUrl(mimeType: string): string {
         let key = this.getKey(mimeType);
-        if (key === undefined || key === null || key.length === 0) {
+        if (!hasValue(key) || key.length === 0) {
             key = 'generic';
         }
         return 'img/mime/ic_doc_' + key + '.png';
     }
 
-    private getKey(mimeType: string): string {
+    private getKey(mimeType: string | null): string | null {
+        if (!hasValue(mimeType)) {
+            return null;
+        }
         if (mimeType.startsWith('audio/')) {
             return 'audio';
         }

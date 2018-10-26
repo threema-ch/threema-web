@@ -1,5 +1,8 @@
 # Releasing
 
+Major release with backwards incompatible changes? Check for `TODO` comments
+with deprecations. Remove them if possible.
+
 Set variables:
 
     $ export VERSION=X.Y.Z

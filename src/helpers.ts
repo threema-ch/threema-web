@@ -252,3 +252,136 @@ export function supportsPassive(): boolean {
 export function escapeRegExp(str: string) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
+
+/**
+ * Generate a link to the msgpack visualizer from an Uint8Array containing
+ * msgpack encoded data.
+ */
+export function msgpackVisualizer(bytes: Uint8Array): string {
+    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(String.fromCharCode.apply(null, bytes)));
+}
+
+/**
+ * Check the featureMask of a contactReceiver
+ */
+export function hasFeature(contactReceiver: threema.ContactReceiver,
+                           feature: threema.ContactReceiverFeature,
+                           $log: ng.ILogService): boolean {
+    const logTag = '[helpers.hasFeature]';
+    if (contactReceiver !== undefined) {
+        if (contactReceiver.featureMask === 0) {
+            $log.warn(logTag, contactReceiver.id, 'featureMask', contactReceiver.featureMask);
+            return false;
+        }
+        // tslint:disable:no-bitwise
+        return (contactReceiver.featureMask & feature) !== 0;
+        // tslint:enable:no-bitwise
+    }
+    $log.warn(logTag, 'Cannot check featureMask of a undefined contactReceiver');
+    return false;
+}
+
+/**
+ * Convert an ArrayBuffer to a data URL.
+ */
+export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (msg: string) => void) {
+    if (buffer === null || buffer === undefined) {
+        throw new Error('Called bufferToUrl on null or undefined');
+    }
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    switch (mimeType) {
+        case 'image/jpg':
+        case 'image/jpeg':
+        case 'image/png':
+        case 'image/webp':
+        case 'image/gif':
+        case 'audio/mp4':
+        case 'audio/aac':
+        case 'audio/ogg':
+        case 'audio/webm':
+            // OK
+            break;
+        default:
+            logWarning('bufferToUrl: Unknown mimeType: ' + mimeType);
+            mimeType = 'image/jpeg';
+            break;
+    }
+    return 'data:' + mimeType + ';base64,' + btoa(binary);
+}
+
+/**
+ * Adapter for creating a logging function.
+ *
+ * Example usage:
+ *
+ * const logWarning = logAdapter($log.warn, '[AvatarService]');
+ */
+export function logAdapter(logFunc: (...msg: string[]) => void, logTag: string): ((msg: string) => void) {
+    return (msg: string) => logFunc(logTag, msg);
+}
+
+/**
+ * Return whether a value is not null and not undefined.
+ */
+export function hasValue(val: any): boolean {
+    return val !== null && val !== undefined;
+}
+
+/**
+ * Awaitable timeout function.
+ */
+export function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Compare two Uint8Array instances. Return true if all elements are equal
+ * (compared using ===).
+ */
+export function arraysAreEqual(a1: Uint8Array, a2: Uint8Array): boolean {
+    if (a1.length !== a2.length) {
+        return false;
+    }
+    for (let i = 0; i < a1.length; i++) {
+        if (a1[i] !== a2[i]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/*
+ * Return whether this key event should trigger a button.
+ * https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values
+ */
+export function isActionTrigger(ev: KeyboardEvent): boolean {
+    if (ev.key === undefined) {
+        return false;
+    }
+    switch (ev.key) {
+        case 'Enter':
+        case ' ':
+            return true;
+        default:
+            return false;
+    }
+}
+
+/*
+ * Create a shallow copy of an object.
+ */
+export function copyShallow<T extends object>(obj: T): T {
+    return Object.assign({}, obj);
+}
+
+/**
+ * Create a deep copy of an object by serializing and deserializing it.
+ */
+export function copyDeep<T extends object>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
+}
