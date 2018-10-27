@@ -385,3 +385,13 @@ export function copyShallow<T extends object>(obj: T): T {
 export function copyDeep<T extends object>(obj: T): T {
     return JSON.parse(JSON.stringify(obj));
 }
+
+/**
+ * Formats date object to time string according to locales
+ * @param date date object to format
+ * @param locales locales string ex: en-US
+ * @param options formatting options like 12/24 hour format
+ */
+export function formatTime(date: Date, locales?: string | string[], options?: Intl.DateTimeFormatOptions): string {
+    return date.toLocaleTimeString(locales, options);
+}

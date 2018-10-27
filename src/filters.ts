@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
+import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter, formatTime} from './helpers';
 import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
@@ -402,11 +402,6 @@ angular.module('3ema.filters', [])
  * Format a unix timestamp as a date.
  */
 .filter('unixToTimestring', ['$translate', function($translate) {
-    function formatTime(date) {
-        return ('00' + date.getHours()).slice(-2) + ':' +
-               ('00' + date.getMinutes()).slice(-2);
-    }
-
     function formatMonth(num) {
         switch (num) {
             case 0x0:
