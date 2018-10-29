@@ -1775,7 +1775,7 @@ export class WebClientService {
         threemaId: string,
         firstName?: string,
         lastName?: string,
-        avatar?: ArrayBuffer,
+        avatar?: ArrayBuffer | null,
     ): Promise<threema.ContactReceiver> {
         // Prepare payload data
         const data = {};
@@ -1847,15 +1847,15 @@ export class WebClientService {
      */
     public createGroup(
         members: string[],
-        name: string = null,
-        avatar?: ArrayBuffer,
+        name: string | null = null,
+        avatar?: ArrayBuffer | null,
     ): Promise<threema.GroupReceiver> {
         const data = {
             [WebClientService.ARGUMENT_MEMBERS]: members,
             [WebClientService.ARGUMENT_NAME]: name,
         } as object;
 
-        if (avatar !== undefined) {
+        if (hasValue(avatar)) {
             data[WebClientService.ARGUMENT_AVATAR] = avatar;
         }
 
@@ -1870,7 +1870,7 @@ export class WebClientService {
         id: string,
         members: string[],
         name?: string,
-        avatar?: ArrayBuffer,
+        avatar?: ArrayBuffer | null,
     ): Promise<threema.GroupReceiver> {
         // Prepare payload data
         const data = {
@@ -2006,7 +2006,7 @@ export class WebClientService {
     /**
      * Modify own profile.
      */
-    public modifyProfile(nickname?: string, avatar?: ArrayBuffer): Promise<null> {
+    public modifyProfile(nickname?: string, avatar?: ArrayBuffer | null): Promise<null> {
         // Prepare payload data
         const data = {};
         if (nickname !== undefined && nickname !== null) {
@@ -2586,7 +2586,7 @@ export class WebClientService {
         // Set avatar for receiver according to resolution
         const field: string = highResolution ? 'high' : 'low';
         const receiverData = this.receivers.getData(args);
-        if (receiverData.avatar === null || receiverData.avatar === undefined) {
+        if (!hasValue(receiverData.avatar)) {
             receiverData.avatar = {};
         }
         receiverData.avatar[field] = avatar;
