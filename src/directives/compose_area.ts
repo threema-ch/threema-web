@@ -15,8 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isActionTrigger} from '../helpers';
+import {hasValue, isActionTrigger} from '../helpers';
 import {BrowserService} from '../services/browser';
+import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
 
@@ -27,6 +28,7 @@ export default [
     'BrowserService',
     'StringService',
     'TimeoutService',
+    'ReceiverService',
     '$timeout',
     '$translate',
     '$mdDialog',
@@ -36,6 +38,7 @@ export default [
     function(browserService: BrowserService,
              stringService: StringService,
              timeoutService: TimeoutService,
+             receiverService: ReceiverService,
              $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
@@ -60,8 +63,10 @@ export default [
                 // Callback that is called when uploading files
                 onUploading: '=',
                 maxTextLength: '=',
+
+                receiver: '=eeeReceiver',
             },
-            link(scope: any, element) {
+            link: function (scope: any, element) {
                 // Logging
                 const logTag = '[Directives.ComposeArea]';
 
@@ -92,6 +97,39 @@ export default [
                     fromBytes?: number,
                     toBytes?: number,
                 } = null;
+
+                let receiverBlocked: boolean = false;
+
+                // TODO objectEquality rausbekommen
+                scope.$watch(
+                    () => scope.receiver,
+                    (newRec: threema.Receiver, oldRec: threema.Receiver) => {
+                    if (hasValue(newRec)) {
+                        receiverBlocked = receiverService.isBlocked(newRec)
+                        chatBlocked(receiverBlocked);
+                    }
+                }, true);
+
+                function chatBlocked(blocked: boolean) {
+                    if (blocked) {
+                        sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
+                        emojiTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
+                        fileTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
+                        composeDiv.attr('contenteditable', false);
+                        if (emojiKeyboard.hasClass('active')) {
+                            hideEmojiPicker();
+                        }
+                    } else {
+                        if (composeAreaIsEmpty()) {
+                            sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
+                        } else {
+                            sendTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
+                        }
+                        emojiTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
+                        fileTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
+                        composeDiv.attr('contenteditable', true);
+                    }
+                }
 
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
@@ -342,7 +380,7 @@ export default [
                         const next = (file: File, res: ArrayBuffer | null, error: any) => {
                             buffers.set(file, res);
                             if (buffers.size >= fileCounter) {
-                               resolve(buffers);
+                                resolve(buffers);
                             }
                         };
                         for (let n = 0; n < fileCounter; n++) {
@@ -457,7 +495,6 @@ export default [
                                 .catch((msg) => $log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
-
                     // Handle pasting of text
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
@@ -526,6 +563,11 @@ export default [
                 // Emoji trigger is clicked
                 function onEmojiTrigger(ev: UIEvent): void {
                     ev.stopPropagation();
+                    // TODO maybe simlify
+                    if (receiverBlocked) {
+                        hideEmojiPicker();
+                        return;
+                    }
                     // Toggle visibility of picker
                     if (emojiKeyboard.hasClass('active')) {
                         hideEmojiPicker();
@@ -537,7 +579,7 @@ export default [
                 // Emoji is chosen
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
-                    insertEmoji (this.textContent);
+                    insertEmoji(this.textContent);
                 }
 
                 function insertEmoji(emoji, posFrom = null, posTo = null): void {
@@ -621,6 +663,9 @@ export default [
                 function onFileTrigger(ev: UIEvent): void {
                     ev.preventDefault();
                     ev.stopPropagation();
+                    if (receiverBlocked) {
+                        return;
+                    }
                     const input = element[0].querySelector('.file-input') as HTMLInputElement;
                     input.click();
                 }
@@ -628,6 +673,9 @@ export default [
                 function onSendTrigger(ev: UIEvent): boolean {
                     ev.preventDefault();
                     ev.stopPropagation();
+                    if (receiverBlocked) {
+                        return;
+                    }
                     return sendText();
                 }
 
@@ -687,7 +735,7 @@ export default [
                             pos = 0;
                             textPos = 0;
                         } else {
-                            selectedElement =  container.previousSibling;
+                            selectedElement = container.previousSibling;
                             pos = offset;
                             textPos = offset;
                         }
@@ -757,7 +805,7 @@ export default [
                                 offset = pos;
                                 break;
                             case Node.ELEMENT_NODE:
-                                size = getOuterHtml(node).length ;
+                                size = getOuterHtml(node).length;
                                 break;
                             default:
                                 $log.warn(logTag, 'Unhandled node:', node);
@@ -821,7 +869,7 @@ export default [
                     if (args.query && args.mention) {
                         // Insert resulting HTML
                         insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,
-                            caretPosition ?  caretPosition.to : null);
+                            caretPosition ? caretPosition.to : null);
                     }
                 }));
 
