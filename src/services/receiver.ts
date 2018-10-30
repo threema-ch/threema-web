@@ -58,4 +58,9 @@ export class ReceiverService {
             && receiver.id.substr(0, 1) === '*';
 
     }
+
+    public isBlocked(receiver: threema.Receiver): boolean {
+        if (!isContactReceiver(receiver)) { return false; }
+        return receiver.isBlocked;
+    }
 }
