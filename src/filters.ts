@@ -20,6 +20,7 @@ import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
+import {isContactReceiver} from './typeguards';
 
 angular.module('3ema.filters', [])
 
@@ -215,16 +216,6 @@ angular.module('3ema.filters', [])
         return filter(obj, valid);
     };
 })
-
-/**
- * Return whether contact is not me.
- */
-.filter('isNotMe', ['WebClientService', function(webClientService: WebClientService) {
-    return function(obj: threema.Receiver) {
-        const valid = (contact: threema.Receiver) => contact.id !== webClientService.receivers.me.id;
-        return filter(obj, valid);
-    };
-}])
 
 /**
  * Filter for duration formatting.
