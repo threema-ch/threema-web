@@ -218,31 +218,6 @@ angular.module('3ema.filters', [])
 })
 
 /**
- * Filter receivers, exclude own contact.
- */
-.filter('isNotMe', ['WebClientService', function(webClientService: WebClientService) {
-    return function(receivers: threema.Receiver[]) {
-        const valid = (contact: threema.Receiver) => contact.id !== webClientService.receivers.me.id;
-        return filter(receivers, valid);
-    };
-}])
-
-/**
- * Filter receivers, exclude hidden contact.
- */
-.filter('isNotHidden', [function() {
-    return function(receivers: threema.Receiver) {
-        const valid = (receiver: threema.Receiver) => {
-            if (isContactReceiver(receiver)) {
-                return receiver.hidden !== true;
-            }
-            return true;
-        };
-        return filter(receivers, valid);
-    };
-}])
-
-/**
  * Filter for duration formatting.
  */
 .filter('duration', function() {

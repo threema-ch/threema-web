@@ -24,7 +24,7 @@ import {
 } from '@uirouter/angularjs';
 
 import {ContactControllerModel} from '../controller_model/contact';
-import {bufferToUrl, hasValue, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
+import {bufferToUrl, filter, hasValue, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
@@ -942,7 +942,24 @@ class NavigationController {
     }
 
     public contacts(): threema.ContactReceiver[] {
-        return Array.from(this.webClientService.contacts.values()) as threema.ContactReceiver[];
+        const contacts = [];
+        // Since `values()` on a map returns an iterator, we cannot directly
+        // apply the `.filter()` method that arrays provide. Therefore, in
+        // order to avoid creating an intermediate array just for filtering,
+        // create the list of contacts imperatively.
+        for (const contact of this.webClientService.contacts.values()) {
+            // Exclude own contact
+            if (contact.id === this.webClientService.receivers.me.id) {
+                continue;
+            }
+            // Exclude hidden contacts
+            if (contact.hidden === true) {
+                continue;
+            }
+            // Otherwise add to results
+            contacts.push(contact);
+        }
+        return contacts;
     }
 
     /**
