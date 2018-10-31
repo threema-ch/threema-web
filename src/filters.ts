@@ -20,6 +20,7 @@ import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
+import {isContactReceiver} from './typeguards';
 
 angular.module('3ema.filters', [])
 
@@ -217,12 +218,27 @@ angular.module('3ema.filters', [])
 })
 
 /**
- * Return whether contact is not me.
+ * Filter receivers, exclude own contact.
  */
 .filter('isNotMe', ['WebClientService', function(webClientService: WebClientService) {
-    return function(obj: threema.Receiver) {
+    return function(receivers: threema.Receiver[]) {
         const valid = (contact: threema.Receiver) => contact.id !== webClientService.receivers.me.id;
-        return filter(obj, valid);
+        return filter(receivers, valid);
+    };
+}])
+
+/**
+ * Filter receivers, exclude hidden contact.
+ */
+.filter('isNotHidden', [function() {
+    return function(receivers: threema.Receiver) {
+        const valid = (receiver: threema.Receiver) => {
+            if (isContactReceiver(receiver)) {
+                return receiver.hidden !== true;
+            }
+            return true;
+        };
+        return filter(receivers, valid);
     };
 }])
 
