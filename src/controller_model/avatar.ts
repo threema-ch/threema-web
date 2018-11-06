@@ -15,27 +15,28 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasValue} from '../helpers';
 import {WebClientService} from '../services/webclient';
 
 export class AvatarControllerModel {
     private logTag: string = '[AvatarControllerModel]';
 
     private $log: ng.ILogService;
-    private avatar: ArrayBuffer = null;
+    private avatar: ArrayBuffer | null = null;
     private loadAvatar: Promise<ArrayBuffer | null>;
     private onChangeAvatar: (image: ArrayBuffer) => void;
     private _avatarChanged: boolean = false;
 
     constructor($log: ng.ILogService,
                 webClientService: WebClientService,
-                receiver: threema.Receiver) {
+                receiver: threema.Receiver | null) {
         this.$log = $log;
         this.loadAvatar = new Promise((resolve, reject) => {
-            if (receiver === null) {
+            if (!hasValue(receiver)) {
                 $log.debug(this.logTag, 'loadAvatar: No receiver defined, no avatar');
                 resolve(null);
                 return;
-            } else if (receiver.avatar.high === undefined || receiver.avatar.high === null) {
+            } else if (!hasValue(receiver.avatar) || !hasValue(receiver.avatar.high)) {
                 $log.debug(this.logTag, 'loadAvatar: Requesting high res avatar from app');
                 webClientService.requestAvatar(receiver, true)
                     .then((data: ArrayBuffer) => resolve(data))

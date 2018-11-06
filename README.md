@@ -31,6 +31,12 @@ particular issue, such as [this one](https://github.com/threema-ch/threema-web/i
 We will factor this in when scheduling what to do next.
 
 
+## Translating
+
+If you want to help translating Threema Web to your language, plese check out
+[`TRANSLATING.md`](./TRANSLATING.md)!
+
+
 ## Development
 
 Threema Web is written using [TypeScript](https://www.typescriptlang.org/) and

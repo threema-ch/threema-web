@@ -4,6 +4,19 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.1][v2.1.1] (2018-10-29)
+
+Changes:
+
+* [feature] Improved troubleshooting tool ([#648][i648])
+* [change] Latest message text: Show "GIF" for GIFs ([#649][i649])
+* [bug] Accessibility improvements ([#656][i656])
+
+Contributors:
+
+- [@MarcoZehe][@MarcoZehe]
+
+
 ### [v2.1.0][v2.1.0] (2018-10-23)
 
 Changes:
@@ -585,7 +598,11 @@ First public release.
 [i640]: https://github.com/threema-ch/threema-web/pull/640
 [i643]: https://github.com/threema-ch/threema-web/pull/643
 [i644]: https://github.com/threema-ch/threema-web/pull/644
+[i648]: https://github.com/threema-ch/threema-web/pull/648
+[i649]: https://github.com/threema-ch/threema-web/pull/649
+[i656]: https://github.com/threema-ch/threema-web/pull/656
 
+[v2.1.1]: https://github.com/threema-ch/threema-web/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0
 [v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
 [v2.0.2]: https://github.com/threema-ch/threema-web/compare/v2.0.1...v2.0.2
