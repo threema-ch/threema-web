@@ -70,7 +70,7 @@ export default [
                 // Optional emoji PNG path prefix
                 emojiImagePath: '@?',
             },
-            link: function (scope: any, element) {
+            link: function(scope: any, element) {
                 // Logging
                 const logTag = '[Directives.ComposeArea]';
 
@@ -112,7 +112,7 @@ export default [
                     () => scope.receiver,
                     (newRec: threema.Receiver, oldRec: threema.Receiver) => {
                     if (hasValue(newRec)) {
-                        receiverBlocked = receiverService.isBlocked(newRec)
+                        receiverBlocked = receiverService.isBlocked(newRec);
                         chatBlocked(receiverBlocked);
                     }
                 }, true);
