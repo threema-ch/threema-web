@@ -57,10 +57,16 @@ export default [
                     } else {
                         // Search for contacts, do not show selected contacts
                         const lowercaseQuery = query.toLowerCase();
+                        const hideInactiveContacts = !webClientService.appConfig.showInactiveIDs;
                         const result = this.allContacts
                             .filter((contactReceiver: threema.ContactReceiver) => {
                                 // Ignore already selected contacts
                                 if (this.members.filter((id: string) => id === contactReceiver.id).length !== 0) {
+                                    return false;
+                                }
+
+                                // Potentially ignore inactive contacts
+                                if (hideInactiveContacts && contactReceiver.state === 'INACTIVE') {
                                     return false;
                                 }
 
@@ -87,10 +93,9 @@ export default [
                     if (contact.id === webClientService.me.id) {
                         return false;
                     }
-
-                    this.members = this.members.filter(function(i: string) {
-                        return i !== contact.id;
-                    });
+                    this.members = this.members.filter(
+                        (identity: string) => identity !== contact.id,
+                    );
                     return true;
                 };
             }],
