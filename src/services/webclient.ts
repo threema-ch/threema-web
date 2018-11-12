@@ -2357,15 +2357,8 @@ export class WebClientService {
             return future.reject(message.ack.error);
         }
 
-        // Unpack and validate args
-        const args = message.args;
+        // Unpack and validate data
         const data = message.data;
-        if (args === undefined) {
-            this.$log.error(`Invalid ${receiverType} response, args or data missing`);
-            return future.reject('invalidResponse');
-        }
-
-        // Validate data
         if (data === undefined) {
             this.$log.error(`Invalid ${receiverType} response, 'data' is missing`);
             return future.reject('invalidResponse');
