@@ -864,7 +864,6 @@ export default [
                 <div class="emoji-keyboard">
                     <ng-include src="'partials/emoji-picker.html'" include-replace></ng-include>
                 </div>
-
             `,
         };
     },
