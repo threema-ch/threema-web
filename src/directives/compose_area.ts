@@ -105,18 +105,6 @@ export default [
                     toChar?: number,
                 } = null;
 
-                let receiverBlocked: boolean = false;
-
-                // TODO objectEquality rausbekommen
-                scope.$watch(
-                    () => scope.receiver,
-                    (newRec: threema.Receiver, oldRec: threema.Receiver) => {
-                    if (hasValue(newRec)) {
-                        receiverBlocked = receiverService.isBlocked(newRec);
-                        chatBlocked(receiverBlocked);
-                    }
-                }, true);
-
                 function chatBlocked(blocked: boolean) {
                     if (blocked) {
                         sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
@@ -137,6 +125,19 @@ export default [
                         composeDiv.attr('contenteditable', true);
                     }
                 }
+
+                // Initialize blocking state
+                chatBlocked(receiverService.isBlocked(scope.receiver));
+
+                // Watch `isBlocked` flag for changes
+                scope.$watch(
+                    (_scope) => receiverService.isBlocked(_scope.receiver),
+                    (isBlocked: boolean, wasBlocked: boolean) => {
+                        if (isBlocked !== wasBlocked) {
+                            chatBlocked(isBlocked);
+                        }
+                    },
+                );
 
                 /**
                  * Stop propagation of click events and hold htmlElement of the emojipicker
@@ -172,6 +173,7 @@ export default [
 
                 // Typing events
                 let stopTypingTimer: ng.IPromise<void> = null;
+
                 function stopTyping() {
                     // We can only stop typing of the timer is set (meaning
                     // that we started typing earlier)
@@ -184,6 +186,7 @@ export default [
                         scope.stopTyping();
                     }
                 }
+
                 function startTyping() {
                     if (stopTypingTimer === null) {
                         // If the timer wasn't set previously, we just
@@ -458,7 +461,7 @@ export default [
                                 .catch((msg) => $log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
-                    // Handle pasting of text
+                        // Handle pasting of text
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
 
@@ -528,7 +531,7 @@ export default [
                 function onEmojiTrigger(ev: UIEvent): void {
                     ev.stopPropagation();
                     // TODO maybe simlify
-                    if (receiverBlocked) {
+                    if (receiverService.isBlocked(scope.receiver)) {
                         hideEmojiPicker();
                         return;
                     }
@@ -658,7 +661,7 @@ export default [
                 function onFileTrigger(ev: UIEvent): void {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    if (receiverBlocked) {
+                    if (receiverService.isBlocked(scope.receiver)) {
                         return;
                     }
                     const input = element[0].querySelector('.file-input') as HTMLInputElement;
@@ -668,7 +671,7 @@ export default [
                 function onSendTrigger(ev: UIEvent): boolean {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    if (receiverBlocked) {
+                    if (receiverService.isBlocked(scope.receiver)) {
                         return;
                     }
                     return sendText();
@@ -714,7 +717,7 @@ export default [
                 }
 
                 // return the html code position of the container element
-                function getPositions(offset: number, container: Node): {html: number, text: number} {
+                function getPositions(offset: number, container: Node): { html: number, text: number } {
                     let pos = null;
                     let textPos = null;
 
