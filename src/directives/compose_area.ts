@@ -60,6 +60,9 @@ export default [
                 // Callback that is called when uploading files
                 onUploading: '=',
                 maxTextLength: '=',
+
+                // Optional emoji PNG path prefix
+                emojiImagePath: '@?',
             },
             link(scope: any, element) {
                 // Logging
@@ -463,8 +466,9 @@ export default [
                         const text = ev.clipboardData.getData('text/plain');
 
                         // Look up some filter functions
+                        // tslint:disable-next-line:max-line-length
+                        const emojify = $filter('emojify') as (a: string, b?: boolean, c?: boolean, d?: string) => string;
                         const escapeHtml = $filter('escapeHtml') as (a: string) => string;
-                        const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
                         const mentionify = $filter('mentionify') as (a: string) => string;
                         const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
 
@@ -472,7 +476,7 @@ export default [
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = nlToBr(mentionify(emojify(escaped, true)), true);
+                        const formatted = nlToBr(mentionify(emojify(escaped, true, false, scope.emojiImagePath)), true);
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);
@@ -537,11 +541,11 @@ export default [
                 // Emoji is chosen
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
-                    insertEmoji (this.textContent);
+                    insertEmoji(this.textContent);
                 }
 
                 function insertEmoji(emoji, posFrom = null, posTo = null): void {
-                    const emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
+                    const emojiElement = ($filter('emojify') as any)(emoji, true, true, scope.emojiImagePath) as string;
                     insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 

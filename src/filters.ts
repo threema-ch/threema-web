@@ -101,11 +101,11 @@ angular.module('3ema.filters', [])
  * Set the `imgTag` parameter to `true` to use inline PNGs instead of sprites.
  */
 .filter('emojify', function() {
-    return function(text, imgTag = false, greedyMatch = false) {
+    return function(text, imgTag = false, greedyMatch = false, imagePath = 'img/e1/') {
         if (text !== null) {
             emojione.sprites = imgTag !== true;
             emojione.emojiSize = '32';
-            emojione.imagePathPNG = 'img/e1/';
+            emojione.imagePathPNG = imagePath;
             emojione.greedyMatch = greedyMatch;
             return emojione.unicodeToImage(text);
         } else {
