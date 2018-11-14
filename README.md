@@ -64,10 +64,19 @@ Web on a server, please follow the instructions at
 
 ## Testing
 
-To run tests:
+To run unit tests:
 
     npm run build && npm run build:tests
     firefox tests/testsuite.html
+
+To run UI tests:
+
+    npm run test:unittests <browser>
+
+For example:
+
+    npm run test:unittests firefox
+    npm run test:unittests chromium:headless
 
 To run linting checks:
 
