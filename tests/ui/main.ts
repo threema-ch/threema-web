@@ -3,7 +3,6 @@
  *
  * This file is part of Threema Web.
  */
-
 import {init as initComposeArea} from './compose_area';
 
 // Expose global functions

@@ -1,29 +1,59 @@
 version: 2
 
 references:
-  test-steps: &test-steps
+  unittest-steps: &unittest-steps
     - checkout
     - restore_cache:
         keys:
           - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
     - run: npm install
     - run: npm run build
-    - run: npm run build:tests
-    - run: npm test
+    - run: npm run build:unittests
+    - run: npm run test:unittests
     - save_cache:
         key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
         paths:
           - node_modules
 
 jobs:
-  test-node8:
+  unittest-node8:
     docker:
       - image: circleci/node:8-browsers
-    steps: *test-steps
-  test-node9:
+    steps: *unittest-steps
+  unittest-node9:
     docker:
       - image: circleci/node:9-browsers
-    steps: *test-steps
+    steps: *unittest-steps
+  uitest-firefox:
+    docker:
+      - image: circleci/node:9-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build:uitests
+      - run: npm run test:uitests firefox:headless
+      - save_cache:
+          key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+  uitest-chrome:
+    docker:
+      - image: circleci/node:9-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+      - run: npm install
+      - run: npm run build:uitests
+      - run: npm run test:uitests chrome:headless
+      - save_cache:
+          key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+          paths:
+            - node_modules
   lint:
     docker:
       - image: circleci/node:8-browsers
@@ -39,6 +69,8 @@ workflows:
   version: 2
   build:
     jobs:
-      - test-node8
-      - test-node9
+      - unittest-node8
+      - unittest-node9
+      - uitest-firefox
+      - uitest-chrome
       - lint

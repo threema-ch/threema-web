@@ -54,22 +54,16 @@ export function init() {
                         conf.url.indexOf('directives/') !== -1 ||
                         conf.url.indexOf('components/') !== -1) {
                         conf.url = '../../src/' + conf.url;
-                    } else if (conf.url.indexOf('css/') !== -1 ||
-                        conf.url.indexOf('fonts/') !== -1 ||
-                        conf.url.indexOf('i18n/') !== -1 ||
-                        conf.url.indexOf('img/') !== -1 ||
-                        conf.url.indexOf('libs/') !== -1 ||
-                        conf.url.indexOf('sounds/') !== -1) {
-                        conf.url = '../../public/' + conf.url;
                     }
                     return conf;
                 },
             };
         }]);
     }]);
+
 }
 
-export class ComposeAreaController {
+class ComposeAreaController {
     public static $inject = [];
 
     public initialData: threema.InitialConversationData;
