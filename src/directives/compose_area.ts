@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isActionTrigger} from '../helpers';
+import {extractText, isActionTrigger, logAdapter} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
@@ -156,61 +156,17 @@ export default [
                     stopTypingTimer = timeoutService.register(stopTyping, 10000, true, 'stopTyping');
                 }
 
-                // Process a DOM node recursively and extract text from compose area.
-                function getText(trim = true) {
-                    let text = '';
-                    const visitChildNodes = (parentNode: HTMLElement) => {
-                        // When pressing shift-enter and typing more text:
-                        //
-                        // - Firefox and chrome insert a <br> between two text nodes
-                        // - Safari creates two <div>s without any line break in between
-                        //   (except for the first line, which stays plain text)
-                        //
-                        // Thus, for Safari, we need to detect <div>s and insert a newline.
-
-                        // tslint:disable-next-line: prefer-for-of (see #98)
-                        for (let i = 0; i < parentNode.childNodes.length; i++) {
-                            const node = parentNode.childNodes[i] as HTMLElement;
-                            switch (node.nodeType) {
-                                case Node.TEXT_NODE:
-                                    // Append text, but strip leading and trailing newlines
-                                    text += node.nodeValue.replace(/(^[\r\n]*|[\r\n]*$)/g, '');
-                                    break;
-                                case Node.ELEMENT_NODE:
-                                    const tag = node.tagName.toLowerCase();
-                                    if (tag === 'div') {
-                                        text += '\n';
-                                        visitChildNodes(node);
-                                        break;
-                                    } else if (tag === 'img') {
-                                        text += (node as HTMLImageElement).alt;
-                                        break;
-                                    } else if (tag === 'br') {
-                                        text += '\n';
-                                        break;
-                                    } else if (tag === 'span' && node.hasAttribute('text')) {
-                                        text += node.getAttributeNode('text').value;
-                                        break;
-                                    }
-                                default:
-                                    $log.warn(logTag, 'Unhandled node:', node);
-                            }
-                        }
-                    };
-                    visitChildNodes(composeDiv[0]);
-                    return trim ? text.trim() : text;
-                }
-
                 // Determine whether field is empty
                 function composeAreaIsEmpty() {
-                    return getText().length === 0;
+                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+                    return text.length === 0;
                 }
 
                 // Submit the text from the compose area.
                 //
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
-                    const text = getText();
+                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
 
                     return new Promise((resolve, reject) => {
                         const submitTexts = (strings: string[]) => {
@@ -306,7 +262,7 @@ export default [
                     $timeout(() => {
                         // If the compose area contains only a single <br>, make it fully empty.
                         // See also: https://stackoverflow.com/q/14638887/284318
-                        const text = getText(false);
+                        const text = extractText(composeDiv[0], logAdapter($log.warn, logTag), false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
                         } else if (ev.keyCode === 190 && caretPosition !== null) {
@@ -616,7 +572,8 @@ export default [
                     setCaretPosition(posFrom);
 
                     // Update the draft text
-                    scope.onTyping(getText());
+                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+                    scope.onTyping(text);
 
                     updateView();
                 }
