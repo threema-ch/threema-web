@@ -1,15 +1,15 @@
 version: 2
 
 references:
-  unittest-steps: &unittest-steps
+  test-steps: &test-steps
     - checkout
     - restore_cache:
         keys:
           - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
     - run: npm install
     - run: npm run build
-    - run: npm run build:unittests
-    - run: npm run test:unittests
+    - run: npm run ${BUILDTARGET}
+    - run: npm run ${TESTTARGET}
     - save_cache:
         key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
         paths:
@@ -19,41 +19,31 @@ jobs:
   unittest-node8:
     docker:
       - image: circleci/node:8-browsers
-    steps: *unittest-steps
+    steps: *test-steps
+    environment:
+      BUILDTARGET: build:unittests
+      TESTTARGET: test:unittests
   unittest-node10:
     docker:
       - image: circleci/node:10-browsers
-    steps: *unittest-steps
+    steps: *test-steps
+    environment:
+      BUILDTARGET: build:unittests
+      TESTTARGET: test:unittests
   uitest-firefox:
     docker:
       - image: circleci/node:10-browsers
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
-      - run: npm install
-      - run: npm run build:uitests
-      - run: npm run test:uitests firefox:headless
-      - save_cache:
-          key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+    steps: *test-steps
+    environment:
+      BUILDTARGET: build:uitests
+      TESTTARGET: test:uitests firefox:headless
   uitest-chrome:
     docker:
       - image: circleci/node:10-browsers
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
-      - run: npm install
-      - run: npm run build:uitests
-      - run: npm run test:uitests chrome:headless
-      - save_cache:
-          key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+    steps: *test-steps
+    environment:
+      BUILDTARGET: build:uitests
+      TESTTARGET: test:uitests firefox:headless
   lint:
     docker:
       - image: circleci/node:8-browsers
