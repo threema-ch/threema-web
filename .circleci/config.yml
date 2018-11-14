@@ -22,28 +22,28 @@ jobs:
     steps: *test-steps
     environment:
       BUILDTARGET: build:unittests
-      TESTTARGET: test:unittests
+      TESTTARGET: test:unit
   unittest-node10:
     docker:
       - image: circleci/node:10-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:unittests
-      TESTTARGET: test:unittests
+      TESTTARGET: test:unit
   uitest-firefox:
     docker:
       - image: circleci/node:10-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
-      TESTTARGET: test:uitests firefox:headless
+      TESTTARGET: test:ui firefox
   uitest-chrome:
     docker:
       - image: circleci/node:10-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
-      TESTTARGET: test:uitests firefox:headless
+      TESTTARGET: test:ui chrome
   lint:
     docker:
       - image: circleci/node:8-browsers
