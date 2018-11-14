@@ -5,13 +5,13 @@ references:
     - checkout
     - restore_cache:
         keys:
-          - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+          - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
     - run: npm install
     - run: npm run build
     - run: npm run build:unittests
     - run: npm run test:unittests
     - save_cache:
-        key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+        key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
         paths:
           - node_modules
 
@@ -20,38 +20,38 @@ jobs:
     docker:
       - image: circleci/node:8-browsers
     steps: *unittest-steps
-  unittest-node9:
+  unittest-node10:
     docker:
-      - image: circleci/node:9-browsers
+      - image: circleci/node:10-browsers
     steps: *unittest-steps
   uitest-firefox:
     docker:
-      - image: circleci/node:9-browsers
+      - image: circleci/node:10-browsers
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+            - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
       - run: npm install
       - run: npm run build:uitests
       - run: npm run test:uitests firefox:headless
       - save_cache:
-          key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
   uitest-chrome:
     docker:
-      - image: circleci/node:9-browsers
+      - image: circleci/node:10-browsers
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+            - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
       - run: npm install
       - run: npm run build:uitests
       - run: npm run test:uitests chrome:headless
       - save_cache:
-          key: v1-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+          key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
   lint:
@@ -61,7 +61,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-test-node8-{{ arch }}-{{ checksum "package.json" }}
+            - v2-dependencies-test-node8-{{ arch }}-{{ checksum "package.json" }}
       - run: npm install
       - run: npm run lint
 
@@ -70,7 +70,7 @@ workflows:
   build:
     jobs:
       - unittest-node8
-      - unittest-node9
+      - unittest-node10
       - uitest-firefox
       - uitest-chrome
       - lint
