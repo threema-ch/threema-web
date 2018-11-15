@@ -14,10 +14,11 @@ import { expect } from 'chai';
 import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
 import * as TermColor from 'term-color';
 
-import { extractText } from '../../src/helpers';
+import { extractText as extractTextFunc } from '../../src/helpers';
 
 // Script arguments
 const browser = process.argv[2];
+const filterQuery = process.argv[3];
 
 // Type aliases
 type Testfunc = (driver: WebDriver) => void;
@@ -26,6 +27,18 @@ type Testfunc = (driver: WebDriver) => void;
 const composeArea = By.css('div.compose');
 const emojiKeyboard = By.css('.emoji-keyboard');
 const emojiTrigger = By.css('.emoji-trigger');
+
+/**
+ * Helper function to extract text.
+ */
+async function extractText(driver: WebDriver): Promise<string> {
+    const script = `
+        ${extractTextFunc.toString()}
+        const element = document.querySelector("div.compose");
+        return extractText(element);
+    `;
+    return driver.executeScript<string>(script);
+}
 
 /**
  * The emoji trigger should toggle the emoji keyboard.
@@ -91,13 +104,30 @@ async function insertNewline(driver: WebDriver) {
     await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
     await driver.findElement(composeArea).sendKeys('web');
 
-    const script = `
-        ${extractText.toString()}
-        const element = document.querySelector("div.compose");
-        return extractText(element);
-    `;
-    const text = await driver.executeScript<string>(script);
+    const text = await extractText(driver);
     expect(text).to.equal('hello\nthreema\nweb');
+}
+
+/**
+ * Insert an emoji after some newlines.
+ * Regression test for #574.
+ */
+async function regression574(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('hello');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('threema');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('web');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+
+    // Insert emoji
+    await driver.findElement(emojiTrigger).click();
+    await driver.findElement(By.css('.e1[title=":smile:"]')).click();
+
+    const text = await extractText(driver);
+    expect(text).to.equal('hello\nthreema\nweb\n😄');
 }
 
 // Register tests here
@@ -105,6 +135,7 @@ const TESTS: Array<[string, Testfunc]> = [
     ['Show and hide emoji selector', showEmojiSelector],
     ['Insert emoji and text', insertEmoji],
     ['Insert three lines of text', insertNewline],
+    ['Regression test #574', regression574],
 ];
 
 // Test runner
@@ -114,13 +145,21 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
     let i = 0;
     let success = 0;
     let failed = 0;
+    let skipped = 0;
     console.info('\n====== THREEMA WEB UI TESTS ======\n');
+    if (filterQuery !== undefined) {
+        console.info(`Filter query: "${filterQuery}"\n`);
+    }
     try {
         for (const [name, testfunc] of TESTS) {
-            console.info(TermColor.blue(`» ${i + 1}: Running test: ${name}`));
-            await driver.get(TEST_URL);
-            await testfunc(driver);
-            success++;
+            if (filterQuery === undefined || name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1) {
+                console.info(TermColor.blue(`» ${i + 1}: Running test: ${name}`));
+                await driver.get(TEST_URL);
+                await testfunc(driver);
+                success++;
+            } else {
+                skipped++;
+            }
             i++;
         }
     } catch (e) {
@@ -131,6 +170,6 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
         await driver.quit();
     }
     const colorFunc = failed > 0 ? TermColor.red : TermColor.green;
-    console.info(colorFunc(`\nSummary: ${i} tests run, ${success} succeeded, ${failed} failed`));
+    console.info(colorFunc(`\nSummary: ${i} tests run, ${success} succeeded, ${failed} failed, ${skipped} skipped`));
     process.exit(failed > 0 ? 1 : 0);
 })();

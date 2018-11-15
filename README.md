@@ -78,6 +78,10 @@ For example:
     npm run test:ui firefox
     npm run test:ui chrome
 
+You can also filter the test cases:
+
+    npm run test:ui firefox emoji
+
 To run linting checks:
 
     npm run lint
