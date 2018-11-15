@@ -6,12 +6,9 @@ fi
 
 export PATH=$PATH:"$(pwd)/node_modules/.bin/"
 
-browser=$1
-shift
-
 concurrently \
     --kill-others \
     -s first \
     --names \"server,test\" \
     "npm run testserver" \
-    "ts-node --skip-project -O '{\"target\": \"ES2015\"}' tests/ui/run.ts $browser"
+    "ts-node --skip-project -O '{\"target\": \"ES2015\"}' tests/ui/run.ts $*"

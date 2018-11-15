@@ -18,6 +18,7 @@ import { extractText } from '../../src/helpers';
 
 // Script arguments
 const browser = process.argv[2];
+const filterQuery = process.argv[3];
 
 // Type aliases
 type Testfunc = (driver: WebDriver) => void;
@@ -114,13 +115,21 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
     let i = 0;
     let success = 0;
     let failed = 0;
+    let skipped = 0;
     console.info('\n====== THREEMA WEB UI TESTS ======\n');
+    if (filterQuery !== undefined) {
+        console.info(`Filter query: "${filterQuery}"\n`);
+    }
     try {
         for (const [name, testfunc] of TESTS) {
-            console.info(TermColor.blue(`» ${i + 1}: Running test: ${name}`));
-            await driver.get(TEST_URL);
-            await testfunc(driver);
-            success++;
+            if (filterQuery === undefined || name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1) {
+                console.info(TermColor.blue(`» ${i + 1}: Running test: ${name}`));
+                await driver.get(TEST_URL);
+                await testfunc(driver);
+                success++;
+            } else {
+                skipped++;
+            }
             i++;
         }
     } catch (e) {
@@ -131,6 +140,6 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
         await driver.quit();
     }
     const colorFunc = failed > 0 ? TermColor.red : TermColor.green;
-    console.info(colorFunc(`\nSummary: ${i} tests run, ${success} succeeded, ${failed} failed`));
+    console.info(colorFunc(`\nSummary: ${i} tests run, ${success} succeeded, ${failed} failed, ${skipped} skipped`));
     process.exit(failed > 0 ? 1 : 0);
 })();
