@@ -19,6 +19,7 @@ import {extractText, isActionTrigger, logAdapter} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
+import {isElementNode, isTextNode} from '../typeguards';
 
 /**
  * The compose area where messages are written.
@@ -500,18 +501,22 @@ export default [
                     insertEmoji(this.textContent);
                 }
 
-                function insertEmoji(emoji, posFrom = null, posTo = null): void {
+                function insertEmoji(emoji, posFrom?: number, posTo?: number): void {
                     const emojiElement = ($filter('emojify') as any)(emoji, true, true, scope.emojiImagePath) as string;
                     insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 
-                function insertMention(mentionString, posFrom = null, posTo = null): void {
+                function insertMention(mentionString, posFrom?: number, posTo?: number): void {
                     const mentionElement = ($filter('mentionify') as any)(mentionString) as string;
                     insertHTMLElement(mentionString, mentionElement, posFrom, posTo);
                 }
 
-                function insertHTMLElement(original: string, formatted: string, posFrom = null, posTo = null): void {
-
+                function insertHTMLElement(
+                    original: string,
+                    formatted: string,
+                    posFrom?: number,
+                    posTo?: number,
+                ): void {
                     // In Chrome in right-to-left mode, our content editable
                     // area may contain a DIV element.
                     const childNodes = composeDiv[0].childNodes;
@@ -527,11 +532,11 @@ export default [
 
                     let currentHTML = '';
                     for (let i = 0; i < contentElement.childNodes.length; i++) {
-                        const node = contentElement.childNodes[i];
+                        const node: Node = contentElement.childNodes[i];
 
-                        if (node.nodeType === node.TEXT_NODE) {
+                        if (isTextNode(node)) {
                             currentHTML += node.textContent;
-                        } else if (node.nodeType === node.ELEMENT_NODE) {
+                        } else if (isElementNode(node)) {
                             const tag = node.tagName.toLowerCase();
                             if (tag === 'img' || tag === 'span') {
                                 currentHTML += getOuterHtml(node);
@@ -541,13 +546,23 @@ export default [
                                 if (i < contentElement.childNodes.length - 1) {
                                     currentHTML += getOuterHtml(node);
                                 }
+                            } else if (tag === 'div') {
+                                // Safari inserts a <div><br></div> after editing content editable fields.
+                                // Remove the last instance to fix this.
+                                if (node.childNodes.length === 1
+                                    && isElementNode(node.lastChild)
+                                    && node.lastChild.tagName.toLowerCase() === 'br') {
+                                    // Ignore
+                                } else {
+                                    currentHTML += getOuterHtml(node);
+                                }
                             }
                         }
                     }
 
                     if (caretPosition !== null) {
-                        posFrom = null === posFrom ? caretPosition.from : posFrom;
-                        posTo = null === posTo ? caretPosition.to : posTo;
+                        posFrom = posFrom === undefined ? caretPosition.from : posFrom;
+                        posTo = posTo === undefined ? caretPosition.to : posTo;
                         currentHTML = currentHTML.substr(0, posFrom)
                             + formatted
                             + currentHTML.substr(posTo);

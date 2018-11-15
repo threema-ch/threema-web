@@ -77,3 +77,17 @@ export function isValidDisconnectReason(
     }
     return false;
 }
+
+/**
+ * Text nodes type guard.
+ */
+export function isTextNode(node: Node): node is Text {
+    return node.nodeType === node.TEXT_NODE;
+}
+
+/**
+ * Element nodes type guard.
+ */
+export function isElementNode(node: Node): node is HTMLElement {
+    return node.nodeType === node.ELEMENT_NODE;
+}

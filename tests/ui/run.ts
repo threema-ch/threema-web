@@ -14,7 +14,7 @@ import { expect } from 'chai';
 import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
 import * as TermColor from 'term-color';
 
-import { extractText } from '../../src/helpers';
+import { extractText as extractTextFunc } from '../../src/helpers';
 
 // Script arguments
 const browser = process.argv[2];
@@ -27,6 +27,18 @@ type Testfunc = (driver: WebDriver) => void;
 const composeArea = By.css('div.compose');
 const emojiKeyboard = By.css('.emoji-keyboard');
 const emojiTrigger = By.css('.emoji-trigger');
+
+/**
+ * Helper function to extract text.
+ */
+async function extractText(driver: WebDriver): Promise<string> {
+    const script = `
+        ${extractTextFunc.toString()}
+        const element = document.querySelector("div.compose");
+        return extractText(element);
+    `;
+    return driver.executeScript<string>(script);
+}
 
 /**
  * The emoji trigger should toggle the emoji keyboard.
@@ -92,13 +104,30 @@ async function insertNewline(driver: WebDriver) {
     await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
     await driver.findElement(composeArea).sendKeys('web');
 
-    const script = `
-        ${extractText.toString()}
-        const element = document.querySelector("div.compose");
-        return extractText(element);
-    `;
-    const text = await driver.executeScript<string>(script);
+    const text = await extractText(driver);
     expect(text).to.equal('hello\nthreema\nweb');
+}
+
+/**
+ * Insert an emoji after some newlines.
+ * Regression test for #574.
+ */
+async function regression574(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('hello');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('threema');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('web');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+
+    // Insert emoji
+    await driver.findElement(emojiTrigger).click();
+    await driver.findElement(By.css('.e1[title=":smile:"]')).click();
+
+    const text = await extractText(driver);
+    expect(text).to.equal('hello\nthreema\nweb\n😄');
 }
 
 // Register tests here
@@ -106,6 +135,7 @@ const TESTS: Array<[string, Testfunc]> = [
     ['Show and hide emoji selector', showEmojiSelector],
     ['Insert emoji and text', insertEmoji],
     ['Insert three lines of text', insertNewline],
+    ['Regression test #574', regression574],
 ];
 
 // Test runner
