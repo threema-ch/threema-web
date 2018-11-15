@@ -3,59 +3,134 @@
  *
  * This file is part of Threema Web.
  */
+
+// tslint:disable:no-reference
+// tslint:disable:no-console
 // tslint:disable:no-unused-expression
 
-import { Selector, ClientFunction } from 'testcafe';
+/// <reference path="../../src/threema.d.ts" />
 
-// NOTE: These tests use test cafe.
-// See http://devexpress.github.io/testcafe/documentation/getting-started/ for
-// documentation on how to write UI tests.
+import { expect } from 'chai';
+import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
+import * as TermColor from 'term-color';
 
-fixture `Compose Area`
-    .page `http://localhost:7777/tests/ui/compose_area.html`;
+import { extractText } from '../../src/helpers';
 
-test('Show and hide emoji selector', async (t) => {
-    const keyboard = await Selector('.emoji-keyboard');
+// Script arguments
+const browser = process.argv[2];
 
-    // Not visible initially
-    await t.expect(keyboard.visible).eql(false);
+// Type aliases
+type Testfunc = (driver: WebDriver) => void;
+
+// Shared selectors
+const composeArea = By.css('div.compose');
+const emojiKeyboard = By.css('.emoji-keyboard');
+const emojiTrigger = By.css('.emoji-trigger');
+
+/**
+ * The emoji trigger should toggle the emoji keyboard.
+ */
+async function showEmojiSelector(driver: WebDriver) {
+    // Initially not visible
+    expect(
+        await driver.findElement(emojiKeyboard).isDisplayed()
+    ).to.be.false;
 
     // Show
-    await t.click('.emoji-trigger');
+    await driver.findElement(emojiTrigger).click();
 
-    // Visible
-    await t.expect(keyboard.visible).eql(true);
+    expect(
+        await driver.findElement(emojiKeyboard).isDisplayed()
+    ).to.be.true;
 
     // Hide
-    await t.click('.emoji-trigger');
+    await driver.findElement(emojiTrigger).click();
 
-    // Visible
-    await t.expect(keyboard.visible).eql(false);
-});
+    expect(
+        await driver.findElement(emojiKeyboard).isDisplayed()
+    ).to.be.false;
+}
 
-test('Insert emoji', async (t) => {
+/**
+ * Insert two emoji and some text.
+ */
+async function insertEmoji(driver: WebDriver) {
     // Show emoji keyboard
-    await t.click('.emoji-trigger');
+    await driver.findElement(emojiTrigger).click();
 
     // Insert woman zombie emoji
-    await t.click('.e1._1f9df-2640');
+    await driver.findElement(By.css('.e1._1f9df-2640')).click();
+
+    // Insert text
+    await driver.findElement(composeArea).sendKeys('hi');
 
     // Insert beer
-    await t.click('.e1-food').click('.e1._1f37b');
+    await driver.findElement(By.className('e1-food')).click();
+    await driver.findElement(By.css('.e1._1f37b')).click();
 
-    // Ensure both have been inserted
-    const getChildNodeCount = await ClientFunction(() => {
-        return document.querySelector('div.compose').childNodes.length;
-    });
-    await t.expect(await getChildNodeCount()).eql(2);
+    // Validate emoji
+    const emoji = await driver.findElement(composeArea).findElements(By.xpath('*'));
+    expect(emoji.length).to.equal(2);
+    expect(await emoji[0].getAttribute('title')).to.equal(':woman_zombie:');
+    expect(await emoji[1].getAttribute('title')).to.equal(':beers:');
 
-    const firstEmoji = await Selector('div.compose img').nth(0)();
-    await t.expect(firstEmoji.tagName).eql('img');
-    await t.expect(firstEmoji.attributes.title).eql(':woman_zombie:');
-    await t.expect(firstEmoji.classNames).eql(['e1']);
+    // Validate text
+    const html = await driver.findElement(composeArea).getAttribute('innerHTML');
+    expect(/>hi<img/.test(html)).to.be.true;
+}
 
-    const secondEmoji = await Selector('div.compose img').nth(1)();
-    await t.expect(secondEmoji.tagName).eql('img');
-    await t.expect(secondEmoji.attributes.title).eql(':beers:');
-    await t.expect(secondEmoji.classNames).eql(['e1']);
-});
+/**
+ * Insert a newline using shift-enter.
+ */
+async function insertNewline(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('hello');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('threema');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('web');
+
+    const script = `
+        ${extractText.toString()}
+        const element = document.querySelector("div.compose");
+        return extractText(element);
+    `;
+    const text = await driver.executeScript<string>(script);
+    expect(text).to.equal('hello\nthreema\nweb');
+}
+
+// Register tests here
+const TESTS: Array<[string, Testfunc]> = [
+    ['Show and hide emoji selector', showEmojiSelector],
+    ['Insert emoji and text', insertEmoji],
+    ['Insert three lines of text', insertNewline],
+];
+
+// Test runner
+const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
+(async function() {
+    const driver: WebDriver = await new Builder().forBrowser(browser).build();
+    let i = 0;
+    let success = 0;
+    let failed = 0;
+    console.info('\n====== THREEMA WEB UI TESTS ======\n');
+    try {
+        for (const [name, testfunc] of TESTS) {
+            console.info(TermColor.blue(`» ${i + 1}: Running test: ${name}`));
+            await driver.get(TEST_URL);
+            await testfunc(driver);
+            success++;
+            i++;
+        }
+    } catch (e) {
+        console.error(TermColor.red(`\nTest failed:`));
+        console.error(e);
+        failed++;
+    } finally {
+        await driver.quit();
+    }
+    const colorFunc = failed > 0 ? TermColor.red : TermColor.green;
+    console.info(colorFunc(`\nSummary: ${i} tests run, ${success} succeeded, ${failed} failed`));
+    process.exit(failed > 0 ? 1 : 0);
+})();
