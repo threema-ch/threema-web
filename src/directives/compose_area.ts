@@ -592,8 +592,8 @@ export default [
                     } else {
                         // If the caret position is not set, then the user must be at the
                         // end of the line. Insert element there.
-                        newPos = currentHtml.length;
                         currentHtml += cleanedElementHtml;
+                        newPos = currentHtml.length;
                         caretPosition = {
                             from: currentHtml.length,
                         };
@@ -725,45 +725,64 @@ export default [
                     }
                 }
 
-                // Set the correct cart position in the content editable div.
+                // Set the correct caret position in the content editable div.
                 // Pos is the position in the html content (not in the visible plain text).
                 function setCaretPosition(pos: number) {
-                    const rangeAt = (node: Node, offset?: number) => {
+
+                    // Put the caret at the specified node/offset by creating a range.
+                    const rangeAt = (node: Node, nodeOffset?: number) => {
                         const range = document.createRange();
-                        range.collapse(false);
-                        if (offset !== undefined) {
-                            range.setStart(node, offset);
-                        } else {
+                        if (nodeOffset === undefined) {
                             range.setStartAfter(node);
+                            range.setEndAfter(node);
+                        } else if (nodeOffset === 0) {
+                            range.setStartBefore(node);
+                            range.setEndBefore(node);
+                        } else {
+                            range.setStart(node, nodeOffset);
+                            range.setEnd(node, nodeOffset);
                         }
                         const sel = window.getSelection();
                         sel.removeAllRanges();
                         sel.addRange(range);
                     };
 
+                    // The compose area content can consist of multiple text
+                    // and/or element nodes. Iterate through all nodes and sum
+                    // up the length. Once we find the node that contains the
+                    // current cursor position, we also need to find the offset
+                    // from the node start.
+                    let offset = pos;
                     for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
                         const node = composeDiv[0].childNodes[i];
+
+                        // Determine node size
                         let size;
-                        let offset;
                         switch (node.nodeType) {
                             case Node.TEXT_NODE:
                                 size = node.textContent.length;
-                                offset = pos;
                                 break;
                             case Node.ELEMENT_NODE:
-                                size = getOuterHtml(node).length ;
+                                size = getOuterHtml(node).length;
                                 break;
                             default:
                                 $log.warn(logTag, 'Unhandled node:', node);
                         }
 
-                        if (pos < size) {
-                            // use this node
+                        // Ready to set the caret position?
+                        if (offset < size) {
+                            // The position lies within this node!
                             rangeAt(node, offset);
+                            return;
                         } else if (i === composeDiv[0].childNodes.length - 1) {
+                            // We're at the end of the node list.
+                            // Simply put the cursor at the end.
                             rangeAt(node);
+                            return;
                         }
-                        pos -= size;
+
+                        // The target pos is after the current node. Update offset.
+                        offset -= size;
                     }
                 }
 

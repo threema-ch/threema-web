@@ -173,6 +173,31 @@ async function regression672(driver: WebDriver) {
     expect(text).to.equal('hello\n😫😫\nworld');
 }
 
+/**
+ * Insert two emoji between two lines of text, then add text.
+ * Regression test for #673.
+ */
+async function regression673(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('a');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('c');
+    await driver.findElement(composeArea).sendKeys(Key.UP);
+
+    // Insert an emoji
+    await driver.findElement(emojiTrigger).click();
+    const emoji = await driver.findElement(By.css('.e1[title=":tired_face:"]'));
+    await emoji.click();
+
+    // Insert some more text
+    await driver.findElement(composeArea).sendKeys('b');
+
+    const text = await extractText(driver);
+    expect(text).to.equal('a\n😫b\nc');
+}
+
 // Register tests here
 const TESTS: Array<[string, Testfunc]> = [
     ['Show and hide emoji selector', showEmojiSelector],
@@ -181,6 +206,7 @@ const TESTS: Array<[string, Testfunc]> = [
     ['Regression test #574', regression574],
     ['Regression test #671', regression671],
     ['Regression test #672', regression672],
+    ['Regression test #673', regression673],
 ];
 
 // Test runner
