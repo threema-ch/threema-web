@@ -90,11 +90,14 @@ export default [
                     composeDiv[0].innerText = scope.initialData.draft;
                 }
 
+                // The current caret position, used when inserting objects
                 let caretPosition: {
+                    // The position in the source HTML
                     from?: number,
                     to?: number,
-                    fromBytes?: number,
-                    toBytes?: number,
+                    // The position in the visible character list
+                    fromChar?: number,
+                    toChar?: number,
                 } = null;
 
                 /**
@@ -268,7 +271,7 @@ export default [
                             composeDiv[0].innerText = '';
                         } else if (ev.keyCode === 190 && caretPosition !== null) {
                             // A ':' is pressed, try to parse
-                            const currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
+                            const currentWord = stringService.getWord(text, caretPosition.fromChar, [':']);
                             if (currentWord.realLength > 2
                                 && currentWord.word.substr(0, 1) === ':') {
                                 const unicodeEmoji = emojione.shortnameToUnicode(currentWord.word);
@@ -512,8 +515,8 @@ export default [
                 }
 
                 function insertHTMLElement(
-                    original: string,
-                    formatted: string,
+                    elementText: string, // The element as the original text representation, not yet converted to HTML
+                    elementHtml: string, // The element converted to HTML
                     posFrom?: number,
                     posTo?: number,
                 ): void {
@@ -530,21 +533,21 @@ export default [
                         contentElement = composeDiv[0];
                     }
 
-                    let currentHTML = '';
+                    let currentHtml = '';
                     for (let i = 0; i < contentElement.childNodes.length; i++) {
                         const node: Node = contentElement.childNodes[i];
 
                         if (isTextNode(node)) {
-                            currentHTML += node.textContent;
+                            currentHtml += node.textContent;
                         } else if (isElementNode(node)) {
                             const tag = node.tagName.toLowerCase();
                             if (tag === 'img' || tag === 'span') {
-                                currentHTML += getOuterHtml(node);
+                                currentHtml += getOuterHtml(node);
                             } else if (tag === 'br') {
                                 // Firefox inserts a <br> after editing content editable fields.
                                 // Remove the last <br> to fix this.
                                 if (i < contentElement.childNodes.length - 1) {
-                                    currentHTML += getOuterHtml(node);
+                                    currentHtml += getOuterHtml(node);
                                 }
                             } else if (tag === 'div') {
                                 // Safari inserts a <div><br></div> after editing content editable fields.
@@ -554,37 +557,53 @@ export default [
                                     && node.lastChild.tagName.toLowerCase() === 'br') {
                                     // Ignore
                                 } else {
-                                    currentHTML += getOuterHtml(node);
+                                    currentHtml += getOuterHtml(node);
                                 }
                             }
                         }
                     }
 
+                    // Because the browser may transform HTML code when
+                    // inserting it into the DOM, we temporarily write it to a
+                    // DOM element to ensure that the current representation
+                    // corresponds to the representation when inserted into the
+                    // DOM. (See #671 for details.)
+                    const tmpDiv = document.createElement('div');
+                    tmpDiv.innerHTML = elementHtml;
+                    const cleanedElementHtml = tmpDiv.innerHTML;
+
+                    // Insert element into currentHtml and determine new caret position
+                    let newPos = posFrom;
                     if (caretPosition !== null) {
+                        // If the caret position is set, then the user has moved around
+                        // in the contenteditable field and might not be ad the end
+                        // of the line.
                         posFrom = posFrom === undefined ? caretPosition.from : posFrom;
                         posTo = posTo === undefined ? caretPosition.to : posTo;
-                        currentHTML = currentHTML.substr(0, posFrom)
-                            + formatted
-                            + currentHTML.substr(posTo);
 
-                        // change caret position
-                        caretPosition.from += formatted.length;
-                        caretPosition.fromBytes += original.length;
-                        posFrom += formatted.length;
+                        currentHtml = currentHtml.substr(0, posFrom)
+                            + cleanedElementHtml
+                            + currentHtml.substr(posTo);
+
+                        // Change caret position
+                        caretPosition.from += cleanedElementHtml.length;
+                        caretPosition.fromChar += elementText.length;
+                        newPos = posFrom + cleanedElementHtml.length;
                     } else {
-                        // insert at the end of line
-                        posFrom = currentHTML.length;
-                        currentHTML += formatted;
+                        // If the caret position is not set, then the user must be at the
+                        // end of the line. Insert element there.
+                        newPos = currentHtml.length;
+                        currentHtml += cleanedElementHtml;
                         caretPosition = {
-                            from: currentHTML.length,
+                            from: currentHtml.length,
                         };
                     }
                     caretPosition.to = caretPosition.from;
-                    caretPosition.toBytes = caretPosition.fromBytes;
+                    caretPosition.toChar = caretPosition.fromChar;
 
-                    contentElement.innerHTML = currentHTML;
+                    contentElement.innerHTML = currentHtml;
                     cleanupComposeContent();
-                    setCaretPosition(posFrom);
+                    setCaretPosition(newPos);
 
                     // Update the draft text
                     const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
@@ -695,20 +714,19 @@ export default [
                             const from = getPositions(range.startOffset, range.startContainer);
                             if (from !== null && from.html >= 0) {
                                 const to = getPositions(range.endOffset, range.endContainer);
-
                                 caretPosition = {
                                     from: from.html,
                                     to: to.html,
-                                    fromBytes: from.text,
-                                    toBytes: to.text,
+                                    fromChar: from.text,
+                                    toChar: to.text,
                                 };
                             }
                         }
                     }
                 }
 
-                // set the correct cart position in the content editable div, position
-                // is the position in the html content (not plain text)
+                // Set the correct cart position in the content editable div.
+                // Pos is the position in the html content (not in the visible plain text).
                 function setCaretPosition(pos: number) {
                     const rangeAt = (node: Node, offset?: number) => {
                         const range = document.createRange();
