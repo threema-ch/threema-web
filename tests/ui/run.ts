@@ -130,12 +130,57 @@ async function regression574(driver: WebDriver) {
     expect(text).to.equal('hello\nthreema\nweb\n😄');
 }
 
+/**
+ * Insert two emoji in the middle of existing text.
+ * Regression test for #671.
+ */
+async function regression671(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('helloworld');
+    await driver.findElement(composeArea).sendKeys(Key.LEFT, Key.LEFT, Key.LEFT, Key.LEFT, Key.LEFT);
+
+    // Insert emoji
+    await driver.findElement(emojiTrigger).click();
+    const emoji = await driver.findElement(By.css('.e1[title=":smile:"]'));
+    await emoji.click();
+    await emoji.click();
+
+    const text = await extractText(driver);
+    expect(text).to.equal('hello😄😄world');
+}
+
+/**
+ * Insert two emoji between two lines of text.
+ * Regression test for #672.
+ */
+async function regression672(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('hello');
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys(Key.SHIFT, Key.ENTER);
+    await driver.findElement(composeArea).sendKeys('world');
+    await driver.findElement(composeArea).sendKeys(Key.UP);
+
+    // Insert two emoji
+    await driver.findElement(emojiTrigger).click();
+    const emoji = await driver.findElement(By.css('.e1[title=":tired_face:"]'));
+    await emoji.click();
+    await emoji.click();
+
+    const text = await extractText(driver);
+    expect(text).to.equal('hello\n😫😫\nworld');
+}
+
 // Register tests here
 const TESTS: Array<[string, Testfunc]> = [
     ['Show and hide emoji selector', showEmojiSelector],
     ['Insert emoji and text', insertEmoji],
     ['Insert three lines of text', insertNewline],
     ['Regression test #574', regression574],
+    ['Regression test #671', regression671],
+    ['Regression test #672', regression672],
 ];
 
 // Test runner
