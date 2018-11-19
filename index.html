@@ -77,14 +77,14 @@
         <!-- The overlay box that shows up if media is previewed -->
         <mediabox></mediabox>
 
-        <div id="main">
+        <div id="main" translate-cloak>
             <div id="status-bar">
                 <status-bar active="ctrl.expandStatusBar"></status-bar>
             </div>
             <div id="main-content" ui-view></div>
         </div>
         <footer ng-controller="FooterController as ctrl">
-            <ul>
+            <ul translate-cloak>
                 <li><a ng-click="ctrl.showVersionInfo('[[VERSION]]')" ng-keypress="ctrl.showVersionInfo('[[VERSION]]', $event)" tabindex="0">Version [[VERSION]] {{ ctrl.config.VERSION_MOUNTAIN }}</a></li>
                 <li><a href="https://threema.ch/threema-web" target="_blank" rel="noopener noreferrer" tabindex="0" translate>welcome.MORE_ABOUT_WEB</a>
                 </li>
