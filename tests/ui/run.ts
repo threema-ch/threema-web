@@ -197,20 +197,23 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
     }
     try {
         for (const [name, testfunc] of TESTS) {
-            if (filterQuery === undefined || name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1) {
-                console.info(TermColor.blue(`» ${i + 1}: Running test: ${name}`));
-                await driver.get(TEST_URL);
-                await testfunc(driver);
-                success++;
-            } else {
-                skipped++;
+            try {
+                if (filterQuery === undefined || name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1) {
+                    console.info(TermColor.blue(`» ${i + 1}: Running test: ${name}`));
+                    await driver.get(TEST_URL);
+                    await testfunc(driver);
+                    success++;
+                } else {
+                    skipped++;
+                }
+            } catch (e) {
+                console.error(TermColor.red(`\nTest failed:`));
+                console.error(e);
+                failed++;
+            } finally {
+                i++;
             }
-            i++;
         }
-    } catch (e) {
-        console.error(TermColor.red(`\nTest failed:`));
-        console.error(e);
-        failed++;
     } finally {
         await driver.quit();
     }
