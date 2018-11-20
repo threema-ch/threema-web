@@ -6,10 +6,24 @@ references:
     - restore_cache:
         keys:
           - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
-    - run: npm install
-    - run: npm run build
-    - run: npm run ${BUILDTARGET}
-    - run: npm run ${TESTTARGET}
+    - run:
+        name: Enable Safari develop menu
+        command: if [ $OS == "macos" ]; then sudo defaults write com.apple.Safari IncludeDevelopMenu -enable; else echo "skipping"; fi
+    - run:
+        name: Allow Safari automation
+        command: if [ $OS == "macos" ]; then sudo /usr/bin/safaridriver --enable; else echo "skipping"; fi
+    - run:
+        name: Install dependencies
+        command: npm install
+    - run:
+        name: Build
+        command: npm run build
+    - run:
+        name: Build tests
+        command: npm run ${BUILDTARGET}
+    - run:
+        name: Run tests
+        command: npm run ${TESTTARGET}
     - save_cache:
         key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
         paths:
@@ -23,6 +37,7 @@ jobs:
     environment:
       BUILDTARGET: build:unittests
       TESTTARGET: test:unit
+      OS: linux
   unittest-node10:
     docker:
       - image: circleci/node:10-browsers
@@ -30,6 +45,7 @@ jobs:
     environment:
       BUILDTARGET: build:unittests
       TESTTARGET: test:unit
+      OS: linux
   uitest-firefox:
     docker:
       - image: circleci/node:10-browsers
@@ -37,6 +53,7 @@ jobs:
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui firefox
+      OS: linux
   uitest-chrome:
     docker:
       - image: circleci/node:10-browsers
@@ -44,6 +61,15 @@ jobs:
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui chrome
+      OS: linux
+  uitest-safari:
+    macos:
+      xcode: "10.1.0"
+    steps: *test-steps
+    environment:
+      BUILDTARGET: build:uitests
+      TESTTARGET: test:ui safari
+      OS: macos
   lint:
     docker:
       - image: circleci/node:8-browsers
@@ -63,4 +89,5 @@ workflows:
       - unittest-node10
       - uitest-firefox
       - uitest-chrome
+      - uitest-safari
       - lint

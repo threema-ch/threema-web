@@ -186,7 +186,14 @@ const TESTS: Array<[string, Testfunc]> = [
 // Test runner
 const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
 (async function() {
-    const driver: WebDriver = await new Builder().forBrowser(browser).build();
+    let driver: WebDriver;
+    try {
+        driver = await new Builder().forBrowser(browser).build();
+    } catch (e) {
+        console.error('Could not launch webdriver. Stack trace:\n');
+        console.error(e.stack);
+        process.exit(1);
+    }
     let i = 0;
     let success = 0;
     let failed = 0;
