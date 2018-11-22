@@ -4,6 +4,18 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.2][v2.1.2] (2018-11-22)
+
+Changes:
+
+* [change] Prevent Chrome from translating Threema Web ([#681][i681])
+* [bug] Contacts: Exclude hidden receivers ([#655][i655])
+* [bug] Member list editor: Handle inactive contacts ([#665][i665])
+* [bug] Stop validating args for create/group & create/distributionList ([#666][i666])
+* [bug] Inserting emoji fixes ([#574][i574] / [#671][i671] / [#672][i672] / [#673][i673])
+* [bug] Avoid flash of untranslated text ([#676][i676])
+
+
 ### [v2.1.1][v2.1.1] (2018-10-29)
 
 Changes:
@@ -582,6 +594,7 @@ First public release.
 [i567]: https://github.com/threema-ch/threema-web/issues/567
 [i569]: https://github.com/threema-ch/threema-web/issues/569
 [i572]: https://github.com/threema-ch/threema-web/issues/572
+[i574]: https://github.com/threema-ch/threema-web/issues/574
 [i590]: https://github.com/threema-ch/threema-web/pull/590
 [i597]: https://github.com/threema-ch/threema-web/pull/597
 [i602]: https://github.com/threema-ch/threema-web/pull/602
@@ -600,8 +613,17 @@ First public release.
 [i644]: https://github.com/threema-ch/threema-web/pull/644
 [i648]: https://github.com/threema-ch/threema-web/pull/648
 [i649]: https://github.com/threema-ch/threema-web/pull/649
+[i655]: https://github.com/threema-ch/threema-web/issues/655
 [i656]: https://github.com/threema-ch/threema-web/pull/656
+[i665]: https://github.com/threema-ch/threema-web/issues/665
+[i666]: https://github.com/threema-ch/threema-web/issues/666
+[i671]: https://github.com/threema-ch/threema-web/issues/671
+[i672]: https://github.com/threema-ch/threema-web/issues/672
+[i673]: https://github.com/threema-ch/threema-web/issues/673
+[i676]: https://github.com/threema-ch/threema-web/issues/676
+[i681]: https://github.com/threema-ch/threema-web/issues/681
 
+[v2.1.2]: https://github.com/threema-ch/threema-web/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/threema-ch/threema-web/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0
 [v2.0.3]: https://github.com/threema-ch/threema-web/compare/v2.0.2...v2.0.3
