@@ -72,6 +72,8 @@ export class PushService {
     /**
      * Send a push notification for the specified session (public permanent key
      * of the initiator). The promise is always resolved to a boolean.
+     *
+     * If something goes wrong, the promise is rejected with an `Error` instance.
      */
     public async sendPush(session: Uint8Array): Promise<boolean> {
         if (!this.isAvailable()) {
