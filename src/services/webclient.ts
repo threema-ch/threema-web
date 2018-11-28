@@ -1022,13 +1022,13 @@ export class WebClientService {
 
         // Actually send the push notification
         this.pushService.sendPush(this.salty.permanentKeyBytes)
-            .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
             .then(() => {
                 this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType, 'push');
                 this.$rootScope.$apply(() => {
                     this.stateService.updateConnectionBuildupState('push');
                 });
-            });
+            })
+            .catch((e: Error) => this.$log.error(this.logTag, 'Could not send wakeup push to app: ' + e.message));
     }
 
     /**
