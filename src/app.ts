@@ -95,9 +95,10 @@ angular.module('3ema', [
             suffix: '.json',
         })
         .uniformLanguageTag('java')
-        .registerAvailableLanguageKeys(['en', 'de'], {
+        .registerAvailableLanguageKeys(['en', 'de', 'fr'], {
             'en_*': 'en',
             'de_*': 'de',
+            'fr_*': 'fr',
         })
         .determinePreferredLanguage()
         .fallbackLanguage('en');
