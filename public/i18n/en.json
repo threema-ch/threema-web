@@ -22,7 +22,7 @@
         "BTN_RECONNECT": "Reconnect",
         "BROWSER_NOT_SUPPORTED": "This browser is not supported",
         "BROWSER_NOT_SUPPORTED_ANDROID": "This browser is not supported on Android",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> or <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a> (iOS only), otherwise the web client might not work properly.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https://www.google.com/chrome/browser/desktop/' target='_blank' rel='noopener noreferrer'>Google Chrome</a>, <a href='https://www.mozilla.org/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox</a>, <a href='https://www.opera.com/' target='_blank' rel='noopener noreferrer'>Opera</a> or <a href='https://www.apple.com/safari/' target='_blank' rel='noopener noreferrer'>Safari</a> (iOS only), otherwise the web client might not work properly.",
         "SAFARI": "Safari is only compatible with Threema Web for iOS.<br>If you are using Android, please use another browser.",
         "CONNECTING": "Connecting",
         "WAITING_FOR_PUSH": "Waiting for<br>app wakeup …",
