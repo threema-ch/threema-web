@@ -105,7 +105,14 @@ export default [
                     toChar?: number,
                 } = null;
 
-                function chatBlocked(blocked: boolean) {
+                let chatBlocked = false;
+
+                // Initialize blocking state
+                setChatBlocked(receiverService.isBlocked(scope.receiver));
+
+                function setChatBlocked(blocked: boolean) {
+                    chatBlocked = blocked;
+                    $log.debug(logTag, 'Receiver blocked:', blocked);
                     if (blocked) {
                         sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                         emojiTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
@@ -126,15 +133,12 @@ export default [
                     }
                 }
 
-                // Initialize blocking state
-                chatBlocked(receiverService.isBlocked(scope.receiver));
-
                 // Watch `isBlocked` flag for changes
                 scope.$watch(
                     (_scope) => receiverService.isBlocked(_scope.receiver),
                     (isBlocked: boolean, wasBlocked: boolean) => {
                         if (isBlocked !== wasBlocked) {
-                            chatBlocked(isBlocked);
+                            setChatBlocked(isBlocked);
                         }
                     },
                 );
@@ -531,7 +535,7 @@ export default [
                 function onEmojiTrigger(ev: UIEvent): void {
                     ev.stopPropagation();
                     // TODO maybe simlify
-                    if (receiverService.isBlocked(scope.receiver)) {
+                    if (chatBlocked) {
                         hideEmojiPicker();
                         return;
                     }
@@ -661,7 +665,7 @@ export default [
                 function onFileTrigger(ev: UIEvent): void {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    if (receiverService.isBlocked(scope.receiver)) {
+                    if (chatBlocked) {
                         return;
                     }
                     const input = element[0].querySelector('.file-input') as HTMLInputElement;
@@ -671,7 +675,7 @@ export default [
                 function onSendTrigger(ev: UIEvent): boolean {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    if (receiverService.isBlocked(scope.receiver)) {
+                    if (chatBlocked) {
                         return;
                     }
                     return sendText();
