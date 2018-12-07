@@ -60,7 +60,6 @@ export class ReceiverService {
     }
 
     public isBlocked(receiver: threema.Receiver): boolean {
-        if (!isContactReceiver(receiver)) { return false; }
-        return receiver.isBlocked;
+        return isContactReceiver(receiver) && receiver.isBlocked;
     }
 }
