@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {hasValue, isActionTrigger} from '../helpers';
+import {isActionTrigger} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
