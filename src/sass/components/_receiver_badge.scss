@@ -31,15 +31,18 @@
     margin-right: $main-padding;
   }
 
-
   .receiver-badge-name {
     margin-right: $main-padding;
   }
+
+  &.inactive {
+    opacity: 0.5;
+  }
+
   /**
     Contact badge specific rules
    */
   &.contact-badge {
-
     .contact-badge-identity {
       flex: 1;
       text-align: right;
@@ -52,7 +55,6 @@
     Distribution List badge specific rules
    */
   &.distribution-list-badge {
-
   }
 
   /**

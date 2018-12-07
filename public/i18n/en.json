@@ -22,7 +22,7 @@
         "BTN_RECONNECT": "Reconnect",
         "BROWSER_NOT_SUPPORTED": "This browser is not supported",
         "BROWSER_NOT_SUPPORTED_ANDROID": "This browser is not supported on Android",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https:\/\/www.google.com\/chrome\/browser\/desktop\/' target='_blank' rel='noopener noreferrer'>Google Chrome<\/a>, <a href='https:\/\/www.mozilla.org\/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox<\/a>, <a href='https:\/\/www.opera.com\/' target='_blank' rel='noopener noreferrer'>Opera</a> or <a href='https:\/\/www.apple.com\/safari\/' target='_blank' rel='noopener noreferrer'>Safari</a> (iOS only), otherwise the web client might not work properly.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of <a href='https://www.google.com/chrome/browser/desktop/' target='_blank' rel='noopener noreferrer'>Google Chrome</a>, <a href='https://www.mozilla.org/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox</a>, <a href='https://www.opera.com/' target='_blank' rel='noopener noreferrer'>Opera</a> or <a href='https://www.apple.com/safari/' target='_blank' rel='noopener noreferrer'>Safari</a> (iOS only), otherwise the web client might not work properly.",
         "SAFARI": "Safari is only compatible with Threema Web for iOS.<br>If you are using Android, please use another browser.",
         "CONNECTING": "Connecting",
         "WAITING_FOR_PUSH": "Waiting for<br>app wakeup …",
@@ -34,13 +34,14 @@
         "MANUAL_START_STEP1": "Open the Threema app and tap on \"Threema Web\" in the left navigation drawer",
         "MANUAL_START_STEP2": "Tap on the session related to this browser",
         "MANUAL_START_STEP3": "Select \"Start session\" to start the session",
-        "MORE_ABOUT_WEB": "More about Threema Web",
+        "MORE_ABOUT_WEB": "About",
         "LOCAL_STORAGE_MISSING_DETAILS": "Access to LocalStorage not possible. This can occur if your browser is configured to reject cookies, or if you installed a browser add-on that blocks access to LocalStorage. Please allow local storage in your browser settings or disable any add-ons you might have installed.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Critical error when accessing LocalStorage: {errorMsg}.<br>Try restarting your browser.",
         "ALREADY_CONNECTED": "Already connected",
         "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!",
         "VERSION": "Version",
-        "BACKGROUND_IMAGE": "Background Image"
+        "BACKGROUND_IMAGE": "Background Image",
+        "HELP_TRANSLATE": "Help Translating"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",

@@ -1,17 +1,22 @@
 {
   "name": "threema-web",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Threema Webclient",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "browserify -p tsify src/app.ts -t [ babelify --presets [ es2015 ] --extensions .ts ] -p [ browserify-header --file header.js ] -o dist/app.js",
     "build:css": "node-sass -o public/css/ --output-style compressed src/sass/",
     "build:css:watch": "node-sass -w -r --source-map true --source-map-embed true -o public/css/ --output-style compressed src/sass/",
-    "build:tests": "browserify -p tsify tests/ts/main.ts -t [ babelify --presets [ es2015 ] --extensions .ts ] -o dist/ts-tests.js",
+    "build:tests": "echo -e 'NOTE: Use either \"npm build:unittests\" or \"npm build:uitests\"\n' && exit 1",
+    "build:unittests": "browserify -p tsify tests/ts/main.ts -t [ babelify --presets [ es2015 ] --extensions .ts ] -o dist/ts-tests.js",
+    "build:uitests": "npm run build:css && browserify -p tsify tests/ui/main.ts -t [ babelify --presets [ es2015 ] --extensions .ts ] -o dist/ui-tests.js",
     "dist": "npm run build && echo \"\" && node dist/build-package.js",
     "serve:live": "echo 'NOTE: serve:live command has been renamed to devserver'",
     "devserver": "npm run build:css && concurrently --kill-others --names \"css,server\" -p name \"npm run build:css:watch\" \"budo src/app.ts:dist/app.js -d public -d . -d src --live -- -d -p tsify -t [ babelify --presets [ es2015 ] --extensions .ts ]\"",
-    "test": "npm run build:tests && karma start --single-run --log-level=debug --colors",
+    "testserver": "budo -d public -d . -d src -p 7777",
+    "test": "echo -e 'NOTE: Use either \"npm test:unit\" or \"npm test:ui\"\n' && exit 1",
+    "test:unit": "npm run build:unittests && karma start --single-run --log-level=debug --colors",
+    "test:ui": "npm run build:uitests && bash tests/ui/run.sh",
     "lint": "tslint -c tslint.json --project tsconfig.json --exclude \"**/src/config.ts\"",
     "clean": "rm -rf js/ build/ dist/app*"
   },
@@ -67,16 +72,23 @@
     "webrtc-adapter": "^6.3.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
     "@types/jasmine": "^2.8.8",
+    "@types/selenium-webdriver": "^3.0.13",
     "angular-mocks": "^1.7.3",
     "budo": "^11",
+    "chai": "^4.2.0",
     "concurrently": "~3.3.0",
+    "geckodriver": "^1.14.1",
     "jasmine": "^3.2.0",
     "jasmine-core": "^3.2.1",
     "karma": "^2.0.5",
     "karma-chrome-launcher": "^2.2.0",
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^1.1.2",
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "term-color": "^1.0.1",
+    "ts-node": "^7.0.1",
     "tslint": "~5.10"
   }
 }

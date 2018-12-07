@@ -77,7 +77,7 @@ angular.module('3ema', [
     FF: 50,
     CHROME: 45,
     OPERA: 32,
-    SAFARI: 10,
+    SAFARI: 11,
 })
 
 // Set default route
@@ -95,9 +95,10 @@ angular.module('3ema', [
             suffix: '.json',
         })
         .uniformLanguageTag('java')
-        .registerAvailableLanguageKeys(['en', 'de'], {
+        .registerAvailableLanguageKeys(['en', 'de', 'fr'], {
             'en_*': 'en',
             'de_*': 'de',
+            'fr_*': 'fr',
         })
         .determinePreferredLanguage()
         .fallbackLanguage('en');

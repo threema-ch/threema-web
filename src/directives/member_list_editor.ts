@@ -51,24 +51,38 @@ export default [
                 };
 
                 this.querySearch = (query: string): threema.ContactReceiver[] => {
-
                     if (query !== undefined && query.length <= 0) {
-                        // do not show a result on empty entry
+                        // Do not show a result on empty entry
                         return [];
                     } else {
-                        // search for contacts, do not show selected contacts
+                        // Search for contacts, do not show selected contacts
                         const lowercaseQuery = query.toLowerCase();
-                        const result = this.allContacts.filter((contactReceiver: threema.ContactReceiver) => {
-                            return this.members.filter((identity: string) => {
-                                    return identity === contactReceiver.id;
-                                }).length === 0
-                                && (
-                                    // find in display name
-                                    contactReceiver.displayName.toLowerCase().indexOf(lowercaseQuery) >= 0
-                                    // or threema identity
-                                    || contactReceiver.id.toLowerCase().indexOf(lowercaseQuery) >= 0
-                                );
-                        });
+                        const hideInactiveContacts = !webClientService.appConfig.showInactiveIDs;
+                        const result = this.allContacts
+                            .filter((contactReceiver: threema.ContactReceiver) => {
+                                // Ignore already selected contacts
+                                if (this.members.filter((id: string) => id === contactReceiver.id).length !== 0) {
+                                    return false;
+                                }
+
+                                // Potentially ignore inactive contacts
+                                if (hideInactiveContacts && contactReceiver.state === 'INACTIVE') {
+                                    return false;
+                                }
+
+                                // Search in display name
+                                if (contactReceiver.displayName.toLowerCase().indexOf(lowercaseQuery) >= 0) {
+                                    return true;
+                                }
+
+                                // Search in identity
+                                if (contactReceiver.id.toLowerCase().indexOf(lowercaseQuery) >= 0) {
+                                    return true;
+                                }
+
+                                // Not found
+                                return false;
+                            });
 
                         return result.length <= AUTOCOMPLETE_MAX_RESULTS ? result
                             : result.slice(0, AUTOCOMPLETE_MAX_RESULTS);
@@ -79,10 +93,9 @@ export default [
                     if (contact.id === webClientService.me.id) {
                         return false;
                     }
-
-                    this.members = this.members.filter(function(i: string) {
-                        return i !== contact.id;
-                    });
+                    this.members = this.members.filter(
+                        (identity: string) => identity !== contact.id,
+                    );
                     return true;
                 };
             }],

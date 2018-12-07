@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-strict-di>
+<head>
+    <meta charset="utf-8">
+
+    <!-- Third party -->
+    <script src="../../public/libs/emojione/emojione.min.js?v=[[VERSION]]"></script>
+
+    <!-- Third party stylesheets -->
+    <link rel="stylesheet" href="../../node_modules/angular/angular-csp.css?v=[[VERSION]]">
+    <link rel="stylesheet" href="../../node_modules/angular-material/angular-material.min.css?v=[[VERSION]]">
+    <link rel="stylesheet" href="../../public/libs/emojione/emojione-sprite-32.min.css?v=[[VERSION]]">
+    <link rel="stylesheet" href="../../public/fonts/roboto.css?v=[[VERSION]]" type="text/css">
+    <link rel="stylesheet" href="../../public/fonts/material.css?v=[[VERSION]]" type="text/css">
+
+    <!-- Own stylesheets -->
+    <link rel="stylesheet" href="../../public/css/app.css?v=[[VERSION]]">
+
+    <!-- Scripts -->
+    <script src="../../dist/ui-tests.js"></script>
+    <script>window.uiTests.initComposeArea();</script>
+</head>
+<body ng-app="uitest">
+    <div ng-controller="ComposeAreaController as ctrl">
+        <compose-area
+            submit="ctrl.submit"
+            initial-data="ctrl.initialData"
+            start-typing="ctrl.startTyping"
+            on-typing="ctrl.onTyping"
+            stop-typing="ctrl.stopTyping"
+            on-key-down="ctrl.onComposeKeyDown"
+            on-uploading="ctrl.onUploading"
+            max-text-length="ctrl.maxTextLength"
+            emoji-image-path="../../public/img/e1/">
+        </compose-area>
+    <div>
+</body>
+</html>

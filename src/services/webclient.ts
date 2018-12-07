@@ -1022,13 +1022,13 @@ export class WebClientService {
 
         // Actually send the push notification
         this.pushService.sendPush(this.salty.permanentKeyBytes)
-            .catch(() => this.$log.warn(this.logTag, 'Could not notify app!'))
             .then(() => {
                 this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType, 'push');
                 this.$rootScope.$apply(() => {
                     this.stateService.updateConnectionBuildupState('push');
                 });
-            });
+            })
+            .catch((e: Error) => this.$log.error(this.logTag, 'Could not send wakeup push to app: ' + e.message));
     }
 
     /**
@@ -2357,15 +2357,8 @@ export class WebClientService {
             return future.reject(message.ack.error);
         }
 
-        // Unpack and validate args
-        const args = message.args;
+        // Unpack and validate data
         const data = message.data;
-        if (args === undefined) {
-            this.$log.error(`Invalid ${receiverType} response, args or data missing`);
-            return future.reject('invalidResponse');
-        }
-
-        // Validate data
         if (data === undefined) {
             this.$log.error(`Invalid ${receiverType} response, 'data' is missing`);
             return future.reject('invalidResponse');

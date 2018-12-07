@@ -14,6 +14,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
+// tslint:disable:no-reference
+/// <reference path="threema.d.ts" />
 
 /**
  * Convert an Uint8Array to a hex string.
@@ -384,4 +386,59 @@ export function copyShallow<T extends object>(obj: T): T {
  */
 export function copyDeep<T extends object>(obj: T): T {
     return JSON.parse(JSON.stringify(obj));
+}
+
+/**
+ * Process a DOM node recursively and extract text from compose area.
+ */
+export function extractText(targetNode: HTMLElement, logWarning: (msg: string) => void, trim = true) {
+    let text = '';
+    const visitChildNodes = (parentNode: HTMLElement) => {
+        // When pressing shift-enter and typing more text:
+        //
+        // - Firefox and chrome insert a <br> between two text nodes
+        // - Safari creates two <div>s without any line break in between
+        //   (except for the first line, which stays plain text)
+        //
+        // Thus, for Safari, we need to detect <div>s and insert a newline.
+
+        let lastNodeType;
+        // tslint:disable-next-line: prefer-for-of (see #98)
+        for (let i = 0; i < parentNode.childNodes.length; i++) {
+            const node = parentNode.childNodes[i] as HTMLElement;
+            switch (node.nodeType) {
+                case Node.TEXT_NODE:
+                    lastNodeType = 'text';
+                    // Append text, but strip leading and trailing newlines
+                    text += node.nodeValue.replace(/(^[\r\n]*|[\r\n]*$)/g, '');
+                    break;
+                case Node.ELEMENT_NODE:
+                    const tag = node.tagName.toLowerCase();
+                    const _lastNodeType = lastNodeType;
+                    lastNodeType = tag;
+                    if (tag === 'div') {
+                        text += '\n';
+                        visitChildNodes(node);
+                        break;
+                    } else if (tag === 'img') {
+                        if (_lastNodeType === 'div') {
+                            // An image following a div should go on a new line
+                            text += '\n';
+                        }
+                        text += (node as HTMLImageElement).alt;
+                        break;
+                    } else if (tag === 'br') {
+                        text += '\n';
+                        break;
+                    } else if (tag === 'span' && node.hasAttribute('text')) {
+                        text += node.getAttributeNode('text').value;
+                        break;
+                    }
+                default:
+                    logWarning(`Unhandled node: ${node}`);
+            }
+        }
+    };
+    visitChildNodes(targetNode);
+    return trim ? text.trim() : text;
 }

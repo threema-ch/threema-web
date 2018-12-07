@@ -15,11 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isActionTrigger} from '../helpers';
+import {extractText, isActionTrigger, logAdapter} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
+import {isElementNode, isTextNode} from '../typeguards';
 
 /**
  * The compose area where messages are written.
@@ -64,9 +65,12 @@ export default [
                 onUploading: '=',
                 maxTextLength: '=',
 
+                // Optional emoji PNG path prefix
+                emojiImagePath: '@?',
+
                 receiver: '=eeeReceiver',
             },
-            link: function(scope: any, element) {
+            link(scope: any, element) {
                 // Logging
                 const logTag = '[Directives.ComposeArea]';
 
@@ -91,11 +95,14 @@ export default [
                     composeDiv[0].innerText = scope.initialData.draft;
                 }
 
+                // The current caret position, used when inserting objects
                 let caretPosition: {
+                    // The position in the source HTML
                     from?: number,
                     to?: number,
-                    fromBytes?: number,
-                    toBytes?: number,
+                    // The position in the visible character list
+                    fromChar?: number,
+                    toChar?: number,
                 } = null;
 
                 function chatBlocked(blocked: boolean) {
@@ -166,7 +173,6 @@ export default [
 
                 // Typing events
                 let stopTypingTimer: ng.IPromise<void> = null;
-
                 function stopTyping() {
                     // We can only stop typing of the timer is set (meaning
                     // that we started typing earlier)
@@ -179,7 +185,6 @@ export default [
                         scope.stopTyping();
                     }
                 }
-
                 function startTyping() {
                     if (stopTypingTimer === null) {
                         // If the timer wasn't set previously, we just
@@ -194,61 +199,17 @@ export default [
                     stopTypingTimer = timeoutService.register(stopTyping, 10000, true, 'stopTyping');
                 }
 
-                // Process a DOM node recursively and extract text from compose area.
-                function getText(trim = true) {
-                    let text = '';
-                    const visitChildNodes = (parentNode: HTMLElement) => {
-                        // When pressing shift-enter and typing more text:
-                        //
-                        // - Firefox and chrome insert a <br> between two text nodes
-                        // - Safari creates two <div>s without any line break in between
-                        //   (except for the first line, which stays plain text)
-                        //
-                        // Thus, for Safari, we need to detect <div>s and insert a newline.
-
-                        // tslint:disable-next-line: prefer-for-of (see #98)
-                        for (let i = 0; i < parentNode.childNodes.length; i++) {
-                            const node = parentNode.childNodes[i] as HTMLElement;
-                            switch (node.nodeType) {
-                                case Node.TEXT_NODE:
-                                    // Append text, but strip leading and trailing newlines
-                                    text += node.nodeValue.replace(/(^[\r\n]*|[\r\n]*$)/g, '');
-                                    break;
-                                case Node.ELEMENT_NODE:
-                                    const tag = node.tagName.toLowerCase();
-                                    if (tag === 'div') {
-                                        text += '\n';
-                                        visitChildNodes(node);
-                                        break;
-                                    } else if (tag === 'img') {
-                                        text += (node as HTMLImageElement).alt;
-                                        break;
-                                    } else if (tag === 'br') {
-                                        text += '\n';
-                                        break;
-                                    } else if (tag === 'span' && node.hasAttribute('text')) {
-                                        text += node.getAttributeNode('text').value;
-                                        break;
-                                    }
-                                default:
-                                    $log.warn(logTag, 'Unhandled node:', node);
-                            }
-                        }
-                    };
-                    visitChildNodes(composeDiv[0]);
-                    return trim ? text.trim() : text;
-                }
-
                 // Determine whether field is empty
                 function composeAreaIsEmpty() {
-                    return getText().length === 0;
+                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+                    return text.length === 0;
                 }
 
                 // Submit the text from the compose area.
                 //
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
-                    const text = getText();
+                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
 
                     return new Promise((resolve, reject) => {
                         const submitTexts = (strings: string[]) => {
@@ -344,12 +305,12 @@ export default [
                     $timeout(() => {
                         // If the compose area contains only a single <br>, make it fully empty.
                         // See also: https://stackoverflow.com/q/14638887/284318
-                        const text = getText(false);
+                        const text = extractText(composeDiv[0], logAdapter($log.warn, logTag), false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
                         } else if (ev.keyCode === 190 && caretPosition !== null) {
                             // A ':' is pressed, try to parse
-                            const currentWord = stringService.getWord(text, caretPosition.fromBytes, [':']);
+                            const currentWord = stringService.getWord(text, caretPosition.fromChar, [':']);
                             if (currentWord.realLength > 2
                                 && currentWord.word.substr(0, 1) === ':') {
                                 const unicodeEmoji = emojione.shortnameToUnicode(currentWord.word);
@@ -383,7 +344,7 @@ export default [
                         const next = (file: File, res: ArrayBuffer | null, error: any) => {
                             buffers.set(file, res);
                             if (buffers.size >= fileCounter) {
-                                resolve(buffers);
+                               resolve(buffers);
                             }
                         };
                         for (let n = 0; n < fileCounter; n++) {
@@ -498,13 +459,15 @@ export default [
                                 .catch((msg) => $log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
-                        // Handle pasting of text
+
+                    // Handle pasting of text
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
 
                         // Look up some filter functions
+                        // tslint:disable-next-line:max-line-length
+                        const emojify = $filter('emojify') as (a: string, b?: boolean, c?: boolean, d?: string) => string;
                         const escapeHtml = $filter('escapeHtml') as (a: string) => string;
-                        const emojify = $filter('emojify') as (a: string, b?: boolean) => string;
                         const mentionify = $filter('mentionify') as (a: string) => string;
                         const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
 
@@ -512,7 +475,7 @@ export default [
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = nlToBr(mentionify(emojify(escaped, true)), true);
+                        const formatted = nlToBr(mentionify(emojify(escaped, true, false, scope.emojiImagePath)), true);
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);
@@ -585,18 +548,22 @@ export default [
                     insertEmoji(this.textContent);
                 }
 
-                function insertEmoji(emoji, posFrom = null, posTo = null): void {
-                    const emojiElement = ($filter('emojify') as any)(emoji, true, true) as string;
+                function insertEmoji(emoji, posFrom?: number, posTo?: number): void {
+                    const emojiElement = ($filter('emojify') as any)(emoji, true, true, scope.emojiImagePath) as string;
                     insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 
-                function insertMention(mentionString, posFrom = null, posTo = null): void {
+                function insertMention(mentionString, posFrom?: number, posTo?: number): void {
                     const mentionElement = ($filter('mentionify') as any)(mentionString) as string;
                     insertHTMLElement(mentionString, mentionElement, posFrom, posTo);
                 }
 
-                function insertHTMLElement(original: string, formatted: string, posFrom = null, posTo = null): void {
-
+                function insertHTMLElement(
+                    elementText: string, // The element as the original text representation, not yet converted to HTML
+                    elementHtml: string, // The element converted to HTML
+                    posFrom?: number,
+                    posTo?: number,
+                ): void {
                     // In Chrome in right-to-left mode, our content editable
                     // area may contain a DIV element.
                     const childNodes = composeDiv[0].childNodes;
@@ -610,54 +577,81 @@ export default [
                         contentElement = composeDiv[0];
                     }
 
-                    let currentHTML = '';
+                    let currentHtml = '';
                     for (let i = 0; i < contentElement.childNodes.length; i++) {
-                        const node = contentElement.childNodes[i];
+                        const node: Node = contentElement.childNodes[i];
 
-                        if (node.nodeType === node.TEXT_NODE) {
-                            currentHTML += node.textContent;
-                        } else if (node.nodeType === node.ELEMENT_NODE) {
+                        if (isTextNode(node)) {
+                            currentHtml += node.textContent;
+                        } else if (isElementNode(node)) {
                             const tag = node.tagName.toLowerCase();
                             if (tag === 'img' || tag === 'span') {
-                                currentHTML += getOuterHtml(node);
+                                currentHtml += getOuterHtml(node);
                             } else if (tag === 'br') {
                                 // Firefox inserts a <br> after editing content editable fields.
                                 // Remove the last <br> to fix this.
                                 if (i < contentElement.childNodes.length - 1) {
-                                    currentHTML += getOuterHtml(node);
+                                    currentHtml += getOuterHtml(node);
+                                }
+                            } else if (tag === 'div') {
+                                // Safari inserts a <div><br></div> after editing content editable fields.
+                                // Remove the last instance to fix this.
+                                if (node.childNodes.length === 1
+                                    && isElementNode(node.lastChild)
+                                    && node.lastChild.tagName.toLowerCase() === 'br') {
+                                    // Ignore
+                                } else {
+                                    currentHtml += getOuterHtml(node);
                                 }
                             }
                         }
                     }
 
-                    if (caretPosition !== null) {
-                        posFrom = null === posFrom ? caretPosition.from : posFrom;
-                        posTo = null === posTo ? caretPosition.to : posTo;
-                        currentHTML = currentHTML.substr(0, posFrom)
-                            + formatted
-                            + currentHTML.substr(posTo);
+                    // Because the browser may transform HTML code when
+                    // inserting it into the DOM, we temporarily write it to a
+                    // DOM element to ensure that the current representation
+                    // corresponds to the representation when inserted into the
+                    // DOM. (See #671 for details.)
+                    const tmpDiv = document.createElement('div');
+                    tmpDiv.innerHTML = elementHtml;
+                    const cleanedElementHtml = tmpDiv.innerHTML;
 
-                        // change caret position
-                        caretPosition.from += formatted.length;
-                        caretPosition.fromBytes += original.length;
-                        posFrom += formatted.length;
+                    // Insert element into currentHtml and determine new caret position
+                    let newPos = posFrom;
+                    if (caretPosition !== null) {
+                        // If the caret position is set, then the user has moved around
+                        // in the contenteditable field and might not be ad the end
+                        // of the line.
+                        posFrom = posFrom === undefined ? caretPosition.from : posFrom;
+                        posTo = posTo === undefined ? caretPosition.to : posTo;
+
+                        currentHtml = currentHtml.substr(0, posFrom)
+                            + cleanedElementHtml
+                            + currentHtml.substr(posTo);
+
+                        // Change caret position
+                        caretPosition.from += cleanedElementHtml.length;
+                        caretPosition.fromChar += elementText.length;
+                        newPos = posFrom + cleanedElementHtml.length;
                     } else {
-                        // insert at the end of line
-                        posFrom = currentHTML.length;
-                        currentHTML += formatted;
+                        // If the caret position is not set, then the user must be at the
+                        // end of the line. Insert element there.
+                        newPos = currentHtml.length;
+                        currentHtml += cleanedElementHtml;
                         caretPosition = {
-                            from: currentHTML.length,
+                            from: currentHtml.length,
                         };
                     }
                     caretPosition.to = caretPosition.from;
-                    caretPosition.toBytes = caretPosition.fromBytes;
+                    caretPosition.toChar = caretPosition.fromChar;
 
-                    contentElement.innerHTML = currentHTML;
+                    contentElement.innerHTML = currentHtml;
                     cleanupComposeContent();
-                    setCaretPosition(posFrom);
+                    setCaretPosition(newPos);
 
                     // Update the draft text
-                    scope.onTyping(getText());
+                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+                    scope.onTyping(text);
 
                     updateView();
                 }
@@ -722,7 +716,7 @@ export default [
                 }
 
                 // return the html code position of the container element
-                function getPositions(offset: number, container: Node): { html: number, text: number } {
+                function getPositions(offset: number, container: Node): {html: number, text: number} {
                     let pos = null;
                     let textPos = null;
 
@@ -738,7 +732,7 @@ export default [
                             pos = 0;
                             textPos = 0;
                         } else {
-                            selectedElement = container.previousSibling;
+                            selectedElement =  container.previousSibling;
                             pos = offset;
                             textPos = offset;
                         }
@@ -770,20 +764,19 @@ export default [
                             const from = getPositions(range.startOffset, range.startContainer);
                             if (from !== null && from.html >= 0) {
                                 const to = getPositions(range.endOffset, range.endContainer);
-
                                 caretPosition = {
                                     from: from.html,
                                     to: to.html,
-                                    fromBytes: from.text,
-                                    toBytes: to.text,
+                                    fromChar: from.text,
+                                    toChar: to.text,
                                 };
                             }
                         }
                     }
                 }
 
-                // set the correct cart position in the content editable div, position
-                // is the position in the html content (not plain text)
+                // Set the correct cart position in the content editable div.
+                // Pos is the position in the html content (not in the visible plain text).
                 function setCaretPosition(pos: number) {
                     const rangeAt = (node: Node, offset?: number) => {
                         const range = document.createRange();
@@ -808,7 +801,7 @@ export default [
                                 offset = pos;
                                 break;
                             case Node.ELEMENT_NODE:
-                                size = getOuterHtml(node).length;
+                                size = getOuterHtml(node).length ;
                                 break;
                             default:
                                 $log.warn(logTag, 'Unhandled node:', node);
@@ -872,7 +865,7 @@ export default [
                     if (args.query && args.mention) {
                         // Insert resulting HTML
                         insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,
-                            caretPosition ? caretPosition.to : null);
+                            caretPosition ?  caretPosition.to : null);
                     }
                 }));
 
@@ -911,7 +904,6 @@ export default [
                 <div class="emoji-keyboard">
                     <ng-include src="'partials/emoji-picker.html'" include-replace></ng-include>
                 </div>
-
             `,
         };
     },

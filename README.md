@@ -64,10 +64,23 @@ Web on a server, please follow the instructions at
 
 ## Testing
 
-To run tests:
+To run unit tests:
 
-    npm run build && npm run build:tests
+    npm run build && npm run build:unittests
     firefox tests/testsuite.html
+
+To run UI tests:
+
+    npm run test:ui <browser>
+
+For example:
+
+    npm run test:ui firefox
+    npm run test:ui chrome
+
+You can also filter the test cases:
+
+    npm run test:ui firefox emoji
 
 To run linting checks:
 
@@ -133,15 +146,16 @@ signed using the following PGP key:
     uid           Threema Signing Key <dev@threema.ch>
 
 If you discover a security issue in the Threema Web, please follow responsible
-disclosure and report it directly to `security@threema.ch` instead of opening
-an issue on Github.
+disclosure and report it directly to `security2018@threema.ch` instead of
+opening an issue on Github.
 
     pub   rsa4096 2017-02-08 [SC] [expires: 2022-02-07]
           677E 0E97 1669 53B3 2620  D95C 71B9 C6BA C55A 9855
-    uid           Threema Security <security@threema.ch>
+    uid           Threema Security <security2018@threema.ch>
 
 You can find both public keys and their proofs [on
-keybase](https://keybase.io/threema).
+keybase](https://keybase.io/threema). The security reporting key can also be
+found at [threema.ch/security.asc](https://threema.ch/security.asc).
 
 
 ## License
