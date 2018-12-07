@@ -70,7 +70,7 @@ export default [
 
                 receiver: '=eeeReceiver',
             },
-            link(scope: any, element) {
+            link: function(scope: any, element) {
                 // Logging
                 const logTag = '[Directives.ComposeArea]';
 
@@ -105,7 +105,14 @@ export default [
                     toChar?: number,
                 } = null;
 
-                function chatBlocked(blocked: boolean) {
+                let chatBlocked = false;
+
+                // Initialize blocking state
+                setChatBlocked(receiverService.isBlocked(scope.receiver));
+
+                function setChatBlocked(blocked: boolean) {
+                    chatBlocked = blocked;
+                    $log.debug(logTag, 'Receiver blocked:', blocked);
                     if (blocked) {
                         sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                         emojiTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
@@ -126,15 +133,12 @@ export default [
                     }
                 }
 
-                // Initialize blocking state
-                chatBlocked(receiverService.isBlocked(scope.receiver));
-
                 // Watch `isBlocked` flag for changes
                 scope.$watch(
                     (_scope) => receiverService.isBlocked(_scope.receiver),
                     (isBlocked: boolean, wasBlocked: boolean) => {
                         if (isBlocked !== wasBlocked) {
-                            chatBlocked(isBlocked);
+                            setChatBlocked(isBlocked);
                         }
                     },
                 );
@@ -173,6 +177,7 @@ export default [
 
                 // Typing events
                 let stopTypingTimer: ng.IPromise<void> = null;
+
                 function stopTyping() {
                     // We can only stop typing of the timer is set (meaning
                     // that we started typing earlier)
@@ -185,6 +190,7 @@ export default [
                         scope.stopTyping();
                     }
                 }
+
                 function startTyping() {
                     if (stopTypingTimer === null) {
                         // If the timer wasn't set previously, we just
@@ -344,7 +350,7 @@ export default [
                         const next = (file: File, res: ArrayBuffer | null, error: any) => {
                             buffers.set(file, res);
                             if (buffers.size >= fileCounter) {
-                               resolve(buffers);
+                                resolve(buffers);
                             }
                         };
                         for (let n = 0; n < fileCounter; n++) {
@@ -460,7 +466,7 @@ export default [
                         };
                         reader.readAsArrayBuffer(blob);
 
-                    // Handle pasting of text
+                        // Handle pasting of text
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
 
@@ -530,7 +536,7 @@ export default [
                 function onEmojiTrigger(ev: UIEvent): void {
                     ev.stopPropagation();
                     // TODO maybe simlify
-                    if (receiverService.isBlocked(scope.receiver)) {
+                    if (chatBlocked) {
                         hideEmojiPicker();
                         return;
                     }
@@ -660,7 +666,7 @@ export default [
                 function onFileTrigger(ev: UIEvent): void {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    if (receiverService.isBlocked(scope.receiver)) {
+                    if (chatBlocked) {
                         return;
                     }
                     const input = element[0].querySelector('.file-input') as HTMLInputElement;
@@ -670,7 +676,7 @@ export default [
                 function onSendTrigger(ev: UIEvent): boolean {
                     ev.preventDefault();
                     ev.stopPropagation();
-                    if (receiverService.isBlocked(scope.receiver)) {
+                    if (chatBlocked) {
                         return;
                     }
                     return sendText();
@@ -716,7 +722,7 @@ export default [
                 }
 
                 // return the html code position of the container element
-                function getPositions(offset: number, container: Node): {html: number, text: number} {
+                function getPositions(offset: number, container: Node): { html: number, text: number } {
                     let pos = null;
                     let textPos = null;
 
@@ -732,7 +738,7 @@ export default [
                             pos = 0;
                             textPos = 0;
                         } else {
-                            selectedElement =  container.previousSibling;
+                            selectedElement = container.previousSibling;
                             pos = offset;
                             textPos = offset;
                         }
@@ -801,7 +807,7 @@ export default [
                                 offset = pos;
                                 break;
                             case Node.ELEMENT_NODE:
-                                size = getOuterHtml(node).length ;
+                                size = getOuterHtml(node).length;
                                 break;
                             default:
                                 $log.warn(logTag, 'Unhandled node:', node);
@@ -865,7 +871,7 @@ export default [
                     if (args.query && args.mention) {
                         // Insert resulting HTML
                         insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,
-                            caretPosition ?  caretPosition.to : null);
+                            caretPosition ? caretPosition.to : null);
                     }
                 }));
 
