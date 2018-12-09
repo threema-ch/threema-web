@@ -24,7 +24,8 @@ module.exports = function(config) {
             'tests/service/browser.js',
             'tests/service/keystore.js',
             'tests/service/notification.js',
-            'tests/helpers.js',
+            'tests/service/receiver.js',
+            'tests/ts/helpers.ts',
         ],
         customLaunchers: {
             Chromium_ci_gitlab: {
@@ -48,4 +49,4 @@ module.exports = function(config) {
 
     config.set(configuration);
 
-}
+};
