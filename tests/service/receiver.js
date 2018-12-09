@@ -57,7 +57,7 @@ describe('ReceiverService', function () {
                 type: 'contact'
             })).toEqual(false);
         });
-        it('is blocked', () => {
+        it('and invalid type is blocked', () => {
             expect($service.isBlocked({
                 id: 'FOOOOBAR',
                 type: 'invalidType'
