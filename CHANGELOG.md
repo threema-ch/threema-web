@@ -4,6 +4,25 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.3][v2.1.3] (2018-12-12)
+
+Changes:
+
+* [feature] Add French translations ([#685][i685])
+* [feature] Add Chinese translations ([#690][i690])
+* [feature] Add Czech translations ([#691][i691])
+* [change] Require at least Safari 11 ([#683][i683])
+* [change] Style scrollbars in Firefox 64+ ([#689][i689])
+
+Contributors:
+
+- [Valéry](https://www.transifex.com/user/profile/Valéry/) (FR translation)
+- [nickya80](https://www.transifex.com/user/profile/nickya80/) (FR translation)
+- [vollkorntomate](https://www.transifex.com/user/profile/vollkorntomate/) (FR translation)
+- [mingmir](https://www.transifex.com/user/profile/mingmir/) (CN translation)
+- [vit.semenec](https://www.transifex.com/user/profile/vit.semenec/) (CS translation)
+
+
 ### [v2.1.2][v2.1.2] (2018-11-22)
 
 Changes:
@@ -622,7 +641,13 @@ First public release.
 [i673]: https://github.com/threema-ch/threema-web/issues/673
 [i676]: https://github.com/threema-ch/threema-web/issues/676
 [i681]: https://github.com/threema-ch/threema-web/issues/681
+[i683]: https://github.com/threema-ch/threema-web/issues/683
+[i685]: https://github.com/threema-ch/threema-web/issues/685
+[i689]: https://github.com/threema-ch/threema-web/issues/689
+[i690]: https://github.com/threema-ch/threema-web/issues/690
+[i691]: https://github.com/threema-ch/threema-web/issues/691
 
+[v2.1.3]: https://github.com/threema-ch/threema-web/compare/v2.1.2...v2.1.3
 [v2.1.2]: https://github.com/threema-ch/threema-web/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/threema-ch/threema-web/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0
