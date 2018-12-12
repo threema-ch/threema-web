@@ -43,9 +43,12 @@
         justify-content: center;
         display: flex;
     }
+
     #conversation-chat {
         flex-grow: 1;
         overflow: auto;
+        overflow-y: scroll;
+        @include scrollbar;
     }
 
     #conversation-quote {
