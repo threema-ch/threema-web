@@ -9,8 +9,11 @@ $material-grey-dark: rgba(0, 0, 0, 0.87);
 $url-light-blue: #63a6cf;
 $work-blue: #3b84df;
 
-$dark-background-color: #F6F6F6;
-$bright-background-color: white;
+$dark-background-color: #f6f6f6;
+$light-background-color: #ffffff;
+
+$scrollbar-color-bg: $dark-background-color;
+$scrollbar-color-thumb: #ccc;
 
 $material-card-shadow: 0px 2px 5px 0px rgba(0,0,0,0.16),0px 2px 5px 0px rgba(0,0,0,0.23);
 

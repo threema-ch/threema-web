@@ -1,10 +1,18 @@
-// TODO: Prefixes
+// Webkit specific global styling
 
 ::-webkit-scrollbar {
-    width: 8px;
-    background-color: #fcfcfc;
+    width: 6px;
+    background-color: $scrollbar-color-bg;
     border: 1px solid #f9f9f9;
 }
+
 ::-webkit-scrollbar-thumb {
-    background-color: #ddd;
+    background-color: $scrollbar-color-thumb;
+}
+
+// Mixin for browsers that support the "CSS Scrollbars Module Level 1" draft
+
+@mixin scrollbar {
+    scrollbar-width: thin;  // Unfortunately Firefox does not support exact pixel values
+    scrollbar-color: $scrollbar-color-thumb $scrollbar-color-bg;
 }

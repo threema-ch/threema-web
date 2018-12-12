@@ -16,7 +16,7 @@ compose-area {
             &:nth-of-type(2) {
                 border: 1px solid $border-grey;
                 border-radius: $material-radius;
-                background-color: $bright-background-color;
+                background-color: $light-background-color;
                 flex-grow: 1;
                 overflow-x: hidden;
                 overflow-y: auto;
