@@ -68,7 +68,7 @@ export default [
                 // Optional emoji PNG path prefix
                 emojiImagePath: '@?',
 
-                receiver: '=eeeReceiver',
+                receiver: '<eeeReceiver',
             },
             link: function(scope: any, element) {
                 // Logging
