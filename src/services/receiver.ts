@@ -67,6 +67,9 @@ export class ReceiverService {
      * @param receiver
      */
     public isBlocked(receiver: threema.Receiver): boolean {
+        if (!hasValue(receiver)) {
+            return false;
+        }
         if (isContactReceiver(receiver) && hasValue(receiver.isBlocked)) {
             return receiver.isBlocked;
         } else {

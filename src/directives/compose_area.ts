@@ -535,7 +535,6 @@ export default [
                 // Emoji trigger is clicked
                 function onEmojiTrigger(ev: UIEvent): void {
                     ev.stopPropagation();
-                    // TODO maybe simlify
                     if (chatBlocked) {
                         hideEmojiPicker();
                         return;
