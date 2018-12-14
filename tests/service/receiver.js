@@ -65,4 +65,10 @@ describe('ReceiverService', function () {
         });
     });
 
+    describe('Undefined receiver', () => {
+        it('is not blocked', () => {
+            expect($service.isBlocked(undefined)).toEqual(false);
+        });
+    });
+
 });
