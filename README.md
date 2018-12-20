@@ -37,6 +37,12 @@ If you want to help translating Threema Web to your language, plese check out
 [`TRANSLATING.md`](./TRANSLATING.md)!
 
 
+## Protocol
+
+The protocol used to communicate between the Threema app and Threema Web
+is documented [here](https://threema-ch.github.io/app-remote-protocol/).
+
+
 ## Development
 
 Threema Web is written using [TypeScript](https://www.typescriptlang.org/) and
