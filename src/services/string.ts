@@ -17,7 +17,7 @@
 
 export class StringService {
     public byteChunk(str: string, byteLength: number, offset: number = null): string[] {
-        const chars = [...str];
+        const chars = Array.from(str);
         const chunks = [''];
         let currentChunkSize = 0;
         let chunkIndex = 0;
@@ -75,7 +75,7 @@ export class StringService {
             realLength: 0,
         };
         if (input !== null && input.length > 0) {
-            const chars = [...input];
+            const chars = Array.from(input);
             let charFound = false;
             const realPos = Math.min(pos, chars.length) - 1;
 

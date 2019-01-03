@@ -158,7 +158,7 @@ angular.module('3ema.filters', [])
             if (text !== null && text.length > 10) {
                 let result = text.match(/@\[([\*\@a-zA-Z0-9][\@a-zA-Z0-9]{7})\]/g);
                 if (result !== null) {
-                    result = ([...new Set(result)]);
+                    result = new Set(result);
                     // Unique
                     for (const possibleMention of result) {
                         const identity = possibleMention.substr(2, 8);
