@@ -53,7 +53,6 @@ targets=(
     angular-animate/angular-animate.min.js
     angular-sanitize/angular-sanitize.min.js
     angular-route/angular-route.min.js
-    babel-es6-polyfill/browser-polyfill.min.js
     msgpack-lite/dist/msgpack.min.js
     tweetnacl/nacl-fast.min.js
     @saltyrtc/chunked-dc/dist/chunked-dc.es5.js

@@ -15,8 +15,6 @@ LICENSE_FILES=(
     'angular-ui-router' 'node_modules/@uirouter/angularjs/LICENSE'
     'angularjs-scroll-glue' '.licenses/angularjs-scroll-glue'
     'autolinker' 'node_modules/autolinker/LICENSE'
-    'babel-es6-polyfill' '.licenses/babel-es6-polyfill'
-    'babel-preset-es2015' '.licenses/babel-preset-es2015'
     'babelify' 'node_modules/babelify/LICENSE'
     'browserify' 'node_modules/browserify/LICENSE'
     'browserify-header' '.licenses/browserify-header'
