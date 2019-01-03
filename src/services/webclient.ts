@@ -26,7 +26,10 @@ import {
     arraysAreEqual, copyDeep, hasFeature, hasValue, hexToU8a,
     msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
 } from '../helpers';
-import {isContactReceiver, isDistributionListReceiver, isGroupReceiver, isValidReceiverType} from '../typeguards';
+import {
+    isContactReceiver, isDistributionListReceiver,
+    isGroupReceiver, isValidReceiverType,
+} from '../typeguards';
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
 import {TrustedKeyStoreService} from './keystore';
@@ -1210,7 +1213,8 @@ export class WebClientService {
             // There's at least one TURN server with TCP transport in the list
             for (const server of this.config.ICE_SERVERS) {
                 // Remove TLS entries
-                server.urls = server.urls.filter((url) => !url.startsWith('turns:'));
+                const urls = Array.isArray(server.urls) ? server.urls : [server.urls];
+                server.urls = urls.filter((url) => !url.startsWith('turns:'));
             }
         } else {
             this.$log.debug(this.logTag, 'No fallback TURN TCP server present, keeping TURNS server');
@@ -1229,7 +1233,8 @@ export class WebClientService {
         if (allUrls.some((url) => url.includes('ds-turn.threema.ch'))) {
             for (const server of this.config.ICE_SERVERS) {
                 // Replace dual stack entries
-                server.urls = server.urls.map((url) => {
+                const urls = Array.isArray(server.urls) ? server.urls : [server.urls];
+                server.urls = urls.map((url) => {
                     return url.replace('ds-turn.threema.ch', 'turn.threema.ch');
                 });
             }

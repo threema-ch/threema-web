@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Autolinker from 'autolinker';
+
 import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
 import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
@@ -76,6 +78,8 @@ angular.module('3ema.filters', [])
         newWindow: true,
         // Don't strip protocol prefix
         stripPrefix: false,
+        // Don't strip trailing slashes
+        stripTrailingSlash: false,
         // Don't truncate links
         truncate: 99999,
         // Add class name to linked links
