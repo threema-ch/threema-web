@@ -69,7 +69,6 @@ targets=(
     angular-material/angular-material.min.css
     croppie/croppie.min.js
     croppie/croppie.css
-    autolinker/dist/Autolinker.min.js
     @uirouter/angularjs/release/angular-ui-router.min.js
     messageformat/messageformat.min.js
     angular-translate/dist/angular-translate.min.js

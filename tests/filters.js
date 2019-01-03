@@ -258,7 +258,7 @@ describe('Filters', function() {
 
         it('links http urls', () => {
             expect(process('hello https://threema.ch/!'))
-                .toEqual('hello <a href="https://threema.ch/" class="autolinked autolinked-url" target="_blank" rel="noopener noreferrer">https://threema.ch</a>!');
+                .toEqual('hello <a href="https://threema.ch/" class="autolinked autolinked-url" target="_blank" rel="noopener noreferrer">https://threema.ch/</a>!');
         });
 
         it('links e-mails', () => {
