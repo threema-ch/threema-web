@@ -3,9 +3,9 @@ const babelifyConfig = {
         ['@babel/preset-env', {
             'useBuiltIns': 'entry',
             'targets': {
-                'firefox': 50,
-                'chrome': 45,
-                'opera': 32,
+                'firefox': 60,
+                'chrome': 65,
+                'opera': 52,
                 'safari': 11,
             },
         }],
