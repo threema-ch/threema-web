@@ -46,7 +46,7 @@
     "angular": "^1.7.5",
     "angular-animate": "^1.7.5",
     "angular-aria": "^1.7.5",
-    "angular-material": "=1.1.10",
+    "angular-material": "=1.1.11",
     "angular-messages": "^1.7.5",
     "angular-qrcode": "~7.2",
     "angular-route": "^1.7.5",
