@@ -100,14 +100,16 @@ export default [
                 function fetchFileContent(file: File): Promise<ArrayBuffer> {
                     return new Promise((resolve, reject) => {
                         const reader = new FileReader();
-                        reader.onload = function(ev: FileReaderProgressEvent) {
-                            resolve(ev.target.result);
+                        reader.onload = function(ev: ProgressEvent) {
+                            // The result will be an ArrayBuffer because we call
+                            // the `FileReader.readAsArrayBuffer` method.
+                            resolve(this.result as ArrayBuffer);
                         };
-                        reader.onerror = function(ev: FileReaderProgressEvent) {
+                        reader.onerror = function(ev: ProgressEvent) {
                             // set a null object
                             reject(ev);
                         };
-                        reader.onprogress = function(ev: FileReaderProgressEvent) {
+                        reader.onprogress = function(ev: ProgressEvent) {
                             if (ev.lengthComputable) {
                                 // TODO implement progress?
                                 // let progress = ((data.loaded / data.total) * 100);

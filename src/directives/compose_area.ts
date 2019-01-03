@@ -311,14 +311,14 @@ export default [
                         for (let n = 0; n < fileCounter; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
-                            reader.onload = function(ev: FileReaderProgressEvent) {
-                                next(file, ev.target.result, ev);
+                            reader.onload = function(ev: ProgressEvent) {
+                                next(file, this.result as ArrayBuffer, ev);
                             };
-                            reader.onerror = function(ev: FileReaderProgressEvent) {
+                            reader.onerror = function(ev: ProgressEvent) {
                                 // set a null object
                                 next(file, null, ev);
                             };
-                            reader.onprogress = function(ev: FileReaderProgressEvent) {
+                            reader.onprogress = function(ev: ProgressEvent) {
                                 if (ev.lengthComputable) {
                                     const progress = ((ev.loaded / ev.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileCounter * n);
@@ -393,8 +393,8 @@ export default [
 
                         // Convert blob to arraybuffer
                         const reader = new FileReader();
-                        reader.onload = function(progressEvent: FileReaderProgressEvent) {
-                            const buffer: ArrayBuffer = this.result;
+                        reader.onload = function(progressEvent: ProgressEvent) {
+                            const buffer: ArrayBuffer = this.result as ArrayBuffer;
 
                             // Construct file name
                             let fileName: string;
@@ -642,10 +642,13 @@ export default [
                     }
 
                     if (browserService.getBrowser().isFirefox(false)) {
-                        // disable object resizing is the only way to disable resizing of
+                        // Disabling object resizing is the only way to disable resizing of
                         // emoji (contenteditable must be true, otherwise the emoji can not
                         // be removed with backspace (in FF))
-                        document.execCommand('enableObjectResizing', false, false);
+                        //
+                        // Note: This is not required anymore for FF63+ (but
+                        // please test before removing it to make sure).
+                        (document.execCommand as any)('enableObjectResizing', false, false);
                     }
                 }
 
