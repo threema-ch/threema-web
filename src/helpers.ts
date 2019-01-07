@@ -442,3 +442,12 @@ export function extractText(targetNode: HTMLElement, logWarning: (msg: string) =
     visitChildNodes(targetNode);
     return trim ? text.trim() : text;
 }
+
+/**
+ * Replace spaces with `&nbsp;` and tabs with `&nbsp;&nbsp;`.
+ */
+export function replaceWhitespace(text: string): string {
+    return text
+        .replace(/ /g, '&nbsp;')
+        .replace(/\t/, '&nbsp;&nbsp;');
+}

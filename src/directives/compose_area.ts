@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {extractText, isActionTrigger, logAdapter} from '../helpers';
+import {extractText, isActionTrigger, logAdapter, replaceWhitespace} from '../helpers';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
@@ -436,7 +436,14 @@ export default [
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = nlToBr(mentionify(emojify(escaped, true, false, scope.emojiImagePath)), true);
+                        const formatted = replaceWhitespace(
+                            nlToBr(
+                                mentionify(
+                                    emojify(escaped, true, false, scope.emojiImagePath),
+                                ),
+                                true,
+                            ),
+                        );
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);

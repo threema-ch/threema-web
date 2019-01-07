@@ -17,11 +17,15 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {u8aToHex} from '../../src/helpers';
+import {replaceWhitespace, u8aToHex} from '../../src/helpers';
 
 describe('Helpers', () => {
     it('u8aToHex', function() {
         const arr = Uint8Array.of(1, 2, 4, 8, 254, 255);
         expect(u8aToHex(arr)).toEqual('01020408feff');
+    });
+
+    it('replaceWhitespace', function() {
+        expect(replaceWhitespace('	Hello wor  ld')).toEqual('&nbsp;&nbsp;Hello&nbsp;wor&nbsp;&nbsp;ld');
     });
 });
