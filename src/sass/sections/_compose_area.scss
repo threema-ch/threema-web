@@ -40,6 +40,7 @@ compose-area {
                     max-height: calc(1.3em * 5);
                     min-height: 22px;
                     cursor: text;
+                    white-space: pre-wrap;
 
                     img.e1 {
                         vertical-align: middle;
