@@ -44,6 +44,20 @@ jobs:
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui chrome
+  dist:
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+      - run: npm install --release
+      - run: npm run dist
+      - save_cache:
+          key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+          paths:
+            - node_modules
   lint:
     docker:
       - image: circleci/node:8-browsers
@@ -63,4 +77,5 @@ workflows:
       - unittest-node10
       - uitest-firefox
       - uitest-chrome
+      - dist
       - lint
