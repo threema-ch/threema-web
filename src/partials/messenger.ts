@@ -1211,6 +1211,7 @@ class MessengerController {
             }
         }, true);
 
+        const logTag = this.logTag;
         this.webClientService.setReceiverListener({
             onConversationRemoved(receiver: threema.Receiver) {
                 switch ($state.current.name) {
@@ -1228,7 +1229,7 @@ class MessengerController {
                         }
                         break;
                     default:
-                        $log.debug(this.logTag, 'Ignored onRemoved event for state', $state.current.name);
+                        $log.debug(logTag, 'Ignored onRemoved event for state', $state.current.name);
                 }
             },
         });
