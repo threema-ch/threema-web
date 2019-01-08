@@ -2940,11 +2940,11 @@ export class WebClientService {
             return;
         }
 
-        // Set low-res avatar
-        receiver.avatar.low = data;
-
-        // Invalidate high-res avatar
-        receiver.avatar.high = undefined;
+        // Set (or clear) low-res avatar, invalidate high-res avatar
+        receiver.avatar = {
+            low: hasValue(data) ? data : undefined,
+            high: undefined,
+        };
     }
 
     /**
