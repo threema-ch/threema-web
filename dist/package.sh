@@ -83,6 +83,7 @@ for target in "${targets[@]}"; do
     else
         install -D "node_modules/$target" "$DIR/node_modules/$target"
     fi
+    sed -i "/sourceMappingURL/d" "$DIR/node_modules/$target"
 done
 
 echo "+ Update version number..."
