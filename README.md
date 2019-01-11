@@ -33,7 +33,7 @@ We will factor this in when scheduling what to do next.
 
 ## Translating
 
-If you want to help translating Threema Web to your language, plese check out
+If you want to help translating Threema Web to your language, please check out
 [`TRANSLATING.md`](./TRANSLATING.md)!
 
 
