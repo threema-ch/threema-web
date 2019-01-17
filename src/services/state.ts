@@ -225,13 +225,19 @@ export class StateService {
         }
     }
 
-    public readyToSubmit(chosenTask: ChosenTask): boolean {
+    /**
+     * Return whether messages can be submitted to the outgoing queue.
+     *
+     * The `startupDone` flag indicates, whether the initial data in the
+     * webclient service has been loaded or not.
+     */
+    public readyToSubmit(chosenTask: ChosenTask, startupDone: boolean): boolean {
         switch (chosenTask) {
             case ChosenTask.RelayedData:
                 return true;
             case ChosenTask.WebRTC:
             default:
-                return this.state === GlobalConnectionState.Ok;
+                return this.state === GlobalConnectionState.Ok && startupDone;
         }
     }
 
