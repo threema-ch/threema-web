@@ -895,6 +895,12 @@ export class WebClientService {
                 this.startupPromise = null;
                 this.startupDone = true;
                 this._resetInitializationSteps();
+
+                // Hack for #712
+                // TODO: Remove once we have the ack protocol for Android too
+                if (this.$state.includes('messenger')) {
+                    this.$state.reload();
+                }
             });
         }
 
