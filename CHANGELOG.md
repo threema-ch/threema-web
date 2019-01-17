@@ -4,6 +4,17 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.4][v2.1.4] (2019-01-17)
+
+Changes:
+
+* [change] Update many dependencies
+* [change] Strip sourceMappingURL lines from release files ([#709][i709])
+* [bug] Fix collapsing of consecutive whitespace in message ([#706][i706])
+* [bug] Android: Fix out-of-sync after reconnect ([#712][i712])
+* [bug] Conversations: Handle clearing of latest message ([#713][i713])
+
+
 ### [v2.1.3][v2.1.3] (2018-12-12)
 
 Changes:
@@ -646,7 +657,12 @@ First public release.
 [i689]: https://github.com/threema-ch/threema-web/issues/689
 [i690]: https://github.com/threema-ch/threema-web/issues/690
 [i691]: https://github.com/threema-ch/threema-web/issues/691
+[i706]: https://github.com/threema-ch/threema-web/issues/706
+[i709]: https://github.com/threema-ch/threema-web/issues/709
+[i712]: https://github.com/threema-ch/threema-web/issues/712
+[i713]: https://github.com/threema-ch/threema-web/issues/713
 
+[v2.1.4]: https://github.com/threema-ch/threema-web/compare/v2.1.3...v2.1.4
 [v2.1.3]: https://github.com/threema-ch/threema-web/compare/v2.1.2...v2.1.3
 [v2.1.2]: https://github.com/threema-ch/threema-web/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/threema-ch/threema-web/compare/v2.1.0...v2.1.1
