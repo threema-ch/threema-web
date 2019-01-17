@@ -339,6 +339,12 @@ export class Conversations implements threema.Container.Conversations {
                 // Copy properties from new conversation to old conversation
                 Object.assign(this.conversations[i], conversation);
 
+                // The latest message can be cleared.
+                if (conversation.latestMessage === undefined
+                        && this.conversations[i].latestMessage !== undefined) {
+                    delete this.conversations[i].latestMessage;
+                }
+
                 // If the position changed, re-sort.
                 if (this.conversations[i].position !== i) {
                     const tmp = this.conversations.splice(i, 1)[0];
