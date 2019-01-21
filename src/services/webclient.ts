@@ -1612,8 +1612,7 @@ export class WebClientService {
                             if (this.mimeService.isAudio(mime)) {
                                 requiredFeature = ContactReceiverFeature.AUDIO;
                                 invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
-                            } else if (this.mimeService.isImage(mime)
-                                || this.mimeService.isVideo(mime)) {
+                            } else if (this.mimeService.isImage(mime) || this.mimeService.isVideo(mime)) {
                                 requiredFeature = ContactReceiverFeature.AUDIO;
                                 invalidFeatureMessage = 'error.MESSAGE_NOT_SUPPORTED';
                             }
@@ -1624,8 +1623,9 @@ export class WebClientService {
                         // check receiver
                         switch (receiver.type) {
                             case 'distributionList':
-                                return reject(this.$translate.instant(invalidFeatureMessage, {
-                                    receiverName: receiver.displayName}));
+                                return reject(this.$translate.instant(
+                                    invalidFeatureMessage, {receiverName: receiver.displayName},
+                                ));
                             case 'group':
                                 const unsupportedMembers = [];
                                 const group = this.groups.get(receiver.id);
@@ -1637,16 +1637,18 @@ export class WebClientService {
                                     if (identity !== this.me.id) {
                                         // tslint:disable-next-line: no-shadowed-variable
                                         const contact = this.contacts.get(identity);
-                                        if (contact === undefined
-                                            || !hasFeature(contact, requiredFeature, this.$log)) {
+                                        if (contact === undefined) {
+                                            this.$log.error(`Cannot retrieve contact ${identity}`);
+                                        } else if (!hasFeature(contact, requiredFeature, this.$log)) {
                                             unsupportedMembers.push(contact.displayName);
                                         }
                                     }
                                 });
 
                                 if (unsupportedMembers.length > 0) {
-                                    return reject(this.$translate.instant(invalidFeatureMessage, {
-                                        receiverName: unsupportedMembers.join(',')}));
+                                    return reject(this.$translate.instant(
+                                        invalidFeatureMessage, {receiverName: unsupportedMembers.join(',')},
+                                    ));
                                 }
                                 break;
                             case 'contact':
