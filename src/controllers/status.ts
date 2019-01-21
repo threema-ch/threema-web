@@ -38,6 +38,7 @@ export class StatusController {
 
     // State variable
     private state = GlobalConnectionState.Error;
+    private unreadCount = 0;
 
     // Expanded status bar
     public expandStatusBar = false;
@@ -81,6 +82,11 @@ export class StatusController {
         this.stateService.evtGlobalConnectionStateChange.attach(
             (stateChange: threema.GlobalConnectionStateChange) => {
                 this.onStateChange(stateChange.state, stateChange.prevState);
+            },
+        );
+        this.stateService.evtUnreadCountChange.attach(
+            (count: number) => {
+                this.unreadCount = count;
             },
         );
     }
@@ -334,5 +340,32 @@ export class StatusController {
     public wide(): boolean {
         return this.controllerService.getControllerName() !== undefined
             && this.controllerService.getControllerName() === 'messenger';
+    }
+
+    /**
+     * Return the favicon filename.
+     */
+    public get faviconFilename(): string {
+        switch (this.state) {
+            case GlobalConnectionState.Ok:
+                if (this.unreadCount > 0) {
+                    return 'favicon-32x32-unread.png';
+                } else {
+                    return 'favicon-32x32.png';
+                }
+                break;
+            case GlobalConnectionState.Warning:
+                const isRelayedData = this.webClientService.chosenTask === threema.ChosenTask.RelayedData;
+                if (isRelayedData) {
+                    // iOS devices are regularly disconnected, but this is normal behavior.
+                    return 'favicon-32x32.png';
+                } else {
+                    return 'favicon-32x32-warning.png';
+                }
+                break;
+            case GlobalConnectionState.Error:
+                return 'favicon-32x32-error.png';
+                break;
+        }
     }
 }

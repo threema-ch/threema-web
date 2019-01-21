@@ -177,7 +177,7 @@ export class WebClientService {
     private qrCodeService: QrCodeService;
     private receiverService: ReceiverService;
     private timeoutService: TimeoutService;
-    private titleService: TitleService;
+    private titleService: TitleService; // Don't remove, needs to be initialized to handle events
     private versionService: VersionService;
 
     // State handling
@@ -3975,14 +3975,14 @@ export class WebClientService {
         const totalUnreadCount = this.conversations
             .get()
             .reduce((a: number, b: threema.Conversation) => a + b.unreadCount, 0);
-        this.titleService.updateUnreadCount(totalUnreadCount);
+        this.stateService.unreadCount = totalUnreadCount;
     }
 
     /**
      * Reset the unread count in the window title
      */
     private resetUnreadCount(): void {
-        this.titleService.updateUnreadCount(0);
+        this.stateService.unreadCount = 0;
     }
 
     /**
