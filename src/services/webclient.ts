@@ -1638,6 +1638,11 @@ export class WebClientService {
                                         // tslint:disable-next-line: no-shadowed-variable
                                         const contact = this.contacts.get(identity);
                                         if (contact === undefined) {
+                                            // This shouldn't actually happen. But if it happens, log an error
+                                            // and assume image support. It's much more likely that the contact
+                                            // can receive images (feature flag 0x01) than otherwise. And if one
+                                            // of the contacts really cannot receive images, the app will return
+                                            // an error message.
                                             this.$log.error(`Cannot retrieve contact ${identity}`);
                                         } else if (!hasFeature(contact, requiredFeature, this.$log)) {
                                             unsupportedMembers.push(contact.displayName);
