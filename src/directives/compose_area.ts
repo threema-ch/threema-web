@@ -435,12 +435,11 @@ export default [
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = replaceWhitespace(nlToBr(mentionify(emojify(escaped)), true));
+                        const formatted = emojify(mentionify(replaceWhitespace(nlToBr(escaped, true))));
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);
 
-                        cleanupComposeContent();
                         updateView();
                     }
                 }
@@ -601,7 +600,6 @@ export default [
                     caretPosition.toChar = caretPosition.fromChar;
 
                     contentElement.innerHTML = currentHtml;
-                    cleanupComposeContent();
                     setCaretPosition(newPos);
 
                     // Update the draft text
@@ -629,26 +627,6 @@ export default [
                 function onFileSelected() {
                     uploadFiles(this.files);
                     fileInput.val('');
-                }
-
-                // Disable content editable and dragging for contained images (emoji)
-                function cleanupComposeContent() {
-                    for (const img of composeDiv[0].getElementsByTagName('img')) {
-                        img.ondragstart = () => false;
-                    }
-                    for (const span of composeDiv[0].getElementsByTagName('span')) {
-                        span.setAttribute('contenteditable', false);
-                    }
-
-                    if (browserService.getBrowser().isFirefox(false)) {
-                        // Disabling object resizing is the only way to disable resizing of
-                        // emoji (contenteditable must be true, otherwise the emoji can not
-                        // be removed with backspace (in FF))
-                        //
-                        // Note: This is not required anymore for FF63+ (but
-                        // please test before removing it to make sure).
-                        (document.execCommand as any)('enableObjectResizing', false, false);
-                    }
                 }
 
                 // Set all correct styles
