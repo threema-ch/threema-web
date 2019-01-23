@@ -15,7 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as twemoji from 'twemoji';
+
 import {extractText, isActionTrigger, logAdapter, replaceWhitespace} from '../helpers';
+import {emojify, shortnameToUnicode} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
@@ -61,9 +64,6 @@ export default [
                 // Callback that is called when uploading files
                 onUploading: '=',
                 maxTextLength: '=',
-
-                // Optional emoji PNG path prefix
-                emojiImagePath: '@?',
             },
             link(scope: any, element) {
                 // Logging
@@ -114,7 +114,7 @@ export default [
                         get: function() {
                             if (instance === undefined) {
                                 instance = {
-                                    htmlElement: composeArea[0].querySelector('div.emojione-picker'),
+                                    htmlElement: composeArea[0].querySelector('div.twemoji-picker'),
                                 };
                                 // append stop propagation
                                 angular.element(instance.htmlElement).on('click', click);
@@ -272,10 +272,10 @@ export default [
                         } else if (ev.keyCode === 190 && caretPosition !== null) {
                             // A ':' is pressed, try to parse
                             const currentWord = stringService.getWord(text, caretPosition.fromChar, [':']);
-                            if (currentWord.realLength > 2
-                                && currentWord.word.substr(0, 1) === ':') {
-                                const unicodeEmoji = emojione.shortnameToUnicode(currentWord.word);
-                                if (unicodeEmoji && unicodeEmoji !== currentWord.word) {
+                            if (currentWord.realLength > 2 && currentWord.word.substr(0, 1) === ':') {
+                                const trimmed = currentWord.word.substr(1, currentWord.word.length - 2);
+                                const unicodeEmoji = shortnameToUnicode(trimmed);
+                                if (unicodeEmoji !== null) {
                                     return insertEmoji(unicodeEmoji,
                                         caretPosition.from - currentWord.realLength,
                                         caretPosition.to);
@@ -427,7 +427,6 @@ export default [
 
                         // Look up some filter functions
                         // tslint:disable-next-line:max-line-length
-                        const emojify = $filter('emojify') as (a: string, b?: boolean, c?: boolean, d?: string) => string;
                         const escapeHtml = $filter('escapeHtml') as (a: string) => string;
                         const mentionify = $filter('mentionify') as (a: string) => string;
                         const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
@@ -436,14 +435,7 @@ export default [
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = replaceWhitespace(
-                            nlToBr(
-                                mentionify(
-                                    emojify(escaped, true, false, scope.emojiImagePath),
-                                ),
-                                true,
-                            ),
-                        );
+                        const formatted = replaceWhitespace(nlToBr(mentionify(emojify(escaped)), true));
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);
@@ -468,7 +460,7 @@ export default [
                     emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                     // Find all emoji
-                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .e1'));
+                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
 
                     // Add event handlers
                     allEmoji.on('click', onEmojiChosen);
@@ -487,7 +479,7 @@ export default [
 
                     // Find all emoji
                     const allEmoji: any = angular.element(
-                        EmojiPickerContainer.get().htmlElement.querySelectorAll('.content .e1'));
+                        EmojiPickerContainer.get().htmlElement.querySelectorAll('.content .em'));
 
                     // Remove event handlers
                     allEmoji.off('click', onEmojiChosen);
@@ -512,7 +504,7 @@ export default [
                 }
 
                 function insertEmoji(emoji, posFrom?: number, posTo?: number): void {
-                    const emojiElement = ($filter('emojify') as any)(emoji, true, true, scope.emojiImagePath) as string;
+                    const emojiElement = emojify(emoji);
                     insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 

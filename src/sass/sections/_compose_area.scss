@@ -40,13 +40,6 @@ compose-area {
                     max-height: calc(1.3em * 5);
                     min-height: 22px;
                     cursor: text;
-
-                    img.e1 {
-                        vertical-align: middle;
-                        margin: 0 1px;
-                        transform: none; // https://github.com/threema-ch/threema-web/issues/262
-                        height: 20px;
-                    }
                 }
             }
             &:first-child,

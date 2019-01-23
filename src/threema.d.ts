@@ -768,7 +768,6 @@ declare namespace threema {
         }
 
         interface Converter {
-            unicodeToEmoji(message);
             addReceiverToConversation(receivers: Receivers);
         }
         interface Filters {

@@ -2125,7 +2125,6 @@ export class WebClientService {
         this.typingInstance = this.container.createTyping();
 
         // Add converters (pre-processors)
-        this.messages.converter = this.container.Converter.unicodeToEmoji;
         this.conversations.setConverter(this.container.Converter.addReceiverToConversation(this.receivers));
 
         // Add filters

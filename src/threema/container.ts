@@ -752,13 +752,6 @@ class Messages implements threema.Container.Messages {
  * Converters transform a message or conversation.
  */
 class Converter {
-    public static unicodeToEmoji(message: threema.Message) {
-        if (message.type === 'text') {
-            message.body = emojione.toShort(message.body);
-        }
-        return message;
-    }
-
     /**
      * Retrieve the receiver corresponding to this conversation and set the
      * `receiver` attribute.

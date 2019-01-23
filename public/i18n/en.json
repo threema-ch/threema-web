@@ -275,7 +275,7 @@
         "LICENSES": "Licenses",
         "OPEN_SOURCE": "Threema Web is fully open source.",
         "SOURCE_CODE": "The source code and the licensing terms can be found on GitHub:",
-        "EMOJI_ART": "Emoji art supplied by <a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>",
+        "EMOJI_ART": "Emoji art supplied by <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
         "NOTIFICATION_SOUNDS": "Sound files &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
         "LICENSE_LINK_BEFORE": "Licenses of used open source components can be found",
         "LICENSE_LINK_TEXT": "in the source code",
