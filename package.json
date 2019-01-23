@@ -55,7 +55,7 @@
     "angular-route": "^1.7.5",
     "angular-sanitize": "^1.7.5",
     "angular-translate": "~2.18",
-    "angularjs-scroll-glue": "~2.2.0",
+    "angularjs-scroll-glue": "~2.1.0",
     "autolinker": "~2.2.1",
     "babelify": "~10.0.0",
     "browserify": "^16.2.3",
