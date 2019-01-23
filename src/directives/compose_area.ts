@@ -269,7 +269,7 @@ export default [
                         const text = extractText(composeDiv[0], logAdapter($log.warn, logTag), false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
-                        } else if (ev.keyCode === 190 && caretPosition !== null) {
+                        } else if ((ev.keyCode === 190 || ev.key === ':') && caretPosition !== null) {
                             // A ':' is pressed, try to parse
                             const currentWord = stringService.getWord(text, caretPosition.fromChar, [':']);
                             if (currentWord.realLength > 2 && currentWord.word.substr(0, 1) === ':') {

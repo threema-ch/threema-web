@@ -41,6 +41,20 @@ async function extractText(driver: WebDriver): Promise<string> {
 }
 
 /**
+ * Helper function to send a KeyUp event.
+ */
+async function sendKeyUp(driver: WebDriver, key: string): Promise<void> {
+    const script = `
+        const e = document.createEvent('HTMLEvents');
+        e.initEvent('keyup', false, true);
+        e.key = '${key}';
+        const element = document.querySelector("div.compose");
+        element.dispatchEvent(e);
+    `;
+    return driver.executeScript<void>(script);
+}
+
+/**
  * The emoji trigger should toggle the emoji keyboard.
  */
 async function showEmojiSelector(driver: WebDriver) {
@@ -173,6 +187,19 @@ async function regression672(driver: WebDriver) {
     expect(text).to.equal('hello\n😫😫\nworld');
 }
 
+/**
+ * Insert emoji with a shortcode.
+ */
+async function insertEmojiWithShortcode(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('hello :+1:');
+    await sendKeyUp(driver, ':');
+
+    const text = await extractText(driver);
+    expect(text).to.equal('hello 👍');
+}
+
 // Register tests here
 const TESTS: Array<[string, Testfunc]> = [
     ['Show and hide emoji selector', showEmojiSelector],
@@ -181,6 +208,7 @@ const TESTS: Array<[string, Testfunc]> = [
     ['Regression test #574', regression574],
     ['Regression test #671', regression671],
     ['Regression test #672', regression672],
+    ['Insert emoji through shortcode', insertEmojiWithShortcode],
 ];
 
 // Test runner
