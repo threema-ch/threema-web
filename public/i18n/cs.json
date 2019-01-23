@@ -273,7 +273,7 @@
         "LICENSES": "Licence",
         "OPEN_SOURCE": "Threema Web je naprogramován dle pravidel open source",
         "SOURCE_CODE": "Zdrojový kód i licenční podmínky naleznete na GitHub webu:",
-        "EMOJI_ART": "Smajlíci dodány od <a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>",
+        "EMOJI_ART": "Smajlíci dodány od <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
         "NOTIFICATION_SOUNDS": "Zvukové soubory &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licencované dle Soundsnap License",
         "LICENSE_LINK_BEFORE": "Zde je licenční ujednání na použité open source komponenty",
         "LICENSE_LINK_TEXT": "ve zdrojovém kódu",

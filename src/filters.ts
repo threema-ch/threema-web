@@ -18,6 +18,7 @@
 import Autolinker from 'autolinker';
 
 import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
+import {emojify, enlargeSingleEmoji} from './helpers/emoji';
 import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
@@ -100,51 +101,13 @@ angular.module('3ema.filters', [])
 
 /**
  * Convert emoji unicode characters to images.
- * Reference: http://git.emojione.com/demos/latest/index.html#js
- *
- * Set the `imgTag` parameter to `true` to use inline PNGs instead of sprites.
  */
-.filter('emojify', function() {
-    return function(text, imgTag = false, greedyMatch = false, imagePath = 'img/e1/') {
-        if (text !== null) {
-            emojione.sprites = imgTag !== true;
-            emojione.emojiSize = '32';
-            emojione.imagePathPNG = imagePath;
-            emojione.greedyMatch = greedyMatch;
-            return emojione.unicodeToImage(text);
-        } else {
-            return text;
-        }
-    };
-})
-
-/**
- * Enlarge 1-3 emoji.
- */
-.filter('enlargeSingleEmoji', function() {
-    const pattern = /<span class="e1 ([^>]*>[^<]*)<\/span>/g;
-    const singleEmojiThreshold = 3;
-    const singleEmojiClassName = 'large-emoji';
-    return function(text, enlarge = false) {
-        if (!enlarge) {
-            return text;
-        }
-        const matches = text.match(pattern);
-        if (matches != null && matches.length >= 1 && matches.length <= singleEmojiThreshold) {
-            if (text.replace(pattern, '').length === 0) {
-                text = text.replace(pattern, '<span class="e1 ' + singleEmojiClassName + ' $1</span>');
-            }
-        }
-        return text;
-    };
-})
+.filter('emojify', () => emojify)
 
 /**
  * Convert markdown elements to html elements
  */
-.filter('markify', function() {
-    return markify;
-})
+.filter('markify', () => markify)
 
 /**
  * Convert mention elements to html elements

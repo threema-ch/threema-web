@@ -273,7 +273,7 @@
         "LICENSES": "许可",
         "OPEN_SOURCE": "Threema web项目是完全开源的。",
         "SOURCE_CODE": "GitHub",
-        "EMOJI_ART": "表情符号由<a target=\"_blank\" href=\"http://emojione.com\">EmojiOne</a>提供",
+        "EMOJI_ART": "表情符号由<a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>提供",
         "NOTIFICATION_SOUNDS": "声音文件和副本; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - 根据Soundsnap许可证获得许可",
         "LICENSE_LINK_BEFORE": "可以找到使用过的开源组件的许可证",
         "LICENSE_LINK_TEXT": "在源代码里",

@@ -25,6 +25,7 @@ import {
 
 import {ContactControllerModel} from '../controller_model/contact';
 import {bufferToUrl, filter, hasValue, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
+import {emojify} from '../helpers/emoji';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
@@ -569,8 +570,9 @@ class ConversationController {
 
                     // Eager translations
                     const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
-                        senderName: (this.$filter('emojify') as any)
-                            ((this.$filter('emptyToPlaceholder') as any)(this.receiver.displayName, '-')),
+                        senderName: emojify(
+                            (this.$filter('emptyToPlaceholder') as any)(this.receiver.displayName, '-'),
+                        ),
                     });
                     const placeholder = this.$translate.instant('messenger.CONFIRM_FILE_CAPTION');
                     const confirmSendAsFile = this.$translate.instant('messenger.CONFIRM_SEND_AS_FILE');

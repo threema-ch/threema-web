@@ -18,6 +18,7 @@
 // tslint:disable:max-line-length
 
 import {hasValue} from '../helpers';
+import {emojify, enlargeSingleEmoji} from '../helpers/emoji';
 import {WebClientService} from '../services/webclient';
 
 // Get text depending on type
@@ -80,8 +81,6 @@ export default [
                 // TODO: Extract filters into helper functions
                 const escapeHtml = $filter('escapeHtml') as any;
                 const markify = $filter('markify') as any;
-                const emojify = $filter('emojify') as any;
-                const enlargeSingleEmoji = $filter('enlargeSingleEmoji') as any;
                 const mentionify = $filter('mentionify') as any;
                 const linkify = $filter('linkify') as any;
                 const nlToBr = $filter('nlToBr') as any;

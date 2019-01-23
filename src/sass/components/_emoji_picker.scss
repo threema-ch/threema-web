@@ -1,4 +1,4 @@
-.emojione-picker {
+.twemoji-picker {
     min-height: 216px;
     margin: 0;
     padding: 0 8px 0;
@@ -14,12 +14,14 @@
 .tab {
     float: left;
 
-    .e1 {
+    .em {
         @include mouse-hand;
         margin-bottom: 8px;
         transform: scale(1.0);
         margin-right: 4px;
         margin-bottom: 12px;
+        display: inline-block;
+        text-indent: -99999px;
     }
 
     label {
@@ -31,7 +33,7 @@
         position: relative;
         left: 1px;
         margin-left: -1px;
-        .e1 {
+        .em {
             top: 3px;
             left: 3px;
         }
