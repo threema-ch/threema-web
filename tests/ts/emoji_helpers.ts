@@ -23,7 +23,8 @@ describe('Emoji Helpers', () => {
     describe('emojify', () => {
         it('emojifies with img tag', function() {
             expect(emojify('hello 🐦'))
-                .toEqual('hello <img class="em" draggable="false" alt="🐦" src="/emoji/1f426.png" data-c="1f426"/>');
+                .toEqual('hello <img class="em" draggable="false" '
+                       + 'alt="🐦" src="/emoji/png32/1f426.png" data-c="1f426"/>');
         });
 
         it('ignores certain codepoints', function() {
@@ -51,12 +52,14 @@ describe('Emoji Helpers', () => {
         };
 
         const singleEmojiClassName = 'large-emoji';
-        const crazy = '<img class="em" draggable="false" alt="🤪" src="/emoji/1f92a.png" data-c="1f92a">';
+        const crazy = '<img class="em" draggable="false"'
+            + ' alt="🤪" src="/emoji/png32/1f92a.png" data-c="1f92a">';
         const crazyLarge = '<img class="em ' + singleEmojiClassName
-            + '" draggable="false" alt="🤪" src="/emoji/1f92a.png" data-c="1f92a">';
-        const copyright = '<img class="em anotherclass" draggable="false" alt="©️" src="/emoji/a9.png" data-c="a9">';
+            + '" draggable="false" alt="🤪" src="/emoji/png64/1f92a.png" data-c="1f92a">';
+        const copyright = '<img class="em anotherclass" draggable="false"'
+            + ' alt="©️" src="/emoji/png32/a9.png" data-c="a9">';
         const copyrightLarge = '<img class="em ' + singleEmojiClassName
-            + ' anotherclass" draggable="false" alt="©️" src="/emoji/a9.png" data-c="a9">';
+            + ' anotherclass" draggable="false" alt="©️" src="/emoji/png64/a9.png" data-c="a9">';
 
         it('enlarges 1 emoji', () => {
             expect(process(crazy)).toEqual(crazyLarge);

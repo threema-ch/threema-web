@@ -3759,7 +3759,7 @@ export function emojify(text: string): string {
     if (text !== null) {
         return twemoji.parse(text, {
             callback: (icon, options, variant) => {
-                return '/emoji/' + icon + '.png';
+                return '/emoji/png32/' + icon + '.png';
             },
             attributes: (icon, variant) => {
                 return {'data-c': variant};
@@ -3794,7 +3794,9 @@ export function enlargeSingleEmoji(text: string, enlarge: boolean = false): stri
     const matches = text.match(pattern);
     if (matches != null && matches.length >= 1 && matches.length <= singleEmojiThreshold) {
         if (text.replace(pattern, '').length === 0) {
-            text = text.replace(pattern, '<img class="em ' + singleEmojiClassName + '$1$2');
+            text = text
+                .replace(pattern, '<img class="em ' + singleEmojiClassName + '$1$2')
+                .replace(/\/png32\//g, '/png64/');
         }
     }
     return text;
