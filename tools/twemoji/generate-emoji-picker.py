@@ -38,7 +38,7 @@ for i, category in enumerate(category_order):
     print('    <div class="tab">')
     print('        <input type="radio" id="tab-%d" name="tabs"%s>' % (i, ' checked' if i == 0 else ''))
     print('        <label for="tab-%d" title="%s">' % (i, category['name']))
-    print('            <img src="/emoji/{0}.svg" class="em-{0}" height="24" width="24"></span>'.format(category['id']))
+    print('            <img src="/emoji/{0}.svg" class="em-{0}" height="24" width="24" role="button" tabindex="0"></span>'.format(category['id']))
     print('        </label>')
     print('        <div class="content">')
     for emoji in groups[category['id']]:

@@ -32,8 +32,8 @@
         position: relative;
         left: 1px;
         margin-left: -1px;
+        @include mouse-hand;
         img {
-            @include mouse-hand;
             position: relative;
             margin: 3px 4px 0;
         }
