@@ -152,7 +152,7 @@ signed using the following PGP key:
     uid           Threema Signing Key <dev@threema.ch>
 
 If you discover a security issue in the Threema Web, please follow responsible
-disclosure and report it directly to `security2018@threema.ch` instead of
+disclosure and report it directly to `security2019@threema.ch` instead of
 opening an issue on Github.
 
     pub   rsa4096 2017-02-08 [SC] [expires: 2022-02-07]
