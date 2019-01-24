@@ -44,6 +44,10 @@ describe('Emoji Helpers', () => {
         it('returns null for unknown shortcodes', function() {
             expect(shortnameToUnicode('sömbsöp')).toBeNull();
         });
+
+        it('handles multi-codepoint emoji', function() {
+            expect(shortnameToUnicode('ch')).toEqual('\ud83c\udde8\ud83c\udded');
+        });
     });
 
     describe('enlargeSingleEmoji', function() {

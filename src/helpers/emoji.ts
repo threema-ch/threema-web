@@ -3774,11 +3774,15 @@ export function emojify(text: string): string {
  * Translate a shortname to UTF8.
  */
 export function shortnameToUnicode(shortname: string): string | null {
-    const codepoint = shortnames[shortname];
-    if (codepoint === undefined) {
+    const codepoints = shortnames[shortname];
+    if (codepoints === undefined) {
         return null;
     }
-    return twemoji.convert.fromCodePoint(codepoint);
+    const parts = [];
+    for (const codepoint of codepoints.split('-')) {
+        parts.push(twemoji.convert.fromCodePoint(codepoint));
+    }
+    return parts.join('');
 }
 
 /**
