@@ -17,8 +17,7 @@
     .em {
         @include mouse-hand;
         margin-bottom: 8px;
-        transform: scale(1.0);
-        margin-right: 4px;
+        margin-right: 5px;
         margin-bottom: 12px;
         display: inline-block;
         text-indent: -99999px;
@@ -34,8 +33,9 @@
         left: 1px;
         margin-left: -1px;
         .em {
-            top: 3px;
-            left: 3px;
+            position: relative;
+            left: 2px;
+            transform: scale(0.75);
         }
     }
 
@@ -45,10 +45,11 @@
         left: 0;
         right: 0;
         bottom: 0;
-        padding: 16px 4px 0;
+        padding: 10px 10px 0;
         background: white;
         border: 1px solid white;
         overflow-y: scroll;
+        @include scrollbar;
         &::selection {
             background: rgba(255, 255, 255, 0.0);
         }
@@ -66,14 +67,5 @@
 
     [type=radio]:checked ~ label ~ .content {
         z-index: 1;
-    }
-
-    ::-webkit-scrollbar {
-        background-color: white;
-        border: 1px solid white;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: #dbdbdb;
     }
 }
