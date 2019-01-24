@@ -4,6 +4,15 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.5][v2.1.5] (2019-01-24)
+
+Changes:
+
+* [change] Switch from Emojione to Twitter Emoji (Unicode 11.0) ([#721][i721])
+* [bug] Fix pasting of emoji ([#722][i722])
+* [bug] Fix UI bug when loading conversations ([#723][i723])
+
+
 ### [v2.1.4][v2.1.4] (2019-01-17)
 
 Changes:
@@ -661,7 +670,11 @@ First public release.
 [i709]: https://github.com/threema-ch/threema-web/issues/709
 [i712]: https://github.com/threema-ch/threema-web/issues/712
 [i713]: https://github.com/threema-ch/threema-web/issues/713
+[i721]: https://github.com/threema-ch/threema-web/issues/721
+[i722]: https://github.com/threema-ch/threema-web/issues/722
+[i723]: https://github.com/threema-ch/threema-web/issues/723
 
+[v2.1.5]: https://github.com/threema-ch/threema-web/compare/v2.1.4...v2.1.5
 [v2.1.4]: https://github.com/threema-ch/threema-web/compare/v2.1.3...v2.1.4
 [v2.1.3]: https://github.com/threema-ch/threema-web/compare/v2.1.2...v2.1.3
 [v2.1.2]: https://github.com/threema-ch/threema-web/compare/v2.1.1...v2.1.2
