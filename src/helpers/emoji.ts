@@ -3778,11 +3778,10 @@ export function shortnameToUnicode(shortname: string): string | null {
     if (codepoints === undefined) {
         return null;
     }
-    const parts = [];
-    for (const codepoint of codepoints.split('-')) {
-        parts.push(twemoji.convert.fromCodePoint(codepoint));
-    }
-    return parts.join('');
+    return codepoints
+        .split('-')
+        .map(twemoji.convert.fromCodePoint)
+        .join('');
 }
 
 /**
