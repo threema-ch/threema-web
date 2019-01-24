@@ -32,10 +32,10 @@
         position: relative;
         left: 1px;
         margin-left: -1px;
-        .em {
+        @include mouse-hand;
+        img {
             position: relative;
-            left: 2px;
-            transform: scale(0.75);
+            margin: 3px 4px 0;
         }
     }
 

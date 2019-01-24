@@ -458,11 +458,13 @@ export default [
                     emojiKeyboard.addClass('active');
                     emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
 
-                    // Find all emoji
+                    // Find some selectors
                     const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
                     // Add event handlers
                     allEmoji.on('click', onEmojiChosen);
+                    allEmojiTabs.on('keydown', onEmojiTabSelected);
 
                     // set focus to fix chat scroll bug
                     $timeout(() => {
@@ -472,16 +474,19 @@ export default [
 
                 // Hide emoji picker element
                 function hideEmojiPicker() {
+                    const emojiPicker: HTMLElement = EmojiPickerContainer.get().htmlElement;
+
                     // Hide
                     emojiKeyboard.removeClass('active');
                     emojiTrigger.removeClass(TRIGGER_ACTIVE_CSS_CLASS);
 
-                    // Find all emoji
-                    const allEmoji: any = angular.element(
-                        EmojiPickerContainer.get().htmlElement.querySelectorAll('.content .em'));
+                    // Find some selectors
+                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
                     // Remove event handlers
                     allEmoji.off('click', onEmojiChosen);
+                    allEmojiTabs.off('keydown', onEmojiTabSelected);
                     EmojiPickerContainer.destroy();
                 }
 
@@ -500,6 +505,14 @@ export default [
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
                     insertEmoji(this.textContent);
+                }
+
+                // Emoji tab is selected
+                function onEmojiTabSelected(ev: KeyboardEvent): void {
+                    if (ev.key === ' ' || ev.key === 'Enter') {
+                        // Warning: Hacky
+                        this.parentElement.previousElementSibling.checked = true;
+                    }
                 }
 
                 function insertEmoji(emoji, posFrom?: number, posTo?: number): void {
