@@ -173,7 +173,7 @@ export default [
                     const rawText = extractText(composeDiv[0], logAdapter($log.warn, logTag));
 
                     // Due to #731, and the hack introduced in #706, the
-                    // extracted text may contain non-breaing spaces (U+00A0).
+                    // extracted text may contain non-breaking spaces (U+00A0).
                     // Replace them with actual whitespace to avoid strange
                     // behavior when submitting the text.
                     //
