@@ -170,7 +170,16 @@ export default [
                 //
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
-                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+                    const rawText = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+
+                    // Due to #731, and the hack introduced in #706, the
+                    // extracted text may contain non-breaking spaces (U+00A0).
+                    // Replace them with actual whitespace to avoid strange
+                    // behavior when submitting the text.
+                    //
+                    // TODO: Remove this once we have a compose area rewrite and can
+                    // fix the actual bug.
+                    const text = rawText.replace(/\u00A0/g, ' ');
 
                     return new Promise((resolve, reject) => {
                         const submitTexts = (strings: string[]) => {
