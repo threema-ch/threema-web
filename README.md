@@ -151,17 +151,12 @@ signed using the following PGP key:
           E7AD D991 4E26 0E8B 35DF  B506 65FD E935 573A CDA6
     uid           Threema Signing Key <dev@threema.ch>
 
+The public key can be found [on Keybase](https://keybase.io/threema).
+
 If you discover a security issue in the Threema Web, please follow responsible
-disclosure and report it directly to `security2018@threema.ch` instead of
-opening an issue on Github.
-
-    pub   rsa4096 2017-02-08 [SC] [expires: 2022-02-07]
-          677E 0E97 1669 53B3 2620  D95C 71B9 C6BA C55A 9855
-    uid           Threema Security <security2018@threema.ch>
-
-You can find both public keys and their proofs [on
-keybase](https://keybase.io/threema). The security reporting key can also be
-found at [threema.ch/security.asc](https://threema.ch/security.asc).
+disclosure and report it directly to Threema instead of opening an issue on
+Github. You can find the security e-mail as well as the PGP public key at
+https://threema.ch/en/contact.
 
 
 ## License
