@@ -19,7 +19,7 @@
     along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
 
 -->
-<html ng-app="3ema" ng-strict-di>
+<html ng-app="3ema" ng-strict-di ng-controller="StatusController as ctrl">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,8 +33,8 @@
     <!-- Favicon / Webmanifest / Browserconfig -->
     <link rel="manifest" href="manifest.webmanifest?v=[[VERSION]]">
     <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png?v=[[VERSION]]">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png?v=[[VERSION]]">
-    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png?v=[[VERSION]]">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ 'img/favicon/' + ctrl.faviconFilename + '?v=[[VERSION]]' }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ 'img/favicon/' + ctrl.faviconFilename + '?v=[[VERSION]]' }}">
     <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg?v=[[VERSION]]" color="#333333">
     <link rel="shortcut icon" href="img/favicon/favicon.ico?v=[[VERSION]]">
     <meta name="msapplication-TileColor" content="#313131">
@@ -56,7 +56,7 @@
     <link rel="stylesheet" href="css/app.css?v=[[VERSION]]">
 </head>
 
-<body ng-controller="StatusController as ctrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
+<body class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
     <img src="img/bg.jpg?v=[[VERSION]]" aria-label="Background image: Blurred photo of a mountain" id="background-image" draggable="false">
 
     <noscript>

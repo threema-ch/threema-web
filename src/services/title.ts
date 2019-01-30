@@ -14,6 +14,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
+import {StateService} from './state';
 
 /**
  * The title service can update the window title.
@@ -23,19 +24,26 @@ export class TitleService {
     private $log: ng.ILogService;
     private $document: ng.IDocumentService;
 
+    private stateService: StateService;
+
     private DEFAULT_TITLE = 'Threema Web';
     private title: string;
     private unreadCount: number = 0;
 
-    public static $inject = ['$log', '$document'];
-    constructor($log: ng.ILogService, $document: ng.IDocumentService) {
+    public static $inject = ['$log', '$document', 'StateService'];
+    constructor($log: ng.ILogService, $document: ng.IDocumentService, stateService: StateService) {
         this.$log = $log;
         this.$document = $document;
-        this.update();
-    }
+        this.stateService = stateService;
 
-    public updateUnreadCount(count: number): void {
-        this.unreadCount = count;
+        // Event handlers
+        this.stateService.evtUnreadCountChange.attach(
+            (count: number) => {
+                this.unreadCount = count;
+                this.update();
+            },
+        );
+
         this.update();
     }
 
