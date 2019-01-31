@@ -3759,7 +3759,7 @@ export function emojify(text: string): string {
     if (text !== null) {
         return twemoji.parse(text, {
             callback: (icon, options, variant) => {
-                return '/emoji/png32/' + icon + '.png';
+                return 'emoji/png32/' + icon + '.png';
             },
             attributes: (icon, variant) => {
                 return {'data-c': variant};
