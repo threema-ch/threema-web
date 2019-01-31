@@ -1,18 +1,22 @@
-.md-autocomplete-suggestions{
+.md-autocomplete-suggestions {
     $avatar-size-in-autocomplete: 30px;
+
     .receiver-badge {
         .avatar-box {
             height: $avatar-size-in-autocomplete;
+
             img {
-                height: $avatar-size-in-autocomplete;
                 width: auto;
+                height: $avatar-size-in-autocomplete;
             }
+
             .work-indicator,
             .home-indicator {
                 // Override configuration.
                 // This is a bit of a hack
                 $indicator-size: 12px;
                 top: $avatar-size-in-autocomplete - $indicator-size - 18px;
+
                 img {
                     width: $indicator-size;
                     height: $indicator-size;
@@ -21,46 +25,44 @@
         }
     }
 }
+
 .receiver-badge {
-  display: flex;
-  flex-direction: row;
-  align-items: center !important;
-  width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center !important;
+    width: 100%;
 
-  .avatar-box {
-    margin-right: $main-padding;
-  }
-
-  .receiver-badge-name {
-    margin-right: $main-padding;
-  }
-
-  &.inactive {
-    opacity: 0.5;
-  }
-
-  &.contact-badge {
-    .contact-badge-identity {
-      flex: 1;
-      text-align: right;
-      font-size: 10pt;
-      color: #757575;
+    .avatar-box {
+        margin-right: $main-padding;
     }
-  }
 
-  &.distribution-list-badge {
-  }
-
-  &.group-badge {
-    .receiver-role {
-      flex: 1;
-      text-align: right;
-      font-size: 10pt;
-      color: #757575;
+    .receiver-badge-name {
+        margin-right: $main-padding;
     }
-  }
+
+    &.inactive {
+        opacity: .5;
+    }
+
+    &.contact-badge {
+        .contact-badge-identity {
+            flex: 1;
+            text-align: right;
+            color: #757575;
+            font-size: 10pt;
+        }
+    }
+
+    &.group-badge {
+        .receiver-role {
+            flex: 1;
+            text-align: right;
+            color: #757575;
+            font-size: 10pt;
+        }
+    }
 }
 
 .linked .receiver-badge {
-    @include mouse-hand;
+    cursor: pointer;
 }

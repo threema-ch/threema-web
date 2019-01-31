@@ -19,8 +19,8 @@
     "test:ui": "npm run build:uitests && bash tests/ui/run.sh",
     "lint": "npm run lint:ts && npm run lint:sass",
     "lint:ts": "tslint -c tslint.json --project tsconfig.json --exclude \"**/src/config.ts\"",
-    "lint:sass": "sass-lint -v -q",
-    "lint:sass:fix": "sass-lint-auto-fix",
+    "lint:sass": "sass-lint -c .sass-lint.yml -v -q",
+    "lint:sass:fix": "sass-lint-auto-fix -c .sass-lint.yml",
     "clean": "rm -rf js/ build/ dist/app*"
   },
   "keywords": [

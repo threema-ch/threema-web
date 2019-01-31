@@ -1,15 +1,23 @@
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
     font-weight: 700;
 }
+
 h1 {
     font-size: 2.2em;
 }
+
 h2 {
     font-size: 1.5em;
 }
 
-html, input, textarea {
-    font-family: 'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif;
+html,
+input,
+textarea {
+    font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 em {

@@ -1,36 +1,32 @@
 .avatar-area {
     &.overview {
+        $avatar-area-size: 250px;
         display: inline-block;
         text-align: center;
-        $avatar-area_size: 250px;
 
         > .avatar-image {
             position: relative;
             margin: auto;
-            width: $avatar-area_size;
-            height: $avatar-area_size;
-            background-color: rgb(198, 198, 198);
-
-            overflow: hidden;
             border-radius: 50%;
+            background-color: rgb(198, 198, 198);
+            width: $avatar-area-size;
+            height: $avatar-area-size;
+            overflow: hidden;
+
             img {
                 width: 100%;
             }
 
-
             .loading-element {
-                position: absolute;
                 display: none;
+                position: absolute;
+                margin-top: $avatar-area-size / 3;
                 width: 100%;
-                margin-top: ($avatar-area_size/3);
 
                 &.active {
                     display: block;
                 }
             }
         }
-    }
-    &.editor {
-
     }
 }

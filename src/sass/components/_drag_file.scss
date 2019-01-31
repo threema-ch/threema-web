@@ -5,31 +5,28 @@
             display: flex;
         }
     }
+
     drag-file {
         > .drag-file-overlay {
+            display: none;
             position: absolute;
+            z-index: 19;
+            background-color: rgba(0, 0, 0, .4);
             width: calc(100%);
             height: calc(100%);
-            background-color: rgba(0,0,0, 0.4);
-            display: none;
-
-            z-index: 19;
-
-            //padding: $main-padding;
 
             > div {
-                margin: $main-padding/2;
-                flex-grow: 1;
-                border: 4px dotted white;
-
                 display: flex;
-
+                flex-grow: 1;
                 align-items: center;
                 justify-content: center;
+                margin: $main-padding / 2;
+                border: 4px dotted #ffffff;
+
                 > span {
-                    font-size: 20pt;
-                    color: white;
                     text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
+                    color: #ffffff;
+                    font-size: 20pt;
                 }
             }
         }

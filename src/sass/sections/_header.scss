@@ -1,18 +1,19 @@
 header {
-    text-align: center;
     height: $header-height;
-    //background-color: #009688;
+    text-align: center;
 }
 
 #title {
-    #logo {
-        width: 100%;
-        svg {
-            width: 220px;
-            margin: 0 auto;
-            fill: white;
-        }
-    }
     position: relative;
     top: 8px;
+
+    #logo {
+        width: 100%;
+
+        svg {
+            margin: 0 auto;
+            width: 220px;
+            fill: #ffffff;
+        }
+    }
 }
