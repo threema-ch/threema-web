@@ -4,6 +4,18 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.6][v2.1.6] (2019-01-31)
+
+Changes:
+
+* [feature] Show connection state and unread state in favicon ([#720][i720])
+* [change] Ensure that webapp loads on browsers without ES2015 support ([#733][i733])
+* [change] Change color of Safari pinned tab favicon ([#746][i746])
+* [change] Update Czech translations
+* [bug] Fix relative paths to emoji images ([#743][i743] / [#748][i748])
+* [bug] Fix the use of non-breaking spaces when pasting text ([#745][i745])
+
+
 ### [v2.1.5][v2.1.5] (2019-01-24)
 
 Changes:
@@ -670,10 +682,17 @@ First public release.
 [i709]: https://github.com/threema-ch/threema-web/issues/709
 [i712]: https://github.com/threema-ch/threema-web/issues/712
 [i713]: https://github.com/threema-ch/threema-web/issues/713
+[i720]: https://github.com/threema-ch/threema-web/issues/720
 [i721]: https://github.com/threema-ch/threema-web/issues/721
 [i722]: https://github.com/threema-ch/threema-web/issues/722
 [i723]: https://github.com/threema-ch/threema-web/issues/723
+[i733]: https://github.com/threema-ch/threema-web/issues/733
+[i743]: https://github.com/threema-ch/threema-web/issues/743
+[i745]: https://github.com/threema-ch/threema-web/issues/745
+[i746]: https://github.com/threema-ch/threema-web/issues/746
+[i748]: https://github.com/threema-ch/threema-web/issues/748
 
+[v2.1.6]: https://github.com/threema-ch/threema-web/compare/v2.1.5...v2.1.6
 [v2.1.5]: https://github.com/threema-ch/threema-web/compare/v2.1.4...v2.1.5
 [v2.1.4]: https://github.com/threema-ch/threema-web/compare/v2.1.3...v2.1.4
 [v2.1.3]: https://github.com/threema-ch/threema-web/compare/v2.1.2...v2.1.3
