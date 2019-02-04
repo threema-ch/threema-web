@@ -1,40 +1,30 @@
 #background-image {
-    min-height: 100%;
-    min-width: 1024px;
-    width: 100%;
-    height: auto;
     position: fixed;
     top: 0;
     left: 0;
     z-index: -1;
-    -moz-user-select: none;
-    -webkit-user-select: none;
+    width: 100%;
+    min-width: 1024px;
+    height: auto;
+    min-height: 100%;
+    -moz-user-select: none; // sass-lint:disable-line no-vendor-prefixes
+    -webkit-user-select: none; // sass-lint:disable-line no-vendor-prefixes
     user-select: none;
     pointer-events: none;
 }
 
 #main-wrapper {
-    height: 100%;
     margin: 0 auto;
     width: 98vw;
     max-width: 450px;
+    height: calc(
+        100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});
     max-height: 575px;
-    height: calc(100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});
+
     &.wide {
         max-width: 1500px;
         max-height: inherit;
     }
-}
-
-#main {
-    border-radius: $material-radius;
-    width: 100%;
-    height: 100%;
-    box-shadow: $material-card-shadow;
-    overflow: hidden;
-}
-
-#main-wrapper {
 
     // Set min height of messenger
     &.wide #main {
@@ -43,10 +33,17 @@
 
     // Set min height of welcome screen
     &:not(.wide) #main {
-        min-height: 620px;
         height: auto;
+        min-height: 620px;
     }
+}
 
+#main {
+    border-radius: $material-radius;
+    box-shadow: $material-card-shadow;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
 #main-content {
@@ -55,36 +52,33 @@
 }
 
 #messenger {
-
-    transition: all 1s ease-out;
     display: flex;
-    width: 100%;
-    // height calculation in _status_bar.scss
     flex-direction: row;
+    // height calculation in _status_bar.scss
+    width: 100%;
 
     #navigation {
-        height: 100%;
         display: flex;
         flex-direction: column;
+        height: 100%;
     }
 
     #detail {
         height: 100%;
-        &>div.ng-scope {
-            height: 100%;
-            background-color: #efebe9;
 
-            /**
-                Default style for the header in the detail
-             */
+        > div.ng-scope {
+            background-color: #efebe9;
+            height: 100%;
+
+            // Default style for the header in the detail
             .detail-header {
-                box-shadow: 1px 2px 4px -2px rgba(0, 0, 0, 0.2);
-                background-color: $dark-background-color;
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                padding: 0 $main-padding;
                 z-index: 18;
+                box-shadow: 1px 2px 4px -2px rgba(0, 0, 0, .2);
+                background-color: $dark-background-color;
+                padding: 0 $main-padding;
                 min-height: 68px;
 
                 > * {
@@ -96,13 +90,14 @@
                     flex-direction: column;
                     flex-grow: 1;
                     overflow: hidden;
+
                     > * {
-                        color: black;
                         display: flex;
-                        line-height: 100%;
                         flex-direction: row;
                         flex-grow: 1;
                         justify-content: space-between;
+                        line-height: 100%;
+                        color: #000000;
 
                         &:first-child {
                             font-weight: bold;
@@ -114,7 +109,7 @@
                     flex: 1;
                     text-align: right;
 
-                    /* loading indicator */
+                    // Loading indicator
                     md-progress-circular {
                         display: inline-block;
                     }
@@ -124,10 +119,10 @@
             .detail-content {
 
                 ul {
-                    list-style-type: none;
                     margin: 0;
                     padding: 0;
                     width: 100%;
+                    list-style-type: none;
 
                     > li {
                         margin-bottom: $main-padding;
@@ -143,21 +138,23 @@
 
                 &.readonly {
                     .form-header {
-                        overflow: hidden;
                         height: 400px;
+                        overflow: hidden;
+
                         eee-avatar {
                             img {
                                 position: relative;
                                 top: calc(-100%);
+                                border-radius: 0;
                                 width: 100%;
                                 max-width: 100%;
-                                max-height: none;
                                 height: auto;
-                                border-radius: 0;
+                                max-height: none;
                             }
                         }
                     }
                 }
+
                 .detail-content {
                     flex-grow: 1;
                     overflow: auto;
@@ -167,29 +164,33 @@
                         flex-flow: row;
 
                         &.div {
-                            >:first-child {
-                                border-right: 1px solid rgba(0,0,0,0.12);
-                                padding-right: 4*$main-padding;
-                                margin-right: 4*$main-padding;
+                            > :first-child {
+                                margin-right: 4 * $main-padding;
+                                border-right: 1px solid rgba(0, 0, 0, .12);
+                                padding-right: 4 * $main-padding;
                             }
                         }
+
                         > * {
                             flex: 1;
 
-                            //be sure the avatar has always the same height as width
+                            // be sure the avatar has always the same height as width
                             &.avatar {
+                                position: relative;
                                 width: 50%;
                                 overflow: hidden;
-                                position: relative;
-                                &:before {
-                                    content: "";
+
+                                &::before {
                                     display: block;
                                     margin-top: 100%;
+                                    content: '';
                                 }
+
                                 eee-avatar {
                                     position: absolute;
-                                    top:0;
+                                    top: 0;
                                     width: 100%;
+
                                     img {
                                         border-radius: 0;
                                         width: 100%;
@@ -200,9 +201,11 @@
                             }
                         }
                     }
+
                     .form-content {
                         padding: $main-padding;
                     }
+
                     .loading-overlay {
                         display: none;
                     }
@@ -213,8 +216,8 @@
 
     &:not(.show-detail) {
         #navigation {
-            max-width: 100%;
             flex: 1 6 100%;
+            max-width: 100%;
         }
 
         #detail {
@@ -224,11 +227,10 @@
 
     &.show-detail {
         #navigation {
-            max-width: 30%;
-            min-width: 200px;
             flex: 1 6 30%;
-
-            border-right: 1px solid #ddd;
+            border-right: 1px solid #dddddd;
+            min-width: 200px;
+            max-width: 30%;
         }
 
         #detail {
@@ -241,8 +243,9 @@
 
 .material-icons {
     &.as-button {
-        opacity: 0.5;
+        opacity: .5;
         cursor: pointer;
+
         &:hover {
             opacity: 1;
         }
@@ -261,59 +264,64 @@ input.threema-id {
 }
 
 a.click-action {
-    @include mouse-hand;
+    cursor: pointer;
 }
 
 .android-ios-only {
-    width: 100%;
     margin: 10px auto 0;
-    background-color: white;
-    text-align: center;
     border-radius: $material-radius;
     box-shadow: $material-card-shadow;
+    background-color: #ffffff;
+    width: 100%;
+    text-align: center;
+
     div {
-        padding: 16px;
-        line-height: 24px;
         display: inline-flex;
-        vertical-align: middle;
         align-items: center;
-        font-weight: 300;
+        padding: 16px;
+        vertical-align: middle;
+        line-height: 24px;
         white-space: nowrap;
+        font-weight: 300;
+
         i.material-icons {
             margin-right: 8px;
         }
+
         img {
-            height: 26px;
             margin-right: 8px;
+            height: 26px;
         }
     }
 }
 
 
-//show dt as threema green subjects
+// show dt as threema green subjects
 .key-values {
     dt {
-        color: rgb(0,150,136);
         padding-bottom: ($main-padding);
+        color: rgb(0, 150, 136);
     }
 
     dd {
-        word-break: normal;
-        margin-bottom: $main-padding*2;
         display: block;
+        margin-bottom: $main-padding * 2;
+        word-break: normal;
 
         > .complex-values {
             display: flex;
-            justify-items: center;
-            align-items: center;
             flex-direction: row;
+            align-items: center;
+            justify-items: center;
 
             > *:not(:last-child) {
                 margin-right: $main-padding;
             }
+
             .indicator-icon {
                 $indicator-size: 18px;
                 top: 48px - $indicator-size;
+
                 img {
                     width: $indicator-size;
                     height: $indicator-size;
@@ -324,11 +332,12 @@ a.click-action {
 }
 
 
-//angular material extensions
+// angular material extensions
 md-toast.md-center {
     left: 50%;
     transform: translate3d(-50%, 0, 0);
 }
+
 md-toast .md-toast-content {
     span {
         text-align: center;
@@ -346,11 +355,23 @@ md-list-item .md-list-item-inner > md-checkbox .md-label {
 
 .status span {
     display: inline;
-    line-height: 24px;
     vertical-align: top;
+    line-height: 24px;
 }
 
-.status-yes i { color: #4caf50; }
-.status-no i { color: #f44336; }
-.status-unknown i { color: #0277BD; }
-.small { font-size: 0.8em; font-weight: 300; }
+.status-yes i {
+    color: #4caf50;
+}
+
+.status-no i {
+    color: #f44336;
+}
+
+.status-unknown i {
+    color: #0277bd;
+}
+
+.small {
+    font-size: .8em;
+    font-weight: 300;
+}

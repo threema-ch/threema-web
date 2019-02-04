@@ -1,69 +1,75 @@
 mediabox {
     .box {
+        $mediabox-transition-duration: .1s;
         position: absolute;
-        left: 0;
         top: 0;
         right: 0;
         bottom: 0;
-        padding: 24px;
+        left: 0;
         z-index: 41;
-        background-color: rgba(0, 0, 0, 0.75);
+        background-color: rgba(0, 0, 0, .75);
+        padding: 24px;
 
-        // Transitions
-        $mediabox-transition-duration: 0.1s;
         &.ng-enter {
-            opacity: 0;
             transition: $mediabox-transition-duration linear opacity;
+            opacity: 0;
+
             img {
-                transform: scale(0.95);
+                transform: scale(.95);
                 transition: $mediabox-transition-duration linear transform;
             }
         }
+
         &.ng-enter-active {
             opacity: 1;
+
             img {
-                transform: scale(1.0);
+                transform: scale(1);
             }
         }
+
         &.ng-leave {
-            opacity: 1;
             transition: $mediabox-transition-duration linear opacity;
+            opacity: 1;
+
             img {
-                transform: scale(1.0);
+                transform: scale(1);
                 transition: $mediabox-transition-duration linear transform;
             }
         }
+
         &.ng-leave-active {
             opacity: 0;
+
             img {
-                transform: scale(0.95);
+                transform: scale(.95);
             }
         }
 
 
         md-icon {
             display: block;
-            box-sizing: border-box;
             position: absolute;
-            height: 28px;
-            width: 28px;
             top: 24px;
-            color: rgba(255, 255, 255, 0.8);
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 2px solid rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(255, 255, 255, .8);
             border-radius: 50%;
+            background-color: rgba(0, 0, 0, .7);
+            cursor: pointer;
+            width: 28px;
+            height: 28px;
+            color: rgba(255, 255, 255, .8);
+            box-sizing: border-box;
             user-select: none;
-            @include mouse-hand;
 
             &:focus {
-                color: rgba(255, 255, 255, 1.0);
-                border: 2px solid rgba(255, 255, 255, 1.0);
+                border: 2px solid rgba(255, 255, 255, 1);
+                color: rgba(255, 255, 255, 1);
             }
 
             &.save {
                 right: 60px;
-                font-size: 20px;
                 padding: 2px;
+                font-size: 20px;
             }
 
             &.close {
@@ -72,34 +78,34 @@ mediabox {
         }
 
         .inner {
-            width: 100%;
-            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
 
             &:focus {
                 outline: 0;
             }
 
             img {
-                max-height: calc(100% - 28px - 28px);
+                box-shadow: 0 0 50px rgba(0, 0, 0, .7);
                 max-width: 100%;
+                max-height: calc(100% - 28px - 28px);
                 user-select: none;
-                box-shadow: 0 0 50px rgba(0, 0, 0, 0.7);
             }
 
             .caption {
-                margin: 4px 0 0;
-                color: rgba(255, 255, 255, 0.8);
-                font-size: 1.3em;
                 display: block;
+                margin: 4px 0 0;
                 max-width: 90%;
                 overflow: hidden;
-                white-space: nowrap;
                 text-overflow: ellipsis;
                 line-height: 1.3em;
+                white-space: nowrap;
+                color: rgba(255, 255, 255, .8);
+                font-size: 1.3em;
             }
         }
     }

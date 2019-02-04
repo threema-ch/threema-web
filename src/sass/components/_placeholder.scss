@@ -1,7 +1,13 @@
 // Hack to show placeholder text on non-input-elements.
 // Simply set the data-placeholder attribute.
-[contentEditable]:empty:not(:focus):before {
-    content:attr(data-placeholder);
-    cursor: text;
-    color: $material-grey;
+[contentEditable] {
+    &:empty {
+        &:not(:focus) {
+            &::before {
+                cursor: text;
+                color: $material-grey;
+                content: attr(data-placeholder);
+            }
+        }
+    }
 }

@@ -1,17 +1,20 @@
 // Based on http://mrmrs.io/links/
 a {
-    text-decoration: none;
     transition: color .4s;
-    color: #265C83;
+    text-decoration: none;
+    color: #265c83;
 
-    &:link, &:visited {
-        color: #265C83;
+    &:link,
+    &:visited {
+        color: #265c83;
     }
+
     &:hover {
-        color: lighten(#265C83, 30%);
+        color: lighten(#265c83, 30%);
     }
+
     &:active {
         transition: color .3s;
-        color: #007BE6;
+        color: #007be6;
     }
 }

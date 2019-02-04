@@ -3,15 +3,17 @@
 
     &.is-dragover {
         .avatar-editor-drag {
-            border-color: black !important;
+            border-color: #000000 !important;
         }
     }
+
     .avatar-editor-drag {
-        margin: auto auto !important;
+        margin: auto !important;
         width: $avatar-size;
         height: $avatar-size;
+
         &:not(.has-image) {
-            border: 5px dotted gray;
+            border: 5px dotted #808080;
         }
     }
 }

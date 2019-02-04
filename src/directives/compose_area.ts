@@ -753,7 +753,7 @@ export default [
                                 offset = pos;
                                 break;
                             case Node.ELEMENT_NODE:
-                                size = getOuterHtml(node).length ;
+                                size = getOuterHtml(node).length;
                                 break;
                             default:
                                 $log.warn(logTag, 'Unhandled node:', node);

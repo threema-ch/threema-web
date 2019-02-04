@@ -1,10 +1,15 @@
 // Hide LastPass input control on forms that set autocomplete=off
 // Source: http://stackoverflow.com/a/29473242/284318
-form[autocomplete=off] {
-    input[type=text] {
-        background-position: 150% 50% !important;
-    }
-    input[type=password] {
-        background-position: 150% 50% !important;
+form {
+    &[autocomplete='off'] {
+        input {
+            &[type='text'] {
+                background-position: 150% 50% !important;
+            }
+
+            &[type='password'] {
+                background-position: 150% 50% !important;
+            }
+        }
     }
 }

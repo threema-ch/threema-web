@@ -8,25 +8,28 @@
     }
 
     md-icon {
+        // sass-lint:disable no-vendor-prefixes
         -webkit-touch-callout: none;
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
+        // sass-lint:enable no-vendor-prefixes
     }
 
-    md-icon, span {
+    md-icon,
+    span {
+        position: absolute;
+        top: 1px;
         width: 24px;
         height: 24px;
         line-height: 24px;
-        position: absolute;
-        top: 1px;
     }
 
     .battery-percent {
-        font-size: 0.8em;
-        font-family: monospace;
-        text-align: center;
         top: 20px;
         left: 1px;
+        text-align: center;
+        font-family: monospace;
+        font-size: .8em;
     }
 }
