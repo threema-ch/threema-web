@@ -4,6 +4,13 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.7][v2.1.7] (2019-02-07)
+
+Changes:
+
+* [bug] Fix state reloading after iOS reconnects ([#728][#728])
+
+
 ### [v2.1.6][v2.1.6] (2019-01-31)
 
 Changes:
@@ -686,12 +693,14 @@ First public release.
 [i721]: https://github.com/threema-ch/threema-web/issues/721
 [i722]: https://github.com/threema-ch/threema-web/issues/722
 [i723]: https://github.com/threema-ch/threema-web/issues/723
+[i728]: https://github.com/threema-ch/threema-web/issues/728
 [i733]: https://github.com/threema-ch/threema-web/issues/733
 [i743]: https://github.com/threema-ch/threema-web/issues/743
 [i745]: https://github.com/threema-ch/threema-web/issues/745
 [i746]: https://github.com/threema-ch/threema-web/issues/746
 [i748]: https://github.com/threema-ch/threema-web/issues/748
 
+[v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
 [v2.1.6]: https://github.com/threema-ch/threema-web/compare/v2.1.5...v2.1.6
 [v2.1.5]: https://github.com/threema-ch/threema-web/compare/v2.1.4...v2.1.5
 [v2.1.4]: https://github.com/threema-ch/threema-web/compare/v2.1.3...v2.1.4
