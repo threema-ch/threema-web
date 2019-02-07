@@ -583,8 +583,7 @@ class WelcomeController {
             (error) => {
                 this.$log.error(this.logTag, 'Error state:', error);
                 // TODO: should probably show an error message instead
-                this.timeoutService.register(
-                    () => this.$state.reload(),
+                this.timeoutService.register(() => this.$state.reload(),
                     WelcomeController.REDIRECT_DELAY,
                     true,
                     'reloadStateError',

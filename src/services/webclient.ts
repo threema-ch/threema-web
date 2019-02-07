@@ -208,7 +208,7 @@ export class WebClientService {
     private pendingAckRequest: number | null = null;
 
     // Message chunking
-    private unchunker: chunkedDc.Unchunker = null;
+    private unchunker: chunkedDc.UnreliableUnorderedUnchunker = null;
 
     // Messenger data
     public messages: threema.Container.Messages;
@@ -781,7 +781,7 @@ export class WebClientService {
             this.outgoingMessageSequenceNumber = new SequenceNumber(
                 0, WebClientService.SEQUENCE_NUMBER_MIN, WebClientService.SEQUENCE_NUMBER_MAX);
         }
-        this.unchunker = new chunkedDc.Unchunker();
+        this.unchunker = new chunkedDc.UnreliableUnorderedUnchunker();
         this.unchunker.onMessage = this.handleIncomingMessageBytes.bind(this);
 
         // Discard previous connection instances
@@ -3744,7 +3744,8 @@ export class WebClientService {
 
                     // Increment the outgoing message sequence number
                     const messageSequenceNumber = this.outgoingMessageSequenceNumber.increment();
-                    const chunker = new chunkedDc.Chunker(messageSequenceNumber, bytes, WebClientService.CHUNK_SIZE);
+                    const chunker = new chunkedDc.UnreliableUnorderedChunker(
+                        messageSequenceNumber, bytes, WebClientService.CHUNK_SIZE);
                     for (const chunk of chunker) {
                         // Send (and cache)
                         this.sendChunk(chunk, retransmit, canQueue, true);
@@ -3843,7 +3844,7 @@ export class WebClientService {
         // Warning: Nothing should be called after the unchunker has processed
         //          the chunk since the message event is synchronous and can
         //          result in a call to .stop!
-        this.unchunker.add(chunk.buffer);
+        this.unchunker.add(chunk);
     }
 
     /**
