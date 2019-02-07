@@ -22,7 +22,7 @@
         "BTN_RECONNECT": "Verbindung aufbauen",
         "BROWSER_NOT_SUPPORTED": "Dieser Browser wird nicht unterst\u00fctzt",
         "BROWSER_NOT_SUPPORTED_ANDROID": "Dieser Browser wird von Android-Geräten nicht unterst\u00fctzt",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https://www.google.com/chrome/browser/desktop/' target='_blank' rel='noopener noreferrer'>Google Chrome</a>, <a href='https://www.mozilla.org/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox</a>, <a href='https://www.opera.com/' target='_blank' rel='noopener noreferrer'>Opera</a> oder <a href='https://www.apple.com/safari/' target='_blank' rel='noopener noreferrer'>Safari</a> (nur mit iOS), um den Webclient ohne Einschr\u00e4nkungen zu nutzen.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von <a href='https://www.google.com/chrome/browser/desktop/' target='_blank' rel='noopener noreferrer'>Google Chrome</a>, <a href='https://www.mozilla.org/' target='_blank' rel='noopener noreferrer'>Mozilla Firefox</a>, <a href='https://www.opera.com/' target='_blank' rel='noopener noreferrer'>Opera</a> oder <a href='https://www.apple.com/safari/' target='_blank' rel='noopener noreferrer'>Safari</a> (nur unter iOS), um Threema Web ohne Einschränkungen zu nutzen.",
         "SAFARI": "Safari ist nur kompatibel mit Threema Web für iOS. Android-Nutzer verwenden bitte einen anderen Browser.",
         "CONNECTING": "Verbindung wird aufgebaut",
         "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
@@ -178,8 +178,7 @@
         "THREEMA_HOME_CONTACT": "Privater Threema-Kontakt",
         "THREEMA_BLOCKED_RECEIVER": "blockiert",
         "DELETE_THREAD": "Chat löschen",
-        "DELETE_THREAD_MESSAGE": "{count, plural, one {Möchten Sie wirklich diesen Chat löschen? Die Nachrichten können nicht wiederhergestellt werden.} other {Möchten Sie wirklich {count} Chats löschen? Die Nachrichten können nicht wiederhergestellt werden.}}",
-        "MUTED": "Keine Benachrichtigungen",
+        "DELETE_THREAD_MESSAGE": "{count, plural, one {Möchten Sie wirklich diesen Chat löschen? Die Nachrichten können nicht wiederhergestellt werden.} other {Möchten Sie wirklich {count} Chat(s) löschen? Die Nachrichten können nicht wiederhergestellt werden.}}",
         "MUTED_NONE": "Keine Benachrichtigungen",
         "MUTED_MENTION_ONLY": "Nur bei Erwähnung benachrichtigen",
         "MUTED_SILENT": "Stumme Benachrichtigungen",
@@ -287,7 +286,7 @@
         "CHANGELOG_LINK_AFTER": "."
     },
     "settings": {
-        "SETTINGS":"Einstellungen",
+        "SETTINGS": "Einstellungen",
         "notifications": {
             "NOTIFICATIONS": "Benachrichtigungen",
             "SHOW_NOTIFICATIONS": "Desktopbenachrichtigungen anzeigen",
