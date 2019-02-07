@@ -689,7 +689,7 @@ export class WebClientService {
      */
     private logOnReject(type: string, subType: string) {
         return ((error) => {
-            this.$log.error(this.logTag, `Message ${type}/${subType} has been rejected: ${error}`);
+            this.$log.error(this.logTag, `Message ${type}/${subType} has been rejected by the remote: ${error}`);
         });
     }
 
