@@ -897,9 +897,11 @@ export class WebClientService {
                 this._resetInitializationSteps();
 
                 // Hack for #712
-                // TODO: Remove once we have the ack protocol for Android too
-                if (this.$state.includes('messenger')) {
-                    this.$state.reload();
+                // TODO: Remove once we have the ack protocol for Android, too
+                if (this.chosenTask !== threema.ChosenTask.RelayedData && this.$state.includes('messenger')) {
+                    this.$state.reload().catch((error) => {
+                        this.$log.error('Unable to reload state:', error);
+                    });
                 }
             });
         }

@@ -473,7 +473,9 @@ class ConversationController {
             return this.receiver.locked;
         }, () => {
             if (this.locked !== this.receiver.locked) {
-                $state.reload();
+                $state.reload().catch((error) => {
+                    this.$log.error('Unable to reload state:', error);
+                });
             }
         });
     }
