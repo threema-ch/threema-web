@@ -879,6 +879,10 @@ class ConversationController {
      * Mark the current conversation as pinned.
      */
     public pinConversation(): void {
+        if (!hasValue(this.conversation)) {
+            this.$log.warn(this.logTag, 'Cannot pin, no conversation exists');
+            return;
+        }
         this.webClientService
             .modifyConversation(this.conversation, true)
             .then(() => this.showMessage('messenger.PINNED_CONVERSATION_OK'))
@@ -892,6 +896,10 @@ class ConversationController {
      * Mark the current conversation as not pinned.
      */
     public unpinConversation(): void {
+        if (!hasValue(this.conversation)) {
+            this.$log.warn(this.logTag, 'Cannot unpin, no conversation exists');
+            return;
+        }
         this.webClientService
             .modifyConversation(this.conversation, false)
             .then(() => this.showMessage('messenger.UNPINNED_CONVERSATION_OK'))
