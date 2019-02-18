@@ -234,7 +234,7 @@ class ConversationController {
 
     // The conversation receiver
     public receiver: threema.Receiver;
-    public conversation: threema.Conversation;
+    public _conversation: threema.Conversation;  // Access through getter
     public type: threema.ReceiverType;
 
     // The conversation messages
@@ -347,7 +347,7 @@ class ConversationController {
         // Set receiver, conversation and type
         try {
             this.receiver = webClientService.receivers.getData({type: $stateParams.type, id: $stateParams.id});
-            this.conversation = this.webClientService.conversations.find(this.receiver);
+            this._conversation = this.webClientService.conversations.find(this.receiver);
             this.type = $stateParams.type;
 
             if (this.receiver.type === undefined) {
@@ -478,6 +478,13 @@ class ConversationController {
                 });
             }
         });
+    }
+
+    public get conversation(): threema.Conversation {
+        if (!hasValue(this._conversation)) {
+            this._conversation = this.webClientService.conversations.find(this.receiver);
+        }
+        return this._conversation;
     }
 
     public isEnabled(): boolean {
@@ -879,6 +886,10 @@ class ConversationController {
      * Mark the current conversation as pinned.
      */
     public pinConversation(): void {
+        if (!hasValue(this.conversation)) {
+            this.$log.warn(this.logTag, 'Cannot pin, no conversation exists');
+            return;
+        }
         this.webClientService
             .modifyConversation(this.conversation, true)
             .then(() => this.showMessage('messenger.PINNED_CONVERSATION_OK'))
@@ -892,6 +903,10 @@ class ConversationController {
      * Mark the current conversation as not pinned.
      */
     public unpinConversation(): void {
+        if (!hasValue(this.conversation)) {
+            this.$log.warn(this.logTag, 'Cannot unpin, no conversation exists');
+            return;
+        }
         this.webClientService
             .modifyConversation(this.conversation, false)
             .then(() => this.showMessage('messenger.UNPINNED_CONVERSATION_OK'))
