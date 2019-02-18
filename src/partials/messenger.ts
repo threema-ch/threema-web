@@ -234,7 +234,7 @@ class ConversationController {
 
     // The conversation receiver
     public receiver: threema.Receiver;
-    public conversation: threema.Conversation;
+    public _conversation: threema.Conversation;  // Access through getter
     public type: threema.ReceiverType;
 
     // The conversation messages
@@ -347,7 +347,7 @@ class ConversationController {
         // Set receiver, conversation and type
         try {
             this.receiver = webClientService.receivers.getData({type: $stateParams.type, id: $stateParams.id});
-            this.conversation = this.webClientService.conversations.find(this.receiver);
+            this._conversation = this.webClientService.conversations.find(this.receiver);
             this.type = $stateParams.type;
 
             if (this.receiver.type === undefined) {
@@ -478,6 +478,13 @@ class ConversationController {
                 });
             }
         });
+    }
+
+    public get conversation(): threema.Conversation {
+        if (!hasValue(this._conversation)) {
+            this._conversation = this.webClientService.conversations.find(this.receiver);
+        }
+        return this._conversation;
     }
 
     public isEnabled(): boolean {
