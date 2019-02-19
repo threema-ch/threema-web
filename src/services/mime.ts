@@ -24,7 +24,7 @@ export class MimeService {
     private $translate: ng.translate.ITranslateService;
 
     private imageMimeTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
-    private audioMimeTypes: string[] = ['audio/ogg'];
+    private audioMimeTypes: string[] = ['audio/ogg', 'audio/m4a', 'audio/x-m4a', 'audio/mp4'];
     private videoMimeTypes: string[] = ['video/mp4', 'video/mpg', 'video/mpeg'];
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService) {
