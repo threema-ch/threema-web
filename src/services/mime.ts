@@ -24,7 +24,8 @@ export class MimeService {
     private $translate: ng.translate.ITranslateService;
 
     private imageMimeTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
-    private audioMimeTypes: string[] = ['audio/ogg', 'audio/m4a', 'audio/x-m4a', 'audio/mp4'];
+    private audioMimeTypesAndroid: string[] = ['audio/ogg'];
+    private audioMimeTypesIos: string[] = ['audio/m4a', 'audio/x-m4a', 'audio/mp4'];
     private videoMimeTypes: string[] = ['video/mp4', 'video/mpg', 'video/mpeg'];
 
     constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService) {
@@ -36,8 +37,15 @@ export class MimeService {
         return this.is(mimeType, this.imageMimeTypes);
     }
 
-    public isAudio(mimeType: string): boolean {
-        return this.is(mimeType, this.audioMimeTypes);
+    public isAudio(mimeType: string, os: threema.OperatingSystem): boolean {
+        // Note: Supported audio file types depend on the mobile OS
+        switch (os) {
+            case threema.OperatingSystem.Android:
+                return this.is(mimeType, this.audioMimeTypesAndroid);
+            case threema.OperatingSystem.Ios:
+                return this.is(mimeType, this.audioMimeTypesIos);
+        }
+        return false;
     }
 
     public isVideo(mimeType: string): boolean {
