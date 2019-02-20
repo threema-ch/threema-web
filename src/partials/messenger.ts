@@ -561,7 +561,7 @@ class ConversationController {
                         }
                         captionSupported = this.mimeService.isImage(msg.fileType);
                         if (this.mimeService.isImage(msg.fileType)
-                            || this.mimeService.isAudio(msg.fileType)
+                            || this.mimeService.isAudio(msg.fileType, this.webClientService.clientInfo.os)
                             || this.mimeService.isVideo(msg.fileType)) {
                             showSendAsFileCheckbox = true;
                             break;

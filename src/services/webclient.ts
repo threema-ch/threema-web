@@ -1610,8 +1610,7 @@ export class WebClientService {
                         if ((message as threema.FileMessageData).sendAsFile !== true) {
                             // check mime type
                             const mime = (message as threema.FileMessageData).fileType;
-
-                            if (this.mimeService.isAudio(mime)) {
+                            if (this.mimeService.isAudio(mime, this.clientInfo.os)) {
                                 requiredFeature = ContactReceiverFeature.AUDIO;
                                 invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
                             } else if (this.mimeService.isImage(mime) || this.mimeService.isVideo(mime)) {
