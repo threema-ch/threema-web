@@ -275,12 +275,9 @@
         "SOURCE_CODE": "Zdrojový kód i licenční podmínky naleznete na GitHub webu:",
         "EMOJI_ART": "Sada smajlíků převzata od <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitteru</a>",
         "NOTIFICATION_SOUNDS": "Zvukové soubory &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licencované dle Soundsnap License",
-        "LICENSE_LINK_BEFORE": "Licenční ujednání na použité open source komponenty najdete",
-        "LICENSE_LINK_TEXT": "ve zdrojovém kódu",
+        "LICENSE_TEXT": "Licenční ujednání na použité open source komponenty najdete <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">ve zdrojovém kódu</a>.",
         "CHANGELOG": "Changelog",
-        "CHANGELOG_LINK_BEFORE": "Threema Web changelog naleznete na ",
-        "CHANGELOG_LINK_TEXT": "GitHub",
-        "CHANGELOG_LINK_AFTER": "."
+        "CHANGELOG_TEXT": "Threema Web changelog naleznete na <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">GitHub</a>."
     },
     "settings": {
         "SETTINGS": "Nastavení",

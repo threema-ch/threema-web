@@ -277,13 +277,9 @@
         "SOURCE_CODE": "The source code and the licensing terms can be found on GitHub:",
         "EMOJI_ART": "Emoji art supplied by <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
         "NOTIFICATION_SOUNDS": "Sound files &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
-        "LICENSE_LINK_BEFORE": "Licenses of used open source components can be found",
-        "LICENSE_LINK_TEXT": "in the source code",
-        "LICENSE_LINK_AFTER": ".",
+        "LICENSE_TEXT": "Licenses of used open source components can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">in the source code</a>.",
         "CHANGELOG": "Changelog",
-        "CHANGELOG_LINK_BEFORE": "The Threema Web changelog can be found",
-        "CHANGELOG_LINK_TEXT": "on GitHub",
-        "CHANGELOG_LINK_AFTER": "."
+        "CHANGELOG_TEXT": "The Threema Web changelog can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">on GitHub</a>."
     },
     "settings": {
         "SETTINGS": "Settings",
