@@ -277,7 +277,7 @@
         "NOTIFICATION_SOUNDS": "声音文件和副本; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - 根据Soundsnap许可证获得许可",
         "LICENSE_TEXT": "可以找到使用过的开源组件的许可证 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">在源代码里</a>。",
         "CHANGELOG": "更新日志",
-        "CHANGELOG_TEXT": "找不到更新日志 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">在GitHub/a>。"
+        "CHANGELOG_TEXT": "找不到更新日志 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">在GitHub</a>。"
     },
     "settings": {
         "SETTINGS": "设置",
