@@ -221,7 +221,6 @@ export class NotificationService {
             this.storeSetting(NotificationService.SETTINGS_NOTIFICATIONS, 'false');
         }
     }
-
     /**
      * Sets if the user wants a message preview
      */

@@ -41,6 +41,7 @@ import {PushService} from './push';
 import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
+import {ThemeService} from './theme';
 import {TimeoutService} from './timeout';
 import {TitleService} from './title';
 import {VersionService} from './version';
@@ -176,6 +177,7 @@ export class WebClientService {
     private pushService: PushService;
     private qrCodeService: QrCodeService;
     private receiverService: ReceiverService;
+    private themeService: ThemeService;
     private timeoutService: TimeoutService;
     private titleService: TitleService; // Don't remove, needs to be initialized to handle events
     private versionService: VersionService;
@@ -253,6 +255,7 @@ export class WebClientService {
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
         'VersionService', 'BatteryStatusService', 'TimeoutService',
+        'ThemeService',
         'CONFIG',
     ];
     constructor($log: ng.ILogService,
@@ -278,6 +281,7 @@ export class WebClientService {
                 versionService: VersionService,
                 batteryStatusService: BatteryStatusService,
                 timeoutService: TimeoutService,
+                themeService: ThemeService,
                 CONFIG: threema.Config) {
 
         // Angular services
@@ -297,6 +301,7 @@ export class WebClientService {
         this.messageService = messageService;
         this.mimeService = mimeService;
         this.notificationService = notificationService;
+        this.themeService = themeService;
         this.pushService = pushService;
         this.qrCodeService = qrCodeService;
         this.receiverService = receiverService;
@@ -432,6 +437,9 @@ export class WebClientService {
 
         // Create new handshake future
         this.connectionInfoFuture = new Future();
+
+        // Set the theme
+        this.themeService.runTheme();
 
         // Create WebRTC task instance
         const maxPacketSize = this.browserService.getBrowser().isFirefox(false) ? 16384 : 65536;

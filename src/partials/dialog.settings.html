@@ -54,6 +54,25 @@
                         </a>
                     </div>
                 </section>
+                <section>
+                        <md-subheader class="md-accent"><span translate>Theme</span>
+                        </md-subheader>
+                        <md-list flex>
+                            <md-list-item ng-if="true">
+                                <md-select
+                                    ng-disabled="false"
+                                    ng-model="ctrl.themeName"
+                                    ng-change="ctrl.setTheme(ctrl.themeName)"
+                                    aria-label="Change the appearance of Threema Web"
+                                    md-selected-text="ctrl.getTheme()"
+                                    >
+                                        <md-option 
+                                            ng-repeat="theme in ctrl.themeOptions" 
+                                            ng-value="theme">{{theme}} 
+                                        </md-option>
+                                </md-select>
+                            </md-list-item>
+                    </section>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
