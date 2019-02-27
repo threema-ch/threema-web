@@ -9,6 +9,13 @@ echo -e "  |_| |_|_|_| |___|___|_|_|_|__,|_____|___|___|\e[32m|_|\e[0m\n"
 
 echo -e "Creating release distribution for Threema Web\n"
 
+# Determine suffix
+if [ $# -gt 0 ]; then
+    SUFFIX="-$1"
+else
+    SUFFIX=""
+fi
+
 # Test whether we're in the root dir
 if [ ! -f "package.json" ]; then
     echo "Error: package.json not found."
@@ -28,7 +35,8 @@ if [ -e "release" ]; then
     done
 fi
 
-VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')
+VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')$SUFFIX
+echo "+ Building version $VERSION"
 
 DIR="release/threema-web-$VERSION"
 
