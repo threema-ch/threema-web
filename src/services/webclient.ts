@@ -439,7 +439,7 @@ export class WebClientService {
         this.connectionInfoFuture = new Future();
 
         // Set the theme
-        this.themeService.runTheme();
+        this.themeService.loadTheme();
 
         // Create WebRTC task instance
         const maxPacketSize = this.browserService.getBrowser().isFirefox(false) ? 16384 : 65536;

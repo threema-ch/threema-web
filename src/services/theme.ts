@@ -49,7 +49,7 @@ export class ThemeService {
         this.$log.info(this.logTag, 'Set a new theme', themeName);
         this.$log.warn(this.logTag, 'Storing the theme as: ', themeName);
         this.storeSetting('ThemeService.THEME_SETTING', themeName);
-        this.runTheme();
+        this.loadTheme();
     }
 
     /**
@@ -69,7 +69,7 @@ export class ThemeService {
     /**
      * Changes the theme to the one currently stored in the settings
      */
-    public runTheme() {
+    public loadTheme() {
         let themeName = this.getTheme();
         this.$log.info(this.logTag, 'Setting the theme to: ', themeName);
 
