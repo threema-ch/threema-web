@@ -2,10 +2,14 @@
     display: flex;
     position: relative;
     flex-direction: column;
-    background-image: url('../img/wallpaper_light.png?');
+    background-color: $background-very-light-color;
+    background-image: url($wallpaper);
     height: 100%;
 
     .detail-header {
+
+        background-color: $conversation-header-color;
+        color: $button-text-color;
 
         .header-avatar {
             cursor: pointer;
@@ -25,9 +29,19 @@
             margin: 0 0 4px;
             padding: 0;
             font-size: 120%;
+
         }
 
-        .conversation-header-details-detail,
+        .conversation-header-details-detail {
+            display: inherit;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.3;
+            white-space: nowrap;
+            color: $text-dark-background-color-2;
+        }
+
         .conversation-header-details-name {
             display: inherit;
             max-width: 100%;
@@ -35,6 +49,7 @@
             text-overflow: ellipsis;
             line-height: 1.3;
             white-space: nowrap;
+            color: $text-on-conversation-header-color;
         }
     }
 
@@ -57,7 +72,7 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
-        background-color: #ffffff;
+        background-color: $background-light-color;
         padding: 8px;
 
         .message-quote {
@@ -87,12 +102,18 @@
     }
 
     #conversation-footer {
-        background-color: $dark-background-color;
+        background-color: $background-dark-color;
 
         .chat-input {
             margin: 0;
             padding: 0;
             width: 100%;
+
+            .compose {
+                border: 0 solid $status-error-color;
+                color: $text-dark-background-color;
+                caret-color: $text-bright-background-color;
+            }
         }
 
         #mention-selector {
@@ -104,14 +125,15 @@
                 list-style-type: none;
 
                 > li {
+
                     cursor: pointer;
 
                     &:not(:hover) {
-                        &:not(.selected) {
-                            background-color: #ffffff;
+                        :not(.selected) {
+                            background-color: $background-light-color;
                         }
                     }
-                }
+                    }
             }
 
             .contact-badge {
@@ -147,13 +169,15 @@
 
 // Quoting
 .message-quote-content {
-    border-left: 5px solid #0000ff;
+    border-left: 5px solid $message-quote-color;
     padding-left: 5px;
+    color: $text-dark-background-color;
     font-size: .9em;
 
     .message-name {
         display: block;
         margin-bottom: 8px;
+        color: $message-quote-color;
         font-size: .9em;
         font-weight: bold;
     }
@@ -183,7 +207,7 @@
                 @include message-bubble-shadow;
                 display: inline-block;
                 border-radius: 50%;
-                background-color: #ffffff;
+                background-color: $background-light-color;
                 padding: 6px;
                 width: 30px;
                 height: 30px;
@@ -308,6 +332,7 @@
 
             span {
                 white-space: pre-wrap;
+                color: $text-dark-background-color;
             }
         }
 
@@ -365,7 +390,7 @@
                 }
 
                 i.timeout {
-                    color: $status-error;
+                    color: $status-error-color;
                 }
             }
 
@@ -375,6 +400,7 @@
                 height: 1em;
                 min-height: 1em;
                 vertical-align: top;
+                color: $button-text-color;
                 font-size: 1em;
             }
         }
@@ -460,7 +486,7 @@
 
         .line {
             flex-grow: 1;
-            border-bottom: 1px solid #bbbbbb;
+            border-bottom: 1px solid $text-dark-background-color;
             text-align: center;
             line-height: 0;
         }
@@ -468,7 +494,8 @@
         .text {
             margin: 0;
             padding: 0 10px;
-            text-shadow: 0 0 4px #bbbbbb;
+            text-shadow: 0 0 4px $text-dark-background-color;
+            color: $text-dark-background-color;
             font-size: .9em;
             font-weight: 300;
         }
@@ -489,6 +516,6 @@
 
 md-menu-item {
     a span {
-        color: $material-grey-dark;
+        color: $material-grey-dark-color;
     }
 }

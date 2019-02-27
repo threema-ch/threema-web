@@ -5,7 +5,7 @@
         &:not(:focus) {
             &::before {
                 cursor: text;
-                color: $material-grey;
+                // color: $material-grey-color;
                 content: attr(data-placeholder);
             }
         }

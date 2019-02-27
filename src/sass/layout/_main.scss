@@ -29,9 +29,8 @@
     // Set min height of messenger
     &.wide #main {
         min-height: 272px;
-    }
+    } // Set min height of welcome screen
 
-    // Set min height of welcome screen
     &:not(.wide) #main {
         height: auto;
         min-height: 620px;
@@ -40,7 +39,7 @@
 
 #main {
     border-radius: $material-radius;
-    box-shadow: $material-card-shadow;
+    box-shadow: $material-card-shadow-color;
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -67,8 +66,9 @@
         height: 100%;
 
         > div.ng-scope {
-            background-color: #efebe9;
+            background-color: $conversation-header-color;
             height: 100%;
+
 
             // Default style for the header in the detail
             .detail-header {
@@ -77,13 +77,14 @@
                 align-items: center;
                 z-index: 18;
                 box-shadow: 1px 2px 4px -2px rgba(0, 0, 0, .2);
-                background-color: $dark-background-color;
+                // background-color: $dark-background-color;
                 padding: 0 $main-padding;
                 min-height: 68px;
 
-                > * {
+                >* {
                     margin-left: 8px;
-                }
+                    color: $text-on-conversation-header-color;
+                } // TODO This might need renaming to header-detail
 
                 .header-detail {
                     display: flex;
@@ -113,10 +114,16 @@
                     md-progress-circular {
                         display: inline-block;
                     }
+
+                    .material-icons {
+                        color: $bright-icon-color;
+                    }
                 }
             }
 
             .detail-content {
+                background-color: $background-dark-color;
+                color: $text-bright-background-color;
 
                 ul {
                     margin: 0;
@@ -130,8 +137,17 @@
                 }
             }
 
-            // editable or readonly detail content
-            > .form {
+            md-card md-card-content {
+                background-color: $background-very-light-color;
+                color: $text-bright-background-color;
+            }
+
+            md-card-title {
+                background-color: $background-very-light-color;
+                color: $text-bright-background-color;
+            } // editable or readonly detail content
+
+            >.form {
                 display: flex;
                 flex-direction: column;
                 height: 100%;
@@ -142,6 +158,8 @@
                         overflow: hidden;
 
                         eee-avatar {
+                            background-color: $background-very-light-color;
+
                             img {
                                 position: relative;
                                 top: calc(-100%);
@@ -177,6 +195,7 @@
                             // be sure the avatar has always the same height as width
                             &.avatar {
                                 position: relative;
+                                background-color: $background-very-light-color;
                                 width: 50%;
                                 overflow: hidden;
 
@@ -195,7 +214,6 @@
                                         border-radius: 0;
                                         width: 100%;
                                         height: auto;
-
                                     }
                                 }
                             }
@@ -228,7 +246,7 @@
     &.show-detail {
         #navigation {
             flex: 1 6 30%;
-            border-right: 1px solid #dddddd;
+            border-right: 1px solid $border-dark-grey-color;
             min-width: 200px;
             max-width: 30%;
         }
@@ -238,24 +256,70 @@
             max-width: 70%;
         }
     }
-
 }
 
 .material-icons {
+    color: $icon-color;
+
+
     &.as-button {
         opacity: .5;
         cursor: pointer;
+        color: $icon-color;
 
         &:hover {
             opacity: 1;
         }
     }
 
+    .md-dark {
+        color: $dark-icon-color;
+    }
+
+    .md-medium-dark {
+        color: $icon-medium-dark-color;
+    }
+
+    .md-light {
+        color: $bright-icon-color;
+    }
+
+    .md-primary {
+        color: $icon-color;
+    }
+}
+
+md-menu-content {
+    background-color: $background-light-color; // color: $text-bright-background-color;
+}
+
+md-dialog.md-default-theme,
+md-dialog {
+    background-color: $background-light-color;
 }
 
 .md-dialog-content {
+    background-color: $background-light-color;
+    color: $text-bright-background-color;
+
     &.center {
         text-align: center;
+    }
+}
+
+md-checkbox {
+    .md-default-theme {
+        :note(.md-checked) {
+            .md-icon {
+                border-color: $text-bright-background-color;
+            }
+        }
+    }
+
+    :not(.md-checked) {
+        .md-icon {
+            border-color: $text-bright-background-color;
+        }
     }
 }
 
@@ -300,7 +364,7 @@ a.click-action {
 .key-values {
     dt {
         padding-bottom: ($main-padding);
-        color: rgb(0, 150, 136);
+        color: $primary-500;
     }
 
     dd {
@@ -331,16 +395,41 @@ a.click-action {
     }
 }
 
+md-input-container {
 
-// angular material extensions
-md-toast.md-center {
-    left: 50%;
-    transform: translate3d(-50%, 0, 0);
+    .md-input {
+        border-color: $text-dark-background-color;
+        color: $text-dark-background-color;
+    }
+
+    label {
+        color: $text-bright-background-color;
+    }
+
+    .md-input-has-value label {
+        color: $text-bright-background-color;
+    }
+
+    :not(.md-input-invalid).md-input-focused {
+        border-color: $text-dark-background-color;
+    }
+
+    :not(.md-input-invalid).md-input-focused label {
+        color: $text-dark-background-color;
+    }
 }
 
-md-toast .md-toast-content {
-    span {
-        text-align: center;
+// angular material extensions
+md-toast {
+    .md-center {
+        left: 50%;
+        transform: translate3d(-50%, 0, 0);
+    }
+
+    .md-toast-content {
+        span {
+            text-align: center;
+        }
     }
 }
 
@@ -348,7 +437,7 @@ md-toast .md-toast-content {
     background-color: transparent;
 }
 
-md-list-item .md-list-item-inner > md-checkbox .md-label {
+md-list-item .md-list-item-inner>md-checkbox .md-label {
     display: inline-block;
     white-space: inherit;
 }
@@ -374,4 +463,17 @@ md-list-item .md-list-item-inner > md-checkbox .md-label {
 .small {
     font-size: .8em;
     font-weight: 300;
+}
+
+md-toolbar {
+    :not(.md-menu-toolbar) {
+        background-color: $md-toolbar-color;
+        color: $md-toolbar-text-color;
+
+        .md-button {
+            .md-icon-button md-icon {
+                color: $md-toolbar-button-color;
+            }
+        }
+    }
 }

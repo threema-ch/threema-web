@@ -1,6 +1,7 @@
 compose-area {
     > div {
         box-shadow: 0 -2px 4px -2px rgba(0, 0, 0, .2);
+        color: $text-dark-background-color;
 
         &:first-child {
             display: flex;
@@ -18,9 +19,9 @@ compose-area {
 
                 &:nth-of-type(2) {
                     flex-grow: 1;
-                    border: 1px solid $border-grey;
+                    border: 1px solid $border-dark-grey-color;
                     border-radius: $material-radius;
-                    background-color: $light-background-color;
+                    background-color: $background-light-color;
                     overflow-x: hidden;
                     overflow-y: auto;
 
@@ -39,7 +40,6 @@ compose-area {
                         &:empty {
                             &::before {
                                 display: block;
-                                color: $active-placeholder-color;
                                 content: attr(data-placeholder);
                             }
                         }
@@ -86,7 +86,7 @@ compose-area {
 
     // On dragover
     &.is-dragover div.compose {
-        border: 4px dashed #d3d3d3;
+        border: 4px dashed $background-dark-color;
         text-align: center;
         line-height: $footer-height - 20px;
         font-size: 1.4em;

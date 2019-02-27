@@ -1,6 +1,6 @@
 // Separator for navigation items
 @mixin nav-item-separator {
-    border-bottom: 1px solid $border-grey;
+    border-bottom: 1px solid $border-color;
 }
 
 #navigation-topheader {
@@ -10,10 +10,10 @@
     justify-content: center;
     z-index: 21;
     box-shadow: -2px 2px 4px -2px rgba(0, 0, 0, .8);
-    background-color: #424242;
+    background-color: $conversation-header-color;
     padding: 0 $main-padding 0 (2 * $main-padding);
     min-height: 68px;
-    color: #ffffff;
+    color: $text-on-conversation-header-color;
 
     .my-identity {
         flex-grow: 1;
@@ -37,7 +37,7 @@
 #navigation-header {
     z-index: 18;
     box-shadow: -2px 2px 4px -2px rgba(0, 0, 0, .4);
-    background-color: #f5f5f5;
+    background-color: $background-light-color;
 
     .main {
         display: flex;
@@ -57,24 +57,29 @@
     }
 
     .search {
+
         $duration-opacity: .1s;
         $duration-height: .2s;
+
+
+        // Animation when disappearing
         transition: opacity $duration-opacity linear,
         max-height $duration-height ease-out $duration-opacity,
         visibility 0s linear $duration-height;
+
         visibility: hidden;
         opacity: 0;
-        // Animation when disappearing
         max-height: 0;
 
         input {
             &[type='text'] {
                 margin: 0;
-                border: 1px solid #dddddd;
+                border: 1px solid $text-bright-background-color;
                 border-radius: $material-radius;
-                background-color: #ffffff;
+                background-color: $background-light-color;
                 padding: $main-padding;
                 width: 100%;
+                color: $text-dark-background-color;
                 box-sizing: border-box;
 
                 .md-errors-spacer {
@@ -104,7 +109,7 @@
     .empty {
         margin-top: 1em;
         margin-left: 16px;
-        color: $material-grey;
+        color: $material-grey-color;
         font-size: 1.2em;
         font-weight: 300;
     }
@@ -114,7 +119,6 @@
     $border-width: 4px;
     $border-count: 2;
     flex: 1;
-    background-color: #ffffff;
     overflow-y: auto;
 
     .loading-element {
@@ -124,23 +128,26 @@
     .conversation-wrapper {
         @include nav-item-separator;
         display: block;
+        background-color: $conversation-background-color;
 
         .conversation {
             display: flex;
             flex-direction: row;
             align-items: center;
-            border-left: $border-width * $border-count solid #ffffff;
+            border-left: $border-width * $border-count solid $conversation-background-color;
             padding: (1.5 * $main-padding) $main-padding - ($border-width * ($border-count - 1));
 
-            &.active,
-            &:hover {
-                border-color: $dark-background-color;
-                background-color: $dark-background-color;
+            &.active {
+                &:hover {
+                    border-color: $conversation-background-highlight-color;
+                    background-color: $conversation-background-highlight-color;
+                }
             }
 
             &:hover {
                 &:not(.active) {
-                    cursor: pointer;
+                    border-color: $conversation-background-highlight-color;
+                    background-color: $conversation-background-highlight-color;
                 }
             }
 
@@ -150,8 +157,8 @@
                     to right,
                     $status-error,
                     $status-error 50%,
-                    #ffffff 50%,
-                    #ffffff 100%
+                    $conversation-background-color 50%,
+                    $conversation-background-color 100%
                 ) 1 100%;
 
                 &.active {
@@ -159,8 +166,18 @@
                         to right,
                         $status-error,
                         $status-error 50%,
-                        $dark-background-color 50%,
-                        $dark-background-color 100%
+                        $conversation-background-color 50%,
+                        $conversation-background-color 100%
+                    ) 1 100%;
+                }
+
+                &:hover {
+                    border-image: linear-gradient(
+                        to right,
+                        $status-error,
+                        $status-error 50%,
+                        $conversation-background-highlight-color 50%,
+                        $conversation-background-highlight-color 100%
                     ) 1 100%;
                 }
             }
@@ -171,8 +188,8 @@
                     to right,
                     $status-starred,
                     $status-starred 50%,
-                    #ffffff 50%,
-                    #ffffff 100%
+                    $conversation-background-color 50%,
+                    $conversation-background-color 100%
                 ) 1 100%;
 
                 &.active {
@@ -182,6 +199,16 @@
                         $status-starred 50%,
                         $dark-background-color 50%,
                         $dark-background-color 100%
+                    ) 1 100%;
+                }
+
+                &:hover {
+                    border-image: linear-gradient(
+                        to right,
+                        $status-starred,
+                        $status-starred 50%,
+                        $conversation-background-highlight-color 50%,
+                        $conversation-background-highlight-color 100%
                     ) 1 100%;
                 }
             }
@@ -224,7 +251,7 @@
                     flex-direction: row;
                     flex-grow: 1;
                     justify-content: space-between;
-                    color: #000000;
+                    color: $text-bright-background-color;
                     font-weight: bold;
 
                     .title {
@@ -248,13 +275,14 @@
 
                 .message-box {
                     flex-grow: 1;
+                    // background-color: $background-light-color;
 
                     .latest-message {
                         display: flex;
                         flex-direction: row;
                         align-items: center;
                         justify-content: space-between;
-                        color: $material-grey;
+                        color: $latest-message-text-color;
 
                         .left {
                             display: flex;
@@ -274,12 +302,11 @@
                             }
                         }
 
-                        .message-name,
-                        .message-text {
-                            line-height: 1.7em;
-                        }
-
                         .message-name {
+                            .message-text {
+                                line-height: 1.7em;
+                            }
+
                             &::after {
                                 margin-right: 4px;
                                 content: ':';
@@ -327,6 +354,10 @@
                                 display: none;
                             }
                         }
+
+                        .message-date {
+                            color: $latest-message-text-color;
+                        }
                     }
                 }
             }
@@ -336,7 +367,7 @@
                 border-radius: 5px;
                 background-color: $status-error;
                 padding: 0 5px;
-                color: #ffffff;
+                color: $text-in-unread-count-offset-color;
                 font-size: .9em;
             }
         }
@@ -345,19 +376,24 @@
 
 #navigation-contacts {
     flex: 1;
+    background-color: $conversation-background-color;
     overflow-y: scroll;
 
     .contact {
         @include nav-item-separator;
+        @include nav-item-separator;
+
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        border-left: 4px solid #ffffff;
+        border-left: 4px solid $background-very-light-color;
+        // background-color: $background-very-light-color;
         padding: 12px 8px;
 
         .avatar-box {
             padding-right: 8px;
+            color: $text-bright-background-color;
         }
 
         .left {
@@ -373,16 +409,31 @@
         }
 
         .name {
+            color: $text-bright-background-color;
             font-weight: bold;
         }
 
+        .identity {
+            color: $latest-message-text-color;
+        }
+
         .nickname {
+            color: $text-bright-background-color;
             font-size: .8em;
         }
 
         &:hover {
-            background-color: #f5f5f5;
+            background-color: $background-dark-color;
             cursor: pointer;
+
+            &.active {
+                border-color: $conversation-background-highlight-color;
+                background-color: $conversation-background-highlight-color;
+            }
+
+            &:not(.active) {
+                background-color: $conversation-background-highlight-color;
+            }
         }
     }
 
@@ -399,7 +450,7 @@
     position: relative;
 
     md-icon {
-        color: #ffffff;
+        color: $button-text-light-color;
     }
 
     .fab-button-add-contact {

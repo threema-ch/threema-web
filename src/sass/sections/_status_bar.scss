@@ -51,31 +51,31 @@ body {
 
 .status-ok {
     #status-bar {
-        background-color: $status-ok;
+        background-color: $status-ok-color;
     }
 
     #title .dot {
-        fill: $status-ok;
+        fill: $status-ok-color;
     }
 }
 
 .status-warning {
     #status-bar {
-        background-color: $status-warning;
+        background-color: $status-warning-color;
     }
 
     #title .dot {
-        fill: $status-warning;
+        fill: $status-warning-color;
     }
 }
 
 .status-error {
     #status-bar {
-        background-color: $status-error;
+        background-color: $status-error-color;
     }
 
     #title .dot {
-        fill: $status-error;
+        fill: $status-error-color;
     }
 }
 
@@ -83,7 +83,7 @@ body {
 // the relayed data task (because connection loss on iOS is expected).
 .status-task-relayed-data {
     &.status-warning #status-bar {
-        background-color: $status-ok;
+        background-color: $status-ok-color;
     }
 }
 

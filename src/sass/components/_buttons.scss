@@ -1,6 +1,130 @@
+md-dialog md-dialog-actions .md-button {
+    background-color: $button-color-enabled;
+}
+
+md-select {
+    .md-select-value {
+        color: $text-dark-background-color;
+
+        .md-select-placeholder {
+            color: $text-dark-background-color;
+        }
+
+        .md-select-icon {
+            color: $text-dark-background-color;
+        }
+    }
+
+    :not([disabled]) {
+        :focus .md-select-value {
+            color: $text-dark-background-color;
+        }
+    }
+}
+
+.md-select-menu-container {
+    .md-active {
+        md-select-menu>* {
+            background-color: $background-dark-color;
+            color: $text-dark-background-color;
+        }
+    }
+}
+
+md-select-menu md-content md-option {
+    color: $text-dark-background-color;
+}
+
+md-menu-content md-menu-item {
+    color: $button-text-dark-color;
+}
+
+
 button {
     i.material-icons {
         margin-bottom: 3px;
         vertical-align: middle;
+    }
+}
+
+.md-button {
+    .md-fab {
+        background-color: $primary-500;
+        color: $text-bright-background-color;
+
+        md-icon {
+            color: $text-bright-background-color;
+        }
+
+        :not([disabled]) {
+            :hover {
+                background-color: $primary-500;
+            }
+
+            .md-focused {
+                background-color: $primary-500;
+            }
+        }
+    }
+
+    .md-raised {
+        background-color: $button-color-enabled;
+        color: $button-text-color;
+
+        :not([disabled]) md-icon {
+            color: $button-text-color;
+        }
+
+        :not([disabled]) {
+            :hover {
+                background-color: $button-color-enabled;
+            }
+
+            .md-focused {
+                background-color: $button-color-pressed;
+            }
+        }
+    }
+
+    .md-warn {
+        color: $status-error-color;
+
+        :not([disabled]) md-icon {
+            color: $status-error-color;
+        }
+
+        .md-raised {
+            background-color: $status-error-color;
+            color: $button-text-light-color;
+
+            :not([disabled]) md-icon {
+                color: $button-text-light-color;
+
+                :hover {
+                    background-color: $status-error-disabled-color;
+                }
+
+                .md-focused {
+                    background-color: $status-error-disabled-color;
+                }
+            }
+        }
+
+        md-fab {
+            background-color: $status-error-color;
+            color: $button-text-light-color;
+
+            :not([disabled]) md-icon {
+                color: $button-text-light-color;
+
+                :hover {
+                    background-color: $status-error-disabled-color;
+                }
+
+                .md-focused {
+                    background-color: $status-error-disabled-color;
+                }
+            }
+        }
     }
 }

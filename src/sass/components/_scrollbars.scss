@@ -1,13 +1,13 @@
 // Webkit specific global styling
 // sass-lint:disable no-vendor-prefixes
 ::-webkit-scrollbar {
-    border: 1px solid #f9f9f9;
-    background-color: $scrollbar-color-bg;
+    border: 1px solid $border-dark-grey-color;
+    background-color: $scrollbar-background-color;
     width: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: $scrollbar-color-thumb;
+    background-color: $scrollbar-thumb-color;
 }
 // sass-lint:enable no-vendor-prefixes
 
@@ -16,6 +16,6 @@
     // Note: Linter doesn't recognise 'scrollbar-*' properties, yet.
     // sass-lint:disable no-misspelled-properties
     scrollbar-width: thin;  // Unfortunately Firefox does not support exact pixel values
-    scrollbar-color: $scrollbar-color-thumb $scrollbar-color-bg;
+    scrollbar-color: $scrollbar-thumb-color $scrollbar-background-color;
     // sass-lint:enable no-misspelled-properties
 }
