@@ -58,6 +58,13 @@ jobs:
           key: v2-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
+  docker-build:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build . --no-cache -t threema/threema-web:${CIRCLE_BRANCH}
   lint:
     docker:
       - image: circleci/node:8-browsers
@@ -79,3 +86,4 @@ workflows:
       - uitest-chrome
       - dist
       - lint
+      - docker-build
