@@ -5,8 +5,8 @@
   "scripts": {
     "build": "npm run build:js && npm run build:css",
     "build:js": "webpack --config webpack.prod.js",
-    "build:css": "node-sass -o public/css/ --output-style compressed src/sass/",
-    "build:css:watch": "node-sass -w -r --source-map true --source-map-embed true -o public/css/ --output-style compressed src/sass/",
+    "build:css": "node-sass -o public/css/ --output-style compressed src/sass/themes",
+    "build:css:watch": "node-sass -w -r --source-map true --source-map-embed true -o public/css/ --output-style compressed src/sass/themes",
     "build:tests": "echo -e 'NOTE: Use either \"npm build:unittests\" or \"npm build:uitests\"\n' && exit 1",
     "build:unittests": "webpack --config webpack.tests.js",
     "build:uitests": "npm run build:css && webpack --config webpack.tests.js",

@@ -92,7 +92,7 @@ export class ThemeService {
         link.id = cssId;
         link.rel = 'stylesheet';
         link.type = 'text/css';
-        link.href = '/css/themes/' + themeName;
+        link.href = '/css/' + themeName;
         link.media = 'all';
         head.appendChild(link);
         head.removeChild(oldTheme);
