@@ -151,7 +151,6 @@ class SettingsController {
     private themeName: string;
     public themeOptions = ['Light (White)', 'Dark (Black)'];
 
-
     constructor($mdDialog: ng.material.IDialogService,
                 $window: ng.IWindowService,
                 settingsService: SettingsService,
