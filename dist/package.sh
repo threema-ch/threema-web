@@ -91,12 +91,13 @@ for target in "${targets[@]}"; do
     else
         install -D "node_modules/$target" "$DIR/node_modules/$target"
     fi
-    sed -i "/sourceMappingURL/d" "$DIR/node_modules/$target"
+    # Note: The `-i.bak` notation is required so that the sed command works both on Linux
+    # and on macOS: https://stackoverflow.com/q/5694228/284318
+    sed -i.bak "/sourceMappingURL/d" "$DIR/node_modules/$target"
+    rm "$DIR/node_modules/$target.bak"
 done
 
 echo "+ Update version number..."
-# Note: The `-i.bak` notation is requires so that the sed command works both on Linux
-# and on macOS: https://stackoverflow.com/q/5694228/284318
 sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/manifest.webmanifest $DIR/browserconfig.xml $DIR/version.txt
 rm $DIR/index.html.bak $DIR/troubleshoot/index.html.bak $DIR/dist/app.js.bak $DIR/manifest.webmanifest.bak $DIR/browserconfig.xml.bak $DIR/version.txt.bak
 
