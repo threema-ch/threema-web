@@ -1,14 +1,11 @@
 # Running Threema Web with Docker
 
+A Docker image with Threema Web is published on Docker Hub at
+[`threema/threema-web`](https://hub.docker.com/r/threema/threema-web).
 
-## Building the Image
+Alternatively you can build the image yourself:
 
-To build the Docker image:
-
-    $ docker build . -t example/threema-web:latest
-
-
-## Running the Image
+    $ docker build . -t threema/threema-web:v2.1
 
 To run the Docker image:
 
@@ -24,8 +21,7 @@ mechanisms in your web server.
 
 ## Config Variables
 
-| Variable | Default | Description |
-| -------- | ------- | ----------- |
-| `SALTYRTC_HOST` | null | The SaltyRTC signaling server hostname |
-| `SALTYRTC_PORT` | 443 | The SaltyRTC signaling server port |
-| `SALTYRTC_SERVER_KEY` | "b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171" | The SaltyRTC signaling server public key |
+- `SALTYRTC_HOST`: The SaltyRTC signaling server hostname (default `null`)
+- `SALTYRTC_PORT`: The SaltyRTC signaling server port (default `443`)
+- `SALTYRTC_SERVER_KEY`: The SaltyRTC signaling server public key
+  (default `"b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171"`)
