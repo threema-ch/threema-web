@@ -13,7 +13,7 @@
 set -euo pipefail
 
 SUPPORTED_BRANCH_NAMES=("master")
-SUPPORTED_TAG_PATTERNS=("^v2.1.\([6789]\|1[0-9]\)$")
+SUPPORTED_TAG_PATTERNS=("^v2.1.\([89]\|1[0-9]\)$")
 IMAGE_NAME=threema/threema-web
 
 if [ "${1:-}" = "--dry-run" ]; then
