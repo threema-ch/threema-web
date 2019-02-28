@@ -86,6 +86,7 @@ for target in "${targets[@]}"; do
     # Note: The `-i.bak` notation is required so that the sed command works both on Linux
     # and on macOS: https://stackoverflow.com/q/5694228/284318
     sed -i.bak "/sourceMappingURL/d" "$DIR/node_modules/$target"
+    rm "$DIR/node_modules/$target.bak"
 done
 
 echo "+ Update version number..."
