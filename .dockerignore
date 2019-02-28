@@ -1,0 +1,5 @@
+Dockerfile
+node_modules/
+build/
+release/
+dist/*.tar.gz

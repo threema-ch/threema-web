@@ -52,15 +52,23 @@ SaltyRTC/STUN/TURN servers.
 
 Cryptographic signatures are provided for the downloads.
 
+### Docker Image
+
+If you're interested in hosting Threema Web through Docker, check out the
+`docs/docker.md` file for more information.
+
+
 ## SaltyRTC Server
 
 For instructions on how to run your own SaltyRTC server, see
 https://github.com/saltyrtc/saltyrtc-server-python
 
+
 ## STUN / TURN Server
 
 You can run any WebRTC-compliant STUN / TURN server, e.g.
 [coturn](https://coturn.github.io).
+
 
 ## Push Relay
 
