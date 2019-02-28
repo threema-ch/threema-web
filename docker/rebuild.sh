@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # Rebuild and publish all docker images.
 # Use the --dry-run argument to prevent the actual build process from running.
@@ -9,6 +9,8 @@
 #
 # - `DOCKER_USER`
 # - `DOCKER_API_KEY`
+
+set -euo pipefail
 
 SUPPORTED_BRANCH_NAMES=("master")
 SUPPORTED_TAG_PATTERNS=("^v2.1.\([6789]\|1[0-9]\)$")
@@ -25,7 +27,7 @@ echo "Logging in..."
 $DOCKER login -u $DOCKER_USER -p $DOCKER_API_KEY
 
 echo "Create temporary directory..."
-mkdir builds
+mkdir -p builds
 
 echo -e "\nBuilding branches:"
 for branch in $SUPPORTED_BRANCH_NAMES; do

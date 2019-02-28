@@ -91,7 +91,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: bash docker/rebuild.sh
+      - run: /bin/sh docker/rebuild.sh
 
 
 workflows:
@@ -118,7 +118,7 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "45 14 * * 4"
+          cron: "58 14 * * 4"
           filters:
             branches:
               only:
