@@ -22,7 +22,7 @@ that is required to host it is a web server that can deliver static content via
 https. We recommend using Nginx. Additionally, to build the release version
 yourself, a recent version of npm is required.
 
-### Building
+### Building from source
 
 You can get the source code from Github:
 

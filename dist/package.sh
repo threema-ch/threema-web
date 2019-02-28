@@ -11,7 +11,7 @@ echo -e "Creating release distribution for Threema Web\n"
 
 # Determine suffix
 if [ $# -gt 0 ]; then
-    SUFFIX="-$1"
+    SUFFIX="$1"
 else
     SUFFIX=""
 fi
