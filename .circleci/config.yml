@@ -119,7 +119,7 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "34 15 * * 4"
+          cron: "48 15 * * 4"
           filters:
             branches:
               only:
