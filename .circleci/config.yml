@@ -91,7 +91,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: apk update && apk add bash
+      - run: apk update && apk add bash git
       - run: /bin/bash docker/rebuild.sh
 
 
