@@ -91,7 +91,8 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: /bin/sh docker/rebuild.sh
+      - run: apk update && apk add bash
+      - run: /bin/bash docker/rebuild.sh
 
 
 workflows:
@@ -118,7 +119,7 @@ workflows:
   weekly:
     triggers:
       - schedule:
-          cron: "58 14 * * 4"
+          cron: "26 15 * * 4"
           filters:
             branches:
               only:

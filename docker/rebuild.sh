@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # Rebuild and publish all docker images.
 # Use the --dry-run argument to prevent the actual build process from running.
