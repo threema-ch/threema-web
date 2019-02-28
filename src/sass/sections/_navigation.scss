@@ -61,7 +61,6 @@
         $duration-opacity: .1s;
         $duration-height: .2s;
 
-
         // Animation when disappearing
         transition: opacity $duration-opacity linear,
         max-height $duration-height ease-out $duration-opacity,
@@ -275,7 +274,6 @@
 
                 .message-box {
                     flex-grow: 1;
-                    // background-color: $background-light-color;
 
                     .latest-message {
                         display: flex;
@@ -380,7 +378,6 @@
     overflow-y: scroll;
 
     .contact {
-        @include nav-item-separator;
         @include nav-item-separator;
 
         display: flex;

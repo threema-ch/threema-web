@@ -145,8 +145,9 @@
             md-card-title {
                 background-color: $background-very-light-color;
                 color: $text-bright-background-color;
-            } // editable or readonly detail content
+            }
 
+            // editable or readonly detail content
             >.form {
                 display: flex;
                 flex-direction: column;
@@ -261,7 +262,6 @@
 .material-icons {
     color: $icon-color;
 
-
     &.as-button {
         opacity: .5;
         cursor: pointer;
@@ -290,7 +290,7 @@
 }
 
 md-menu-content {
-    background-color: $background-light-color; // color: $text-bright-background-color;
+    background-color: $background-light-color;
 }
 
 md-dialog.md-default-theme,
