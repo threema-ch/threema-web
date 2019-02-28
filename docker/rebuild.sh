@@ -16,7 +16,7 @@ SUPPORTED_BRANCH_NAMES=("master")
 SUPPORTED_TAG_PATTERNS=("^v2.1.\([6789]\|1[0-9]\)$")
 IMAGE_NAME=threema/threema-web
 
-if [ $1 == "--dry-run" ]; then
+if [ ${1:-} == "--dry-run" ]; then
     echo -e "Dry run\n"
     DOCKER='echo > docker'
 else
