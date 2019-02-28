@@ -116,7 +116,7 @@ workflows:
           filters:
             branches:
               only: /v[0-9.]*/
-  weekly:
+  rebuild-images:
     triggers:
       - schedule:
           cron: "30 5 * * 1,4"
