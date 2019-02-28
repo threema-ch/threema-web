@@ -3,3 +3,4 @@ node_modules/
 build/
 release/
 dist/*.tar.gz
+docker/rebuild.sh
