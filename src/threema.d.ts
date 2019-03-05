@@ -687,6 +687,7 @@ declare namespace threema {
         ARP_LOG_LEVEL: LogLevel;
         ARP_LOG_TRACE: boolean;
         MSGPACK_LOG_TRACE: boolean;
+        TRANSPORT_LOG_LEVEL: LogLevel;
     }
 
     interface InitialConversationData {

@@ -71,5 +71,7 @@ export default {
     // outgoing protocol messages.
     // Note: Affects performance and contains sensitive information.
     MSGPACK_LOG_TRACE: false,
+    // Transport log level
+    TRANSPORT_LOG_LEVEL: 'warn',
 
 } as threema.Config;
