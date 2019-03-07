@@ -63,7 +63,7 @@
     "babelify": "~10.0.0",
     "browserify": "^16.2.3",
     "browserify-header": "^1.0.0",
-    "croppie": "~2.6.0",
+    "croppie": "^2.6.3",
     "file-saver": "2.0.0",
     "messageformat": "^2.0.5",
     "msgpack-lite": "~0.1.26",
