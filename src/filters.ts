@@ -431,4 +431,12 @@ angular.module('3ema.filters', [])
     return $sce.trustAsResourceUrl;
 }])
 
+.filter('meNickname', ['WebClientService', function(webClientService: WebClientService) {
+    return function(displayName: string) {
+        if (displayName === webClientService.me.displayName) {
+            return 'Ich';
+        } else { return displayName; }
+    };
+}])
+
 ;

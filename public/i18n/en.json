@@ -189,7 +189,8 @@
         "PINNED_CONVERSATION_OK": "Conversation pinned",
         "PINNED_CONVERSATION_ERROR": "Conversation could not be pinned",
         "UNPINNED_CONVERSATION_OK": "Conversation unpinned",
-        "UNPINNED_CONVERSATION_ERROR": "Conversation could not be unpinned"
+        "UNPINNED_CONVERSATION_ERROR": "Conversation could not be unpinned",
+        "ME": "Me"
     },
     "messageStates": {
         "WE_ACK": "You sent thumbs-up",
