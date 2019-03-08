@@ -4,17 +4,20 @@ $status-error: #f44336;
 $status-starred: #ffc107;
 $border-grey: #dddddd;
 $background-grey: lighten($border-grey, 7%);
-$material-grey: rgba(0, 0, 0, 0.54);
-$material-grey-dark: rgba(0, 0, 0, 0.87);
+$material-grey: rgba(0, 0, 0, .54);
+$material-grey-dark: rgba(0, 0, 0, .87);
 $url-light-blue: #63a6cf;
 $work-blue: #3b84df;
 
-$dark-background-color: #F6F6F6;
-$bright-background-color: white;
+$dark-background-color: #f6f6f6;
+$light-background-color: #ffffff;
 
-$material-card-shadow: 0px 2px 5px 0px rgba(0,0,0,0.16),0px 2px 5px 0px rgba(0,0,0,0.23);
+$scrollbar-color-bg: $dark-background-color;
+$scrollbar-color-thumb: #cccccc;
 
-$active-placeholder-color: lightgray;
+$material-card-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 5px 0 rgba(0, 0, 0, .23);
+
+$active-placeholder-color: #d3d3d3;
 
 .color-status-ok {
     color: $status-ok;
@@ -28,5 +31,5 @@ $active-placeholder-color: lightgray;
     color: $status-error;
 }
 
-.material-icons.md-medium-dark { color: rgba(0, 0, 0, 0.54); }
-.material-icons.md-medium-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+.material-icons.md-medium-dark { color: rgba(0, 0, 0, .54); }
+.material-icons.md-medium-dark.md-inactive { color: rgba(0, 0, 0, .26); }

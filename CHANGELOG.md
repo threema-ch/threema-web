@@ -4,6 +4,64 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.1.7][v2.1.7] (2019-02-07)
+
+Changes:
+
+* [bug] Fix state reloading after iOS reconnects ([#728][#728])
+
+
+### [v2.1.6][v2.1.6] (2019-01-31)
+
+Changes:
+
+* [feature] Show connection state and unread state in favicon ([#720][i720])
+* [change] Ensure that webapp loads on browsers without ES2015 support ([#733][i733])
+* [change] Change color of Safari pinned tab favicon ([#746][i746])
+* [change] Update Czech translations
+* [bug] Fix relative paths to emoji images ([#743][i743] / [#748][i748])
+* [bug] Fix the use of non-breaking spaces when pasting text ([#745][i745])
+
+
+### [v2.1.5][v2.1.5] (2019-01-24)
+
+Changes:
+
+* [change] Switch from Emojione to Twitter Emoji (Unicode 11.0) ([#721][i721])
+* [bug] Fix pasting of emoji ([#722][i722])
+* [bug] Fix UI bug when loading conversations ([#723][i723])
+
+
+### [v2.1.4][v2.1.4] (2019-01-17)
+
+Changes:
+
+* [change] Update many dependencies
+* [change] Strip sourceMappingURL lines from release files ([#709][i709])
+* [bug] Fix collapsing of consecutive whitespace in message ([#706][i706])
+* [bug] Android: Fix out-of-sync after reconnect ([#712][i712])
+* [bug] Conversations: Handle clearing of latest message ([#713][i713])
+
+
+### [v2.1.3][v2.1.3] (2018-12-12)
+
+Changes:
+
+* [feature] Add French translations ([#685][i685])
+* [feature] Add Chinese translations ([#690][i690])
+* [feature] Add Czech translations ([#691][i691])
+* [change] Require at least Safari 11 ([#683][i683])
+* [change] Style scrollbars in Firefox 64+ ([#689][i689])
+
+Contributors:
+
+- [Valéry](https://www.transifex.com/user/profile/Valéry/) (FR translation)
+- [nickya80](https://www.transifex.com/user/profile/nickya80/) (FR translation)
+- [vollkorntomate](https://www.transifex.com/user/profile/vollkorntomate/) (FR translation)
+- [mingmir](https://www.transifex.com/user/profile/mingmir/) (CN translation)
+- [vit.semenec](https://www.transifex.com/user/profile/vit.semenec/) (CS translation)
+
+
 ### [v2.1.2][v2.1.2] (2018-11-22)
 
 Changes:
@@ -622,7 +680,31 @@ First public release.
 [i673]: https://github.com/threema-ch/threema-web/issues/673
 [i676]: https://github.com/threema-ch/threema-web/issues/676
 [i681]: https://github.com/threema-ch/threema-web/issues/681
+[i683]: https://github.com/threema-ch/threema-web/issues/683
+[i685]: https://github.com/threema-ch/threema-web/issues/685
+[i689]: https://github.com/threema-ch/threema-web/issues/689
+[i690]: https://github.com/threema-ch/threema-web/issues/690
+[i691]: https://github.com/threema-ch/threema-web/issues/691
+[i706]: https://github.com/threema-ch/threema-web/issues/706
+[i709]: https://github.com/threema-ch/threema-web/issues/709
+[i712]: https://github.com/threema-ch/threema-web/issues/712
+[i713]: https://github.com/threema-ch/threema-web/issues/713
+[i720]: https://github.com/threema-ch/threema-web/issues/720
+[i721]: https://github.com/threema-ch/threema-web/issues/721
+[i722]: https://github.com/threema-ch/threema-web/issues/722
+[i723]: https://github.com/threema-ch/threema-web/issues/723
+[i728]: https://github.com/threema-ch/threema-web/issues/728
+[i733]: https://github.com/threema-ch/threema-web/issues/733
+[i743]: https://github.com/threema-ch/threema-web/issues/743
+[i745]: https://github.com/threema-ch/threema-web/issues/745
+[i746]: https://github.com/threema-ch/threema-web/issues/746
+[i748]: https://github.com/threema-ch/threema-web/issues/748
 
+[v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
+[v2.1.6]: https://github.com/threema-ch/threema-web/compare/v2.1.5...v2.1.6
+[v2.1.5]: https://github.com/threema-ch/threema-web/compare/v2.1.4...v2.1.5
+[v2.1.4]: https://github.com/threema-ch/threema-web/compare/v2.1.3...v2.1.4
+[v2.1.3]: https://github.com/threema-ch/threema-web/compare/v2.1.2...v2.1.3
 [v2.1.2]: https://github.com/threema-ch/threema-web/compare/v2.1.1...v2.1.2
 [v2.1.1]: https://github.com/threema-ch/threema-web/compare/v2.1.0...v2.1.1
 [v2.1.0]: https://github.com/threema-ch/threema-web/compare/v2.0.3...v2.1.0

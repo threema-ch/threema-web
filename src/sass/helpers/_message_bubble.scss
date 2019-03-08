@@ -3,16 +3,16 @@ $message-bubble-color-out: #dff0d8;
 $bubble-triangle-size: $main-padding;
 
 @mixin message-bubble-shadow {
-  box-shadow: 0 1px 1px rgba(0,0,0,0.25);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .25);
 }
 
 @mixin message-bubble-triangle {
-  content: "";
-  position: absolute;
-  border-radius: 1px;
-  transform: rotate(-45deg);
-  width: $bubble-triangle-size;
-  height: $bubble-triangle-size;
-  left: ($bubble-triangle-size/2);
-  top: $bubble-triangle-size;
+    position: absolute;
+    top: $bubble-triangle-size;
+    left: $bubble-triangle-size / 2;
+    transform: rotate(-45deg);
+    border-radius: 1px;
+    width: $bubble-triangle-size;
+    height: $bubble-triangle-size;
+    content: '';
 }

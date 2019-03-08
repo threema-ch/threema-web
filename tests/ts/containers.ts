@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2018 Threema GmbH (https://threema.ch/).
+ * Copyright © 2016-2019 Threema GmbH (https://threema.ch/).
  *
  * This file is part of Threema Web.
  *
@@ -35,7 +35,6 @@ function makeContactConversation(id: string, position?: number): threema.Convers
         position: position,
         messageCount: 5,
         unreadCount: 0,
-        latestMessage: null,
         isStarred: false,
     };
 }
@@ -148,6 +147,42 @@ describe('Container', () => {
 
                 conversations.updateOrAdd(makeContactConversation('1', 7));
                 expect(conversations.get().map(getId)).toEqual(['2', '0', '1']);
+            });
+
+            it('handles conversations that clear the latest message', function() {
+                // Regression test for #693
+                const conversations = getConversations();
+                conversations.set([
+                    {
+                        type: 'contact',
+                        id: '0',
+                        position: 0,
+                        messageCount: 1,
+                        unreadCount: 0,
+                        latestMessage: {
+                            type: 'text',
+                            id: 'xyz',
+                            body: 'a',
+                            sortKey: 0,
+                            partnerId: 'z',
+                            isOutbox: true,
+                            isStatus: false,
+                        },
+                        isStarred: false,
+                    },
+                ]);
+
+                conversations.updateOrAdd({
+                    type: 'contact',
+                    id: '0',
+                    position: 0,
+                    messageCount: 0,
+                    unreadCount: 0,
+                    isStarred: false,
+                });
+                const updated = conversations.get()[0];
+                expect(updated.messageCount).toEqual(0);
+                expect(updated.latestMessage).toBeUndefined();
             });
         });
     });

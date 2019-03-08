@@ -15,7 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Autolinker from 'autolinker';
+
 import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
+import {emojify, enlargeSingleEmoji} from './helpers/emoji';
 import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {NotificationService} from './services/notification';
@@ -76,6 +79,8 @@ angular.module('3ema.filters', [])
         newWindow: true,
         // Don't strip protocol prefix
         stripPrefix: false,
+        // Don't strip trailing slashes
+        stripTrailingSlash: false,
         // Don't truncate links
         truncate: 99999,
         // Add class name to linked links
@@ -96,51 +101,13 @@ angular.module('3ema.filters', [])
 
 /**
  * Convert emoji unicode characters to images.
- * Reference: http://git.emojione.com/demos/latest/index.html#js
- *
- * Set the `imgTag` parameter to `true` to use inline PNGs instead of sprites.
  */
-.filter('emojify', function() {
-    return function(text, imgTag = false, greedyMatch = false, imagePath = 'img/e1/') {
-        if (text !== null) {
-            emojione.sprites = imgTag !== true;
-            emojione.emojiSize = '32';
-            emojione.imagePathPNG = imagePath;
-            emojione.greedyMatch = greedyMatch;
-            return emojione.unicodeToImage(text);
-        } else {
-            return text;
-        }
-    };
-})
-
-/**
- * Enlarge 1-3 emoji.
- */
-.filter('enlargeSingleEmoji', function() {
-    const pattern = /<span class="e1 ([^>]*>[^<]*)<\/span>/g;
-    const singleEmojiThreshold = 3;
-    const singleEmojiClassName = 'large-emoji';
-    return function(text, enlarge = false) {
-        if (!enlarge) {
-            return text;
-        }
-        const matches = text.match(pattern);
-        if (matches != null && matches.length >= 1 && matches.length <= singleEmojiThreshold) {
-            if (text.replace(pattern, '').length === 0) {
-                text = text.replace(pattern, '<span class="e1 ' + singleEmojiClassName + ' $1</span>');
-            }
-        }
-        return text;
-    };
-})
+.filter('emojify', () => emojify)
 
 /**
  * Convert markdown elements to html elements
  */
-.filter('markify', function() {
-    return markify;
-})
+.filter('markify', () => markify)
 
 /**
  * Convert mention elements to html elements
@@ -154,7 +121,7 @@ angular.module('3ema.filters', [])
             if (text !== null && text.length > 10) {
                 let result = text.match(/@\[([\*\@a-zA-Z0-9][\@a-zA-Z0-9]{7})\]/g);
                 if (result !== null) {
-                    result = ([...new Set(result)]);
+                    result = new Set(result);
                     // Unique
                     for (const possibleMention of result) {
                         const identity = possibleMention.substr(2, 8);

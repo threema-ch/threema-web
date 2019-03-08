@@ -1,35 +1,45 @@
 md-dialog {
     min-width: 520px;
     max-width: 750px;
+
     p {
         margin-bottom: 16px;
         line-height: 1.3em;
+
         &:last-of-type {
             margin-bottom: 0;
         }
     }
+
     h2 {
-        font-size: 1.4em;
         margin-top: 24px;
         margin-bottom: 16px;
+        font-size: 1.4em;
     }
+
     ul {
         margin-left: 1.3em;
+
         li {
             line-height: 1.5em;
         }
     }
+
     md-dialog-content {
         line-height: 1.3em;
 
         // If a h2 is the first child of a dialog, remove the top margin
-        .md-dialog-content>h2:first-child {
-            margin-top: 0;
+        .md-dialog-content > h2 {
+            &:first-child {
+                margin-top: 0;
+            }
         }
     }
+
     .md-subheader-inner {
         padding-left: 0;
     }
+
     .status {
         padding-left: 16px;
     }
@@ -39,15 +49,17 @@ md-dialog.send-file-dialog {
     md-input-container.input-caption {
         margin-bottom: 0;
     }
+
     md-input-container.input-send-as-file {
         margin-top: 0;
         margin-bottom: 0;
     }
+
     .preview {
         display: block;
-        margin: 0px auto;
-        max-height: 250px;
+        margin: 0 auto;
         max-width: 100%;
+        max-height: 250px;
     }
 }
 
@@ -58,8 +70,9 @@ md-dialog.message-history-dialog {
 
     .event-type {
         font-weight: bold;
-    }
-    .event-type:after {
-        content: ':';
+
+        &::after {
+            content: ':';
+        }
     }
 }

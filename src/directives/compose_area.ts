@@ -15,7 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {extractText, hasValue, isActionTrigger, logAdapter} from '../helpers';
+import * as twemoji from 'twemoji';
+
+import {extractText, hasValue, isActionTrigger, logAdapter, replaceWhitespace} from '../helpers';
+import {emojify, shortnameToUnicode} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
@@ -64,11 +67,6 @@ export default [
                 // Callback that is called when uploading files
                 onUploading: '=',
                 maxTextLength: '=',
-
-                receiver: '=eeeReceiver',
-
-                // Optional emoji PNG path prefix
-                emojiImagePath: '@?',
 
                 receiver: '<eeeReceiver',
             },
@@ -159,7 +157,7 @@ export default [
                         get: function() {
                             if (instance === undefined) {
                                 instance = {
-                                    htmlElement: composeArea[0].querySelector('div.emojione-picker'),
+                                    htmlElement: composeArea[0].querySelector('div.twemoji-picker'),
                                 };
                                 // append stop propagation
                                 angular.element(instance.htmlElement).on('click', click);
@@ -217,7 +215,16 @@ export default [
                 //
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
-                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+                    const rawText = extractText(composeDiv[0], logAdapter($log.warn, logTag));
+
+                    // Due to #731, and the hack introduced in #706, the
+                    // extracted text may contain non-breaking spaces (U+00A0).
+                    // Replace them with actual whitespace to avoid strange
+                    // behavior when submitting the text.
+                    //
+                    // TODO: Remove this once we have a compose area rewrite and can
+                    // fix the actual bug.
+                    const text = rawText.replace(/\u00A0/g, ' ');
 
                     return new Promise((resolve, reject) => {
                         const submitTexts = (strings: string[]) => {
@@ -316,13 +323,13 @@ export default [
                         const text = extractText(composeDiv[0], logAdapter($log.warn, logTag), false);
                         if (text === '\n') {
                             composeDiv[0].innerText = '';
-                        } else if (ev.keyCode === 190 && caretPosition !== null) {
+                        } else if ((ev.keyCode === 190 || ev.key === ':') && caretPosition !== null) {
                             // A ':' is pressed, try to parse
                             const currentWord = stringService.getWord(text, caretPosition.fromChar, [':']);
-                            if (currentWord.realLength > 2
-                                && currentWord.word.substr(0, 1) === ':') {
-                                const unicodeEmoji = emojione.shortnameToUnicode(currentWord.word);
-                                if (unicodeEmoji && unicodeEmoji !== currentWord.word) {
+                            if (currentWord.realLength > 2 && currentWord.word.substr(0, 1) === ':') {
+                                const trimmed = currentWord.word.substr(1, currentWord.word.length - 2);
+                                const unicodeEmoji = shortnameToUnicode(trimmed);
+                                if (unicodeEmoji !== null) {
                                     return insertEmoji(unicodeEmoji,
                                         caretPosition.from - currentWord.realLength,
                                         caretPosition.to);
@@ -358,14 +365,14 @@ export default [
                         for (let n = 0; n < fileCounter; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
-                            reader.onload = function(ev: FileReaderProgressEvent) {
-                                next(file, ev.target.result, ev);
+                            reader.onload = function(ev: ProgressEvent) {
+                                next(file, this.result as ArrayBuffer, ev);
                             };
-                            reader.onerror = function(ev: FileReaderProgressEvent) {
+                            reader.onerror = function(ev: ProgressEvent) {
                                 // set a null object
                                 next(file, null, ev);
                             };
-                            reader.onprogress = function(ev: FileReaderProgressEvent) {
+                            reader.onprogress = function(ev: ProgressEvent) {
                                 if (ev.lengthComputable) {
                                     const progress = ((ev.loaded / ev.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileCounter * n);
@@ -440,8 +447,8 @@ export default [
 
                         // Convert blob to arraybuffer
                         const reader = new FileReader();
-                        reader.onload = function(progressEvent: FileReaderProgressEvent) {
-                            const buffer: ArrayBuffer = this.result;
+                        reader.onload = function(progressEvent: ProgressEvent) {
+                            const buffer: ArrayBuffer = this.result as ArrayBuffer;
 
                             // Construct file name
                             let fileName: string;
@@ -473,7 +480,6 @@ export default [
 
                         // Look up some filter functions
                         // tslint:disable-next-line:max-line-length
-                        const emojify = $filter('emojify') as (a: string, b?: boolean, c?: boolean, d?: string) => string;
                         const escapeHtml = $filter('escapeHtml') as (a: string) => string;
                         const mentionify = $filter('mentionify') as (a: string) => string;
                         const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
@@ -482,12 +488,11 @@ export default [
                         const escaped = escapeHtml(text);
 
                         // Apply filters (emojify, convert newline, etc)
-                        const formatted = nlToBr(mentionify(emojify(escaped, true, false, scope.emojiImagePath)), true);
+                        const formatted = emojify(mentionify(replaceWhitespace(nlToBr(escaped, true))));
 
                         // Insert resulting HTML
                         document.execCommand('insertHTML', false, formatted);
 
-                        cleanupComposeContent();
                         updateView();
                     }
                 }
@@ -506,11 +511,13 @@ export default [
                     emojiKeyboard.addClass('active');
                     emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
 
-                    // Find all emoji
-                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .e1'));
+                    // Find some selectors
+                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
                     // Add event handlers
                     allEmoji.on('click', onEmojiChosen);
+                    allEmojiTabs.on('keydown', onEmojiTabSelected);
 
                     // set focus to fix chat scroll bug
                     $timeout(() => {
@@ -520,16 +527,19 @@ export default [
 
                 // Hide emoji picker element
                 function hideEmojiPicker() {
+                    const emojiPicker: HTMLElement = EmojiPickerContainer.get().htmlElement;
+
                     // Hide
                     emojiKeyboard.removeClass('active');
                     emojiTrigger.removeClass(TRIGGER_ACTIVE_CSS_CLASS);
 
-                    // Find all emoji
-                    const allEmoji: any = angular.element(
-                        EmojiPickerContainer.get().htmlElement.querySelectorAll('.content .e1'));
+                    // Find some selectors
+                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
                     // Remove event handlers
                     allEmoji.off('click', onEmojiChosen);
+                    allEmojiTabs.off('keydown', onEmojiTabSelected);
                     EmojiPickerContainer.destroy();
                 }
 
@@ -554,8 +564,16 @@ export default [
                     insertEmoji(this.textContent);
                 }
 
+                // Emoji tab is selected
+                function onEmojiTabSelected(ev: KeyboardEvent): void {
+                    if (ev.key === ' ' || ev.key === 'Enter') {
+                        // Warning: Hacky
+                        this.parentElement.previousElementSibling.checked = true;
+                    }
+                }
+
                 function insertEmoji(emoji, posFrom?: number, posTo?: number): void {
-                    const emojiElement = ($filter('emojify') as any)(emoji, true, true, scope.emojiImagePath) as string;
+                    const emojiElement = emojify(emoji);
                     insertHTMLElement(emoji, emojiElement, posFrom, posTo);
                 }
 
@@ -652,7 +670,6 @@ export default [
                     caretPosition.toChar = caretPosition.fromChar;
 
                     contentElement.innerHTML = currentHtml;
-                    cleanupComposeContent();
                     setCaretPosition(newPos);
 
                     // Update the draft text
@@ -686,23 +703,6 @@ export default [
                 function onFileSelected() {
                     uploadFiles(this.files);
                     fileInput.val('');
-                }
-
-                // Disable content editable and dragging for contained images (emoji)
-                function cleanupComposeContent() {
-                    for (const img of composeDiv[0].getElementsByTagName('img')) {
-                        img.ondragstart = () => false;
-                    }
-                    for (const span of composeDiv[0].getElementsByTagName('span')) {
-                        span.setAttribute('contenteditable', false);
-                    }
-
-                    if (browserService.getBrowser().isFirefox(false)) {
-                        // disable object resizing is the only way to disable resizing of
-                        // emoji (contenteditable must be true, otherwise the emoji can not
-                        // be removed with backspace (in FF))
-                        document.execCommand('enableObjectResizing', false, false);
-                    }
                 }
 
                 // Set all correct styles

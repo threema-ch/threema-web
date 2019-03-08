@@ -12,7 +12,7 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <p>
-                    Threema Web &copy; 2016&ndash;2018 Threema GmbH.
+                    Threema Web &copy; 2016&ndash;2019 Threema GmbH.
                     <span translate>about.ALL_RIGHTS_RESERVED</span>
                 </p>
 
@@ -27,21 +27,12 @@
                 </p>
 
                 <h2 translate>about.CHANGELOG</h2>
-                <p>
-                    <span translate>about.CHANGELOG_LINK_BEFORE</span>
-                    <a href="https://github.com/threema-ch/threema-web/blob/{{ ctrl.config.GIT_BRANCH }}/CHANGELOG.md"
-                       target="_blank" rel="noopener noreferrer" translate>about.CHANGELOG_LINK_TEXT</a><span translate>about.CHANGELOG_LINK_AFTER</span>
-                </p>
+                <p translate translate-values="{ url: 'https://github.com/threema-ch/threema-web/blob/{{ ctrl.config.GIT_BRANCH }}/CHANGELOG.md' }">about.CHANGELOG_TEXT</p>
 
                 <h2 translate>about.LICENSES</h2>
                 <ul>
                     <li translate>about.EMOJI_ART</li>
-                    <li>
-                        <span translate>about.LICENSE_LINK_BEFORE</span>
-                        <a href="https://github.com/threema-ch/threema-web/blob/{{ ctrl.config.GIT_BRANCH }}/LICENSE-3RD-PARTY.txt"
-                           target="_blank" rel="noopener noreferrer" translate>about.LICENSE_LINK_TEXT</a>
-                        <span translate>about.LICENSE_LINK_AFTER</span>
-                    </li>
+                    <li translate translate-values="{ url: 'https://github.com/threema-ch/threema-web/blob/{{ ctrl.config.GIT_BRANCH }}/LICENSE-3RD-PARTY.txt' }">about.LICENSE_LINK</li>
                     <li translate>about.NOTIFICATION_SOUNDS</li>
                 </ul>
 

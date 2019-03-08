@@ -43,7 +43,7 @@ export default [
                 function fetchFileListContents(fileList: FileList): Promise<Map<File, ArrayBuffer>> {
                     return new Promise((resolve) => {
                         const buffers = new Map<File, ArrayBuffer>();
-                        const next = (file: File, res: ArrayBuffer | null, error?: FileReaderProgressEvent) => {
+                        const next = (file: File, res: ArrayBuffer | null, error?: ProgressEvent) => {
                             buffers.set(file, res);
                             if (buffers.size >= fileList.length) {
                                 resolve(buffers);
@@ -56,14 +56,14 @@ export default [
                         for (let n = 0; n < fileList.length; n++) {
                             const reader = new FileReader();
                             const file = fileList.item(n);
-                            reader.onload = function(ev: FileReaderProgressEvent) {
-                                next(file, ev.target.result);
+                            reader.onload = function(ev: ProgressEvent) {
+                                next(file, this.result as ArrayBuffer);
                             };
-                            reader.onerror = function(ev: FileReaderProgressEvent) {
+                            reader.onerror = function(ev: ProgressEvent) {
                                 // set a null object
                                 next(file, null, ev);
                             };
-                            reader.onprogress = function(ev: FileReaderProgressEvent) {
+                            reader.onprogress = function(ev: ProgressEvent) {
                                 if (ev.lengthComputable) {
                                     const progress = ((ev.loaded / ev.total) * 100);
                                     scope.onUploading(true, progress, 100 / fileList.length * n);

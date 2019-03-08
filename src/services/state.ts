@@ -37,6 +37,7 @@ export class StateService {
     // Events
     public evtConnectionBuildupStateChange = new AsyncEvent<threema.ConnectionBuildupStateChange>();
     public evtGlobalConnectionStateChange = new AsyncEvent<threema.GlobalConnectionStateChange>();
+    public evtUnreadCountChange = new AsyncEvent<number>();
 
     // Connection states
     public signalingConnectionState: saltyrtc.SignalingState;
@@ -52,6 +53,9 @@ export class StateService {
     private stage: Stage;
     private _state: threema.GlobalConnectionState;
     public wasConnected: boolean;
+
+    // Unread messages
+    private _unreadCount: number = 0;
 
     public static $inject = ['$log', '$interval'];
     constructor($log: ng.ILogService, $interval: ng.IIntervalService) {
@@ -225,14 +229,35 @@ export class StateService {
         }
     }
 
-    public readyToSubmit(chosenTask: ChosenTask): boolean {
+    /**
+     * Return whether messages can be submitted to the outgoing queue.
+     *
+     * The `startupDone` flag indicates, whether the initial data in the
+     * webclient service has been loaded or not.
+     */
+    public readyToSubmit(chosenTask: ChosenTask, startupDone: boolean): boolean {
         switch (chosenTask) {
             case ChosenTask.RelayedData:
                 return true;
             case ChosenTask.WebRTC:
             default:
-                return this.state === GlobalConnectionState.Ok;
+                return this.state === GlobalConnectionState.Ok && startupDone;
         }
+    }
+
+    /**
+     * Getters and setters for unread messages count.
+     */
+    public get unreadCount(): number {
+        return this._unreadCount;
+    }
+    public set unreadCount(count: number) {
+        if (this._unreadCount === count) {
+            // No need to dispatch any events
+            return;
+        }
+        this._unreadCount = count;
+        this.evtUnreadCountChange.post(count);
     }
 
     /**
@@ -249,5 +274,6 @@ export class StateService {
         this.wasConnected = false;
         this.connectionBuildupState = connectionBuildupState;
         this.progress = 0;
+        this.unreadCount = 0;
     }
 }

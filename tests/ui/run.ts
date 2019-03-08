@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2018 Threema GmbH (https://threema.ch/).
+ * Copyright © 2016-2019 Threema GmbH (https://threema.ch/).
  *
  * This file is part of Threema Web.
  */
@@ -41,6 +41,20 @@ async function extractText(driver: WebDriver): Promise<string> {
 }
 
 /**
+ * Helper function to send a KeyUp event.
+ */
+async function sendKeyUp(driver: WebDriver, key: string): Promise<void> {
+    const script = `
+        const e = document.createEvent('HTMLEvents');
+        e.initEvent('keyup', false, true);
+        e.key = '${key}';
+        const element = document.querySelector("div.compose");
+        element.dispatchEvent(e);
+    `;
+    return driver.executeScript<void>(script);
+}
+
+/**
  * The emoji trigger should toggle the emoji keyboard.
  */
 async function showEmojiSelector(driver: WebDriver) {
@@ -72,20 +86,20 @@ async function insertEmoji(driver: WebDriver) {
     await driver.findElement(emojiTrigger).click();
 
     // Insert woman zombie emoji
-    await driver.findElement(By.css('.e1._1f9df-2640')).click();
+    await driver.findElement(By.css('.em[data-s=":woman_zombie:"]')).click();
 
     // Insert text
     await driver.findElement(composeArea).sendKeys('hi');
 
     // Insert beer
-    await driver.findElement(By.className('e1-food')).click();
-    await driver.findElement(By.css('.e1._1f37b')).click();
+    await driver.findElement(By.className('em-food')).click();
+    await driver.findElement(By.css('.em[data-s=":beers:"]')).click();
 
     // Validate emoji
     const emoji = await driver.findElement(composeArea).findElements(By.xpath('*'));
     expect(emoji.length).to.equal(2);
-    expect(await emoji[0].getAttribute('title')).to.equal(':woman_zombie:');
-    expect(await emoji[1].getAttribute('title')).to.equal(':beers:');
+    expect(await emoji[0].getAttribute('data-c')).to.equal('1f9df-200d-2640-fe0f'); // woman zombie
+    expect(await emoji[1].getAttribute('data-c')).to.equal('1f37b'); // clinking beer mugs
 
     // Validate text
     const html = await driver.findElement(composeArea).getAttribute('innerHTML');
@@ -124,7 +138,7 @@ async function regression574(driver: WebDriver) {
 
     // Insert emoji
     await driver.findElement(emojiTrigger).click();
-    await driver.findElement(By.css('.e1[title=":smile:"]')).click();
+    await driver.findElement(By.css('.em[data-s=":smile:"]')).click();
 
     const text = await extractText(driver);
     expect(text).to.equal('hello\nthreema\nweb\n😄');
@@ -142,7 +156,7 @@ async function regression671(driver: WebDriver) {
 
     // Insert emoji
     await driver.findElement(emojiTrigger).click();
-    const emoji = await driver.findElement(By.css('.e1[title=":smile:"]'));
+    const emoji = await driver.findElement(By.css('.em[data-s=":smile:"]'));
     await emoji.click();
     await emoji.click();
 
@@ -165,12 +179,25 @@ async function regression672(driver: WebDriver) {
 
     // Insert two emoji
     await driver.findElement(emojiTrigger).click();
-    const emoji = await driver.findElement(By.css('.e1[title=":tired_face:"]'));
+    const emoji = await driver.findElement(By.css('.em[data-s=":tired_face:"]'));
     await emoji.click();
     await emoji.click();
 
     const text = await extractText(driver);
     expect(text).to.equal('hello\n😫😫\nworld');
+}
+
+/**
+ * Insert emoji with a shortcode.
+ */
+async function insertEmojiWithShortcode(driver: WebDriver) {
+    // Insert text
+    await driver.findElement(composeArea).click();
+    await driver.findElement(composeArea).sendKeys('hello :+1:');
+    await sendKeyUp(driver, ':');
+
+    const text = await extractText(driver);
+    expect(text).to.equal('hello 👍');
 }
 
 // Register tests here
@@ -181,6 +208,7 @@ const TESTS: Array<[string, Testfunc]> = [
     ['Regression test #574', regression574],
     ['Regression test #671', regression671],
     ['Regression test #672', regression672],
+    ['Insert emoji through shortcode', insertEmojiWithShortcode],
 ];
 
 // Test runner

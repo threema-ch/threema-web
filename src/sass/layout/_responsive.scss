@@ -1,5 +1,5 @@
 @media (max-width: 880px) {
-    /* Hide some of the navigation elements */
+    // Hide some of the navigation elements
     .conversation {
         .message-date,
         .nickname {
@@ -7,8 +7,7 @@
         }
     }
 
-    //try to resize thumbnails
-
+    // try to resize thumbnails
     .message-body {
         max-width: 70% !important;
     }
@@ -21,15 +20,14 @@
         width: auto !important;
         height: auto !important;
     }
-
 }
 
 @media (max-width: 600px) {
     #messenger {
         &.show-detail {
             #navigation {
-                flex: 0 !important;
                 display: none;
+                flex: 0 !important;
                 min-width: 0 !important;
                 max-width: none !important;
             }
@@ -48,6 +46,5 @@
             height: auto !important;
         }
     }
-
 
 }

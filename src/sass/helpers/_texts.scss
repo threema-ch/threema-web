@@ -1,15 +1,13 @@
-@mixin word-wrap() {
-	overflow-wrap: break-word;
-	word-wrap: break-word;
-	-ms-word-break: break-all;
-	word-break: break-word;
-	-ms-hyphens: auto;
-	-moz-hyphens: auto;
-	-webkit-hyphens: auto;
-	hyphens: auto;
+@mixin word-wrap {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -webkit-hyphens: auto; // sass-lint:disable-line no-vendor-prefixes
+    hyphens: auto;
 }
-@mixin ellipsis() {
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+
+@mixin ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

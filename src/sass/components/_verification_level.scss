@@ -1,56 +1,53 @@
-/*
- * Verification level.
- */
-
+// Verification level
 .verification-dots {
-
-   div {
-     display: inline-block;
-     height: 11px;
-     width: 11px;
-     border-radius: 50%;
-     background-color: #e0e0e0;
-     margin-right: 2px;
-   }
-
-  &.level1 {
     div {
-      &:nth-of-type(1) {
-        background-color: $status-error;
-      }
+        display: inline-block;
+        margin-right: 2px;
+        border-radius: 50%;
+        background-color: #e0e0e0;
+        width: 11px;
+        height: 11px;
     }
-  }
 
-  &.level2 {
-    div {
-      &:nth-of-type(1),
-      &:nth-of-type(2) {
-        background-color: $status-warning;
-      }
-    }
-    &.work {
-      div {
-        &:nth-of-type(1),
-        &:nth-of-type(2) {
-          background-color: $work-blue;
+    &.level1 {
+        div {
+            &:nth-of-type(1) {
+                background-color: $status-error;
+            }
         }
-      }
     }
-  }
 
-  &.level3 {
-    div {
-        background-color: $status-ok;
-    }
-    &.work {
-      div {
-        &:nth-of-type(1),
-        &:nth-of-type(2),
-        &:nth-of-type(3) {
-          background-color: $work-blue;
+    &.level2 {
+        div {
+            &:nth-of-type(1),
+            &:nth-of-type(2) {
+                background-color: $status-warning;
+            }
         }
-      }
-    }
-  }
 
+        &.work {
+            div {
+                &:nth-of-type(1),
+                &:nth-of-type(2) {
+                    background-color: $work-blue;
+                }
+            }
+        }
+    }
+
+    &.level3 {
+        div {
+            background-color: $status-ok;
+        }
+
+        &.work {
+            div {
+                &:nth-of-type(1),
+                &:nth-of-type(2),
+                &:nth-of-type(3) {
+                    background-color: $work-blue;
+                }
+            }
+        }
+    }
 }

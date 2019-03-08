@@ -340,7 +340,7 @@ declare namespace threema {
         position?: number;
         messageCount: number;
         unreadCount: number;
-        latestMessage: Message | null;
+        latestMessage?: Message;
         receiver?: Receiver;
         avatar?: ArrayBuffer;
         notifications?: NotificationSettings;
@@ -768,7 +768,6 @@ declare namespace threema {
         }
 
         interface Converter {
-            unicodeToEmoji(message);
             addReceiverToConversation(receivers: Receivers);
         }
         interface Filters {

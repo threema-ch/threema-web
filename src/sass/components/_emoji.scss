@@ -1,4 +1,17 @@
-.e1 {
-    transform: scale(0.75);
-    margin: -3px -2px;
+$emoji-height-normal: 1em;
+$emoji-height-large: 32px;
+
+img.em {
+    margin: 0 .05em 0 .1em;
+    width: $emoji-height-normal;
+    height: $emoji-height-normal;
+    vertical-align: -.1em;
+}
+
+#conversation .message-text {
+    .em.large-emoji {
+        margin: 1px 4px 1px 0;
+        width: $emoji-height-large;
+        height: $emoji-height-large;
+    }
 }

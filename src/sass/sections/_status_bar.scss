@@ -1,9 +1,6 @@
-/*
- * Connection status
- */
-
+// Connection status
 #status-bar {
-    transition: all 1s ease-out;
+    transition: 1s ease-out;
     height: 5px;
 }
 
@@ -15,6 +12,7 @@ body {
             height: calc(100% - 5px) !important;
         }
     }
+
     &.expanded {
         &.status-warning,
         &.status-error {
@@ -22,22 +20,27 @@ body {
             #status-bar {
                 height: 50px;
             }
+
             // Resize messenger
             #messenger {
                 height: calc(100% - 50px);
             }
+
             @media (max-width: 640px) {
                 #status-bar {
                     height: 65px;
                 }
+
                 #messenger {
                     height: calc(100% - 65px);
                 }
             }
+
             @media (max-width: 380px) {
                 #status-bar {
                     height: 80px;
                 }
+
                 #messenger {
                     height: calc(100% - 80px);
                 }
@@ -70,6 +73,7 @@ body {
     #status-bar {
         background-color: $status-error;
     }
+
     #title .dot {
         fill: $status-error;
     }
@@ -95,14 +99,15 @@ body {
 
     // Loading indicator color
     .loading {
-        @include loading-spinner(26px, 3px, white, rgba(255, 255, 255, 0.2));
+        $light-transparent: rgba(255, 255, 255, .2);
+        @include loading-spinner(26px, 3px, #ffffff, $light-transparent);
     }
 
     > div {
-        color: white;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, .5);
-
+        $half-transparent: rgba(0, 0, 0, .5);
         margin: 8px;
+        text-shadow: 0 1px 1px $half-transparent;
+        color: #ffffff;
 
         &:first-of-type {
             margin-left: 16px;
@@ -120,5 +125,4 @@ body {
     h1 {
         font-size: inherit;
     }
-
 }

@@ -29,6 +29,7 @@
         <div class="header-buttons">
             <toggle-button
                 flag="ctrl.conversation.isStarred"
+                ng-if="ctrl.conversation"
                 on-enable="ctrl.pinConversation()"
                 on-disable="ctrl.unpinConversation()"
                 label-enabled="messenger.PINNED_CONVERSATION"

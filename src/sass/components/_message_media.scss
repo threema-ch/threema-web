@@ -4,19 +4,17 @@ $circle-size: 50px;
 $loading-ring-thickness: 5px;
 
 // Animations
-
 @keyframes file-download-rotater {
     0% {
         transform: rotate(0deg);
     }
+
     100% {
         transform: rotate(360deg);
     }
 }
 
-
 // Styling
-
 .message-media {
 
     .in-view-indicator {
@@ -27,107 +25,106 @@ $loading-ring-thickness: 5px;
 
     // up/downloading circle element
     .circle {
-        height: $circle-size;
+        display: flex;
+        position: relative;
+        outline: none;
+        border-radius: $circle-size / 2;
+        background-color: #808080;
         width: $circle-size;
         min-width: $circle-size;
+        height: $circle-size;
         min-height: $circle-size;
-        background-color: grey;
-        outline: none;
-        position: relative;
-        border-radius: $circle-size / 2;
-        display: flex;
+
         // centering element
         &.center {
             margin: 0 auto;
         }
+
         i,
         img {
-            color: white;
-            margin: auto auto;
             position: relative;
-            background: rgba(128, 128, 128, .3);
+            margin: auto;
             border-radius: $material-radius;
+            background: rgba(128, 128, 128, .3);
+            color: #ffffff;
         }
     }
 
     // Loading indicator
     .loading.active {
         display: block;
-        width: $circle-size - 2 * $loading-ring-thickness;
-        height: $circle-size - 2 * $loading-ring-thickness;
-        border: $loading-ring-thickness solid rgba(0, 0, 0, 0.1);
-        border-left-color: lightgreen;
-        animation: file-download-rotater 1.1s infinite linear;
-        border-radius: 50%;
         position: absolute;
         top: 0;
         left: 0;
+        animation: file-download-rotater 1.1s infinite linear;
+        border: $loading-ring-thickness solid rgba(0, 0, 0, .1);
+        border-radius: 50%;
+        border-left-color: #90ee90;
+        width: $circle-size - (2 * $loading-ring-thickness);
+        height: $circle-size - (2 * $loading-ring-thickness);
     }
 
     // Thumbnails (Images, GIFs, Locations, ...)
     .thumbnail {
-        // For absolute positioning of children
-        position: relative;
-
-        // for big pictures
-        overflow: hidden;
-
         // Make it clickable
-        @include mouse-hand;
-
-        // Show/hide logic
-        .loading-wrapper {
-            display: none;
-            &.active {
-                z-index: 10;
-                display: block;
-            }
-        }
-
-        // max size of a thumbnail
+        position: relative;
+        // For absolute positioning of children
+        cursor: pointer;
+        // For big pictures
+        overflow: hidden;
 
         // Styling of loader
         .loading-wrapper {
+            display: none;
             position: absolute;
+            background-color: rgba(0, 0, 0, .2);
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.2);
+
+            &.active {
+                display: block;
+                z-index: 10;
+            }
+
             .loading {
                 display: block;
                 position: absolute;
-                top: calc(50% - #{$circle-size/2} - 1em);
-                left: calc(50% - #{$circle-size/2});
-                width: $circle-size - 2 * $loading-ring-thickness;
-                height: $circle-size - 2 * $loading-ring-thickness;
-                border: $loading-ring-thickness solid rgba(255, 255, 255, 0.3);
-                border-left-color: lightgreen;
+                top: calc(50% - #{$circle-size / 2} - 1em);
+                left: calc(50% - #{$circle-size / 2});
                 animation: file-download-rotater 1.1s infinite linear;
+                border: $loading-ring-thickness solid rgba(255, 255, 255, .3);
                 border-radius: 50%;
+                border-left-color: #90ee90;
+                width: $circle-size - (2 * $loading-ring-thickness);
+                height: $circle-size - (2 * $loading-ring-thickness);
             }
+
             .loading-text {
                 display: block;
-                text-align: center;
-                width: 100%;
-                color: white;
-                height: 1em;
                 position: absolute;
                 top: calc(50% + #{$circle-size/2});
+                width: 100%;
+                height: 1em;
+                text-align: center;
+                color: #ffffff;
             }
         }
 
         .overlay {
-            &.video, &.gif {
+            &.video,
+            &.gif {
                 position: absolute;
                 width: 100%;
                 height: 100%;
+
                 i {
+                    position: absolute;
+                    top: calc(50% - #{$circle-size / 2});
+                    left: calc(50% - #{$circle-size / 2});
+                    border-radius: $circle-size - (2 * $loading-ring-thickness);
+                    background: rgba(128, 128, 128, .6);
                     line-height: $circle-size;
                     font-size: $circle-size;
-                    position: absolute;
-                    top: calc(50% - #{$circle-size/2});
-                    left: calc(50% - #{$circle-size/2});
-                    background: rgba(128, 128, 128, 0.6);
-                    border-radius: $circle-size - (2 * $loading-ring-thickness);
                 }
             }
         }
@@ -135,8 +132,8 @@ $loading-ring-thickness: 5px;
 
     // File messages (Files, Audio, ...)
     .file-message {
+        cursor: pointer;
         height: $circle-size;
-        @include mouse-hand;
 
         .message-text {
             padding-top: 8px;
@@ -144,21 +141,22 @@ $loading-ring-thickness: 5px;
 
         .info {
             position: relative;
-            margin-left: $circle-size + 16px;
             top: -$circle-size;
+            margin-left: $circle-size + 16px;
             height: $circle-size;
             line-height: $circle-size;
+
             p {
                 margin: 0;
-                line-height: normal;
                 padding: 0;
-                font-size: 10pt;
-                text-overflow: ellipsis;
                 overflow: hidden;
-            }
+                text-overflow: ellipsis;
+                line-height: normal;
+                font-size: 10pt;
 
-            p:first-child {
-                font-size: 100%;
+                &:first-child {
+                    font-size: 100%;
+                }
             }
         }
 

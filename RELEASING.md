@@ -23,6 +23,10 @@ Update changelog:
 
     $ vim CHANGELOG.md
 
+Potentially update `SUPPORTED_TAG_PATTERNS` in `docker/rebuild.sh`:
+
+    $ vim docker/rebuild.sh
+
 Commit & tag:
 
     $ git commit -S${GPG_KEY} -m "Release v${VERSION}"

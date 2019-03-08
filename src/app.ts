@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2018 Threema GmbH (https://threema.ch/).
+ * Copyright © 2016-2019 Threema GmbH (https://threema.ch/).
  *
  * This file is part of Threema Web.
  *
@@ -16,6 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
+
+import 'regenerator-runtime/runtime';
 
 import {AsyncEvent} from 'ts-events';
 
@@ -74,9 +76,9 @@ angular.module('3ema', [
 
 // Constants to be used by controllers
 .constant('BROWSER_MIN_VERSIONS', {
-    FF: 50,
-    CHROME: 45,
-    OPERA: 32,
+    FF: 60,
+    CHROME: 65,
+    OPERA: 52,
     SAFARI: 11,
 })
 
@@ -95,10 +97,12 @@ angular.module('3ema', [
             suffix: '.json',
         })
         .uniformLanguageTag('java')
-        .registerAvailableLanguageKeys(['en', 'de', 'fr'], {
-            'en_*': 'en',
+        .registerAvailableLanguageKeys(['cs', 'de', 'en', 'fr', 'zh'], {
+            'cs_*': 'cs',
             'de_*': 'de',
+            'en_*': 'en',
             'fr_*': 'fr',
+            'zh_*': 'zh',
         })
         .determinePreferredLanguage()
         .fallbackLanguage('en');

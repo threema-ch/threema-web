@@ -18,11 +18,7 @@
                 <p><a ng-href="{{ ctrl.config.VERSION_MOUNTAIN_URL }}" target="_blank" rel="noopener noreferrer">{{ ctrl.config.VERSION_MOUNTAIN }} ({{ ctrl.config.VERSION_MOUNTAIN_HEIGHT }}m)</a> / <a ng-href="{{ ctrl.config.VERSION_MOUNTAIN_IMAGE_URL }}" target="_blank" rel="noopener noreferrer">Source Image</a> ({{ ctrl.config.VERSION_MOUNTAIN_IMAGE_COPYRIGHT }})</p>
 
                 <h2 translate>about.CHANGELOG</h2>
-                <p>
-                    <span translate>about.CHANGELOG_LINK_BEFORE</span>
-                    <a href="https://github.com/threema-ch/threema-web/blob/{{ ctrl.config.GIT_BRANCH }}/CHANGELOG.md"
-                       target="_blank" rel="noopener noreferrer" translate>about.CHANGELOG_LINK_TEXT</a><span translate>about.CHANGELOG_LINK_AFTER</span>
-                </p>
+                <p translate translate-values="{ url: 'https://github.com/threema-ch/threema-web/blob/{{ ctrl.config.GIT_BRANCH }}/CHANGELOG.md' }">about.CHANGELOG_TEXT</p>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">

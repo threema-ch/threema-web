@@ -1,0 +1,2334 @@
+/* glue: 0.13 hash: f8697e1376 */
+        .em-flags-1f6a9,
+.em-flags-1f3f4,
+.em-flags-1f3f4-e0067-e0062-e0077-e006c-e0073-e007f,
+.em-flags-1f3f4-e0067-e0062-e0073-e0063-e0074-e007f,
+.em-flags-1f3f4-e0067-e0062-e0065-e006e-e0067-e007f,
+.em-flags-1f3f4-200d-2620-fe0f,
+.em-flags-1f3f3,
+.em-flags-1f3f3-fe0f-200d-1f308,
+.em-flags-1f3c1,
+.em-flags-1f38c,
+.em-flags-1f1ff-1f1fc,
+.em-flags-1f1ff-1f1f2,
+.em-flags-1f1ff-1f1e6,
+.em-flags-1f1fe-1f1f9,
+.em-flags-1f1fe-1f1ea,
+.em-flags-1f1fd-1f1f0,
+.em-flags-1f1fc-1f1f8,
+.em-flags-1f1fc-1f1eb,
+.em-flags-1f1fb-1f1fa,
+.em-flags-1f1fb-1f1f3,
+.em-flags-1f1fb-1f1ee,
+.em-flags-1f1fb-1f1ec,
+.em-flags-1f1fb-1f1ea,
+.em-flags-1f1fb-1f1e8,
+.em-flags-1f1fb-1f1e6,
+.em-flags-1f1fa-1f1ff,
+.em-flags-1f1fa-1f1fe,
+.em-flags-1f1fa-1f1f8,
+.em-flags-1f1fa-1f1ec,
+.em-flags-1f1fa-1f1e6,
+.em-flags-1f1f9-1f1ff,
+.em-flags-1f1f9-1f1fc,
+.em-flags-1f1f9-1f1fb,
+.em-flags-1f1f9-1f1f9,
+.em-flags-1f1f9-1f1f7,
+.em-flags-1f1f9-1f1f4,
+.em-flags-1f1f9-1f1f3,
+.em-flags-1f1f9-1f1f2,
+.em-flags-1f1f9-1f1f1,
+.em-flags-1f1f9-1f1f0,
+.em-flags-1f1f9-1f1ef,
+.em-flags-1f1f9-1f1ed,
+.em-flags-1f1f9-1f1ec,
+.em-flags-1f1f9-1f1eb,
+.em-flags-1f1f9-1f1e9,
+.em-flags-1f1f9-1f1e8,
+.em-flags-1f1f8-1f1ff,
+.em-flags-1f1f8-1f1fe,
+.em-flags-1f1f8-1f1fd,
+.em-flags-1f1f8-1f1fb,
+.em-flags-1f1f8-1f1f9,
+.em-flags-1f1f8-1f1f8,
+.em-flags-1f1f8-1f1f7,
+.em-flags-1f1f8-1f1f4,
+.em-flags-1f1f8-1f1f3,
+.em-flags-1f1f8-1f1f2,
+.em-flags-1f1f8-1f1f1,
+.em-flags-1f1f8-1f1f0,
+.em-flags-1f1f8-1f1ee,
+.em-flags-1f1f8-1f1ed,
+.em-flags-1f1f8-1f1ec,
+.em-flags-1f1f8-1f1ea,
+.em-flags-1f1f8-1f1e9,
+.em-flags-1f1f8-1f1e8,
+.em-flags-1f1f8-1f1e7,
+.em-flags-1f1f8-1f1e6,
+.em-flags-1f1f7-1f1fc,
+.em-flags-1f1f7-1f1fa,
+.em-flags-1f1f7-1f1f8,
+.em-flags-1f1f7-1f1f4,
+.em-flags-1f1f7-1f1ea,
+.em-flags-1f1f6-1f1e6,
+.em-flags-1f1f5-1f1fe,
+.em-flags-1f1f5-1f1fc,
+.em-flags-1f1f5-1f1f9,
+.em-flags-1f1f5-1f1f8,
+.em-flags-1f1f5-1f1f7,
+.em-flags-1f1f5-1f1f3,
+.em-flags-1f1f5-1f1f2,
+.em-flags-1f1f5-1f1f1,
+.em-flags-1f1f5-1f1f0,
+.em-flags-1f1f5-1f1ed,
+.em-flags-1f1f5-1f1ec,
+.em-flags-1f1f5-1f1eb,
+.em-flags-1f1f5-1f1ea,
+.em-flags-1f1f5-1f1e6,
+.em-flags-1f1f4-1f1f2,
+.em-flags-1f1f3-1f1ff,
+.em-flags-1f1f3-1f1fa,
+.em-flags-1f1f3-1f1f7,
+.em-flags-1f1f3-1f1f5,
+.em-flags-1f1f3-1f1f4,
+.em-flags-1f1f3-1f1f1,
+.em-flags-1f1f3-1f1ee,
+.em-flags-1f1f3-1f1ec,
+.em-flags-1f1f3-1f1eb,
+.em-flags-1f1f3-1f1ea,
+.em-flags-1f1f3-1f1e8,
+.em-flags-1f1f3-1f1e6,
+.em-flags-1f1f2-1f1ff,
+.em-flags-1f1f2-1f1fe,
+.em-flags-1f1f2-1f1fd,
+.em-flags-1f1f2-1f1fc,
+.em-flags-1f1f2-1f1fb,
+.em-flags-1f1f2-1f1fa,
+.em-flags-1f1f2-1f1f9,
+.em-flags-1f1f2-1f1f8,
+.em-flags-1f1f2-1f1f7,
+.em-flags-1f1f2-1f1f6,
+.em-flags-1f1f2-1f1f5,
+.em-flags-1f1f2-1f1f4,
+.em-flags-1f1f2-1f1f3,
+.em-flags-1f1f2-1f1f2,
+.em-flags-1f1f2-1f1f1,
+.em-flags-1f1f2-1f1f0,
+.em-flags-1f1f2-1f1ed,
+.em-flags-1f1f2-1f1ec,
+.em-flags-1f1f2-1f1ea,
+.em-flags-1f1f2-1f1e9,
+.em-flags-1f1f2-1f1e8,
+.em-flags-1f1f2-1f1e6,
+.em-flags-1f1f1-1f1fe,
+.em-flags-1f1f1-1f1fb,
+.em-flags-1f1f1-1f1fa,
+.em-flags-1f1f1-1f1f9,
+.em-flags-1f1f1-1f1f8,
+.em-flags-1f1f1-1f1f7,
+.em-flags-1f1f1-1f1f0,
+.em-flags-1f1f1-1f1ee,
+.em-flags-1f1f1-1f1e8,
+.em-flags-1f1f1-1f1e7,
+.em-flags-1f1f1-1f1e6,
+.em-flags-1f1f0-1f1ff,
+.em-flags-1f1f0-1f1fe,
+.em-flags-1f1f0-1f1fc,
+.em-flags-1f1f0-1f1f7,
+.em-flags-1f1f0-1f1f5,
+.em-flags-1f1f0-1f1f3,
+.em-flags-1f1f0-1f1f2,
+.em-flags-1f1f0-1f1ee,
+.em-flags-1f1f0-1f1ed,
+.em-flags-1f1f0-1f1ec,
+.em-flags-1f1f0-1f1ea,
+.em-flags-1f1ef-1f1f5,
+.em-flags-1f1ef-1f1f4,
+.em-flags-1f1ef-1f1f2,
+.em-flags-1f1ef-1f1ea,
+.em-flags-1f1ee-1f1f9,
+.em-flags-1f1ee-1f1f8,
+.em-flags-1f1ee-1f1f7,
+.em-flags-1f1ee-1f1f6,
+.em-flags-1f1ee-1f1f4,
+.em-flags-1f1ee-1f1f3,
+.em-flags-1f1ee-1f1f2,
+.em-flags-1f1ee-1f1f1,
+.em-flags-1f1ee-1f1ea,
+.em-flags-1f1ee-1f1e9,
+.em-flags-1f1ee-1f1e8,
+.em-flags-1f1ed-1f1fa,
+.em-flags-1f1ed-1f1f9,
+.em-flags-1f1ed-1f1f7,
+.em-flags-1f1ed-1f1f3,
+.em-flags-1f1ed-1f1f0,
+.em-flags-1f1ec-1f1fe,
+.em-flags-1f1ec-1f1fc,
+.em-flags-1f1ec-1f1fa,
+.em-flags-1f1ec-1f1f9,
+.em-flags-1f1ec-1f1f8,
+.em-flags-1f1ec-1f1f7,
+.em-flags-1f1ec-1f1f6,
+.em-flags-1f1ec-1f1f5,
+.em-flags-1f1ec-1f1f3,
+.em-flags-1f1ec-1f1f2,
+.em-flags-1f1ec-1f1f1,
+.em-flags-1f1ec-1f1ee,
+.em-flags-1f1ec-1f1ed,
+.em-flags-1f1ec-1f1ec,
+.em-flags-1f1ec-1f1eb,
+.em-flags-1f1ec-1f1ea,
+.em-flags-1f1ec-1f1e9,
+.em-flags-1f1ec-1f1e7,
+.em-flags-1f1ec-1f1e6,
+.em-flags-1f1eb-1f1f7,
+.em-flags-1f1eb-1f1f4,
+.em-flags-1f1eb-1f1f2,
+.em-flags-1f1eb-1f1f0,
+.em-flags-1f1eb-1f1ef,
+.em-flags-1f1eb-1f1ee,
+.em-flags-1f1ea-1f1fa,
+.em-flags-1f1ea-1f1f9,
+.em-flags-1f1ea-1f1f8,
+.em-flags-1f1ea-1f1f7,
+.em-flags-1f1ea-1f1ed,
+.em-flags-1f1ea-1f1ec,
+.em-flags-1f1ea-1f1ea,
+.em-flags-1f1ea-1f1e8,
+.em-flags-1f1e9-1f1ff,
+.em-flags-1f1e9-1f1f4,
+.em-flags-1f1e9-1f1f2,
+.em-flags-1f1e9-1f1f0,
+.em-flags-1f1e9-1f1ef,
+.em-flags-1f1e9-1f1ea,
+.em-flags-1f1e8-1f1ff,
+.em-flags-1f1e8-1f1fe,
+.em-flags-1f1e8-1f1fd,
+.em-flags-1f1e8-1f1fc,
+.em-flags-1f1e8-1f1fb,
+.em-flags-1f1e8-1f1fa,
+.em-flags-1f1e8-1f1f7,
+.em-flags-1f1e8-1f1f4,
+.em-flags-1f1e8-1f1f3,
+.em-flags-1f1e8-1f1f2,
+.em-flags-1f1e8-1f1f1,
+.em-flags-1f1e8-1f1f0,
+.em-flags-1f1e8-1f1ee,
+.em-flags-1f1e8-1f1ed,
+.em-flags-1f1e8-1f1ec,
+.em-flags-1f1e8-1f1eb,
+.em-flags-1f1e8-1f1e9,
+.em-flags-1f1e8-1f1e8,
+.em-flags-1f1e8-1f1e6,
+.em-flags-1f1e7-1f1ff,
+.em-flags-1f1e7-1f1fe,
+.em-flags-1f1e7-1f1fc,
+.em-flags-1f1e7-1f1f9,
+.em-flags-1f1e7-1f1f8,
+.em-flags-1f1e7-1f1f7,
+.em-flags-1f1e7-1f1f6,
+.em-flags-1f1e7-1f1f4,
+.em-flags-1f1e7-1f1f3,
+.em-flags-1f1e7-1f1f2,
+.em-flags-1f1e7-1f1f1,
+.em-flags-1f1e7-1f1ef,
+.em-flags-1f1e7-1f1ee,
+.em-flags-1f1e7-1f1ed,
+.em-flags-1f1e7-1f1ec,
+.em-flags-1f1e7-1f1eb,
+.em-flags-1f1e7-1f1ea,
+.em-flags-1f1e7-1f1e9,
+.em-flags-1f1e7-1f1e7,
+.em-flags-1f1e7-1f1e6,
+.em-flags-1f1e6-1f1ff,
+.em-flags-1f1e6-1f1fd,
+.em-flags-1f1e6-1f1fc,
+.em-flags-1f1e6-1f1fa,
+.em-flags-1f1e6-1f1f9,
+.em-flags-1f1e6-1f1f8,
+.em-flags-1f1e6-1f1f7,
+.em-flags-1f1e6-1f1f6,
+.em-flags-1f1e6-1f1f4,
+.em-flags-1f1e6-1f1f2,
+.em-flags-1f1e6-1f1f1,
+.em-flags-1f1e6-1f1ee,
+.em-flags-1f1e6-1f1ec,
+.em-flags-1f1e6-1f1eb,
+.em-flags-1f1e6-1f1ea,
+.em-flags-1f1e6-1f1e9 {
+            background-image: url('flags.png?f8697e1376');
+            background-repeat: no-repeat;
+        }
+        
+        .em-flags-1f6a9 {
+            background-position: -1px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3f4 {
+            background-position: -35px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3f4-e0067-e0062-e0077-e006c-e0073-e007f {
+            background-position: -1px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3f4-e0067-e0062-e0073-e0063-e0074-e007f {
+            background-position: -35px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3f4-e0067-e0062-e0065-e006e-e0067-e007f {
+            background-position: -69px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3f4-200d-2620-fe0f {
+            background-position: -69px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3f3 {
+            background-position: -1px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3f3-fe0f-200d-1f308 {
+            background-position: -35px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f3c1 {
+            background-position: -69px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f38c {
+            background-position: -103px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ff-1f1fc {
+            background-position: -103px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ff-1f1f2 {
+            background-position: -103px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ff-1f1e6 {
+            background-position: -1px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fe-1f1f9 {
+            background-position: -35px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fe-1f1ea {
+            background-position: -69px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fd-1f1f0 {
+            background-position: -103px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fc-1f1f8 {
+            background-position: -137px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fc-1f1eb {
+            background-position: -137px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fb-1f1fa {
+            background-position: -137px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fb-1f1f3 {
+            background-position: -137px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fb-1f1ee {
+            background-position: -1px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fb-1f1ec {
+            background-position: -35px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fb-1f1ea {
+            background-position: -69px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fb-1f1e8 {
+            background-position: -103px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fb-1f1e6 {
+            background-position: -137px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fa-1f1ff {
+            background-position: -171px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fa-1f1fe {
+            background-position: -171px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fa-1f1f8 {
+            background-position: -171px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fa-1f1ec {
+            background-position: -171px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1fa-1f1e6 {
+            background-position: -171px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1ff {
+            background-position: -1px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1fc {
+            background-position: -35px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1fb {
+            background-position: -69px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1f9 {
+            background-position: -103px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1f7 {
+            background-position: -137px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1f4 {
+            background-position: -171px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1f3 {
+            background-position: -205px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1f2 {
+            background-position: -205px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1f1 {
+            background-position: -205px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1f0 {
+            background-position: -205px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1ef {
+            background-position: -205px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1ed {
+            background-position: -205px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1ec {
+            background-position: -1px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1eb {
+            background-position: -35px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1e9 {
+            background-position: -69px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f9-1f1e8 {
+            background-position: -103px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1ff {
+            background-position: -137px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1fe {
+            background-position: -171px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1fd {
+            background-position: -205px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1fb {
+            background-position: -239px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f9 {
+            background-position: -239px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f8 {
+            background-position: -239px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f7 {
+            background-position: -239px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f4 {
+            background-position: -239px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f3 {
+            background-position: -239px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f2 {
+            background-position: -239px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f1 {
+            background-position: -1px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1f0 {
+            background-position: -35px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1ee {
+            background-position: -69px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1ed {
+            background-position: -103px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1ec {
+            background-position: -137px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1ea {
+            background-position: -171px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1e9 {
+            background-position: -205px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1e8 {
+            background-position: -239px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1e7 {
+            background-position: -273px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f8-1f1e6 {
+            background-position: -273px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f7-1f1fc {
+            background-position: -273px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f7-1f1fa {
+            background-position: -273px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f7-1f1f8 {
+            background-position: -273px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f7-1f1f4 {
+            background-position: -273px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f7-1f1ea {
+            background-position: -273px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f6-1f1e6 {
+            background-position: -273px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1fe {
+            background-position: -1px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1fc {
+            background-position: -35px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1f9 {
+            background-position: -69px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1f8 {
+            background-position: -103px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1f7 {
+            background-position: -137px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1f3 {
+            background-position: -171px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1f2 {
+            background-position: -205px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1f1 {
+            background-position: -239px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1f0 {
+            background-position: -273px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1ed {
+            background-position: -307px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1ec {
+            background-position: -307px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1eb {
+            background-position: -307px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1ea {
+            background-position: -307px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f5-1f1e6 {
+            background-position: -307px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f4-1f1f2 {
+            background-position: -307px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1ff {
+            background-position: -307px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1fa {
+            background-position: -307px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1f7 {
+            background-position: -307px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1f5 {
+            background-position: -1px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1f4 {
+            background-position: -35px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1f1 {
+            background-position: -69px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1ee {
+            background-position: -103px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1ec {
+            background-position: -137px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1eb {
+            background-position: -171px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1ea {
+            background-position: -205px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1e8 {
+            background-position: -239px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f3-1f1e6 {
+            background-position: -273px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1ff {
+            background-position: -307px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1fe {
+            background-position: -341px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1fd {
+            background-position: -341px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1fc {
+            background-position: -341px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1fb {
+            background-position: -341px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1fa {
+            background-position: -341px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f9 {
+            background-position: -341px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f8 {
+            background-position: -341px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f7 {
+            background-position: -341px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f6 {
+            background-position: -341px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f5 {
+            background-position: -341px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f4 {
+            background-position: -1px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f3 {
+            background-position: -35px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f2 {
+            background-position: -69px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f1 {
+            background-position: -103px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1f0 {
+            background-position: -137px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1ed {
+            background-position: -171px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1ec {
+            background-position: -205px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1ea {
+            background-position: -239px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1e9 {
+            background-position: -273px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1e8 {
+            background-position: -307px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f2-1f1e6 {
+            background-position: -341px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1fe {
+            background-position: -375px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1fb {
+            background-position: -375px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1fa {
+            background-position: -375px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1f9 {
+            background-position: -375px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1f8 {
+            background-position: -375px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1f7 {
+            background-position: -375px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1f0 {
+            background-position: -375px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1ee {
+            background-position: -375px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1e8 {
+            background-position: -375px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1e7 {
+            background-position: -375px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f1-1f1e6 {
+            background-position: -375px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1ff {
+            background-position: -1px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1fe {
+            background-position: -35px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1fc {
+            background-position: -69px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1f7 {
+            background-position: -103px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1f5 {
+            background-position: -137px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1f3 {
+            background-position: -171px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1f2 {
+            background-position: -205px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1ee {
+            background-position: -239px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1ed {
+            background-position: -273px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1ec {
+            background-position: -307px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1f0-1f1ea {
+            background-position: -341px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ef-1f1f5 {
+            background-position: -375px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ef-1f1f4 {
+            background-position: -409px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ef-1f1f2 {
+            background-position: -409px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ef-1f1ea {
+            background-position: -409px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f9 {
+            background-position: -409px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f8 {
+            background-position: -409px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f7 {
+            background-position: -409px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f6 {
+            background-position: -409px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f4 {
+            background-position: -409px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f3 {
+            background-position: -409px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f2 {
+            background-position: -409px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1f1 {
+            background-position: -409px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1ea {
+            background-position: -409px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1e9 {
+            background-position: -1px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ee-1f1e8 {
+            background-position: -35px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ed-1f1fa {
+            background-position: -69px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ed-1f1f9 {
+            background-position: -103px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ed-1f1f7 {
+            background-position: -137px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ed-1f1f3 {
+            background-position: -171px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ed-1f1f0 {
+            background-position: -205px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1fe {
+            background-position: -239px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1fc {
+            background-position: -273px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1fa {
+            background-position: -307px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f9 {
+            background-position: -341px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f8 {
+            background-position: -375px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f7 {
+            background-position: -409px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f6 {
+            background-position: -443px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f5 {
+            background-position: -443px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f3 {
+            background-position: -443px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f2 {
+            background-position: -443px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1f1 {
+            background-position: -443px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1ee {
+            background-position: -443px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1ed {
+            background-position: -443px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1ec {
+            background-position: -443px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1eb {
+            background-position: -443px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1ea {
+            background-position: -443px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1e9 {
+            background-position: -443px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1e7 {
+            background-position: -443px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ec-1f1e6 {
+            background-position: -443px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1eb-1f1f7 {
+            background-position: -1px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1eb-1f1f4 {
+            background-position: -35px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1eb-1f1f2 {
+            background-position: -69px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1eb-1f1f0 {
+            background-position: -103px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1eb-1f1ef {
+            background-position: -137px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1eb-1f1ee {
+            background-position: -171px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1fa {
+            background-position: -205px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1f9 {
+            background-position: -239px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1f8 {
+            background-position: -273px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1f7 {
+            background-position: -307px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1ed {
+            background-position: -341px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1ec {
+            background-position: -375px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1ea {
+            background-position: -409px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1ea-1f1e8 {
+            background-position: -443px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e9-1f1ff {
+            background-position: -477px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e9-1f1f4 {
+            background-position: -477px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e9-1f1f2 {
+            background-position: -477px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e9-1f1f0 {
+            background-position: -477px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e9-1f1ef {
+            background-position: -477px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e9-1f1ea {
+            background-position: -477px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1ff {
+            background-position: -477px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1fe {
+            background-position: -477px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1fd {
+            background-position: -477px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1fc {
+            background-position: -477px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1fb {
+            background-position: -477px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1fa {
+            background-position: -477px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1f7 {
+            background-position: -477px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1f4 {
+            background-position: -477px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1f3 {
+            background-position: -1px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1f2 {
+            background-position: -35px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1f1 {
+            background-position: -69px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1f0 {
+            background-position: -103px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1ee {
+            background-position: -137px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1ed {
+            background-position: -171px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1ec {
+            background-position: -205px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1eb {
+            background-position: -239px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1e9 {
+            background-position: -273px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1e8 {
+            background-position: -307px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e8-1f1e6 {
+            background-position: -341px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1ff {
+            background-position: -375px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1fe {
+            background-position: -409px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1fc {
+            background-position: -443px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f9 {
+            background-position: -477px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f8 {
+            background-position: -511px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f7 {
+            background-position: -511px -35px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f6 {
+            background-position: -511px -69px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f4 {
+            background-position: -511px -103px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f3 {
+            background-position: -511px -137px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f2 {
+            background-position: -511px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1f1 {
+            background-position: -511px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1ef {
+            background-position: -511px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1ee {
+            background-position: -511px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1ed {
+            background-position: -511px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1ec {
+            background-position: -511px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1eb {
+            background-position: -511px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1ea {
+            background-position: -511px -409px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1e9 {
+            background-position: -511px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1e7 {
+            background-position: -511px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e7-1f1e6 {
+            background-position: -1px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1ff {
+            background-position: -35px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1fd {
+            background-position: -69px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1fc {
+            background-position: -103px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1fa {
+            background-position: -137px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1f9 {
+            background-position: -171px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1f8 {
+            background-position: -205px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1f7 {
+            background-position: -239px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1f6 {
+            background-position: -273px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1f4 {
+            background-position: -307px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1f2 {
+            background-position: -341px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1f1 {
+            background-position: -375px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1ee {
+            background-position: -409px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1ec {
+            background-position: -443px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1eb {
+            background-position: -477px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1ea {
+            background-position: -511px -511px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-flags-1f1e6-1f1e9 {
+            background-position: -545px -1px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        @media screen and (-webkit-min-device-pixel-ratio: 1.0), screen and (min--moz-device-pixel-ratio: 1.0), screen and (-o-min-device-pixel-ratio: 100/100), screen and (min-device-pixel-ratio: 1.0), screen and (min-resolution: 1.0dppx) {
+            .em-flags-1f6a9,
+    .em-flags-1f3f4,
+    .em-flags-1f3f4-e0067-e0062-e0077-e006c-e0073-e007f,
+    .em-flags-1f3f4-e0067-e0062-e0073-e0063-e0074-e007f,
+    .em-flags-1f3f4-e0067-e0062-e0065-e006e-e0067-e007f,
+    .em-flags-1f3f4-200d-2620-fe0f,
+    .em-flags-1f3f3,
+    .em-flags-1f3f3-fe0f-200d-1f308,
+    .em-flags-1f3c1,
+    .em-flags-1f38c,
+    .em-flags-1f1ff-1f1fc,
+    .em-flags-1f1ff-1f1f2,
+    .em-flags-1f1ff-1f1e6,
+    .em-flags-1f1fe-1f1f9,
+    .em-flags-1f1fe-1f1ea,
+    .em-flags-1f1fd-1f1f0,
+    .em-flags-1f1fc-1f1f8,
+    .em-flags-1f1fc-1f1eb,
+    .em-flags-1f1fb-1f1fa,
+    .em-flags-1f1fb-1f1f3,
+    .em-flags-1f1fb-1f1ee,
+    .em-flags-1f1fb-1f1ec,
+    .em-flags-1f1fb-1f1ea,
+    .em-flags-1f1fb-1f1e8,
+    .em-flags-1f1fb-1f1e6,
+    .em-flags-1f1fa-1f1ff,
+    .em-flags-1f1fa-1f1fe,
+    .em-flags-1f1fa-1f1f8,
+    .em-flags-1f1fa-1f1ec,
+    .em-flags-1f1fa-1f1e6,
+    .em-flags-1f1f9-1f1ff,
+    .em-flags-1f1f9-1f1fc,
+    .em-flags-1f1f9-1f1fb,
+    .em-flags-1f1f9-1f1f9,
+    .em-flags-1f1f9-1f1f7,
+    .em-flags-1f1f9-1f1f4,
+    .em-flags-1f1f9-1f1f3,
+    .em-flags-1f1f9-1f1f2,
+    .em-flags-1f1f9-1f1f1,
+    .em-flags-1f1f9-1f1f0,
+    .em-flags-1f1f9-1f1ef,
+    .em-flags-1f1f9-1f1ed,
+    .em-flags-1f1f9-1f1ec,
+    .em-flags-1f1f9-1f1eb,
+    .em-flags-1f1f9-1f1e9,
+    .em-flags-1f1f9-1f1e8,
+    .em-flags-1f1f8-1f1ff,
+    .em-flags-1f1f8-1f1fe,
+    .em-flags-1f1f8-1f1fd,
+    .em-flags-1f1f8-1f1fb,
+    .em-flags-1f1f8-1f1f9,
+    .em-flags-1f1f8-1f1f8,
+    .em-flags-1f1f8-1f1f7,
+    .em-flags-1f1f8-1f1f4,
+    .em-flags-1f1f8-1f1f3,
+    .em-flags-1f1f8-1f1f2,
+    .em-flags-1f1f8-1f1f1,
+    .em-flags-1f1f8-1f1f0,
+    .em-flags-1f1f8-1f1ee,
+    .em-flags-1f1f8-1f1ed,
+    .em-flags-1f1f8-1f1ec,
+    .em-flags-1f1f8-1f1ea,
+    .em-flags-1f1f8-1f1e9,
+    .em-flags-1f1f8-1f1e8,
+    .em-flags-1f1f8-1f1e7,
+    .em-flags-1f1f8-1f1e6,
+    .em-flags-1f1f7-1f1fc,
+    .em-flags-1f1f7-1f1fa,
+    .em-flags-1f1f7-1f1f8,
+    .em-flags-1f1f7-1f1f4,
+    .em-flags-1f1f7-1f1ea,
+    .em-flags-1f1f6-1f1e6,
+    .em-flags-1f1f5-1f1fe,
+    .em-flags-1f1f5-1f1fc,
+    .em-flags-1f1f5-1f1f9,
+    .em-flags-1f1f5-1f1f8,
+    .em-flags-1f1f5-1f1f7,
+    .em-flags-1f1f5-1f1f3,
+    .em-flags-1f1f5-1f1f2,
+    .em-flags-1f1f5-1f1f1,
+    .em-flags-1f1f5-1f1f0,
+    .em-flags-1f1f5-1f1ed,
+    .em-flags-1f1f5-1f1ec,
+    .em-flags-1f1f5-1f1eb,
+    .em-flags-1f1f5-1f1ea,
+    .em-flags-1f1f5-1f1e6,
+    .em-flags-1f1f4-1f1f2,
+    .em-flags-1f1f3-1f1ff,
+    .em-flags-1f1f3-1f1fa,
+    .em-flags-1f1f3-1f1f7,
+    .em-flags-1f1f3-1f1f5,
+    .em-flags-1f1f3-1f1f4,
+    .em-flags-1f1f3-1f1f1,
+    .em-flags-1f1f3-1f1ee,
+    .em-flags-1f1f3-1f1ec,
+    .em-flags-1f1f3-1f1eb,
+    .em-flags-1f1f3-1f1ea,
+    .em-flags-1f1f3-1f1e8,
+    .em-flags-1f1f3-1f1e6,
+    .em-flags-1f1f2-1f1ff,
+    .em-flags-1f1f2-1f1fe,
+    .em-flags-1f1f2-1f1fd,
+    .em-flags-1f1f2-1f1fc,
+    .em-flags-1f1f2-1f1fb,
+    .em-flags-1f1f2-1f1fa,
+    .em-flags-1f1f2-1f1f9,
+    .em-flags-1f1f2-1f1f8,
+    .em-flags-1f1f2-1f1f7,
+    .em-flags-1f1f2-1f1f6,
+    .em-flags-1f1f2-1f1f5,
+    .em-flags-1f1f2-1f1f4,
+    .em-flags-1f1f2-1f1f3,
+    .em-flags-1f1f2-1f1f2,
+    .em-flags-1f1f2-1f1f1,
+    .em-flags-1f1f2-1f1f0,
+    .em-flags-1f1f2-1f1ed,
+    .em-flags-1f1f2-1f1ec,
+    .em-flags-1f1f2-1f1ea,
+    .em-flags-1f1f2-1f1e9,
+    .em-flags-1f1f2-1f1e8,
+    .em-flags-1f1f2-1f1e6,
+    .em-flags-1f1f1-1f1fe,
+    .em-flags-1f1f1-1f1fb,
+    .em-flags-1f1f1-1f1fa,
+    .em-flags-1f1f1-1f1f9,
+    .em-flags-1f1f1-1f1f8,
+    .em-flags-1f1f1-1f1f7,
+    .em-flags-1f1f1-1f1f0,
+    .em-flags-1f1f1-1f1ee,
+    .em-flags-1f1f1-1f1e8,
+    .em-flags-1f1f1-1f1e7,
+    .em-flags-1f1f1-1f1e6,
+    .em-flags-1f1f0-1f1ff,
+    .em-flags-1f1f0-1f1fe,
+    .em-flags-1f1f0-1f1fc,
+    .em-flags-1f1f0-1f1f7,
+    .em-flags-1f1f0-1f1f5,
+    .em-flags-1f1f0-1f1f3,
+    .em-flags-1f1f0-1f1f2,
+    .em-flags-1f1f0-1f1ee,
+    .em-flags-1f1f0-1f1ed,
+    .em-flags-1f1f0-1f1ec,
+    .em-flags-1f1f0-1f1ea,
+    .em-flags-1f1ef-1f1f5,
+    .em-flags-1f1ef-1f1f4,
+    .em-flags-1f1ef-1f1f2,
+    .em-flags-1f1ef-1f1ea,
+    .em-flags-1f1ee-1f1f9,
+    .em-flags-1f1ee-1f1f8,
+    .em-flags-1f1ee-1f1f7,
+    .em-flags-1f1ee-1f1f6,
+    .em-flags-1f1ee-1f1f4,
+    .em-flags-1f1ee-1f1f3,
+    .em-flags-1f1ee-1f1f2,
+    .em-flags-1f1ee-1f1f1,
+    .em-flags-1f1ee-1f1ea,
+    .em-flags-1f1ee-1f1e9,
+    .em-flags-1f1ee-1f1e8,
+    .em-flags-1f1ed-1f1fa,
+    .em-flags-1f1ed-1f1f9,
+    .em-flags-1f1ed-1f1f7,
+    .em-flags-1f1ed-1f1f3,
+    .em-flags-1f1ed-1f1f0,
+    .em-flags-1f1ec-1f1fe,
+    .em-flags-1f1ec-1f1fc,
+    .em-flags-1f1ec-1f1fa,
+    .em-flags-1f1ec-1f1f9,
+    .em-flags-1f1ec-1f1f8,
+    .em-flags-1f1ec-1f1f7,
+    .em-flags-1f1ec-1f1f6,
+    .em-flags-1f1ec-1f1f5,
+    .em-flags-1f1ec-1f1f3,
+    .em-flags-1f1ec-1f1f2,
+    .em-flags-1f1ec-1f1f1,
+    .em-flags-1f1ec-1f1ee,
+    .em-flags-1f1ec-1f1ed,
+    .em-flags-1f1ec-1f1ec,
+    .em-flags-1f1ec-1f1eb,
+    .em-flags-1f1ec-1f1ea,
+    .em-flags-1f1ec-1f1e9,
+    .em-flags-1f1ec-1f1e7,
+    .em-flags-1f1ec-1f1e6,
+    .em-flags-1f1eb-1f1f7,
+    .em-flags-1f1eb-1f1f4,
+    .em-flags-1f1eb-1f1f2,
+    .em-flags-1f1eb-1f1f0,
+    .em-flags-1f1eb-1f1ef,
+    .em-flags-1f1eb-1f1ee,
+    .em-flags-1f1ea-1f1fa,
+    .em-flags-1f1ea-1f1f9,
+    .em-flags-1f1ea-1f1f8,
+    .em-flags-1f1ea-1f1f7,
+    .em-flags-1f1ea-1f1ed,
+    .em-flags-1f1ea-1f1ec,
+    .em-flags-1f1ea-1f1ea,
+    .em-flags-1f1ea-1f1e8,
+    .em-flags-1f1e9-1f1ff,
+    .em-flags-1f1e9-1f1f4,
+    .em-flags-1f1e9-1f1f2,
+    .em-flags-1f1e9-1f1f0,
+    .em-flags-1f1e9-1f1ef,
+    .em-flags-1f1e9-1f1ea,
+    .em-flags-1f1e8-1f1ff,
+    .em-flags-1f1e8-1f1fe,
+    .em-flags-1f1e8-1f1fd,
+    .em-flags-1f1e8-1f1fc,
+    .em-flags-1f1e8-1f1fb,
+    .em-flags-1f1e8-1f1fa,
+    .em-flags-1f1e8-1f1f7,
+    .em-flags-1f1e8-1f1f4,
+    .em-flags-1f1e8-1f1f3,
+    .em-flags-1f1e8-1f1f2,
+    .em-flags-1f1e8-1f1f1,
+    .em-flags-1f1e8-1f1f0,
+    .em-flags-1f1e8-1f1ee,
+    .em-flags-1f1e8-1f1ed,
+    .em-flags-1f1e8-1f1ec,
+    .em-flags-1f1e8-1f1eb,
+    .em-flags-1f1e8-1f1e9,
+    .em-flags-1f1e8-1f1e8,
+    .em-flags-1f1e8-1f1e6,
+    .em-flags-1f1e7-1f1ff,
+    .em-flags-1f1e7-1f1fe,
+    .em-flags-1f1e7-1f1fc,
+    .em-flags-1f1e7-1f1f9,
+    .em-flags-1f1e7-1f1f8,
+    .em-flags-1f1e7-1f1f7,
+    .em-flags-1f1e7-1f1f6,
+    .em-flags-1f1e7-1f1f4,
+    .em-flags-1f1e7-1f1f3,
+    .em-flags-1f1e7-1f1f2,
+    .em-flags-1f1e7-1f1f1,
+    .em-flags-1f1e7-1f1ef,
+    .em-flags-1f1e7-1f1ee,
+    .em-flags-1f1e7-1f1ed,
+    .em-flags-1f1e7-1f1ec,
+    .em-flags-1f1e7-1f1eb,
+    .em-flags-1f1e7-1f1ea,
+    .em-flags-1f1e7-1f1e9,
+    .em-flags-1f1e7-1f1e7,
+    .em-flags-1f1e7-1f1e6,
+    .em-flags-1f1e6-1f1ff,
+    .em-flags-1f1e6-1f1fd,
+    .em-flags-1f1e6-1f1fc,
+    .em-flags-1f1e6-1f1fa,
+    .em-flags-1f1e6-1f1f9,
+    .em-flags-1f1e6-1f1f8,
+    .em-flags-1f1e6-1f1f7,
+    .em-flags-1f1e6-1f1f6,
+    .em-flags-1f1e6-1f1f4,
+    .em-flags-1f1e6-1f1f2,
+    .em-flags-1f1e6-1f1f1,
+    .em-flags-1f1e6-1f1ee,
+    .em-flags-1f1e6-1f1ec,
+    .em-flags-1f1e6-1f1eb,
+    .em-flags-1f1e6-1f1ea,
+    .em-flags-1f1e6-1f1e9 {
+                background-image: url('flags.png?f8697e1376');
+                -webkit-background-size: 578px 544px;
+                -moz-background-size: 578px 544px;
+                background-size: 578px 544px;
+            }
+        }
+        
+        @media screen and (-webkit-min-device-pixel-ratio: 2.0), screen and (min--moz-device-pixel-ratio: 2.0), screen and (-o-min-device-pixel-ratio: 200/100), screen and (min-device-pixel-ratio: 2.0), screen and (min-resolution: 2.0dppx) {
+            .em-flags-1f6a9,
+    .em-flags-1f3f4,
+    .em-flags-1f3f4-e0067-e0062-e0077-e006c-e0073-e007f,
+    .em-flags-1f3f4-e0067-e0062-e0073-e0063-e0074-e007f,
+    .em-flags-1f3f4-e0067-e0062-e0065-e006e-e0067-e007f,
+    .em-flags-1f3f4-200d-2620-fe0f,
+    .em-flags-1f3f3,
+    .em-flags-1f3f3-fe0f-200d-1f308,
+    .em-flags-1f3c1,
+    .em-flags-1f38c,
+    .em-flags-1f1ff-1f1fc,
+    .em-flags-1f1ff-1f1f2,
+    .em-flags-1f1ff-1f1e6,
+    .em-flags-1f1fe-1f1f9,
+    .em-flags-1f1fe-1f1ea,
+    .em-flags-1f1fd-1f1f0,
+    .em-flags-1f1fc-1f1f8,
+    .em-flags-1f1fc-1f1eb,
+    .em-flags-1f1fb-1f1fa,
+    .em-flags-1f1fb-1f1f3,
+    .em-flags-1f1fb-1f1ee,
+    .em-flags-1f1fb-1f1ec,
+    .em-flags-1f1fb-1f1ea,
+    .em-flags-1f1fb-1f1e8,
+    .em-flags-1f1fb-1f1e6,
+    .em-flags-1f1fa-1f1ff,
+    .em-flags-1f1fa-1f1fe,
+    .em-flags-1f1fa-1f1f8,
+    .em-flags-1f1fa-1f1ec,
+    .em-flags-1f1fa-1f1e6,
+    .em-flags-1f1f9-1f1ff,
+    .em-flags-1f1f9-1f1fc,
+    .em-flags-1f1f9-1f1fb,
+    .em-flags-1f1f9-1f1f9,
+    .em-flags-1f1f9-1f1f7,
+    .em-flags-1f1f9-1f1f4,
+    .em-flags-1f1f9-1f1f3,
+    .em-flags-1f1f9-1f1f2,
+    .em-flags-1f1f9-1f1f1,
+    .em-flags-1f1f9-1f1f0,
+    .em-flags-1f1f9-1f1ef,
+    .em-flags-1f1f9-1f1ed,
+    .em-flags-1f1f9-1f1ec,
+    .em-flags-1f1f9-1f1eb,
+    .em-flags-1f1f9-1f1e9,
+    .em-flags-1f1f9-1f1e8,
+    .em-flags-1f1f8-1f1ff,
+    .em-flags-1f1f8-1f1fe,
+    .em-flags-1f1f8-1f1fd,
+    .em-flags-1f1f8-1f1fb,
+    .em-flags-1f1f8-1f1f9,
+    .em-flags-1f1f8-1f1f8,
+    .em-flags-1f1f8-1f1f7,
+    .em-flags-1f1f8-1f1f4,
+    .em-flags-1f1f8-1f1f3,
+    .em-flags-1f1f8-1f1f2,
+    .em-flags-1f1f8-1f1f1,
+    .em-flags-1f1f8-1f1f0,
+    .em-flags-1f1f8-1f1ee,
+    .em-flags-1f1f8-1f1ed,
+    .em-flags-1f1f8-1f1ec,
+    .em-flags-1f1f8-1f1ea,
+    .em-flags-1f1f8-1f1e9,
+    .em-flags-1f1f8-1f1e8,
+    .em-flags-1f1f8-1f1e7,
+    .em-flags-1f1f8-1f1e6,
+    .em-flags-1f1f7-1f1fc,
+    .em-flags-1f1f7-1f1fa,
+    .em-flags-1f1f7-1f1f8,
+    .em-flags-1f1f7-1f1f4,
+    .em-flags-1f1f7-1f1ea,
+    .em-flags-1f1f6-1f1e6,
+    .em-flags-1f1f5-1f1fe,
+    .em-flags-1f1f5-1f1fc,
+    .em-flags-1f1f5-1f1f9,
+    .em-flags-1f1f5-1f1f8,
+    .em-flags-1f1f5-1f1f7,
+    .em-flags-1f1f5-1f1f3,
+    .em-flags-1f1f5-1f1f2,
+    .em-flags-1f1f5-1f1f1,
+    .em-flags-1f1f5-1f1f0,
+    .em-flags-1f1f5-1f1ed,
+    .em-flags-1f1f5-1f1ec,
+    .em-flags-1f1f5-1f1eb,
+    .em-flags-1f1f5-1f1ea,
+    .em-flags-1f1f5-1f1e6,
+    .em-flags-1f1f4-1f1f2,
+    .em-flags-1f1f3-1f1ff,
+    .em-flags-1f1f3-1f1fa,
+    .em-flags-1f1f3-1f1f7,
+    .em-flags-1f1f3-1f1f5,
+    .em-flags-1f1f3-1f1f4,
+    .em-flags-1f1f3-1f1f1,
+    .em-flags-1f1f3-1f1ee,
+    .em-flags-1f1f3-1f1ec,
+    .em-flags-1f1f3-1f1eb,
+    .em-flags-1f1f3-1f1ea,
+    .em-flags-1f1f3-1f1e8,
+    .em-flags-1f1f3-1f1e6,
+    .em-flags-1f1f2-1f1ff,
+    .em-flags-1f1f2-1f1fe,
+    .em-flags-1f1f2-1f1fd,
+    .em-flags-1f1f2-1f1fc,
+    .em-flags-1f1f2-1f1fb,
+    .em-flags-1f1f2-1f1fa,
+    .em-flags-1f1f2-1f1f9,
+    .em-flags-1f1f2-1f1f8,
+    .em-flags-1f1f2-1f1f7,
+    .em-flags-1f1f2-1f1f6,
+    .em-flags-1f1f2-1f1f5,
+    .em-flags-1f1f2-1f1f4,
+    .em-flags-1f1f2-1f1f3,
+    .em-flags-1f1f2-1f1f2,
+    .em-flags-1f1f2-1f1f1,
+    .em-flags-1f1f2-1f1f0,
+    .em-flags-1f1f2-1f1ed,
+    .em-flags-1f1f2-1f1ec,
+    .em-flags-1f1f2-1f1ea,
+    .em-flags-1f1f2-1f1e9,
+    .em-flags-1f1f2-1f1e8,
+    .em-flags-1f1f2-1f1e6,
+    .em-flags-1f1f1-1f1fe,
+    .em-flags-1f1f1-1f1fb,
+    .em-flags-1f1f1-1f1fa,
+    .em-flags-1f1f1-1f1f9,
+    .em-flags-1f1f1-1f1f8,
+    .em-flags-1f1f1-1f1f7,
+    .em-flags-1f1f1-1f1f0,
+    .em-flags-1f1f1-1f1ee,
+    .em-flags-1f1f1-1f1e8,
+    .em-flags-1f1f1-1f1e7,
+    .em-flags-1f1f1-1f1e6,
+    .em-flags-1f1f0-1f1ff,
+    .em-flags-1f1f0-1f1fe,
+    .em-flags-1f1f0-1f1fc,
+    .em-flags-1f1f0-1f1f7,
+    .em-flags-1f1f0-1f1f5,
+    .em-flags-1f1f0-1f1f3,
+    .em-flags-1f1f0-1f1f2,
+    .em-flags-1f1f0-1f1ee,
+    .em-flags-1f1f0-1f1ed,
+    .em-flags-1f1f0-1f1ec,
+    .em-flags-1f1f0-1f1ea,
+    .em-flags-1f1ef-1f1f5,
+    .em-flags-1f1ef-1f1f4,
+    .em-flags-1f1ef-1f1f2,
+    .em-flags-1f1ef-1f1ea,
+    .em-flags-1f1ee-1f1f9,
+    .em-flags-1f1ee-1f1f8,
+    .em-flags-1f1ee-1f1f7,
+    .em-flags-1f1ee-1f1f6,
+    .em-flags-1f1ee-1f1f4,
+    .em-flags-1f1ee-1f1f3,
+    .em-flags-1f1ee-1f1f2,
+    .em-flags-1f1ee-1f1f1,
+    .em-flags-1f1ee-1f1ea,
+    .em-flags-1f1ee-1f1e9,
+    .em-flags-1f1ee-1f1e8,
+    .em-flags-1f1ed-1f1fa,
+    .em-flags-1f1ed-1f1f9,
+    .em-flags-1f1ed-1f1f7,
+    .em-flags-1f1ed-1f1f3,
+    .em-flags-1f1ed-1f1f0,
+    .em-flags-1f1ec-1f1fe,
+    .em-flags-1f1ec-1f1fc,
+    .em-flags-1f1ec-1f1fa,
+    .em-flags-1f1ec-1f1f9,
+    .em-flags-1f1ec-1f1f8,
+    .em-flags-1f1ec-1f1f7,
+    .em-flags-1f1ec-1f1f6,
+    .em-flags-1f1ec-1f1f5,
+    .em-flags-1f1ec-1f1f3,
+    .em-flags-1f1ec-1f1f2,
+    .em-flags-1f1ec-1f1f1,
+    .em-flags-1f1ec-1f1ee,
+    .em-flags-1f1ec-1f1ed,
+    .em-flags-1f1ec-1f1ec,
+    .em-flags-1f1ec-1f1eb,
+    .em-flags-1f1ec-1f1ea,
+    .em-flags-1f1ec-1f1e9,
+    .em-flags-1f1ec-1f1e7,
+    .em-flags-1f1ec-1f1e6,
+    .em-flags-1f1eb-1f1f7,
+    .em-flags-1f1eb-1f1f4,
+    .em-flags-1f1eb-1f1f2,
+    .em-flags-1f1eb-1f1f0,
+    .em-flags-1f1eb-1f1ef,
+    .em-flags-1f1eb-1f1ee,
+    .em-flags-1f1ea-1f1fa,
+    .em-flags-1f1ea-1f1f9,
+    .em-flags-1f1ea-1f1f8,
+    .em-flags-1f1ea-1f1f7,
+    .em-flags-1f1ea-1f1ed,
+    .em-flags-1f1ea-1f1ec,
+    .em-flags-1f1ea-1f1ea,
+    .em-flags-1f1ea-1f1e8,
+    .em-flags-1f1e9-1f1ff,
+    .em-flags-1f1e9-1f1f4,
+    .em-flags-1f1e9-1f1f2,
+    .em-flags-1f1e9-1f1f0,
+    .em-flags-1f1e9-1f1ef,
+    .em-flags-1f1e9-1f1ea,
+    .em-flags-1f1e8-1f1ff,
+    .em-flags-1f1e8-1f1fe,
+    .em-flags-1f1e8-1f1fd,
+    .em-flags-1f1e8-1f1fc,
+    .em-flags-1f1e8-1f1fb,
+    .em-flags-1f1e8-1f1fa,
+    .em-flags-1f1e8-1f1f7,
+    .em-flags-1f1e8-1f1f4,
+    .em-flags-1f1e8-1f1f3,
+    .em-flags-1f1e8-1f1f2,
+    .em-flags-1f1e8-1f1f1,
+    .em-flags-1f1e8-1f1f0,
+    .em-flags-1f1e8-1f1ee,
+    .em-flags-1f1e8-1f1ed,
+    .em-flags-1f1e8-1f1ec,
+    .em-flags-1f1e8-1f1eb,
+    .em-flags-1f1e8-1f1e9,
+    .em-flags-1f1e8-1f1e8,
+    .em-flags-1f1e8-1f1e6,
+    .em-flags-1f1e7-1f1ff,
+    .em-flags-1f1e7-1f1fe,
+    .em-flags-1f1e7-1f1fc,
+    .em-flags-1f1e7-1f1f9,
+    .em-flags-1f1e7-1f1f8,
+    .em-flags-1f1e7-1f1f7,
+    .em-flags-1f1e7-1f1f6,
+    .em-flags-1f1e7-1f1f4,
+    .em-flags-1f1e7-1f1f3,
+    .em-flags-1f1e7-1f1f2,
+    .em-flags-1f1e7-1f1f1,
+    .em-flags-1f1e7-1f1ef,
+    .em-flags-1f1e7-1f1ee,
+    .em-flags-1f1e7-1f1ed,
+    .em-flags-1f1e7-1f1ec,
+    .em-flags-1f1e7-1f1eb,
+    .em-flags-1f1e7-1f1ea,
+    .em-flags-1f1e7-1f1e9,
+    .em-flags-1f1e7-1f1e7,
+    .em-flags-1f1e7-1f1e6,
+    .em-flags-1f1e6-1f1ff,
+    .em-flags-1f1e6-1f1fd,
+    .em-flags-1f1e6-1f1fc,
+    .em-flags-1f1e6-1f1fa,
+    .em-flags-1f1e6-1f1f9,
+    .em-flags-1f1e6-1f1f8,
+    .em-flags-1f1e6-1f1f7,
+    .em-flags-1f1e6-1f1f6,
+    .em-flags-1f1e6-1f1f4,
+    .em-flags-1f1e6-1f1f2,
+    .em-flags-1f1e6-1f1f1,
+    .em-flags-1f1e6-1f1ee,
+    .em-flags-1f1e6-1f1ec,
+    .em-flags-1f1e6-1f1eb,
+    .em-flags-1f1e6-1f1ea,
+    .em-flags-1f1e6-1f1e9 {
+                background-image: url('flags@2x.png?f8697e1376');
+                -webkit-background-size: 578px 544px;
+                -moz-background-size: 578px 544px;
+                background-size: 578px 544px;
+            }
+        }
+        

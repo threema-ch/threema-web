@@ -1,12 +1,12 @@
-.emojione-picker {
-    min-height: 216px;
+.twemoji-picker {
     margin: 0;
-    padding: 0 8px 0;
     background-color: $background-grey;
+    padding: 0 8px;
+    min-height: 216px;
 
     &.outline {
-        border-radius: 4px;
         border: 2px solid #dbdbdb;
+        border-radius: 4px;
         width: 366px;
     }
 }
@@ -14,64 +14,59 @@
 .tab {
     float: left;
 
-    .e1 {
-        @include mouse-hand;
+    .em {
+        display: inline-block;
+        margin-right: 5px;
         margin-bottom: 8px;
-        transform: scale(1.0);
-        margin-right: 4px;
-        margin-bottom: 12px;
+        cursor: pointer;
+        text-indent: -99999px;
     }
 
     label {
-        background: $background-grey;
         display: block;
-        height: 32px;
-        padding: 4px;
-        border: 1px solid $background-grey;
         position: relative;
         left: 1px;
         margin-left: -1px;
-        .e1 {
-            top: 3px;
-            left: 3px;
+        border: 1px solid $background-grey;
+        background: $background-grey;
+        cursor: pointer;
+        padding: 4px;
+        height: 32px;
+
+        img {
+            position: relative;
+            margin: 3px 4px 0;
         }
     }
 
     .content {
+        @include scrollbar;
         position: absolute;
         top: 32px + 8px + 1px;
-        left: 0;
         right: 0;
         bottom: 0;
-        padding: 16px 4px 0;
-        background: white;
-        border: 1px solid white;
+        left: 0;
+        border: 1px solid #ffffff;
+        background: #ffffff;
+        padding: 10px 10px 0;
         overflow-y: scroll;
+
         &::selection {
-            background: rgba(255, 255, 255, 0.0);
+            background: rgba(255, 255, 255, 0);
         }
     }
 
-    [type=radio] {
+    [type='radio'] {
         display: none;
-    }
 
-    [type=radio]:checked ~ label {
-        background: white;
-        border-bottom: 1px solid white;
-        z-index: 2;
-    }
+        &:checked ~ label {
+            z-index: 2;
+            border-bottom: 1px solid #ffffff;
+            background: #ffffff;
+        }
 
-    [type=radio]:checked ~ label ~ .content {
-        z-index: 1;
-    }
-
-    ::-webkit-scrollbar {
-        background-color: white;
-        border: 1px solid white;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background-color: #dbdbdb;
+        &:checked ~ label ~ .content {
+            z-index: 1;
+        }
     }
 }

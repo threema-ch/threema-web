@@ -3,15 +3,21 @@
 <head>
     <meta charset="utf-8">
 
-    <!-- Third party -->
-    <script src="../../public/libs/emojione/emojione.min.js?v=[[VERSION]]"></script>
-
     <!-- Third party stylesheets -->
     <link rel="stylesheet" href="../../node_modules/angular/angular-csp.css?v=[[VERSION]]">
     <link rel="stylesheet" href="../../node_modules/angular-material/angular-material.min.css?v=[[VERSION]]">
-    <link rel="stylesheet" href="../../public/libs/emojione/emojione-sprite-32.min.css?v=[[VERSION]]">
     <link rel="stylesheet" href="../../public/fonts/roboto.css?v=[[VERSION]]" type="text/css">
     <link rel="stylesheet" href="../../public/fonts/material.css?v=[[VERSION]]" type="text/css">
+
+    <!-- Emoji -->
+    <link rel="stylesheet" href="../../public/emoji/activity.css?v=[[VERSION]]" type="text/css" media="all" />
+    <link rel="stylesheet" href="../../public/emoji/flags.css?v=[[VERSION]]" type="text/css" media="all" />
+    <link rel="stylesheet" href="../../public/emoji/food.css?v=[[VERSION]]" type="text/css" media="all" />
+    <link rel="stylesheet" href="../../public/emoji/nature.css?v=[[VERSION]]" type="text/css" media="all" />
+    <link rel="stylesheet" href="../../public/emoji/objects.css?v=[[VERSION]]" type="text/css" media="all" />
+    <link rel="stylesheet" href="../../public/emoji/people.css?v=[[VERSION]]" type="text/css" media="all" />
+    <link rel="stylesheet" href="../../public/emoji/symbols.css?v=[[VERSION]]" type="text/css" media="all" />
+    <link rel="stylesheet" href="../../public/emoji/travel.css?v=[[VERSION]]" type="text/css" media="all" />
 
     <!-- Own stylesheets -->
     <link rel="stylesheet" href="../../public/css/app.css?v=[[VERSION]]">
@@ -30,8 +36,7 @@
             stop-typing="ctrl.stopTyping"
             on-key-down="ctrl.onComposeKeyDown"
             on-uploading="ctrl.onUploading"
-            max-text-length="ctrl.maxTextLength"
-            emoji-image-path="../../public/img/e1/">
+            max-text-length="ctrl.maxTextLength">
         </compose-area>
     <div>
 </body>

@@ -54,6 +54,46 @@ jobs:
             - v2-dependencies-test-node8-{{ arch }}-{{ checksum "package.json" }}
       - run: npm install
       - run: npm run lint
+  docker-build:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: docker build . --no-cache
+  docker-push-branch:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: >
+          docker build .  --no-cache -t threema/threema-web:${CIRCLE_BRANCH}
+          && docker login -u $DOCKER_USER -p $DOCKER_API_KEY
+          && docker push threema/threema-web
+  docker-push-tag:
+    docker:
+      - image: docker:stable
+    environment:
+      IMAGE: threema/threema-web
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: >
+          export minortag=$(echo $CIRCLE_TAG | sed 's/^\(v[0-9]*\.[0-9]*\)\..*$/\1/')
+                 majortag=$(echo $CIRCLE_TAG | sed 's/^\(v[0-9]*\)\..*$/\1/')
+          && docker build .  --no-cache -t $IMAGE:$CIRCLE_TAG -t $IMAGE:$minortag -t $IMAGE:$majortag
+          && docker login -u $DOCKER_USER -p $DOCKER_API_KEY
+          && docker push threema/threema-web
+  docker-rebuild-images:
+    docker:
+      - image: docker:stable
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: apk update && apk add bash git
+      - run: /bin/bash docker/rebuild.sh
+
 
 workflows:
   version: 2
@@ -64,3 +104,25 @@ workflows:
       - uitest-firefox
       - uitest-chrome
       - lint
+      - docker-build:
+          filters:
+            branches:
+              ignore: master
+      - docker-push-branch:
+          filters:
+            branches:
+              only: master
+      - docker-push-tag:
+          filters:
+            branches:
+              only: /v[0-9.]*/
+  rebuild-images:
+    triggers:
+      - schedule:
+          cron: "30 5 * * 1,4"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - docker-rebuild-images

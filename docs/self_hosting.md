@@ -22,7 +22,7 @@ that is required to host it is a web server that can deliver static content via
 https. We recommend using Nginx. Additionally, to build the release version
 yourself, a recent version of npm is required.
 
-### Building
+### Building from source
 
 You can get the source code from Github:
 
@@ -52,15 +52,23 @@ SaltyRTC/STUN/TURN servers.
 
 Cryptographic signatures are provided for the downloads.
 
+### Docker Image
+
+If you're interested in hosting Threema Web through Docker, check out the
+`docs/docker.md` file for more information.
+
+
 ## SaltyRTC Server
 
 For instructions on how to run your own SaltyRTC server, see
 https://github.com/saltyrtc/saltyrtc-server-python
 
+
 ## STUN / TURN Server
 
 You can run any WebRTC-compliant STUN / TURN server, e.g.
 [coturn](https://coturn.github.io).
+
 
 ## Push Relay
 

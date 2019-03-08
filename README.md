@@ -2,6 +2,7 @@
 
 [![Build status](https://circleci.com/gh/threema-ch/threema-web.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/threema-ch/threema-web)
 [![License](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://github.com/threema-ch/threema-web/blob/master/LICENSE.txt)
+[![Docker Image](https://img.shields.io/badge/docker%20image-threema%2Fthreema--web-yellow.svg)](https://hub.docker.com/r/threema/threema-web)
 
 Threema Web is a web client for Threema, a privacy-focussed end-to-end
 encrypted mobile messenger hosted and developed in Switzerland. With Threema
@@ -33,8 +34,14 @@ We will factor this in when scheduling what to do next.
 
 ## Translating
 
-If you want to help translating Threema Web to your language, plese check out
+If you want to help translating Threema Web to your language, please check out
 [`TRANSLATING.md`](./TRANSLATING.md)!
+
+
+## Protocol
+
+The protocol used to communicate between the Threema app and Threema Web
+is documented [here](https://threema-ch.github.io/app-remote-protocol/).
 
 
 ## Development
@@ -145,17 +152,12 @@ signed using the following PGP key:
           E7AD D991 4E26 0E8B 35DF  B506 65FD E935 573A CDA6
     uid           Threema Signing Key <dev@threema.ch>
 
+The public key can be found [on Keybase](https://keybase.io/threema).
+
 If you discover a security issue in the Threema Web, please follow responsible
-disclosure and report it directly to `security2018@threema.ch` instead of
-opening an issue on Github.
-
-    pub   rsa4096 2017-02-08 [SC] [expires: 2022-02-07]
-          677E 0E97 1669 53B3 2620  D95C 71B9 C6BA C55A 9855
-    uid           Threema Security <security2018@threema.ch>
-
-You can find both public keys and their proofs [on
-keybase](https://keybase.io/threema). The security reporting key can also be
-found at [threema.ch/security.asc](https://threema.ch/security.asc).
+disclosure and report it directly to Threema instead of opening an issue on
+Github. You can find the security e-mail as well as the PGP public key at
+https://threema.ch/en/contact.
 
 
 ## License
@@ -164,7 +166,7 @@ Threema Web license:
 
     Threema Web.
 
-    Copyright © 2016-2018 Threema GmbH (https://threema.ch/).
+    Copyright © 2016-2019 Threema GmbH (https://threema.ch/).
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as

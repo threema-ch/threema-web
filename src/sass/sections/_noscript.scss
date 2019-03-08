@@ -1,18 +1,18 @@
 noscript {
     div {
-        background-color: white;
         display: block;
         margin: 16px auto 0;
+        background-color: #ffffff;
+        padding: 16px;
         width: 50%;
         text-align: center;
-        padding: 16px;
     }
 
-    img#logo-noscript {
+    #logo-noscript {
         display: block;
+        margin: 16px auto;
         min-width: 100px;
         max-width: 300px;
-        margin: 16px auto;
         text-align: center;
     }
 

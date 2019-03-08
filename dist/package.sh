@@ -9,6 +9,13 @@ echo -e "  |_| |_|_|_| |___|___|_|_|_|__,|_____|___|___|\e[32m|_|\e[0m\n"
 
 echo -e "Creating release distribution for Threema Web\n"
 
+# Determine suffix
+if [ $# -gt 0 ]; then
+    SUFFIX="$1"
+else
+    SUFFIX=""
+fi
+
 # Test whether we're in the root dir
 if [ ! -f "package.json" ]; then
     echo "Error: package.json not found."
@@ -28,7 +35,8 @@ if [ -e "release" ]; then
     done
 fi
 
-VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')
+VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')$SUFFIX
+echo "+ Building version $VERSION"
 
 DIR="release/threema-web-$VERSION"
 
@@ -53,7 +61,6 @@ targets=(
     angular-animate/angular-animate.min.js
     angular-sanitize/angular-sanitize.min.js
     angular-route/angular-route.min.js
-    babel-es6-polyfill/browser-polyfill.min.js
     msgpack-lite/dist/msgpack.min.js
     tweetnacl/nacl-fast.min.js
     @saltyrtc/chunked-dc/dist/chunked-dc.es5.js
@@ -70,7 +77,6 @@ targets=(
     angular-material/angular-material.min.css
     croppie/croppie.min.js
     croppie/croppie.css
-    autolinker/dist/Autolinker.min.js
     @uirouter/angularjs/release/angular-ui-router.min.js
     messageformat/messageformat.min.js
     angular-translate/dist/angular-translate.min.js
@@ -85,11 +91,13 @@ for target in "${targets[@]}"; do
     else
         install -D "node_modules/$target" "$DIR/node_modules/$target"
     fi
+    # Note: The `-i.bak` notation is required so that the sed command works both on Linux
+    # and on macOS: https://stackoverflow.com/q/5694228/284318
+    sed -i.bak "/sourceMappingURL/d" "$DIR/node_modules/$target"
+    rm "$DIR/node_modules/$target.bak"
 done
 
 echo "+ Update version number..."
-# Note: The `-i.bak` notation is requires so that the sed command works both on Linux
-# and on macOS: https://stackoverflow.com/q/5694228/284318
 sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.js $DIR/manifest.webmanifest $DIR/browserconfig.xml $DIR/version.txt
 rm $DIR/index.html.bak $DIR/troubleshoot/index.html.bak $DIR/dist/app.js.bak $DIR/manifest.webmanifest.bak $DIR/browserconfig.xml.bak $DIR/version.txt.bak
 
