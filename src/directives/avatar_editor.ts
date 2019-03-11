@@ -15,6 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// tslint:disable:no-reference
+/// <reference path="../types/croppie.d.ts" />
+
 // tslint:disable:max-line-length
 
 import {bufferToUrl, logAdapter} from '../helpers';
@@ -41,47 +44,41 @@ export default [
                 const editorArea: any = angular.element(element[0].querySelector('.avatar-editor'));
                 const fileTrigger: any = angular.element(element[0].querySelector('.file-trigger'));
                 const fileInput: any = angular.element(element[0].querySelector('input.file-input'));
-                // const avatarRemove: any = angular.element(element[0].querySelector('.avatar-remove'));
-                // const navigation: any = angular.element(element[0].querySelector('.avatar-area-navigation'));
-                const enabled = scope.enabled === undefined || scope.enabled === true;
 
-                let croppieInstance = null;
-                const initCroppie = () => {
-                    if (croppieInstance !== null) {
-                        return croppieInstance;
-                    }
-                    croppieInstance = new Croppie(element[0].querySelector('.croppie-target'), {
-                        viewport: {
-                            type: 'square',
-                            width: VIEWPORT_SIZE,
-                            height: VIEWPORT_SIZE,
-                        },
-                        customClass: 'has-image',
-                        showZoomer: true,
-                        update() {
-                            if (updateTimeout !== undefined) {
-                                clearTimeout(updateTimeout);
-                            }
-
-                            updateTimeout = self.setTimeout(() => {
-                                croppieInstance.result({
-                                    type: 'blob',
-                                    // max allowed size on device
-                                    size: [512, 512],
-                                    circle: false,
-                                    format: 'png',
-                                })
-                                    .then((blob: Blob) => {
-                                        const fileReader = new FileReader();
-                                        fileReader.onload = function() {
-                                            scope.onChange(this.result);
-                                        };
-                                        fileReader.readAsArrayBuffer(blob);
+                let croppieInstance: Croppie = null;
+                const initCroppie = (): Croppie => {
+                    if (croppieInstance === null) {
+                        // Create croppie
+                        const croppieTarget: HTMLElement = element[0].querySelector('.croppie-target');
+                        croppieInstance = new Croppie(croppieTarget, {
+                            viewport: {
+                                type: 'square',
+                                width: VIEWPORT_SIZE,
+                                height: VIEWPORT_SIZE,
+                            },
+                            customClass: 'has-image',
+                            showZoomer: true,
+                            update: (): void => {
+                                if (updateTimeout !== undefined) {
+                                    clearTimeout(updateTimeout);
+                                }
+                                updateTimeout = self.setTimeout(async () => {
+                                    const image: Blob = await croppieInstance.result({
+                                        type: 'blob',
+                                        // TODO: Should be retrieved from clientInfo once available
+                                        size: { width: 512, height: 512 },
+                                        circle: false,
+                                        format: 'png',
                                     });
-                            }, 500);
-                        },
-                    });
-
+                                    const fileReader = new FileReader();
+                                    fileReader.onload = function() {
+                                        scope.onChange(fileReader.result);
+                                    };
+                                    fileReader.readAsArrayBuffer(image);
+                                }, 500);
+                            },
+                        });
+                    }
                     return croppieInstance;
                 };
 
@@ -92,6 +89,7 @@ export default [
                         editorArea.removeClass('loading');
                     }
                 }
+
                 // set after default avatar is set
                 let updateTimeout;
 
@@ -172,50 +170,36 @@ export default [
                     uploadFiles(this.files);
                 }
 
-                function setImage(newImage: any) {
+                function setImage(imageBase64Url: string) {
                     const croppie = initCroppie();
-
-                    if (newImage === null) {
-                        // set a none image
-                        // TODO
-                        croppie.bind({
-                            url: null,
-                        });
-
-                        scope.onChange(null);
-                        return;
-                    }
-
                     loading(true);
+
                     // load image to calculate size
                     const img = new Image();
-                    img.addEventListener('load', function() {
+                    img.addEventListener('load', async () => {
                         $log.debug(logTag, 'Image loaded');
 
-                        const w = this.naturalWidth;
-                        const h = this.naturalHeight;
+                        const w = img.naturalWidth;
+                        const h = img.naturalHeight;
                         const size = Math.min(w, h);
 
                         // set to center
-                        const imageSize = [
+                        const imageSize: [number, number, number, number] = [
                             (w - size) / 2,
                             (h - size) / 2,
                             size,
-                            size];
+                            size,
+                        ];
 
-                        croppie.bind({
-                            url: newImage,
-                            points: imageSize,
-                        }).then(() => {
-                            loading(false);
-                        }).catch((e) => {
-                            $log.error(logTag, 'Could not bind avatar preview:', e);
-                            loading(false);
-                        });
-
-                        if (newImage === null) {
-                            scope.onChange(null);
+                        try {
+                            await croppie.bind({
+                                url: imageBase64Url,
+                                points: imageSize,
+                            });
+                        } catch (error) {
+                            $log.error(logTag, 'Could not bind avatar preview:', error);
                         }
+                        loading(false);
                     });
 
                     img.addEventListener('error', function(e) {
@@ -224,7 +208,7 @@ export default [
                         loading(false);
                     });
 
-                    img.src = newImage;
+                    img.src = imageBase64Url;
 
                 }
 
@@ -240,16 +224,6 @@ export default [
 
                 // Handle file uploads
                 fileInput.on('change', onFileUploaded);
-
-                // Handle remove
-                if (scope.enableClear !== undefined && scope.enableClear === true) {
-                    // avatarRemove.on('click', () => {
-                    //     setImage(null);
-                    // });
-                } else {
-                    // remove element if clear disabled
-                    // avatarRemove.remove();
-                }
 
             },
             template: `

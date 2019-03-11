@@ -286,7 +286,7 @@ export function hasFeature(contactReceiver: threema.ContactReceiver,
 /**
  * Convert an ArrayBuffer to a data URL.
  */
-export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (msg: string) => void) {
+export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (msg: string) => void): string {
     if (buffer === null || buffer === undefined) {
         throw new Error('Called bufferToUrl on null or undefined');
     }
