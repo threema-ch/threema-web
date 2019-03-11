@@ -63,6 +63,8 @@
         .message-quote {
             @include word-wrap;
             max-width: 85%;
+            max-height: 9.4em;
+            overflow: hidden;
             line-height: 1.3em;
         }
     }
