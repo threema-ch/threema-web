@@ -1,6 +1,6 @@
 <div id="conversation" class="drag-container">
     <drag-file
-            ng-if="!ctrl.locked"
+            ng-if="!ctrl.locked && !ctrl.receiver.isBlocked"
             submit="ctrl.submit"
             on-uploading="ctrl.onUploading"></drag-file>
 
@@ -123,7 +123,8 @@
                     start-typing="ctrl.startTyping"
                     stop-typing="ctrl.stopTyping"
                     on-uploading="ctrl.onUploading"
-                    max-text-length="ctrl.maxTextLength">
+                    max-text-length="ctrl.maxTextLength"
+                    receiver="ctrl.receiver">
             </compose-area>
         </div>
     </div>

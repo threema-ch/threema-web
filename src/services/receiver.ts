@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasValue} from '../helpers';
 import {isContactReceiver} from '../typeguards';
 
 export class ReceiverService {
@@ -57,5 +58,22 @@ export class ReceiverService {
         return isContactReceiver(receiver)
             && receiver.id.substr(0, 1) === '*';
 
+    }
+
+    /**
+     * Check if a receiver is blocked.
+     * If the receiver isn't a contact or does not have the blocked flag, he is not blocked.
+     * Otherwise the isBlocked flag is evaluated
+     * @param receiver
+     */
+    public isBlocked(receiver: threema.Receiver | null): boolean {
+        if (!hasValue(receiver)) {
+            return false;
+        }
+        if (isContactReceiver(receiver) && hasValue(receiver.isBlocked)) {
+            return receiver.isBlocked;
+        } else {
+            return false;
+        }
     }
 }
