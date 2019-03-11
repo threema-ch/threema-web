@@ -68,7 +68,7 @@ export default [
                 onUploading: '=',
                 maxTextLength: '=',
 
-                receiver: '<eeeReceiver',
+                receiver: '<receiver',
             },
             link: function(scope: any, element) {
                 // Logging
