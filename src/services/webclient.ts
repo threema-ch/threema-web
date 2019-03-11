@@ -2172,11 +2172,16 @@ export class WebClientService {
             return future.reject('invalidResponse');
         }
 
-        // Store receivers
-        this.sortContacts(data.contact);
-        this.receivers.set(data);
-        this.registerInitializationStep(InitializationStep.Receivers);
-        future.resolve();
+        // Run delayed as it requires the profile to be initialised
+        this.runAfterInitializationSteps([
+            InitializationStep.Profile,
+        ], () => {
+            // Store receivers
+            this.sortContacts(data.contact);
+            this.receivers.set(data);
+            this.registerInitializationStep(InitializationStep.Receivers);
+            future.resolve();
+        });
     }
 
     private _receiveResponseContactDetail(message: threema.WireMessage): void {
@@ -2470,7 +2475,7 @@ export class WebClientService {
             return future.reject('invalidResponse');
         }
 
-        // Run delayed...
+        // Run delayed as it requires the receivers to be available
         this.runAfterInitializationSteps([
             InitializationStep.Receivers,
         ], () => {
