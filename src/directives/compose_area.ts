@@ -107,9 +107,7 @@ export default [
 
                 let chatBlocked = false;
 
-                // Initialize blocking state
-                setChatBlocked(receiverService.isBlocked(scope.receiver));
-
+                // Function to update blocking state
                 function setChatBlocked(blocked: boolean) {
                     chatBlocked = blocked;
                     $log.debug(logTag, 'Receiver blocked:', blocked);
@@ -132,6 +130,9 @@ export default [
                         composeDiv.attr('contenteditable', true);
                     }
                 }
+
+                // Initialize blocking state
+                setChatBlocked(receiverService.isBlocked(scope.receiver));
 
                 // Watch `isBlocked` flag for changes
                 scope.$watch(
