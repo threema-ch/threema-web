@@ -475,7 +475,8 @@ export default [
                                 .catch((msg) => $log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
-                        // Handle pasting of text
+
+                    // Handle pasting of text
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
 
