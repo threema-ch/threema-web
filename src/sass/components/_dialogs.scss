@@ -78,6 +78,8 @@ md-dialog.message-history-dialog {
     }
 }
 
+// sass-lint:disable no-vendor-prefixes
+// sass-lint:disable force-pseudo-nesting
 md-input-container {
     .md-input::-webkit-input-placeholder {
         color: darken($text-placeholder-color, 30%);
@@ -120,3 +122,5 @@ md-input-container.md-input-focused {
         color: darken($text-placeholder-color, 20%);
     }
 }
+// sass-lint:enable no-vendor-prefixes
+// sass-lint:enable force-pseudo-nesting
