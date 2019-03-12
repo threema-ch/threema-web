@@ -217,6 +217,7 @@
         &.typing-indicator {
             .message-body {
                 min-width: 15px;
+                color: $text-dark-background-color;
             }
         }
     }
@@ -281,6 +282,7 @@
         padding: 8px;
         min-width: 64px;
         max-width: 85%;
+        color: $text-dark-background-color;
 
         &:not(.text-message-body) {
             // set fixed height to thumbnails
@@ -387,6 +389,7 @@
                 i {
                     position: relative;
                     top: 2px;
+                    color: $text-dark-background-color;
                 }
 
                 i.timeout {
@@ -410,6 +413,7 @@
         .message-body {
             position: relative;
             background-color: $message-bubble-color-in;
+            color: $text-dark-background-color;
         }
 
         // arrow
@@ -436,6 +440,7 @@
         .message-body {
             position: relative;
             background-color: $message-bubble-color-out;
+            color: $text-dark-background-color;
         }
 
         // arrow
