@@ -77,3 +77,46 @@ md-dialog.message-history-dialog {
         }
     }
 }
+
+md-input-container {
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
+
+    .md-input:-moz-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
+
+    .md-input::-moz-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
+
+    // TODO: Investigate this.
+    // If this pseudo-class is nested within its parent
+    // it doesn't work in Chrome. I have no clue why.
+    .md-input:-ms-input-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
+
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
+}
+
+md-input-container.md-input-focused {
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+
+    .md-input:-moz-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+
+    .md-input:-ms-input-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+}
