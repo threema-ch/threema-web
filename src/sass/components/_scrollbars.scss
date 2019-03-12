@@ -1,7 +1,7 @@
 // Webkit specific global styling
 // sass-lint:disable no-vendor-prefixes
 ::-webkit-scrollbar {
-    border: 1px solid $border-dark-grey-color;
+    border: 1px solid $border-color;
     background-color: $scrollbar-background-color;
     width: 6px;
 }

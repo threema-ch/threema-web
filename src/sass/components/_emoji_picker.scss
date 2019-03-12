@@ -5,7 +5,7 @@
     min-height: 216px;
 
     &.outline {
-        border: 2px solid $border-grey-color;
+        border: 2px solid $border-color;
         border-radius: 4px;
         width: 366px;
     }
@@ -27,7 +27,7 @@
         position: relative;
         left: 1px;
         margin-left: -1px;
-        border: 1px solid $border-dark-grey-color;
+        border: 1px solid $border-color;
         background: $background-light-color;
         cursor: pointer;
         padding: 4px;
@@ -46,7 +46,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        border: 1px solid $border-dark-grey-color;
+        border: 1px solid $border-color;
         background: $background-light-color;
         padding: 10px 10px 0;
         overflow-y: scroll;
