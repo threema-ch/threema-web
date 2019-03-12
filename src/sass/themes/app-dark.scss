@@ -25,6 +25,7 @@ $primary-050: #e0f2f1;
 $primary: $primary-500;
 
 // Secondary
+$secondary-999: rgba(0, 0, 0, 1);
 $secondary-900: rgba(32, 32, 32, 1);
 $secondary-850: rgba(48, 48, 48, 1);
 $secondary-800: rgba(65, 65, 65, 1);
@@ -75,23 +76,24 @@ px 2px 5px px $material-grey-dark-color;
 
 // Text colors
 $text-bright-background-color: $secondary-300;
-$text-bright-background-welcome-color: $secondary-900;
-$text-dark-background-color: $secondary-500;
-$text-dark-background-color-2: $text-dark-background-color;
-$latest-message-text-color: $text-dark-background-color;
-$text-protocol-updated-color: #9dd0f2;
-$text-on-conversation-header-color: $secondary-000;
-$text-in-unread-count-offset-color: $secondary-000;
+$text-dark-color: $secondary-500;
+$text-light-color: $text-dark-color;
+
+$text-bright-background-welcome-color: $secondary-999;
+$latest-message-text-color: $text-dark-color;
 $text-placeholder-color: $latest-message-text-color;
+$text-protocol-updated-color: #9dd0f2;
+
+// md-toolbar colors
 $md-toolbar-color: $background-dark-color;
-$md-toolbar-text-color: $text-dark-background-color;
+$md-toolbar-text-color: $text-dark-color;
 $md-toolbar-button-color: $secondary-800;
 
 // Icon colors
 $icon-color: $secondary-000;
-$dark-icon-color: $secondary-600;
+$icon-dark-color: $secondary-600;
 $icon-medium-dark-color: $secondary-500;
-$bright-icon-color: $secondary-400;
+$icon-light-color: $secondary-400;
 
 // Message bubble colors
 $message-quote-color: $threema-green-color;
@@ -99,7 +101,7 @@ $message-bubble-color-in: rgb(31, 25, 25);
 $message-bubble-color-out: rgb(27, 39, 52);
 
 // Misc colors
-$active-placeholder-color: $text-dark-background-color;
+$active-placeholder-color: $text-dark-color;
 $url-light-blue-color: #63a6cf;
 $work-blue-color: #3b84df;
 
@@ -109,7 +111,6 @@ $button-color-enabled: $secondary-600;
 $button-color-disabled: lighten($secondary-700, 65%);
 $button-color-pressed: $secondary-750;
 $button-text-color: $secondary-000;
-$button-text-dark-color: $secondary-000;
 $button-text-light-color: $secondary-900;
 
 .color-status-ok {

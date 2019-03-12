@@ -4,20 +4,20 @@ md-dialog md-dialog-actions .md-button {
 
 md-select {
     .md-select-value {
-        color: $text-dark-background-color;
+        color: $text-dark-color;
 
         .md-select-placeholder {
-            color: $text-dark-background-color;
+            color: $text-dark-color;
         }
 
         .md-select-icon {
-            color: $text-dark-background-color;
+            color: $text-dark-color;
         }
     }
 
     :not([disabled]) {
         :focus .md-select-value {
-            color: $text-dark-background-color;
+            color: $text-dark-color;
         }
     }
 }
@@ -26,17 +26,17 @@ md-select {
     .md-active {
         md-select-menu>* {
             background-color: $background-dark-color;
-            color: $text-dark-background-color;
+            color: $text-dark-color;
         }
     }
 }
 
 md-select-menu md-content md-option {
-    color: $text-dark-background-color;
+    color: $text-dark-color;
 }
 
 md-menu-content md-menu-item {
-    color: $button-text-dark-color;
+    color: $button-text-color;
 }
 
 

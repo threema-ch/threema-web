@@ -83,7 +83,7 @@
 
                 >* {
                     margin-left: 8px;
-                    color: $text-on-conversation-header-color;
+                    color: $secondary-000;
                 } // TODO This might need renaming to header-detail
 
                 .header-detail {
@@ -116,7 +116,7 @@
                     }
 
                     .material-icons {
-                        color: $bright-icon-color;
+                        color: $icon-light-color;
                     }
                 }
             }
@@ -273,7 +273,7 @@
     }
 
     .md-dark {
-        color: $dark-icon-color;
+        color: $icon-dark-color;
     }
 
     .md-medium-dark {
@@ -281,7 +281,7 @@
     }
 
     .md-light {
-        color: $bright-icon-color;
+        color: $icon-light-color;
     }
 
     .md-primary {
@@ -398,8 +398,8 @@ a.click-action {
 md-input-container {
 
     .md-input {
-        border-color: $text-dark-background-color;
-        color: $text-dark-background-color;
+        border-color: $text-dark-color;
+        color: $text-dark-color;
     }
 
     label {
@@ -411,11 +411,11 @@ md-input-container {
     }
 
     :not(.md-input-invalid).md-input-focused {
-        border-color: $text-dark-background-color;
+        border-color: $text-dark-color;
     }
 
     :not(.md-input-invalid).md-input-focused label {
-        color: $text-dark-background-color;
+        color: $text-dark-color;
     }
 }
 

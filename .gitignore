@@ -11,6 +11,7 @@ dist/*.js.map
 dist/*.tar.gz
 public/css/*.css
 public/css/*.map
+public/css/themes/*
 release/
 
 # Node stuff

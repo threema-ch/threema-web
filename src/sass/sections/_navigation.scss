@@ -13,10 +13,10 @@
     background-color: $conversation-header-color;
     padding: 0 $main-padding 0 (2 * $main-padding);
     min-height: 68px;
-    color: $text-on-conversation-header-color;
+    color: $secondary-000;
 
     .material-icons.md-light {
-        color: $bright-icon-color;
+        color: $icon-light-color;
     }
 
     .my-identity {
@@ -86,7 +86,7 @@
                 background-color: $background-light-color;
                 padding: $main-padding;
                 width: 100%;
-                color: $text-dark-background-color;
+                color: $text-dark-color;
                 box-sizing: border-box;
 
                 .md-errors-spacer {
@@ -373,7 +373,7 @@
                 border-radius: 5px;
                 background-color: $status-error;
                 padding: 0 5px;
-                color: $text-in-unread-count-offset-color;
+                color: $secondary-000;
                 font-size: .9em;
             }
         }

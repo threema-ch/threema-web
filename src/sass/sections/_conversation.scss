@@ -39,7 +39,7 @@
             text-overflow: ellipsis;
             line-height: 1.3;
             white-space: nowrap;
-            color: $text-dark-background-color-2;
+            color: $text-light-color;
         }
 
         .conversation-header-details-name {
@@ -49,7 +49,7 @@
             text-overflow: ellipsis;
             line-height: 1.3;
             white-space: nowrap;
-            color: $text-on-conversation-header-color;
+            color: $secondary-000;
         }
     }
 
@@ -111,7 +111,7 @@
 
             .compose {
                 border: 0 solid $status-error-color;
-                color: $text-dark-background-color;
+                color: $text-dark-color;
                 caret-color: $text-bright-background-color;
             }
         }
@@ -171,7 +171,7 @@
 .message-quote-content {
     border-left: 5px solid $message-quote-color;
     padding-left: 5px;
-    color: $text-dark-background-color;
+    color: $text-dark-color;
     font-size: .9em;
 
     .message-name {
@@ -217,7 +217,7 @@
         &.typing-indicator {
             .message-body {
                 min-width: 15px;
-                color: $text-dark-background-color;
+                color: $text-dark-color;
             }
         }
     }
@@ -282,7 +282,7 @@
         padding: 8px;
         min-width: 64px;
         max-width: 85%;
-        color: $text-dark-background-color;
+        color: $text-dark-color;
 
         &:not(.text-message-body) {
             // set fixed height to thumbnails
@@ -334,7 +334,7 @@
 
             span {
                 white-space: pre-wrap;
-                color: $text-dark-background-color;
+                color: $text-dark-color;
             }
         }
 
@@ -389,7 +389,7 @@
                 i {
                     position: relative;
                     top: 2px;
-                    color: $text-dark-background-color;
+                    color: $text-dark-color;
                 }
 
                 i.timeout {
@@ -413,7 +413,7 @@
         .message-body {
             position: relative;
             background-color: $message-bubble-color-in;
-            color: $text-dark-background-color;
+            color: $text-dark-color;
         }
 
         // arrow
@@ -440,7 +440,7 @@
         .message-body {
             position: relative;
             background-color: $message-bubble-color-out;
-            color: $text-dark-background-color;
+            color: $text-dark-color;
         }
 
         // arrow
@@ -491,7 +491,7 @@
 
         .line {
             flex-grow: 1;
-            border-bottom: 1px solid $text-dark-background-color;
+            border-bottom: 1px solid $text-dark-color;
             text-align: center;
             line-height: 0;
         }
@@ -499,8 +499,8 @@
         .text {
             margin: 0;
             padding: 0 10px;
-            text-shadow: 0 0 4px $text-dark-background-color;
-            color: $text-dark-background-color;
+            text-shadow: 0 0 4px $text-dark-color;
+            color: $text-dark-color;
             font-size: .9em;
             font-weight: 300;
         }

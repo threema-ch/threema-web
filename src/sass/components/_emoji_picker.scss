@@ -65,7 +65,7 @@
             background: $background-dark-color;
         }
 
-        &:checked ~ label ~ .content {
+        :checked ~ label ~ .content {
             z-index: 1;
         }
     }
