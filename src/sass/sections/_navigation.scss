@@ -15,6 +15,10 @@
     min-height: 68px;
     color: $text-on-conversation-header-color;
 
+    .material-icons.md-light {
+        color: $bright-icon-color;
+    }
+
     .my-identity {
         flex-grow: 1;
         width: 85%;
@@ -38,6 +42,10 @@
     z-index: 18;
     box-shadow: -2px 2px 4px -2px rgba(0, 0, 0, .4);
     background-color: $background-light-color;
+
+    .material-icons.md-dark {
+        color: $icon-medium-dark-color;
+    }
 
     .main {
         display: flex;
