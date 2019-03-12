@@ -80,6 +80,7 @@ md-dialog.message-history-dialog {
 
 // sass-lint:disable no-vendor-prefixes
 // sass-lint:disable force-pseudo-nesting
+// sass-lint:disable no-mergeable-selectors
 md-input-container {
     .md-input::-webkit-input-placeholder {
         color: darken($text-placeholder-color, 30%);
@@ -124,3 +125,4 @@ md-input-container.md-input-focused {
 }
 // sass-lint:enable no-vendor-prefixes
 // sass-lint:enable force-pseudo-nesting
+// sass-lint:enable no-mergeable-selectors
