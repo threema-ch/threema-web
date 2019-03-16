@@ -431,12 +431,13 @@ angular.module('3ema.filters', [])
     return $sce.trustAsResourceUrl;
 }])
 
-.filter('meNickname', ['WebClientService', '$translate', function(webClientService: WebClientService, $translate: ng.translate.ITranslateService) {
-    return function(displayName: string) {
-        if (displayName === webClientService.me.displayName) {
-            return $translate.instant('messenger.ME');
-        } else { return displayName; }
-    };
+.filter('ownIdToNickname', ['WebClientService', '$translate',
+    function(webClientService: WebClientService, $translate: ng.translate.ITranslateService) {
+        return function(displayName: string) {
+            if (displayName === webClientService.me.displayName) {
+                return $translate.instant('messenger.ME');
+            } else { return displayName; }
+        };
 }])
 
 ;
