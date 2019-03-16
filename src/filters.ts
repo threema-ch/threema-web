@@ -431,12 +431,15 @@ angular.module('3ema.filters', [])
     return $sce.trustAsResourceUrl;
 }])
 
-.filter('ownIdToNickname', ['WebClientService', '$translate',
+/**
+ * Show 'Me' for own contact, for all other contacts show displayName
+ */
+.filter('displayName', ['WebClientService', '$translate',
     function(webClientService: WebClientService, $translate: ng.translate.ITranslateService) {
-        return function(displayName: string) {
-            if (displayName === webClientService.me.displayName) {
+        return function(contact: threema.Receiver) {
+            if (contact.id === webClientService.me.id) {
                 return $translate.instant('messenger.ME');
-            } else { return displayName; }
+            } else { return contact.displayName; }
         };
 }])
 
