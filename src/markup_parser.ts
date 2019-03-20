@@ -53,8 +53,26 @@ function isMarkupToken(tokenType: TokenType) {
  * Return whether the specified character is a boundary character.
  * When `character` is undefined, the function will return true.
  */
-function isBoundary(character?: string) {
+function isBoundary(character?: string): boolean {
     return character === undefined || /[\s.,!?¡¿‽⸮;:&(){}\[\]⟨⟩‹›«»'"‘’“”*~\-_…⋯᠁]/.test(character);
+}
+
+/**
+ * Return whether the specified character is a URL boundary character.
+ * When `character` is undefined, the function will return true.
+ *
+ * Characters that may be in an URL according to RFC 3986:
+ * ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=%
+ */
+function isUrlBoundary(character?: string): boolean {
+    return character === undefined || !/[a-zA-Z0-9\-._~:/?#\[\]@!$&'()*+,;=%]/.test(character);
+}
+
+/**
+ * Return whether the specified string starts an URL.
+ */
+function isUrlStart(substring: string): boolean {
+    return substring.match(/^[a-zA-Z]+:\/\//) != null;
 }
 
 /**
@@ -63,6 +81,7 @@ function isBoundary(character?: string) {
 export function tokenize(text: string): Token[] {
     const tokens = [];
     let textBuf = '';
+    let matchingUrl = false;
 
     const pushTextBufToken = () => {
         if (textBuf.length > 0) {
@@ -73,23 +92,39 @@ export function tokenize(text: string): Token[] {
 
     for (let i = 0; i < text.length; i++) {
         const currentChar = text[i];
-        const prevIsBoundary = isBoundary(text[i - 1]);
-        const nextIsBoundary = isBoundary(text[i + 1]);
 
-        if (currentChar === '*' && (prevIsBoundary || nextIsBoundary)) {
-            pushTextBufToken();
-            tokens.push({ kind: TokenType.Asterisk });
-        } else if (currentChar === '_' && (prevIsBoundary || nextIsBoundary)) {
-            pushTextBufToken();
-            tokens.push({ kind: TokenType.Underscore });
-        } else if (currentChar === '~' && (prevIsBoundary || nextIsBoundary)) {
-            pushTextBufToken();
-            tokens.push({ kind: TokenType.Tilde });
-        } else if (currentChar === '\n') {
-            pushTextBufToken();
-            tokens.push({ kind: TokenType.Newline });
-        } else {
+        // Detect URLs
+        if (!matchingUrl) {
+            matchingUrl = isUrlStart(text.substring(i));
+        }
+
+        // URLs have a limited set of boundary characters, therefore we need to
+        // treat them separately.
+        if (matchingUrl) {
             textBuf += currentChar;
+            const nextIsUrlBoundary = isUrlBoundary(text[i + 1]);
+            if (nextIsUrlBoundary) {
+                pushTextBufToken();
+                matchingUrl = false;
+            }
+        } else {
+            const prevIsBoundary = isBoundary(text[i - 1]);
+            const nextIsBoundary = isBoundary(text[i + 1]);
+            if (currentChar === '*' && (prevIsBoundary || nextIsBoundary)) {
+                pushTextBufToken();
+                tokens.push({ kind: TokenType.Asterisk });
+            } else if (currentChar === '_' && (prevIsBoundary || nextIsBoundary)) {
+                pushTextBufToken();
+                tokens.push({ kind: TokenType.Underscore });
+            } else if (currentChar === '~' && (prevIsBoundary || nextIsBoundary)) {
+                pushTextBufToken();
+                tokens.push({ kind: TokenType.Tilde });
+            } else if (currentChar === '\n') {
+                pushTextBufToken();
+                tokens.push({ kind: TokenType.Newline });
+            } else {
+                textBuf += currentChar;
+            }
         }
     }
 
