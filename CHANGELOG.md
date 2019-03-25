@@ -8,7 +8,7 @@ the full log, please refer to the git commit history.
 
 Changes:
 
-* [bug] Fix state reloading after iOS reconnects ([#728][#728])
+* [bug] Fix state reloading after iOS reconnects ([#728][i728])
 
 
 ### [v2.1.6][v2.1.6] (2019-01-31)
