@@ -56,15 +56,15 @@ describe('Markup Parser', () => {
             ]);
         });
 
-        it('ignore in URLs', function() {
-            const text = 'ignore if *in* a link: https://example.com/_pub_/horse.jpg';
+        it('ignore markup in URLs', function() {
+            const text = 'ignore if *in* a link: https://example.com/pic_-_a.jpg';
             const tokens = tokenize(text);
             expect(tokens).toEqual([
                 { kind: TokenType.Text, value: 'ignore if ' },
                 { kind: TokenType.Asterisk },
                 { kind: TokenType.Text, value: 'in' },
                 { kind: TokenType.Asterisk },
-                { kind: TokenType.Text, value: ' a link: https://example.com/_pub_/horse.jpg' },
+                { kind: TokenType.Text, value: ' a link: https://example.com/pic_-_a.jpg' },
             ]);
         });
 
@@ -246,6 +246,8 @@ describe('Markup Parser', () => {
                  'https://example.com?__twitter_impression=true'],
                 ['https://example.com?___twitter_impression=true',
                  'https://example.com?___twitter_impression=true'],
+                ['https://example.com/image_-_1.jpg',
+                 'https://example.com/image_-_1.jpg'],
             ]);
         });
 
