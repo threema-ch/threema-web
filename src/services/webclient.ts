@@ -81,7 +81,6 @@ export class WebClientService {
     private static CHUNK_CACHE_SIZE_MAX = 2 * 1024 * 1024;
     private static AVATAR_LOW_MAX_SIZE = 48;
     private static MAX_TEXT_LENGTH = 3500;
-    private static MAX_FILE_SIZE_WEBRTC = 15 * 1024 * 1024;
     private static CONNECTION_ID_NONCE = stringToUtf8a('connectionidconnectionid');
 
     private static TYPE_REQUEST = 'request';
@@ -1591,13 +1590,17 @@ export class WebClientService {
 
                         break;
                     case 'file':
+                        const fileMessage = message as threema.FileMessageData;
+
                         // Validate max file size
                         if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                            if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE_WEBRTC) {
-                                return reject(this.$translate.instant('error.FILE_TOO_LARGE_WEB'));
+                            if (fileMessage.size > this.clientInfo.capabilities.maxWebrtcFileSize) {
+                                return reject(this.$translate.instant('error.FILE_TOO_LARGE_WEB', {
+                                    maxmb: Math.floor(this.clientInfo.capabilities.maxWebrtcFileSize / 1024 / 1024),
+                                }));
                             }
                         } else {
-                            if ((message as threema.FileMessageData).size > this.clientInfo.capabilities.maxFileSize) {
+                            if (fileMessage.size > this.clientInfo.capabilities.maxFileSize) {
                                 return reject(this.$translate.instant('error.FILE_TOO_LARGE', {
                                     maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
                                 }));
@@ -1607,9 +1610,9 @@ export class WebClientService {
                         // Determine required feature mask
                         let requiredFeature: ContactReceiverFeature = ContactReceiverFeature.FILE;
                         let invalidFeatureMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
-                        if ((message as threema.FileMessageData).sendAsFile !== true) {
+                        if (fileMessage.sendAsFile !== true) {
                             // check mime type
-                            const mime = (message as threema.FileMessageData).fileType;
+                            const mime = fileMessage.fileType;
                             if (this.mimeService.isAudio(mime, this.clientInfo.os)) {
                                 requiredFeature = ContactReceiverFeature.AUDIO;
                                 invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
@@ -3084,6 +3087,7 @@ export class WebClientService {
             capabilities: {
                 maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
                 maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
+                maxWebrtcFileSize: getOrDefault<number>(data.capabilities.maxWebrtcFileSize, 15 * 1024 * 1024),
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
                 imageFormat: data.capabilities.imageFormat,
                 mdm: data.capabilities.mdm,

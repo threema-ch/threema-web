@@ -242,7 +242,7 @@
         "CONTACT_BLOCKED":  "不能向拉黑的联系人发送消息",
         "ERROR_OCCURRED": "发生错误",
         "FILE_TOO_LARGE": "无法发送大于{maxmb} M的文件",
-        "FILE_TOO_LARGE_WEB": "这个文件大于15M，无法通过Threema Web发送",
+        "FILE_TOO_LARGE_WEB": "这个文件大于{maxmb} M，无法通过Threema Web发送",
         "FILE_TOO_LARGE_GENERIC": "文件太大无法发送",
         "TEXT_TOO_LONG": "此消息太长且无法发送（最大长度为{max}个字符）。",
         "NOTIFICATION_PERMISSION_DENIED": "您必须手动授予Threema Web通知权限才能接收通知。",
