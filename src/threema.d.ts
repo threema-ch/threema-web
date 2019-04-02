@@ -693,7 +693,7 @@ declare namespace threema {
     interface AppCapabilities {
         maxGroupSize: number;
         maxFileSize: number;
-        maxWebrtcFileSize?: number;
+        maxFileSizeUntilAckProtocol?: number;
         distributionLists: boolean;
         imageFormat: ImageFormat;
         mdm?: MdmRestrictions;

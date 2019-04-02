@@ -1594,9 +1594,10 @@ export class WebClientService {
 
                         // Validate max file size
                         if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                            if (fileMessage.size > this.clientInfo.capabilities.maxWebrtcFileSize) {
+                            if (fileMessage.size > this.clientInfo.capabilities.maxFileSizeUntilAckProtocol) {
+                                const maxmb = this.clientInfo.capabilities.maxFileSizeUntilAckProtocol / 1024 / 1024;
                                 return reject(this.$translate.instant('error.FILE_TOO_LARGE_WEB', {
-                                    maxmb: Math.floor(this.clientInfo.capabilities.maxWebrtcFileSize / 1024 / 1024),
+                                    maxmb: Math.floor(maxmb),
                                 }));
                             }
                         } else {
@@ -3087,7 +3088,8 @@ export class WebClientService {
             capabilities: {
                 maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
                 maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
-                maxWebrtcFileSize: getOrDefault<number>(data.capabilities.maxWebrtcFileSize, 15 * 1024 * 1024),
+                maxFileSizeUntilAckProtocol: getOrDefault<number>(data.capabilities.maxFileSizeUntilAckProtocol,
+                    15 * 1024 * 1024),
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
                 imageFormat: data.capabilities.imageFormat,
                 mdm: data.capabilities.mdm,
