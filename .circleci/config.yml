@@ -58,6 +58,7 @@ jobs:
     docker:
       - image: docker:stable
     steps:
+      - run: apk update && apk add git openssh
       - checkout
       - setup_remote_docker
       - run: docker build . --no-cache
@@ -65,6 +66,7 @@ jobs:
     docker:
       - image: docker:stable
     steps:
+      - run: apk update && apk add git openssh
       - checkout
       - setup_remote_docker
       - run: >
@@ -77,6 +79,7 @@ jobs:
     environment:
       IMAGE: threema/threema-web
     steps:
+      - run: apk update && apk add git openssh
       - checkout
       - setup_remote_docker
       - run: >
@@ -89,9 +92,9 @@ jobs:
     docker:
       - image: docker:stable
     steps:
+      - run: apk update && apk add git openssh bash git
       - checkout
       - setup_remote_docker
-      - run: apk update && apk add bash git
       - run: /bin/bash docker/rebuild.sh
 
 
