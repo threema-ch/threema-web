@@ -28,37 +28,78 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.$onInit = function() {
-                    this.status = this.message.voip.status;
-                    this.duration = this.message.voip.duration;
-                    this.reason = this.message.voip.reason;
-                    this.incoming = !this.message.isOutbox;
-                    this.outgoing = this.message.isOutbox;
+                    const voip: threema.VoipStatusInfo = this.message.voip;
+                    const incoming = !this.message.isOutbox;
+
+                    switch (voip.status) {
+                        case threema.VoipStatus.Missed:
+                            this.colorClass = 'color-status-error';
+                            this.icon = 'call_missed';
+                            this.msgString = 'voip.CALL_MISSED';
+                            break;
+                        case threema.VoipStatus.Finished:
+                            this.colorClass = 'color-status-ok';
+                            if (incoming) {
+                                this.icon = 'call_received';
+                                this.msgString = 'voip.CALL_FINISHED_IN';
+                            } else {
+                                this.icon = 'call_made';
+                                this.msgString = 'voip.CALL_FINISHED_OUT';
+                            }
+                            break;
+                        case threema.VoipStatus.Rejected:
+                            if (incoming) {
+                                this.icon = 'call_missed';
+                                switch (voip.reason) {
+                                    case threema.VoipRejectReason.Busy:
+                                        this.colorClass = 'color-status-error';
+                                        this.msgString = 'voip.CALL_MISSED_BUSY';
+                                        break;
+                                    case threema.VoipRejectReason.Rejected:
+                                        this.colorClass = 'color-status-warning';
+                                        this.msgString = 'voip.CALL_REJECTED';
+                                        break;
+                                    case threema.VoipRejectReason.Unknown:
+                                    case threema.VoipRejectReason.Timeout:
+                                    case threema.VoipRejectReason.Disabled:
+                                    default:
+                                        this.colorClass = 'color-status-error';
+                                        this.msgString = 'voip.CALL_MISSED';
+                                        break;
+                                }
+                            } else {
+                                this.icon = 'call_missed_outgoing';
+                                this.colorClass = 'color-status-error';
+                                switch (voip.reason) {
+                                    case threema.VoipRejectReason.Busy:
+                                        this.msgString = 'voip.CALL_REJECTED_BUSY';
+                                        break;
+                                    case threema.VoipRejectReason.Timeout:
+                                        this.msgString = 'voip.CALL_REJECTED_UNAVAILABLE';
+                                        break;
+                                    case threema.VoipRejectReason.Disabled:
+                                        this.msgString = 'voip.CALL_REJECTED_DISABLED';
+                                        break;
+                                    case threema.VoipRejectReason.Rejected:
+                                    case threema.VoipRejectReason.Unknown:
+                                    default:
+                                        this.msgString = 'voip.CALL_REJECTED';
+                                        break;
+                                }
+                            }
+                            break;
+                        case threema.VoipStatus.Aborted:
+                            this.colorClass = 'color-status-warning';
+                            this.icon = 'call_missed_outgoing';
+                            this.msgString = 'voip.CALL_ABORTED';
+                            break;
+                    }
                 };
             }],
             template: `
-                <p ng-if="ctrl.status === 1">
-                    <md-icon class="material-icons color-status-warning">call_missed</md-icon>
-                    <span translate>voip.CALL_MISSED</span>
-                </p>
-                <p ng-if="ctrl.status === 2 && ctrl.incoming">
-                    <md-icon class="material-icons color-status-ok">call_received</md-icon>
-                    <span translate>voip.CALL_FINISHED_IN</span>
-                </p>
-                <p ng-if="ctrl.status === 2 && ctrl.outgoing">
-                    <md-icon class="material-icons color-status-ok">call_made</md-icon>
-                    <span translate>voip.CALL_FINISHED_OUT</span>
-                </p>
-                <p ng-if="ctrl.status === 3 && ctrl.incoming">
-                    <md-icon class="material-icons color-status-error">call_missed</md-icon>
-                    <span translate>voip.CALL_REJECTED</span>
-                </p>
-                <p ng-if="ctrl.status === 3 && ctrl.outgoing">
-                    <md-icon class="material-icons color-status-error">call_missed_outgoing</md-icon>
-                    <span translate>voip.CALL_REJECTED</span>
-                </p>
-                <p ng-if="ctrl.status === 4">
-                    <md-icon class="material-icons color-status-warning">call_missed_outgoing</md-icon>
-                    <span translate>voip.CALL_ABORTED</span>
+                 <p>
+                    <md-icon class="material-icons {{ ctrl.colorClass }}">{{ ctrl.icon }}</md-icon>
+                    <span translate>{{ ctrl.msgString }}</span>
                 </p>
             `,
         };

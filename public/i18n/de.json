@@ -296,9 +296,13 @@
     },
     "voip": {
         "CALL_MISSED": "Verpasster Anruf",
+        "CALL_MISSED_BUSY": "Verpasster Anruf (Besetzt)",
         "CALL_FINISHED_IN": "Eingehender Anruf",
         "CALL_FINISHED_OUT": "Ausgehender Anruf",
         "CALL_REJECTED": "Anruf abgelehnt",
+        "CALL_REJECTED_BUSY": "Anrufempfänger ist besetzt",
+        "CALL_REJECTED_UNAVAILABLE": "Anrufempfänger nicht verfügbar",
+        "CALL_REJECTED_DISABLED": "Threema-Anrufe sind auf dem Zielgerät deaktiviert",
         "CALL_ABORTED": "Anruf abgebrochen"
     },
     "battery": {
