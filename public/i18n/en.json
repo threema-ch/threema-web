@@ -296,9 +296,13 @@
     },
     "voip": {
         "CALL_MISSED": "Missed call",
+        "CALL_MISSED_BUSY": "Missed call (Busy)",
         "CALL_FINISHED_IN": "Incoming call",
         "CALL_FINISHED_OUT": "Outgoing call",
         "CALL_REJECTED": "Call rejected",
+        "CALL_REJECTED_BUSY": "Call recipient is busy",
+        "CALL_REJECTED_UNAVAILABLE": "Call recipient is unavailable",
+        "CALL_REJECTED_DISABLED": "Threema calls disabled by recipient",
         "CALL_ABORTED": "Call aborted"
     },
     "battery": {

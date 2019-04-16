@@ -146,6 +146,7 @@ declare namespace threema {
         Busy = 1,
         Timeout = 2,
         Rejected = 3,
+        Disabled = 4,
     }
 
     interface VoipStatusInfo {
