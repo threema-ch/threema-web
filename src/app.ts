@@ -17,8 +17,6 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import 'regenerator-runtime/runtime';
-
 import {AsyncEvent} from 'ts-events';
 
 import './components';

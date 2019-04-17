@@ -12,9 +12,6 @@ import * as angular from 'angular';
 import 'angular-material';
 import 'angular-translate';
 
-// Import types
-import '../../src/threema.d';
-
 // Import dependencies
 import config from '../../src/config';
 import '../../src/directives';

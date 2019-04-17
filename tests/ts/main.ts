@@ -20,8 +20,6 @@
 // tslint:disable:no-reference
 /// <reference path="../../src/threema.d.ts" />
 
-import '@babel/polyfill';
-
 import './containers';
 import './crypto_helpers';
 import './emoji_helpers';
