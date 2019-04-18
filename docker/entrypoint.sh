@@ -5,10 +5,10 @@ set -euo pipefail
 echo "Patching config file..."
 cd /usr/share/nginx/html/
 if [ ! -z "$SALTYRTC_HOST" ]; then
-    sed -i "s/SALTYRTC_HOST: null,/SALTYRTC_HOST: '${SALTYRTC_HOST}',/g" dist/app.js
+    sed -i -E "s/SALTYRTC_HOST:\s*null,/SALTYRTC_HOST:'${SALTYRTC_HOST}',/g" *.bundle.js
 fi
-sed -i "s/SALTYRTC_PORT: [^,]*,/SALTYRTC_PORT: ${SALTYRTC_PORT},/g" dist/app.js
-sed -i "s/SALTYRTC_SERVER_KEY: '[^']*',/SALTYRTC_SERVER_KEY: '${SALTYRTC_SERVER_KEY}',/g" dist/app.js
+sed -i -E "s/SALTYRTC_PORT:\s*[^,]*,/SALTYRTC_PORT:${SALTYRTC_PORT},/g" *.bundle.js
+sed -i -E "s/SALTYRTC_SERVER_KEY:\s*\"[^\"]*\",/SALTYRTC_SERVER_KEY:\"${SALTYRTC_SERVER_KEY}\",/g" *.bundle.js
 
 echo "Starting Threema Web..."
 exec nginx -g 'daemon off;'
