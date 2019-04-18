@@ -19,8 +19,18 @@ issue](https://github.com/threema-ch/threema-web/issues) on Github.
 
 Threema Web is a web application written in TypeScript with AngularJS 1. All
 that is required to host it is a web server that can deliver static content via
-https. We recommend using Nginx. Additionally, to build the release version
-yourself, a recent version of npm is required.
+https. We recommend using Nginx. Additionally, to build the
+release version yourself, a recent version of npm is required.
+
+*Note:* The web server needs to set the proper MIME type for `*.wasm`
+(WebAssembly) files. When using Nginx, add the following line to the types in
+`/etc/nginx/mime.types`:
+
+    application/wasm    wasm;
+
+When using Python,
+[someting like this](https://gist.github.com/dbrgn/6bf88d32b1b44b1b1d4140f92b8a7a0a)
+should work.
 
 ### Building from source
 

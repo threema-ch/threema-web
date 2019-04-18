@@ -5,11 +5,11 @@ A Docker image with Threema Web is published on Docker Hub at
 
 Alternatively you can build the image yourself:
 
-    $ docker build . -t threema/threema-web:v2.1
+    $ docker build . -t threema/threema-web:master
 
 To run the Docker image:
 
-    $ docker run --rm -p 8080:80 threema/threema-web
+    $ docker run --rm -p 8080:80 threema/threema-web:master
 
 Now you can open `http://localhost:8080/` in your browser to use Threema Web.
 
