@@ -10,7 +10,7 @@
     "build:tests": "echo -e 'NOTE: Use either \"npm build:unittests\" or \"npm build:uitests\"\n' && exit 1",
     "build:unittests": "webpack --config webpack.tests.js",
     "build:uitests": "npm run build:css && webpack --config webpack.tests.js",
-    "dist": "npm run build && echo \"\" && node dist/build-package.js",
+    "dist": "npm run clean && npm run build && echo \"\" && node dist/build-package.js",
     "serve:live": "echo 'NOTE: serve:live command has been renamed to devserver'",
     "devserver": "npm run build:css && concurrently --kill-others --names \"css,server\" -p name \"npm run build:css:watch\" \"npx webpack-dev-server --config webpack.dev.js\"",
     "testserver": "npx webpack-dev-server --config webpack.tests.js",
@@ -21,7 +21,7 @@
     "lint:ts": "tslint -c tslint.json --project tsconfig.json --exclude \"**/src/config.ts\"",
     "lint:sass": "sass-lint -c .sass-lint.yml -v -q",
     "lint:sass:fix": "sass-lint-auto-fix -c .sass-lint.yml",
-    "clean": "rm -rf js/ build/ dist/app*"
+    "clean": "rm -rf dist/generated"
   },
   "keywords": [
     "threema",
@@ -35,6 +35,7 @@
   "homepage": "https://threema.ch/",
   "dependencies": {
     "@babel/core": "^7.4.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-runtime": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@babel/runtime": "^7.4.3",

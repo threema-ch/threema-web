@@ -11,7 +11,6 @@ module.exports = merge(common, {
       path.join(__dirname, 'public'),
       path.join(__dirname, 'src'),
     ],
-    publicPath: '/dist/',
     compress: true,
     port: 9966,
   },

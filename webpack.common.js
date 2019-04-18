@@ -23,12 +23,13 @@ const babelOptions = {
     ['@babel/plugin-transform-runtime', {
       regenerator: true,
     }],
+    ['@babel/plugin-syntax-dynamic-import'],
   ],
 };
 
 module.exports = {
   entry: {
-    app: './src/app.ts',
+    app: './src/bootstrap.ts',
   },
   module: {
     rules: [
@@ -50,10 +51,10 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.js', '.ts'],
+    extensions: ['.js', '.ts', '.wasm'],
   },
   output: {
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'dist', 'generated'),
     filename: '[name].bundle.js',
   },
 };
