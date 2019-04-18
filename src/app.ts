@@ -175,3 +175,6 @@ angular.module('3ema', [
 ])
 
 ;
+
+// Bootstrap application
+angular.bootstrap(document, ['3ema']);
