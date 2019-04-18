@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as twemoji from 'twemoji';
+import twemoji from 'twemoji';
 
 // This file contains helper functions related to emoji.
 // Try to keep all functions pure!
