@@ -31,9 +31,9 @@ module.exports = merge(common, {
     pathinfo: false
   },
   plugins: [
-    new webpack.DefinePlugin({"process.env.NODE_ENV": JSON.stringify("production")}),
+    new webpack.DefinePlugin({'process.env.NODE_ENV': JSON.stringify('production')}),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.BannerPlugin({banner: banner}),
+    new webpack.BannerPlugin({banner: banner, entryOnly: true}),
   ],
 });
