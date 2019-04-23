@@ -56,5 +56,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist', 'generated'),
     filename: '[name].bundle.js',
+    chunkFilename: '[name].[chunkhash].bundle.js',
   },
 };

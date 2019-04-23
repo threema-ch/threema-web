@@ -1,7 +1,3 @@
-afterEach(function () {
-    jasmine.clock().uninstall();
-});
-
 describe('Filters', function() {
 
     let $filter;

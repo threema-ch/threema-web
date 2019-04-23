@@ -20,9 +20,12 @@
 
         <script src="../node_modules/@saltyrtc/chunked-dc/dist/chunked-dc.es5.js"></script>
 
-        <script src="../dist/app.bundle.js"></script>
-        <script src="../dist/unittests.bundle.js"></script>
+        <!-- App bundles -->
+        <script src="../dist/generated/app_noinit.bundle.js"></script>
+        <script src="../dist/generated/unittest.bundle.js"></script>
 
+        <!-- Tests -->
+        <script src="init.js"></script>
         <script src="filters.js"></script>
         <script src="service/message.js"></script>
         <script src="service/mime.js"></script>
@@ -33,7 +36,7 @@
         <script src="service/browser.js"></script>
         <script src="service/keystore.js"></script>
         <script src="service/notification.js"></script>
-        <script src="helpers.js"></script>
+        <script src="service/receiver.js"></script>
     </head>
     <body>
     <script>

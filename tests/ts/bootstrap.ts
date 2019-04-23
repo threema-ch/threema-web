@@ -20,9 +20,6 @@
 // tslint:disable:no-console
 
 // A dependency graph that contains any wasm must all be imported asynchronously.
-import('./app')
-    .then(() => {
-        console.info('Bundle loaded, bootstrapping application.');
-        angular.bootstrap(document, ['3ema']);
-    })
-    .catch((e) => console.error('Could not bootstrap application', e));
+import('./main')
+    .then(() => console.info('Tests bootstrapped'))
+    .catch((e) => console.error('Could not bootstrap tests', e));
