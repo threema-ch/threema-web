@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as emojiRegex from 'emoji-regex/es2015/index';
 import twemoji from 'twemoji';
 
 // This file contains helper functions related to emoji.
@@ -3768,6 +3769,48 @@ export function emojify(text: string): string {
         });
     }
     return text;
+}
+
+/**
+ * Process emoji unicode characters.
+ * TODO: Rename once emojify fn is removed.
+ */
+export function emojifyNew(text: string): Array<threema.EmojiInfo | string> {
+    const regex: RegExp = emojiRegex();
+    const result = [];
+
+    let match: string[];
+    let startIndex: number = 0;
+    let endIndex: number = 0;
+
+    // tslint:disable-next-line:no-conditional-assignment
+    while (match = regex.exec(text)) {
+        // Detect emoji
+        const emoji: string = match[0];
+        const prevEndIndex = endIndex;
+        startIndex = regex.lastIndex - emoji.length;
+        endIndex = regex.lastIndex;
+
+        // Push text preceding emoji
+        if (prevEndIndex < startIndex) {
+            result.push(text.substring(prevEndIndex, startIndex));
+        }
+
+        // Push emoji
+        const codepoint = twemoji.convert.toCodePoint(emoji);
+        const strippedCodepoint = codepoint.replace(/-fe0[ef]$/, '');
+        result.push({
+            emojiString: emoji,
+            imgPath: `emoji/png32/${strippedCodepoint}.png`,
+            codepoint: codepoint,
+        });
+    }
+
+    if (endIndex < text.length) {
+        result.push(text.substring(endIndex, text.length));
+    }
+
+    return result;
 }
 
 /**

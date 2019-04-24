@@ -14,8 +14,6 @@ import { expect } from 'chai';
 import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
 import * as TermColor from 'term-color';
 
-import { extractText as extractTextFunc } from '../../src/helpers';
-
 // Script arguments
 const browser = process.argv[2];
 const filterQuery = process.argv[3];
@@ -32,11 +30,7 @@ const emojiTrigger = By.css('.emoji-trigger');
  * Helper function to extract text.
  */
 async function extractText(driver: WebDriver): Promise<string> {
-    const script = `
-        ${extractTextFunc.toString()}
-        const element = document.querySelector("div.compose");
-        return extractText(element);
-    `;
+    const script = `return window.composeArea.getText();`;
     return driver.executeScript<string>(script);
 }
 

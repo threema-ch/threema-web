@@ -91,3 +91,13 @@ export function isTextNode(node: Node): node is Text {
 export function isElementNode(node: Node): node is HTMLElement {
     return node.nodeType === node.ELEMENT_NODE;
 }
+
+/**
+ * Emoji info type guard.
+ */
+export function isEmojiInfo(val: string | threema.EmojiInfo): val is threema.EmojiInfo {
+    return typeof val === 'object'
+        && val.emojiString !== undefined
+        && val.imgPath !== undefined
+        && val.codepoint !== undefined;
+}

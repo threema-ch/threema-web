@@ -58,6 +58,8 @@ export function init() {
         }]);
     }]);
 
+    // Bootstrap application
+    angular.bootstrap(document, ['uitest']);
 }
 
 class ComposeAreaController {
@@ -70,6 +72,11 @@ class ComposeAreaController {
             draft: '',
             initialText: '',
         };
+    }
+
+    public onInit(composeArea) {
+        // tslint:disable-next-line:no-string-literal
+        window['composeArea'] = composeArea;
     }
 
     public startTyping() {

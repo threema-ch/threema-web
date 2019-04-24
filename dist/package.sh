@@ -45,7 +45,9 @@ mkdir -p $DIR/{partials,directives,components,node_modules,partials/messenger.re
 
 echo "+ Copy code..."
 cp -R index.html $DIR/
-cp -R dist/generated/*.js $DIR/
+cp -R dist/generated/*.bundle.js $DIR/
+cp -R dist/generated/*.bundle.js.map $DIR/
+cp -R dist/generated/*.wasm $DIR/
 cp -R public/* $DIR/
 cp -R troubleshoot/* $DIR/troubleshoot/
 cp -R src/partials/*.html $DIR/partials/

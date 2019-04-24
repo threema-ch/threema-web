@@ -17,7 +17,30 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {emojify, enlargeSingleEmoji, shortnameToUnicode} from '../../src/helpers/emoji';
+import twemoji from 'twemoji';
+import {emojify, emojifyNew, enlargeSingleEmoji, shortnameToUnicode} from '../../src/helpers/emoji';
+
+
+const textVariantSelector = '\ufe0e';
+const emojiVariantSelector = '\ufe0f';
+
+const beer = '\ud83c\udf7b';
+const bird = '\ud83d\udc26';
+
+function makeEmoji(emojiString: string, codepoint?: string, imgCodepoint?: string): threema.EmojiInfo {
+    if (codepoint === undefined) {
+        codepoint = twemoji.convert.toCodePoint(emojiString);
+    }
+    const imgPath = imgCodepoint === undefined
+        ? `emoji/png32/${codepoint}.png`
+        : `emoji/png32/${imgCodepoint}.png`;
+    return {
+        emojiString: emojiString,
+        imgPath: imgPath,
+        codepoint: codepoint,
+    }
+}
+
 
 describe('Emoji Helpers', () => {
     describe('emojify', () => {
@@ -31,6 +54,52 @@ describe('Emoji Helpers', () => {
             expect(emojify('©')).toEqual('©');
             expect(emojify('®')).toEqual('®');
             expect(emojify('™')).toEqual('™');
+        });
+    });
+
+    describe('emojifyNew', () => {
+        it('returns text unmodified', function() {
+            expect(emojifyNew('hello world')).toEqual(['hello world']);
+        });
+
+        it('emojifies single emoji', function() {
+            expect(emojifyNew(bird))
+                .toEqual([makeEmoji(bird)]);
+        });
+
+        it('emojifies multiple emoji', function() {
+            expect(emojifyNew(`${beer}${bird}`))
+                .toEqual([makeEmoji(beer), makeEmoji(bird)]);
+        });
+
+        it('emojifies mixed content', function() {
+            expect(emojifyNew(`hi ${bird}`))
+                .toEqual(['hi ', makeEmoji(bird)]);
+            expect(emojifyNew(`${bird} bird`))
+                .toEqual([makeEmoji(bird), ' bird']);
+            expect(emojifyNew(`hi ${bird} bird`))
+                .toEqual(['hi ', makeEmoji(bird), ' bird']);
+            expect(emojifyNew(`hi ${bird}${beer}`))
+                .toEqual(['hi ', makeEmoji(bird), makeEmoji(beer)]);
+        });
+
+        it('ignores certain codepoints', function() {
+            expect(emojifyNew('©')).toEqual(['©']);
+            expect(emojifyNew('®')).toEqual(['®']);
+            expect(emojifyNew('™')).toEqual(['™']);
+        });
+
+        it('properly handles variant selectors', function() {
+            // https://www.unicode.org/emoji/charts/emoji-variants.html
+            const copy = '©';
+            const codepoint = 'a9-fe0f'; // Should include variant selector
+            const imgCodepoint = 'a9'; // Should not include variant selector
+            expect(emojifyNew(copy))
+                .toEqual([copy]);
+            expect(emojifyNew(copy + textVariantSelector))
+                .toEqual([copy + textVariantSelector]);
+            expect(emojifyNew(copy + emojiVariantSelector))
+                .toEqual([makeEmoji(copy + emojiVariantSelector, codepoint, imgCodepoint)]);
         });
     });
 
