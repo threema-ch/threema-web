@@ -37,7 +37,7 @@ import {MessageService} from './message';
 import {MimeService} from './mime';
 import {NotificationService} from './notification';
 import {PeerConnectionHelper} from './peerconnection';
-import {PushService} from './push';
+import {PushService, PushSession} from './push';
 import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
@@ -45,6 +45,7 @@ import {TimeoutService} from './timeout';
 import {TitleService} from './title';
 import {VersionService} from './version';
 
+import {TimeoutError} from '../exceptions';
 import {ChunkCache} from '../protocol/cache';
 import {SequenceNumber} from '../protocol/sequence_number';
 
@@ -186,7 +187,6 @@ export class WebClientService {
     private pendingInitializationStepRoutines: Set<threema.InitializationStepRoutine> = new Set();
     private initialized: Set<threema.InitializationStep> = new Set();
     private stateService: StateService;
-    private lastPush: Date = null;
 
     // Session connection
     private saltyRtcHost: string = null;
@@ -215,8 +215,13 @@ export class WebClientService {
     public conversations: threema.Container.Conversations;
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
+
+    // Push
     private pushToken: string = null;
     private pushTokenType: threema.PushTokenType = null;
+    private pushSession: PushSession = null;
+    private pushPromise: Promise<any> = null;
+    private readonly pushExpectedPeriodMaxMs: number = PushSession.expectedPeriodMaxMs();
 
     // Timeouts
     private batteryStatusTimeout: ng.IPromise<void> = null;
@@ -484,6 +489,12 @@ export class WebClientService {
         // We want to know about new responders.
         this.salty.on('new-responder', () => {
             if (!this.startupDone) {
+                // Pushing complete
+                if (this.pushSession !== null) {
+                    this.pushSession.done();
+                    this.pushSession = null;
+                }
+
                 // Peer handshake
                 this.stateService.updateConnectionBuildupState('peer_handshake');
             }
@@ -1018,28 +1029,36 @@ export class WebClientService {
 
     /**
      * Send a push message to wake up the peer.
-     * The push message will only be sent if the last push is less than 2 seconds ago.
+     *
+     * Returns the maximum expected period until the promise will be resolved,
+     * and the promise itself.
      */
-    private sendPush(): void {
-        // Make sure not to flood the target device with pushes
-        const minPushInterval = 2000;
-        const now = new Date();
-        if (this.lastPush !== null && (now.getTime() - this.lastPush.getTime()) < minPushInterval) {
-            this.$log.debug(this.logTag,
-                'Skipping push, last push was requested less than ' + (minPushInterval / 1000) + 's ago');
-            return;
-        }
-        this.lastPush = now;
+    public sendPush(): [number, Promise<void>] {
+        // Create new session
+        if (this.pushSession === null) {
+            this.pushSession = this.pushService.createSession(this.salty.permanentKeyBytes);
 
-        // Actually send the push notification
-        this.pushService.sendPush(this.salty.permanentKeyBytes)
-            .then(() => {
-                this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType, 'push');
-                this.$rootScope.$apply(() => {
-                    this.stateService.updateConnectionBuildupState('push');
-                });
-            })
-            .catch((e: Error) => this.$log.error(this.logTag, 'Could not send wakeup push to app: ' + e.message));
+            // Start and handle errors
+            this.pushPromise = this.pushSession.start().catch((error) => {
+                if (error instanceof TimeoutError) {
+                    // TODO: Show device unreachable dialog
+                    // TODO: If unreachable dialog is already shown, set .retrying to false (with root scope)
+                    // this.showDeviceUnreachableDialog();
+                } else {
+                    this.failSession();
+                }
+            });
+
+            // Update state
+            if (!this.$rootScope.$$phase) {
+                this.$rootScope.$apply(() => this.stateService.updateConnectionBuildupState('push'));
+            } else {
+                this.stateService.updateConnectionBuildupState('push');
+            }
+        }
+
+        // Retrieve the expected maximum period
+        return [this.pushExpectedPeriodMaxMs, this.pushPromise];
     }
 
     /**
@@ -1100,6 +1119,12 @@ export class WebClientService {
             `${args.connectionBuildupState !== undefined ? args.connectionBuildupState : 'n/a'})`);
         let close = args.close !== false;
         let remove = false;
+
+        // Stop push session
+        if (this.pushSession !== null) {
+            this.pushSession.done();
+            this.pushSession = null;
+        }
 
         // Session deleted: Force close and delete
         if (args.reason === DisconnectReason.SessionDeleted) {
@@ -3121,7 +3146,7 @@ export class WebClientService {
                     this.$log.error(this.logTag, 'Invalid operating system in client info');
             }
         }
-        if (this.pushToken && this.pushTokenType) {
+        if (this.pushToken !== null && this.pushTokenType !== null) {
             this.pushService.init(this.pushToken, this.pushTokenType);
         }
 

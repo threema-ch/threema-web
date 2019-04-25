@@ -15,35 +15,262 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {TimeoutError} from '../exceptions';
+import {randomString, sleep} from '../helpers';
 import {sha256} from '../helpers/crypto';
 
+/**
+ * A push session will send pushes continuously until an undefined goal has
+ * been achieved which needs to call the `.done` method to stop pushes.
+ *
+ * The push session will stop and reject the returned promise in case the
+ * push relay determined a client error (e.g. an invalid push token). In any
+ * other case, it will continue sending pushes. Thus, it is crucial to call
+ * `.done` eventually!
+ *
+ * With default settings, the push session will send a push in the following
+ * intervals: 0s, 2s, 4s, 8s, 16s, 30s (maximum), 30s, ...
+ *
+ * The first push will use a TTL (time to live) of 0, the second push a TTL of
+ * 15s, and all subsequent pushes will use a TTL of 90s.
+ *
+ * The default settings intend to wake up the app immediately by the first push
+ * which uses a TTL of 0, indicating the push server to deliver *now or never*.
+ * The mid TTL tries to work around issues with FCM clients interpreting the
+ * TTL as *don't need to dispatch until expired*. And the TTL of 90s acts as a
+ * last resort mechanism to wake up the app eventually.
+ *
+ * Furthermore, the collapse key ensures that only one push per session will be
+ * stored on the push server.
+ */
+export class PushSession {
+    private readonly $log: ng.ILogService;
+    private readonly service: PushService;
+    private readonly session: Uint8Array;
+    private readonly config: threema.PushSessionConfig;
+    private readonly collapseKey: string = randomString(6);
+    private readonly doneFuture: Future<any> = new Future();
+    private logTag: string = '[Push]';
+    private running: boolean = false;
+    private retryTimeoutMs: number;
+    private tries: number = 0;
+
+    /**
+     * Return the default configuration.
+     */
+    public static get defaultConfig(): threema.PushSessionConfig {
+        return {
+            retryTimeoutInitMs: 2000,
+            retryTimeoutMaxMs: 30000,
+            triesMax: 3,
+            timeToLiveRange: [0, 15, 90],
+        };
+    }
+
+    /**
+     * Return the expected maximum period until the session will be forcibly
+     * rejected.
+     *
+     * Note: The actual maximum period will usually be larger since the HTTP
+     *       request itself can take an arbitrary amount of time.
+     */
+    public static expectedPeriodMaxMs(config?: threema.PushSessionConfig): number {
+        if (config === undefined) {
+            config = PushSession.defaultConfig;
+        }
+        if (config.triesMax === Number.POSITIVE_INFINITY) {
+            return Number.POSITIVE_INFINITY;
+        }
+        let retryTimeoutMs = config.retryTimeoutInitMs;
+        let sumMs = 0;
+        for (let i = 0; i < config.triesMax; ++i) {
+            sumMs += retryTimeoutMs;
+            retryTimeoutMs = Math.min(retryTimeoutMs * 2, config.retryTimeoutMaxMs);
+        }
+        return sumMs;
+    }
+
+    /**
+     * Create a push session.
+     *
+     * @param service The associated `PushService` instance.
+     * @param session Session identifier (public permanent key of the
+     *   initiator)
+     * @param config Push session configuration.
+     */
+    public constructor(service: PushService, session: Uint8Array, config?: threema.PushSessionConfig) {
+        this.$log = service.$log;
+        this.service = service;
+        this.session = session;
+        this.config = config !== undefined ? config : PushSession.defaultConfig;
+        this.retryTimeoutMs = this.config.retryTimeoutInitMs;
+
+        // Sanity checks
+        if (this.config.timeToLiveRange.length === 0) {
+            throw new Error('timeToLiveRange must not be an empty array');
+        }
+        if (this.config.triesMax < 1) {
+            throw new Error('triesMax must be >= 1');
+        }
+    }
+
+    /**
+     * The promise resolves once the session has been marked as *done*.
+     *
+     * It will reject in case the server indicated a bad request or the maximum
+     * amount of retransmissions have been reached.
+     *
+     * @throws TimeoutError in case the maximum amount of retries has been
+     *   reached.
+     * @throws Error in case of an unrecoverable error which prevents further
+     *   pushes.
+     */
+    public start(): Promise<void> {
+        // Start sending
+        if (!this.running) {
+            this.run().catch((error) => {
+                this.$log.error(this.logTag, 'Push runner failed:', error);
+                this.doneFuture.reject(error);
+            });
+            this.running = true;
+        }
+        return this.doneFuture;
+    }
+
+    /**
+     * Mark as done and stop sending push messages.
+     *
+     * This will resolve all pending promises.
+     */
+    public done(): void {
+        this.$log.info(this.logTag, 'Push done');
+        this.doneFuture.resolve();
+    }
+
+    private async run(): Promise<void> {
+        // Calculate session hash
+        const sessionHash = await sha256(this.session.buffer);
+        this.logTag = `[Push.${sessionHash}.${this.collapseKey}]`;
+
+        // Prepare data
+        const data = new URLSearchParams();
+        data.set(PushService.ARG_TYPE, this.service.pushType);
+        data.set(PushService.ARG_SESSION, sessionHash);
+        data.set(PushService.ARG_VERSION, `${this.service.version}`);
+        if (this.service.pushType === threema.PushTokenType.Apns) {
+            // APNS token format: "<hex-deviceid>;<endpoint>;<bundle-id>"
+            const parts = this.service.pushToken.split(';');
+            if (parts.length < 3) {
+                throw new Error(`APNS push token contains ${parts.length} parts, but at least 3 are required`);
+            }
+            data.set(PushService.ARG_TOKEN, parts[0]);
+            data.set(PushService.ARG_ENDPOINT, parts[1]);
+            data.set(PushService.ARG_BUNDLE_ID, parts[2]);
+        } else if (this.service.pushType === threema.PushTokenType.Gcm) {
+            data.set(PushService.ARG_TOKEN, this.service.pushToken);
+        } else {
+            throw new Error(`Invalid push type: ${this.service.pushType}`);
+        }
+
+        // Push until done or unrecoverable error
+        while (!this.doneFuture.done) {
+            // Determine TTL
+            let timeToLive = this.config.timeToLiveRange[this.tries];
+            if (timeToLive === undefined) {
+                timeToLive = this.config.timeToLiveRange[this.config.timeToLiveRange.length - 1];
+            }
+
+            // Set/Remove collapse key
+            if (timeToLive === 0) {
+                data.delete(PushService.ARG_COLLAPSE_KEY);
+            } else {
+                data.set(PushService.ARG_COLLAPSE_KEY, this.collapseKey);
+            }
+
+            // Modify data
+            data.set(PushService.ARG_TIME_TO_LIVE, `${timeToLive}`);
+            ++this.tries;
+
+            // Send push
+            this.$log.debug(this.logTag, `Sending push ${this.tries}/${this.config.triesMax} (ttl=${timeToLive})`);
+            if (this.service.config.DEBUG) {
+                this.$log.debug(this.logTag, 'Push data:', `${data}`);
+            }
+            try {
+                const response = await fetch(this.service.url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: data,
+                });
+
+                // Check if successful
+                if (response.ok) {
+                    // Success: Retry
+                    this.$log.debug(this.logTag, 'Push sent successfully');
+                } else if (response.status >= 400 && response.status < 500) {
+                    // Client error: Don't retry
+                    const error = `Push rejected (client error), status: ${response.status}`;
+                    this.$log.warn(this.logTag, error);
+                    this.doneFuture.reject(new Error(error));
+                } else {
+                    // Server error: Retry
+                    this.$log.warn(this.logTag, `Push rejected (server error), status: ${response.status}`);
+                }
+            } catch (error) {
+                this.$log.warn(this.logTag, 'Sending push failed:', error);
+            }
+
+            // Retry after timeout
+            await sleep(this.retryTimeoutMs);
+
+            // Apply RTO backoff
+            this.retryTimeoutMs = Math.min(this.retryTimeoutMs * 2, this.config.retryTimeoutMaxMs);
+
+            // Maximum tries reached?
+            if (this.tries === this.config.triesMax) {
+                const error = `Push session timeout after ${this.tries} tries`;
+                this.$log.warn(this.logTag, error);
+                this.doneFuture.reject(new TimeoutError(error));
+            }
+        }
+    }
+}
+
 export class PushService {
-    private static ARG_TYPE = 'type';
-    private static ARG_TOKEN = 'token';
-    private static ARG_SESSION = 'session';
-    private static ARG_VERSION = 'version';
-    private static ARG_ENDPOINT = 'endpoint';
-    private static ARG_BUNDLE_ID = 'bundleid';
+    public static readonly $inject = ['$log', 'CONFIG', 'PROTOCOL_VERSION'];
 
-    private logTag: string = '[PushService]';
+    public static readonly ARG_TYPE = 'type';
+    public static readonly ARG_TOKEN = 'token';
+    public static readonly ARG_SESSION = 'session';
+    public static readonly ARG_VERSION = 'version';
+    public static readonly ARG_ENDPOINT = 'endpoint';
+    public static readonly ARG_BUNDLE_ID = 'bundleid';
+    public static readonly ARG_TIME_TO_LIVE = 'ttl';
+    public static readonly ARG_COLLAPSE_KEY = 'collapse_key';
 
-    private $http: ng.IHttpService;
-    private $log: ng.ILogService;
-    private $httpParamSerializerJQLike;
+    private readonly logTag: string = '[PushService]';
+    public readonly $log: ng.ILogService;
+    public readonly config: threema.Config;
+    public readonly url: string;
+    public readonly version: number = null;
+    private _pushToken: string = null;
+    private _pushType = threema.PushTokenType.Gcm;
 
-    private url: string;
-    private pushToken: string = null;
-    private pushType = threema.PushTokenType.Gcm;
-    private version: number = null;
-
-    public static $inject = ['$http', '$log', '$httpParamSerializerJQLike', 'CONFIG', 'PROTOCOL_VERSION'];
-    constructor($http: ng.IHttpService, $log: ng.ILogService, $httpParamSerializerJQLike,
-                CONFIG: threema.Config, PROTOCOL_VERSION: number) {
-        this.$http = $http;
+    constructor($log: ng.ILogService, CONFIG: threema.Config, PROTOCOL_VERSION: number) {
         this.$log = $log;
-        this.$httpParamSerializerJQLike = $httpParamSerializerJQLike;
+        this.config = CONFIG;
         this.url = CONFIG.PUSH_URL;
         this.version = PROTOCOL_VERSION;
+    }
+
+    public get pushToken(): string {
+        return this._pushToken;
+    }
+
+    public get pushType(): string {
+        return this._pushType;
     }
 
     /**
@@ -51,87 +278,35 @@ export class PushService {
      */
     public init(pushToken: string, pushTokenType: threema.PushTokenType): void {
         this.$log.info(this.logTag, 'Initialized with', pushTokenType, 'token');
-        this.pushToken = pushToken;
-        this.pushType = pushTokenType;
+        this._pushToken = pushToken;
+        this._pushType = pushTokenType;
     }
 
     /**
      * Reset the push service, remove stored push tokens.
      */
     public reset(): void {
-        this.pushToken = null;
+        this._pushToken = null;
     }
 
     /**
-     * Return true if service has been initialized with a push token.
+     * Return whether the service has been initialized with a push token.
      */
     public isAvailable(): boolean {
-        return this.pushToken != null;
+        return this._pushToken != null;
     }
 
     /**
-     * Send a push notification for the specified session (public permanent key
-     * of the initiator). The promise is always resolved to a boolean.
-     *
-     * If something goes wrong, the promise is rejected with an `Error` instance.
+     * Create a push session for a specific session (public permanent key of
+     * the initiator) which will repeatedly send push messages until the
+     * session is marked as established.
      */
-    public async sendPush(session: Uint8Array): Promise<boolean> {
+    public createSession(session: Uint8Array, config?: threema.PushSessionConfig): PushSession {
         if (!this.isAvailable()) {
-            return false;
+            throw new Error('Push service unavailable');
         }
 
-        // Calculate session hash
-        const sessionHash = await sha256(session.buffer);
-
-        // Prepare request
-        const data = {
-            [PushService.ARG_TYPE]: this.pushType,
-            [PushService.ARG_SESSION]: sessionHash,
-            [PushService.ARG_VERSION]: this.version,
-        };
-        if (this.pushType === threema.PushTokenType.Apns) {
-            // APNS token format: "<hex-deviceid>;<endpoint>;<bundle-id>"
-            const parts = this.pushToken.split(';');
-            if (parts.length < 3) {
-                this.$log.warn(this.logTag, 'APNS push token contains', parts.length, 'parts, at least 3 are required');
-                return false;
-            }
-            data[PushService.ARG_TOKEN] = parts[0];
-            data[PushService.ARG_ENDPOINT] = parts[1];
-            data[PushService.ARG_BUNDLE_ID] = parts[2];
-        } else if (this.pushType === threema.PushTokenType.Gcm) {
-            data[PushService.ARG_TOKEN] = this.pushToken;
-        } else {
-            this.$log.warn(this.logTag, 'Invalid push type');
-            return false;
-        }
-
-        const request = {
-            method: 'POST',
-            url: this.url,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            data: this.$httpParamSerializerJQLike(data),
-        };
-
-        // Send push
-        return new Promise((resolve) => {
-            this.$http(request).then(
-                (successResponse) => {
-                    if (successResponse.status === 204) {
-                        this.$log.debug(this.logTag, 'Sent push');
-                        resolve(true);
-                    } else {
-                        this.$log.warn(this.logTag, 'Sending push failed: HTTP ' + successResponse.status);
-                        resolve(false);
-                    }
-                },
-                (errorResponse) => {
-                    this.$log.warn(this.logTag, 'Sending push failed:', errorResponse);
-                    resolve(false);
-                },
-            );
-        }) as Promise<boolean>;
+        // Create push instance
+        return new PushSession(this, session, config);
     }
 }
