@@ -116,7 +116,7 @@ $button-color-disabled: rgba(255, 254, 254, .65);
 $button-color-pressed: rgb(155, 155, 155);
 $button-text-color: $secondary-900;
 $button-text-light-color: rgb(255, 255, 255);
-$button-text-alt-color: $text-bright-background-color;
+$button-text-alt-color: $button-text-light-color;
 $button-hover-color: rgba(158, 158, 158, .2);
 $button-selected-color: rgba(158, 158, 158, 1);
 
