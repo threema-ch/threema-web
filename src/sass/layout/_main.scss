@@ -66,7 +66,7 @@
         height: 100%;
 
         > div.ng-scope {
-            background-color: $conversation-header-color;
+            background-color: $background-dark-color;
             height: 100%;
 
 
@@ -77,13 +77,13 @@
                 align-items: center;
                 z-index: 18;
                 box-shadow: 1px 2px 4px -2px rgba(0, 0, 0, .2);
-                // background-color: $dark-background-color;
+                background-color: $conversation-header-color;
                 padding: 0 $main-padding;
                 min-height: 68px;
 
                 >* {
                     margin-left: 8px;
-                    color: $secondary-000;
+                    color: text-bright-background-color;
                 } // TODO This might need renaming to header-detail
 
                 .header-detail {
@@ -116,7 +116,7 @@
                     }
 
                     .material-icons {
-                        color: $icon-light-color;
+                        color: $icon-dark-color;
                     }
                 }
             }
@@ -260,12 +260,12 @@
 }
 
 .material-icons {
-    color: $icon-color;
+    color: $icon-material-grey-color;
 
     &.as-button {
         opacity: .5;
         cursor: pointer;
-        color: $icon-color;
+        color: $icon-material-grey-color;
 
         &:hover {
             opacity: 1;
@@ -285,12 +285,8 @@
     }
 
     .md-primary {
-        color: $icon-color;
+        color: $icon-material-grey-color;
     }
-}
-
-md-menu-content {
-    background-color: $background-light-color;
 }
 
 md-dialog.md-default-theme,
@@ -476,4 +472,8 @@ md-toolbar {
             }
         }
     }
+}
+
+md-menu-content {
+    background-color: $background-very-light-color;
 }

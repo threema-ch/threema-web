@@ -10,13 +10,13 @@
     justify-content: center;
     z-index: 21;
     box-shadow: -2px 2px 4px -2px rgba(0, 0, 0, .8);
-    background-color: $conversation-header-color;
+    background-color: $navigation-header-color;
     padding: 0 $main-padding 0 (2 * $main-padding);
     min-height: 68px;
     color: $secondary-000;
 
     .material-icons.md-light {
-        color: $icon-light-color;
+        color: $icon-light-color !important;
     }
 
     .my-identity {
@@ -44,7 +44,7 @@
     background-color: $background-light-color;
 
     .material-icons.md-dark {
-        color: $icon-medium-dark-color;
+        color: $icon-dark-color;
     }
 
     .main {
@@ -83,7 +83,7 @@
                 margin: 0;
                 border: 1px solid $text-bright-background-color;
                 border-radius: $material-radius;
-                background-color: $background-light-color;
+                background-color: $secondary-000;
                 padding: $main-padding;
                 width: 100%;
                 color: $text-dark-color;
@@ -418,7 +418,7 @@
         }
 
         .identity {
-            color: $latest-message-text-color;
+            color: $text-bright-background-color;
         }
 
         .nickname {

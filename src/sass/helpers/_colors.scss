@@ -2,7 +2,7 @@ $status-ok: #4caf50;
 $status-warning: #ff9800;
 $status-error: #f44336;
 $status-starred: #ffc107;
-$border-color: #dddddd;
+// $border-color: #dddddd;
 $background-grey: lighten($border-color, 7%);
 $material-grey: rgba(0, 0, 0, .54);
 $material-grey-dark: rgba(0, 0, 0, .87);
@@ -17,7 +17,7 @@ $scrollbar-color-thumb: #cccccc;
 
 $material-card-shadow: 0 2px 5px 0 rgba(0, 0, 0, .16), 0 2px 5px 0 rgba(0, 0, 0, .23);
 
-$active-placeholder-color: #d3d3d3;
+// $active-placeholder-color: #d3d3d3;
 
 .color-status-ok {
     color: $status-ok;

@@ -1,22 +1,17 @@
 md-dialog md-dialog-actions .md-button {
     background-color: $button-color-enabled;
+    color: $button-text-alt-color !important; // $button-text-color
 }
 
 md-select {
     .md-select-value {
-        color: $text-dark-color;
+        color: $text-dark-color !important;
 
         .md-select-placeholder {
             color: $text-dark-color;
         }
 
         .md-select-icon {
-            color: $text-dark-color;
-        }
-    }
-
-    :not([disabled]) {
-        :focus .md-select-value {
             color: $text-dark-color;
         }
     }
@@ -31,11 +26,31 @@ md-select {
     }
 }
 
-md-select-menu md-content md-option {
-    color: $text-dark-color;
+md-select-menu {
+    md-content {
+        background-color: $background-very-light-color !important;
+
+        md-option {
+            background-color: $background-very-light-color !important;
+            color: $text-dark-color;
+
+            &:not([disabled]) {
+                &:hover {
+                    background-color: $button-hover-color !important;
+                    color: $text-dark-color;
+                }
+            }
+
+            &[selected] {
+                background-color: $button-selected-color !important;
+                color: $text-dark-color !important;
+            }
+        }
+    }
 }
 
 md-menu-content md-menu-item {
+    background-color: $background-very-light-color;
     color: $button-text-color;
 }
 
@@ -44,16 +59,17 @@ button {
     i.material-icons {
         margin-bottom: 3px;
         vertical-align: middle;
+        color: $icon-dark-color !important;
     }
 }
 
 .md-button {
     .md-fab {
         background-color: $primary-500;
-        color: $text-bright-background-color;
+        color: $button-text-alt-color; // $button-text-color
 
         md-icon {
-            color: $text-bright-background-color;
+            color: $button-text-alt-color;
         }
 
         :not([disabled]) {
@@ -65,6 +81,11 @@ button {
                 background-color: $primary-500;
             }
         }
+    }
+
+    .md-primary {
+        background-color: $primary-500;
+        color: $button-text-alt-color; // $button-text-color
     }
 
     .md-raised {

@@ -35,6 +35,7 @@ $secondary-600: rgba(116, 116, 116, 1);
 $secondary-570: rgba(148, 148, 148, 1);
 $secondary-500: rgba(157, 157, 157, 1); // Standard
 $secondary-400: rgba(188, 188, 188, 1);
+$secondary-320: rgba(219, 219, 219, 1);
 $secondary-300: rgba(223, 223, 223, 1);
 $secondary-200: rgba(237, 237, 237, 1);
 $secondary-100: rgba(245, 245, 245, 1);
@@ -53,6 +54,7 @@ $status-starred-color: #ffc107;
 
 // Border colors
 $border-color: $secondary-750;
+$border-alt-color: $secondary-320;
 
 // Scrollbar colors
 $scrollbar-thumb-color: $secondary-400;
@@ -61,8 +63,10 @@ $scrollbar-background-color: $secondary-900;
 // Background colors
 $background-dark-color: $secondary-900;
 $background-light-color: $secondary-850;
+$background-light-alt-color: $background-light-color;
 $background-welcome-light-color: $secondary-000;
 $background-very-light-color: $secondary-750;
+$navigation-header-color: $secondary-800; // secondary-800
 $conversation-header-color: $secondary-800;
 $conversation-background-color: $background-light-color;
 $conversation-background-highlight-color: $background-dark-color;
@@ -77,7 +81,8 @@ px 2px 5px px $material-grey-dark-color;
 // Text colors
 $text-bright-background-color: $secondary-300;
 $text-dark-color: $secondary-500;
-$text-light-color: $text-dark-color;
+$text-light-color: $secondary-050;
+$conversation-header-text-color: $secondary-050;
 
 $text-bright-background-welcome-color: $secondary-999;
 $latest-message-text-color: $text-dark-color;
@@ -91,14 +96,16 @@ $md-toolbar-button-color: $secondary-800;
 
 // Icon colors
 $icon-color: $secondary-000;
-$icon-dark-color: $secondary-600;
+$icon-dark-color: $secondary-400;
 $icon-medium-dark-color: $secondary-500;
+$icon-material-grey-color: $secondary-500;
 $icon-light-color: $secondary-400;
 
 // Message bubble colors
 $message-quote-color: $threema-green-color;
 $message-bubble-color-in: rgb(31, 25, 25);
 $message-bubble-color-out: rgb(27, 39, 52);
+$ctrl-message-bubble-color: #0c2298; //TODO: Check what this color is in the Android App
 
 // Misc colors
 $active-placeholder-color: $text-dark-color;
@@ -112,6 +119,12 @@ $button-color-disabled: lighten($secondary-700, 65%);
 $button-color-pressed: $secondary-750;
 $button-text-color: $secondary-000;
 $button-text-light-color: $secondary-900;
+$button-text-alt-color: $button-text-color;
+
+$button-hover-color: lighten($background-very-light-color, 15%);
+$button-selected-color: darken($background-very-light-color, 10%);
+
+$white-zero: rgba(255, 255, 255, 0);
 
 .color-status-ok {
     color: $status-ok-color;
