@@ -123,7 +123,7 @@
 
             .detail-content {
                 background-color: $background-dark-color;
-                color: $text-bright-background-color;
+                color: $text-medium-color;
 
                 ul {
                     margin: 0;
@@ -138,13 +138,13 @@
             }
 
             md-card md-card-content {
-                background-color: $background-very-light-color;
-                color: $text-bright-background-color;
+                background-color: $background-light-color;
+                color: $text-medium-color;
             }
 
             md-card-title {
-                background-color: $background-very-light-color;
-                color: $text-bright-background-color;
+                background-color: $background-light-color;
+                color: $text-medium-color;
             }
 
             // editable or readonly detail content
@@ -159,7 +159,7 @@
                         overflow: hidden;
 
                         eee-avatar {
-                            background-color: $background-very-light-color;
+                            background-color: $background-light-color;
 
                             img {
                                 position: relative;
@@ -196,7 +196,7 @@
                             // be sure the avatar has always the same height as width
                             &.avatar {
                                 position: relative;
-                                background-color: $background-very-light-color;
+                                background-color: $background-light-color;
                                 width: 50%;
                                 overflow: hidden;
 
@@ -247,7 +247,7 @@
     &.show-detail {
         #navigation {
             flex: 1 6 30%;
-            border-right: 1px solid $border-color;
+            border-right: 1px solid $border-dark-color;
             min-width: 200px;
             max-width: 30%;
         }
@@ -276,10 +276,6 @@
         color: $icon-dark-color;
     }
 
-    .md-medium-dark {
-        color: $icon-medium-dark-color;
-    }
-
     .md-light {
         color: $icon-light-color;
     }
@@ -291,12 +287,12 @@
 
 md-dialog.md-default-theme,
 md-dialog {
-    background-color: $background-light-color;
+    background-color: $background-medium-color;
 }
 
 .md-dialog-content {
-    background-color: $background-light-color;
-    color: $text-bright-background-color;
+    background-color: $background-medium-color;
+    color: $text-medium-color;
 
     &.center {
         text-align: center;
@@ -307,14 +303,14 @@ md-checkbox {
     .md-default-theme {
         :note(.md-checked) {
             .md-icon {
-                border-color: $text-bright-background-color;
+                border-color: $text-medium-color;
             }
         }
     }
 
     :not(.md-checked) {
         .md-icon {
-            border-color: $text-bright-background-color;
+            border-color: $text-medium-color;
         }
     }
 }
@@ -399,11 +395,11 @@ md-input-container {
     }
 
     label {
-        color: $text-bright-background-color;
+        color: $text-medium-color;
     }
 
     .md-input-has-value label {
-        color: $text-bright-background-color;
+        color: $text-medium-color;
     }
 
     :not(.md-input-invalid).md-input-focused {
@@ -475,5 +471,5 @@ md-toolbar {
 }
 
 md-menu-content {
-    background-color: $background-very-light-color;
+    background-color: $background-light-color;
 }

@@ -1,5 +1,5 @@
 #welcome {
-    background-color: $background-welcome-light-color;
+    background-color: $secondary-000;
     padding: 16px 32px;
     line-height: 1.4em;
 
@@ -19,7 +19,7 @@
     &,
     input {
         text-align: center;
-        color: $text-bright-background-welcome-color;
+        color: $secondary-999;
     }
 
     md-input-container {

@@ -79,44 +79,50 @@ md-dialog.message-history-dialog {
 }
 
 // sass-lint:disable no-vendor-prefixes
+// sass-lint:disable force-pseudo-nesting
+// sass-lint:disable no-mergeable-selectors
 md-input-container {
-    .md-input {
-        &::-webkit-input-placeholder {
-            color: darken($text-placeholder-color, 30%);
-        }
-
-        &:-moz-placeholder {
-            color: darken($text-placeholder-color, 30%);
-        }
-
-        &::-moz-placeholder {
-            color: darken($text-placeholder-color, 30%);
-        }
-
-        &:-ms-input-placeholder {
-            color: darken($text-placeholder-color, 30%);
-        }
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 30%);
     }
 
-    .md-input-focused {
-        .md-input {
-            &::-webkit-input-placeholder {
-                color: darken($text-placeholder-color, 30%);
-            }
-
-            &:-moz-placeholder {
-                color: darken($text-placeholder-color, 30%);
-            }
-
-            &::-moz-placeholder {
-                color: darken($text-placeholder-color, 30%);
-            }
-
-            &:-ms-input-placeholder {
-                color: darken($text-placeholder-color, 30%);
-            }
-        }
+    .md-input:-moz-placeholder {
+        color: darken($text-placeholder-color, 30%);
     }
 
+    .md-input::-moz-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
+
+    // TODO: Investigate this.
+    // If this pseudo-class is nested within its parent
+    // it doesn't work in Chrome. I have no clue why.
+    .md-input:-ms-input-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
+
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 30%);
+    }
 }
-// sass-lint:disable no-vendor-prefixes
+
+md-input-container.md-input-focused {
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+
+    .md-input:-moz-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+
+    .md-input:-ms-input-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+
+    .md-input::-webkit-input-placeholder {
+        color: darken($text-placeholder-color, 20%);
+    }
+}
+// sass-lint:enable no-vendor-prefixes
+// sass-lint:enable force-pseudo-nesting
+// sass-lint:enable no-mergeable-selectors

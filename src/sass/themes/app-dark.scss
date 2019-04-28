@@ -1,15 +1,10 @@
-// // Like this adding the class dark to the body will change the colors of all the underlying elements.
-// // I'm not quite sure whether the variables at the top are global and I couldn't find information on that on the fly. Might need to look into that
-// // Otherwise this seems fine and is what dbrgn has described in https://github.com/threema-ch/threema-web/pull/110
-// // See here for the scope of the variables: https://stackoverflow.com/questions/12365703/scss-variable-scope#30009712
-
 $wallpaper: '../../public/img/wallpaper_dark.png?';; // TODO: Use a darker wallpaper
 
 // Define colors
-// $almost-black: rgb(27, 27, 27);
 $threema-green-color: rgb(0, 150, 136);
-// $very-dark-gray: rgb(46, 46, 46);
-// $standard-gray: rgb(83, 83, 83);
+$dark-gray: rgb(83, 83, 83);
+$middle-gray: rgb(112, 112, 112);
+$light-gray: rgb(235, 235, 235);
 
 // Primary
 $primary-900: #004d3f;
@@ -45,6 +40,13 @@ $secondary: $secondary-500;
 
 // Terniary
 
+// Material colors
+$material-grey-color: $secondary-900;
+$material-grey-inactive-color: lighter($material-grey-color, 50%);
+$material-grey-dark-color: darken($secondary-900, 25%);
+$material-card-shadow-color: px 2px 5px px $material-grey-dark-color,
+px 2px 5px px $material-grey-dark-color;
+
 // Status colors
 $status-ok-color: #4caf50;
 $status-warning-color: #ff9800;
@@ -53,8 +55,8 @@ $status-error-disabled-color: #f44336;
 $status-starred-color: #ffc107;
 
 // Border colors
-$border-color: $secondary-750;
-$border-alt-color: $secondary-320;
+$border-dark-color: $secondary-750;
+$border-light-color: $secondary-320;
 
 // Scrollbar colors
 $scrollbar-thumb-color: $secondary-400;
@@ -62,44 +64,38 @@ $scrollbar-background-color: $secondary-900;
 
 // Background colors
 $background-dark-color: $secondary-900;
-$background-light-color: $secondary-850;
-$background-light-alt-color: $background-light-color;
-$background-welcome-light-color: $secondary-000;
-$background-very-light-color: $secondary-750;
-$navigation-header-color: $secondary-800; // secondary-800
-$conversation-header-color: $secondary-800;
-$conversation-background-color: $background-light-color;
-$conversation-background-highlight-color: $background-dark-color;
+$background-medium-color: $secondary-850;
+$background-light-color: $secondary-750;
 
-// Material colors
-$material-grey-color: $secondary-900;
-$material-grey-inactive-color: lighter($material-grey-color, 50%);
-$material-grey-dark-color: darken($secondary-900, 25%);
-$material-card-shadow-color: px 2px 5px px $material-grey-dark-color,
-px 2px 5px px $material-grey-dark-color;
+$background-emoji-picker-color: $background-medium-color;
+$navigation-background-color: $background-medium-color;
+$navigation-background-highlight-color: $background-dark-color;
+
+// Header colors
+$navigation-header-color: $secondary-800;
+$conversation-header-color: $secondary-800;
 
 // Text colors
-$text-bright-background-color: $secondary-300;
 $text-dark-color: $secondary-500;
+$text-medium-color: $secondary-300;
 $text-light-color: $secondary-050;
+
 $conversation-header-text-color: $secondary-050;
 
-$text-bright-background-welcome-color: $secondary-999;
-$latest-message-text-color: $text-dark-color;
-$text-placeholder-color: $latest-message-text-color;
+$latest-message-text-color: $secondary-500;
+$text-placeholder-color: $secondary-500;
 $text-protocol-updated-color: #9dd0f2;
 
 // md-toolbar colors
 $md-toolbar-color: $background-dark-color;
-$md-toolbar-text-color: $text-dark-color;
+$md-toolbar-text-color: $secondary-800;
 $md-toolbar-button-color: $secondary-800;
 
 // Icon colors
 $icon-color: $secondary-000;
 $icon-dark-color: $secondary-400;
-$icon-medium-dark-color: $secondary-500;
-$icon-material-grey-color: $secondary-500;
 $icon-light-color: $secondary-400;
+$icon-material-grey-color: $secondary-500;
 
 // Message bubble colors
 $message-quote-color: $threema-green-color;
@@ -107,24 +103,23 @@ $message-bubble-color-in: rgb(31, 25, 25);
 $message-bubble-color-out: rgb(27, 39, 52);
 $ctrl-message-bubble-color: #0c2298; //TODO: Check what this color is in the Android App
 
-// Misc colors
-$active-placeholder-color: $text-dark-color;
-$url-light-blue-color: #63a6cf;
-$work-blue-color: #3b84df;
-
 // Button colors
 $button-color: $material-grey-color;
 $button-color-enabled: $secondary-600;
 $button-color-disabled: lighten($secondary-700, 65%);
 $button-color-pressed: $secondary-750;
-$button-text-color: $secondary-000;
+$button-hover-color: lighten($background-light-color, 15%);
+$button-selected-color: darken($background-light-color, 10%);
+
+$button-text-dark-color: $secondary-000;
 $button-text-light-color: $secondary-900;
-$button-text-alt-color: $button-text-color;
 
-$button-hover-color: lighten($background-very-light-color, 15%);
-$button-selected-color: darken($background-very-light-color, 10%);
-
+// Misc colors
+$active-placeholder-color: $text-dark-color;
+$url-light-blue-color: #63a6cf;
+$work-blue-color: #3b84df;
 $white-zero: rgba(255, 255, 255, 0);
+
 
 .color-status-ok {
     color: $status-ok-color;

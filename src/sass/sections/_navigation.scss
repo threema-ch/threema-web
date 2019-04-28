@@ -1,6 +1,6 @@
 // Separator for navigation items
 @mixin nav-item-separator {
-    border-bottom: 1px solid $border-color;
+    border-bottom: 1px solid $border-dark-color;
 }
 
 #navigation-topheader {
@@ -41,7 +41,7 @@
 #navigation-header {
     z-index: 18;
     box-shadow: -2px 2px 4px -2px rgba(0, 0, 0, .4);
-    background-color: $background-light-color;
+    background-color: $background-medium-color;
 
     .material-icons.md-dark {
         color: $icon-dark-color;
@@ -81,7 +81,7 @@
         input {
             &[type='text'] {
                 margin: 0;
-                border: 1px solid $text-bright-background-color;
+                border: 1px solid $text-medium-color;
                 border-radius: $material-radius;
                 background-color: $secondary-000;
                 padding: $main-padding;
@@ -135,26 +135,26 @@
     .conversation-wrapper {
         @include nav-item-separator;
         display: block;
-        background-color: $conversation-background-color;
+        background-color: $navigation-background-color;
 
         .conversation {
             display: flex;
             flex-direction: row;
             align-items: center;
-            border-left: $border-width * $border-count solid $conversation-background-color;
+            border-left: $border-width * $border-count solid $navigation-background-color;
             padding: (1.5 * $main-padding) $main-padding - ($border-width * ($border-count - 1));
 
             &.active {
                 &:hover {
-                    border-color: $conversation-background-highlight-color;
-                    background-color: $conversation-background-highlight-color;
+                    border-color: $navigation-background-highlight-color;
+                    background-color: $navigation-background-highlight-color;
                 }
             }
 
             &:hover {
                 &:not(.active) {
-                    border-color: $conversation-background-highlight-color;
-                    background-color: $conversation-background-highlight-color;
+                    border-color: $navigation-background-highlight-color;
+                    background-color: $navigation-background-highlight-color;
                 }
             }
 
@@ -164,8 +164,8 @@
                     to right,
                     $status-error,
                     $status-error 50%,
-                    $conversation-background-color 50%,
-                    $conversation-background-color 100%
+                    $navigation-background-color 50%,
+                    $navigation-background-color 100%
                 ) 1 100%;
 
                 &.active {
@@ -173,8 +173,8 @@
                         to right,
                         $status-error,
                         $status-error 50%,
-                        $conversation-background-color 50%,
-                        $conversation-background-color 100%
+                        $navigation-background-color 50%,
+                        $navigation-background-color 100%
                     ) 1 100%;
                 }
 
@@ -183,8 +183,8 @@
                         to right,
                         $status-error,
                         $status-error 50%,
-                        $conversation-background-highlight-color 50%,
-                        $conversation-background-highlight-color 100%
+                        $navigation-background-highlight-color 50%,
+                        $navigation-background-highlight-color 100%
                     ) 1 100%;
                 }
             }
@@ -195,8 +195,8 @@
                     to right,
                     $status-starred,
                     $status-starred 50%,
-                    $conversation-background-color 50%,
-                    $conversation-background-color 100%
+                    $navigation-background-color 50%,
+                    $navigation-background-color 100%
                 ) 1 100%;
 
                 &.active {
@@ -214,8 +214,8 @@
                         to right,
                         $status-starred,
                         $status-starred 50%,
-                        $conversation-background-highlight-color 50%,
-                        $conversation-background-highlight-color 100%
+                        $navigation-background-highlight-color 50%,
+                        $navigation-background-highlight-color 100%
                     ) 1 100%;
                 }
             }
@@ -258,7 +258,7 @@
                     flex-direction: row;
                     flex-grow: 1;
                     justify-content: space-between;
-                    color: $text-bright-background-color;
+                    color: $text-medium-color;
                     font-weight: bold;
 
                     .title {
@@ -382,7 +382,7 @@
 
 #navigation-contacts {
     flex: 1;
-    background-color: $conversation-background-color;
+    background-color: $navigation-background-color;
     overflow-y: scroll;
 
     .contact {
@@ -392,12 +392,12 @@
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        border-left: 4px solid $background-very-light-color;
+        border-left: 4px solid $background-light-color;
         padding: 12px 8px;
 
         .avatar-box {
             padding-right: 8px;
-            color: $text-bright-background-color;
+            color: $text-medium-color;
         }
 
         .left {
@@ -413,16 +413,16 @@
         }
 
         .name {
-            color: $text-bright-background-color;
+            color: $text-medium-color;
             font-weight: bold;
         }
 
         .identity {
-            color: $text-bright-background-color;
+            color: $text-medium-color;
         }
 
         .nickname {
-            color: $text-bright-background-color;
+            color: $text-medium-color;
             font-size: .8em;
         }
 
@@ -431,12 +431,12 @@
             cursor: pointer;
 
             &.active {
-                border-color: $conversation-background-highlight-color;
-                background-color: $conversation-background-highlight-color;
+                border-color: $navigation-background-highlight-color;
+                background-color: $navigation-background-highlight-color;
             }
 
             &:not(.active) {
-                background-color: $conversation-background-highlight-color;
+                background-color: $navigation-background-highlight-color;
             }
         }
     }

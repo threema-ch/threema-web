@@ -1,6 +1,6 @@
 md-dialog md-dialog-actions .md-button {
     background-color: $button-color-enabled;
-    color: $button-text-alt-color !important; // $button-text-color
+    color: $button-text-dark-color !important; // $button-text-dark-color
 }
 
 md-select {
@@ -26,32 +26,28 @@ md-select {
     }
 }
 
-md-select-menu {
-    md-content {
-        background-color: $background-very-light-color !important;
+md-select-menu md-content {
+    background-color: $background-light-color !important;
+}
 
-        md-option {
-            background-color: $background-very-light-color !important;
-            color: $text-dark-color;
+md-select-menu md-content md-option {
+    background-color: $background-light-color !important;
+    color: $text-dark-color;
+}
 
-            &:not([disabled]) {
-                &:hover {
-                    background-color: $button-hover-color !important;
-                    color: $text-dark-color;
-                }
-            }
+md-select-menu md-content md-option:not([disabled]):hover {
+    background-color: $button-hover-color !important;
+    color: $text-dark-color;
+}
 
-            &[selected] {
-                background-color: $button-selected-color !important;
-                color: $text-dark-color !important;
-            }
-        }
-    }
+md-select-menu md-content md-option[selected] {
+    background-color: $button-selected-color !important;
+    color: $text-dark-color !important;
 }
 
 md-menu-content md-menu-item {
-    background-color: $background-very-light-color;
-    color: $button-text-color;
+    background-color: $background-light-color;
+    color: $button-text-dark-color;
 }
 
 
@@ -66,10 +62,10 @@ button {
 .md-button {
     .md-fab {
         background-color: $primary-500;
-        color: $button-text-alt-color; // $button-text-color
+        color: $button-text-dark-color; // $button-text-dark-color
 
         md-icon {
-            color: $button-text-alt-color;
+            color: $button-text-dark-color;
         }
 
         :not([disabled]) {
@@ -85,15 +81,15 @@ button {
 
     .md-primary {
         background-color: $primary-500;
-        color: $button-text-alt-color; // $button-text-color
+        color: $button-text-dark-color; // $button-text-dark-color
     }
 
     .md-raised {
         background-color: $button-color-enabled;
-        color: $button-text-color;
+        color: $button-text-dark-color;
 
         :not([disabled]) md-icon {
-            color: $button-text-color;
+            color: $button-text-dark-color;
         }
 
         :not([disabled]) {

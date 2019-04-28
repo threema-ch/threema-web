@@ -1,11 +1,11 @@
 .twemoji-picker {
     margin: 0;
-    background-color: $background-light-alt-color;
+    background-color: $background-emoji-picker-color;
     padding: 0 8px;
     min-height: 216px;
 
     &.outline {
-        border: 2px solid $border-alt-color;
+        border: 2px solid $border-light-color;
         border-radius: 4px;
         width: 366px;
     }
@@ -27,8 +27,8 @@
         position: relative;
         left: 1px;
         margin-left: -1px;
-        border: 1px solid $background-light-alt-color;
-        background: $background-light-alt-color;
+        border: 1px solid $background-emoji-picker-color;
+        background: $background-emoji-picker-color;
         cursor: pointer;
         padding: 4px;
         height: 32px;
@@ -46,8 +46,8 @@
         right: 0;
         bottom: 0;
         left: 0;
-        border: 1px solid $background-very-light-color;
-        background: $background-very-light-color;
+        border: 1px solid $background-light-color;
+        background: $background-light-color;
         padding: 10px 10px 0;
         overflow-y: scroll;
 
@@ -61,8 +61,8 @@
 
         &:checked ~ label {
             z-index: 2;
-            border-bottom: 1px solid $background-very-light-color;
-            background: $background-very-light-color;
+            border-bottom: 1px solid $background-light-color;
+            background: $background-light-color;
         }
 
         &:checked ~ label ~ .content {
