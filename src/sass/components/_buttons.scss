@@ -26,23 +26,27 @@ md-select {
     }
 }
 
-md-select-menu md-content {
-    background-color: $background-light-color !important;
-}
+md-select-menu {
+    md-content {
+        background-color: $background-light-color !important;
 
-md-select-menu md-content md-option {
-    background-color: $background-light-color !important;
-    color: $text-dark-color;
-}
+        md-option {
+            background-color: $background-light-color !important;
+            color: $text-dark-color;
 
-md-select-menu md-content md-option:not([disabled]):hover {
-    background-color: $button-hover-color !important;
-    color: $text-dark-color;
-}
+            &:not([disabled]) {
+                &:hover {
+                    background-color: $button-hover-color !important;
+                    color: $text-dark-color;
+                }
+            }
 
-md-select-menu md-content md-option[selected] {
-    background-color: $button-selected-color !important;
-    color: $text-dark-color !important;
+            &[selected] {
+                background-color: $button-selected-color !important;
+                color: $text-dark-color !important;
+            }
+        }
+    }
 }
 
 md-menu-content md-menu-item {

@@ -35,7 +35,7 @@ def create_png(rotation: int) -> None:
             f.name,
         ])
         result.check_returncode()
-
+# All paths must be absolute in macOS
 
 if __name__ == '__main__':
     with open('spinner.svg', 'r') as f:
