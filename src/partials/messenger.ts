@@ -24,7 +24,7 @@ import {
 } from '@uirouter/angularjs';
 
 import {ContactControllerModel} from '../controller_model/contact';
-import {bufferToUrl, filter, hasValue, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
+import {bufferToUrl, hasValue, logAdapter, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {emojify} from '../helpers/emoji';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
@@ -61,7 +61,7 @@ class DialogController {
         this.done();
     }
 
-    protected hide(data: any): void {
+    protected hide(data?: any): void {
         this.$mdDialog.hide(data);
         this.done();
     }
@@ -128,10 +128,59 @@ class SendFileController extends DialogController {
 }
 
 /**
+ * Handle device unreachable
+ */
+export class DeviceUnreachableController extends DialogController {
+    public static readonly $inject = ['$rootScope', '$window', '$mdDialog', 'CONFIG', 'WebClientService'];
+    private readonly $rootScope: any;
+    private readonly $window: ng.IWindowService;
+    private readonly webClientService: WebClientService;
+    public retrying: boolean = false;
+    public progress: number = 0;
+
+    constructor(
+        $rootScope: any, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
+        CONFIG: threema.Config, webClientService: WebClientService,
+    ) {
+        super($mdDialog, CONFIG);
+        this.$rootScope = $rootScope;
+        this.$window = $window;
+        this.webClientService = webClientService;
+    }
+
+    /**
+     * Retry wakeup of the device via a push session.
+     */
+    public async retry(): Promise<any> {
+        // Schedule sending a push
+        const [expectedPeriodMaxMs, pushSessionPromise] = this.webClientService.sendPush();
+
+        // Initialise progress circle
+        this.retrying = true;
+        this.progress = 0;
+        const interval = setInterval(() => this.$rootScope.$apply(() => ++this.progress), expectedPeriodMaxMs / 100);
+
+        // Wait for push to succeed/reject and reset the progress circle
+        try {
+            await pushSessionPromise;
+        } finally {
+            clearInterval(interval);
+            this.$rootScope.$apply(() => this.retrying = false);
+        }
+    }
+
+    /**
+     * Reload the page.
+     */
+    public reload(): void {
+        this.$window.location.reload();
+    }
+}
+
+/**
  * Handle settings
  */
 class SettingsController {
-
     public static $inject = ['$mdDialog', '$window', 'SettingsService', 'NotificationService'];
 
     public $mdDialog: ng.material.IDialogService;
@@ -190,7 +239,6 @@ class SettingsController {
     public setWantsSound(notificationSound: boolean) {
         this.notificationService.setWantsSound(notificationSound);
     }
-
 }
 
 interface ConversationStateParams extends UiStateParams {

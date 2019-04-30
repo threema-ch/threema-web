@@ -46,6 +46,7 @@ import {TitleService} from './title';
 import {VersionService} from './version';
 
 import {TimeoutError} from '../exceptions';
+import {DeviceUnreachableController} from '../partials/messenger';
 import {ChunkCache} from '../protocol/cache';
 import {SequenceNumber} from '../protocol/sequence_number';
 
@@ -217,11 +218,12 @@ export class WebClientService {
     public alerts: threema.Alert[] = [];
 
     // Push
+    private readonly pushExpectedPeriodMaxMs: number = PushSession.expectedPeriodMaxMs();
     private pushToken: string = null;
     private pushTokenType: threema.PushTokenType = null;
-    private pushSession: PushSession = null;
-    private pushPromise: Promise<any> = null;
-    private readonly pushExpectedPeriodMaxMs: number = PushSession.expectedPeriodMaxMs();
+    private pushSession: PushSession | null = null;
+    private pushPromise: Promise<any> | null = null;
+    private deviceUnreachableDialog: ng.IPromise<any> | null = null;
 
     // Timeouts
     private batteryStatusTimeout: ng.IPromise<void> = null;
@@ -490,10 +492,7 @@ export class WebClientService {
         this.salty.on('new-responder', () => {
             if (!this.startupDone) {
                 // Pushing complete
-                if (this.pushSession !== null) {
-                    this.pushSession.done();
-                    this.pushSession = null;
-                }
+                this.resetPushSession(true);
 
                 // Peer handshake
                 this.stateService.updateConnectionBuildupState('peer_handshake');
@@ -1038,16 +1037,30 @@ export class WebClientService {
         if (this.pushSession === null) {
             this.pushSession = this.pushService.createSession(this.salty.permanentKeyBytes);
 
-            // Start and handle errors
-            this.pushPromise = this.pushSession.start().catch((error) => {
-                if (error instanceof TimeoutError) {
-                    // TODO: Show device unreachable dialog
-                    // TODO: If unreachable dialog is already shown, set .retrying to false (with root scope)
-                    // this.showDeviceUnreachableDialog();
-                } else {
-                    this.failSession();
-                }
-            });
+            // Start and handle success/error
+            this.pushPromise = this.pushSession.start()
+                .then(() => this.resetPushSession(true))
+                .catch((error) => {
+                    // Reset push session
+                    this.resetPushSession(false);
+
+                    // Handle error
+                    if (error instanceof TimeoutError) {
+                        // Show device unreachable dialog (if we were already
+                        // connected and if not already visible).
+                        if (this.$state.includes('messenger') && this.deviceUnreachableDialog === null) {
+                            this.deviceUnreachableDialog = this.$mdDialog.show({
+                                controller: DeviceUnreachableController,
+                                controllerAs: 'ctrl',
+                                templateUrl: 'partials/dialog.device-unreachable.html',
+                                parent: angular.element(document.body),
+                                escapeToClose: false,
+                            }).finally(() => this.deviceUnreachableDialog = null);
+                        }
+                    } else {
+                        this.failSession();
+                    }
+                });
 
             // Update state
             if (!this.$rootScope.$$phase) {
@@ -1059,6 +1072,24 @@ export class WebClientService {
 
         // Retrieve the expected maximum period
         return [this.pushExpectedPeriodMaxMs, this.pushPromise];
+    }
+
+    /**
+     * Reset push session (if any) and hide the *device unreachable* dialog
+     * (if any and if requested).
+     */
+    private resetPushSession(hideDeviceUnreachableDialog: boolean = true): void {
+        // Hide unreachable dialog (if any)
+        if (hideDeviceUnreachableDialog && this.deviceUnreachableDialog !== null) {
+            this.$mdDialog.hide();
+        }
+
+        // Reset push session (if any)
+        if (this.pushSession !== null) {
+            this.pushSession.done();
+            this.pushSession = null;
+            this.pushPromise = null;
+        }
     }
 
     /**
@@ -1121,10 +1152,7 @@ export class WebClientService {
         let remove = false;
 
         // Stop push session
-        if (this.pushSession !== null) {
-            this.pushSession.done();
-            this.pushSession = null;
-        }
+        this.resetPushSession(true);
 
         // Session deleted: Force close and delete
         if (args.reason === DisconnectReason.SessionDeleted) {

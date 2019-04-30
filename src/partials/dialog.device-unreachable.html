@@ -1,0 +1,43 @@
+<md-dialog aria-label="Device Unreachable">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>deviceUnreachable.DEVICE_UNREACHABLE</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <h3 translate>deviceUnreachable.UNABLE_TO_CONNECT</h3>
+                <ul class="material-icons-list">
+                    <li class="help">
+                        <span translate>troubleshooting.PHONE_ONLINE</span>
+                    </li>
+                    <li class="help">
+                        <span translate>troubleshooting.APP_STARTED</span>
+                    </li>
+                    <li class="help">
+                        <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
+                    </li>
+                    <li class="info">
+                        <span translate>troubleshooting.UNLOCK_OR_CHARGE</span>
+                    </li>
+                    <li class="info">
+                        <span translate>troubleshooting.PUSH_FAQ</span>
+                    </li>
+                </ul>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button role="button" class="md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
+                <span translate id="aria-label-reload">welcome.RELOAD</span>
+            </md-button>
+            <md-button role="button" class="md-primary reload-btn circular-progress-button" ng-click="ctrl.retry()" ng-disabled="ctrl.retrying" aria-labelledby="aria-label-retry">
+                <md-progress-circular ng-if="ctrl.retrying" md-mode="determinate" md-diameter="20" value="{{ctrl.progress}}"></md-progress-circular>
+                <i ng-if="!ctrl.retrying" class="material-icons">refresh</i>
+                <span translate id="aria-label-retry">welcome.RETRY</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+
