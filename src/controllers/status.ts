@@ -305,7 +305,8 @@ export class StatusController {
             };
         })();
 
-        this.$timeout(() => {
+        this.$timeout.cancel(this.reconnectTimeout);
+        this.reconnectTimeout = this.$timeout(() => {
             if (push.send) {
                 this.$log.debug(`Starting new connection with push, reason: ${push.reason}`);
             } else {
