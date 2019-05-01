@@ -172,91 +172,29 @@ export class StatusController {
         const originalKeyStore = this.webClientService.salty.keyStore;
         const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
 
-        // Timeout durations
-        const TIMEOUT1 = 20 * 1000; // Duration per step for first reconnect
-        const TIMEOUT2 = 20 * 1000; // Duration per step for second reconnect
-
-        // Reconnect state
-        let reconnectTry: 1 | 2 = 1;
-
-        // Handler for failed reconnection attempts
-        const reconnectionFailed = () => {
-            // Collapse status bar
-            this.collapseStatusBar();
-
-            // Reset connection & state
-            this.webClientService.stop({
-                reason: DisconnectReason.SessionError,
-                send: false,
-                // TODO: Use welcome.error once we have it
-                close: 'welcome',
-                connectionBuildupState: 'reconnect_failed',
-            });
-        };
-
-        // Handlers for reconnecting timeout
-        const reconnect2Timeout = () => {
-            // Give up
-            this.$log.error(this.logTag, 'Reconnect timeout 2. Going back to initial loading screen...');
-            reconnectionFailed();
-        };
-        const reconnect1Timeout = () => {
-            // Could not connect so far.
-            this.$log.error(this.logTag, 'Reconnect timeout 1. Retrying...');
-            reconnectTry = 2;
-            this.reconnectTimeout = this.$timeout(reconnect2Timeout, TIMEOUT2);
-            doSoftReconnect();
-        };
-
-        // Function to soft-reconnect. Does not reset the loaded data.
-        const doSoftReconnect = () => {
-            this.webClientService.stop({
-                reason: DisconnectReason.SessionStopped,
-                send: true,
-                close: false,
-            });
-            this.webClientService.init({
-                keyStore: originalKeyStore,
-                peerTrustedKey: originalPeerPermanentKeyBytes,
-                resume: true,
-            });
-            this.webClientService.start().then(
-                () => {
-                    // Cancel timeout
-                    this.$timeout.cancel(this.reconnectTimeout);
-
-                    // Hide expanded status bar
-                    this.collapseStatusBar();
-                },
-                (error) => {
-                    this.$log.error(this.logTag, 'Error state:', error);
-                    this.$timeout.cancel(this.reconnectTimeout);
-                    reconnectionFailed();
-                },
-                (progress: threema.ConnectionBuildupStateChange) => {
-                    if (progress.state === 'peer_handshake' || progress.state === 'loading') {
-                        this.$log.debug(this.logTag, 'Connection buildup advanced, resetting timeout');
-                        // Restart timeout
-                        this.$timeout.cancel(this.reconnectTimeout);
-                        if (reconnectTry === 1) {
-                            this.reconnectTimeout = this.$timeout(reconnect1Timeout, TIMEOUT1);
-                        } else if (reconnectTry === 2) {
-                            this.reconnectTimeout = this.$timeout(reconnect2Timeout, TIMEOUT2);
-                        } else {
-                            throw new Error('Invalid reconnectTry value: ' + reconnectTry);
-                        }
-                    }
-                },
-            );
-        };
-
-        // Start timeout
-        this.reconnectTimeout = this.$timeout(reconnect1Timeout, TIMEOUT1);
-
-        // Start reconnecting process
-        doSoftReconnect();
-
-        // TODO: Handle server closing state
+        // Soft reconnect: Does not reset the loaded data
+        this.webClientService.stop({
+            reason: DisconnectReason.SessionStopped,
+            send: true,
+            close: false,
+        });
+        this.webClientService.init({
+            keyStore: originalKeyStore,
+            peerTrustedKey: originalPeerPermanentKeyBytes,
+            resume: true,
+        });
+        this.webClientService.start().then(
+            () => {
+                // Hide expanded status bar
+                this.collapseStatusBar();
+            },
+            (error) => {
+                this.$log.error(this.logTag, 'Error state:', error);
+            },
+            (progress: threema.ConnectionBuildupStateChange) => {
+                this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
+            },
+        );
     }
 
     /**
@@ -330,7 +268,6 @@ export class StatusController {
                         connectionBuildupState: 'reconnect_failed',
                     });
                 },
-                // Progress
                 (progress: threema.ConnectionBuildupStateChange) => {
                     this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
                 },
