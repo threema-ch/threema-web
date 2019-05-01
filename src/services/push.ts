@@ -228,7 +228,7 @@ export class PushSession {
             this.retryTimeoutMs = Math.min(this.retryTimeoutMs * 2, this.config.retryTimeoutMaxMs);
 
             // Maximum tries reached?
-            if (this.tries === this.config.triesMax) {
+            if (!this.doneFuture.done && this.tries === this.config.triesMax) {
                 const error = `Push session timeout after ${this.tries} tries`;
                 this.$log.warn(this.logTag, error);
                 this.doneFuture.reject(new TimeoutError(error));
