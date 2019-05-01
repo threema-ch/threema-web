@@ -48,7 +48,6 @@ export class PushSession {
     private readonly service: PushService;
     private readonly session: Uint8Array;
     private readonly config: threema.PushSessionConfig;
-    private readonly collapseKey: string = randomString(6);
     private readonly doneFuture: Future<any> = new Future();
     private logTag: string = '[Push]';
     private running: boolean = false;
@@ -150,7 +149,7 @@ export class PushSession {
     private async run(): Promise<void> {
         // Calculate session hash
         const sessionHash = await sha256(this.session.buffer);
-        this.logTag = `[Push.${sessionHash}.${this.collapseKey}]`;
+        this.logTag = `[Push.${sessionHash}]`;
 
         // Prepare data
         const data = new URLSearchParams();
@@ -184,7 +183,7 @@ export class PushSession {
             if (timeToLive === 0) {
                 data.delete(PushService.ARG_COLLAPSE_KEY);
             } else {
-                data.set(PushService.ARG_COLLAPSE_KEY, this.collapseKey);
+                data.set(PushService.ARG_COLLAPSE_KEY, sessionHash.slice(0, 6));
             }
 
             // Modify data
