@@ -183,18 +183,22 @@ export class StatusController {
             peerTrustedKey: originalPeerPermanentKeyBytes,
             resume: true,
         });
-        this.webClientService.start().then(
-            () => {
+        this.webClientService.start()
+            .then(
+                () => { /* ignored */ },
+                (error) => {
+                    this.$log.error(this.logTag, 'Error state:', error);
+                    // Note: The web client service has already been stopped at
+                    // this point.
+                },
+                (progress: threema.ConnectionBuildupStateChange) => {
+                    this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
+                },
+            )
+            .finally(() => {
                 // Hide expanded status bar
                 this.collapseStatusBar();
-            },
-            (error) => {
-                this.$log.error(this.logTag, 'Error state:', error);
-            },
-            (progress: threema.ConnectionBuildupStateChange) => {
-                this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
-            },
-        );
+            });
     }
 
     /**
@@ -257,16 +261,11 @@ export class StatusController {
             });
 
             this.webClientService.start(!push.send).then(
-                () => { /* ok */ },
+                () => { /* ignored */ },
                 (error) => {
                     this.$log.error(this.logTag, 'Error state:', error);
-                    this.webClientService.stop({
-                        reason: DisconnectReason.SessionError,
-                        send: false,
-                        // TODO: Use welcome.error once we have it
-                        close: 'welcome',
-                        connectionBuildupState: 'reconnect_failed',
-                    });
+                    // Note: The web client service has already been stopped at
+                    // this point.
                 },
                 (progress: threema.ConnectionBuildupStateChange) => {
                     this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);

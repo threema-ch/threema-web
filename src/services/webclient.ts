@@ -1257,6 +1257,12 @@ export class WebClientService {
 
         // Done, redirect now if session closed
         if (close) {
+            // Reject startup promise (if any)
+            if (this.startupPromise !== null) {
+                this.startupPromise.reject();
+                this.startupPromise = null;
+            }
+
             // Translate close flag
             const state = args.close !== false ? args.close : 'welcome';
             this.$state.go(state);

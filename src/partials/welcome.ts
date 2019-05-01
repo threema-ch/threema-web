@@ -582,19 +582,12 @@ class WelcomeController {
             // If an error occurs...
             (error) => {
                 this.$log.error(this.logTag, 'Error state:', error);
-                // TODO: should probably show an error message instead
-                this.timeoutService.register(
-                    () => this.$state.reload(),
-                    WelcomeController.REDIRECT_DELAY,
-                    true,
-                    'reloadStateError',
-                );
+                // Note: On rejection, the web client service will already
+                //       redirect to 'welcome' and show a protocol error.
             },
 
             // State updates
-            (progress: threema.ConnectionBuildupStateChange) => {
-                // Do nothing
-            },
+            (progress: threema.ConnectionBuildupStateChange) => { /* ignored */ },
         );
     }
 
