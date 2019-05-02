@@ -61,7 +61,7 @@ export function hexToU8a(hexstring: string): Uint8Array {
 }
 
 /**
- * Generate a random string.
+ * Generate a (non-cryptographically-secure!) random string.
  *
  * Based on http://stackoverflow.com/a/1349426/284318.
  */
