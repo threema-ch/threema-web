@@ -37,11 +37,20 @@ export default [
                         }
                     },
                 );
+                scope.$watch(
+                    () => scope.ctrl.themeService.currentTheme, (newTheme, oldTheme) => {
+                        if (hasValue(newTheme) && newTheme !== oldTheme) {
+                            scope.ctrl.update();
+                        }
+                    },
+                );
             },
             controllerAs: 'ctrl',
             controller: ['ThemeService', function(themeService: ThemeService) {
-                // Return icon depending on message type.
 
+                this.themeService = themeService;
+
+                // Return icon depending on message type.
                 const getIconFilename = (msgType: threema.MessageType) => {
                     switch (msgType) {
                         case 'image':
@@ -67,7 +76,7 @@ export default [
                 // Return icon depending on the current theme
                 const getIcon = (msgType: threema.MessageType) => {
                     const fn = getIconFilename(msgType);
-                    return (fn == null) ? themeService.imageFilename(fn) : null;
+                    return ((fn !== null) ? themeService.themedFilename(fn) : null);
                 };
 
                 this.update = () => {

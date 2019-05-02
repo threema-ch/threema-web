@@ -19,6 +19,7 @@ import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import {ControllerService} from '../services/controller';
 import {StateService} from '../services/state';
+import {ThemeService} from '../services/theme';
 import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
 
@@ -56,15 +57,16 @@ export class StatusController {
     // Custom services
     private controllerService: ControllerService;
     private stateService: StateService;
+    private themeService: ThemeService;
     private timeoutService: TimeoutService;
     private webClientService: WebClientService;
 
     public static $inject = [
         '$scope', '$timeout', '$log', '$state',
-        'ControllerService', 'StateService', 'TimeoutService', 'WebClientService',
+        'ControllerService', 'StateService', 'ThemeService', 'TimeoutService', 'WebClientService',
     ];
     constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: UiStateService,
-                controllerService: ControllerService, stateService: StateService,
+                controllerService: ControllerService, stateService: StateService, themeService: ThemeService,
                 timeoutService: TimeoutService, webClientService: WebClientService) {
 
         // Angular services
@@ -77,6 +79,7 @@ export class StatusController {
         this.stateService = stateService;
         this.timeoutService = timeoutService;
         this.webClientService = webClientService;
+        this.themeService = themeService;
 
         // Register event handlers
         this.stateService.evtGlobalConnectionStateChange.attach(

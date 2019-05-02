@@ -41,7 +41,7 @@ export default {
 
         this.getIcon = () => {
             const fn = (this.flag ? this.iconEnabled : this.iconDisabled);
-            return themeService.imageFilename(fn);
+            return themeService.themedFilename(fn);
         };
 
     }],

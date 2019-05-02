@@ -14,88 +14,67 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
-
-import {StateService as UiStateService} from '@uirouter/angularjs';
-
 import {SettingsService} from './settings';
 
 export class ThemeService {
 
-    private $log: ng.ILogService;
-    private $window: ng.IWindowService;
-    private $state: UiStateService;
+    public currentTheme: number;
+
+    public themeOptions: string[] = ['THEME_LIGHT_WHITE', 'THEME_DARK_BLACK'];
+    private themeFilenames: string[] = ['app-light.css', 'app-dark.css'];
 
     private settingsService: SettingsService;
-    private logTag = '[ThemeService]';
+    public static $inject = ['SettingsService'];
 
-    public static $inject = ['$log', '$window', '$state', 'SettingsService'];
-
-    constructor($log: ng.ILogService, $window: ng.IWindowService,
-                $state: UiStateService, settingsService: SettingsService) {
-        this.$log = $log;
-        this.$window = $window;
-        this.$state = $state;
+    constructor(settingsService: SettingsService) {
         this.settingsService = settingsService;
+        this.currentTheme = this.getThemeID();
     }
 
-    public init(): void {
-        this.getTheme();
-    }
-
-    /**
-     * Sets the theme to themeName
-     */
-    public setTheme(themeName: string): void {
-        this.$log.info(this.logTag, 'Set a new theme', themeName);
-        this.$log.warn(this.logTag, 'Storing the theme as: ', themeName);
-        this.storeSetting('ThemeService.THEME_SETTING', themeName);
-        this.loadTheme();
-    }
-
-    /**
-     * Retrieves the theme from settings
-     */
-    public getTheme(): string {
-
-        let theme = this.retrieveSetting('ThemeService.THEME_SETTING');
-
-        if (!theme) {
-            theme = 'Light (White)';
+    /*
+    * Returns a string with _dark added at the end.
+    * Used to get the correct icons depending on the theme.
+    */
+    public themedFilename(fn: string): string {
+        if (fn == null) {
+            return null;
         }
-
-        return theme;
+        const ext = (this.currentTheme === 1) ? '_dark' : '';
+        const fnl = fn.length;
+        return fn.substring(0, fnl - 4) + ext + fn.substring(fnl - 4, fnl);
     }
 
-    /**
-     * Changes the theme to the one currently stored in the settings
-     */
-    public loadTheme() {
-        let themeName = this.getTheme();
-        this.$log.info(this.logTag, 'Setting the theme to: ', themeName);
+    public setThemeID(themeID: number) {
+        this.currentTheme = themeID;
+        this.storeSetting('ThemeService.THEME_SETTING', themeID.toString());
+    }
 
-        if (themeName === 'Dark (Black)') {
-            themeName = 'app-dark.css';
-        } else if (themeName === 'Light (White)') {
-            themeName = 'app-light.css';
-        } else {
-            themeName = 'app-light.css';
+    public getThemeIDS(): number[] {
+        const list: number[] = [];
+        for (let i = 0; i < this.themeOptions.length; i++) {
+            list.push(i);
         }
+        return list;
+    }
 
-        this.$log.info(this.logTag, 'Setting the link to: ', '/css/' + themeName);
+    public getThemeID(): number {
+        const theme: number = Number(this.retrieveSetting('ThemeService.THEME_SETTING'));
+        this.currentTheme = theme;
+        return isNaN(theme) ? 0 : theme;
+    }
 
-        // StackOverflow: https://stackoverflow.com/a/577002/2310837
-        // you could encode the css path itself to generate id..
-        const cssId = 'themeID';
-        const head = document.getElementsByTagName('head')[0];
-        const oldTheme = document.getElementById(cssId);
-        const link = document.createElement('link');
-        link.id = cssId;
-        link.rel = 'stylesheet';
-        link.type = 'text/css';
-        link.href = '/css/' + themeName;
-        link.media = 'all';
-        head.appendChild(link);
-        head.removeChild(oldTheme);
+    private getNameForThemeID(themeID: number): string {
+        if (themeID < this.themeOptions.length) {
+            return this.themeOptions[themeID];
+        }
+        return this.themeOptions[0];
+    }
+
+    public getCSSForThemeID(themeID: number): string {
+        if (themeID < this.themeFilenames.length) {
+            return this.themeFilenames[themeID];
+        }
+        return this.themeFilenames[0];
     }
 
     /**
