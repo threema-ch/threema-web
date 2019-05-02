@@ -31,11 +31,11 @@ def create_png(rotation: int) -> None:
             '-e', filename,
             '-w', '30',
             '-h', '30',
+            # '-b', 'rgb(48, 48, 48)',
             '-b', 'white',
             f.name,
         ])
         result.check_returncode()
-# All paths must be absolute in macOS
 
 if __name__ == '__main__':
     with open('spinner.svg', 'r') as f:
