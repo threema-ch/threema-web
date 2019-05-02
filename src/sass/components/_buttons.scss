@@ -5,14 +5,14 @@ md-dialog md-dialog-actions .md-button {
 
 md-select {
     .md-select-value {
-        color: $text-dark-color !important;
+        color: $text-medium-color !important;
 
         .md-select-placeholder {
-            color: $text-dark-color;
+            color: $text-medium-color;
         }
 
         .md-select-icon {
-            color: $text-dark-color;
+            color: $text-medium-color;
         }
     }
 }
@@ -21,7 +21,7 @@ md-select {
     .md-active {
         md-select-menu>* {
             background-color: $background-dark-color;
-            color: $text-dark-color;
+            color: $text-medium-color;
         }
     }
 }
@@ -32,18 +32,18 @@ md-select-menu {
 
         md-option {
             background-color: $background-light-color !important;
-            color: $text-dark-color;
+            color: $text-medium-color;
 
             &:not([disabled]) {
                 &:hover {
                     background-color: $button-hover-color !important;
-                    color: $text-dark-color;
+                    color: $text-medium-color;
                 }
             }
 
             &[selected] {
                 background-color: $button-selected-color !important;
-                color: $text-dark-color !important;
+                color: $text-medium-color !important;
             }
         }
     }
