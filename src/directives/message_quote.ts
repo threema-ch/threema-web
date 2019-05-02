@@ -31,10 +31,11 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.contact = () => webClientService.contacts.get(this.quote.identity);
+                this.color = () => ((this.contact().color) == '#181818') ? 'rgb(0, 150, 136)' : (this.contact().color);
             }],
             template: `
-                <div class="message-quote-content" ng-style="{'border-color': ctrl.contact().color}" role="blockquote">
-                    <span class="message-name" ng-style="{'color': ctrl.contact().color}"
+                <div class="message-quote-content" ng-style="{'border-color': ctrl.color()}" role="blockquote">
+                    <span class="message-name" ng-style="{'color': ctrl.color()}"
                         ng-bind-html="ctrl.contact().displayName | escapeHtml | emojify"></span>
                     <span class="message-quote" ng-bind-html="ctrl.quote.text | escapeHtml | markify | emojify | linkify | mentionify | nlToBr"></span>
                 </div>
