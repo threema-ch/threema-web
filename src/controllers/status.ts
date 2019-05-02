@@ -120,21 +120,16 @@ export class StatusController {
                 if (oldValue === 'ok' && isWebrtc) {
                     this.scheduleStatusBar();
                 }
-                if (this.stateService.wasConnected) {
-                    this.webClientService.clearIsTypingFlags();
-                }
-                if (this.stateService.wasConnected && isRelayedData) {
+                this.webClientService.clearIsTypingFlags();
+                if (isRelayedData) {
                     this.reconnectIos();
                 }
                 break;
             case 'error':
-                if (this.stateService.wasConnected && isWebrtc) {
-                    if (oldValue === 'ok') {
-                        this.scheduleStatusBar();
-                    }
+                if (isWebrtc) {
                     this.reconnectAndroid();
                 }
-                if (this.stateService.wasConnected && isRelayedData) {
+                if (this.stateService.attempt === 0 && isRelayedData) {
                     this.reconnectIos();
                 }
                 break;
@@ -166,7 +161,12 @@ export class StatusController {
      * Attempt to reconnect an Android device after a connection loss.
      */
     private reconnectAndroid(): void {
-        this.$log.warn(this.logTag, 'Connection lost (Android). Attempting to reconnect...');
+        this.$log.warn(this.logTag, `Connection lost (Android). Reconnect attempt #${this.stateService.attempt + 1}`);
+
+        // Show expanded status bar (if on 'messenger')
+        if (this.$state.includes('messenger')) {
+            this.scheduleStatusBar();
+        }
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;
@@ -183,7 +183,16 @@ export class StatusController {
             peerTrustedKey: originalPeerPermanentKeyBytes,
             resume: true,
         });
-        this.webClientService.start()
+
+        // Show device unreachable dialog if maximum attempts exceeded
+        // Note: This will not be shown on 'welcome'
+        const pause = this.stateService.attempt >= WebClientService.MAX_CONNECT_ATTEMPTS;
+        if (pause) {
+            this.webClientService.showDeviceUnreachableDialog();
+        }
+
+        // Start
+        this.webClientService.start(pause)
             .then(
                 () => { /* ignored */ },
                 (error) => {
@@ -199,13 +208,14 @@ export class StatusController {
                 // Hide expanded status bar
                 this.collapseStatusBar();
             });
+        ++this.stateService.attempt;
     }
 
     /**
      * Attempt to reconnect an iOS device after a connection loss.
      */
     private reconnectIos(): void {
-        this.$log.info(this.logTag, 'Connection lost (iOS). Attempting to reconnect...');
+        this.$log.info(this.logTag, `Connection lost (iOS). Reconnect attempt #${++this.stateService.attempt}`);
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;

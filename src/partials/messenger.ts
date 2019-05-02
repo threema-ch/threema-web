@@ -131,27 +131,35 @@ class SendFileController extends DialogController {
  * Handle device unreachable
  */
 export class DeviceUnreachableController extends DialogController {
-    public static readonly $inject = ['$rootScope', '$window', '$mdDialog', 'CONFIG', 'WebClientService'];
+    public static readonly $inject = [
+        '$rootScope', '$window', '$mdDialog',
+        'CONFIG', 'StateService', 'WebClientService',
+    ];
     private readonly $rootScope: any;
     private readonly $window: ng.IWindowService;
+    private readonly stateService: StateService;
     private readonly webClientService: WebClientService;
     public retrying: boolean = false;
     public progress: number = 0;
 
     constructor(
         $rootScope: any, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
-        CONFIG: threema.Config, webClientService: WebClientService,
+        CONFIG: threema.Config, stateService: StateService, webClientService: WebClientService,
     ) {
         super($mdDialog, CONFIG);
         this.$rootScope = $rootScope;
         this.$window = $window;
+        this.stateService = stateService;
         this.webClientService = webClientService;
     }
 
     /**
      * Retry wakeup of the device via a push session.
      */
-    public async retry(): Promise<any> {
+    public async retry(): Promise<void> {
+        // Reset attempt counter
+        this.stateService.attempt = 0;
+
         // Schedule sending a push
         const [expectedPeriodMaxMs, pushSessionPromise] = this.webClientService.sendPush();
 

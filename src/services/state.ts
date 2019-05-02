@@ -52,7 +52,7 @@ export class StateService {
     // Global connection state
     private stage: Stage;
     private _state: threema.GlobalConnectionState;
-    public wasConnected: boolean;
+    public attempt: number = 0;
 
     // Unread messages
     private _unreadCount: number = 0;
@@ -132,7 +132,7 @@ export class StateService {
                     break;
                 case TaskConnectionState.Connected:
                     this.state = GlobalConnectionState.Ok;
-                    this.wasConnected = true;
+                    this.attempt = 0;
                     break;
                 case TaskConnectionState.Disconnected:
                     this.state = GlobalConnectionState.Error;
@@ -271,7 +271,6 @@ export class StateService {
         this.taskConnectionState = TaskConnectionState.New;
         this.stage = Stage.Signaling;
         this.state = GlobalConnectionState.Error;
-        this.wasConnected = false;
         this.connectionBuildupState = connectionBuildupState;
         this.progress = 0;
         this.unreadCount = 0;

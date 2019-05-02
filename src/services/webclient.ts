@@ -54,6 +54,7 @@ import {SequenceNumber} from '../protocol/sequence_number';
 import InitializationStep = threema.InitializationStep;
 import ContactReceiverFeature = threema.ContactReceiverFeature;
 import DisconnectReason = threema.DisconnectReason;
+import PushSessionConfig = threema.PushSessionConfig;
 
 /**
  * Payload of a connectionInfo message.
@@ -77,6 +78,7 @@ const fakeConnectionId = Uint8Array.from([
  * This service handles everything related to the communication with the peer.
  */
 export class WebClientService {
+    public static readonly MAX_CONNECT_ATTEMPTS = 3;
     private static CHUNK_SIZE = 64 * 1024;
     private static SEQUENCE_NUMBER_MIN = 0;
     private static SEQUENCE_NUMBER_MAX = (2 ** 32) - 1;
@@ -218,10 +220,11 @@ export class WebClientService {
     public alerts: threema.Alert[] = [];
 
     // Push
-    private readonly pushExpectedPeriodMaxMs: number = PushSession.expectedPeriodMaxMs();
     private pushToken: string = null;
     private pushTokenType: threema.PushTokenType = null;
     private pushSession: PushSession | null = null;
+    private readonly pushSessionConfig: PushSessionConfig;
+    private readonly pushSessionExpectedPeriodMaxMs: number;
     private pushPromise: Promise<any> | null = null;
     private deviceUnreachableDialog: ng.IPromise<any> | null = null;
 
@@ -316,6 +319,11 @@ export class WebClientService {
 
         // State
         this.stateService = stateService;
+
+        // Push session configuration
+        this.pushSessionConfig = PushSession.defaultConfig;
+        this.pushSessionConfig.triesMax = WebClientService.MAX_CONNECT_ATTEMPTS;
+        this.pushSessionExpectedPeriodMaxMs = PushSession.expectedPeriodMaxMs(this.pushSessionConfig);
 
         // Other properties
         this.container = container;
@@ -1035,7 +1043,7 @@ export class WebClientService {
     public sendPush(): [number, Promise<void>] {
         // Create new session
         if (this.pushSession === null) {
-            this.pushSession = this.pushService.createSession(this.salty.permanentKeyBytes);
+            this.pushSession = this.pushService.createSession(this.salty.permanentKeyBytes, this.pushSessionConfig);
 
             // Start and handle success/error
             this.pushPromise = this.pushSession.start()
@@ -1046,17 +1054,7 @@ export class WebClientService {
 
                     // Handle error
                     if (error instanceof TimeoutError) {
-                        // Show device unreachable dialog (if we were already
-                        // connected and if not already visible).
-                        if (this.$state.includes('messenger') && this.deviceUnreachableDialog === null) {
-                            this.deviceUnreachableDialog = this.$mdDialog.show({
-                                controller: DeviceUnreachableController,
-                                controllerAs: 'ctrl',
-                                templateUrl: 'partials/dialog.device-unreachable.html',
-                                parent: angular.element(document.body),
-                                escapeToClose: false,
-                            }).finally(() => this.deviceUnreachableDialog = null);
-                        }
+                        this.showDeviceUnreachableDialog();
                     } else {
                         this.failSession();
                     }
@@ -1071,7 +1069,7 @@ export class WebClientService {
         }
 
         // Retrieve the expected maximum period
-        return [this.pushExpectedPeriodMaxMs, this.pushPromise];
+        return [this.pushSessionExpectedPeriodMaxMs, this.pushPromise];
     }
 
     /**
@@ -1089,6 +1087,25 @@ export class WebClientService {
             this.pushSession.done();
             this.pushSession = null;
             this.pushPromise = null;
+        }
+    }
+
+    /**
+     * Show the *device unreachable* dialog.
+     */
+    public showDeviceUnreachableDialog(): void {
+        // Show device unreachable dialog (if we were already
+        // connected and if not already visible).
+        if (this.pushService.isAvailable() && this.$state.includes('messenger')
+            && this.deviceUnreachableDialog === null) {
+            this.deviceUnreachableDialog = this.$mdDialog.show({
+                controller: DeviceUnreachableController,
+                controllerAs: 'ctrl',
+                templateUrl: 'partials/dialog.device-unreachable.html',
+                parent: angular.element(document.body),
+                escapeToClose: false,
+            })
+                .finally(() => this.deviceUnreachableDialog = null);
         }
     }
 
@@ -1112,10 +1129,12 @@ export class WebClientService {
         this.salty.connect();
 
         // If push service is available, notify app
-        if (skipPush === true) {
-            this.$log.debug(this.logTag, 'start(): Skipping push notification');
-        } else if (this.pushService.isAvailable()) {
-            this.sendPush();
+        if (this.pushService.isAvailable()) {
+            if (skipPush === true) {
+                this.$log.debug(this.logTag, 'start(): Skipping push notification');
+            } else {
+                this.sendPush();
+            }
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug(this.logTag, 'Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
