@@ -16,6 +16,7 @@
  */
 
 import {hasValue} from '../helpers';
+import { ThemeService } from '../services/theme';
 
 export default [
     function() {
@@ -38,9 +39,10 @@ export default [
                 );
             },
             controllerAs: 'ctrl',
-            controller: [function() {
+            controller: ['ThemeService', function(themeService: ThemeService) {
                 // Return icon depending on message type.
-                const getIcon = (msgType: threema.MessageType) => {
+
+                const getIconFilename = (msgType: threema.MessageType) => {
                     switch (msgType) {
                         case 'image':
                             return 'ic_image_24px.svg';
@@ -60,6 +62,12 @@ export default [
                         default:
                             return null;
                     }
+                };
+
+                // Return icon depending on the current theme
+                const getIcon = (msgType: threema.MessageType) => {
+                    const fn = getIconFilename(msgType);
+                    return (fn == null) ? themeService.imageFilename(fn) : null;
                 };
 
                 this.update = () => {

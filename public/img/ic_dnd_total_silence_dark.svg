@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg4550"
+   version="1.1"
+   viewBox="0 0 48 48"
+   height="48"
+   width="48"
+   sodipodi:docname="ic_dnd_total_silence_dark.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1414"
+     inkscape:window-height="810"
+     id="namedview7"
+     showgrid="false"
+     inkscape:zoom="4.9166667"
+     inkscape:cx="-12.610169"
+     inkscape:cy="15.864407"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg4550" />
+  <metadata
+     id="metadata4556">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4554" />
+  <path
+     style="stroke-width:0.94999999;fill:#bcbcbc;fill-opacity:1"
+     id="path4548"
+     d="M 24,5 C 13.512,5 5,13.512 5,24 5,34.488 13.512,43 24,43 34.488,43 43,34.488 43,24 43,13.512 34.488,5 24,5 Z m 9.5,20.9 h -19 v -3.8 h 19 z" />
+  <ellipse
+     ry="23.040001"
+     rx="23.039999"
+     cy="24"
+     cx="24"
+     id="path5101"
+     style="fill:none;stroke:#bcbcbc;stroke-width:1.92;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:0.69999999;stroke-dasharray:none;stroke-dashoffset:38.53903961;stroke-opacity:1" />
+</svg>

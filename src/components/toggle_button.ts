@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ThemeService } from '../services/theme';
+
 /**
  * A generic toggle button.
  *
@@ -32,11 +34,17 @@ export default {
         iconEnabled: '@',
         iconDisabled: '@',
     },
-    controller: function() {
+    controller: ['ThemeService', function(themeService: ThemeService) {
         this.getLabel = () => this.flag ? this.labelEnabled : this.labelDisabled;
-        this.getIcon = () => this.flag ? this.iconEnabled : this.iconDisabled;
+        // this.getIcon = () => this.flag ? this.iconEnabled : this.iconDisabled;
         this.action = () => this.flag ? this.onDisable() : this.onEnable();
-    },
+
+        this.getIcon = () => {
+            const fn = (this.flag ? this.iconEnabled : this.iconDisabled);
+            return themeService.imageFilename(fn);
+        };
+
+    }],
     template: `
         <md-button
             class="md-icon-button"
