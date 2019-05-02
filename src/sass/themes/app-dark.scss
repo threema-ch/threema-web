@@ -1,4 +1,4 @@
-$wallpaper: '../../public/img/wallpaper_dark.png?';; // TODO: Use a darker wallpaper
+$wallpaper: '../../public/img/wallpaper_dark.png?'; // TODO: Use a darker wallpaper
 
 // Define colors
 $threema-green-color: rgb(0, 150, 136);
@@ -59,8 +59,8 @@ $border-dark-color: $secondary-750;
 $border-light-color: $secondary-320;
 
 // Scrollbar colors
-$scrollbar-thumb-color: $secondary-400;
-$scrollbar-background-color: $secondary-900;
+$scrollbar-thumb-color: $secondary-800;
+$scrollbar-background-color: $secondary-600;
 
 // Background colors
 $background-dark-color: $secondary-900;
@@ -70,6 +70,9 @@ $background-light-color: $secondary-750;
 $background-emoji-picker-color: $background-medium-color;
 $navigation-background-color: $background-medium-color;
 $navigation-background-highlight-color: $background-dark-color;
+$spinner-background-color: $background-medium-color;
+
+$avatar-background-color: $primary-900;
 
 // Header colors
 $navigation-header-color: $secondary-800;

@@ -205,7 +205,7 @@
                 @include message-bubble-shadow;
                 display: inline-block;
                 border-radius: 50%;
-                background-color: $background-medium-color;
+                background-color: $spinner-background-color;
                 padding: 6px;
                 width: 30px;
                 height: 30px;
@@ -388,6 +388,14 @@
                     position: relative;
                     top: 2px;
                     color: $text-dark-color;
+                }
+
+                i.user-ack {
+                    color: #4caf50;
+                }
+
+                i.user-dec {
+                    color: #ff9800;
                 }
 
                 i.timeout {

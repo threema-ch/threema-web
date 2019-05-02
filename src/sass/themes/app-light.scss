@@ -56,10 +56,6 @@ $status-starred-color: #ffc107;
 $border-dark-color: $secondary-600;
 $border-light-color: $secondary-320;
 
-// Scrollbar colors
-$scrollbar-thumb-color: $secondary-900;
-$scrollbar-background-color: $secondary-400;
-
 // Background colors
 $background-dark-color: #efebe9;
 $background-medium-color: #f5f5f5;
@@ -68,6 +64,13 @@ $background-light-color: $secondary-000;
 $background-emoji-picker-color: #efefef;
 $navigation-background-color: $secondary-000;
 $navigation-background-highlight-color: $background-medium-color;
+$spinner-background-color: $background-light-color;
+
+$avatar-background-color: rgb(198, 198, 198);
+
+// Scrollbar colors
+$scrollbar-thumb-color: #cccccc;
+$scrollbar-background-color: $background-dark-color;
 
 // Header colors
 $navigation-header-color: $secondary-800;
