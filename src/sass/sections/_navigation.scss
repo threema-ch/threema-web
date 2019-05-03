@@ -146,6 +146,8 @@
             padding: (1.5 * $main-padding) $main-padding - ($border-width * ($border-count - 1));
 
             &.active {
+                border-color: $navigation-background-highlight-color;
+                background-color: $navigation-background-highlight-color;
                 &:hover {
                     border-color: $navigation-background-highlight-color;
                     background-color: $navigation-background-highlight-color;
@@ -174,8 +176,8 @@
                         to right,
                         $status-error,
                         $status-error 50%,
-                        $navigation-background-color 50%,
-                        $navigation-background-color 100%
+                        $navigation-background-highlight-color 50%,
+                        $navigation-background-highlight-color 100%
                     ) 1 100%;
                 }
 
@@ -205,8 +207,8 @@
                         to right,
                         $status-starred,
                         $status-starred 50%,
-                        $dark-background-color 50%,
-                        $dark-background-color 100%
+                        $navigation-background-highlight-color 50%,
+                        $navigation-background-highlight-color 100%
                     ) 1 100%;
                 }
 

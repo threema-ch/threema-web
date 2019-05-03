@@ -378,7 +378,7 @@
             align-items: flex-end;
             margin-top: 4px;
             height: 16px;
-            color: #808080;
+            color: $text-dark-color;
             font-size: .8em;
 
             .message-state {
@@ -409,7 +409,7 @@
                 height: 1em;
                 min-height: 1em;
                 vertical-align: top;
-                color: $button-text-dark-color;
+                color: $text-dark-color;
                 font-size: 1em;
             }
         }
