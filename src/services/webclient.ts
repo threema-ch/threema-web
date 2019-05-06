@@ -1280,6 +1280,7 @@ export class WebClientService {
             if (this.startupPromise !== null) {
                 this.startupPromise.reject();
                 this.startupPromise = null;
+                this._resetInitializationSteps();
             }
 
             // Translate close flag
