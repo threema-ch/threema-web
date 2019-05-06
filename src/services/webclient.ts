@@ -23,7 +23,7 @@ import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import * as msgpack from 'msgpack-lite';
 import {
-    arraysAreEqual, copyDeep, hasFeature, hasValue, hexToU8a,
+    arraysAreEqual, base64ToU8a, copyDeep, hasFeature, hasValue, hexToU8a,
     msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
 } from '../helpers';
 import {
@@ -2520,6 +2520,9 @@ export class WebClientService {
             this.$log.warn('Invalid messages response, data or arguments missing');
             return future.reject('invalidResponse');
         }
+        if (this.config.MSG_DEBUGGING) {
+            this.logChatMessages(message.type, message.subType, data);
+        }
 
         // Unpack required argument fields
         const type: string = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
@@ -2713,6 +2716,9 @@ export class WebClientService {
         if (args === undefined || data === undefined) {
             this.$log.warn('Invalid message update, data or arguments missing');
             return future.reject('invalidResponse');
+        }
+        if (this.config.MSG_DEBUGGING) {
+            this.logChatMessages(message.type, message.subType, data);
         }
 
         // Unpack required argument fields
@@ -4052,6 +4058,18 @@ export class WebClientService {
         } else if (isOk && this.batteryStatusTimeout !== null) {
             this.timeoutService.cancel(this.batteryStatusTimeout);
             this.batteryStatusTimeout = null;
+        }
+    }
+
+    /**
+     * Log chat message's metadata for debugging purposes.
+     */
+    private logChatMessages(type: string, subType: string, messages: threema.Message[]) {
+        for (const message of messages) {
+            const idHex = u8aToHex(base64ToU8a(message.id));
+            this.$log.debug('[MessageInspector]', `${type}/${subType}: direction=${message.isOutbox ? 'out' : 'in'}, ` +
+                `id=${idHex}. type=${message.type}, state=${message.state !== undefined ? message.state : '?'}, ` +
+                `is-status=${message.isStatus}, date=${message.date}`);
         }
     }
 }
