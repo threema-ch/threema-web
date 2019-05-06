@@ -4068,7 +4068,7 @@ export class WebClientService {
         for (const message of messages) {
             const idHex = u8aToHex(base64ToU8a(message.id));
             this.$log.debug('[MessageInspector]', `${type}/${subType}: direction=${message.isOutbox ? 'out' : 'in'}, ` +
-                `id=${idHex}. type=${message.type}, state=${message.state !== undefined ? message.state : '?'}, ` +
+                `id=${idHex}, type=${message.type}, state=${message.state !== undefined ? message.state : '?'}, ` +
                 `is-status=${message.isStatus}, date=${message.date}`);
         }
     }
