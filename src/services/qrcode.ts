@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {stringToUtf8a} from '../helpers';
+import {stringToUtf8a, u8aToBase64} from '../helpers';
 
 /**
  * Functionality related to the initial QR code.
@@ -70,7 +70,7 @@ export class QrCodeService {
         u8Array.set(saltyRtcHostBytes, 101);
 
         // Base64 encode
-        return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
+        return u8aToBase64(new Uint8Array(buf));
 
         // tslint:enable:no-bitwise
     }
