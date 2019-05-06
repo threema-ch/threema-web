@@ -61,6 +61,20 @@ export function hexToU8a(hexstring: string): Uint8Array {
 }
 
 /**
+ * Convert an Uint8Array to a base 64 string.
+ */
+export function u8aToBase64(array: Uint8Array): string {
+    return btoa(Array.from(array, (byte: number) => String.fromCharCode(byte)).join(''));
+}
+
+/**
+ * Convert a base 64 string to an Uint8Array.
+ */
+export function base64ToU8a(base64String: string): Uint8Array {
+    return Uint8Array.from(atob(base64String), (char: string) => char.charCodeAt(0));
+}
+
+/**
  * Generate a (non-cryptographically-secure!) random string.
  *
  * Based on http://stackoverflow.com/a/1349426/284318.
@@ -259,8 +273,8 @@ export function escapeRegExp(str: string) {
  * Generate a link to the msgpack visualizer from an Uint8Array containing
  * msgpack encoded data.
  */
-export function msgpackVisualizer(bytes: Uint8Array): string {
-    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(btoa(String.fromCharCode.apply(null, bytes)));
+export function msgpackVisualizer(array: Uint8Array): string {
+    return 'https://msgpack.dbrgn.ch#base64=' + encodeURIComponent(u8aToBase64(array));
 }
 
 /**
@@ -290,12 +304,6 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (
     if (buffer === null || buffer === undefined) {
         throw new Error('Called bufferToUrl on null or undefined');
     }
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
     switch (mimeType) {
         case 'image/jpg':
         case 'image/jpeg':
@@ -313,7 +321,7 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (
             mimeType = 'image/jpeg';
             break;
     }
-    return 'data:' + mimeType + ';base64,' + btoa(binary);
+    return 'data:' + mimeType + ';base64,' + u8aToBase64(new Uint8Array(buffer));
 }
 
 /**
