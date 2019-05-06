@@ -4066,9 +4066,14 @@ export class WebClientService {
      */
     private logChatMessages(type: string, subType: string, messages: threema.Message[]) {
         for (const message of messages) {
-            const idHex = u8aToHex(base64ToU8a(message.id));
+            let id: string = message.id;
+            if (this.clientInfo.os === threema.OperatingSystem.Ios) {
+                try {
+                    id = u8aToHex(base64ToU8a(message.id));
+                } catch { /* ignored */ }
+            }
             this.$log.debug('[MessageInspector]', `${type}/${subType}: direction=${message.isOutbox ? 'out' : 'in'}, ` +
-                `id=${idHex}, type=${message.type}, state=${message.state !== undefined ? message.state : '?'}, ` +
+                `id=${id}, type=${message.type}, state=${message.state !== undefined ? message.state : '?'}, ` +
                 `is-status=${message.isStatus}, date=${message.date}`);
         }
     }
