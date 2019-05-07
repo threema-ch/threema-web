@@ -49,6 +49,7 @@ export class PushSession {
     private readonly session: Uint8Array;
     private readonly config: threema.PushSessionConfig;
     private readonly doneFuture: Future<any> = new Future();
+    private readonly affiliation: string = randomString(6);
     private logTag: string = '[Push]';
     private running: boolean = false;
     private retryTimeoutMs: number;
@@ -156,6 +157,7 @@ export class PushSession {
         data.set(PushService.ARG_TYPE, this.service.pushType);
         data.set(PushService.ARG_SESSION, sessionHash);
         data.set(PushService.ARG_VERSION, `${this.service.version}`);
+        data.set(PushService.ARG_AFFILIATION, this.affiliation);
         if (this.service.pushType === threema.PushTokenType.Apns) {
             // APNS token format: "<hex-deviceid>;<endpoint>;<bundle-id>"
             const parts = this.service.pushToken.split(';');
@@ -244,6 +246,7 @@ export class PushService {
     public static readonly ARG_TOKEN = 'token';
     public static readonly ARG_SESSION = 'session';
     public static readonly ARG_VERSION = 'version';
+    public static readonly ARG_AFFILIATION = 'affiliation';
     public static readonly ARG_ENDPOINT = 'endpoint';
     public static readonly ARG_BUNDLE_ID = 'bundleid';
     public static readonly ARG_TIME_TO_LIVE = 'ttl';
