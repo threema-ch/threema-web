@@ -161,7 +161,7 @@ export class StatusController {
      * Attempt to reconnect an Android device after a connection loss.
      */
     private reconnectAndroid(): void {
-        this.$log.warn(this.logTag, `Connection lost (Android). Reconnect attempt #${this.stateService.attempt + 1}`);
+        this.$log.info(this.logTag, `Connection lost (Android). Reconnect attempt #${this.stateService.attempt + 1}`);
 
         // Show expanded status bar (if on 'messenger')
         if (this.$state.includes('messenger')) {

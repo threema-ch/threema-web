@@ -1215,6 +1215,11 @@ export class WebClientService {
             this.previousIncomingChunkSequenceNumber = null;
             this.previousChunkCache = null;
 
+            // Remove chosen task
+            // Note: This implicitly prevents automatic connection attempts
+            //       from the status controller.
+            this.chosenTask = threema.ChosenTask.None;
+
             // Reset general client information
             this.clientInfo = null;
 
