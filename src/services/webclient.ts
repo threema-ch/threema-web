@@ -227,6 +227,8 @@ export class WebClientService {
     private readonly pushSessionExpectedPeriodMaxMs: number;
     private pushPromise: Promise<any> | null = null;
     private deviceUnreachableDialog: ng.IPromise<any> | null = null;
+    private pushTimer: number | null = null;
+    private schedulePushAfterCooldown: boolean = false;
 
     // Timeouts
     private batteryStatusTimeout: ng.IPromise<void> = null;
@@ -547,7 +549,6 @@ export class WebClientService {
         // Once the connection is established, if this is a WebRTC connection,
         // initiate the peer connection and start the handover.
         this.salty.once('state-change:task', () => {
-
             // Determine chosen task
             const task = this.salty.getTask();
             if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
@@ -821,6 +822,51 @@ export class WebClientService {
                 this.ackTimer = null;
                 this._sendConnectionAck();
             }, timeout);
+        }
+    }
+
+    /**
+     * Schedule a push to be sent if there is no network activity within a
+     * specified interval.
+     */
+    private schedulePush(timeoutMs: number = 3000): void {
+        if (this.pushTimer !== null) {
+            this.schedulePushAfterCooldown = true;
+            return;
+        }
+
+        // Send a push after the timeout
+        this.pushTimer = self.setTimeout(() => {
+            this.pushTimer = null;
+            this.schedulePushAfterCooldown = false;
+            this.$log.debug(this.logTag, 'Connection appears to be lost, sending push');
+            this.sendPush();
+        }, timeoutMs);
+
+        // Send a connection ack.
+        // Note: This acts as a *ping* but also helps us to keep the caches
+        //       clean.
+        this._requestConnectionAck();
+    }
+
+    /**
+     * Cancel a scheduled push.
+     */
+    private cancelPush(cooldownMs: number = 10000): void {
+        if (this.pushTimer !== null) {
+            self.clearTimeout(this.pushTimer);
+            this.pushTimer = null;
+        }
+        this.schedulePushAfterCooldown = false;
+
+        // Start the cooldown of the push timeout (if required)
+        if (cooldownMs > 0) {
+            this.pushTimer = self.setTimeout(() => {
+                this.pushTimer = null;
+                if (this.schedulePushAfterCooldown) {
+                    this.schedulePush();
+                }
+            }, cooldownMs);
         }
     }
 
@@ -1191,11 +1237,15 @@ export class WebClientService {
                 {reason: args.reason});
         }
 
-        // Stop ack timer
+        // Stop timer
         if (this.ackTimer !== null) {
             self.clearTimeout(this.ackTimer);
             this.ackTimer = null;
         }
+        if (this.pushTimer !== null) {
+            this.cancelPush(0);
+        }
+        this.$log.debug(this.logTag, 'Timer stopped');
 
         // Reset states
         this.stateService.reset(args.connectionBuildupState);
@@ -3918,7 +3968,15 @@ export class WebClientService {
             if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
                 this.$log.debug(`[Chunk] Sending chunk (retransmit/push=${retransmit}:`, chunk);
             }
+
+            // Send chunk
             this.relayedDataTask.sendMessage(chunk.buffer);
+
+            // Send a push if no incoming chunks within the next two seconds.
+            // Note: This has a cooldown phase of 10 seconds.
+            if (retransmit && this.startupDone) {
+                this.schedulePush();
+            }
         }
     }
 
@@ -3941,6 +3999,9 @@ export class WebClientService {
 
         // Schedule the periodic ack timer
         this.scheduleConnectionAck();
+
+        // Cancel scheduled push since data has been received
+        this.cancelPush();
 
         // Process chunk
         // Warning: Nothing should be called after the unchunker has processed
