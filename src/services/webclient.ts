@@ -2751,10 +2751,19 @@ export class WebClientService {
                     notify = true;
                     break;
                 case WebClientService.ARGUMENT_MODE_MODIFIED:
-                    this.messages.update(receiver, msg);
+                    if (!this.messages.update(receiver, msg)) {
+                        const log = `Received message update for unknown message (id ${msg.id})`;
+                        this.$log.error(this.logTag, log);
+                        if (this.config.DEBUG) {
+                            this.messages.addStatusMessage(receiver, 'Warning: ' + log);
+                            notify = true;
+                        }
+                    }
                     break;
                 case WebClientService.ARGUMENT_MODE_REMOVED:
-                    this.messages.remove(receiver, msg.id);
+                    if (!this.messages.remove(receiver, msg.id)) {
+                        this.$log.error(this.logTag, `Received message deletion for unknown message (id ${msg.id})`);
+                    }
                     notify = true;
                     break;
                 default:

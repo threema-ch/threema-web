@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {copyShallow} from '../helpers';
+import {copyShallow, randomString} from '../helpers';
 import {isFirstUnreadStatusMessage} from '../message_helpers';
 import {ReceiverService} from '../services/receiver';
 
@@ -601,6 +601,34 @@ class Messages implements threema.Container.Messages {
         // Add the oldest message as ref
         receiverMessages.referenceMsgId = messages[0].id;
         receiverMessages.list.unshift.apply(receiverMessages.list, messages);
+    }
+
+    /**
+     * Insert a new fake status message.
+     *
+     * Note: This should probably only be used for debugging.
+     */
+    public addStatusMessage(receiver: threema.BaseReceiver, text: string): void {
+        // Get reference to message list for the specified receiver
+        const receiverMessages = this.getReceiverMessages(receiver);
+
+        // Determine sort key
+        const sortKey = receiverMessages.list.length > 0
+            ? receiverMessages.list[receiverMessages.list.length - 1].sortKey
+            : 0;
+
+        // Create fake status message
+        receiverMessages.list.push({
+            type: 'status',
+            id: randomString(6),
+            body: '',
+            caption: text,
+            sortKey: sortKey,
+            partnerId: receiver.id,
+            isOutbox: false,
+            isStatus: true,
+            statusType: 'text',
+        });
     }
 
     /**
