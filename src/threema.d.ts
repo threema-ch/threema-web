@@ -820,6 +820,7 @@ declare namespace threema {
             clearRequested(receiver: BaseReceiver): void;
             addNewer(receiver: BaseReceiver, messages: Message[]): void;
             addOlder(receiver: BaseReceiver, messages: Message[]): void;
+            addStatusMessage(receiver: BaseReceiver, text: string): void;
             update(receiver: BaseReceiver, message: Message): boolean;
             setThumbnail(receiver: BaseReceiver, messageId: string, thumbnailImage: string): boolean;
             remove(receiver: BaseReceiver, messageId: string): boolean;
