@@ -32,6 +32,15 @@ particular issue, such as [this one](https://github.com/threema-ch/threema-web/i
 We will factor this in when scheduling what to do next.
 
 
+## Beta Testing
+
+We may occasionally deploy experimental branches on
+[https://web-beta.threema.ch](https://web-beta.threema.ch) which you are
+encouraged to test. If you encounter problems, please
+[open an issue](https://github.com/threema-ch/threema-web/issues/new) and
+include the experiment's version number (e.g. `1.2.3-experiment-beta4`).
+
+
 ## Translating
 
 If you want to help translating Threema Web to your language, please check out
