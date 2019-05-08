@@ -2520,9 +2520,6 @@ export class WebClientService {
             this.$log.warn('Invalid messages response, data or arguments missing');
             return future.reject('invalidResponse');
         }
-        if (this.config.MSG_DEBUGGING) {
-            this.logChatMessages(message.type, message.subType, data);
-        }
 
         // Unpack required argument fields
         const type: string = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
@@ -2535,6 +2532,9 @@ export class WebClientService {
         if (!isValidReceiverType(type)) {
             this.$log.warn('Invalid messages response, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
+        }
+        if (this.config.MSG_DEBUGGING) {
+            this.logChatMessages(message.type, message.subType, type, id, 'new', data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
 
@@ -2717,9 +2717,6 @@ export class WebClientService {
             this.$log.warn('Invalid message update, data or arguments missing');
             return future.reject('invalidResponse');
         }
-        if (this.config.MSG_DEBUGGING) {
-            this.logChatMessages(message.type, message.subType, data);
-        }
 
         // Unpack required argument fields
         const type: string = args[WebClientService.ARGUMENT_RECEIVER_TYPE];
@@ -2732,6 +2729,9 @@ export class WebClientService {
         if (!isValidReceiverType(type)) {
             this.$log.warn(this.logTag, 'Invalid messages update, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
+        }
+        if (this.config.MSG_DEBUGGING) {
+            this.logChatMessages(message.type, message.subType, type, id, mode, data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
 
@@ -4064,7 +4064,10 @@ export class WebClientService {
     /**
      * Log chat message's metadata for debugging purposes.
      */
-    private logChatMessages(type: string, subType: string, messages: threema.Message[]) {
+    private logChatMessages(
+        type: string, subType: string, receiverType: string, receiver: string, mode: string,
+        messages: threema.Message[],
+    ) {
         for (const message of messages) {
             let id: string = message.id;
             if (this.clientInfo.os === threema.OperatingSystem.Ios) {
@@ -4072,9 +4075,10 @@ export class WebClientService {
                     id = u8aToHex(base64ToU8a(message.id));
                 } catch { /* ignored */ }
             }
-            this.$log.debug('[MessageInspector]', `${type}/${subType}: direction=${message.isOutbox ? 'out' : 'in'}, ` +
-                `id=${id}, type=${message.type}, state=${message.state !== undefined ? message.state : '?'}, ` +
-                `is-status=${message.isStatus}, date=${message.date}`);
+            this.$log.debug('[MessageInspector]', `${type}/${subType}: receiver=${receiverType}/${receiver}, ` +
+                `mode=${mode}, direction=${message.isOutbox ? 'out' : 'in'}, id=${id}, type=${message.type}, ` +
+                `state=${message.state !== undefined ? message.state : '?'}, is-status=${message.isStatus}, ` +
+                `date=${message.date}`);
         }
     }
 }
