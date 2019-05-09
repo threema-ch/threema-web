@@ -257,9 +257,8 @@ export default [
                     if (!composeAreaIsEmpty()) {
                         submitText().then(() => {
                             // Clear compose div
-                            // TODO: Use clear() and focus() methods
-                            composeDiv[0].innerText = '';
-                            composeDiv[0].focus();
+                            composeArea.clear();
+                            composeArea.focus();
 
                             // Send stopTyping event
                             stopTyping();
