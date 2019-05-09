@@ -574,7 +574,9 @@ export default [
 
                 // Insert a single emoji
                 function insertEmoji(emoji: threema.EmojiInfo): void {
-                    composeArea.insert_image(emoji.imgPath, emoji.emojiString, 'em');
+                    const img: HTMLElement = composeArea.insert_image(emoji.imgPath, emoji.emojiString, 'em');
+                    img.draggable = false;
+                    img.ondragstart = () => false;
                 }
 
                 // TODO
