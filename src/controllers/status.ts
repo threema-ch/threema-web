@@ -120,21 +120,16 @@ export class StatusController {
                 if (oldValue === 'ok' && isWebrtc) {
                     this.scheduleStatusBar();
                 }
-                if (this.stateService.wasConnected) {
-                    this.webClientService.clearIsTypingFlags();
-                }
-                if (this.stateService.wasConnected && isRelayedData) {
+                this.webClientService.clearIsTypingFlags();
+                if (isRelayedData) {
                     this.reconnectIos();
                 }
                 break;
             case 'error':
-                if (this.stateService.wasConnected && isWebrtc) {
-                    if (oldValue === 'ok') {
-                        this.scheduleStatusBar();
-                    }
+                if (isWebrtc) {
                     this.reconnectAndroid();
                 }
-                if (this.stateService.wasConnected && isRelayedData) {
+                if (this.stateService.attempt === 0 && isRelayedData) {
                     this.reconnectIos();
                 }
                 break;
@@ -166,104 +161,61 @@ export class StatusController {
      * Attempt to reconnect an Android device after a connection loss.
      */
     private reconnectAndroid(): void {
-        this.$log.warn(this.logTag, 'Connection lost (Android). Attempting to reconnect...');
+        this.$log.info(this.logTag, `Connection lost (Android). Reconnect attempt #${this.stateService.attempt + 1}`);
+
+        // Show expanded status bar (if on 'messenger')
+        if (this.$state.includes('messenger')) {
+            this.scheduleStatusBar();
+        }
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;
         const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
 
-        // Timeout durations
-        const TIMEOUT1 = 20 * 1000; // Duration per step for first reconnect
-        const TIMEOUT2 = 20 * 1000; // Duration per step for second reconnect
+        // Soft reconnect: Does not reset the loaded data
+        this.webClientService.stop({
+            reason: DisconnectReason.SessionStopped,
+            send: true,
+            close: false,
+        });
+        this.webClientService.init({
+            keyStore: originalKeyStore,
+            peerTrustedKey: originalPeerPermanentKeyBytes,
+            resume: true,
+        });
 
-        // Reconnect state
-        let reconnectTry: 1 | 2 = 1;
+        // Show device unreachable dialog if maximum attempts exceeded
+        // Note: This will not be shown on 'welcome'
+        const pause = this.stateService.attempt >= WebClientService.MAX_CONNECT_ATTEMPTS;
+        if (pause) {
+            this.webClientService.showDeviceUnreachableDialog();
+        }
 
-        // Handler for failed reconnection attempts
-        const reconnectionFailed = () => {
-            // Collapse status bar
-            this.collapseStatusBar();
-
-            // Reset connection & state
-            this.webClientService.stop({
-                reason: DisconnectReason.SessionError,
-                send: false,
-                // TODO: Use welcome.error once we have it
-                close: 'welcome',
-                connectionBuildupState: 'reconnect_failed',
-            });
-        };
-
-        // Handlers for reconnecting timeout
-        const reconnect2Timeout = () => {
-            // Give up
-            this.$log.error(this.logTag, 'Reconnect timeout 2. Going back to initial loading screen...');
-            reconnectionFailed();
-        };
-        const reconnect1Timeout = () => {
-            // Could not connect so far.
-            this.$log.error(this.logTag, 'Reconnect timeout 1. Retrying...');
-            reconnectTry = 2;
-            this.reconnectTimeout = this.$timeout(reconnect2Timeout, TIMEOUT2);
-            doSoftReconnect();
-        };
-
-        // Function to soft-reconnect. Does not reset the loaded data.
-        const doSoftReconnect = () => {
-            this.webClientService.stop({
-                reason: DisconnectReason.SessionStopped,
-                send: true,
-                close: false,
-            });
-            this.webClientService.init({
-                keyStore: originalKeyStore,
-                peerTrustedKey: originalPeerPermanentKeyBytes,
-                resume: true,
-            });
-            this.webClientService.start().then(
-                () => {
-                    // Cancel timeout
-                    this.$timeout.cancel(this.reconnectTimeout);
-
-                    // Hide expanded status bar
-                    this.collapseStatusBar();
-                },
+        // Start
+        this.webClientService.start(pause)
+            .then(
+                () => { /* ignored */ },
                 (error) => {
                     this.$log.error(this.logTag, 'Error state:', error);
-                    this.$timeout.cancel(this.reconnectTimeout);
-                    reconnectionFailed();
+                    // Note: The web client service has already been stopped at
+                    // this point.
                 },
                 (progress: threema.ConnectionBuildupStateChange) => {
-                    if (progress.state === 'peer_handshake' || progress.state === 'loading') {
-                        this.$log.debug(this.logTag, 'Connection buildup advanced, resetting timeout');
-                        // Restart timeout
-                        this.$timeout.cancel(this.reconnectTimeout);
-                        if (reconnectTry === 1) {
-                            this.reconnectTimeout = this.$timeout(reconnect1Timeout, TIMEOUT1);
-                        } else if (reconnectTry === 2) {
-                            this.reconnectTimeout = this.$timeout(reconnect2Timeout, TIMEOUT2);
-                        } else {
-                            throw new Error('Invalid reconnectTry value: ' + reconnectTry);
-                        }
-                    }
+                    this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
                 },
-            );
-        };
-
-        // Start timeout
-        this.reconnectTimeout = this.$timeout(reconnect1Timeout, TIMEOUT1);
-
-        // Start reconnecting process
-        doSoftReconnect();
-
-        // TODO: Handle server closing state
+            )
+            .finally(() => {
+                // Hide expanded status bar
+                this.collapseStatusBar();
+            });
+        ++this.stateService.attempt;
     }
 
     /**
      * Attempt to reconnect an iOS device after a connection loss.
      */
     private reconnectIos(): void {
-        this.$log.info(this.logTag, 'Connection lost (iOS). Attempting to reconnect...');
+        this.$log.info(this.logTag, `Connection lost (iOS). Reconnect attempt #${++this.stateService.attempt}`);
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;
@@ -305,7 +257,8 @@ export class StatusController {
             };
         })();
 
-        this.$timeout(() => {
+        this.$timeout.cancel(this.reconnectTimeout);
+        this.reconnectTimeout = this.$timeout(() => {
             if (push.send) {
                 this.$log.debug(`Starting new connection with push, reason: ${push.reason}`);
             } else {
@@ -318,18 +271,12 @@ export class StatusController {
             });
 
             this.webClientService.start(!push.send).then(
-                () => { /* ok */ },
+                () => { /* ignored */ },
                 (error) => {
                     this.$log.error(this.logTag, 'Error state:', error);
-                    this.webClientService.stop({
-                        reason: DisconnectReason.SessionError,
-                        send: false,
-                        // TODO: Use welcome.error once we have it
-                        close: 'welcome',
-                        connectionBuildupState: 'reconnect_failed',
-                    });
+                    // Note: The web client service has already been stopped at
+                    // this point.
                 },
-                // Progress
                 (progress: threema.ConnectionBuildupStateChange) => {
                     this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
                 },

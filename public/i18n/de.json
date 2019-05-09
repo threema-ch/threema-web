@@ -8,6 +8,7 @@
         "PLEASE_SCAN": "Scannen Sie den QR-Code mit Ihrer Threema-App",
         "PLEASE_UNLOCK": "Verbindung wiederaufbauen",
         "WAITING": "Auf Verbindung warten",
+        "RETRY": "Erneut versuchen",
         "PLEASE_RELOAD": "Bitte laden Sie die Seite neu.",
         "RELOAD": "Seite neu laden",
         "PASSWORD": "Passwort",
@@ -59,6 +60,8 @@
         "APP_STARTED": "Ist die Threema-App gestartet?",
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
+        "UNLOCK_OR_CHARGE": "Es kann helfen, Ihr Mobilgerät zu entsperren oder an ein Ladegerät anzuschliessen.",
+        "PUSH_FAQ": "Möglicherweise liegt ein Problem bei der Verarbeitung von Push-Benachrichtigungen vor. Die FAQ-Artikel für <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> und <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> helfen bei der Fehlersuche.",
         "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?",
         "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
         "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?",
@@ -289,6 +292,10 @@
             "SHOW_PREVIEW": "Nachrichteninhalt in Benachrichtigungen anzeigen",
             "PLAY_SOUND": "Ton abspielen"
         }
+    },
+    "deviceUnreachable": {
+        "DEVICE_UNREACHABLE": "Mobilgerät nicht erreichbar",
+        "UNABLE_TO_CONNECT": "Eine Verbindung mit Ihrem Mobilgerät konnte nicht hergestellt werden …"
     },
     "version": {
         "NEW_VERSION": "Neue Version Verfügbar",

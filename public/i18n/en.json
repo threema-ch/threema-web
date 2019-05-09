@@ -8,6 +8,7 @@
         "PLEASE_SCAN": "Scan this QR code with your Threema app",
         "PLEASE_UNLOCK": "Reconnecting session",
         "WAITING": "Waiting for connection",
+        "RETRY": "Retry",
         "PLEASE_RELOAD": "Please reload the page to try again.",
         "RELOAD": "Reload page",
         "PASSWORD": "Password",
@@ -59,6 +60,8 @@
         "APP_STARTED": "Is the Threema app started?",
         "SESSION_DELETED": "Did you delete this session on your phone?",
         "PHONE_ONLINE": "Is your phone connected to the internet?",
+        "UNLOCK_OR_CHARGE": "It may help to unlock your device or connect it to a charger.",
+        "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
         "WEBCLIENT_ENABLED": "Is Threema Web enabled in the Threema app?",
         "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
         "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?",
@@ -289,6 +292,10 @@
             "SHOW_PREVIEW": "Show message contents in notifications",
             "PLAY_SOUND": "Play sound"
         }
+    },
+    "deviceUnreachable": {
+        "DEVICE_UNREACHABLE": "Device Unreachable",
+        "UNABLE_TO_CONNECT": "Unable to connect to your device …"
     },
     "version": {
         "NEW_VERSION": "New Version Available",

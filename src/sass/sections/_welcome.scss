@@ -112,10 +112,13 @@
     }
 
     .loading {
+        $progress-height: 250px;
+        $progress-overlap: 70px;
         margin-top: 48px;
 
         md-progress-circular {
-            margin: 0 auto;
+            margin: 0 auto calc(-#{$progress-height} + #{$progress-overlap});
+            height: $progress-height;
 
             svg path {
                 stroke-width: 12px !important;
@@ -123,13 +126,6 @@
         }
 
         .info {
-            display: flex;
-            position: relative;
-            top: -250px;
-            flex-direction: column;
-            justify-content: center;
-            height: 250px;
-
             .percentage {
                 margin-bottom: 8px;
                 vertical-align: center;
@@ -140,11 +136,7 @@
         }
 
         .troubleshoot {
-            $troubleshoot-height: 190px;
-            position: absolute;
-            bottom: -$troubleshoot-height - 32px;
-            width: 100%;
-            height: $troubleshoot-height;
+            margin-top: calc(#{$progress-overlap} + 40px);
 
             h3 {
                 margin-bottom: 8px;
@@ -152,13 +144,13 @@
             }
 
             ul {
+                text-align: left;
                 font-size: .9em;
-                list-style-type: none;
-            }
 
-            li {
-                padding-bottom: .3em;
-                line-height: 1.2em;
+                li {
+                    padding: 0 1em .3em;
+                    line-height: 1.2em;
+                }
             }
 
             .forget {
@@ -170,21 +162,6 @@
                 padding: 0 10px;
                 height: 35px;
             }
-        }
-    }
-
-    .notification {
-        flex-direction: horizontal;
-        margin-bottom: 16px;
-        background-color: #ff9800;
-        padding: 8px;
-
-        p {
-            width: 100%;
-            text-align: center;
-            line-height: 1.4em;
-            font-size: .8em;
-            font-weight: bold;
         }
     }
 }

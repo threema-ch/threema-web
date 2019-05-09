@@ -250,12 +250,44 @@
             opacity: 1;
         }
     }
+}
 
+ul.material-icons-list {
+    list-style-type: none;
+
+    li {
+        $list-style-width: 1.3em;
+        margin-left: $list-style-width;
+        text-indent: -$list-style-width;
+
+        &::before {
+            font-family: 'Material Icons';
+        }
+
+        &.help {
+            &::before {
+                content: 'help';
+            }
+        }
+
+        &.info {
+            &::before {
+                content: 'info';
+            }
+        }
+    }
 }
 
 .md-dialog-content {
     &.center {
         text-align: center;
+    }
+}
+
+.circular-progress-button {
+    md-progress-circular {
+        float: left;
+        margin: 8px 4px;
     }
 }
 

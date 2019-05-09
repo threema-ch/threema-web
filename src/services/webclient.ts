@@ -37,7 +37,7 @@ import {MessageService} from './message';
 import {MimeService} from './mime';
 import {NotificationService} from './notification';
 import {PeerConnectionHelper} from './peerconnection';
-import {PushService} from './push';
+import {PushService, PushSession} from './push';
 import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
@@ -45,6 +45,8 @@ import {TimeoutService} from './timeout';
 import {TitleService} from './title';
 import {VersionService} from './version';
 
+import {TimeoutError} from '../exceptions';
+import {DeviceUnreachableController} from '../partials/messenger';
 import {ChunkCache} from '../protocol/cache';
 import {SequenceNumber} from '../protocol/sequence_number';
 
@@ -52,6 +54,7 @@ import {SequenceNumber} from '../protocol/sequence_number';
 import InitializationStep = threema.InitializationStep;
 import ContactReceiverFeature = threema.ContactReceiverFeature;
 import DisconnectReason = threema.DisconnectReason;
+import PushSessionConfig = threema.PushSessionConfig;
 
 /**
  * Payload of a connectionInfo message.
@@ -75,6 +78,7 @@ const fakeConnectionId = Uint8Array.from([
  * This service handles everything related to the communication with the peer.
  */
 export class WebClientService {
+    public static readonly MAX_CONNECT_ATTEMPTS = 3;
     private static CHUNK_SIZE = 64 * 1024;
     private static SEQUENCE_NUMBER_MIN = 0;
     private static SEQUENCE_NUMBER_MAX = (2 ** 32) - 1;
@@ -186,7 +190,6 @@ export class WebClientService {
     private pendingInitializationStepRoutines: Set<threema.InitializationStepRoutine> = new Set();
     private initialized: Set<threema.InitializationStep> = new Set();
     private stateService: StateService;
-    private lastPush: Date = null;
 
     // Session connection
     private saltyRtcHost: string = null;
@@ -215,8 +218,17 @@ export class WebClientService {
     public conversations: threema.Container.Conversations;
     public receivers: threema.Container.Receivers;
     public alerts: threema.Alert[] = [];
+
+    // Push
     private pushToken: string = null;
     private pushTokenType: threema.PushTokenType = null;
+    private pushSession: PushSession | null = null;
+    private readonly pushSessionConfig: PushSessionConfig;
+    private readonly pushSessionExpectedPeriodMaxMs: number;
+    private pushPromise: Promise<any> | null = null;
+    private deviceUnreachableDialog: ng.IPromise<any> | null = null;
+    private pushTimer: number | null = null;
+    private schedulePushAfterCooldown: boolean = false;
 
     // Timeouts
     private batteryStatusTimeout: ng.IPromise<void> = null;
@@ -309,6 +321,11 @@ export class WebClientService {
 
         // State
         this.stateService = stateService;
+
+        // Push session configuration
+        this.pushSessionConfig = PushSession.defaultConfig;
+        this.pushSessionConfig.triesMax = WebClientService.MAX_CONNECT_ATTEMPTS;
+        this.pushSessionExpectedPeriodMaxMs = PushSession.expectedPeriodMaxMs(this.pushSessionConfig);
 
         // Other properties
         this.container = container;
@@ -484,6 +501,9 @@ export class WebClientService {
         // We want to know about new responders.
         this.salty.on('new-responder', () => {
             if (!this.startupDone) {
+                // Pushing complete
+                this.resetPushSession(true);
+
                 // Peer handshake
                 this.stateService.updateConnectionBuildupState('peer_handshake');
             }
@@ -529,7 +549,6 @@ export class WebClientService {
         // Once the connection is established, if this is a WebRTC connection,
         // initiate the peer connection and start the handover.
         this.salty.once('state-change:task', () => {
-
             // Determine chosen task
             const task = this.salty.getTask();
             if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
@@ -807,6 +826,51 @@ export class WebClientService {
     }
 
     /**
+     * Schedule a push to be sent if there is no network activity within a
+     * specified interval.
+     */
+    private schedulePush(timeoutMs: number = 3000): void {
+        if (this.pushTimer !== null) {
+            this.schedulePushAfterCooldown = true;
+            return;
+        }
+
+        // Send a push after the timeout
+        this.pushTimer = self.setTimeout(() => {
+            this.pushTimer = null;
+            this.schedulePushAfterCooldown = false;
+            this.$log.debug(this.logTag, 'Connection appears to be lost, sending push');
+            this.sendPush();
+        }, timeoutMs);
+
+        // Send a connection ack.
+        // Note: This acts as a *ping* but also helps us to keep the caches
+        //       clean.
+        this._requestConnectionAck();
+    }
+
+    /**
+     * Cancel a scheduled push.
+     */
+    private cancelPush(cooldownMs: number = 10000): void {
+        if (this.pushTimer !== null) {
+            self.clearTimeout(this.pushTimer);
+            this.pushTimer = null;
+        }
+        this.schedulePushAfterCooldown = false;
+
+        // Start the cooldown of the push timeout (if required)
+        if (cooldownMs > 0) {
+            this.pushTimer = self.setTimeout(() => {
+                this.pushTimer = null;
+                if (this.schedulePushAfterCooldown) {
+                    this.schedulePush();
+                }
+            }, cooldownMs);
+        }
+    }
+
+    /**
      * For the WebRTC task, this is called when the DataChannel is open.
      * For the relayed data task, this is called once the connection is established.
      */
@@ -1018,28 +1082,77 @@ export class WebClientService {
 
     /**
      * Send a push message to wake up the peer.
-     * The push message will only be sent if the last push is less than 2 seconds ago.
+     *
+     * Returns the maximum expected period until the promise will be resolved,
+     * and the promise itself.
      */
-    private sendPush(): void {
-        // Make sure not to flood the target device with pushes
-        const minPushInterval = 2000;
-        const now = new Date();
-        if (this.lastPush !== null && (now.getTime() - this.lastPush.getTime()) < minPushInterval) {
-            this.$log.debug(this.logTag,
-                'Skipping push, last push was requested less than ' + (minPushInterval / 1000) + 's ago');
-            return;
-        }
-        this.lastPush = now;
+    public sendPush(): [number, Promise<void>] {
+        // Create new session
+        if (this.pushSession === null) {
+            this.pushSession = this.pushService.createSession(this.salty.permanentKeyBytes, this.pushSessionConfig);
 
-        // Actually send the push notification
-        this.pushService.sendPush(this.salty.permanentKeyBytes)
-            .then(() => {
-                this.$log.debug(this.logTag, 'Requested app wakeup via', this.pushTokenType, 'push');
-                this.$rootScope.$apply(() => {
-                    this.stateService.updateConnectionBuildupState('push');
+            // Start and handle success/error
+            this.pushPromise = this.pushSession.start()
+                .then(() => this.resetPushSession(true))
+                .catch((error) => {
+                    // Reset push session
+                    this.resetPushSession(false);
+
+                    // Handle error
+                    if (error instanceof TimeoutError) {
+                        this.showDeviceUnreachableDialog();
+                    } else {
+                        this.failSession();
+                    }
                 });
+
+            // Update state
+            if (!this.$rootScope.$$phase) {
+                this.$rootScope.$apply(() => this.stateService.updateConnectionBuildupState('push'));
+            } else {
+                this.stateService.updateConnectionBuildupState('push');
+            }
+        }
+
+        // Retrieve the expected maximum period
+        return [this.pushSessionExpectedPeriodMaxMs, this.pushPromise];
+    }
+
+    /**
+     * Reset push session (if any) and hide the *device unreachable* dialog
+     * (if any and if requested).
+     */
+    private resetPushSession(hideDeviceUnreachableDialog: boolean = true): void {
+        // Hide unreachable dialog (if any)
+        if (hideDeviceUnreachableDialog && this.deviceUnreachableDialog !== null) {
+            this.$mdDialog.hide();
+        }
+
+        // Reset push session (if any)
+        if (this.pushSession !== null) {
+            this.pushSession.done();
+            this.pushSession = null;
+            this.pushPromise = null;
+        }
+    }
+
+    /**
+     * Show the *device unreachable* dialog.
+     */
+    public showDeviceUnreachableDialog(): void {
+        // Show device unreachable dialog (if we were already
+        // connected and if not already visible).
+        if (this.pushService.isAvailable() && this.$state.includes('messenger')
+            && this.deviceUnreachableDialog === null) {
+            this.deviceUnreachableDialog = this.$mdDialog.show({
+                controller: DeviceUnreachableController,
+                controllerAs: 'ctrl',
+                templateUrl: 'partials/dialog.device-unreachable.html',
+                parent: angular.element(document.body),
+                escapeToClose: false,
             })
-            .catch((e: Error) => this.$log.error(this.logTag, 'Could not send wakeup push to app: ' + e.message));
+                .finally(() => this.deviceUnreachableDialog = null);
+        }
     }
 
     /**
@@ -1062,10 +1175,12 @@ export class WebClientService {
         this.salty.connect();
 
         // If push service is available, notify app
-        if (skipPush === true) {
-            this.$log.debug(this.logTag, 'start(): Skipping push notification');
-        } else if (this.pushService.isAvailable()) {
-            this.sendPush();
+        if (this.pushService.isAvailable()) {
+            if (skipPush === true) {
+                this.$log.debug(this.logTag, 'start(): Skipping push notification');
+            } else {
+                this.sendPush();
+            }
         } else if (this.trustedKeyStore.hasTrustedKey()) {
             this.$log.debug(this.logTag, 'Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
@@ -1101,6 +1216,9 @@ export class WebClientService {
         let close = args.close !== false;
         let remove = false;
 
+        // Stop push session
+        this.resetPushSession(true);
+
         // Session deleted: Force close and delete
         if (args.reason === DisconnectReason.SessionDeleted) {
             close = true;
@@ -1119,11 +1237,15 @@ export class WebClientService {
                 {reason: args.reason});
         }
 
-        // Stop ack timer
+        // Stop timer
         if (this.ackTimer !== null) {
             self.clearTimeout(this.ackTimer);
             this.ackTimer = null;
         }
+        if (this.pushTimer !== null) {
+            this.cancelPush(0);
+        }
+        this.$log.debug(this.logTag, 'Timer stopped');
 
         // Reset states
         this.stateService.reset(args.connectionBuildupState);
@@ -1142,6 +1264,11 @@ export class WebClientService {
             this.previousConnectionId = null;
             this.previousIncomingChunkSequenceNumber = null;
             this.previousChunkCache = null;
+
+            // Remove chosen task
+            // Note: This implicitly prevents automatic connection attempts
+            //       from the status controller.
+            this.chosenTask = threema.ChosenTask.None;
 
             // Reset general client information
             this.clientInfo = null;
@@ -1204,6 +1331,13 @@ export class WebClientService {
 
         // Done, redirect now if session closed
         if (close) {
+            // Reject startup promise (if any)
+            if (this.startupPromise !== null) {
+                this.startupPromise.reject();
+                this.startupPromise = null;
+                this._resetInitializationSteps();
+            }
+
             // Translate close flag
             const state = args.close !== false ? args.close : 'welcome';
             this.$state.go(state);
@@ -3121,7 +3255,7 @@ export class WebClientService {
                     this.$log.error(this.logTag, 'Invalid operating system in client info');
             }
         }
-        if (this.pushToken && this.pushTokenType) {
+        if (this.pushToken !== null && this.pushTokenType !== null) {
             this.pushService.init(this.pushToken, this.pushTokenType);
         }
 
@@ -3834,7 +3968,15 @@ export class WebClientService {
             if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
                 this.$log.debug(`[Chunk] Sending chunk (retransmit/push=${retransmit}:`, chunk);
             }
+
+            // Send chunk
             this.relayedDataTask.sendMessage(chunk.buffer);
+
+            // Send a push if no incoming chunks within the next two seconds.
+            // Note: This has a cooldown phase of 10 seconds.
+            if (retransmit && this.startupDone) {
+                this.schedulePush();
+            }
         }
     }
 
@@ -3857,6 +3999,9 @@ export class WebClientService {
 
         // Schedule the periodic ack timer
         this.scheduleConnectionAck();
+
+        // Cancel scheduled push since data has been received
+        this.cancelPush();
 
         // Process chunk
         // Warning: Nothing should be called after the unchunker has processed
@@ -3954,7 +4099,8 @@ export class WebClientService {
             try {
                 messageHandler.apply(this, [message.subType, message]);
             } catch (error) {
-                this.$log.error(this.logTag, `Unable to handle incoming wire message: ${error}`, error.stack);
+                this.$log.error(this.logTag, 'Unable to handle incoming wire message:', error);
+                console.trace(error); // tslint:disable-line:no-console
                 return;
             }
         }

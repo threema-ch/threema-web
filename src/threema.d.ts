@@ -487,6 +487,13 @@ declare namespace threema {
         text: string;
     }
 
+    interface PushSessionConfig {
+        retryTimeoutInitMs: number;
+        retryTimeoutMaxMs: number;
+        triesMax: number;
+        timeToLiveRange: number[];
+    }
+
     const enum PushTokenType {
         Gcm = 'gcm',
         Apns = 'apns',

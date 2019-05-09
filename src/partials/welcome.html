@@ -66,29 +66,29 @@
                     <p ng-if="ctrl.state === 'loading' || ctrl.state === 'done'" translate>welcome.LOADING_INITIAL_DATA</p>
                     <div class="troubleshoot" ng-if="ctrl.slowConnect">
                         <h3 translate>troubleshooting.SLOW_CONNECT</h3>
-                        <ul>
-                            <li>
-                                <i class="material-icons md-dark md-14">help</i>
+                        <ul class="material-icons-list">
+                            <li class="help">
                                 <span translate>troubleshooting.PHONE_ONLINE</span>
                             </li>
-                            <li ng-if="ctrl.state === 'push'">
-                                <i class="material-icons md-dark md-14">help</i>
+                            <li ng-if="ctrl.state === 'push'" class="help">
                                 <span translate>troubleshooting.APP_STARTED</span>
                             </li>
-                            <li ng-if="ctrl.state === 'push'">
-                                <i class="material-icons md-dark md-14">help</i>
+                            <li ng-if="ctrl.state === 'push'" class="help">
                                 <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
                             </li>
-                            <li ng-if="ctrl.state === 'push'">
-                                <i class="material-icons md-dark md-14">help</i>
+                            <li ng-if="ctrl.state === 'push'" class="help">
                                 <span translate>troubleshooting.SESSION_DELETED</span>
                             </li>
-                            <li ng-if="ctrl.state === 'peer_handshake' && ctrl.showWebrtcTroubleshooting">
-                                <i class="material-icons md-dark md-14">help</i>
+                            <li ng-if="ctrl.state === 'push'" class="info">
+                                <span translate>troubleshooting.UNLOCK_OR_CHARGE</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'" class="info">
+                                <span translate>troubleshooting.PUSH_FAQ</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'peer_handshake' && ctrl.showWebrtcTroubleshooting" class="help">
                                 <span translate>troubleshooting.PLUGIN</span>
                             </li>
-                            <li ng-if="ctrl.state === 'peer_handshake' && ctrl.showWebrtcTroubleshooting">
-                                <i class="material-icons md-dark md-14">help</i>
+                            <li ng-if="ctrl.state === 'peer_handshake' && ctrl.showWebrtcTroubleshooting" class="help">
                                 <span translate>troubleshooting.ADBLOCKER</span>
                             </li>
                         </ul>
