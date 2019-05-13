@@ -507,10 +507,8 @@ export default [
                     allEmoji.on('click', onEmojiChosen);
                     allEmojiTabs.on('keydown', onEmojiTabSelected);
 
-                    // set focus to fix chat scroll bug
-                    $timeout(() => {
-                        composeDiv[0].focus();
-                    });
+                    // Focus compose area again
+                    $timeout(() => composeArea.focus());
                 }
 
                 // Hide emoji picker element
@@ -665,7 +663,7 @@ export default [
                 // Listen to broadcasts
                 const unsubscribeListeners = [];
                 unsubscribeListeners.push($rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
-                    composeDiv[0].focus();
+                    composeArea.focus();
                 }));
 
                 // When switching chat, send stopTyping message
