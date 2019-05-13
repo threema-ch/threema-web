@@ -40,6 +40,7 @@ export default [
     '$filter',
     '$log',
     '$rootScope',
+    'CONFIG',
     function(browserService: BrowserService,
              stringService: StringService,
              timeoutService: TimeoutService,
@@ -49,7 +50,8 @@ export default [
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
              $log: ng.ILogService,
-             $rootScope: ng.IRootScopeService) {
+             $rootScope: ng.IRootScopeService,
+             CONFIG: threema.Config) {
         return {
             restrict: 'EA',
             scope: {
@@ -92,7 +94,7 @@ export default [
                 const fileInput: any = angular.element(element[0].querySelector('input.file-input'));
 
                 // Initialize compose area lib
-                const composeArea = ComposeArea.bind_to(composeDiv[0]);
+                const composeArea = ComposeArea.bind_to(composeDiv[0], CONFIG.DEBUG ? 'debug' : 'warn');
                 if (scope.onInit) {
                     scope.onInit(composeArea);
                 }
