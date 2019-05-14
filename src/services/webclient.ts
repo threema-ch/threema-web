@@ -187,6 +187,7 @@ export class WebClientService {
     // State handling
     private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
     public startupDone: boolean = false;
+    private handoverDone: boolean = false;
     private pendingInitializationStepRoutines: Set<threema.InitializationStepRoutine> = new Set();
     private initialized: Set<threema.InitializationStep> = new Set();
     private stateService: StateService;
@@ -542,7 +543,7 @@ export class WebClientService {
                             this.$log.warn(this.logTag, 'Unknown signaling state:', state);
                     }
                 }
-                this.stateService.updateSignalingConnectionState(state, this.chosenTask);
+                this.stateService.updateSignalingConnectionState(state, this.chosenTask, this.handoverDone);
             }, 0);
         });
 
@@ -1042,6 +1043,11 @@ export class WebClientService {
             this.secureDataChannel.onclose = (ev: Event) => {
                 this.$log.warn('Secure data channel: Closed');
             };
+
+            // Mark as handed over
+            // Note: Even though this method is also "misused" for the relayed
+            //       data task, only WebRTC really hands over.
+            this.handoverDone = true;
         } else if (this.chosenTask === threema.ChosenTask.RelayedData) {
             // Handle messages directly
             this.relayedDataTask.on('data', (ev: saltyrtc.SaltyRTCEvent) => {
@@ -1170,6 +1176,7 @@ export class WebClientService {
             this.startupPromise = this.$q.defer();
         }
         this.startupDone = false;
+        this.handoverDone = false;
 
         // Connect
         this.salty.connect();
