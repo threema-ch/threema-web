@@ -22,7 +22,7 @@ const filterQuery = process.argv[3];
 type Testfunc = (driver: WebDriver) => void;
 
 // Shared selectors
-const composeArea = By.css('div.compose');
+const composeArea = By.id('composeDiv');
 const emojiKeyboard = By.css('.emoji-keyboard');
 const emojiTrigger = By.css('.emoji-trigger');
 
@@ -30,7 +30,7 @@ const emojiTrigger = By.css('.emoji-trigger');
  * Helper function to extract text.
  */
 async function extractText(driver: WebDriver): Promise<string> {
-    const script = `return window.composeArea.getText();`;
+    const script = `return window.composeArea.get_text();`;
     return driver.executeScript<string>(script);
 }
 
@@ -209,6 +209,7 @@ const TESTS: Array<[string, Testfunc]> = [
 const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
 (async function() {
     const driver: WebDriver = await new Builder().forBrowser(browser).build();
+    driver.manage().setTimeouts({implicit: 1000, pageLoad: 30000, script: 30000});
     let i = 0;
     let success = 0;
     let failed = 0;
@@ -218,6 +219,9 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
         console.info(`Filter query: "${filterQuery}"\n`);
     }
     try {
+        // Initial pageload to ensure bundles are generated
+        await driver.get(TEST_URL);
+
         for (const [name, testfunc] of TESTS) {
             try {
                 if (filterQuery === undefined || name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1) {
