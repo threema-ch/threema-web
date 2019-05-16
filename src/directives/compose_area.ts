@@ -547,7 +547,7 @@ export default [
                 // Emoji is chosen
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
-                    insertEmojiString(this.textContent);
+                    insertSingleEmojiString(this.textContent);
                 }
 
                 // Emoji tab is selected
@@ -559,7 +559,7 @@ export default [
                 }
 
                 // Insert a single emoji, passed in as string
-                function insertEmojiString(emojiString: string): void {
+                function insertSingleEmojiString(emojiString: string): void {
                     const tokens = emojifyNew(emojiString);
                     if (tokens.length !== 1) {
                         throw new Error(`Emoji parsing failed: Expected 1 element, found ${tokens.length}`);
@@ -574,6 +574,7 @@ export default [
                 // Insert a single emoji
                 function insertEmoji(emoji: threema.EmojiInfo): void {
                     const img: HTMLElement = composeArea.insert_image(emoji.imgPath, emoji.emojiString, 'em');
+                    img.setAttribute('data-c', emoji.codepoint);
                     img.draggable = false;
                     img.ondragstart = () => false;
                 }
