@@ -439,7 +439,9 @@ angular.module('3ema.filters', [])
         return function(contact: threema.Receiver) {
             if (contact.id === webClientService.me.id) {
                 return $translate.instant('messenger.ME');
-            } else { return contact.displayName; }
+            } else {
+                return contact.displayName;
+            }
         };
 }])
 
