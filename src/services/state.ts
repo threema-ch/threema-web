@@ -83,11 +83,12 @@ export class StateService {
     /**
      * Signaling connection state.
      */
-    public updateSignalingConnectionState(state: saltyrtc.SignalingState, chosenTask: ChosenTask): void {
+    public updateSignalingConnectionState(
+        state: saltyrtc.SignalingState, chosenTask: ChosenTask, handoverDone: boolean,
+    ): void {
         const prevState = this.signalingConnectionState;
         this.signalingConnectionState = state;
-        if (this.stage === Stage.Signaling
-        || (this.stage === Stage.Task && chosenTask === ChosenTask.RelayedData)) {
+        if (!handoverDone) {
             this.$log.debug(this.logTag, 'Signaling connection state:', prevState, '=>', state);
             switch (state) {
                 case 'new':
@@ -109,7 +110,7 @@ export class StateService {
                     this.state = GlobalConnectionState.Error;
                     break;
                 default:
-                    this.$log.warn(this.logTag, 'Ignored signaling connection state change to', state);
+                    this.$log.warn(this.logTag, `Unknown signaling connection state: ${state}`);
             }
         } else {
             this.$log.debug(this.logTag, 'Ignored signaling connection state to "' + state + '"');
