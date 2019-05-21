@@ -280,6 +280,17 @@ export default [
                 }
 
                 // Handle typing events
+
+                let isComposing = false;
+
+                function onCompositionStart(ev: KeyboardEvent): void {
+                    isComposing = true;
+                }
+
+                function onCompositionEnd(ev: KeyboardEvent): void {
+                    isComposing = false;
+                }
+
                 function onKeyDown(ev: KeyboardEvent): void {
                     // If enter is pressed, prevent default event from being dispatched
                     if (!ev.shiftKey && ev.key === 'Enter') {
@@ -289,6 +300,13 @@ export default [
                     // If the keydown is handled and aborted outside
                     if (scope.onKeyDown && scope.onKeyDown(ev) !== true) {
                         ev.preventDefault();
+                        return;
+                    }
+
+                    // If the enter key is part of a composition (e.g. when
+                    // entering text with an IME), don't submit the text.
+                    // See https://github.com/threema-ch/threema-web/issues/777
+                    if ((ev as any).isComposing || isComposing) {
                         return;
                     }
 
@@ -621,6 +639,8 @@ export default [
                 }
 
                 // Handle typing events
+                composeDiv.on('compositionstart', onCompositionStart);
+                composeDiv.on('compositionend', onCompositionEnd);
                 composeDiv.on('keydown', onKeyDown);
                 composeDiv.on('keyup', onKeyUp);
 
