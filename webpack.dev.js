@@ -12,6 +12,7 @@ module.exports = merge(common, {
       path.join(__dirname, 'src'),
     ],
     compress: true,
+    host: '127.0.0.1',
     port: 9966,
   },
 });
