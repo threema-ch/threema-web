@@ -6,12 +6,14 @@ GROUPS_JSON = '../../../twemoji-picker/generated/groups.json'
 with open(GROUPS_JSON, 'r') as f:
     groups = json.loads(f.read())
 
-print('const shortnames = {')
+mappings = []
+
 for emoji_list in groups.values():
     for emoji in emoji_list:
         for shortname in emoji['shortnames']:
-            print("    '{}': '{}',".format(
-                shortname.strip(':'),
-                emoji['codepoint_fully_qualified']
-            ))
+            mappings.append((shortname.strip(':'), emoji['codepoint_fully_qualified']))
+
+print('const shortnames = {')
+for (k, v) in sorted(mappings):
+    print("    '{}': '{}',".format(k, v))
 print('}')
