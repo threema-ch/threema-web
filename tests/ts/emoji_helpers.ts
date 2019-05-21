@@ -89,25 +89,34 @@ describe('Emoji Helpers', () => {
             expect(emojifyNew('™')).toEqual(['™']);
         });
 
-        it('properly handles variant selectors', function() {
-            // https://www.unicode.org/emoji/charts/emoji-variants.html
+        it('properly handles variant selectors (text-default)', function() {
+            // Copyright: Text-default
             const copy = '©';
-            const codepoint = 'a9-fe0f'; // Should include variant selector
-            const imgCodepoint = 'a9'; // Should not include variant selector
             expect(emojifyNew(copy))
                 .toEqual([copy]);
             expect(emojifyNew(copy + textVariantSelector))
                 .toEqual([copy + textVariantSelector]);
             expect(emojifyNew(copy + emojiVariantSelector))
-                .toEqual([makeEmoji(copy + emojiVariantSelector, codepoint, imgCodepoint)]);
+                .toEqual([makeEmoji(copy + emojiVariantSelector, 'a9-fe0f', 'a9')]);
+        });
+
+        it('properly handles variant selectors (emoji-default)', function() {
+            // Exclamation mark: Emoji-default
+            const exclamation = '\u2757';
+            expect(emojifyNew(exclamation))
+                .toEqual([makeEmoji(exclamation, '2757', '2757')]);
+            expect(emojifyNew(exclamation + textVariantSelector))
+                .toEqual([exclamation + textVariantSelector]);
+            expect(emojifyNew(exclamation + emojiVariantSelector))
+                .toEqual([makeEmoji(exclamation + emojiVariantSelector, '2757', '2757')]);
         });
     });
 
     describe('shortnameToUnicode', () => {
         it('converts valid shortnames', function() {
-            expect(shortnameToUnicode('+1')).toEqual('\ud83d\udc4d');
-            expect(shortnameToUnicode('thumbup')).toEqual('\ud83d\udc4d');
-            expect(shortnameToUnicode('thumbsup')).toEqual('\ud83d\udc4d');
+            expect(shortnameToUnicode('+1')).toEqual('\ud83d\udc4d\ufe0f');
+            expect(shortnameToUnicode('thumbup')).toEqual('\ud83d\udc4d\ufe0f');
+            expect(shortnameToUnicode('thumbsup')).toEqual('\ud83d\udc4d\ufe0f');
         });
 
         it('returns null for unknown shortcodes', function() {
