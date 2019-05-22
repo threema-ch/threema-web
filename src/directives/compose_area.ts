@@ -210,14 +210,14 @@ export default [
 
                 // Determine whether field is empty
                 function composeAreaIsEmpty() {
-                    return composeArea.get_text(false).length === 0;
+                    return composeArea.get_text().length === 0;
                 }
 
                 // Submit the text from the compose area.
                 //
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
-                    const text = composeArea.get_text(false).replace(/\r/g, '');
+                    const text = composeArea.get_text().replace(/\r/g, '');
 
                     return new Promise((resolve, reject) => {
                         const submitTexts = (strings: string[]) => {
