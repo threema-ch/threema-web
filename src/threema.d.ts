@@ -740,13 +740,6 @@ declare namespace threema {
         isAll: boolean;
     }
 
-    interface WordResult {
-        // The trimmed word
-        word: string;
-        // The length of the untrimmed word
-        realLength: number;
-    }
-
     interface WebClientServiceStopArguments {
         reason: DisconnectReason;
         send: boolean;

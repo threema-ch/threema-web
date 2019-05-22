@@ -310,6 +310,15 @@ export default [
                         return;
                     }
 
+                    // If a : is pressed, possibly insert emoji
+                    if (ev.key === ':') {
+                        const modified = onEmojiShortcodeKeyPressed(ev, ':', false);
+                        if (modified) {
+                            ev.preventDefault();
+                            return;
+                        }
+                    }
+
                     // At link time, the element is not yet evaluated.
                     // Therefore add following code to end of event loop.
                     $timeout(() => {
@@ -325,40 +334,23 @@ export default [
                 }
 
                 function onKeyUp(ev: KeyboardEvent): void {
-                    // At link time, the element is not yet evaluated.
-                    // Therefore add following code to end of event loop.
-                    $timeout(() => {
-                        // If the compose area contains only a single <br>, make it fully empty.
-                        // See also: https://stackoverflow.com/q/14638887/284318
-                        const text = composeArea.get_text(true);
-                        if (text === '\n') {
-                            composeDiv[0].innerText = '';
-                        // TODO
-                        // } else if ((ev.keyCode === 190 || ev.key === ':') && caretPosition !== null) {
-                        //    // A ':' is pressed, try to parse
-                        //    const currentWord = stringService.getWord(text, caretPosition.fromChar, [':']);
-                        //    if (currentWord.realLength > 2 && currentWord.word.substr(0, 1) === ':') {
-                        //        const trimmed = currentWord.word.substr(1, currentWord.word.length - 2);
-                        //        const unicodeEmoji = shortnameToUnicode(trimmed);
-                        //        if (unicodeEmoji !== null) {
-                        //            return insertEmoji(unicodeEmoji,
-                        //                caretPosition.from - currentWord.realLength,
-                        //                caretPosition.to);
-                        //        }
-                        //    }
-                        }
+                    // If the compose area contains only a single <br>, make it fully empty.
+                    // See also: https://stackoverflow.com/q/14638887/284318
+                    const text = composeArea.get_text(true);
+                    if (text === '\n') {
+                        composeDiv[0].innerText = '';
+                    }
 
-                        // Update typing information
-                        if (text.trim().length === 0) {
-                            stopTyping();
-                            scope.onTyping('');
-                        } else {
-                            startTyping();
-                            scope.onTyping(text.trim(), null/* TODO stringService.getWord(text, caretPosition.from)*/);
-                        }
+                    // Update typing information
+                    if (text.trim().length === 0) {
+                        stopTyping();
+                        scope.onTyping('');
+                    } else {
+                        startTyping();
+                        scope.onTyping(text.trim());
+                    }
 
-                        updateView();
-                    }, 0);
+                    updateView();
                 }
 
                 // Function to fetch file contents
@@ -595,6 +587,36 @@ export default [
                     img.setAttribute('data-c', emoji.codepoint);
                     img.draggable = false;
                     img.ondragstart = () => false;
+                }
+
+                // The emoji shortcode trigger (:) was inserted. Return a boolean
+                // indicating whether the compose area contents were modified.
+                //
+                // The `alreadyProcessed` indicates whether the key has already
+                // been processed in the DOM (onKeyUp) or not (onKeyDown).
+                function onEmojiShortcodeKeyPressed(ev, trigger: string, alreadyProcessed: boolean): boolean {
+                    const word = composeArea.get_word_at_caret();
+                    if (word === undefined) {
+                        return false;
+                    }
+                    let before = word.before();
+                    const after = word.after();
+                    if (!alreadyProcessed) {
+                        before += trigger;
+                    }
+                    if (after.length === 0 && before.length > 2) {
+                        if (before.startsWith(trigger) && before.endsWith(trigger)) {
+                            const trimmed = before.substr(1, before.length - 2);
+                            const unicodeEmoji = shortnameToUnicode(trimmed);
+                            if (unicodeEmoji !== null) {
+                                composeArea.select_word_at_caret();
+                                composeArea.store_selection_range();
+                                insertSingleEmojiString(unicodeEmoji);
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
                 }
 
                 // TODO
