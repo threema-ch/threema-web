@@ -35,6 +35,20 @@ async function extractText(driver: WebDriver): Promise<string> {
 }
 
 /**
+ * Helper function to send a KeyDown event.
+ */
+async function sendKeyDown(driver: WebDriver, key: string): Promise<void> {
+    const script = `
+        const e = document.createEvent('HTMLEvents');
+        e.initEvent('keydown', false, true);
+        e.key = '${key}';
+        const element = document.querySelector("div.compose");
+        element.dispatchEvent(e);
+    `;
+    return driver.executeScript<void>(script);
+}
+
+/**
  * Helper function to send a KeyUp event.
  */
 async function sendKeyUp(driver: WebDriver, key: string): Promise<void> {
@@ -51,24 +65,24 @@ async function sendKeyUp(driver: WebDriver, key: string): Promise<void> {
 /**
  * The emoji trigger should toggle the emoji keyboard.
  */
-async function showEmojiSelector(driver: WebDriver) {
+async function buttonTogglesEmojiSelector(driver: WebDriver) {
     // Initially not visible
     expect(
-        await driver.findElement(emojiKeyboard).isDisplayed()
+        await driver.findElement(emojiKeyboard).isDisplayed(),
     ).to.be.false;
 
     // Show
     await driver.findElement(emojiTrigger).click();
 
     expect(
-        await driver.findElement(emojiKeyboard).isDisplayed()
+        await driver.findElement(emojiKeyboard).isDisplayed(),
     ).to.be.true;
 
     // Hide
     await driver.findElement(emojiTrigger).click();
 
     expect(
-        await driver.findElement(emojiKeyboard).isDisplayed()
+        await driver.findElement(emojiKeyboard).isDisplayed(),
     ).to.be.false;
 }
 
@@ -87,7 +101,8 @@ async function insertEmoji(driver: WebDriver) {
 
     // Insert beer
     await driver.findElement(By.className('em-food')).click();
-    await driver.findElement(By.css('.em[data-s=":beers:"]')).click();
+    const elem = await driver.findElement(By.css('.em[data-s=":beers:"]'));
+    await elem.click();
 
     // Validate emoji
     const emoji = await driver.findElement(composeArea).findElements(By.xpath('*'));
@@ -187,16 +202,16 @@ async function regression672(driver: WebDriver) {
 async function insertEmojiWithShortcode(driver: WebDriver) {
     // Insert text
     await driver.findElement(composeArea).click();
-    await driver.findElement(composeArea).sendKeys('hello :+1:');
-    await sendKeyUp(driver, ':');
+    await driver.findElement(composeArea).sendKeys('hello :+1');
+    await sendKeyDown(driver, ':');
 
     const text = await extractText(driver);
-    expect(text).to.equal('hello 👍');
+    expect(text).to.equal('hello 👍️');
 }
 
 // Register tests here
 const TESTS: Array<[string, Testfunc]> = [
-    ['Show and hide emoji selector', showEmojiSelector],
+    ['Show and hide emoji selector', buttonTogglesEmojiSelector],
     ['Insert emoji and text', insertEmoji],
     ['Insert three lines of text', insertNewline],
     ['Regression test #574', regression574],

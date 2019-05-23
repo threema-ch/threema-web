@@ -470,22 +470,27 @@ export default [
 
                 // Show emoji picker element
                 function showEmojiPicker() {
-                    const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
+                    // If the emoji picker is triggered too early, it's possible that the picker element
+                    // has not yet been fully loaded (e.g. during UI tests). Therefore enqueue the event
+                    // handler at the end of the event loop.
+                    $timeout(() => {
+                        const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
 
-                    // Show
-                    emojiKeyboard.addClass('active');
-                    emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
+                        // Show
+                        emojiKeyboard.addClass('active');
+                        emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
 
-                    // Find some selectors
-                    const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
-                    const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
+                        // Find some selectors
+                        const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                        const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
-                    // Add event handlers
-                    allEmoji.on('click', onEmojiChosen as any);
-                    allEmojiTabs.on('keydown', onEmojiTabSelected as any);
+                        // Add event handlers
+                        allEmoji.on('click', onEmojiChosen as any);
+                        allEmojiTabs.on('keydown', onEmojiTabSelected as any);
 
-                    // Focus compose area again
-                    $timeout(() => composeArea.focus());
+                        // Focus compose area again
+                        composeArea.focus();
+                    });
                 }
 
                 // Hide emoji picker element
