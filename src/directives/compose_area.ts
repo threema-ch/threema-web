@@ -16,15 +16,14 @@
  */
 
 import {ComposeArea} from '@threema/compose-area';
-import * as twemoji from 'twemoji';
 
-import {hasValue, isActionTrigger, logAdapter, replaceWhitespace} from '../helpers';
-import {emojify, emojifyNew, shortnameToUnicode} from '../helpers/emoji';
+import {isActionTrigger} from '../helpers';
+import {emojifyNew, shortnameToUnicode} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
-import {isElementNode, isEmojiInfo, isTextNode} from '../typeguards';
+import {isEmojiInfo} from '../typeguards';
 
 /**
  * The compose area where messages are written.
@@ -76,7 +75,7 @@ export default [
 
                 receiver: '<receiver',
             },
-            link: function(scope: any, element) {
+            link: function(scope: any, wrapper: JQLite) {
                 // Logging
                 const logTag = '[Directives.ComposeArea]';
 
@@ -85,13 +84,13 @@ export default [
                 const TRIGGER_ACTIVE_CSS_CLASS = 'is-active';
 
                 // Elements
-                const wrapper: any = element;
-                const composeDiv: any = angular.element(element[0].querySelector('div.compose'));
-                const emojiTrigger: any = angular.element(element[0].querySelector('i.emoji-trigger'));
-                const emojiKeyboard: any = angular.element(element[0].querySelector('.emoji-keyboard'));
-                const sendTrigger: any = angular.element(element[0].querySelector('i.send-trigger'));
-                const fileTrigger: any = angular.element(element[0].querySelector('i.file-trigger'));
-                const fileInput: any = angular.element(element[0].querySelector('input.file-input'));
+                const select = (selector) => angular.element(wrapper[0].querySelector(selector));
+                const composeDiv = select('div.compose') as JQuery<HTMLElement>;
+                const emojiTrigger = select('i.emoji-trigger') as JQuery<HTMLElement>;
+                const emojiKeyboard = select('.emoji-keyboard') as JQuery<HTMLElement>;
+                const sendTrigger = select('i.send-trigger') as JQuery<HTMLElement>;
+                const fileTrigger = select('i.file-trigger') as JQuery<HTMLElement>;
+                const fileInput = select('input.file-input') as JQuery<HTMLInputElement>;
 
                 // Initialize compose area lib
                 const composeArea = ComposeArea.bind_to(composeDiv[0], CONFIG.DEBUG ? 'debug' : 'warn');
@@ -117,7 +116,7 @@ export default [
                         sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                         emojiTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                         fileTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
-                        composeDiv.attr('contenteditable', false);
+                        composeDiv.attr('contenteditable', 'false');
                         if (emojiKeyboard.hasClass('active')) {
                             hideEmojiPicker();
                         }
@@ -129,7 +128,7 @@ export default [
                         }
                         emojiTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
                         fileTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
-                        composeDiv.attr('contenteditable', true);
+                        composeDiv.attr('contenteditable', 'true');
                     }
                 }
 
@@ -145,38 +144,6 @@ export default [
                         }
                     },
                 );
-
-                /**
-                 * Stop propagation of click events and hold htmlElement of the emojipicker
-                 */
-                const EmojiPickerContainer = (function() {
-                    let instance;
-
-                    function click(e) {
-                        e.stopPropagation();
-                    }
-
-                    return {
-                        get: function() {
-                            if (instance === undefined) {
-                                instance = {
-                                    htmlElement: wrapper[0].querySelector('div.twemoji-picker'),
-                                };
-                                // append stop propagation
-                                angular.element(instance.htmlElement).on('click', click);
-
-                            }
-                            return instance;
-                        },
-                        destroy: function() {
-                            if (instance !== undefined) {
-                                // remove stop propagation
-                                angular.element(instance.htmlElement).off('click', click);
-                                instance = undefined;
-                            }
-                        },
-                    };
-                })();
 
                 // Typing events
                 let stopTypingTimer: ng.IPromise<void> = null;
@@ -283,11 +250,11 @@ export default [
 
                 let isComposing = false;
 
-                function onCompositionStart(ev: KeyboardEvent): void {
+                function onCompositionStart(ev: CompositionEvent): void {
                     isComposing = true;
                 }
 
-                function onCompositionEnd(ev: KeyboardEvent): void {
+                function onCompositionEnd(ev: CompositionEvent): void {
                     isComposing = false;
                 }
 
@@ -503,19 +470,19 @@ export default [
 
                 // Show emoji picker element
                 function showEmojiPicker() {
-                    const emojiPicker: HTMLElement = EmojiPickerContainer.get().htmlElement;
+                    const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
 
                     // Show
                     emojiKeyboard.addClass('active');
                     emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                     // Find some selectors
-                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
-                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
+                    const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                    const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
                     // Add event handlers
-                    allEmoji.on('click', onEmojiChosen);
-                    allEmojiTabs.on('keydown', onEmojiTabSelected);
+                    allEmoji.on('click', onEmojiChosen as any);
+                    allEmojiTabs.on('keydown', onEmojiTabSelected as any);
 
                     // Focus compose area again
                     $timeout(() => composeArea.focus());
@@ -523,24 +490,23 @@ export default [
 
                 // Hide emoji picker element
                 function hideEmojiPicker() {
-                    const emojiPicker: HTMLElement = EmojiPickerContainer.get().htmlElement;
+                    const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
 
                     // Hide
                     emojiKeyboard.removeClass('active');
                     emojiTrigger.removeClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                     // Find some selectors
-                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
-                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
+                    const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                    const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
                     // Remove event handlers
-                    allEmoji.off('click', onEmojiChosen);
-                    allEmojiTabs.off('keydown', onEmojiTabSelected);
-                    EmojiPickerContainer.destroy();
+                    allEmoji.off('click', onEmojiChosen as any);
+                    allEmojiTabs.off('keydown', onEmojiTabSelected as any);
                 }
 
                 // Emoji trigger is clicked
-                function onEmojiTrigger(ev: UIEvent): void {
+                function onEmojiTrigger(ev: KeyboardEvent): void {
                     ev.stopPropagation();
                     if (chatBlocked) {
                         hideEmojiPicker();
@@ -557,14 +523,14 @@ export default [
                 // Emoji is chosen
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
-                    insertSingleEmojiString(this.textContent);
+                    insertSingleEmojiString((ev.target as Element).textContent);
                 }
 
                 // Emoji tab is selected
                 function onEmojiTabSelected(ev: KeyboardEvent): void {
                     if (ev.key === ' ' || ev.key === 'Enter') {
                         // Warning: Hacky
-                        this.parentElement.previousElementSibling.checked = true;
+                        (ev.target as any).parentElement.previousElementSibling.checked = true;
                     }
                 }
 
@@ -632,7 +598,7 @@ export default [
                     if (chatBlocked) {
                         return;
                     }
-                    const input = element[0].querySelector('.file-input') as HTMLInputElement;
+                    const input = wrapper[0].querySelector('.file-input') as HTMLInputElement;
                     input.click();
                 }
 
@@ -661,10 +627,10 @@ export default [
                 }
 
                 // Handle typing events
-                composeDiv.on('compositionstart', onCompositionStart);
-                composeDiv.on('compositionend', onCompositionEnd);
-                composeDiv.on('keydown', onKeyDown);
-                composeDiv.on('keyup', onKeyUp);
+                composeDiv.on('compositionstart', onCompositionStart as any);
+                composeDiv.on('compositionend', onCompositionEnd as any);
+                composeDiv.on('keydown', onKeyDown as any);
+                composeDiv.on('keyup', onKeyUp as any);
 
                 // Handle selection change
                 document.addEventListener('selectionchange', () => {
@@ -672,21 +638,25 @@ export default [
                 });
 
                 // Handle paste event
-                composeDiv.on('paste', onPaste);
+                composeDiv.on('paste', onPaste as any);
 
                 // Handle click on emoji trigger
-                emojiTrigger.on('click', onEmojiTrigger);
-                emojiTrigger.on('keypress', (ev: KeyboardEvent) => {
+                emojiTrigger.on('click', onEmojiTrigger as any);
+                emojiTrigger[0].addEventListener('keypress', (ev: KeyboardEvent) => {
                     if (isActionTrigger(ev)) {
-                        onEmojiTrigger(ev);
+                        $rootScope.$apply(() => {
+                            onEmojiTrigger(ev);
+                        });
                     }
                 });
 
                 // Handle click on file trigger
-                fileTrigger.on('click', onFileTrigger);
-                fileTrigger.on('keypress', (ev: KeyboardEvent) => {
+                fileTrigger.on('click', onFileTrigger as any);
+                fileTrigger[0].addEventListener('keypress', (ev: any) => {
                     if (isActionTrigger(ev)) {
-                        onFileTrigger(ev);
+                        $rootScope.$apply(() => {
+                            onFileTrigger(ev);
+                        });
                     }
                 });
 
@@ -694,10 +664,12 @@ export default [
                 fileInput.on('change', onFileSelected);
 
                 // Handle click on send trigger
-                sendTrigger.on('click', onSendTrigger);
-                sendTrigger.on('keypress', (ev: KeyboardEvent) => {
+                sendTrigger.on('click', onSendTrigger as any);
+                sendTrigger[0].addEventListener('keypress', (ev: any) => {
                     if (isActionTrigger(ev)) {
-                        onSendTrigger(ev);
+                        $rootScope.$apply(() => {
+                            onSendTrigger(ev);
+                        });
                     }
                 });
 
