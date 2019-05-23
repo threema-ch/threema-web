@@ -4,11 +4,37 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
-### Unreleased
+### [v2.2.0-beta.1][v2.2.0-beta.1] (2019-05-23)
 
-**NOTE:** If you are self-hosting threema-web, then you need to make sure to
-set the proper MIME type for `.wasm` (WebAssembly) files. See
-`docs/self_hosting.md` for more details.
+Changes:
+
+* [feature] Improvements to the device wakeup functionality, automatic
+  reconnects after connection loss should now be more reliable ([#792][i792])
+* [feature] Rewritten compose area, many bugs should now be fixed
+  ([#773][i773], fixes [#502][i502] / [#674][i674] / [#679][i679] / [#777][i777])
+* [change] Revised VoIP status message texts ([#787][i787])
+* [change] Better MIME handling for audio messages ([#756][i756])
+* [bug] Markup parser: Ignore markup in URLs ([#778][i778])
+* [bug] Fixed connection problems when large profile picture was set ([#768][i768])
+* [bug] Hide input for blocked contacts ([#462][i462])
+* [bug] Only show pin/unpin button if conversation exists ([#752][i752])
+* [bug] Clamp text in quotes ([#767][i767])
+
+Changes relevant when self-hosting:
+
+* Since Threema Web now contains WebAssembly, the web server hosting the files
+  must set the correct MIME-Type (`application/wasm`) for `*.wasm` files. See
+  [self hosting docs](https://github.com/threema-ch/threema-web/blob/master/docs/self_hosting.md#threema-web).
+* We now provide a [Docker Image](https://github.com/threema-ch/threema-web/blob/master/docs/docker.md).
+
+Changes relevant to developers:
+
+* We switched from Browserify to Webpack
+
+Contributors:
+
+- [@IndianaDschones][@IndianaDschones]
+- [@joelfischerr][@joelfischerr]
 
 
 ### [v2.1.7][v2.1.7] (2019-02-07)
@@ -641,8 +667,10 @@ First public release.
 [i445]: https://github.com/threema-ch/threema-web/issues/445
 [i453]: https://github.com/threema-ch/threema-web/issues/453
 [i458]: https://github.com/threema-ch/threema-web/issues/458
+[i462]: https://github.com/threema-ch/threema-web/issues/462
 [i472]: https://github.com/threema-ch/threema-web/issues/472
 [i480]: https://github.com/threema-ch/threema-web/issues/480
+[i502]: https://github.com/threema-ch/threema-web/issues/502
 [i503]: https://github.com/threema-ch/threema-web/issues/503
 [i517]: https://github.com/threema-ch/threema-web/issues/517
 [i519]: https://github.com/threema-ch/threema-web/issues/519
@@ -685,7 +713,9 @@ First public release.
 [i671]: https://github.com/threema-ch/threema-web/issues/671
 [i672]: https://github.com/threema-ch/threema-web/issues/672
 [i673]: https://github.com/threema-ch/threema-web/issues/673
+[i674]: https://github.com/threema-ch/threema-web/issues/674
 [i676]: https://github.com/threema-ch/threema-web/issues/676
+[i679]: https://github.com/threema-ch/threema-web/issues/679
 [i681]: https://github.com/threema-ch/threema-web/issues/681
 [i683]: https://github.com/threema-ch/threema-web/issues/683
 [i685]: https://github.com/threema-ch/threema-web/issues/685
@@ -706,7 +736,17 @@ First public release.
 [i745]: https://github.com/threema-ch/threema-web/issues/745
 [i746]: https://github.com/threema-ch/threema-web/issues/746
 [i748]: https://github.com/threema-ch/threema-web/issues/748
+[i752]: https://github.com/threema-ch/threema-web/issues/752
+[i756]: https://github.com/threema-ch/threema-web/issues/756
+[i767]: https://github.com/threema-ch/threema-web/issues/767
+[i768]: https://github.com/threema-ch/threema-web/issues/768
+[i773]: https://github.com/threema-ch/threema-web/issues/773
+[i777]: https://github.com/threema-ch/threema-web/issues/777
+[i778]: https://github.com/threema-ch/threema-web/issues/778
+[i787]: https://github.com/threema-ch/threema-web/issues/787
+[i792]: https://github.com/threema-ch/threema-web/issues/792
 
+[v2.2.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0-beta.1
 [v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
 [v2.1.6]: https://github.com/threema-ch/threema-web/compare/v2.1.5...v2.1.6
 [v2.1.5]: https://github.com/threema-ch/threema-web/compare/v2.1.4...v2.1.5
