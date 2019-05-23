@@ -23,12 +23,22 @@
     <link rel="stylesheet" href="../../public/css/app.css?v=[[VERSION]]">
 
     <!-- Scripts -->
-    <script src="../../dist/uitest.bundle.js"></script>
-    <script>window.uiTests.initComposeArea();</script>
+    <script src="../../dist/generated/uitest.bundle.js"></script>
+    <script>
+        function init() {
+            if (window.uiTests === undefined) {
+                window.setTimeout(init, 100);
+            } else {
+                window.uiTests.initComposeArea();
+            }
+        }
+        init();
+    </script>
 </head>
-<body ng-app="uitest">
+<body>
     <div ng-controller="ComposeAreaController as ctrl">
         <compose-area
+            on-init="ctrl.onInit"
             submit="ctrl.submit"
             initial-data="ctrl.initialData"
             start-typing="ctrl.startTyping"

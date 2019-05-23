@@ -4,6 +4,13 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### Unreleased
+
+**NOTE:** If you are self-hosting threema-web, then you need to make sure to
+set the proper MIME type for `.wasm` (WebAssembly) files. See
+`docs/self_hosting.md` for more details.
+
+
 ### [v2.1.7][v2.1.7] (2019-02-07)
 
 Changes:

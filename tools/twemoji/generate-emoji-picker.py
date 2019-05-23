@@ -42,12 +42,16 @@ for i, category in enumerate(category_order):
     print('        </label>')
     print('        <div class="content">')
     for emoji in groups[category['id']]:
+        if emoji['representation'] == 'emoji-default':
+            hex_codepoint = emoji['codepoint'].lower()
+        else:
+            hex_codepoint = emoji['codepoint_fully_qualified']
         print('            <span class="em em-{3}-{0}" data-c="{0}" data-s="{1}" title="{2}">{4}</span>'.format(
             emoji['codepoint'].lower(),
             emoji['shortname'],
             emoji['name'],
             category['id'],
-            make_hexchar(emoji['codepoint_fully_qualified']),
+            make_hexchar(hex_codepoint),
         ))
     print('        </div>')
     print('   </div>')

@@ -735,35 +735,9 @@ class ConversationController {
      * In contrast to startTyping, this method is is always called, not just if
      * the text field is non-empty.
      */
-    public onTyping = (text: string, currentWord: threema.WordResult = null) => {
+    public onTyping = (text: string) => {
         // Update draft
         this.webClientService.setDraft(this.receiver, text);
-
-        /* Make mentions readonly for now
-        if (currentWord && currentWord.substr(0, 1) === '@') {
-            this.currentMentionFilterWord = currentWord.substr(1);
-            const query = this.currentMentionFilterWord.toLowerCase().trim();
-            const selectedMentionObject = this.getSelectedMention();
-            this.currentMentions = this.allMentions.filter((i) => {
-                if (query.length === 0) {
-                    return true;
-                }
-                return i.query.indexOf(query) >= 0;
-            });
-            // If only one mention is filtered, select them
-            if (this.currentMentions.length === 1) {
-                this.selectedMention = 0;
-            } else if (selectedMentionObject !== null) {
-                // Get the new position of the latest selected mention object
-                this.selectedMention = null;
-                this.selectedMention = this.currentMentions.findIndex((m) => {
-                    return m.identity === selectedMentionObject.identity;
-                });
-            }
-        } else {
-            this.currentMentionFilterWord = null;
-        }
-        */
     }
 
     public getSelectedMention = (): threema.Mention => {

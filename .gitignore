@@ -6,8 +6,7 @@
 
 # Generated files
 js/
-dist/*.js
-dist/*.js.map
+dist/generated/
 dist/*.tar.gz
 public/css/*.css
 public/css/*.map

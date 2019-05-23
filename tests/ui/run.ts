@@ -14,8 +14,6 @@ import { expect } from 'chai';
 import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
 import * as TermColor from 'term-color';
 
-import { extractText as extractTextFunc } from '../../src/helpers';
-
 // Script arguments
 const browser = process.argv[2];
 const filterQuery = process.argv[3];
@@ -24,7 +22,7 @@ const filterQuery = process.argv[3];
 type Testfunc = (driver: WebDriver) => void;
 
 // Shared selectors
-const composeArea = By.css('div.compose');
+const composeArea = By.id('composeDiv');
 const emojiKeyboard = By.css('.emoji-keyboard');
 const emojiTrigger = By.css('.emoji-trigger');
 
@@ -32,12 +30,22 @@ const emojiTrigger = By.css('.emoji-trigger');
  * Helper function to extract text.
  */
 async function extractText(driver: WebDriver): Promise<string> {
-    const script = `
-        ${extractTextFunc.toString()}
-        const element = document.querySelector("div.compose");
-        return extractText(element);
-    `;
+    const script = `return window.composeArea.get_text();`;
     return driver.executeScript<string>(script);
+}
+
+/**
+ * Helper function to send a KeyDown event.
+ */
+async function sendKeyDown(driver: WebDriver, key: string): Promise<void> {
+    const script = `
+        const e = document.createEvent('HTMLEvents');
+        e.initEvent('keydown', false, true);
+        e.key = '${key}';
+        const element = document.querySelector("div.compose");
+        element.dispatchEvent(e);
+    `;
+    return driver.executeScript<void>(script);
 }
 
 /**
@@ -57,24 +65,24 @@ async function sendKeyUp(driver: WebDriver, key: string): Promise<void> {
 /**
  * The emoji trigger should toggle the emoji keyboard.
  */
-async function showEmojiSelector(driver: WebDriver) {
+async function buttonTogglesEmojiSelector(driver: WebDriver) {
     // Initially not visible
     expect(
-        await driver.findElement(emojiKeyboard).isDisplayed()
+        await driver.findElement(emojiKeyboard).isDisplayed(),
     ).to.be.false;
 
     // Show
     await driver.findElement(emojiTrigger).click();
 
     expect(
-        await driver.findElement(emojiKeyboard).isDisplayed()
+        await driver.findElement(emojiKeyboard).isDisplayed(),
     ).to.be.true;
 
     // Hide
     await driver.findElement(emojiTrigger).click();
 
     expect(
-        await driver.findElement(emojiKeyboard).isDisplayed()
+        await driver.findElement(emojiKeyboard).isDisplayed(),
     ).to.be.false;
 }
 
@@ -93,7 +101,8 @@ async function insertEmoji(driver: WebDriver) {
 
     // Insert beer
     await driver.findElement(By.className('em-food')).click();
-    await driver.findElement(By.css('.em[data-s=":beers:"]')).click();
+    const elem = await driver.findElement(By.css('.em[data-s=":beers:"]'));
+    await elem.click();
 
     // Validate emoji
     const emoji = await driver.findElement(composeArea).findElements(By.xpath('*'));
@@ -193,16 +202,16 @@ async function regression672(driver: WebDriver) {
 async function insertEmojiWithShortcode(driver: WebDriver) {
     // Insert text
     await driver.findElement(composeArea).click();
-    await driver.findElement(composeArea).sendKeys('hello :+1:');
-    await sendKeyUp(driver, ':');
+    await driver.findElement(composeArea).sendKeys('hello :+1');
+    await sendKeyDown(driver, ':');
 
     const text = await extractText(driver);
-    expect(text).to.equal('hello 👍');
+    expect(text).to.equal('hello 👍️');
 }
 
 // Register tests here
 const TESTS: Array<[string, Testfunc]> = [
-    ['Show and hide emoji selector', showEmojiSelector],
+    ['Show and hide emoji selector', buttonTogglesEmojiSelector],
     ['Insert emoji and text', insertEmoji],
     ['Insert three lines of text', insertNewline],
     ['Regression test #574', regression574],
@@ -215,6 +224,7 @@ const TESTS: Array<[string, Testfunc]> = [
 const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
 (async function() {
     const driver: WebDriver = await new Builder().forBrowser(browser).build();
+    driver.manage().setTimeouts({implicit: 1000, pageLoad: 30000, script: 30000});
     let i = 0;
     let success = 0;
     let failed = 0;
@@ -224,6 +234,9 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
         console.info(`Filter query: "${filterQuery}"\n`);
     }
     try {
+        // Initial pageload to ensure bundles are generated
+        await driver.get(TEST_URL);
+
         for (const [name, testfunc] of TESTS) {
             try {
                 if (filterQuery === undefined || name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1) {

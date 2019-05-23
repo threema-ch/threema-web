@@ -15,15 +15,15 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as twemoji from 'twemoji';
+import {ComposeArea} from '@threema/compose-area';
 
-import {extractText, hasValue, isActionTrigger, logAdapter, replaceWhitespace} from '../helpers';
-import {emojify, shortnameToUnicode} from '../helpers/emoji';
+import {isActionTrigger} from '../helpers';
+import {emojifyNew, shortnameToUnicode} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
-import {isElementNode, isTextNode} from '../typeguards';
+import {isEmojiInfo} from '../typeguards';
 
 /**
  * The compose area where messages are written.
@@ -39,6 +39,7 @@ export default [
     '$filter',
     '$log',
     '$rootScope',
+    'CONFIG',
     function(browserService: BrowserService,
              stringService: StringService,
              timeoutService: TimeoutService,
@@ -48,10 +49,14 @@ export default [
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
              $log: ng.ILogService,
-             $rootScope: ng.IRootScopeService) {
+             $rootScope: ng.IRootScopeService,
+             CONFIG: threema.Config) {
         return {
             restrict: 'EA',
             scope: {
+                // Callback to get a reference to the initialized ComposeArea instance.
+                onInit: '=',
+
                 // Callback to submit text or file data
                 submit: '=',
 
@@ -70,7 +75,7 @@ export default [
 
                 receiver: '<receiver',
             },
-            link: function(scope: any, element) {
+            link: function(scope: any, wrapper: JQLite) {
                 // Logging
                 const logTag = '[Directives.ComposeArea]';
 
@@ -79,13 +84,19 @@ export default [
                 const TRIGGER_ACTIVE_CSS_CLASS = 'is-active';
 
                 // Elements
-                const composeArea: any = element;
-                const composeDiv: any = angular.element(element[0].querySelector('div.compose'));
-                const emojiTrigger: any = angular.element(element[0].querySelector('i.emoji-trigger'));
-                const emojiKeyboard: any = angular.element(element[0].querySelector('.emoji-keyboard'));
-                const sendTrigger: any = angular.element(element[0].querySelector('i.send-trigger'));
-                const fileTrigger: any = angular.element(element[0].querySelector('i.file-trigger'));
-                const fileInput: any = angular.element(element[0].querySelector('input.file-input'));
+                const select = (selector) => angular.element(wrapper[0].querySelector(selector));
+                const composeDiv = select('div.compose') as JQuery<HTMLElement>;
+                const emojiTrigger = select('i.emoji-trigger') as JQuery<HTMLElement>;
+                const emojiKeyboard = select('.emoji-keyboard') as JQuery<HTMLElement>;
+                const sendTrigger = select('i.send-trigger') as JQuery<HTMLElement>;
+                const fileTrigger = select('i.file-trigger') as JQuery<HTMLElement>;
+                const fileInput = select('input.file-input') as JQuery<HTMLInputElement>;
+
+                // Initialize compose area lib
+                const composeArea = ComposeArea.bind_to(composeDiv[0], CONFIG.DEBUG ? 'debug' : 'warn');
+                if (scope.onInit) {
+                    scope.onInit(composeArea);
+                }
 
                 // Set initial text
                 if (scope.initialData.initialText) {
@@ -94,16 +105,6 @@ export default [
                 } else if (scope.initialData.draft !== undefined) {
                     composeDiv[0].innerText = scope.initialData.draft;
                 }
-
-                // The current caret position, used when inserting objects
-                let caretPosition: {
-                    // The position in the source HTML
-                    from?: number,
-                    to?: number,
-                    // The position in the visible character list
-                    fromChar?: number,
-                    toChar?: number,
-                } = null;
 
                 let chatBlocked = false;
 
@@ -115,7 +116,7 @@ export default [
                         sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                         emojiTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                         fileTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
-                        composeDiv.attr('contenteditable', false);
+                        composeDiv.attr('contenteditable', 'false');
                         if (emojiKeyboard.hasClass('active')) {
                             hideEmojiPicker();
                         }
@@ -127,7 +128,7 @@ export default [
                         }
                         emojiTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
                         fileTrigger.addClass(TRIGGER_ENABLED_CSS_CLASS);
-                        composeDiv.attr('contenteditable', true);
+                        composeDiv.attr('contenteditable', 'true');
                     }
                 }
 
@@ -143,38 +144,6 @@ export default [
                         }
                     },
                 );
-
-                /**
-                 * Stop propagation of click events and hold htmlElement of the emojipicker
-                 */
-                const EmojiPickerContainer = (function() {
-                    let instance;
-
-                    function click(e) {
-                        e.stopPropagation();
-                    }
-
-                    return {
-                        get: function() {
-                            if (instance === undefined) {
-                                instance = {
-                                    htmlElement: composeArea[0].querySelector('div.twemoji-picker'),
-                                };
-                                // append stop propagation
-                                angular.element(instance.htmlElement).on('click', click);
-
-                            }
-                            return instance;
-                        },
-                        destroy: function() {
-                            if (instance !== undefined) {
-                                // remove stop propagation
-                                angular.element(instance.htmlElement).off('click', click);
-                                instance = undefined;
-                            }
-                        },
-                    };
-                })();
 
                 // Typing events
                 let stopTypingTimer: ng.IPromise<void> = null;
@@ -208,24 +177,14 @@ export default [
 
                 // Determine whether field is empty
                 function composeAreaIsEmpty() {
-                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
-                    return text.length === 0;
+                    return composeArea.get_text().length === 0;
                 }
 
                 // Submit the text from the compose area.
                 //
                 // Emoji images are converted to their alt text in this process.
                 function submitText(): Promise<any> {
-                    const rawText = extractText(composeDiv[0], logAdapter($log.warn, logTag));
-
-                    // Due to #731, and the hack introduced in #706, the
-                    // extracted text may contain non-breaking spaces (U+00A0).
-                    // Replace them with actual whitespace to avoid strange
-                    // behavior when submitting the text.
-                    //
-                    // TODO: Remove this once we have a compose area rewrite and can
-                    // fix the actual bug.
-                    const text = rawText.replace(/\u00A0/g, ' ');
+                    const text = composeArea.get_text().replace(/\r/g, '');
 
                     return new Promise((resolve, reject) => {
                         const submitTexts = (strings: string[]) => {
@@ -241,9 +200,8 @@ export default [
                                 .catch(reject);
                         };
 
-                        const fullText = text.trim().replace(/\r/g, '');
-                        if (fullText.length > scope.maxTextLength) {
-                            const pieces: string[] = stringService.byteChunk(fullText, scope.maxTextLength, 50);
+                        if (text.length > scope.maxTextLength) {
+                            const pieces: string[] = stringService.byteChunk(text, scope.maxTextLength, 50);
                             const confirm = $mdDialog.confirm()
                                 .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
                                 .textContent($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_BODY', {
@@ -259,7 +217,7 @@ export default [
                                 reject();
                             });
                         } else {
-                            submitTexts([fullText]);
+                            submitTexts([text]);
                         }
                     });
                 }
@@ -268,8 +226,8 @@ export default [
                     if (!composeAreaIsEmpty()) {
                         submitText().then(() => {
                             // Clear compose div
-                            composeDiv[0].innerText = '';
-                            composeDiv[0].focus();
+                            composeArea.clear();
+                            composeArea.focus();
 
                             // Send stopTyping event
                             stopTyping();
@@ -289,6 +247,17 @@ export default [
                 }
 
                 // Handle typing events
+
+                let isComposing = false;
+
+                function onCompositionStart(ev: CompositionEvent): void {
+                    isComposing = true;
+                }
+
+                function onCompositionEnd(ev: CompositionEvent): void {
+                    isComposing = false;
+                }
+
                 function onKeyDown(ev: KeyboardEvent): void {
                     // If enter is pressed, prevent default event from being dispatched
                     if (!ev.shiftKey && ev.key === 'Enter') {
@@ -299,6 +268,22 @@ export default [
                     if (scope.onKeyDown && scope.onKeyDown(ev) !== true) {
                         ev.preventDefault();
                         return;
+                    }
+
+                    // If the enter key is part of a composition (e.g. when
+                    // entering text with an IME), don't submit the text.
+                    // See https://github.com/threema-ch/threema-web/issues/777
+                    if ((ev as any).isComposing || isComposing) {
+                        return;
+                    }
+
+                    // If a : is pressed, possibly insert emoji
+                    if (ev.key === ':') {
+                        const modified = onEmojiShortcodeKeyPressed(ev, ':', false);
+                        if (modified) {
+                            ev.preventDefault();
+                            return;
+                        }
                     }
 
                     // At link time, the element is not yet evaluated.
@@ -316,39 +301,23 @@ export default [
                 }
 
                 function onKeyUp(ev: KeyboardEvent): void {
-                    // At link time, the element is not yet evaluated.
-                    // Therefore add following code to end of event loop.
-                    $timeout(() => {
-                        // If the compose area contains only a single <br>, make it fully empty.
-                        // See also: https://stackoverflow.com/q/14638887/284318
-                        const text = extractText(composeDiv[0], logAdapter($log.warn, logTag), false);
-                        if (text === '\n') {
-                            composeDiv[0].innerText = '';
-                        } else if ((ev.keyCode === 190 || ev.key === ':') && caretPosition !== null) {
-                            // A ':' is pressed, try to parse
-                            const currentWord = stringService.getWord(text, caretPosition.fromChar, [':']);
-                            if (currentWord.realLength > 2 && currentWord.word.substr(0, 1) === ':') {
-                                const trimmed = currentWord.word.substr(1, currentWord.word.length - 2);
-                                const unicodeEmoji = shortnameToUnicode(trimmed);
-                                if (unicodeEmoji !== null) {
-                                    return insertEmoji(unicodeEmoji,
-                                        caretPosition.from - currentWord.realLength,
-                                        caretPosition.to);
-                                }
-                            }
-                        }
+                    // If the compose area contains only a single <br>, make it fully empty.
+                    // See also: https://stackoverflow.com/q/14638887/284318
+                    const text = composeArea.get_text(true);
+                    if (text === '\n') {
+                        composeDiv[0].innerText = '';
+                    }
 
-                        // Update typing information (use text instead method)
-                        if (text.trim().length === 0 || caretPosition === null) {
-                            stopTyping();
-                            scope.onTyping('');
-                        } else {
-                            startTyping();
-                            scope.onTyping(text.trim(), stringService.getWord(text, caretPosition.from));
-                        }
+                    // Update typing information
+                    if (text.trim().length === 0) {
+                        stopTyping();
+                        scope.onTyping('');
+                    } else {
+                        startTyping();
+                        scope.onTyping(text.trim());
+                    }
 
-                        updateView();
-                    }, 0);
+                    updateView();
                 }
 
                 // Function to fetch file contents
@@ -479,23 +448,17 @@ export default [
                     // Handle pasting of text
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
-
-                        // Look up some filter functions
-                        // tslint:disable-next-line:max-line-length
-                        const escapeHtml = $filter('escapeHtml') as (a: string) => string;
-                        const mentionify = $filter('mentionify') as (a: string) => string;
-                        const nlToBr = $filter('nlToBr') as (a: string, b?: boolean) => string;
-
-                        // Escape HTML markup
-                        const escaped = escapeHtml(text);
-
-                        // Apply filters (emojify, convert newline, etc)
-                        const formatted = emojify(mentionify(replaceWhitespace(nlToBr(escaped, true))));
-
-                        // Insert resulting HTML
-                        document.execCommand('insertHTML', false, formatted);
-
-                        updateView();
+                        if (text) {
+                            const tokens = emojifyNew(text);
+                            for (const token of tokens) {
+                                if (isEmojiInfo(token)) {
+                                    insertEmoji(token);
+                                } else {
+                                    composeArea.insert_text(token);
+                                }
+                            }
+                            updateView();
+                        }
                     }
                 }
 
@@ -507,46 +470,48 @@ export default [
 
                 // Show emoji picker element
                 function showEmojiPicker() {
-                    const emojiPicker: HTMLElement = EmojiPickerContainer.get().htmlElement;
-
-                    // Show
-                    emojiKeyboard.addClass('active');
-                    emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
-
-                    // Find some selectors
-                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
-                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
-
-                    // Add event handlers
-                    allEmoji.on('click', onEmojiChosen);
-                    allEmojiTabs.on('keydown', onEmojiTabSelected);
-
-                    // set focus to fix chat scroll bug
+                    // If the emoji picker is triggered too early, it's possible that the picker element
+                    // has not yet been fully loaded (e.g. during UI tests). Therefore enqueue the event
+                    // handler at the end of the event loop.
                     $timeout(() => {
-                        composeDiv[0].focus();
+                        const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
+
+                        // Show
+                        emojiKeyboard.addClass('active');
+                        emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
+
+                        // Find some selectors
+                        const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                        const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
+
+                        // Add event handlers
+                        allEmoji.on('click', onEmojiChosen as any);
+                        allEmojiTabs.on('keydown', onEmojiTabSelected as any);
+
+                        // Focus compose area again
+                        composeArea.focus();
                     });
                 }
 
                 // Hide emoji picker element
                 function hideEmojiPicker() {
-                    const emojiPicker: HTMLElement = EmojiPickerContainer.get().htmlElement;
+                    const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
 
                     // Hide
                     emojiKeyboard.removeClass('active');
                     emojiTrigger.removeClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                     // Find some selectors
-                    const allEmoji: any = angular.element(emojiPicker.querySelectorAll('.content .em'));
-                    const allEmojiTabs: any = angular.element(emojiPicker.querySelectorAll('.tab label img'));
+                    const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
+                    const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
 
                     // Remove event handlers
-                    allEmoji.off('click', onEmojiChosen);
-                    allEmojiTabs.off('keydown', onEmojiTabSelected);
-                    EmojiPickerContainer.destroy();
+                    allEmoji.off('click', onEmojiChosen as any);
+                    allEmojiTabs.off('keydown', onEmojiTabSelected as any);
                 }
 
                 // Emoji trigger is clicked
-                function onEmojiTrigger(ev: UIEvent): void {
+                function onEmojiTrigger(ev: KeyboardEvent): void {
                     ev.stopPropagation();
                     if (chatBlocked) {
                         hideEmojiPicker();
@@ -563,123 +528,73 @@ export default [
                 // Emoji is chosen
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
-                    insertEmoji(this.textContent);
+                    insertSingleEmojiString((ev.target as Element).textContent);
                 }
 
                 // Emoji tab is selected
                 function onEmojiTabSelected(ev: KeyboardEvent): void {
                     if (ev.key === ' ' || ev.key === 'Enter') {
                         // Warning: Hacky
-                        this.parentElement.previousElementSibling.checked = true;
+                        (ev.target as any).parentElement.previousElementSibling.checked = true;
                     }
                 }
 
-                function insertEmoji(emoji, posFrom?: number, posTo?: number): void {
-                    const emojiElement = emojify(emoji);
-                    insertHTMLElement(emoji, emojiElement, posFrom, posTo);
-                }
-
-                function insertMention(mentionString, posFrom?: number, posTo?: number): void {
-                    const mentionElement = ($filter('mentionify') as any)(mentionString) as string;
-                    insertHTMLElement(mentionString, mentionElement, posFrom, posTo);
-                }
-
-                function insertHTMLElement(
-                    elementText: string, // The element as the original text representation, not yet converted to HTML
-                    elementHtml: string, // The element converted to HTML
-                    posFrom?: number,
-                    posTo?: number,
-                ): void {
-                    // In Chrome in right-to-left mode, our content editable
-                    // area may contain a DIV element.
-                    const childNodes = composeDiv[0].childNodes;
-                    const nestedDiv = childNodes.length === 1
-                        && childNodes[0].tagName !== undefined
-                        && childNodes[0].tagName.toLowerCase() === 'div';
-                    let contentElement;
-                    if (nestedDiv === true) {
-                        contentElement = composeDiv[0].childNodes[0];
-                    } else {
-                        contentElement = composeDiv[0];
+                // Insert a single emoji, passed in as string
+                function insertSingleEmojiString(emojiString: string): void {
+                    const tokens = emojifyNew(emojiString);
+                    if (tokens.length !== 1) {
+                        throw new Error(`Emoji parsing failed: Expected 1 element, found ${tokens.length}`);
                     }
+                    const emoji = tokens[0];
+                    if (!isEmojiInfo(emoji)) {
+                        throw new Error(`Emoji parsing failed: Returned text, not emoji info`);
+                    }
+                    insertEmoji(emoji);
+                }
 
-                    let currentHtml = '';
-                    for (let i = 0; i < contentElement.childNodes.length; i++) {
-                        const node: Node = contentElement.childNodes[i];
+                // Insert a single emoji
+                function insertEmoji(emoji: threema.EmojiInfo): void {
+                    const img: HTMLElement = composeArea.insert_image(emoji.imgPath, emoji.emojiString, 'em');
+                    img.setAttribute('data-c', emoji.codepoint);
+                    img.draggable = false;
+                    img.ondragstart = () => false;
+                }
 
-                        if (isTextNode(node)) {
-                            currentHtml += node.textContent;
-                        } else if (isElementNode(node)) {
-                            const tag = node.tagName.toLowerCase();
-                            if (tag === 'img' || tag === 'span') {
-                                currentHtml += getOuterHtml(node);
-                            } else if (tag === 'br') {
-                                // Firefox inserts a <br> after editing content editable fields.
-                                // Remove the last <br> to fix this.
-                                if (i < contentElement.childNodes.length - 1) {
-                                    currentHtml += getOuterHtml(node);
-                                }
-                            } else if (tag === 'div') {
-                                // Safari inserts a <div><br></div> after editing content editable fields.
-                                // Remove the last instance to fix this.
-                                if (node.childNodes.length === 1
-                                    && isElementNode(node.lastChild)
-                                    && node.lastChild.tagName.toLowerCase() === 'br') {
-                                    // Ignore
-                                } else {
-                                    currentHtml += getOuterHtml(node);
-                                }
+                // The emoji shortcode trigger (:) was inserted. Return a boolean
+                // indicating whether the compose area contents were modified.
+                //
+                // The `alreadyProcessed` indicates whether the key has already
+                // been processed in the DOM (onKeyUp) or not (onKeyDown).
+                function onEmojiShortcodeKeyPressed(ev, trigger: string, alreadyProcessed: boolean): boolean {
+                    const word = composeArea.get_word_at_caret();
+                    if (word === undefined) {
+                        return false;
+                    }
+                    let before = word.before();
+                    const after = word.after();
+                    if (!alreadyProcessed) {
+                        before += trigger;
+                    }
+                    if (after.length === 0 && before.length > 2) {
+                        if (before.startsWith(trigger) && before.endsWith(trigger)) {
+                            const trimmed = before.substr(1, before.length - 2);
+                            const unicodeEmoji = shortnameToUnicode(trimmed);
+                            if (unicodeEmoji !== null) {
+                                composeArea.select_word_at_caret();
+                                composeArea.store_selection_range();
+                                insertSingleEmojiString(unicodeEmoji);
+                                return true;
                             }
                         }
                     }
-
-                    // Because the browser may transform HTML code when
-                    // inserting it into the DOM, we temporarily write it to a
-                    // DOM element to ensure that the current representation
-                    // corresponds to the representation when inserted into the
-                    // DOM. (See #671 for details.)
-                    const tmpDiv = document.createElement('div');
-                    tmpDiv.innerHTML = elementHtml;
-                    const cleanedElementHtml = tmpDiv.innerHTML;
-
-                    // Insert element into currentHtml and determine new caret position
-                    let newPos = posFrom;
-                    if (caretPosition !== null) {
-                        // If the caret position is set, then the user has moved around
-                        // in the contenteditable field and might not be ad the end
-                        // of the line.
-                        posFrom = posFrom === undefined ? caretPosition.from : posFrom;
-                        posTo = posTo === undefined ? caretPosition.to : posTo;
-
-                        currentHtml = currentHtml.substr(0, posFrom)
-                            + cleanedElementHtml
-                            + currentHtml.substr(posTo);
-
-                        // Change caret position
-                        caretPosition.from += cleanedElementHtml.length;
-                        caretPosition.fromChar += elementText.length;
-                        newPos = posFrom + cleanedElementHtml.length;
-                    } else {
-                        // If the caret position is not set, then the user must be at the
-                        // end of the line. Insert element there.
-                        newPos = currentHtml.length;
-                        currentHtml += cleanedElementHtml;
-                        caretPosition = {
-                            from: currentHtml.length,
-                        };
-                    }
-                    caretPosition.to = caretPosition.from;
-                    caretPosition.toChar = caretPosition.fromChar;
-
-                    contentElement.innerHTML = currentHtml;
-                    setCaretPosition(newPos);
-
-                    // Update the draft text
-                    const text = extractText(composeDiv[0], logAdapter($log.warn, logTag));
-                    scope.onTyping(text);
-
-                    updateView();
+                    return false;
                 }
+
+                // TODO
+                // function insertMention(mentionString, posFrom?: number, posTo?: number): void {
+                //     const mentionElement = ($filter('mentionify') as any)(mentionString) as string;
+                //     insertHTMLElement(mentionString, mentionElement, posFrom, posTo);
+                // }
 
                 // File trigger is clicked
                 function onFileTrigger(ev: UIEvent): void {
@@ -688,7 +603,7 @@ export default [
                     if (chatBlocked) {
                         return;
                     }
-                    const input = element[0].querySelector('.file-input') as HTMLInputElement;
+                    const input = wrapper[0].querySelector('.file-input') as HTMLInputElement;
                     input.click();
                 }
 
@@ -716,137 +631,37 @@ export default [
                     }
                 }
 
-                // return the outer html of a node element
-                function getOuterHtml(node: Node): string {
-                    const pseudoElement = document.createElement('pseudo');
-                    pseudoElement.appendChild(node.cloneNode(true));
-                    return pseudoElement.innerHTML;
-                }
-
-                // return the html code position of the container element
-                function getPositions(offset: number, container: Node): { html: number, text: number } {
-                    let pos = null;
-                    let textPos = null;
-
-                    if (composeDiv[0].contains(container)) {
-                        let selectedElement;
-                        if (container === composeDiv[0]) {
-                            if (offset === 0) {
-                                return {
-                                    html: 0, text: 0,
-                                };
-                            }
-                            selectedElement = composeDiv[0].childNodes[offset - 1];
-                            pos = 0;
-                            textPos = 0;
-                        } else {
-                            selectedElement = container.previousSibling;
-                            pos = offset;
-                            textPos = offset;
-                        }
-
-                        while (selectedElement !== null) {
-                            if (selectedElement.nodeType === Node.TEXT_NODE) {
-                                pos += selectedElement.textContent.length;
-                                textPos += selectedElement.textContent.length;
-                            } else {
-                                pos += getOuterHtml(selectedElement).length;
-                                textPos += 1;
-                            }
-                            selectedElement = selectedElement.previousSibling;
-                        }
-                    }
-                    return {
-                        html: pos,
-                        text: textPos,
-                    };
-                }
-
-                // Update the current caret position or selection
-                function updateCaretPosition() {
-                    caretPosition = null;
-                    if (window.getSelection && composeDiv[0].innerHTML.length > 0) {
-                        const selection = window.getSelection();
-                        if (selection.rangeCount) {
-                            const range = selection.getRangeAt(0);
-                            const from = getPositions(range.startOffset, range.startContainer);
-                            if (from !== null && from.html >= 0) {
-                                const to = getPositions(range.endOffset, range.endContainer);
-                                caretPosition = {
-                                    from: from.html,
-                                    to: to.html,
-                                    fromChar: from.text,
-                                    toChar: to.text,
-                                };
-                            }
-                        }
-                    }
-                }
-
-                // Set the correct cart position in the content editable div.
-                // Pos is the position in the html content (not in the visible plain text).
-                function setCaretPosition(pos: number) {
-                    const rangeAt = (node: Node, offset?: number) => {
-                        const range = document.createRange();
-                        range.collapse(false);
-                        if (offset !== undefined) {
-                            range.setStart(node, offset);
-                        } else {
-                            range.setStartAfter(node);
-                        }
-                        const sel = window.getSelection();
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-                    };
-
-                    for (let i = 0; i < composeDiv[0].childNodes.length; i++) {
-                        const node = composeDiv[0].childNodes[i];
-                        let size;
-                        let offset;
-                        switch (node.nodeType) {
-                            case Node.TEXT_NODE:
-                                size = node.textContent.length;
-                                offset = pos;
-                                break;
-                            case Node.ELEMENT_NODE:
-                                size = getOuterHtml(node).length;
-                                break;
-                            default:
-                                $log.warn(logTag, 'Unhandled node:', node);
-                        }
-
-                        if (pos < size) {
-                            // use this node
-                            rangeAt(node, offset);
-                        } else if (i === composeDiv[0].childNodes.length - 1) {
-                            rangeAt(node);
-                        }
-                        pos -= size;
-                    }
-                }
-
                 // Handle typing events
-                composeDiv.on('keydown', onKeyDown);
-                composeDiv.on('keyup', onKeyUp);
-                composeDiv.on('keyup mouseup', updateCaretPosition);
-                composeDiv.on('selectionchange', updateCaretPosition);
+                composeDiv.on('compositionstart', onCompositionStart as any);
+                composeDiv.on('compositionend', onCompositionEnd as any);
+                composeDiv.on('keydown', onKeyDown as any);
+                composeDiv.on('keyup', onKeyUp as any);
+
+                // Handle selection change
+                document.addEventListener('selectionchange', () => {
+                    composeArea.store_selection_range();
+                });
 
                 // Handle paste event
-                composeDiv.on('paste', onPaste);
+                composeDiv.on('paste', onPaste as any);
 
                 // Handle click on emoji trigger
-                emojiTrigger.on('click', onEmojiTrigger);
-                emojiTrigger.on('keypress', (ev: KeyboardEvent) => {
+                emojiTrigger.on('click', onEmojiTrigger as any);
+                emojiTrigger[0].addEventListener('keypress', (ev: KeyboardEvent) => {
                     if (isActionTrigger(ev)) {
-                        onEmojiTrigger(ev);
+                        $rootScope.$apply(() => {
+                            onEmojiTrigger(ev);
+                        });
                     }
                 });
 
                 // Handle click on file trigger
-                fileTrigger.on('click', onFileTrigger);
-                fileTrigger.on('keypress', (ev: KeyboardEvent) => {
+                fileTrigger.on('click', onFileTrigger as any);
+                fileTrigger[0].addEventListener('keypress', (ev: any) => {
                     if (isActionTrigger(ev)) {
-                        onFileTrigger(ev);
+                        $rootScope.$apply(() => {
+                            onFileTrigger(ev);
+                        });
                     }
                 });
 
@@ -854,10 +669,12 @@ export default [
                 fileInput.on('change', onFileSelected);
 
                 // Handle click on send trigger
-                sendTrigger.on('click', onSendTrigger);
-                sendTrigger.on('keypress', (ev: KeyboardEvent) => {
+                sendTrigger.on('click', onSendTrigger as any);
+                sendTrigger[0].addEventListener('keypress', (ev: any) => {
                     if (isActionTrigger(ev)) {
-                        onSendTrigger(ev);
+                        $rootScope.$apply(() => {
+                            onSendTrigger(ev);
+                        });
                     }
                 });
 
@@ -866,15 +683,7 @@ export default [
                 // Listen to broadcasts
                 const unsubscribeListeners = [];
                 unsubscribeListeners.push($rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
-                    composeDiv[0].focus();
-                }));
-
-                unsubscribeListeners.push($rootScope.$on('onMentionSelected', (event: ng.IAngularEvent, args: any) => {
-                    if (args.query && args.mention) {
-                        // Insert resulting HTML
-                        insertMention(args.mention, caretPosition ? caretPosition.to - args.query.length : null,
-                            caretPosition ? caretPosition.to : null);
-                    }
+                    composeArea.focus();
                 }));
 
                 // When switching chat, send stopTyping message
@@ -895,6 +704,7 @@ export default [
                     <div>
                         <div
                             class="compose"
+                            id="composeDiv"
                             contenteditable
                             autofocus
                             translate

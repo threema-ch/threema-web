@@ -27,9 +27,9 @@ declare namespace threema {
     }
 
     interface WireMessageAcknowledgement {
-        id: string,
-        success: boolean,
-        error?: string,
+        id: string;
+        success: boolean;
+        error?: string;
     }
 
     /**
@@ -740,18 +740,11 @@ declare namespace threema {
         isAll: boolean;
     }
 
-    interface WordResult {
-        // The trimmed word
-        word: string;
-        // The length of the untrimmed word
-        realLength: number;
-    }
-
     interface WebClientServiceStopArguments {
-        reason: DisconnectReason,
-        send: boolean,
-        close: boolean | string,
-        connectionBuildupState?: ConnectionBuildupState,
+        reason: DisconnectReason;
+        send: boolean;
+        close: boolean | string;
+        connectionBuildupState?: ConnectionBuildupState;
     }
 
     const enum ChosenTask {
@@ -766,6 +759,15 @@ declare namespace threema {
         WebclientDisabled = 'disable',
         SessionReplaced = 'replace',
         SessionError = 'error',
+    }
+
+    interface EmojiInfo {
+        // The plain emoji string
+        emojiString: string;
+        // The image path, e.g. emoji/png32/1f9df-200d-2640-fe0f.png
+        imgPath: string;
+        // The codepoint string, e.g. 1f9df-200d-2640-fe0f
+        codepoint: string;
     }
 
     namespace Container {

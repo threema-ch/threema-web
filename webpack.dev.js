@@ -11,8 +11,8 @@ module.exports = merge(common, {
       path.join(__dirname, 'public'),
       path.join(__dirname, 'src'),
     ],
-    publicPath: '/dist/',
     compress: true,
+    host: '127.0.0.1',
     port: 9966,
   },
 });

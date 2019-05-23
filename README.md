@@ -82,8 +82,8 @@ Web on a server, please follow the instructions at
 
 To run unit tests:
 
-    npm run build:unittests
-    firefox tests/testsuite.html
+    npm run build:unittests && npm run testserver
+    firefox http://localhost:7777/tests/testsuite.html
 
 To run UI tests:
 

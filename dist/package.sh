@@ -36,16 +36,18 @@ if [ -e "release" ]; then
 fi
 
 VERSION=$(grep "\"version\"" package.json  | sed 's/[[:blank:]]*\"version\": \"\([^\"]*\).*/\1/')$SUFFIX
-echo "+ Building version $VERSION"
+echo "+ Packaging version $VERSION"
 
 DIR="release/threema-web-$VERSION"
 
 echo "+ Create release directory..."
-mkdir -p $DIR/{dist,partials,directives,components,node_modules,partials/messenger.receiver,troubleshoot}
+mkdir -p $DIR/{partials,directives,components,node_modules,partials/messenger.receiver,troubleshoot}
 
 echo "+ Copy code..."
 cp -R index.html $DIR/
-cp -R dist/app.bundle.js $DIR/dist/
+cp -R dist/generated/*.bundle.js $DIR/
+cp -R dist/generated/*.bundle.js.map $DIR/
+cp -R dist/generated/*.wasm $DIR/
 cp -R public/* $DIR/
 cp -R troubleshoot/* $DIR/troubleshoot/
 cp -R src/partials/*.html $DIR/partials/
@@ -98,8 +100,8 @@ for target in "${targets[@]}"; do
 done
 
 echo "+ Update version number..."
-sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/dist/app.bundle.js $DIR/manifest.webmanifest $DIR/browserconfig.xml $DIR/version.txt
-rm $DIR/index.html.bak $DIR/troubleshoot/index.html.bak $DIR/dist/app.bundle.js.bak $DIR/manifest.webmanifest.bak $DIR/browserconfig.xml.bak $DIR/version.txt.bak
+sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/*.bundle.js $DIR/manifest.webmanifest $DIR/browserconfig.xml $DIR/version.txt
+rm $DIR/*.bak $DIR/troubleshoot/index.html.bak
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;
