@@ -26,7 +26,7 @@ export default [
             template: `
                 <span class="message-name"
                     ng-style="colored && {'color': contact.color}"
-                       ng-bind-html="contact.displayName | escapeHtml | emojify">
+                       ng-bind-html="contact | displayName | escapeHtml | emojify">
                 </span>
             `,
         };

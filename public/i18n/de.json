@@ -192,7 +192,8 @@
         "PINNED_CONVERSATION_OK": "Unterhaltung angepinnt",
         "PINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht angepinnt werden",
         "UNPINNED_CONVERSATION_OK": "Unterhaltung entpinnt",
-        "UNPINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht entpinnt werden"
+        "UNPINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht entpinnt werden",
+        "ME": "Ich"
     },
     "messageStates": {
         "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",

@@ -90,7 +90,7 @@ export default [
                         <eee-avatar eee-receiver="ctrl.contactReceiver"
                                     eee-resolution="'low'"></eee-avatar>
                     </section>
-                    <div class="receiver-badge-name" ng-bind-html="ctrl.contactReceiver.displayName | escapeHtml | emojify"></div>
+                    <div class="receiver-badge-name" ng-bind-html="ctrl.contactReceiver | displayName | escapeHtml | emojify"></div>
                     <div class="contact-badge-identity">{{ ctrl.contactReceiver.id }}</div>
                     <div class="contact-badge-actions" ng-if="ctrl.showActions">
                         <md-button aria-label="Remove" class="md-icon-button" ng-click="ctrl.onRemove(ctrl.contactReceiver)">

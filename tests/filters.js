@@ -13,21 +13,25 @@ describe('Filters', function() {
             get: function(id) {
                 if (id === 'AAAAAAAA') {
                     return {
+                        id: 'AAAAAAAA',
                         displayName: 'ContactA'
                     }
                 }
                 else if (id === 'XXXXXXXX') {
                     return {
+                        id: 'XXXXXXXX',
                         displayName: 'ContactX'
                     }
                 }
                 else if (id === '*AAAAAAA') {
                     return {
+                        id: '*AAAAAAA',
                         displayName: 'GWContactA'
                     }
                 }
                 else if (id === 'BAD0BAD1') {
                     return {
+                        id: 'BAD0BAD1',
                         displayName: '<b>< script >foo&ndash;</b>< script>',
                     }
                 }
@@ -234,6 +238,24 @@ describe('Filters', function() {
             const input = 'hello #threema';
             expect(process(input)).toEqual(input);
         });
+    });
+
+    describe('displayName', function() {
+
+        let process = (id) => {
+            return $filter('displayName')(id)
+        };
+
+        it('own contact/nickname to me', () => {
+            expect(process(webClientServiceMock.me)).toEqual('messenger.ME');
+        });
+
+        it('other contacts to displayName', () => {
+            expect(process(webClientServiceMock.contacts.get('AAAAAAAA'))).toEqual('ContactA');
+            expect(process(webClientServiceMock.contacts.get('XXXXXXXX'))).toEqual('ContactX');
+            expect(process(webClientServiceMock.contacts.get('*AAAAAAA'))).toEqual('GWContactA');
+        });
+
     });
 
 });

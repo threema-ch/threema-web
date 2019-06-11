@@ -189,7 +189,8 @@
         "PINNED_CONVERSATION_OK": "Les conversations épinglées",
         "PINNED_CONVERSATION_ERROR": "Les conversations n'ont pas pu être épinglées",
         "UNPINNED_CONVERSATION_OK": "Les conversations non épinglées",
-        "UNPINNED_CONVERSATION_ERROR": "La conversation n'a pas pu être désépinglé"
+        "UNPINNED_CONVERSATION_ERROR": "La conversation n'a pas pu être désépinglé",
+        "ME": "Moi"
     },
     "messageStates": {
         "WE_ACK": "Vous avez envoyé un pouce levé",
