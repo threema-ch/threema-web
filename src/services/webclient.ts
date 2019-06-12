@@ -503,17 +503,6 @@ export class WebClientService {
             this.$log.debug('Auth token:', this.salty.authTokenHex);
         }
 
-        // We want to know about new responders.
-        this.salty.on('new-responder', () => {
-            if (!this.startupDone) {
-                // Pushing complete
-                this.resetPushSession(true);
-
-                // Peer handshake
-                this.stateService.updateConnectionBuildupState('peer_handshake');
-            }
-        });
-
         // We want to know about state changes
         this.salty.on('state-change', (ev: saltyrtc.SaltyRTCEvent) => {
             const state: saltyrtc.SignalingState = ev.data;
@@ -535,7 +524,6 @@ export class WebClientService {
                         }
                         break;
                     case 'task':
-                        // Do nothing, state will be updated once SecureDataChannel is open
                         break;
                     case 'closing':
                     case 'closed':
@@ -551,6 +539,12 @@ export class WebClientService {
         // Once the connection is established, if this is a WebRTC connection,
         // initiate the peer connection and start the handover.
         this.salty.once('state-change:task', () => {
+            // Pushing complete
+            this.resetPushSession(true);
+
+            // Peer handshake
+            this.stateService.updateConnectionBuildupState('peer_handshake');
+
             // Determine chosen task
             const task = this.salty.getTask();
             if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
