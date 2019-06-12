@@ -326,6 +326,10 @@ export class WebClientService {
         // Push session configuration
         this.pushSessionConfig = PushSession.defaultConfig;
         this.pushSessionConfig.triesMax = WebClientService.MAX_CONNECT_ATTEMPTS;
+        // TODO: Remove below config overwrite lines once the app-related push issues have been resolved in #802
+        this.pushSessionConfig = {
+            retryTimeoutInitMs: 14000, retryTimeoutMaxMs: 30000, triesMax: 1, timeToLiveRange: [90],
+        };
         this.pushSessionExpectedPeriodMaxMs = PushSession.expectedPeriodMaxMs(this.pushSessionConfig);
 
         // Other properties
