@@ -39,7 +39,7 @@
     "@babel/plugin-transform-runtime": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
     "@babel/runtime": "^7.4.3",
-    "@saltyrtc/client": "^0.13.2",
+    "@saltyrtc/client": "^0.14.4",
     "@saltyrtc/task-relayed-data": "^0.3.1",
     "@saltyrtc/task-webrtc": "^0.13.0",
     "@threema/compose-area": "^0.3.1",
