@@ -8,10 +8,11 @@
         "PLEASE_SCAN": "Scannez ce code QR avec votre app Threema",
         "PLEASE_UNLOCK": "Rétablissement de la session ",
         "WAITING": "En attente de la connexion",
+        "RETRY": "Retry",
         "PLEASE_RELOAD": "Veuillez recharger cette page pour réessayer",
         "RELOAD": "Recharger page",
         "PASSWORD": "Mot de passe",
-        "CHOOSE_PASSWORD": "Si vous souhaitez rester connecter, veuillez saisir <br>un mot de passe de session avant le scan.",
+        "CHOOSE_PASSWORD": "Si vous souhaitez rester connecté, veuillez saisir <br>un mot de passe de session avant le scan.",
         "UNLOCK_FAILED_TEXT": "Vous avez saisi un mauvais mot de passe. La session ne peut pas être restaurée.",
         "ENTER_PASSWORD": "Pour rétablir votre précédente session, <br>veuillez saisir le mot de passe :",
         "UNLOCK_FAILED_TITLE": "Le déverrouillage a échoué",
@@ -59,6 +60,8 @@
         "APP_STARTED": "Est-ce que l'application Threema a été lancé ?",
         "SESSION_DELETED": "Aviez-vous effacé la session sur votre téléphone ?",
         "PHONE_ONLINE": "Est-ce que votre téléphone est connecté à internet ?",
+        "UNLOCK_OR_CHARGE": "It may help to unlock your device or connect it to a charger.",
+        "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
         "WEBCLIENT_ENABLED": "Est-ce que Threema Web est activé dans l'app Threema?",
         "PLUGIN": "Est-ce qu'un module de confidentialité pouvant bloquer la communication WebRTC a été installé dans votre navigateur ?",
         "ADBLOCKER": "Utilisez-vous un bloqueur de publicité bloquant aussi la communication WebRTC?",
@@ -243,9 +246,9 @@
         "CONTACT_BLOCKED":  "Vous ne pouvez pas envoyer des messages à un contact bloqué.",
         "ERROR_OCCURRED": "Une erreur est apparue.",
         "FILE_TOO_LARGE": "Les fichiers plus grands que {maxmb} MiB ne peuvent pas être envoyés",
-        "FILE_TOO_LARGE_WEB": "Actuellement les fichiers plus grands que 15 MiB ne peuvent pas être envoyés  avec Threema Web",
+        "FILE_TOO_LARGE_WEB": "Actuellement les fichiers plus grands que 15 MiB ne peuvent pas être envoyés avec Threema Web",
         "FILE_TOO_LARGE_GENERIC": "Le fichier est trop lourd pour être envoyé.",
-        "TEXT_TOO_LONG": "Le fichier est trop long et ne peut pas être envoyé (Longueur max  {max}  caractères).",
+        "TEXT_TOO_LONG": "Le fichier est trop long et ne peut pas être envoyé (Longueur max {max} caractères).",
         "NOTIFICATION_PERMISSION_DENIED": "Vous devez autoriser les notifications pour Threema Web manuellement pour pouvoir recevoir les notifications sur votre ordinateur.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "En savoir davantage.",
         "NOTIFICATION_API_NOT_AVAILABLE": "Votre ordinateur ne supporte pas les notifications.",
@@ -278,7 +281,7 @@
         "NOTIFICATION_SOUNDS": "Fichiers audio &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a>- en application des licences Soundsnap",
         "LICENSE_TEXT": "Vous pouvez trouver les licences open source des composants utilisées <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">dans le code source</a>.",
         "CHANGELOG": "Journal des modifications",
-        "CHANGELOG_TEXT": "Le journal des modifications de Threema Web n'a pas été trouvé <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">sur GitHub</a>."
+        "CHANGELOG_TEXT": "Le journal des modifications de Threema Web peut être trouvé <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">sur GitHub</a>."
     },
     "settings": {
         "SETTINGS": "Paramètre",
@@ -289,15 +292,23 @@
             "PLAY_SOUND": "Mettre le son"
         }
     },
+    "deviceUnreachable": {
+        "DEVICE_UNREACHABLE": "Device Unreachable",
+        "UNABLE_TO_CONNECT": "Unable to connect to your device …"
+    },
     "version": {
         "NEW_VERSION": "Novelle version disponible",
         "NEW_VERSION_BODY": "Une nouvelle version de Threema Web ({version}) est disponible. Regarder le {changelog} pou plus d'information. Cliquer sur \"OK\" pour valider la mise à jour."
     },
     "voip": {
         "CALL_MISSED": "Appel manqué",
+        "CALL_MISSED_BUSY": "Appel manqé (Occupé)",
         "CALL_FINISHED_IN": "Appel entrant",
         "CALL_FINISHED_OUT": "Appel sortant",
         "CALL_REJECTED": "Appel rejeté",
+        "CALL_REJECTED_BUSY": "Call recipient is busy",
+        "CALL_REJECTED_UNAVAILABLE": "Call recipient is unavailable",
+        "CALL_REJECTED_DISABLED": "Threema calls disabled by recipient",
         "CALL_ABORTED": "Appel annulé"
     },
     "battery": {

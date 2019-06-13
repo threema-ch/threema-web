@@ -8,6 +8,7 @@
         "PLEASE_SCAN": "使用Threema APP客户端扫描二维码",
         "PLEASE_UNLOCK": "正在重连",
         "WAITING": "等待连接",
+        "RETRY": "重试",
         "PLEASE_RELOAD": "请刷新页面后再尝试操作",
         "RELOAD": "重新加载页面",
         "PASSWORD": "密码",
@@ -59,6 +60,8 @@
         "APP_STARTED": "您打开Threema手机客户端了吗？",
         "SESSION_DELETED": "您是否在Threema客户端里删除了这个连接会话？",
         "PHONE_ONLINE": "您的手机能正常上网吗？",
+        "UNLOCK_OR_CHARGE": "有助于解锁您的设备或将其连接到充电器。",
+        "PUSH_FAQ": "系统推动设置可能会影响您的设备及时接收消息，请根据您的设备操作系统查看FAQ以及故障排除：<a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">安卓系统</a>，<a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">苹果系统</a>",
         "WEBCLIENT_ENABLED": "您的Threema手机客户端上是否启用了web端登录？",
         "PLUGIN": "您的浏览器中是否安装了一个阻止WebRTC通信的隐私插件？",
         "ADBLOCKER": "您是否使用了阻止WebRTC通信的广告拦截软件？",
@@ -189,7 +192,8 @@
         "PINNED_CONVERSATION_OK": "聊天已置顶",
         "PINNED_CONVERSATION_ERROR": "聊天不能置顶",
         "UNPINNED_CONVERSATION_OK": "取消了聊天置顶",
-        "UNPINNED_CONVERSATION_ERROR": "聊天不能取消置顶"
+        "UNPINNED_CONVERSATION_ERROR": "聊天不能取消置顶",
+        "ME": "Me"
     },
     "messageStates": {
         "WE_ACK": "你点了赞",
@@ -288,15 +292,23 @@
             "PLAY_SOUND": "播放声音"
         }
     },
+    "deviceUnreachable": {
+        "DEVICE_UNREACHABLE": "无法访问设备",
+        "UNABLE_TO_CONNECT": "无法连接到您的设备"
+    },
     "version": {
         "NEW_VERSION": "有可用的新版本",
         "NEW_VERSION_BODY": "Threema web ({version}) 新版本已发布，查看{changelog}了解更新详情，点击“OK”确认更新。"
     },
     "voip": {
         "CALL_MISSED": "未接来电",
+        "CALL_MISSED_BUSY": "未接来电（忙碌）",
         "CALL_FINISHED_IN": "呼入",
         "CALL_FINISHED_OUT": "呼出",
         "CALL_REJECTED": "已拒绝",
+        "CALL_REJECTED_BUSY": "对方正忙",
+        "CALL_REJECTED_UNAVAILABLE": "无法连线",
+        "CALL_REJECTED_DISABLED": "对方关闭了语音通话功能",
         "CALL_ABORTED": "通话中断"
     },
     "battery": {

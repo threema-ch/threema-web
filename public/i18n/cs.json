@@ -8,10 +8,11 @@
         "PLEASE_SCAN": "Naskenujte tento QR kód pomocí aplikace Threema v mobilu",
         "PLEASE_UNLOCK": "Obnova relace",
         "WAITING": "Čekám na spojení",
+        "RETRY": "Opakovat",
         "PLEASE_RELOAD": "Znovu načtěte stránku a zkuste to znovu.",
         "RELOAD": "Načíst znovu",
         "PASSWORD": "Heslo",
-        "CHOOSE_PASSWORD": "Pokud chcete zůstat trvale přihlášeni, zadejte prosím<br>\nheslo před naskenováním QR kódu.",
+        "CHOOSE_PASSWORD": "Pokud chcete zůstat trvale přihlášeni, zadejte prosím<br>heslo před naskenováním QR kódu.",
         "UNLOCK_FAILED_TEXT": "Zadali jste nesprávné heslo, relaci nelze obnovit.",
         "ENTER_PASSWORD": "Chcete-li se znovu připojit k vaší předchozí relaci,<br> zadejte prosím heslo:",
         "UNLOCK_FAILED_TITLE": "Odemknutí se nezdařilo",
@@ -59,6 +60,8 @@
         "APP_STARTED": "Je spuštěna aplikace Threema?",
         "SESSION_DELETED": "Nevymazali jste tuto relaci v telefonu?",
         "PHONE_ONLINE": "Je váš telefon připojen k Internetu?",
+        "UNLOCK_OR_CHARGE": "Může pomoci odemknout zařízení nebo připojení k nabíječce.",
+        "PUSH_FAQ": "Problémy s Push Notifikací mohou být ovlivněny nastavením Vašeho zařízení. Postupy na odstranění problémů naleznete v článcích FAQ pro <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> i <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS.</a>",
         "WEBCLIENT_ENABLED": "Je v aplikaci Threema povolena funkce Threema Web?",
         "PLUGIN": "Je v prohlížeči nainstalován nějaký ochranný plugin, který blokuje komunikaci WebRTC?",
         "ADBLOCKER": "Používáte blokování reklam, které také blokuje komunikaci WebRTC?",
@@ -189,12 +192,13 @@
         "PINNED_CONVERSATION_OK": "Konverzace je připnuta",
         "PINNED_CONVERSATION_ERROR": "Konverzace nemůže být připnuta",
         "UNPINNED_CONVERSATION_OK": "Konverzace odepnuta",
-        "UNPINNED_CONVERSATION_ERROR": "Konverzace nemůže být odepnuta"
+        "UNPINNED_CONVERSATION_ERROR": "Konverzace nemůže být odepnuta",
+        "ME": "Me"
     },
     "messageStates": {
         "WE_ACK": "Poslali jste \"palec nahoru\"",
-        "WE_DEC": "Odeslán \"palec nahoru\"",
-        "USER_ACK": "Odeslán \"palec dolů\" ",
+        "WE_DEC": "Odeslán \"palec dolů\"",
+        "USER_ACK": "Příjemce odpověděl \"palec nahoru\"",
         "USER_DEC": "Příjemce odpověděl \"palec dolů\"",
         "PENDING": "Zpráva se přenáší do vašeho zařízení",
         "SENDING": "Zpráva se přenáší na Threema server",
@@ -288,15 +292,23 @@
             "PLAY_SOUND": "Přehrát zvuk"
         }
     },
+    "deviceUnreachable": {
+        "DEVICE_UNREACHABLE": "Zařízení je nedostupné",
+        "UNABLE_TO_CONNECT": "Nelze se připojit k zařízení ..."
+    },
     "version": {
         "NEW_VERSION": "Je k dispozici nová verze",
         "NEW_VERSION_BODY": "Je k dispozici nová verze programu Threema Web ({version}). Novinky jsou popsané v {changelog}. Klepnutím na tlačítko OK program aktualizujete."
     },
     "voip": {
         "CALL_MISSED": "Zmeškaný hovor",
+        "CALL_MISSED_BUSY": "Zmeškaný hovor (obsazeno)",
         "CALL_FINISHED_IN": "Příchozí hovor",
         "CALL_FINISHED_OUT": "Odchozí hovor",
         "CALL_REJECTED": "Volání odmítnuto",
+        "CALL_REJECTED_BUSY": "Příjemce hovoru je zaneprázdněn",
+        "CALL_REJECTED_UNAVAILABLE": "Příjemce hovoru není dostupný",
+        "CALL_REJECTED_DISABLED": "Příjemce má vypnuté Threema volání",
         "CALL_ABORTED": "Volání zrušeno"
     },
     "battery": {

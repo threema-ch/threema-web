@@ -60,8 +60,8 @@
         "APP_STARTED": "Ist die Threema-App gestartet?",
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
-        "UNLOCK_OR_CHARGE": "Es kann helfen, Ihr Mobilgerät zu entsperren oder an ein Ladegerät anzuschliessen.",
-        "PUSH_FAQ": "Möglicherweise liegt ein Problem bei der Verarbeitung von Push-Benachrichtigungen vor. Die FAQ-Artikel für <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> und <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> helfen bei der Fehlersuche.",
+        "UNLOCK_OR_CHARGE": "Es kann hilfreich sein, das Gerät zu entsperren oder an ein Ladegerät anzuschließen.",
+        "PUSH_FAQ": "Ihr Gerät kann von Problemen mit der Push-Benachrichtigung betroffen sein. Lesen Sie die FAQ-Artikel für<a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\"> Android</a> und <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> zur Fehlerbehebung.",
         "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?",
         "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
         "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?",
@@ -206,8 +206,7 @@
         "DELIVERED": "Die Nachricht ist beim Gerät des Empfängers angekommen",
         "READ": "Die Nachricht wurde vom Empfänger gelesen",
         "FAILED": "Die Nachricht konnte nicht gesendet werden",
-        "TIMEOUT": "Die Nachricht konnte nicht auf Ihr Gerät übertragen werden.",
-        "UNKNOWN": ""
+        "TIMEOUT": "Die Nachricht konnte nicht auf Ihr Gerät übertragen werden."
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
@@ -281,9 +280,9 @@
         "SOURCE_CODE": "Der Quellcode und die Lizenzbedingungen finden sich auf GitHub:",
         "EMOJI_ART": "Verwendete Emoji stammen von <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
         "NOTIFICATION_SOUNDS": "Benachrichtigunstöne &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
-        "LICENSE_TEXT": "Lizenzen von verwendeten Open-Source-Komponenten können <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">im Quellcode</a> gefunden werden.",
+        "LICENSE_TEXT": "Lizenzen der verwendeten Open Source-Komponenten finden Sie <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">im Quellcode</a>.",
         "CHANGELOG": "Änderungsprotokoll",
-        "CHANGELOG_TEXT": "Das Änderungsprotokoll von Threema Web findet sich <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">auf GitHub</a>."
+        "CHANGELOG_TEXT": "Das Threema Web-Änderungsprotokoll finden Sie <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">auf GitHub</a>."
     },
     "settings": {
         "SETTINGS": "Einstellungen",
@@ -295,8 +294,8 @@
         }
     },
     "deviceUnreachable": {
-        "DEVICE_UNREACHABLE": "Mobilgerät nicht erreichbar",
-        "UNABLE_TO_CONNECT": "Eine Verbindung mit Ihrem Mobilgerät konnte nicht hergestellt werden …"
+        "DEVICE_UNREACHABLE": "Gerät nicht erreichbar",
+        "UNABLE_TO_CONNECT": "Verbindung zum Gerät fehlgeschlagen …"
     },
     "version": {
         "NEW_VERSION": "Neue Version Verfügbar",
