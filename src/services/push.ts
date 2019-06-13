@@ -194,7 +194,7 @@ export class PushSession {
 
             // Send push
             this.$log.debug(this.logTag, `Sending push ${this.tries}/${this.config.triesMax} (ttl=${timeToLive})`);
-            if (this.service.config.DEBUG) {
+            if (this.service.config.VERBOSE_DEBUGGING) {
                 this.$log.debug(this.logTag, 'Push data:', `${data}`);
             }
             try {

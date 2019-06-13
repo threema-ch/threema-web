@@ -38,10 +38,13 @@ export default {
     // Push
     PUSH_URL: 'https://push-web.threema.ch/push',
 
-    // Debugging options
-    DEBUG: false,
-    MSG_DEBUGGING: false, // Log all incoming and outgoing messages
-    MSGPACK_DEBUGGING: false, // Log URLs to the msgpack visualizer
-    ICE_DEBUGGING: false,
+    // Very verbose logging that potentially affects performance and may also
+    // contain sensitive information.
+    VERBOSE_DEBUGGING: false,
+    // Logs all incoming and outgoing protocol messages.
+    MSG_DEBUGGING: false,
+    // Logs URLs to visualise MsgPack messages for all incoming and outgoing
+    // protocol messages.
+    MSGPACK_DEBUGGING: false,
 
 } as threema.Config;

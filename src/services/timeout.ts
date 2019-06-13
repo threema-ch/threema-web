@@ -39,7 +39,7 @@ export class TimeoutService {
      * Log a message on debug log level, but only if the `DEBUG` flag is enabled.
      */
     private logDebug(msg: string): void {
-        if (this.config.DEBUG) {
+        if (this.config.VERBOSE_DEBUGGING) {
             this.$log.debug(this.logTag, msg);
         }
     }

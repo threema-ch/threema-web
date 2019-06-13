@@ -93,7 +93,7 @@ export default [
                 const fileInput = select('input.file-input') as JQuery<HTMLInputElement>;
 
                 // Initialize compose area lib
-                const composeArea = ComposeArea.bind_to(composeDiv[0], CONFIG.DEBUG ? 'debug' : 'warn');
+                const composeArea = ComposeArea.bind_to(composeDiv[0], CONFIG.VERBOSE_DEBUGGING ? 'debug' : 'warn');
                 if (scope.onInit) {
                     scope.onInit(composeArea);
                 }

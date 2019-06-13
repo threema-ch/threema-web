@@ -460,7 +460,7 @@ export class WebClientService {
         this.webrtcTask = new saltyrtcTaskWebrtc.WebRTCTask(true, maxPacketSize, this.config.SALTYRTC_LOG_LEVEL);
 
         // Create Relayed Data task instance
-        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.DEBUG);
+        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.VERBOSE_DEBUGGING);
 
         // Create new keystore if necessary
         if (!keyStore) {
@@ -498,7 +498,7 @@ export class WebClientService {
             builder = builder.withTrustedPeerKey(flags.peerTrustedKey);
         }
         this.salty = builder.asInitiator();
-        if (this.config.DEBUG) {
+        if (this.config.VERBOSE_DEBUGGING) {
             this.$log.debug('Public key:', this.salty.permanentKeyHex);
             this.$log.debug('Auth token:', this.salty.authTokenHex);
         }
@@ -578,7 +578,7 @@ export class WebClientService {
                 this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
                     this.$rootScope, this.webrtcTask,
                     this.config.ICE_SERVERS,
-                    !this.config.ICE_DEBUGGING);
+                    !this.config.VERBOSE_DEBUGGING);
 
                 // On state changes in the PeerConnectionHelper class, let state service know about it
                 this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
@@ -2896,7 +2896,7 @@ export class WebClientService {
                     if (!this.messages.update(receiver, msg)) {
                         const log = `Received message update for unknown message (id ${msg.id})`;
                         this.$log.error(this.logTag, log);
-                        if (this.config.DEBUG) {
+                        if (this.config.VERBOSE_DEBUGGING) {
                             this.messages.addStatusMessage(receiver, 'Warning: ' + log);
                             notify = true;
                         }
@@ -3959,7 +3959,7 @@ export class WebClientService {
 
         // Add to chunk cache
         if (cache) {
-            if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
+            if (this.config.VERBOSE_DEBUGGING && this.config.MSG_DEBUGGING) {
                 this.$log.debug(`[Chunk] Caching chunk (retransmit/push=${retransmit}:`, chunk);
             }
             try {
@@ -3973,7 +3973,7 @@ export class WebClientService {
 
         // Send if ready
         if (!shouldQueue) {
-            if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
+            if (this.config.VERBOSE_DEBUGGING && this.config.MSG_DEBUGGING) {
                 this.$log.debug(`[Chunk] Sending chunk (retransmit/push=${retransmit}:`, chunk);
             }
 
@@ -3992,7 +3992,7 @@ export class WebClientService {
      * Handle an incoming chunk from the underlying transport.
      */
     private receiveChunk(chunk: Uint8Array): void {
-        if (this.config.DEBUG && this.config.MSG_DEBUGGING) {
+        if (this.config.VERBOSE_DEBUGGING && this.config.MSG_DEBUGGING) {
             this.$log.debug('[Chunk] Received chunk:', chunk);
         }
 
