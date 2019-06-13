@@ -4,6 +4,27 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.2.0-beta.2][v2.2.0-beta.2] (2019-06-13)
+
+Changes:
+
+* [change] Improvements for reconnection behavior ([#815][i815] / [#816][i816]
+  / [#817][i817] / [#818][i818])
+* [change] Update Czech, French, German and Chinese translations
+* [feature] Add Dutch, Slovak, Spanish and Ukrainian translations
+
+Contributors:
+
+- [@IndianaDschones][@IndianaDschones]
+- [Artem Nachtigall](https://www.transifex.com/user/profile/artem.nachtigall/) (UK translations)
+- [Boris Klokoc](https://www.transifex.com/user/profile/klokyno/) (SK translations)
+- [Fernando Alvarez Junco](https://www.transifex.com/user/profile/arbesulo/) (ES translations)
+- [frau\_lutzn](https://www.transifex.com/user/profile/frau_lutzn/) (NL translations)
+- [Maik Holzhauer](https://www.transifex.com/user/profile/mkhlzhr/) (ES translations)
+- [Sergiy Kotyk](https://www.transifex.com/user/profile/kitser/) (UK translations)
+- [vollkorntomate](https://www.transifex.com/user/profile/vollkorntomate/) (NL translations)
+
+
 ### [v2.2.0-beta.1][v2.2.0-beta.1] (2019-05-23)
 
 Changes:
@@ -745,7 +766,12 @@ First public release.
 [i778]: https://github.com/threema-ch/threema-web/issues/778
 [i787]: https://github.com/threema-ch/threema-web/issues/787
 [i792]: https://github.com/threema-ch/threema-web/issues/792
+[i815]: https://github.com/threema-ch/threema-web/issues/815
+[i816]: https://github.com/threema-ch/threema-web/issues/816
+[i817]: https://github.com/threema-ch/threema-web/issues/817
+[i818]: https://github.com/threema-ch/threema-web/issues/818
 
+[v2.2.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.1...v2.2.0-beta.2
 [v2.2.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0-beta.1
 [v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
 [v2.1.6]: https://github.com/threema-ch/threema-web/compare/v2.1.5...v2.1.6
