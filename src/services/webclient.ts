@@ -516,39 +516,36 @@ export class WebClientService {
 
         // We want to know about state changes
         this.salty.on('state-change', (ev: saltyrtc.SaltyRTCEvent) => {
-            // Wrap this in a $timeout to execute at the end of the event loop.
-            this.$timeout(() => {
-                const state: saltyrtc.SignalingState = ev.data;
-                if (!this.startupDone) {
-                    switch (state) {
-                        case 'new':
-                        case 'ws-connecting':
-                        case 'server-handshake':
-                            if (this.stateService.connectionBuildupState !== 'push'
-                                && this.stateService.connectionBuildupState !== 'manual_start') {
-                                this.stateService.updateConnectionBuildupState('connecting');
-                            }
-                            break;
-                        case 'peer-handshake':
-                            // Waiting for peer
-                            if (this.stateService.connectionBuildupState !== 'push'
-                                && this.stateService.connectionBuildupState !== 'manual_start') {
-                                this.stateService.updateConnectionBuildupState('waiting');
-                            }
-                            break;
-                        case 'task':
-                            // Do nothing, state will be updated once SecureDataChannel is open
-                            break;
-                        case 'closing':
-                        case 'closed':
-                            this.stateService.updateConnectionBuildupState('closed');
-                            break;
-                        default:
-                            this.$log.warn(this.logTag, 'Unknown signaling state:', state);
-                    }
+            const state: saltyrtc.SignalingState = ev.data;
+            if (!this.startupDone) {
+                switch (state) {
+                    case 'new':
+                    case 'ws-connecting':
+                    case 'server-handshake':
+                        if (this.stateService.connectionBuildupState !== 'push'
+                            && this.stateService.connectionBuildupState !== 'manual_start') {
+                            this.stateService.updateConnectionBuildupState('connecting');
+                        }
+                        break;
+                    case 'peer-handshake':
+                        // Waiting for peer
+                        if (this.stateService.connectionBuildupState !== 'push'
+                            && this.stateService.connectionBuildupState !== 'manual_start') {
+                            this.stateService.updateConnectionBuildupState('waiting');
+                        }
+                        break;
+                    case 'task':
+                        // Do nothing, state will be updated once SecureDataChannel is open
+                        break;
+                    case 'closing':
+                    case 'closed':
+                        this.stateService.updateConnectionBuildupState('closed');
+                        break;
+                    default:
+                        this.$log.warn(this.logTag, 'Unknown signaling state:', state);
                 }
-                this.stateService.updateSignalingConnectionState(state, this.chosenTask, this.handoverDone);
-            }, 0);
+            }
+            this.stateService.updateSignalingConnectionState(state, this.chosenTask, this.handoverDone);
         });
 
         // Once the connection is established, if this is a WebRTC connection,
