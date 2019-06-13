@@ -154,6 +154,23 @@ export class DeviceUnreachableController extends DialogController {
     }
 
     /**
+     * We can only retry as long as the signaling connection has not been
+     * closed.
+     *
+     * TODO: This is a hack and should be removed as soon as the transport code
+     *       has been rewritten.
+     */
+    public get canRetry(): boolean {
+        switch (this.webClientService.salty.state) {
+            case 'closing':
+            case 'closed':
+                return false;
+            default:
+                return true;
+        }
+    }
+
+    /**
      * Retry wakeup of the device via a push session.
      */
     public async retry(): Promise<void> {
