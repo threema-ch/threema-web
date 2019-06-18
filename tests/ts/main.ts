@@ -20,9 +20,11 @@
 // tslint:disable:no-reference
 /// <reference path="../../src/threema.d.ts" />
 
+import './confidential_helpers';
 import './containers';
 import './crypto_helpers';
 import './emoji_helpers';
+import './logger_helpers';
 import './helpers';
 import './markup_parser';
 import './receiver_helpers';

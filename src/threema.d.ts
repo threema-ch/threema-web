@@ -18,6 +18,19 @@
 declare const angular: ng.IAngularStatic;
 
 declare namespace threema {
+    type LogType = 'debug' | 'trace' | 'info' | 'warn' | 'error';
+    type LogLevel = 'none' | 'debug' | 'info' | 'warn' | 'error';
+    type LogRecord = [Date, LogType, any?, ...any[]];
+
+    /**
+     * An object can be marked as confidential in which case it needs to
+     * implement the censor method. This mixin is being used for sanitising log
+     * records when using the report tool.
+     */
+    interface Confidential<U, C> {
+        uncensored: U;
+        censored(): C;
+    }
 
     interface Avatar {
         // Low resolution avatar URI
