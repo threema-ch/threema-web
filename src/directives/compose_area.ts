@@ -20,6 +20,7 @@ import {ComposeArea} from '@threema/compose-area';
 import {isActionTrigger} from '../helpers';
 import {emojifyNew, shortnameToUnicode} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
+import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
@@ -30,6 +31,7 @@ import {isEmojiInfo} from '../typeguards';
  */
 export default [
     'BrowserService',
+    'LogService',
     'StringService',
     'TimeoutService',
     'ReceiverService',
@@ -37,10 +39,10 @@ export default [
     '$translate',
     '$mdDialog',
     '$filter',
-    '$log',
     '$rootScope',
     'CONFIG',
     function(browserService: BrowserService,
+             logService: LogService,
              stringService: StringService,
              timeoutService: TimeoutService,
              receiverService: ReceiverService,
@@ -48,9 +50,9 @@ export default [
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
              $filter: ng.IFilterService,
-             $log: ng.ILogService,
              $rootScope: ng.IRootScopeService,
              CONFIG: threema.Config) {
+        const log = logService.getLogger('ComposeArea-C');
         return {
             restrict: 'EA',
             scope: {
@@ -76,9 +78,6 @@ export default [
                 receiver: '<receiver',
             },
             link: function(scope: any, wrapper: JQLite) {
-                // Logging
-                const logTag = '[Directives.ComposeArea]';
-
                 // Constants
                 const TRIGGER_ENABLED_CSS_CLASS = 'is-enabled';
                 const TRIGGER_ACTIVE_CSS_CLASS = 'is-active';
@@ -111,7 +110,7 @@ export default [
                 // Function to update blocking state
                 function setChatBlocked(blocked: boolean) {
                     chatBlocked = blocked;
-                    $log.debug(logTag, 'Receiver blocked:', blocked);
+                    log.debug('Receiver blocked:', blocked);
                     if (blocked) {
                         sendTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
                         emojiTrigger.removeClass(TRIGGER_ENABLED_CSS_CLASS);
@@ -238,7 +237,7 @@ export default [
                             updateView();
                         }).catch(() => {
                             // do nothing
-                            $log.warn(logTag, 'Failed to submit text');
+                            log.warn('Failed to submit text');
                         });
 
                         return true;
@@ -376,11 +375,11 @@ export default [
                         });
                         scope
                             .submit('file', fileMessages)
-                            .catch((msg) => $log.error('Could not send file:', msg));
+                            .catch((e) => log.error('Could not send file:', e));
                         scope.onUploading(false);
 
                     }).catch((ev: ErrorEvent) => {
-                        $log.error(logTag, 'Could not load file:', ev.message);
+                        log.error('Could not load file:', ev.message);
                     });
                 }
 
@@ -428,7 +427,7 @@ export default [
                                 const fileExt = blob.type.split(';')[0].split('/')[1];
                                 fileName = 'clipboard.' + fileExt;
                             } else {
-                                $log.warn(logTag, 'Pasted file has an invalid MIME type: "' + blob.type + '"');
+                                log.warn('Pasted file has an invalid MIME type: "' + blob.type + '"');
                                 return;
                             }
 
@@ -441,7 +440,7 @@ export default [
                             };
                             scope
                                 .submit('file', [fileMessageData])
-                                .catch((msg) => $log.error('Could not send file:', msg));
+                                .catch((msg) => log.error('Could not send file:', msg));
                         };
                         reader.readAsArrayBuffer(blob);
 

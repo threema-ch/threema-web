@@ -20,13 +20,6 @@
  */
 export class ControllerService {
     private currentController: string;
-    private $log: ng.ILogService;
-    public static $inject = ['$log'];
-
-    constructor($log: ng.ILogService) {
-        // Angular services
-        this.$log = $log;
-    }
 
     public setControllerName(name: string): void {
         this.currentController = name;

@@ -22,12 +22,14 @@ import {saveAs} from 'file-saver';
 import {BrowserInfo} from '../helpers/browser_info';
 import {getSenderIdentity} from '../helpers/messages';
 import {BrowserService} from '../services/browser';
+import {LogService} from '../services/log';
 import {MessageService} from '../services/message';
 import {ReceiverService} from '../services/receiver';
 import {WebClientService} from '../services/webclient';
 
 export default [
     'BrowserService',
+    'LogService',
     'MessageService',
     'ReceiverService',
     'WebClientService',
@@ -35,17 +37,16 @@ export default [
     '$mdToast',
     '$translate',
     '$rootScope',
-    '$log',
     function(browserService: BrowserService,
+             logService: LogService,
              messageService: MessageService,
              receiverService: ReceiverService,
              webClientService: WebClientService,
              $mdDialog: ng.material.IDialogService,
              $mdToast: ng.material.IToastService,
              $translate: ng.translate.ITranslateService,
-             $rootScope: ng.IRootScopeService,
-             $log: ng.ILogService) {
-
+             $rootScope: ng.IRootScopeService) {
+        const log = logService.getLogger('Message-C');
         return {
             restrict: 'E',
             scope: {},
@@ -57,8 +58,6 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.logTag = '[MessageDirective]';
-
                 // Determine browser
                 this.browserInfo = browserService.getBrowser();
 
@@ -147,12 +146,12 @@ export default [
                         try {
                             const successful = document.execCommand('copy');
                             if (!successful) {
-                                $log.warn(this.logTag, 'Could not copy text to clipboard');
+                                log.warn('Could not copy text to clipboard');
                             } else {
                                 toastString = 'messenger.COPIED';
                             }
                         } catch (err) {
-                            $log.warn(this.logTag, 'Could not copy text to clipboard:', err);
+                            log.warn('Could not copy text to clipboard:', err);
                         }
                         document.body.removeChild(textArea);
 
@@ -178,13 +177,13 @@ export default [
                                             saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
                                             break;
                                         default:
-                                            $log.warn(this.logTag, 'Ignored download request for message type', this.message.type);
+                                            log.warn('Ignored download request for message type', this.message.type);
                                     }
                                 });
                             })
                             .catch((error) => {
                                 // TODO: Handle this properly / show an error message
-                                $log.error(this.logTag, `Error downloading blob: ${error}`);
+                                log.error(`Error downloading blob: ${error}`);
                                 this.downloading = false;
                             });
                     };

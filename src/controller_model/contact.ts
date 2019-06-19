@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
 import {AvatarControllerModel} from './avatar';
 
@@ -22,10 +24,7 @@ import {AvatarControllerModel} from './avatar';
 import ControllerModelMode = threema.ControllerModelMode;
 
 export class ContactControllerModel implements threema.ControllerModel<threema.ContactReceiver> {
-    private logTag = '[ContactControllerModel]';
-
     // Angular services
-    private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
 
@@ -37,19 +36,21 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
     public access: threema.ContactReceiverAccess;
     public isLoading = false;
 
+    private readonly log: Logger;
     private contact: threema.ContactReceiver | null;
     private webClientService: WebClientService;
     private firstNameLabel: string;
     private avatarController: AvatarControllerModel;
     private mode = ControllerModelMode.NEW;
 
-    constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
-                webClientService: WebClientService,
+    constructor($translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
+                logService: LogService, webClientService: WebClientService,
                 mode: ControllerModelMode,
                 contact?: threema.ContactReceiver) {
-        this.$log = $log;
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
+        this.log = logService.getLogger('Contact-CM');
+
         if (contact === undefined) {
             if (mode !== ControllerModelMode.NEW) {
                 throw new Error('ContactControllerModel: Contact may not be undefined for mode ' + mode);
@@ -66,7 +67,7 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
                 this.firstName = this.contact!.firstName;
                 this.lastName = this.contact!.lastName;
                 this.avatarController = new AvatarControllerModel(
-                    this.$log, this.webClientService, this.contact,
+                    logService, this.webClientService, this.contact,
                 );
 
                 this.access = this.contact!.access;
@@ -86,7 +87,7 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
                 break;
 
             default:
-                $log.error(this.logTag, 'Invalid controller model mode: ', this.getMode());
+                this.log.error('Invalid controller model mode: ', this.getMode());
         }
     }
 
@@ -133,17 +134,17 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
         this.$mdDialog.show(confirm).then(() => {
             this.reallyClean();
         }, () => {
-            this.$log.debug(this.logTag, 'Clean canceled');
+            this.log.debug('Clean cancelled');
         });
     }
 
     private reallyClean(): any {
         if (!this.contact) {
-            this.$log.error(this.logTag, 'reallyClean: Contact is null');
+            this.log.error('reallyClean: Contact is null');
             return;
         }
         if (!this.canClean()) {
-            this.$log.error(this.logTag, 'Not allowed to clean this contact');
+            this.log.error('Not allowed to clean this contact');
             return;
         }
 
@@ -154,7 +155,7 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
             })
             .catch((error) => {
                 // TODO: Handle this properly / show an error message
-                this.$log.error(this.logTag, `Cleaning receiver conversation failed: ${error}`);
+                this.log.error(`Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -175,7 +176,7 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
             case ControllerModelMode.NEW:
                 return this.webClientService.addContact(this.identity);
             default:
-                this.$log.error(this.logTag, 'Cannot save contact, invalid mode');
+                this.log.error('Cannot save contact, invalid mode');
                 return Promise.reject('Cannot save contact, invalid mode');
         }
     }

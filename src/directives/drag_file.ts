@@ -15,12 +15,15 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {LogService} from '../services/log';
+
 /**
  * Allow to drag and drop elements, set class to parent object
  */
 export default [
-    '$log',
-    function($log: ng.ILogService) {
+    'LogService',
+    function(logService: LogService) {
+        const log = logService.getLogger('DragFile-C');
         return {
             restrict: 'EA',
             scope: {
@@ -28,9 +31,6 @@ export default [
                 onUploading: '=',
             },
             link(scope: any, element) {
-                // Logging
-                const logTag = '[Directives.DragFile]';
-
                 // Constants
                 const DRAGOVER_CSS_CLASS = 'is-dragover';
 
@@ -49,7 +49,7 @@ export default [
                                 resolve(buffers);
                             }
                             if (error !== undefined) {
-                                $log.error(logTag, 'Error:', error);
+                                log.error('Error:', error);
                             }
                         };
 
@@ -91,7 +91,7 @@ export default [
                         scope.onUploading(false);
 
                     }).catch((ev: ErrorEvent) => {
-                        $log.error(logTag, 'Could not load file:', ev.message);
+                        log.error('Could not load file:', ev.message);
                     });
                 }
 

@@ -15,6 +15,9 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
+import {LogService} from './log';
 import {NotificationService} from './notification';
 
 export class BatteryStatusService {
@@ -31,17 +34,24 @@ export class BatteryStatusService {
     private $translate: ng.translate.ITranslateService;
     private notificationService: NotificationService;
 
-    public static $inject = ['$translate', 'NotificationService'];
+    // Logging
+    private readonly log: Logger;
 
-    constructor($translate: ng.translate.ITranslateService, notificationService: NotificationService) {
+    public static $inject = ['$translate', 'LogService', 'NotificationService'];
+
+    constructor($translate: ng.translate.ITranslateService,
+                logService: LogService, notificationService: NotificationService) {
         this.$translate = $translate;
         this.notificationService = notificationService;
+        this.log = logService.getLogger('BatteryStatus-S');
     }
 
     /**
      * Update the battery status.
      */
     public setStatus(batteryStatus: threema.BatteryStatus): void {
+        this.log.debug('Status:', batteryStatus);
+
         // Handle null percent value. This can happen if the battery status could not be determined.
         if (batteryStatus.percent === null) {
             this.clearStatus();

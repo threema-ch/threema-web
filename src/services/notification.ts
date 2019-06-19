@@ -15,8 +15,11 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
 import {StateService as UiStateService} from '@uirouter/angularjs';
 
+import {LogService} from './log';
 import {SettingsService} from './settings';
 
 export class NotificationService {
@@ -26,12 +29,12 @@ export class NotificationService {
     private static SETTINGS_NOTIFICATION_SOUND = 'notificationSound';
     private static NOTIFICATION_SOUND = 'sounds/notification.mp3';
 
-    private $log: ng.ILogService;
     private $window: ng.IWindowService;
     private $state: UiStateService;
 
     private settingsService: SettingsService;
-    private logTag = '[NotificationService]';
+
+    private readonly log: Logger;
 
     // Whether user has granted notification permission
     private notificationPermission: boolean = null;
@@ -47,14 +50,14 @@ export class NotificationService {
     // Cache notifications
     private notificationCache: any = {};
 
-    public static $inject = ['$log', '$window', '$state', 'SettingsService'];
+    public static $inject = ['$window', '$state', 'LogService', 'SettingsService'];
 
-    constructor($log: ng.ILogService, $window: ng.IWindowService,
-                $state: UiStateService, settingsService: SettingsService) {
-        this.$log = $log;
+    constructor($window: ng.IWindowService, $state: UiStateService,
+                logService: LogService, settingsService: SettingsService) {
         this.$window = $window;
         this.$state = $state;
         this.settingsService = settingsService;
+        this.log = logService.getLogger('Notification-S');
     }
 
     public init(): void {
@@ -77,7 +80,7 @@ export class NotificationService {
     private requestNotificationPermission(): void {
         if (this.notificationAPIAvailable) {
             const Notification = this.$window.Notification;
-            this.$log.debug(this.logTag, 'Requesting notification permission...');
+            this.log.debug('Requesting notification permission...');
             Notification.requestPermission((result) => {
                 switch (result) {
                     case 'denied':
@@ -96,7 +99,7 @@ export class NotificationService {
                         this.notificationPermission = false;
                         break;
                 }
-                this.$log.debug(this.logTag, 'Notification permission', this.notificationPermission);
+                this.log.debug('Notification permission', this.notificationPermission);
             });
         }
     }
@@ -109,7 +112,7 @@ export class NotificationService {
      */
     private checkNotificationAPI(): void {
         this.notificationAPIAvailable = ('Notification' in this.$window);
-        this.$log.debug(this.logTag, 'Notification API available:', this.notificationAPIAvailable);
+        this.log.debug('Notification API available:', this.notificationAPIAvailable);
         if (this.notificationAPIAvailable) {
             const Notification = this.$window.Notification;
             switch (Notification.permission) {
@@ -128,47 +131,47 @@ export class NotificationService {
                     break;
             }
         }
-        this.$log.debug(this.logTag, 'Initial notificationPermission', this.notificationPermission);
+        this.log.debug('Initial notificationPermission', this.notificationPermission);
     }
 
     /**
      * Get the initial settings from local storage
      */
     private fetchSettings(): void {
-        this.$log.debug(this.logTag, 'Fetching settings...');
+        this.log.debug('Fetching settings...');
         const notifications = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATIONS);
         const preview = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW);
         const sound = this.retrieveSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND);
         if (notifications === 'true') {
-            this.$log.debug(this.logTag, 'Desktop notifications:', notifications);
+            this.log.debug('Desktop notifications:', notifications);
             this.desktopNotifications = true;
             // check permission because user may have revoked them
             this.requestNotificationPermission();
         } else if (notifications === 'false') {
-            this.$log.debug(this.logTag, 'Desktop notifications:', notifications);
+            this.log.debug('Desktop notifications:', notifications);
             // user does not want notifications
             this.desktopNotifications = false;
         } else {
-            this.$log.debug(this.logTag, 'Desktop notifications:', notifications, 'Asking user...');
+            this.log.debug('Desktop notifications:', notifications, 'Asking user...');
             // Neither true nor false was in local storage, so we have to ask the user if he wants notifications
             // If he grants (or already has granted) us the permission, we will set the flag true (default setting)
             this.requestNotificationPermission();
         }
         if (preview === 'false') {
-            this.$log.debug(this.logTag, 'Notification preview:', preview);
+            this.log.debug('Notification preview:', preview);
             this.notificationPreview = false;
         } else {
             // set the flag true if true/nothing or sth. else is in local storage (default setting)
-            this.$log.debug(this.logTag, 'Notification preview:', preview, 'Using default value (true)');
+            this.log.debug('Notification preview:', preview, 'Using default value (true)');
             this.notificationPreview = true;
             this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, 'true');
         }
         if (sound === 'true') {
-            this.$log.debug(this.logTag, 'Notification sound:', sound);
+            this.log.debug('Notification sound:', sound);
             this.notificationSound = true;
         } else {
             // set the flag false if false/nothing or sth. else is in local storage (default setting)
-            this.$log.debug(this.logTag, 'Notification sound:', sound, 'Using default value (false)');
+            this.log.debug('Notification sound:', sound, 'Using default value (false)');
             this.notificationSound = false;
             this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND, 'false');
         }
@@ -213,7 +216,7 @@ export class NotificationService {
      * Sets if the user wants desktop notifications
      */
     public setWantsNotifications(wantsNotifications: boolean): void {
-        this.$log.debug(this.logTag, 'Requesting notification preference change to', wantsNotifications);
+        this.log.debug('Requesting notification preference change to', wantsNotifications);
         if (wantsNotifications) {
             this.requestNotificationPermission();
         } else {
@@ -226,7 +229,7 @@ export class NotificationService {
      * Sets if the user wants a message preview
      */
     public setWantsPreview(wantsPreview: boolean): void {
-        this.$log.debug(this.logTag, 'Requesting preview preference change to', wantsPreview);
+        this.log.debug('Requesting preview preference change to', wantsPreview);
         this.notificationPreview = wantsPreview;
         this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_PREVIEW, wantsPreview ? 'true' : 'false');
     }
@@ -235,7 +238,7 @@ export class NotificationService {
      * Sets if the user wants sound when a new message arrives
      */
     public setWantsSound(wantsSound: boolean): void {
-        this.$log.debug(this.logTag, 'Requesting sound preference change to', wantsSound);
+        this.log.debug('Requesting sound preference change to', wantsSound);
         this.notificationSound = wantsSound;
         this.storeSetting(NotificationService.SETTINGS_NOTIFICATION_SOUND, wantsSound ? 'true' : 'false');
     }
@@ -365,7 +368,7 @@ export class NotificationService {
         }
 
         // Show notification
-        this.$log.debug(this.logTag, 'Showing notification', tag);
+        this.log.debug('Showing notification', tag);
         const notification = new this.$window.Notification(title, {
             icon: avatar,
             body: body.trim(),
@@ -380,7 +383,7 @@ export class NotificationService {
             if (clickCallback !== undefined) {
                 clickCallback();
             }
-            this.$log.debug(this.logTag, 'Hiding notification', tag, 'on click');
+            this.log.debug('Hiding notification', tag, 'on click');
             notification.close();
             this.clearCache(tag);
         };
@@ -399,7 +402,7 @@ export class NotificationService {
     public hideNotification(tag: string): boolean {
         const notification = this.notificationCache[tag];
         if (notification !== undefined) {
-            this.$log.debug(this.logTag, 'Hiding notification', tag);
+            this.log.debug('Hiding notification', tag);
             notification.close();
             this.clearCache(tag);
             return true;

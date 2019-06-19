@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
 import {AvatarControllerModel} from './avatar';
 
@@ -22,9 +24,7 @@ import {AvatarControllerModel} from './avatar';
 import ControllerModelMode = threema.ControllerModelMode;
 
 export class GroupControllerModel implements threema.ControllerModel<threema.GroupReceiver> {
-    private logTag = '[GroupControllerModel]';
-
-    private $log: ng.ILogService;
+    private log: Logger;
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
     public members: string[];
@@ -41,13 +41,13 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
     private mode: ControllerModelMode;
     private onRemovedCallback: threema.OnRemovedCallback;
 
-    constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
-                webClientService: WebClientService,
+    constructor($translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
+                logService: LogService, webClientService: WebClientService,
                 mode: ControllerModelMode,
                 group?: threema.GroupReceiver) {
-        this.$log = $log;
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
+        this.log = logService.getLogger('Group-CM');
 
         if (group === undefined) {
             if (mode !== ControllerModelMode.NEW) {
@@ -66,7 +66,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
                 this.name = this.group!.displayName;
                 this.members = this.group!.members;
                 this.avatarController = new AvatarControllerModel(
-                    this.$log, this.webClientService, this.group!,
+                    logService, this.webClientService, this.group!,
                 );
                 this.access = this.group!.access;
                 break;
@@ -82,12 +82,12 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
                 this.subject = $translate.instant('messenger.CREATE_GROUP');
                 this.members = [];
                 this.avatarController = new AvatarControllerModel(
-                    this.$log, this.webClientService, null,
+                    logService, this.webClientService, null,
                 );
                 break;
 
             default:
-                $log.error(this.logTag, 'Invalid controller model mode: ', this.getMode());
+                this.log.error('Invalid controller model mode: ', this.getMode());
         }
     }
 
@@ -136,17 +136,17 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
         this.$mdDialog.show(confirm).then(() => {
             this.reallyClean();
         }, () => {
-            this.$log.debug('clean canceled');
+            this.log.debug('Clean cancelled');
         });
     }
 
     private reallyClean(): any {
         if (!this.group) {
-            this.$log.error(this.logTag, 'reallyClean: Group is null');
+            this.log.error('reallyClean: Group is null');
             return;
         }
         if (!this.canClean()) {
-            this.$log.error(this.logTag, 'Not allowed to clean this group');
+            this.log.error('Not allowed to clean this group');
             return;
         }
 
@@ -157,7 +157,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
             })
             .catch((error) => {
                 // TODO: Handle this properly / show an error message
-                this.$log.error(this.logTag, `Cleaning receiver conversation failed: ${error}`);
+                this.log.error(`Cleaning receiver conversation failed: ${error}`);
                 this.isLoading = false;
             });
     }
@@ -168,7 +168,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
 
     public leave(ev): void {
         if (!this.group) {
-            this.$log.error(this.logTag, 'leave: Group is null');
+            this.log.error('leave: Group is null');
             return;
         }
         const confirm = this.$mdDialog.confirm()
@@ -184,13 +184,13 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
         this.$mdDialog.show(confirm).then(() => {
             this.reallyLeave(this.group!);
         }, () => {
-            this.$log.debug(this.logTag, 'Leave canceled');
+            this.log.debug('Leave cancelled');
         });
     }
 
     private reallyLeave(group: threema.GroupReceiver): void {
         if (!group.access.canLeave) {
-            this.$log.error(this.logTag, 'Cannot leave group');
+            this.log.error('Cannot leave group');
             return;
         }
 
@@ -201,14 +201,14 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
             })
             .catch((error) => {
                 // TODO: Handle this properly / show an error message
-                this.$log.error(`Leaving group failed: ${error}`);
+                this.log.error(`Leaving group failed: ${error}`);
                 this.isLoading = false;
             });
     }
 
     public delete(ev): void {
         if (!this.group) {
-            this.$log.error(this.logTag, 'delete: Group is null');
+            this.log.error('delete: Group is null');
             return;
         }
 
@@ -222,13 +222,13 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
         this.$mdDialog.show(confirm).then(() => {
             this.reallyDelete(this.group!);
         }, () => {
-            this.$log.debug('delete canceled');
+            this.log.debug('Delete cancelled');
         });
     }
 
     private reallyDelete(group: threema.GroupReceiver): void {
         if (!this.access.canDelete) {
-            this.$log.error('can not delete group');
+            this.log.error('Can not delete group');
             return;
         }
 
@@ -242,18 +242,18 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
             })
             .catch((error) => {
                 // TODO: Handle this properly / show an error message
-                this.$log.error(`Deleting group failed: ${error}`);
+                this.log.error(`Deleting group failed: ${error}`);
                 this.isLoading = false;
             });
     }
 
     public sync(ev): void {
         if (!this.group) {
-            this.$log.error(this.logTag, 'sync: Group is null');
+            this.log.error('sync: Group is null');
             return;
         }
         if (!this.access.canSync) {
-            this.$log.error(this.logTag, 'Cannot sync group');
+            this.log.error('Cannot sync group');
             return;
         }
 
@@ -284,7 +284,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
                     this.avatarController.avatarChanged ? this.avatarController.getAvatar() : undefined,
                 );
             default:
-                this.$log.error(this.logTag, 'Cannot save group, invalid mode');
+                this.log.error('Cannot save group, invalid mode');
                 return Promise.reject('Cannot save group, invalid mode');
         }
     }

@@ -15,21 +15,23 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {bufferToUrl, hasValue, logAdapter} from '../helpers';
+import {bufferToUrl, hasValue} from '../helpers';
 import {isEchoContact, isGatewayContact} from '../receiver_helpers';
+import {LogService} from '../services/log';
 import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
 import {isContactReceiver} from '../typeguards';
 
 export default [
     '$rootScope',
-    '$log',
+    'LogService',
     'TimeoutService',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
-             $log: ng.ILogService,
+             logService: LogService,
              timeoutService: TimeoutService,
              webClientService: WebClientService) {
+        const log = logService.getLogger('Avatar-C');
         return {
             restrict: 'E',
             scope: {},
@@ -81,8 +83,6 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.logTag = '[Directives.Avatar]';
-
                 let loadingPromise: ng.IPromise<any> = null;
 
                 /**
@@ -99,10 +99,7 @@ export default [
                     if (avatarUri[res] === null) {
                         // Cache avatar image URI
                         avatarUri[res] = bufferToUrl(
-                            data,
-                            webClientService.appCapabilities.imageFormat.avatar,
-                            logAdapter($log.warn, this.logTag),
-                        );
+                            data, webClientService.appCapabilities.imageFormat.avatar, log);
                     }
                     return avatarUri[res];
                 };
@@ -220,7 +217,7 @@ export default [
                                     })
                                     .catch((error) => {
                                         // TODO: Handle this properly / show an error message
-                                        $log.error(this.logTag, `Avatar request has been rejected: ${error}`);
+                                        log.error(`Avatar request has been rejected: ${error}`);
                                         $rootScope.$apply(() => {
                                             this.isLoading = false;
                                         });

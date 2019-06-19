@@ -667,9 +667,10 @@ declare namespace threema {
         REPORT_LOG_LIMIT: number;
         COMPOSE_AREA_LOG_LEVEL: LogLevel;
         SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
-        DEBUG_TIMER: boolean,
-        DEBUG_ARP: boolean;
-        DEBUG_MSGPACK: boolean;
+        TIMER_LOG_LEVEL: LogLevel;
+        ARP_LOG_LEVEL: LogLevel;
+        ARP_LOG_TRACE: boolean;
+        MSGPACK_LOG_TRACE: boolean;
     }
 
     interface InitialConversationData {

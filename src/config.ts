@@ -52,16 +52,22 @@ export default {
     COMPOSE_AREA_LOG_LEVEL: 'warn',
     // SaltyRTC log level
     SALTYRTC_LOG_LEVEL: 'warn',
-    // Toggles logging verbose timer-related information.
-    DEBUG_TIMER: false,
-    // Toggles logging all chunks and messages exchanged by or associated with
-    // the app remote protocol. May also enable additional debug facilities of
-    // the app remote protocol.
+    // Timer (created by the TimeoutService) log level.
+    // Note: Log records filtered by this level will prevent them from being
+    //       picked up by the console and the report logger.
+    TIMER_LOG_LEVEL: 'info',
+    // App remote protocol log level.
+    // Note: Log records filtered by this level will prevent them from being
+    //       picked up by the console and the report logger.
+    ARP_LOG_LEVEL: 'debug',
+    // Toggles expensive or sensitive logging operations. Toggles logging of
+    // all chunks and messages exchanged by or associated with the app remote
+    // protocol.
     // Note: Affects performance and contains sensitive information.
-    DEBUG_ARP: false,
+    ARP_LOG_TRACE: false,
     // Toggles URL logging to visualise MsgPack messages for all incoming and
     // outgoing protocol messages.
     // Note: Affects performance and contains sensitive information.
-    DEBUG_MSGPACK: false,
+    MSGPACK_LOG_TRACE: false,
 
 } as threema.Config;

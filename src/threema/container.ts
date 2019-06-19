@@ -15,8 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
 import {copyShallow, randomString} from '../helpers';
+import {ConfidentialArray, ConfidentialObjectValues} from '../helpers/confidential';
 import {isFirstUnreadStatusMessage} from '../message_helpers';
+import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
 
 type ContactMap = Map<string, threema.ContactReceiver>;
@@ -408,6 +412,9 @@ class ReceiverMessages {
  * This class manages all messages for the current user.
  */
 class Messages implements threema.Container.Messages {
+    // Logging
+    private readonly log: Logger;
+
     // The messages are stored in date-ascending order,
     // newest messages are appended, older messages are prepended.
     private messages: MessageMap = new Map();
@@ -415,10 +422,8 @@ class Messages implements threema.Container.Messages {
     // Message converter
     public converter: MessageConverter = null;
 
-    private $log: ng.ILogService;
-
-    constructor($log: ng.ILogService) {
-        this.$log = $log;
+    constructor(logService: LogService) {
+        this.log = logService.getLogger('MessagesContainer');
     }
 
     /**
@@ -594,7 +599,8 @@ class Messages implements threema.Container.Messages {
         const lastId = messages[messages.length - 1].id;
         const predicate = (msg: threema.Message) => msg.id === firstId || msg.id === lastId;
         if (receiverMessages.list.findIndex(predicate, receiverMessages.list) !== -1) {
-            this.$log.warn('Messages to be prepended intersect with existing messages:', messages);
+            this.log.warn('Messages to be prepended intersect with existing messages:',
+                new ConfidentialArray(messages.map((message) => new ConfidentialObjectValues(message))));
             return;
         }
 
@@ -866,8 +872,8 @@ class Drafts implements threema.Container.Drafts {
 }
 
 angular.module('3ema.container', [])
-.factory('Container', ['$filter', '$log', 'ReceiverService',
-    function($filter, $log, receiverService: ReceiverService) {
+.factory('Container', ['$filter', 'LogService', 'ReceiverService',
+    function($filter, logService: LogService, receiverService: ReceiverService) {
         class Filters  {
             public static hasData(receivers) {
                 return (obj) => $filter('hasData')(obj, receivers);
@@ -887,7 +893,7 @@ angular.module('3ema.container', [])
             Filters: Filters as threema.Container.Filters,
             createReceivers: () => new Receivers(),
             createConversations: () => new Conversations(receiverService),
-            createMessages: () => new Messages($log),
+            createMessages: () => new Messages(logService),
             createTyping: () => new Typing(),
             createDrafts: () => new Drafts(),
         } as threema.Container.Factory;

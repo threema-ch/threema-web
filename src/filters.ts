@@ -17,13 +17,11 @@
 
 import Autolinker from 'autolinker';
 
-import {bufferToUrl, escapeRegExp, filter, hasValue, logAdapter} from './helpers';
-import {emojify, enlargeSingleEmoji} from './helpers/emoji';
+import {bufferToUrl, escapeRegExp, filter, hasValue} from './helpers';
+import {emojify} from './helpers/emoji';
 import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
-import {NotificationService} from './services/notification';
 import {WebClientService} from './services/webclient';
-import {isContactReceiver} from './typeguards';
 
 angular.module('3ema.filters', [])
 
@@ -196,27 +194,6 @@ angular.module('3ema.filters', [])
         return padLeft + left + ':' + padRight + right;
     };
 })
-
-/**
- * Convert an ArrayBuffer to a data URL.
- *
- * Warning: Make sure that this is not called repeatedly on big data, or performance will decrease.
- */
-.filter('bufferToUrl', ['$sce', '$log', function($sce, $log) {
-    const logTag = '[filters.bufferToUrl]';
-    return function(buffer: ArrayBuffer, mimeType: string, trust: boolean = true) {
-        if (!buffer) {
-            $log.error(logTag, 'Could not apply bufferToUrl filter: buffer is', buffer);
-            return '';
-        }
-        const uri = bufferToUrl(buffer, mimeType, logAdapter($log.warn, logTag));
-        if (trust) {
-            return $sce.trustAsResourceUrl(uri);
-        } else {
-            return uri;
-        }
-    };
-}])
 
 .filter('mapLink', function() {
     return function(location: threema.LocationInfo) {

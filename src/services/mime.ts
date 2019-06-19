@@ -18,9 +18,8 @@
 import {hasValue} from '../helpers';
 
 export class MimeService {
-    public static $inject = ['$log', '$translate'];
+    public static $inject = ['$translate'];
 
-    private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
 
     private imageMimeTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
@@ -28,8 +27,7 @@ export class MimeService {
     private audioMimeTypesIos: string[] = ['audio/m4a', 'audio/x-m4a', 'audio/mp4'];
     private videoMimeTypes: string[] = ['video/mp4', 'video/mpg', 'video/mpeg'];
 
-    constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService) {
-        this.$log = $log;
+    constructor($translate: ng.translate.ITranslateService) {
         this.$translate = $translate;
     }
 

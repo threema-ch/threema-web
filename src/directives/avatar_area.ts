@@ -17,7 +17,8 @@
 
 // tslint:disable:max-line-length
 
-import {bufferToUrl, logAdapter} from '../helpers';
+import {bufferToUrl} from '../helpers';
+import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
 
 /**
@@ -25,13 +26,14 @@ import {WebClientService} from '../services/webclient';
  */
 export default [
     '$rootScope',
-    '$log',
     '$mdDialog',
+    'LogService',
     'WebClientService',
     function($rootScope: ng.IRootScopeService,
-             $log: ng.ILogService,
              $mdDialog: ng.material.IDialogService,
+             logService: LogService,
              webClientService: WebClientService) {
+        const log = logService.getLogger('AvatarArea-C');
         return {
             restrict: 'EA',
             scope: true,
@@ -43,8 +45,6 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                const logTag = '[AvatarAreaDirective]';
-
                 this.isLoading = false;
                 this.avatar = null; // String
                 const avatarFormat = webClientService.appCapabilities.imageFormat.avatar;
@@ -53,7 +53,7 @@ export default [
                     this.setAvatar = (avatarBytes: ArrayBuffer) => {
                         this.avatar = (avatarBytes === null)
                             ? null
-                            : bufferToUrl(avatarBytes, avatarFormat, logAdapter($log.warn, logTag));
+                            : bufferToUrl(avatarBytes, avatarFormat, log);
                     };
 
                     this.imageChanged = (image: ArrayBuffer, notify = true) => {

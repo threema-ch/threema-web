@@ -16,33 +16,31 @@
  */
 
 import {hasValue} from '../helpers';
+import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
 
 export class AvatarControllerModel {
-    private logTag: string = '[AvatarControllerModel]';
-
-    private $log: ng.ILogService;
     private avatar: ArrayBuffer | null = null;
     private loadAvatar: Promise<ArrayBuffer | null>;
     private onChangeAvatar: (image: ArrayBuffer) => void;
     private _avatarChanged: boolean = false;
 
-    constructor($log: ng.ILogService,
+    constructor(logService: LogService,
                 webClientService: WebClientService,
                 receiver: threema.Receiver | null) {
-        this.$log = $log;
+        const log = logService.getLogger('Avatar-CM');
         this.loadAvatar = new Promise((resolve, reject) => {
             if (!hasValue(receiver)) {
-                $log.debug(this.logTag, 'loadAvatar: No receiver defined, no avatar');
+                log.debug('No receiver defined, no avatar');
                 resolve(null);
                 return;
             } else if (!hasValue(receiver.avatar) || !hasValue(receiver.avatar.high)) {
-                $log.debug(this.logTag, 'loadAvatar: Requesting high res avatar from app');
+                log.debug('Requesting high res avatar from app');
                 webClientService.requestAvatar(receiver, true)
                     .then((data: ArrayBuffer) => resolve(data))
                     .catch((error) => reject(error));
             } else {
-                $log.debug(this.logTag, 'loadAvatar: Returning cached version');
+                log.debug('Returning cached avatar');
                 resolve(receiver.avatar.high);
             }
         });

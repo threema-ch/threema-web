@@ -17,26 +17,26 @@
 
 import {saveAs} from 'file-saver';
 
-import {bufferToUrl, logAdapter} from '../helpers';
+import {bufferToUrl} from '../helpers';
+import {LogService} from '../services/log';
 import {MediaboxService} from '../services/mediabox';
 
 export default [
     '$rootScope',
     '$document',
-    '$log',
+    'LogService',
     'MediaboxService',
     function($rootScope: ng.IRootScopeService,
              $document: ng.IDocumentService,
-             $log: ng.ILogService,
+             logService: LogService,
              mediaboxService: MediaboxService) {
+        const log = logService.getLogger('Mediabox-C');
         return {
             restrict: 'E',
             scope: {},
             bindToController: {},
             controllerAs: 'ctrl',
             controller: [function() {
-                this.logTag = '[MediaboxDirective]';
-
                 // Data attributes
                 this.imageDataUrl = null;
                 this.caption = '';
@@ -62,10 +62,7 @@ export default [
                     $rootScope.$apply(() => {
                         if (dataAvailable) {
                             this.imageDataUrl = bufferToUrl(
-                                mediaboxService.data,
-                                mediaboxService.mimetype,
-                                logAdapter($log.debug, this.logTag),
-                            );
+                                mediaboxService.data, mediaboxService.mimetype, log);
                             this.caption = mediaboxService.caption || mediaboxService.filename;
                         } else {
                             this.close();

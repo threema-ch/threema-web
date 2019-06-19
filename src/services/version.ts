@@ -15,32 +15,36 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class VersionService {
-    private logTag: string = '[VersionService]';
+import {Logger} from 'ts-log';
 
-    private $log: ng.ILogService;
+import {LogService} from './log';
+
+export class VersionService {
     private $http: ng.IHttpService;
     private $mdDialog: ng.material.IDialogService;
     private $translate: ng.translate.ITranslateService;
     private $window: ng.IWindowService;
 
+    private readonly config: threema.Config;
+    private readonly log: Logger;
+
     private version: string;
-    private config: threema.Config;
     private dialogShowing = false;
 
-    public static $inject = ['$log', '$http', '$mdDialog', '$translate', '$window', 'CONFIG'];
-    constructor($log: ng.ILogService,
-                $http: ng.IHttpService,
+    public static $inject = ['$http', '$mdDialog', '$translate', '$window', 'CONFIG', 'LogService'];
+    constructor($http: ng.IHttpService,
                 $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
                 $window: ng.IWindowService,
-                CONFIG: threema.Config) {
-        this.$log = $log;
+                CONFIG: threema.Config,
+                logService: LogService) {
         this.$http = $http;
         this.$mdDialog = $mdDialog;
         this.$translate = $translate;
         this.$window = $window;
+
         this.config = CONFIG;
+        this.log = logService.getLogger('Version-S');
     }
 
     /**
@@ -55,10 +59,10 @@ export class VersionService {
         this.fetchVersion()
             .then((version: string) => {
                 this.version = version;
-                this.$log.info(this.logTag, 'Using Threema Web version', this.version);
+                this.log.info('Using Threema Web version', this.version);
             })
             .catch((error: string) => {
-                this.$log.error(this.logTag, 'Could not fetch version.txt:', error);
+                this.log.error('Could not fetch version.txt:', error);
             });
     }
 
@@ -94,22 +98,20 @@ export class VersionService {
      * Check for a version update. If the version was updated, show a dialog.
      */
     public checkForUpdate(): void {
-        this.$log.debug(this.logTag, 'Checking for version update...');
+        this.log.debug('Checking for version update...');
         if (this.version === undefined) {
-            this.$log.error(this.logTag, 'Cannot check for update, version is not initialized');
+            this.log.error('Cannot check for update, version is not initialized');
             return;
         }
         this.fetchVersion()
             .then((version: string) => {
                 if (version !== this.version) {
-                    this.$log.warn(this.logTag,
-                        'A new version of Threema Web is available:',
-                        this.version, '->', version);
+                    this.log.warn('A new version of Threema Web is available:', this.version, '->', version);
                     this.notifyNewVersion(version);
                 }
             })
             .catch((error: string) => {
-                this.$log.error('Could not fetch version.txt:', error);
+                this.log.error('Could not fetch version.txt:', error);
             });
     }
 

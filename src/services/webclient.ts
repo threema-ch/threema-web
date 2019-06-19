@@ -20,10 +20,11 @@
 /// <reference types="@saltyrtc/task-relayed-data" />
 
 import {StateService as UiStateService} from '@uirouter/angularjs';
+import {Logger} from 'ts-log';
 
 import * as msgpack from 'msgpack-lite';
 import {
-    arraysAreEqual, base64ToU8a, copyDeep, hasFeature, hasValue, hexToU8a,
+    arraysAreEqual, base64ToU8a, bufferToUrl, copyDeep, hasFeature, hasValue, hexToU8a,
     msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
 } from '../helpers';
 import {
@@ -33,6 +34,7 @@ import {
 import {BatteryStatusService} from './battery';
 import {BrowserService} from './browser';
 import {TrustedKeyStoreService} from './keystore';
+import {LogService} from './log';
 import {MessageService} from './message';
 import {MimeService} from './mime';
 import {NotificationService} from './notification';
@@ -46,6 +48,7 @@ import {TitleService} from './title';
 import {VersionService} from './version';
 
 import {TimeoutError} from '../exceptions';
+import {ConfidentialWireMessage} from '../helpers/confidential';
 import {DeviceUnreachableController} from '../partials/messenger';
 import {ChunkCache} from '../protocol/cache';
 import {SequenceNumber} from '../protocol/sequence_number';
@@ -158,11 +161,8 @@ export class WebClientService {
     private static DATA_FIELD_BLOB_NAME = 'name';
     private static DC_LABEL = 'THREEMA';
 
-    private logTag: string = '[WebClientService]';
-
     // Angular services
     private $state: UiStateService;
-    private $log: ng.ILogService;
     private $rootScope: any;
     private $q: ng.IQService;
     private $window: ng.IWindowService;
@@ -174,6 +174,7 @@ export class WebClientService {
     // Custom services
     private batteryStatusService: BatteryStatusService;
     private browserService: BrowserService;
+    private logService: LogService;
     private messageService: MessageService;
     private mimeService: MimeService;
     private notificationService: NotificationService;
@@ -183,6 +184,12 @@ export class WebClientService {
     private timeoutService: TimeoutService;
     private titleService: TitleService; // Don't remove, needs to be initialized to handle events
     private versionService: VersionService;
+
+    // Logging
+    private readonly log: Logger;
+    private readonly arpLog: Logger;
+    private readonly arpLogV: Logger;
+    private readonly msgpackLog: Logger;
 
     // State handling
     private startupPromise: ng.IDeferred<{}> = null; // TODO: deferred type
@@ -261,15 +268,14 @@ export class WebClientService {
     private wireMessageFutures: Map<string, Future<any>> = new Map();
 
     public static $inject = [
-        '$log', '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout', '$mdDialog',
-        'Container', 'TrustedKeyStore',
+        '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout', '$mdDialog',
+        'LogService', 'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
         'VersionService', 'BatteryStatusService', 'TimeoutService',
         'CONFIG',
     ];
-    constructor($log: ng.ILogService,
-                $rootScope: any,
+    constructor($rootScope: any,
                 $q: ng.IQService,
                 $state: UiStateService,
                 $window: ng.IWindowService,
@@ -277,6 +283,7 @@ export class WebClientService {
                 $filter: ng.IFilterService,
                 $timeout: ng.ITimeoutService,
                 $mdDialog: ng.material.IDialogService,
+                logService: LogService,
                 container: threema.Container.Factory,
                 trustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService,
@@ -294,7 +301,6 @@ export class WebClientService {
                 CONFIG: threema.Config) {
 
         // Angular services
-        this.$log = $log;
         this.$rootScope = $rootScope;
         this.$q = $q;
         this.$state = $state;
@@ -307,6 +313,7 @@ export class WebClientService {
         // Own services
         this.batteryStatusService = batteryStatusService;
         this.browserService = browserService;
+        this.logService = logService;
         this.messageService = messageService;
         this.mimeService = mimeService;
         this.notificationService = notificationService;
@@ -319,6 +326,15 @@ export class WebClientService {
 
         // Configuration object
         this.config = CONFIG;
+
+        // Logging
+        this.log = logService.getLogger('WebClient-S', 'color: #fff; background-color: #0066cc');
+        this.arpLog = logService.getLogger(
+            'AppRemoteProtocol', 'color: #fff; background-color: #0099cc', CONFIG.ARP_LOG_LEVEL);
+        this.arpLogV = logService.getLogger(
+            'AppRemoteProtocol', 'color: #fff; background-color: #00ace6', CONFIG.ARP_LOG_TRACE ? 'debug' : 'none');
+        this.msgpackLog = logService.getLogger(
+            'MessagePack', 'color: #fff; background-color: #006699', CONFIG.MSGPACK_LOG_TRACE ? 'debug' : 'none');
 
         // State
         this.stateService = stateService;
@@ -410,7 +426,7 @@ export class WebClientService {
     }): void {
         let keyStore = flags.keyStore;
         let resumeSession = flags.resume;
-        this.$log.info(`Initializing (keyStore=${keyStore !== undefined ? 'yes' : 'no'}, peerTrustedKey=` +
+        this.log.info(`Initializing (keyStore=${keyStore !== undefined ? 'yes' : 'no'}, peerTrustedKey=` +
             `${flags.peerTrustedKey !== undefined ? 'yes' : 'no'}, resume=${resumeSession})`);
 
         // Reset fields, blob cache, pending requests and pending timeouts in case the session
@@ -425,17 +441,17 @@ export class WebClientService {
         // connection was successful (and if there was one at all).
         if (resumeSession) {
             if (this.previousConnectionId) {
-                this.$log.debug(`Trying to resume previous session (id=${u8aToHex(this.previousConnectionId)}, ` +
+                this.arpLog.debug(`Trying to resume previous session (id=${u8aToHex(this.previousConnectionId)}, ` +
                     `sn-out=${this.previousChunkCache.sequenceNumber.get()})`);
             } else {
                 resumeSession = false;
-                this.$log.debug('Wanted to resume previous session but none exists');
+                this.arpLog.debug('Wanted to resume previous session but none exists');
             }
         } else {
             // Discard session
             this.discardSession({ resetMessageSequenceNumber: true });
             resumeSession = false;
-            this.$log.debug('Discarded previous session');
+            this.arpLog.debug('Discarded previous session');
         }
 
         // Reset handshake completed flag
@@ -498,10 +514,8 @@ export class WebClientService {
             builder = builder.withTrustedPeerKey(flags.peerTrustedKey);
         }
         this.salty = builder.asInitiator();
-        if (this.config.DEBUG_ARP) {
-            this.$log.debug('Public key:', this.salty.permanentKeyHex);
-            this.$log.debug('Auth token:', this.salty.authTokenHex);
-        }
+        this.arpLog.debug('Public key:', this.salty.permanentKeyHex);
+        this.arpLogV.debug('Auth token:', this.salty.authTokenHex);
 
         // We want to know about state changes
         this.salty.on('state-change', (ev: saltyrtc.SaltyRTCEvent) => {
@@ -531,7 +545,7 @@ export class WebClientService {
                         this.stateService.updateConnectionBuildupState('closed');
                         break;
                     default:
-                        this.$log.warn(this.logTag, 'Unknown signaling state:', state);
+                        this.arpLog.warn('Unknown signaling state:', state);
                 }
             }
             this.stateService.updateSignalingConnectionState(state, this.chosenTask, this.handoverDone);
@@ -548,20 +562,20 @@ export class WebClientService {
         this.salty.on('handover', () => {
             // Ignore handovers requested by non-WebRTC tasks
             if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                this.$log.debug(this.logTag, 'Handover done');
+                this.arpLog.debug('Handover done');
                 this.onHandover(resumeSession);
             }
         });
 
         // Handle SaltyRTC errors
         this.salty.on('connection-error', (ev) => {
-            this.$log.error('Connection error:', ev);
+            this.arpLog.error('Connection error:', ev);
         });
         this.salty.on('connection-closed', (ev) => {
-            this.$log.info('Connection closed:', ev);
+            this.arpLog.info('Connection closed:', ev);
         });
         this.salty.on('no-shared-task', (ev) => {
-            this.$log.warn('No shared task found:', ev.data);
+            this.arpLog.warn('No shared task found:', ev.data);
             const offeredWebrtc = ev.data.offered.filter((t) => t.endsWith('webrtc.tasks.saltyrtc.org')).length > 0;
             this.$rootScope.$apply(() => {
                 if (!this.browserService.supportsWebrtcTask() && offeredWebrtc) {
@@ -652,7 +666,7 @@ export class WebClientService {
      */
     private logOnReject(type: string, subType: string) {
         return ((error) => {
-            this.$log.error(this.logTag, `Message ${type}/${subType} has been rejected by the remote: ${error}`);
+            this.arpLog.error(`Message ${type}/${subType} has been rejected by the remote: ${error}`);
         });
     }
 
@@ -668,19 +682,19 @@ export class WebClientService {
         // Validate connection ID
         const remoteCurrentConnectionId = new Uint8Array(remoteInfo.id);
         if (arraysAreEqual(fakeConnectionId, remoteCurrentConnectionId)) {
-            this.$log.debug('Cannot resume session: Remote did not implement deriving the connection ID');
+            this.arpLog.debug('Cannot resume session: Remote did not implement deriving the connection ID');
             // TODO: Remove this once it is implemented properly by the app!
             return false;
         }
         if (!arraysAreEqual(this.currentConnectionId, remoteCurrentConnectionId)) {
-            this.$log.info(`Cannot resume session: IDs of previous connection do not match (local=`
+            this.arpLog.info(`Cannot resume session: IDs of previous connection do not match (local=`
                 + `${u8aToHex(this.currentConnectionId)}, remote=${u8aToHex(remoteCurrentConnectionId)}`);
             throw new Error('Derived connection IDs do not match!');
         }
 
         // Ensure both local and remote want to resume a session
         if (!resumeSession || remoteInfo.resume === undefined) {
-            this.$log.info(this.logTag, `No resumption (local requested: ${resumeSession ? 'yes' : 'no'}, ` +
+            this.arpLog.info(`No resumption (local requested: ${resumeSession ? 'yes' : 'no'}, ` +
                 `remote requested: ${remoteInfo.resume ? 'yes' : 'no'})`);
             // Both sides should detect that -> recoverable
             return false;
@@ -690,7 +704,7 @@ export class WebClientService {
         const remotePreviousConnectionId = new Uint8Array(remoteInfo.resume.id);
         if (!arraysAreEqual(this.previousConnectionId, remotePreviousConnectionId)) {
             // Both sides should detect that -> recoverable
-            this.$log.info(`Cannot resume session: IDs of previous connection do not match (local=`
+            this.arpLog.info(`Cannot resume session: IDs of previous connection do not match (local=`
                 + `${u8aToHex(this.previousConnectionId)}, remote=${u8aToHex(remotePreviousConnectionId)}`);
             return false;
         }
@@ -698,7 +712,7 @@ export class WebClientService {
         // Remove chunks that have been received by the remote side
         const size = this.previousChunkCache.byteLength;
         let result;
-        this.$log.debug(`Pruning cache (local-sn=${this.previousChunkCache.sequenceNumber.get()}, ` +
+        this.arpLog.debug(`Pruning cache (local-sn=${this.previousChunkCache.sequenceNumber.get()}, ` +
             `remote-sn=${remoteInfo.resume.sequenceNumber})`);
         try {
             result = this.previousChunkCache.prune(remoteInfo.resume.sequenceNumber);
@@ -706,15 +720,15 @@ export class WebClientService {
             // Not recoverable
             throw new Error(`Unable to resume session: ${error}`);
         }
-        this.$log.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
+        this.arpLog.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
             `${size} -> ${this.previousChunkCache.byteLength}`);
-        if (this.config.DEBUG_ARP) {
-            this.$log.debug(`Chunks that require acknowledgement: ${this.previousChunkCache.chunks.length}`);
+        if (this.config.ARP_LOG_TRACE) {
+            this.arpLog.debug(`Chunks that require acknowledgement: ${this.previousChunkCache.chunks.length}`);
         }
 
         // Transfer the cache (filters chunks which should not be retransmitted)
         const transferred = this.currentChunkCache.transfer(this.previousChunkCache.chunks);
-        this.$log.debug(`Chunk cache transferred (${transferred} chunks)`);
+        this.arpLog.debug(`Chunk cache transferred (${transferred} chunks)`);
 
         // Invalidate the previous connection cache & id
         // Note: This MUST be done immediately after the session has been
@@ -726,7 +740,7 @@ export class WebClientService {
 
         // Resend chunks
         const chunks = this.currentChunkCache.chunks;
-        this.$log.debug(this.logTag, `Sending cached chunks: ${chunks.length}`);
+        this.arpLog.debug(`Sending cached chunks: ${chunks.length}`);
         for (const chunk of chunks) {
             this.sendChunk(chunk, true, false, false);
         }
@@ -783,7 +797,7 @@ export class WebClientService {
         this.pushTimer = self.setTimeout(() => {
             this.pushTimer = null;
             this.schedulePushAfterCooldown = false;
-            this.$log.debug(this.logTag, 'Connection appears to be lost, sending push');
+            this.log.debug('Connection appears to be lost, sending push');
             this.sendPush();
         }, timeoutMs);
 
@@ -852,10 +866,12 @@ export class WebClientService {
                 this.skipIceDs();
             }
 
-            this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
-                this.$rootScope, this.webrtcTask,
+            this.pcHelper = new PeerConnectionHelper(
+                this.$q, this.$timeout, this.$rootScope,
+                this.logService,
+                this.webrtcTask,
                 this.config.ICE_SERVERS,
-                !this.config.DEBUG_ARP);
+                !this.config.ARP_LOG_TRACE);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
@@ -879,14 +895,14 @@ export class WebClientService {
         // Send connection info
         if (resumeSession) {
             const incomingSequenceNumber = this.previousIncomingChunkSequenceNumber.get();
-            this.$log.debug(this.logTag, `Sending connection info (resume=yes, sn-in=${incomingSequenceNumber})`);
+            this.arpLog.debug(`Sending connection info (resume=yes, sn-in=${incomingSequenceNumber})`);
             this._sendConnectionInfo(
                 this.currentConnectionId.buffer,
                 this.previousConnectionId.buffer,
                 incomingSequenceNumber,
             );
         } else {
-            this.$log.debug(this.logTag, 'Sending connection info (resume=no)');
+            this.arpLog.debug('Sending connection info (resume=no)');
             this._sendConnectionInfo(this.currentConnectionId.buffer);
         }
 
@@ -897,7 +913,7 @@ export class WebClientService {
         try {
             remoteInfo = await this.connectionInfoFuture;
         } catch (error) {
-            this.$log.error(this.logTag, error);
+            this.arpLog.error(error);
             this.failSession();
             return;
         }
@@ -907,7 +923,7 @@ export class WebClientService {
             outgoingSequenceNumber = remoteInfo.resume.sequenceNumber;
             remoteResume = 'yes';
         }
-        this.$log.debug(this.logTag, `Received connection info (resume=${remoteResume}, ` +
+        this.arpLog.debug(`Received connection info (resume=${remoteResume}, ` +
             `sn-out=${outgoingSequenceNumber})`);
 
         // Resume the session (if both requested to resume the same connection)
@@ -915,7 +931,7 @@ export class WebClientService {
         try {
             sessionWasResumed = this.maybeResumeSession(resumeSession, remoteInfo);
         } catch (error) {
-            this.$log.error(this.logTag, error);
+            this.arpLog.error(error);
             this.failSession();
             return;
         }
@@ -929,7 +945,7 @@ export class WebClientService {
             // Note: We cannot reset the message sequence number here any more since
             //       it has already been used for the connectionInfo message.
             this.discardSession({ resetMessageSequenceNumber: false });
-            this.$log.debug(this.logTag, 'Session discarded');
+            this.arpLog.debug('Session discarded');
 
             // Reset fields, blob cache, pending requests and pending timeouts in case the session
             // cannot be resumed
@@ -948,7 +964,7 @@ export class WebClientService {
             // Request initial data
             this._requestInitialData();
         } else {
-            this.$log.debug(this.logTag, 'Session resumed');
+            this.arpLog.debug('Session resumed');
         }
 
         // Schedule required initialisation steps if we have finished the
@@ -965,7 +981,7 @@ export class WebClientService {
                 // TODO: Remove once we have the ack protocol for Android, too
                 if (this.chosenTask !== threema.ChosenTask.RelayedData && this.$state.includes('messenger')) {
                     this.$state.reload().catch((error) => {
-                        this.$log.error('Unable to reload state:', error);
+                        this.log.error('Unable to reload state:', error);
                     });
                 }
             });
@@ -1007,7 +1023,7 @@ export class WebClientService {
      */
     private onHandover(resumeSession: boolean) {
         // Initialize NotificationService
-        this.$log.debug(this.logTag, 'Initializing NotificationService...');
+        this.log.debug('Initializing NotificationService...');
         this.notificationService.init();
 
         // Derive connection ID
@@ -1019,12 +1035,12 @@ export class WebClientService {
         // If the WebRTC task was chosen, initialize the data channel
         if (this.chosenTask === threema.ChosenTask.WebRTC) {
             // Create secure data channel
-            this.$log.debug(this.logTag, 'Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
+            this.arpLog.debug('Create SecureDataChannel "' + WebClientService.DC_LABEL + '"...');
             this.secureDataChannel = this.pcHelper.createSecureDataChannel(WebClientService.DC_LABEL);
             this.secureDataChannel.onopen = () => {
-                this.$log.debug(this.logTag, 'SecureDataChannel open');
+                this.arpLog.debug('SecureDataChannel open');
                 this.onConnectionEstablished(resumeSession).catch((error) => {
-                    this.$log.error(this.logTag, 'Error during handshake:', error);
+                    this.arpLog.error('Error during handshake:', error);
                 });
             };
 
@@ -1034,14 +1050,13 @@ export class WebClientService {
                 this.handleIncomingMessageBytes(bytes);
             };
             this.secureDataChannel.onbufferedamountlow = (ev: Event) => {
-                this.$log.debug('Secure data channel: Buffered amount low');
+                this.arpLog.debug('Secure data channel: Buffered amount low');
             };
             this.secureDataChannel.onerror = (e: ErrorEvent) => {
-                this.$log.warn('Secure data channel: Error:', e.message);
-                this.$log.debug(e);
+                this.arpLog.warn('Secure data channel: Error:', e.message);
             };
             this.secureDataChannel.onclose = (ev: Event) => {
-                this.$log.warn('Secure data channel: Closed');
+                this.arpLog.warn('Secure data channel: Closed');
             };
 
             // Mark as handed over
@@ -1056,7 +1071,7 @@ export class WebClientService {
 
             // The communication channel is now open! Fetch initial data
             this.onConnectionEstablished(resumeSession).catch((error) => {
-                this.$log.error(this.logTag, 'Error during handshake:', error);
+                this.arpLog.error('Error during handshake:', error);
             });
         }
     }
@@ -1071,16 +1086,14 @@ export class WebClientService {
                 if (this.stateService.taskConnectionState === threema.TaskConnectionState.Connected) {
                     this.stateService.updateTaskConnectionState(threema.TaskConnectionState.Reconnecting);
                 } else {
-                    this.$log.debug(
-                        this.logTag,
+                    this.arpLog.debug(
                         'Ignoring peer-disconnected event (state is '
                         + this.stateService.taskConnectionState + ')',
                     );
                 }
                 break;
             default:
-                this.$log.debug(
-                    this.logTag,
+                this.arpLog.debug(
                     'Ignoring peer-disconnected event (chosen task is ' + this.chosenTask + ')',
                 );
         }
@@ -1166,13 +1179,13 @@ export class WebClientService {
      * Return a promise that resolves once connected.
      */
     public start(skipPush: boolean = false): ng.IPromise<any> {
-        this.$log.debug(this.logTag, 'Starting WebClientService...');
+        this.log.debug('Starting WebClientService...');
 
         // Promise to track startup state
         if (this.startupPromise !== null) {
-            this.$log.debug(this.logTag, 'Reusing startup promise (was not resolved)');
+            this.log.debug('Reusing startup promise (was not resolved)');
         } else {
-            this.$log.debug(this.logTag, 'Creating new startup promise');
+            this.log.debug('Creating new startup promise');
             this.startupPromise = this.$q.defer();
         }
         this.startupDone = false;
@@ -1184,12 +1197,12 @@ export class WebClientService {
         // If push service is available, notify app
         if (this.pushService.isAvailable()) {
             if (skipPush === true) {
-                this.$log.debug(this.logTag, 'start(): Skipping push notification');
+                this.log.debug('start(): Skipping push notification');
             } else {
                 this.sendPush();
             }
         } else if (this.trustedKeyStore.hasTrustedKey()) {
-            this.$log.debug(this.logTag, 'Push service not available');
+            this.log.debug('Push service not available');
             this.stateService.updateConnectionBuildupState('manual_start');
         }
 
@@ -1217,7 +1230,7 @@ export class WebClientService {
         if (args.close === true) {
             throw new Error('args.close has been set to "true" but requires a redirect state instead');
         }
-        this.$log.info(this.logTag, `Stopping (reason=${args.reason}, send=${args.send}, close=${args.close}, ` +
+        this.log.info(`Stopping (reason=${args.reason}, send=${args.send}, close=${args.close}, ` +
             'connectionBuildupState=' +
             `${args.connectionBuildupState !== undefined ? args.connectionBuildupState : 'n/a'})`);
         let close = args.close !== false;
@@ -1252,7 +1265,7 @@ export class WebClientService {
         if (this.pushTimer !== null) {
             this.cancelPush(0);
         }
-        this.$log.debug(this.logTag, 'Timer stopped');
+        this.log.debug('Timer stopped');
 
         // Reset states
         this.stateService.reset(args.connectionBuildupState);
@@ -1293,7 +1306,7 @@ export class WebClientService {
             this.pushService.reset();
 
             // Closed!
-            this.$log.debug(this.logTag, 'Session closed (cannot be resumed)');
+            this.arpLog.debug('Session closed (cannot be resumed)');
         } else {
             // Only reuse a previous chunk cache if the handshake had been
             // completed
@@ -1303,12 +1316,12 @@ export class WebClientService {
                 this.previousIncomingChunkSequenceNumber = this.currentIncomingChunkSequenceNumber;
                 this.previousChunkCache = this.currentChunkCache;
             }
-            this.$log.debug(this.logTag, 'Session remains open');
+            this.arpLog.debug('Session remains open');
         }
 
         // Close data channel
         if (this.secureDataChannel !== null) {
-            this.$log.debug(this.logTag, 'Closing secure datachannel');
+            this.arpLog.debug('Closing secure datachannel');
             this.secureDataChannel.onopen = null;
             this.secureDataChannel.onmessage = null;
             this.secureDataChannel.onbufferedamountlow = null;
@@ -1322,7 +1335,7 @@ export class WebClientService {
             this.relayedDataTask.off();
         }
         if (this.salty !== null) {
-            this.$log.debug(this.logTag, 'Closing signaling');
+            this.arpLog.debug('Closing signaling');
             this.salty.off();
             this.salty.disconnect(true);
         }
@@ -1331,9 +1344,9 @@ export class WebClientService {
         if (this.pcHelper !== null) {
             this.pcHelper.onConnectionStateChange = null;
             this.pcHelper.close();
-            this.$log.debug(this.logTag, 'Peer connection closed');
+            this.arpLog.debug('Peer connection closed');
         } else {
-            this.$log.debug(this.logTag, 'Peer connection was null');
+            this.arpLog.debug('Peer connection was null');
         }
 
         // Done, redirect now if session closed
@@ -1356,7 +1369,7 @@ export class WebClientService {
      * if at least one "turn:" server with tcp transport is in the list.
      */
     public skipIceTls(): void {
-        this.$log.debug(this.logTag, 'Requested to remove TURNS server from ICE configuration');
+        this.arpLog.debug('Requested to remove TURN-TLS server from ICE configuration');
         const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
         if (allUrls.some((url) => url.startsWith('turn:') && url.endsWith('=tcp'))) {
             // There's at least one TURN server with TCP transport in the list
@@ -1366,7 +1379,7 @@ export class WebClientService {
                 server.urls = urls.filter((url) => !url.startsWith('turns:'));
             }
         } else {
-            this.$log.debug(this.logTag, 'No fallback TURN TCP server present, keeping TURNS server');
+            this.arpLog.debug('No fallback TURN-TCP server present, keeping TURN-TLS server');
         }
     }
 
@@ -1377,7 +1390,7 @@ export class WebClientService {
      * in the ICE_SERVERS configuration with turn.threema.ch.
      */
     public skipIceDs(): void {
-        this.$log.debug(this.logTag, 'Requested to replace DS servers in ICE configuration');
+        this.arpLog.debug('Requested to replace DS servers in ICE configuration');
         const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
         if (allUrls.some((url) => url.includes('ds-turn.threema.ch'))) {
             for (const server of this.config.ICE_SERVERS) {
@@ -1388,7 +1401,7 @@ export class WebClientService {
                 });
             }
         } else {
-            this.$log.debug(this.logTag, 'No ds-turn ICE server present');
+            this.arpLog.debug('No ds-turn ICE server present');
         }
     }
 
@@ -1397,11 +1410,11 @@ export class WebClientService {
      */
     public registerInitializationStep(name: threema.InitializationStep) {
         if (this.initialized.has(name) ) {
-            this.$log.warn(this.logTag, 'Initialization step "' + name + '" already registered');
+            this.arpLog.warn('Initialization step "' + name + '" already registered');
             return;
         }
 
-        this.$log.debug(this.logTag, 'Initialization step "' + name + '" done');
+        this.arpLog.debug('Initialization step "' + name + '" done');
         this.initialized.add(name);
 
         // Check pending routines
@@ -1411,7 +1424,7 @@ export class WebClientService {
             });
 
             if (ready) {
-                this.$log.debug(this.logTag, 'Running routine after initialization "' + name + '" completed');
+                this.arpLog.debug('Running routine after initialization "' + name + '" completed');
 
                 // Important: Remove the routine BEFORE calling it to prevent
                 //            it from being called more than once (due to nested
@@ -1470,7 +1483,7 @@ export class WebClientService {
      * Send a client info request.
      */
     public requestClientInfo(): void {
-        this.$log.debug('Sending client info request');
+        this.arpLog.debug('Sending client info request');
         const browser = this.browserService.getBrowser();
         const data: object = {
             [WebClientService.ARGUMENT_USER_AGENT]: navigator.userAgent,
@@ -1490,7 +1503,7 @@ export class WebClientService {
      * Send a receivers request.
      */
     public requestReceivers(): void {
-        this.$log.debug('Sending receivers request');
+        this.arpLog.debug('Sending receivers request');
         const subType = WebClientService.SUB_TYPE_RECEIVERS;
         this.sendRequestWireMessage(subType, !this.requiresTemporaryIdBackwardsCompatibility)
             .catch(this.failSessionOnReject(WebClientService.TYPE_REQUEST, subType)); // critical request
@@ -1500,7 +1513,7 @@ export class WebClientService {
      * Send a conversation request.
      */
     public requestConversations(): void {
-        this.$log.debug('Sending conversation request');
+        this.arpLog.debug('Sending conversation request');
         const subType = WebClientService.SUB_TYPE_CONVERSATIONS;
         const args = {[WebClientService.ARGUMENT_MAX_SIZE]: WebClientService.AVATAR_LOW_MAX_SIZE};
         this.sendRequestWireMessage(subType, !this.requiresTemporaryIdBackwardsCompatibility, args)
@@ -1511,7 +1524,7 @@ export class WebClientService {
      * Send a battery status request.
      */
     public requestBatteryStatus(): void {
-        this.$log.debug('Sending battery status request');
+        this.arpLog.debug('Sending battery status request');
         const subType = WebClientService.SUB_TYPE_BATTERY_STATUS;
         this.sendRequestWireMessage(subType, !this.requiresTemporaryIdBackwardsCompatibility)
             .catch(this.failSessionOnReject(WebClientService.TYPE_REQUEST, subType)); // critical request
@@ -1521,7 +1534,7 @@ export class WebClientService {
      * Send a profile request.
      */
     public requestProfile(): void {
-        this.$log.debug('Sending profile request');
+        this.arpLog.debug('Sending profile request');
         const subType = WebClientService.SUB_TYPE_PROFILE;
         this.sendRequestWireMessage(subType, !this.requiresTemporaryIdBackwardsCompatibility)
             .catch(this.failSessionOnReject(WebClientService.TYPE_REQUEST, subType)); // critical request
@@ -1537,12 +1550,12 @@ export class WebClientService {
      * message update.
      */
     public requestMessages(receiver: threema.Receiver): string | null {
-        this.$log.debug(this.logTag, 'requestMessages');
+        this.arpLog.debug('requestMessages');
 
         // If there are no more messages available, stop here.
         if (!this.messages.hasMore(receiver)) {
             this.messages.notify(receiver, this.$rootScope);
-            this.$log.debug(this.logTag, 'requestMessages: No more messages available');
+            this.arpLog.debug('requestMessages: No more messages available');
             return null;
         }
 
@@ -1550,7 +1563,7 @@ export class WebClientService {
 
         // Check if messages have already been requested
         if (this.messages.isRequested(receiver)) {
-            this.$log.debug(this.logTag, 'requestMessages: Already requested');
+            this.arpLog.debug('requestMessages: Already requested');
             return null;
         }
 
@@ -1573,7 +1586,7 @@ export class WebClientService {
         }
 
         // Send request
-        this.$log.debug('Sending message request for', receiver.type, receiver.id,
+        this.arpLog.debug('Sending message request for', receiver.type, receiver.id,
             'with message id', msgId);
         const subType = WebClientService.SUB_TYPE_MESSAGES;
         // TODO: Return the promise instead to unset the 'requested' flag?
@@ -1612,7 +1625,7 @@ export class WebClientService {
            args[WebClientService.ARGUMENT_MAX_SIZE] = WebClientService.AVATAR_LOW_MAX_SIZE;
         }
 
-        this.$log.debug('Sending', resolution, 'res avatar request for', receiver.type, receiver.id);
+        this.arpLog.debug('Sending', resolution, 'res avatar request for', receiver.type, receiver.id);
         const subType = WebClientService.SUB_TYPE_AVATAR;
         return this.sendRequestWireMessage(subType, true, args);
     }
@@ -1635,7 +1648,7 @@ export class WebClientService {
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
         };
 
-        this.$log.debug('Sending thumbnail request for', receiver.type, message.id);
+        this.arpLog.debug('Sending thumbnail request for', receiver.type, message.id);
         const subType = WebClientService.SUB_TYPE_THUMBNAIL;
         return this.sendRequestWireMessage(subType, true, args);
     }
@@ -1646,7 +1659,7 @@ export class WebClientService {
     public requestBlob(msgId: string, receiver: threema.Receiver): Promise<threema.BlobInfo> {
         const cached = this.blobCache.get(msgId + receiver.type);
         if (cached !== undefined) {
-            this.$log.debug(this.logTag, 'Use cached blob');
+            this.arpLog.debug('Use cached blob');
             return new Promise((resolve) => {
                 resolve(cached);
             });
@@ -1656,7 +1669,7 @@ export class WebClientService {
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_MESSAGE_ID]: msgId,
         };
-        this.$log.debug('Sending blob request for message', msgId);
+        this.arpLog.debug('Sending blob request for message', msgId);
         return this.sendRequestWireMessage(WebClientService.SUB_TYPE_BLOB, true, args);
     }
 
@@ -1666,11 +1679,11 @@ export class WebClientService {
     public requestRead(receiver, newestMessage: threema.Message): void {
         if (newestMessage.id === undefined) {
             // Message that hasn't been sent yet
-            this.$log.warn(this.logTag, 'Called requestRead on a message without id');
+            this.arpLog.warn('Called requestRead on a message without id');
             return;
         }
         if (newestMessage.type === 'status') {
-            this.$log.warn(this.logTag, 'Called requestRead on a status message');
+            this.arpLog.warn('Called requestRead on a status message');
             return;
         }
 
@@ -1680,7 +1693,7 @@ export class WebClientService {
             [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
             [WebClientService.ARGUMENT_MESSAGE_ID]: newestMessage.id.toString(),
         };
-        this.$log.debug('Sending read request for', receiver.type, receiver.id, '(msg ' + newestMessage.id + ')');
+        this.arpLog.debug('Sending read request for', receiver.type, receiver.id, '(msg ' + newestMessage.id + ')');
         const subType = WebClientService.SUB_TYPE_READ;
         this.sendRequestWireMessage(subType, !this.requiresTemporaryIdBackwardsCompatibility, args)
             .catch(this.logOnReject(WebClientService.TYPE_REQUEST, subType));
@@ -1785,8 +1798,8 @@ export class WebClientService {
                                             // can receive images (feature flag 0x01) than otherwise. And if one
                                             // of the contacts really cannot receive images, the app will return
                                             // an error message.
-                                            this.$log.error(`Cannot retrieve contact ${identity}`);
-                                        } else if (!hasFeature(contact, requiredFeature, this.$log)) {
+                                            this.arpLog.error(`Cannot retrieve contact ${identity}`);
+                                        } else if (!hasFeature(contact, requiredFeature, this.log)) {
                                             unsupportedMembers.push(contact.displayName);
                                         }
                                     }
@@ -1801,10 +1814,10 @@ export class WebClientService {
                             case 'contact':
                                 const contact = this.contacts.get(receiver.id);
                                 if (contact === undefined) {
-                                    this.$log.error('Cannot retrieve contact');
+                                    this.arpLog.error('Cannot retrieve contact');
                                     return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                                } else if (!hasFeature(contact, requiredFeature, this.$log)) {
-                                    this.$log.debug('Cannot send message: Feature level mismatch:',
+                                } else if (!hasFeature(contact, requiredFeature, this.log)) {
+                                    this.arpLog.debug('Cannot send message: Feature level mismatch:',
                                         contact.featureMask, 'does not include', requiredFeature);
                                     return reject(this.$translate.instant(invalidFeatureMessage, {
                                         receiverName: contact.displayName}));
@@ -1815,7 +1828,7 @@ export class WebClientService {
                         }
                         break;
                     default:
-                        this.$log.warn('Invalid message type:', type);
+                        this.arpLog.warn('Invalid message type:', type);
                         return reject();
                 }
 
@@ -1831,7 +1844,7 @@ export class WebClientService {
                 // Send message
                 this.sendCreateWireMessage(subType, true, args, message, id)
                     .catch((error) => {
-                        this.$log.error('Error sending message:', error);
+                        this.arpLog.error('Error sending message:', error);
 
                         // Remove temporary message
                         this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
@@ -1954,7 +1967,7 @@ export class WebClientService {
 
         // If no changes happened, resolve the promise immediately.
         if (Object.keys(data).length === 0) {
-            this.$log.warn(this.logTag, 'Trying to modify contact without any changes');
+            this.arpLog.warn('Trying to modify contact without any changes');
             return Promise.resolve(contact);
         }
 
@@ -1993,7 +2006,7 @@ export class WebClientService {
 
         // If no changes happened, resolve the promise immediately.
         if (Object.keys(data).length === 0) {
-            this.$log.warn(this.logTag, 'Trying to modify conversation without any changes');
+            this.arpLog.warn('Trying to modify conversation without any changes');
             return Promise.resolve(null);
         }
 
@@ -2178,7 +2191,7 @@ export class WebClientService {
 
         // If no changes happened, resolve the promise immediately.
         if (Object.keys(data).length === 0) {
-            this.$log.warn(this.logTag, 'Trying to modify profile without any changes');
+            this.arpLog.warn('Trying to modify profile without any changes');
             return Promise.resolve(null);
         }
 
@@ -2248,7 +2261,7 @@ export class WebClientService {
      * Reset data related to initialization.
      */
     private _resetInitializationSteps(): void {
-        this.$log.debug(this.logTag, 'Reset initialization steps');
+        this.arpLog.debug('Reset initialization steps');
         this.initialized.clear();
         this.pendingInitializationStepRoutines = new Set();
     }
@@ -2288,7 +2301,7 @@ export class WebClientService {
 
     // TODO: Deprecated, remove soon.
     private _receiveResponseConfirmAction(message: threema.WireMessage): void {
-        this.$log.debug('Received confirmAction response');
+        this.arpLog.debug('Received confirmAction response');
         const future = this.popWireMessageFuture(message);
         if (!message.ack.success) {
             future.reject(message.ack.error);
@@ -2298,7 +2311,7 @@ export class WebClientService {
     }
 
     private _receiveResponseReceivers(message: threema.WireMessage): void {
-        this.$log.debug('Received receivers response');
+        this.arpLog.debug('Received receivers response');
         const future = this.popWireMessageFuture(message, this.requiresTemporaryIdBackwardsCompatibility);
 
         // Handle error (if any)
@@ -2309,7 +2322,7 @@ export class WebClientService {
         // Unpack and validate data
         const data = message.data;
         if (data === undefined) {
-            this.$log.warn('Invalid receivers response, data missing');
+            this.arpLog.warn('Invalid receivers response, data missing');
             return future.reject('invalidResponse');
         }
 
@@ -2326,7 +2339,7 @@ export class WebClientService {
     }
 
     private _receiveResponseContactDetail(message: threema.WireMessage): void {
-        this.$log.debug('Received contact detail response');
+        this.arpLog.debug('Received contact detail response');
         const future = this.popWireMessageFuture(message);
 
         // Handle error (if any)
@@ -2338,7 +2351,7 @@ export class WebClientService {
         const args = message.args;
         const data = message.data;
         if (args === undefined || data === undefined) {
-            this.$log.error('Invalid contact response, args or data missing');
+            this.arpLog.error('Invalid contact response, args or data missing');
             return future.reject('invalidResponse');
         }
 
@@ -2354,7 +2367,7 @@ export class WebClientService {
     }
 
     private _receiveUpdateAlert(message: threema.WireMessage): void {
-        this.$log.debug('Received alert');
+        this.arpLog.debug('Received alert');
         this.alerts.push({
             source: message.args.source,
             type: message.args.type,
@@ -2374,13 +2387,13 @@ export class WebClientService {
      * A connectionAck update arrived.
      */
     private _receiveUpdateConnectionAck(message: threema.WireMessage) {
-        this.$log.debug('Received connection ack');
+        this.arpLog.debug('Received connection ack');
         if (!hasValue(message.data)) {
-            this.$log.warn(this.logTag, 'Invalid connectionAck message: data missing');
+            this.arpLog.warn('Invalid connectionAck message: data missing');
             return;
         }
         if (!hasValue(message.data.sequenceNumber)) {
-            this.$log.warn(this.logTag, 'Invalid connectionAck message: sequenceNumber missing');
+            this.arpLog.warn('Invalid connectionAck message: sequenceNumber missing');
             return;
         }
         const sequenceNumber = message.data.sequenceNumber;
@@ -2388,16 +2401,16 @@ export class WebClientService {
         // Remove chunks which have already been received by the remote side
         const size = this.currentChunkCache.byteLength;
         let result;
-        this.$log.debug(`Pruning cache (local-sn=${this.currentChunkCache.sequenceNumber.get()}, ` +
+        this.arpLog.debug(`Pruning cache (local-sn=${this.currentChunkCache.sequenceNumber.get()}, ` +
             `remote-sn=${sequenceNumber})`);
         try {
             result = this.currentChunkCache.prune(sequenceNumber);
         } catch (error) {
-            this.$log.error(this.logTag, error);
+            this.arpLog.error(error);
             this.failSession();
             return;
         }
-        this.$log.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
+        this.arpLog.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
             `${size} -> ${this.currentChunkCache.byteLength}`);
 
         // Clear pending ack requests
@@ -2410,15 +2423,15 @@ export class WebClientService {
      * A connectionDisconnect message arrived.
      */
     private _receiveUpdateConnectionDisconnect(message: threema.WireMessage) {
-        this.$log.debug(this.logTag, 'Received connectionDisconnect');
+        this.arpLog.debug('Received connectionDisconnect');
 
         if (!hasValue(message.data) || !hasValue(message.data.reason)) {
-            this.$log.warn(this.logTag, 'Invalid connectionDisconnect message: data or reason missing');
+            this.arpLog.warn('Invalid connectionDisconnect message: data or reason missing');
             return;
         }
         const reason = message.data.reason;
 
-        this.$log.debug(this.logTag, `Disconnecting requested (reason: ${reason})`);
+        this.arpLog.debug(`Disconnecting requested (reason: ${reason})`);
 
         let alertMessage: string;
         switch (reason) {
@@ -2439,7 +2452,7 @@ export class WebClientService {
                 break;
             default:
                 alertMessage = 'connection.SESSION_ERROR';
-                this.$log.error(this.logTag, 'Unknown disconnect reason:', reason);
+                this.arpLog.error('Unknown disconnect reason:', reason);
                 break;
         }
 
@@ -2458,7 +2471,7 @@ export class WebClientService {
         //       'welcome' page.
         if (isWelcome) {
             this.$state.reload().catch((error) => {
-                this.$log.error('Unable to reload state:', error);
+                this.log.error('Unable to reload state:', error);
             });
         }
         this.showAlert(alertMessage);
@@ -2468,7 +2481,7 @@ export class WebClientService {
      * A connectionInfo message arrived.
      */
     private _receiveConnectionInfo(message: threema.WireMessage) {
-        this.$log.debug('Received connectionInfo from device');
+        this.arpLog.debug('Received connectionInfo from device');
         if (!hasValue(message.data)) {
             this.connectionInfoFuture.reject('Invalid connectionInfo message: data missing');
             return;
@@ -2514,7 +2527,7 @@ export class WebClientService {
         receiverType: threema.ReceiverType,
         future: Future<any>,
     ): void {
-        this.$log.debug(`Received ${receiverType} ${message.subType}`);
+        this.arpLog.debug(`Received ${receiverType} ${message.subType}`);
 
         // Handle error (if any)
         if (message.ack !== undefined && !message.ack.success) {
@@ -2524,7 +2537,7 @@ export class WebClientService {
         // Unpack and validate data
         const data = message.data;
         if (data === undefined) {
-            this.$log.error(`Invalid ${receiverType} response, 'data' is missing`);
+            this.arpLog.error(`Invalid ${receiverType} response, 'data' is missing`);
             return future.reject('invalidResponse');
         }
 
@@ -2563,7 +2576,7 @@ export class WebClientService {
     }
 
     private _receiveCreateMessage(message: threema.WireMessage): void {
-        this.$log.debug('Received create message response');
+        this.arpLog.debug('Received create message response');
         const future = this.popWireMessageFuture(message);
 
         // Handle error (if any)
@@ -2575,7 +2588,7 @@ export class WebClientService {
         const args = message.args;
         const data = message.data;
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid create message received, arguments or data missing');
+            this.arpLog.warn('Invalid create message received, arguments or data missing');
             return future.reject('invalidResponse');
         }
 
@@ -2583,7 +2596,7 @@ export class WebClientService {
         const receiverId: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
         const messageId: string = data[WebClientService.ARGUMENT_MESSAGE_ID];
         if (receiverType === undefined || receiverId === undefined || messageId === undefined) {
-            this.$log.warn("Invalid create received: 'type', 'id' or 'messageId' missing");
+            this.arpLog.warn("Invalid create received: 'type', 'id' or 'messageId' missing");
             return future.reject('invalidResponse');
         }
 
@@ -2601,7 +2614,7 @@ export class WebClientService {
     }
 
     private _receiveResponseConversations(message: threema.WireMessage) {
-        this.$log.debug('Received conversations response');
+        this.arpLog.debug('Received conversations response');
         const future = this.popWireMessageFuture(message, this.requiresTemporaryIdBackwardsCompatibility);
 
         // Handle error (if any)
@@ -2612,7 +2625,7 @@ export class WebClientService {
         // Validate data
         const data = message.data as threema.Conversation[];
         if (data === undefined) {
-            this.$log.warn('Invalid conversation response, data missing');
+            this.arpLog.warn('Invalid conversation response, data missing');
             return future.reject('invalidResponse');
         }
 
@@ -2646,7 +2659,7 @@ export class WebClientService {
     }
 
     private _receiveResponseMessages(message: threema.WireMessage): void {
-        this.$log.debug('Received messages response');
+        this.arpLog.debug('Received messages response');
         const future = this.popWireMessageFuture(message, this.requiresTemporaryIdBackwardsCompatibility);
 
         // Handle error (if any)
@@ -2658,7 +2671,7 @@ export class WebClientService {
         const args = message.args;
         const data = message.data as threema.Message[];
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid messages response, data or arguments missing');
+            this.arpLog.warn('Invalid messages response, data or arguments missing');
             return future.reject('invalidResponse');
         }
 
@@ -2667,14 +2680,14 @@ export class WebClientService {
         const id: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
         let more: boolean = args[WebClientService.ARGUMENT_HAS_MORE];
         if (type === undefined || id === undefined || more === undefined) {
-            this.$log.warn('Invalid messages response, argument field missing');
+            this.arpLog.warn('Invalid messages response, argument field missing');
             return future.reject('invalidResponse');
         }
         if (!isValidReceiverType(type)) {
-            this.$log.warn('Invalid messages response, unknown receiver type (' + type + ')');
+            this.arpLog.warn('Invalid messages response, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
         }
-        if (this.config.DEBUG_ARP) {
+        if (this.config.ARP_LOG_TRACE) {
             this.logChatMessages(message.type, message.subType, type, id, 'new', data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
@@ -2691,7 +2704,7 @@ export class WebClientService {
         // TODO: Isn't this a bogus check since we know that we have made the
         //       request at this point?
         if (!this.messages.isRequested(receiver)) {
-            this.$log.warn("Ignoring message response that hasn't been requested");
+            this.arpLog.warn("Ignoring message response that hasn't been requested");
             return future.reject('invalidResponse');
         }
 
@@ -2712,7 +2725,7 @@ export class WebClientService {
     }
 
     private _receiveResponseAvatar(message: threema.WireMessage): void {
-        this.$log.debug('Received avatar response');
+        this.arpLog.debug('Received avatar response');
         const future = this.popWireMessageFuture(message);
 
         // Handle error (if any)
@@ -2723,7 +2736,7 @@ export class WebClientService {
         // Unpack data and arguments
         const args = message.args;
         if (args === undefined) {
-            this.$log.warn('Invalid message response: arguments missing');
+            this.arpLog.warn('Invalid message response: arguments missing');
             return future.reject('invalidResponse');
         }
 
@@ -2739,7 +2752,7 @@ export class WebClientService {
         const id = args[WebClientService.ARGUMENT_RECEIVER_ID];
         const highResolution = args[WebClientService.ARGUMENT_AVATAR_HIGH_RESOLUTION];
         if (type === undefined || id === undefined || highResolution === undefined) {
-            this.$log.warn('Invalid avatar response, argument field missing');
+            this.arpLog.warn('Invalid avatar response, argument field missing');
             return future.reject('invalidResponse');
         }
 
@@ -2754,7 +2767,7 @@ export class WebClientService {
     }
 
     private _receiveResponseThumbnail(message: threema.WireMessage): void {
-        this.$log.debug('Received thumbnail response');
+        this.arpLog.debug('Received thumbnail response');
         const future = this.popWireMessageFuture(message);
 
         // Handle error (if any)
@@ -2765,7 +2778,7 @@ export class WebClientService {
         // Unpack data and arguments
         const args = message.args;
         if (args === undefined) {
-            this.$log.warn('Invalid message response: arguments missing');
+            this.arpLog.warn('Invalid message response: arguments missing');
             return future.reject('invalidResponse');
         }
 
@@ -2781,7 +2794,7 @@ export class WebClientService {
         const id = args[WebClientService.ARGUMENT_RECEIVER_ID];
         const messageId: string = args[WebClientService.ARGUMENT_MESSAGE_ID];
         if (type === undefined || id === undefined || messageId === undefined ) {
-            this.$log.warn('Invalid thumbnail response, argument field missing');
+            this.arpLog.warn('Invalid thumbnail response, argument field missing');
             return future.reject('invalidResponse');
         }
 
@@ -2791,7 +2804,7 @@ export class WebClientService {
     }
 
     private _receiveResponseBlob(message: threema.WireMessage): void {
-        this.$log.debug('Received blob response');
+        this.arpLog.debug('Received blob response');
         const future = this.popWireMessageFuture(message);
 
         // Handle error (if any)
@@ -2803,7 +2816,7 @@ export class WebClientService {
         const args = message.args;
         const data = message.data;
         if (args === undefined) {
-            this.$log.warn('Invalid message response, args missing');
+            this.arpLog.warn('Invalid message response, args missing');
             return future.reject('invalidResponse');
         }
 
@@ -2812,7 +2825,7 @@ export class WebClientService {
         const receiverId = args[WebClientService.ARGUMENT_RECEIVER_ID];
         const msgId: string = args[WebClientService.ARGUMENT_MESSAGE_ID];
         if (receiverType === undefined || receiverId === undefined || msgId === undefined) {
-            this.$log.warn('Invalid blob response, argument field missing');
+            this.arpLog.warn('Invalid blob response, argument field missing');
             return future.reject('invalidResponse');
         }
 
@@ -2823,7 +2836,7 @@ export class WebClientService {
             filename: data[WebClientService.DATA_FIELD_BLOB_NAME],
         };
         if (blobInfo.buffer === undefined || blobInfo.mimetype === undefined || blobInfo.filename === undefined) {
-            this.$log.warn('Invalid blob response, data field missing');
+            this.arpLog.warn('Invalid blob response, data field missing');
             return future.reject('invalidResponse');
         }
 
@@ -2833,7 +2846,7 @@ export class WebClientService {
     }
 
     private _receiveUpdateConfirm(message: threema.WireMessage): void {
-        this.$log.debug('Received wire message acknowledgement');
+        this.arpLog.debug('Received wire message acknowledgement');
         const future = this.popWireMessageFuture(message);
         if (!message.ack.success) {
             future.reject(message.ack.error);
@@ -2843,7 +2856,7 @@ export class WebClientService {
     }
 
     private _receiveUpdateMessages(message: threema.WireMessage): void {
-        this.$log.debug('Received messages update');
+        this.arpLog.debug('Received messages update');
         const future = this.popWireMessageFuture(message, true);
 
         // Handle error (if any)
@@ -2855,7 +2868,7 @@ export class WebClientService {
         const args = message.args;
         const data: threema.Message[] = message.data;
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid message update, data or arguments missing');
+            this.arpLog.warn('Invalid message update, data or arguments missing');
             return future.reject('invalidResponse');
         }
 
@@ -2864,14 +2877,14 @@ export class WebClientService {
         const id: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
         const mode: string = args[WebClientService.ARGUMENT_MODE];
         if (type === undefined || id === undefined || mode === undefined) {
-            this.$log.warn('Invalid message update, argument field missing');
+            this.arpLog.warn('Invalid message update, argument field missing');
             return future.reject('invalidResponse');
         }
         if (!isValidReceiverType(type)) {
-            this.$log.warn(this.logTag, 'Invalid messages update, unknown receiver type (' + type + ')');
+            this.arpLog.warn('Invalid messages update, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
         }
-        if (this.config.DEBUG_ARP) {
+        if (this.config.ARP_LOG_TRACE) {
             this.logChatMessages(message.type, message.subType, type, id, mode, data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
@@ -2894,8 +2907,8 @@ export class WebClientService {
                 case WebClientService.ARGUMENT_MODE_MODIFIED:
                     if (!this.messages.update(receiver, msg)) {
                         const log = `Received message update for unknown message (id ${msg.id})`;
-                        this.$log.error(this.logTag, log);
-                        if (this.config.DEBUG_ARP) {
+                        this.arpLog.error(log);
+                        if (this.config.ARP_LOG_TRACE) {
                             this.messages.addStatusMessage(receiver, 'Warning: ' + log);
                             notify = true;
                         }
@@ -2903,12 +2916,12 @@ export class WebClientService {
                     break;
                 case WebClientService.ARGUMENT_MODE_REMOVED:
                     if (!this.messages.remove(receiver, msg.id)) {
-                        this.$log.error(this.logTag, `Received message deletion for unknown message (id ${msg.id})`);
+                        this.arpLog.error(`Received message deletion for unknown message (id ${msg.id})`);
                     }
                     notify = true;
                     break;
                 default:
-                    this.$log.warn(this.logTag, 'Invalid message response, unknown mode:', mode);
+                    this.arpLog.warn('Invalid message response, unknown mode:', mode);
             }
         }
         if (notify) {
@@ -2918,13 +2931,13 @@ export class WebClientService {
     }
 
     private _receiveUpdateReceiver(message: threema.WireMessage): void {
-        this.$log.debug('Received receiver update');
+        this.arpLog.debug('Received receiver update');
 
         // Unpack data and arguments
         const args = message.args;
         const data = message.data;
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid receiver update, data or arguments missing');
+            this.arpLog.warn('Invalid receiver update, data or arguments missing');
             return;
         }
 
@@ -2933,7 +2946,7 @@ export class WebClientService {
         const id = args[WebClientService.ARGUMENT_RECEIVER_ID];
         const mode: 'new' | 'modified' | 'removed' = args[WebClientService.ARGUMENT_MODE];
         if (type === undefined || mode === undefined || id === undefined) {
-            this.$log.warn('Invalid receiver update, argument field missing');
+            this.arpLog.warn('Invalid receiver update, argument field missing');
             return;
         }
 
@@ -2954,25 +2967,25 @@ export class WebClientService {
                 (this.receivers.get(type) as Map<string, threema.Receiver>).delete(id);
                 break;
             default:
-                this.$log.warn('Invalid receiver response, unknown mode:', mode);
+                this.arpLog.warn('Invalid receiver response, unknown mode:', mode);
         }
     }
 
     private _receiveUpdateReceivers(message: threema.WireMessage): void {
-        this.$log.debug('Received receivers update');
+        this.arpLog.debug('Received receivers update');
 
         // Unpack data and arguments
         const args = message.args;
         const data = message.data;
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid receiver update, data or arguments missing');
+            this.arpLog.warn('Invalid receiver update, data or arguments missing');
             return;
         }
 
         // Unpack required argument fields
         const type = args[WebClientService.ARGUMENT_RECEIVER_TYPE] as threema.ReceiverType;
         if (type === undefined) {
-            this.$log.warn('Invalid receivers update, argument field missing');
+            this.arpLog.warn('Invalid receivers update, argument field missing');
             return;
         }
 
@@ -2989,32 +3002,32 @@ export class WebClientService {
                 this.receivers.setDistributionLists(data);
                 break;
             default:
-                this.$log.warn('Unknown receiver type:', type);
+                this.arpLog.warn('Unknown receiver type:', type);
         }
     }
 
     private _receiveUpdateTyping(message: threema.WireMessage): void {
-        this.$log.debug('Received typing update');
+        this.arpLog.debug('Received typing update');
 
         // Unpack data and arguments
         const args = message.args;
         const data = message.data;
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid typing update, data or arguments missing');
+            this.arpLog.warn('Invalid typing update, data or arguments missing');
             return;
         }
 
         // Unpack required argument fields
         const identity: string = args[WebClientService.ARGUMENT_RECEIVER_ID];
         if (identity === undefined) {
-            this.$log.warn('Invalid typing update, argument field missing');
+            this.arpLog.warn('Invalid typing update, argument field missing');
             return;
         }
 
         // Unpack required data fields
         const isTyping: boolean = data[WebClientService.ARGUMENT_IS_TYPING];
         if (isTyping === undefined) {
-            this.$log.warn('Invalid typing update, data field missing');
+            this.arpLog.warn('Invalid typing update, data field missing');
             return;
         }
 
@@ -3030,13 +3043,13 @@ export class WebClientService {
     }
 
     private _receiveUpdateConversation(message: threema.WireMessage) {
-        this.$log.debug('Received conversation update');
+        this.arpLog.debug('Received conversation update');
 
         // Validate data
         const args = message.args;
         const data = message.data as threema.ConversationWithPosition;
         if (args === undefined || data === undefined) {
-            this.$log.warn('Invalid conversation update, data or arguments missing');
+            this.arpLog.warn('Invalid conversation update, data or arguments missing');
             return;
         }
 
@@ -3086,12 +3099,12 @@ export class WebClientService {
 
                 // Call on-removed listener
                 this.receiverListener.forEach((listener: threema.ReceiverListener) => {
-                    this.$log.debug(this.logTag, 'Call on removed listener');
+                    this.arpLog.debug('Call on removed listener');
                     listener.onConversationRemoved(receiver);
                 });
                 break;
             default:
-                this.$log.warn(this.logTag, 'Received conversation without a mode');
+                this.arpLog.warn('Received conversation without a mode');
                 break;
         }
 
@@ -3099,18 +3112,18 @@ export class WebClientService {
     }
 
     private _receiveUpdateAvatar(message: threema.WireMessage) {
-        this.$log.debug('Received avatar update');
+        this.arpLog.debug('Received avatar update');
         const args = message.args;
         const data = message.data as ArrayBuffer;
         if (args === undefined) {
-            this.$log.warn('Invalid avatar update, arguments missing');
+            this.arpLog.warn('Invalid avatar update, arguments missing');
             return;
         }
 
         // Get receiver
         const receiver = this.receivers.getData({type: args.type, id: args.id});
         if (receiver === undefined) {
-            this.$log.error(this.logTag, 'Received avatar update for nonexistent receiver');
+            this.arpLog.error('Received avatar update for nonexistent receiver');
             return;
         }
 
@@ -3125,7 +3138,7 @@ export class WebClientService {
      * Process an incoming battery status message.
      */
     private _receiveUpdateBatteryStatus(message: threema.WireMessage): void {
-        this.$log.debug('Received battery status');
+        this.arpLog.debug('Received battery status');
         const future = this.popWireMessageFuture(message, true);
 
         // Handle error (if any)
@@ -3136,13 +3149,12 @@ export class WebClientService {
         // Unpack data and arguments
         const data = message.data as threema.BatteryStatus;
         if (data === undefined) {
-            this.$log.warn('Invalid battery status message, data missing');
+            this.arpLog.warn('Invalid battery status message, data missing');
             return future.reject('invalidResponse');
         }
 
         // Set battery status
         this.batteryStatusService.setStatus(data);
-        this.$log.debug('[BatteryStatusService]', this.batteryStatusService.toString());
         future.resolve();
     }
 
@@ -3165,12 +3177,12 @@ export class WebClientService {
      * Process an incoming profile update message.
      */
     private _receiveUpdateProfile(message: threema.WireMessage): void {
-        this.$log.debug('Received profile update');
+        this.arpLog.debug('Received profile update');
 
         // Unpack data and arguments
         const data = message.data as threema.ProfileUpdate;
         if (data === undefined) {
-            this.$log.warn('Invalid profile update message, data missing');
+            this.arpLog.warn('Invalid profile update message, data missing');
             return;
         }
 
@@ -3199,7 +3211,7 @@ export class WebClientService {
      * identify the active session.
      */
     private _receiveResponseClientInfo(message: threema.WireMessage): void {
-        this.$log.debug('Received client info response');
+        this.arpLog.debug('Received client info response');
         const future = this.popWireMessageFuture(message, this.requiresTemporaryIdBackwardsCompatibility);
 
         // Handle error (if any)
@@ -3210,7 +3222,7 @@ export class WebClientService {
         // Validate data
         const data = message.data;
         if (data === undefined) {
-            this.$log.warn('Invalid client info, data field missing');
+            this.arpLog.warn('Invalid client info, data field missing');
             return future.reject('invalidResponse');
         }
 
@@ -3246,7 +3258,7 @@ export class WebClientService {
             },
         };
 
-        this.$log.debug('Client device:', this.clientInfo.device);
+        this.arpLog.debug('Client device:', this.clientInfo.device);
 
         // Store push token
         if (this.clientInfo.pushToken) {
@@ -3259,7 +3271,7 @@ export class WebClientService {
                     this.pushTokenType = threema.PushTokenType.Apns;
                     break;
                 default:
-                    this.$log.error(this.logTag, 'Invalid operating system in client info');
+                    this.arpLog.error('Invalid operating system in client info');
             }
         }
         if (this.pushToken !== null && this.pushTokenType !== null) {
@@ -3274,7 +3286,7 @@ export class WebClientService {
      * The peer sends information about the current user profile.
      */
     private _receiveResponseProfile(message: threema.WireMessage): void {
-        this.$log.debug('Received profile response');
+        this.arpLog.debug('Received profile response');
         const future = this.popWireMessageFuture(message, this.requiresTemporaryIdBackwardsCompatibility);
 
         // Handle error (if any)
@@ -3285,7 +3297,7 @@ export class WebClientService {
         // Validate data
         const data = message.data as threema.Profile;
         if (data === undefined) {
-            this.$log.warn('Invalid client info, data field missing');
+            this.arpLog.warn('Invalid client info, data field missing');
             return future.reject('invalidResponse');
         }
 
@@ -3482,7 +3494,7 @@ export class WebClientService {
                 }
                 const tag = conversation.type + '-' + conversation.id;
                 const avatar = (sender.avatar && sender.avatar.low)
-                    ? this.$filter('bufferToUrl')(sender.avatar.low, 'image/png')
+                    ? bufferToUrl(sender.avatar.low, 'image/png', this.arpLog)
                     : null;
                 this.notificationService.showNotification(tag, title, body, avatar, () => {
                     this.$state.go('messenger.home.conversation', {
@@ -3508,7 +3520,7 @@ export class WebClientService {
                 this.pushTokenType,
                 password,
             );
-            this.$log.info('Stored trusted key');
+            this.log.info('Stored trusted key');
             return true;
         }
         return false;
@@ -3604,9 +3616,7 @@ export class WebClientService {
 
             // Create & store future
             const future: Future<any> = new Future();
-            if (this.config.DEBUG_ARP) {
-                this.$log.debug(this.logTag, `Added wire message future: ${id} -> ${type}/${subType}`);
-            }
+            this.arpLogV.debug(`Added wire message future: ${id} -> ${type}/${subType}`);
             this.wireMessageFutures.set(message.id, future);
             promise = future;
         } else {
@@ -3710,10 +3720,8 @@ export class WebClientService {
         if (future !== undefined) {
             // Remove the future from the map
             this.wireMessageFutures.delete(id);
-            if (this.config.DEBUG_ARP) {
-                this.$log.debug(this.logTag, `Removed wire message future: ${id} -> ` +
-                    `${message.type}/${message.subType}`);
-            }
+            this.arpLogV.debug(`Removed wire message future: ${id} -> ` +
+                `${message.type}/${message.subType}`);
         } else if (error === undefined) {
             error = new Error(`Wire message future not found for id: ${id}`);
         }
@@ -3736,7 +3744,7 @@ export class WebClientService {
                 this._receiveRequestConnectionAck(message);
                 break;
             default:
-                this.$log.warn(`Ignored request/${type}`);
+                this.arpLog.warn(`Ignored request/${type}`);
                 break;
         }
     }
@@ -3774,7 +3782,7 @@ export class WebClientService {
                 this._receiveResponseContactDetail(message);
                 break;
             default:
-                this.$log.warn(`Ignored response/${type}`);
+                this.arpLog.warn(`Ignored response/${type}`);
                 break;
         }
     }
@@ -3827,7 +3835,7 @@ export class WebClientService {
                 this._receiveUpdateConnectionDisconnect(message);
                 break;
             default:
-                this.$log.warn(`Ignored update/${type}`);
+                this.arpLog.warn(`Ignored update/${type}`);
                 break;
         }
     }
@@ -3848,7 +3856,7 @@ export class WebClientService {
                 this._receiveCreateMessage(message);
                 break;
             default:
-                this.$log.warn(`Ignored response/${type}`);
+                this.arpLog.warn(`Ignored response/${type}`);
                 break;
         }
     }
@@ -3871,9 +3879,10 @@ export class WebClientService {
      * Send a message via the underlying transport.
      */
     private send(message: threema.WireMessage, retransmit: boolean): void {
-        this.$log.debug('Sending', message.type + '/' + message.subType, 'message');
-        if (this.config.DEBUG_ARP) {
-            this.$log.debug('[Message] Outgoing:', message.type, '/', message.subType, message);
+        this.arpLog.debug('Sending', message.type + '/' + message.subType, 'message');
+        if (this.config.ARP_LOG_TRACE) {
+            // Sanitise outgoing message before logging
+            this.arpLogV.debug('Outgoing:', message.type, '/', message.subType, new ConfidentialWireMessage(message));
         }
 
         // TODO: Fix chosenTask may be different between connections in the
@@ -3884,8 +3893,8 @@ export class WebClientService {
                 {
                     // Send bytes through WebRTC DataChannel
                     const bytes: Uint8Array = this.msgpackEncode(message);
-                    if (this.config.DEBUG_MSGPACK) {
-                        this.$log.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
+                    if (this.config.MSGPACK_LOG_TRACE) {
+                        this.msgpackLog.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
                     }
                     this.secureDataChannel.send(bytes);
                 }
@@ -3898,8 +3907,8 @@ export class WebClientService {
 
                     // Send bytes through e2e encrypted WebSocket
                     const bytes: Uint8Array = this.msgpackEncode(message);
-                    if (this.config.DEBUG_MSGPACK) {
-                        this.$log.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
+                    if (this.config.MSGPACK_LOG_TRACE) {
+                        this.msgpackLog.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
                     }
 
                     // Increment the outgoing message sequence number
@@ -3923,7 +3932,7 @@ export class WebClientService {
                 }
                 break;
             default:
-                this.$log.error(this.logTag, 'Trying to send message, but no chosen task set');
+                this.arpLog.error('Trying to send message, but no chosen task set');
         }
     }
 
@@ -3942,9 +3951,9 @@ export class WebClientService {
         // send a wakeup push.
         if (shouldQueue) {
             chunkCache = this.previousChunkCache;
-            this.$log.debug(this.logTag, 'Currently not connected, queueing chunk');
+            this.arpLog.debug('Currently not connected, queueing chunk');
             if (!this.pushService.isAvailable()) {
-                this.$log.warn(this.logTag, 'Push service not available, cannot wake up peer!');
+                this.log.warn('Push service not available, cannot wake up peer!');
                 retransmit = false;
             }
             if (retransmit) {
@@ -3958,13 +3967,11 @@ export class WebClientService {
 
         // Add to chunk cache
         if (cache) {
-            if (this.config.DEBUG_ARP) {
-                this.$log.debug(`[Chunk] Caching chunk (retransmit/push=${retransmit}:`, chunk);
-            }
+            this.arpLogV.debug(`Caching chunk (retransmit/push=${retransmit}:`, chunk);
             try {
                 chunkCache.append(retransmit ? chunk : null);
             } catch (error) {
-                this.$log.error(this.logTag, error);
+                this.arpLog.error(error);
                 this.failSession();
                 return;
             }
@@ -3972,9 +3979,7 @@ export class WebClientService {
 
         // Send if ready
         if (!shouldQueue) {
-            if (this.config.DEBUG_ARP) {
-                this.$log.debug(`[Chunk] Sending chunk (retransmit/push=${retransmit}:`, chunk);
-            }
+            this.arpLogV.debug(`Sending chunk (retransmit/push=${retransmit}:`, chunk);
 
             // Send chunk
             this.relayedDataTask.sendMessage(chunk.buffer);
@@ -3991,15 +3996,13 @@ export class WebClientService {
      * Handle an incoming chunk from the underlying transport.
      */
     private receiveChunk(chunk: Uint8Array): void {
-        if (this.config.DEBUG_ARP) {
-            this.$log.debug('[Chunk] Received chunk:', chunk);
-        }
+        this.arpLogV.debug('Received chunk:', chunk);
 
         // Update incoming sequence number
         try {
             this.currentIncomingChunkSequenceNumber.increment();
         } catch (error) {
-            this.$log.error(this.logTag, `Unable to continue session: ${error}`);
+            this.arpLog.error(`Unable to continue session: ${error}`);
             this.failSession();
             return;
         }
@@ -4021,9 +4024,9 @@ export class WebClientService {
      * Handle incoming message bytes from the SecureDataChannel.
      */
     private handleIncomingMessageBytes(bytes: Uint8Array): void {
-        this.$log.debug('New incoming message (' + bytes.byteLength + ' bytes)');
-        if (this.config.DEBUG_MSGPACK) {
-            this.$log.debug('Incoming message payload: ' + msgpackVisualizer(bytes));
+        this.arpLog.debug('New incoming message (' + bytes.byteLength + ' bytes)');
+        if (this.config.MSGPACK_LOG_TRACE) {
+            this.msgpackLog.debug('Incoming message payload: ' + msgpackVisualizer(bytes));
         }
 
         // Decode bytes
@@ -4037,22 +4040,23 @@ export class WebClientService {
      * or from the relayed data WebSocket.
      */
     private handleIncomingMessage(message: threema.WireMessage): void {
-        this.$log.debug(`Received ${message.type}/${message.subType} message`);
+        this.arpLog.debug(`Received ${message.type}/${message.subType} message`);
 
         // Validate message to keep contract defined by `threema.WireMessage` type
         if (message.type === undefined) {
-            this.$log.warn('Ignoring invalid message (no type attribute)');
+            this.arpLog.warn('Ignoring invalid message (no type attribute)');
             return;
         } else if (message.subType === undefined) {
-            this.$log.warn('Ignoring invalid message (no subType attribute)');
+            this.arpLog.warn('Ignoring invalid message (no subType attribute)');
             return;
         }
 
         // If desired, log message type / subtype
-        if (this.config.DEBUG_ARP) {
-            // Deep copy message to prevent issues with JS debugger
-            const deepcopy = copyDeep(message);
-            this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);
+        if (this.config.ARP_LOG_TRACE) {
+            // Sanitise incoming message before logging
+            // Note: Deep-copy message to prevent issues with JS debugger
+            this.arpLogV.debug(`Incoming: ${message.type}/${message.subType}`,
+                new ConfidentialWireMessage(copyDeep(message)));
         }
 
         // Process data
@@ -4071,7 +4075,7 @@ export class WebClientService {
             // Check for unexpected messages
             if (message.type !== WebClientService.TYPE_UPDATE ||
                 message.subType !== WebClientService.SUB_TYPE_CONNECTION_INFO) {
-                this.$log.error(this.logTag, 'Unexpected message before handshake has been completed');
+                this.arpLog.error('Unexpected message before handshake has been completed');
                 this.failSession();
                 return;
             }
@@ -4097,7 +4101,7 @@ export class WebClientService {
                 messageHandler = this._receiveUpdate;
                 break;
             default:
-                this.$log.warn(this.logTag, `Ignored message ${message.type}/${message.subType}`);
+                this.arpLog.warn(`Ignored message ${message.type}/${message.subType}`);
                 break;
         }
 
@@ -4106,7 +4110,7 @@ export class WebClientService {
             try {
                 messageHandler.apply(this, [message.subType, message]);
             } catch (error) {
-                this.$log.error(this.logTag, 'Unable to handle incoming wire message:', error);
+                this.arpLog.error('Unable to handle incoming wire message:', error);
                 console.trace(error); // tslint:disable-line:no-console
                 return;
             }
@@ -4122,7 +4126,7 @@ export class WebClientService {
             // Yes, I really know what I'm doing, thanks eslint...
         }
         if (future !== undefined) {
-            this.$log.warn(`Unhandled message acknowledgement for type ${message.type}:`, message.ack);
+            this.arpLog.warn(`Unhandled message acknowledgement for type ${message.type}:`, message.ack);
             future.reject('unhandled');
         }
     }
@@ -4130,8 +4134,7 @@ export class WebClientService {
     private runAfterInitializationSteps(requiredSteps: threema.InitializationStep[], callback: any): void {
         for (const requiredStep of requiredSteps) {
             if (!this.initialized.has(requiredStep)) {
-                this.$log.debug(this.logTag,
-                    'Required initialization step', requiredStep, 'not completed, add pending routine');
+                this.arpLog.debug('Required initialization step', requiredStep, 'not completed, add pending routine');
                 this.pendingInitializationStepRoutines.add({
                     requiredSteps: requiredSteps,
                     callback: callback,
@@ -4237,7 +4240,7 @@ export class WebClientService {
                     id = u8aToHex(base64ToU8a(message.id));
                 } catch { /* ignored */ }
             }
-            this.$log.debug('[MessageInspector]', `${type}/${subType}: receiver=${receiverType}/${receiver}, ` +
+            this.arpLogV.debug('Chat message:', `${type}/${subType}: receiver=${receiverType}/${receiver}, ` +
                 `mode=${mode}, direction=${message.isOutbox ? 'out' : 'in'}, id=${id}, type=${message.type}, ` +
                 `state=${message.state !== undefined ? message.state : '?'}, is-status=${message.isStatus}, ` +
                 `date=${message.date}`);

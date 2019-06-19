@@ -15,10 +15,13 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
 import {ContactControllerModel} from '../controller_model/contact';
 import {DistributionListControllerModel} from '../controller_model/distributionList';
 import {GroupControllerModel} from '../controller_model/group';
 import {MeControllerModel} from '../controller_model/me';
+import {LogService} from './log';
 import {WebClientService} from './webclient';
 
 // Type aliases
@@ -28,18 +31,20 @@ import ControllerModelMode = threema.ControllerModelMode;
  * Factory to create ControllerModels
  */
 export class ControllerModelService {
-    private $log: ng.ILogService;
-    private $translate: ng.translate.ITranslateService;
-    private $mdDialog: ng.material.IDialogService;
-    private webClientService: WebClientService;
+    private readonly $translate: ng.translate.ITranslateService;
+    private readonly $mdDialog: ng.material.IDialogService;
+    private readonly logService: LogService;
+    private readonly webClientService: WebClientService;
+    private readonly log: Logger;
 
-    public static $inject = ['$log', '$translate', '$mdDialog', 'WebClientService'];
-    constructor($log: ng.ILogService, $translate: ng.translate.ITranslateService,
-                $mdDialog: ng.material.IDialogService, webClientService: WebClientService) {
-        this.$log = $log;
+    public static $inject = ['$translate', '$mdDialog', 'LogService', 'WebClientService'];
+    constructor($translate: ng.translate.ITranslateService, $mdDialog: ng.material.IDialogService,
+                logService: LogService, webClientService: WebClientService) {
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
+        this.logService = logService;
         this.webClientService = webClientService;
+        this.log = logService.getLogger('ControllerModel-S');
     }
 
     public me(
@@ -47,9 +52,9 @@ export class ControllerModelService {
         mode: ControllerModelMode,
     ): threema.ControllerModel<threema.MeReceiver> {
         return new MeControllerModel(
-            this.$log,
             this.$translate,
             this.$mdDialog,
+            this.logService,
             this.webClientService,
             mode,
             receiver,
@@ -61,9 +66,9 @@ export class ControllerModelService {
         mode: ControllerModelMode,
     ): threema.ControllerModel<threema.ContactReceiver> {
         return new ContactControllerModel(
-            this.$log,
             this.$translate,
             this.$mdDialog,
+            this.logService,
             this.webClientService,
             mode,
             receiver,
@@ -75,9 +80,9 @@ export class ControllerModelService {
         mode: ControllerModelMode,
     ): threema.ControllerModel<threema.GroupReceiver> {
         return new GroupControllerModel(
-            this.$log,
             this.$translate,
             this.$mdDialog,
+            this.logService,
             this.webClientService,
             mode,
             receiver,
@@ -89,9 +94,9 @@ export class ControllerModelService {
         mode: ControllerModelMode,
     ): threema.ControllerModel<threema.DistributionListReceiver> {
         return new DistributionListControllerModel(
-            this.$log,
             this.$translate,
             this.$mdDialog,
+            this.logService,
             this.webClientService,
             mode,
             receiver,
