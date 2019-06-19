@@ -152,7 +152,7 @@ angular.module('3ema', [
     function($log: ng.ILogService, CONFIG: threema.Config, browserService: BrowserService) {
         // For Safari (when in DEBUG mode), monkey-patch $log to show timestamps.
 
-        if (!(CONFIG.VERBOSE_DEBUGGING && browserService.getBrowser().isSafari(false))) {
+        if (!browserService.getBrowser().isSafari(false)) {
             return;
         }
 

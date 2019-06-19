@@ -22,7 +22,6 @@ export default {
     SALTYRTC_HOST_SUFFIX: '.threema.ch',
     SALTYRTC_PORT: 443,
     SALTYRTC_SERVER_KEY: 'b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171',
-    SALTYRTC_LOG_LEVEL: 'warn',
 
     // ICE
     ICE_SERVERS: [{
@@ -38,13 +37,22 @@ export default {
     // Push
     PUSH_URL: 'https://push-web.threema.ch/push',
 
-    // Very verbose logging that potentially affects performance and may also
-    // contain sensitive information.
-    VERBOSE_DEBUGGING: false,
-    // Logs all incoming and outgoing protocol messages.
-    MSG_DEBUGGING: false,
-    // Logs URLs to visualise MsgPack messages for all incoming and outgoing
-    // protocol messages.
-    MSGPACK_DEBUGGING: false,
+    // Console log level
+    CONSOLE_LOG_LEVEL: 'info',
+    // Compose area log level
+    COMPOSE_AREA_LOG_LEVEL: 'warn',
+    // SaltyRTC log level
+    SALTYRTC_LOG_LEVEL: 'warn',
+    // Toggles logging verbose timer-related information.
+    DEBUG_TIMER: false,
+    // Toggles logging all chunks and messages exchanged by or associated with
+    // the app remote protocol. May also enable additional debug facilities of
+    // the app remote protocol.
+    // Note: Affects performance and contains sensitive information.
+    DEBUG_ARP: false,
+    // Toggles URL logging to visualise MsgPack messages for all incoming and
+    // outgoing protocol messages.
+    // Note: Affects performance and contains sensitive information.
+    DEBUG_MSGPACK: false,
 
 } as threema.Config;

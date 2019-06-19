@@ -460,7 +460,7 @@ export class WebClientService {
         this.webrtcTask = new saltyrtcTaskWebrtc.WebRTCTask(true, maxPacketSize, this.config.SALTYRTC_LOG_LEVEL);
 
         // Create Relayed Data task instance
-        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.VERBOSE_DEBUGGING);
+        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.SALTYRTC_LOG_LEVEL === 'debug');
 
         // Create new keystore if necessary
         if (!keyStore) {
@@ -498,7 +498,7 @@ export class WebClientService {
             builder = builder.withTrustedPeerKey(flags.peerTrustedKey);
         }
         this.salty = builder.asInitiator();
-        if (this.config.VERBOSE_DEBUGGING) {
+        if (this.config.DEBUG_ARP) {
             this.$log.debug('Public key:', this.salty.permanentKeyHex);
             this.$log.debug('Auth token:', this.salty.authTokenHex);
         }
@@ -708,7 +708,7 @@ export class WebClientService {
         }
         this.$log.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
             `${size} -> ${this.previousChunkCache.byteLength}`);
-        if (this.config.MSG_DEBUGGING) {
+        if (this.config.DEBUG_ARP) {
             this.$log.debug(`Chunks that require acknowledgement: ${this.previousChunkCache.chunks.length}`);
         }
 
@@ -855,7 +855,7 @@ export class WebClientService {
             this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
                 this.$rootScope, this.webrtcTask,
                 this.config.ICE_SERVERS,
-                !this.config.VERBOSE_DEBUGGING);
+                !this.config.DEBUG_ARP);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
@@ -2674,7 +2674,7 @@ export class WebClientService {
             this.$log.warn('Invalid messages response, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
         }
-        if (this.config.MSG_DEBUGGING) {
+        if (this.config.DEBUG_ARP) {
             this.logChatMessages(message.type, message.subType, type, id, 'new', data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
@@ -2871,7 +2871,7 @@ export class WebClientService {
             this.$log.warn(this.logTag, 'Invalid messages update, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
         }
-        if (this.config.MSG_DEBUGGING) {
+        if (this.config.DEBUG_ARP) {
             this.logChatMessages(message.type, message.subType, type, id, mode, data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
@@ -2895,7 +2895,7 @@ export class WebClientService {
                     if (!this.messages.update(receiver, msg)) {
                         const log = `Received message update for unknown message (id ${msg.id})`;
                         this.$log.error(this.logTag, log);
-                        if (this.config.VERBOSE_DEBUGGING) {
+                        if (this.config.DEBUG_ARP) {
                             this.messages.addStatusMessage(receiver, 'Warning: ' + log);
                             notify = true;
                         }
@@ -3604,7 +3604,7 @@ export class WebClientService {
 
             // Create & store future
             const future: Future<any> = new Future();
-            if (this.config.MSG_DEBUGGING) {
+            if (this.config.DEBUG_ARP) {
                 this.$log.debug(this.logTag, `Added wire message future: ${id} -> ${type}/${subType}`);
             }
             this.wireMessageFutures.set(message.id, future);
@@ -3710,7 +3710,7 @@ export class WebClientService {
         if (future !== undefined) {
             // Remove the future from the map
             this.wireMessageFutures.delete(id);
-            if (this.config.MSG_DEBUGGING) {
+            if (this.config.DEBUG_ARP) {
                 this.$log.debug(this.logTag, `Removed wire message future: ${id} -> ` +
                     `${message.type}/${message.subType}`);
             }
@@ -3872,7 +3872,7 @@ export class WebClientService {
      */
     private send(message: threema.WireMessage, retransmit: boolean): void {
         this.$log.debug('Sending', message.type + '/' + message.subType, 'message');
-        if (this.config.MSG_DEBUGGING) {
+        if (this.config.DEBUG_ARP) {
             this.$log.debug('[Message] Outgoing:', message.type, '/', message.subType, message);
         }
 
@@ -3884,7 +3884,7 @@ export class WebClientService {
                 {
                     // Send bytes through WebRTC DataChannel
                     const bytes: Uint8Array = this.msgpackEncode(message);
-                    if (this.config.MSGPACK_DEBUGGING) {
+                    if (this.config.DEBUG_MSGPACK) {
                         this.$log.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
                     }
                     this.secureDataChannel.send(bytes);
@@ -3898,7 +3898,7 @@ export class WebClientService {
 
                     // Send bytes through e2e encrypted WebSocket
                     const bytes: Uint8Array = this.msgpackEncode(message);
-                    if (this.config.MSGPACK_DEBUGGING) {
+                    if (this.config.DEBUG_MSGPACK) {
                         this.$log.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
                     }
 
@@ -3958,7 +3958,7 @@ export class WebClientService {
 
         // Add to chunk cache
         if (cache) {
-            if (this.config.VERBOSE_DEBUGGING && this.config.MSG_DEBUGGING) {
+            if (this.config.DEBUG_ARP) {
                 this.$log.debug(`[Chunk] Caching chunk (retransmit/push=${retransmit}:`, chunk);
             }
             try {
@@ -3972,7 +3972,7 @@ export class WebClientService {
 
         // Send if ready
         if (!shouldQueue) {
-            if (this.config.VERBOSE_DEBUGGING && this.config.MSG_DEBUGGING) {
+            if (this.config.DEBUG_ARP) {
                 this.$log.debug(`[Chunk] Sending chunk (retransmit/push=${retransmit}:`, chunk);
             }
 
@@ -3991,7 +3991,7 @@ export class WebClientService {
      * Handle an incoming chunk from the underlying transport.
      */
     private receiveChunk(chunk: Uint8Array): void {
-        if (this.config.VERBOSE_DEBUGGING && this.config.MSG_DEBUGGING) {
+        if (this.config.DEBUG_ARP) {
             this.$log.debug('[Chunk] Received chunk:', chunk);
         }
 
@@ -4022,7 +4022,7 @@ export class WebClientService {
      */
     private handleIncomingMessageBytes(bytes: Uint8Array): void {
         this.$log.debug('New incoming message (' + bytes.byteLength + ' bytes)');
-        if (this.config.MSGPACK_DEBUGGING) {
+        if (this.config.DEBUG_MSGPACK) {
             this.$log.debug('Incoming message payload: ' + msgpackVisualizer(bytes));
         }
 
@@ -4049,7 +4049,7 @@ export class WebClientService {
         }
 
         // If desired, log message type / subtype
-        if (this.config.MSG_DEBUGGING) {
+        if (this.config.DEBUG_ARP) {
             // Deep copy message to prevent issues with JS debugger
             const deepcopy = copyDeep(message);
             this.$log.debug('[Message] Incoming:', message.type, '/', message.subType, deepcopy);

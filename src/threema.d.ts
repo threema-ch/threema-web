@@ -637,25 +637,36 @@ declare namespace threema {
     }
 
     interface Config {
+        // General
         SELF_HOSTED: boolean;
-        PREV_PROTOCOL_LAST_VERSION: string | null;
         VERSION_MOUNTAIN: string;
         VERSION_MOUNTAIN_URL: string;
         VERSION_MOUNTAIN_IMAGE_URL: string;
         VERSION_MOUNTAIN_IMAGE_COPYRIGHT: string;
         VERSION_MOUNTAIN_HEIGHT: number;
+        PREV_PROTOCOL_LAST_VERSION: string | null;
         GIT_BRANCH: string;
-        SALTYRTC_PORT: number;
-        SALTYRTC_SERVER_KEY: string | null;
+
+        // SaltyRTC
         SALTYRTC_HOST: string | null;
         SALTYRTC_HOST_PREFIX: string | null;
         SALTYRTC_HOST_SUFFIX: string | null;
-        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
+        SALTYRTC_PORT: number;
+        SALTYRTC_SERVER_KEY: string | null;
+
+        // ICE
         ICE_SERVERS: RTCIceServer[];
+
+        // Push
         PUSH_URL: string;
-        VERBOSE_DEBUGGING: boolean;
-        MSG_DEBUGGING: boolean;
-        MSGPACK_DEBUGGING: boolean;
+
+        // Logging/debugging
+        CONSOLE_LOG_LEVEL: LogLevel;
+        COMPOSE_AREA_LOG_LEVEL: LogLevel;
+        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
+        DEBUG_TIMER: boolean,
+        DEBUG_ARP: boolean;
+        DEBUG_MSGPACK: boolean;
     }
 
     interface InitialConversationData {
