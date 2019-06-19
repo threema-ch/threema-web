@@ -38,6 +38,7 @@ module.exports = function(config) {
             'tests/service/string.js',
             'tests/service/browser.js',
             'tests/service/keystore.js',
+            'tests/service/log.js',
             'tests/service/notification.js',
             'tests/service/receiver.js',
         ],

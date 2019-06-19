@@ -37,8 +37,17 @@ export default {
     // Push
     PUSH_URL: 'https://push-web.threema.ch/push',
 
+    // Padding length (in characters) of the log tag
+    // Note: The padding will be stripped by the report log.
+    LOG_TAG_PADDING: 20,
     // Console log level
+    // Note: It is advisable to set this to `info` on production.
     CONSOLE_LOG_LEVEL: 'info',
+    // Report log level and maximum amount of log records to keep in memory.
+    // Note: There's no reason to change this unless you want to disable
+    //       the report tool.
+    REPORT_LOG_LEVEL: 'debug',
+    REPORT_LOG_LIMIT: 1000,
     // Compose area log level
     COMPOSE_AREA_LOG_LEVEL: 'warn',
     // SaltyRTC log level

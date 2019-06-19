@@ -235,7 +235,7 @@ export class MemoryLogger implements Logger {
             if (message !== null && message !== undefined && message.constructor === String) {
                 let stripped = false;
 
-                // Strip style formatting string if any
+                // Strip first style formatting placeholder if any
                 message = message.replace(/%c/, () => {
                     stripped = true;
                     return '';

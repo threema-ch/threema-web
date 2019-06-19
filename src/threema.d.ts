@@ -661,7 +661,10 @@ declare namespace threema {
         PUSH_URL: string;
 
         // Logging/debugging
+        LOG_TAG_PADDING: number,
         CONSOLE_LOG_LEVEL: LogLevel;
+        REPORT_LOG_LEVEL: LogLevel;
+        REPORT_LOG_LIMIT: number;
         COMPOSE_AREA_LOG_LEVEL: LogLevel;
         SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
         DEBUG_TIMER: boolean,
