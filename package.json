@@ -62,7 +62,7 @@
     "angular-sanitize": "^1.7.8",
     "angular-translate": "~2.18",
     "angularjs-scroll-glue": "~2.2.0",
-    "autolinker": "~2.2.1",
+    "autolinker": "^2.2.2",
     "babel-loader": "^8.0.6",
     "core-js": "^3.1.4",
     "croppie": "^2.6.4",
@@ -98,11 +98,11 @@
     "karma-firefox-launcher": "^1.1.0",
     "karma-jasmine": "^2.0.1",
     "sass-lint": "^1.13.1",
-    "sass-lint-auto-fix": "^0.15.2",
+    "sass-lint-auto-fix": "^0.17",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "term-color": "^1.0.1",
     "ts-node": "^8",
-    "tslint": "^5.12.1",
+    "tslint": "^5.18.0",
     "webpack-dev-server": "^3.7.2"
   }
 }
