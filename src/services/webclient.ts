@@ -24,7 +24,7 @@ import {Logger} from 'ts-log';
 
 import * as msgpack from 'msgpack-lite';
 import {
-    arraysAreEqual, base64ToU8a, bufferToUrl, copyDeep, hasFeature, hasValue, hexToU8a,
+    arraysAreEqual, base64ToU8a, bufferToUrl, copyDeepOrReference, hasFeature, hasValue, hexToU8a,
     msgpackVisualizer, randomString, stringToUtf8a, u8aToHex,
 } from '../helpers';
 import {
@@ -4056,7 +4056,7 @@ export class WebClientService {
             // Sanitise incoming message before logging
             // Note: Deep-copy message to prevent issues with JS debugger
             this.arpLogV.debug(`Incoming: ${message.type}/${message.subType}`,
-                new ConfidentialWireMessage(copyDeep(message)));
+                new ConfidentialWireMessage(copyDeepOrReference(message)));
         }
 
         // Process data

@@ -370,18 +370,61 @@ export function isActionTrigger(ev: KeyboardEvent): boolean {
     }
 }
 
-/*
+/**
  * Create a shallow copy of an object.
  */
-export function copyShallow<T extends object>(obj: T): T {
-    return Object.assign({}, obj);
+export function copyShallow(object: object): object {
+    return Object.assign({}, object);
 }
 
 /**
- * Create a deep copy of an object by serializing and deserializing it.
+ * Create a deep copy (mostly).
+ *
+ * This handles the following types:
+ *
+ * - copies `undefined` and `null`,
+ * - copies `Boolean`, `Number` and `String`,
+ * - copies `object` recursively,
+ * - copies `Array` recursively,
+ * - copies `ArrayBuffer`,
+ * - copies `Uint8Array`,
+ *
+ * Everything else will be **referenced**.
  */
-export function copyDeep<T extends object>(obj: T): T {
-    return JSON.parse(JSON.stringify(obj));
+export function copyDeepOrReference(value: any): any {
+    // Handle `null` and `undefined` early
+    if (value === null || value === undefined) {
+        return value;
+    }
+
+    // Plain object
+    if (value.constructor === Object) {
+        const object = {};
+        for (const [k, v] of Object.entries(value)) {
+            object[k] = copyDeepOrReference(v);
+        }
+        return object;
+    }
+
+    // Plain array
+    if (value instanceof Array) {
+        return value.map((item) => copyDeepOrReference(item));
+    }
+
+    // ArrayBuffer
+    if (value instanceof ArrayBuffer) {
+        return value.slice(0);
+    }
+
+    // Uint8Array
+    if (value instanceof Uint8Array) {
+        // Note: To mimic the byte offset, we copy the whole underlying buffer.
+        const buffer = value.buffer.slice(0);
+        return new Uint8Array(buffer, value.byteOffset, value.byteLength);
+    }
+
+    // Reference everything else
+    return value;
 }
 
 /**
