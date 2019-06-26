@@ -81,7 +81,9 @@ export class StatusController {
         // Register event handlers
         this.stateService.evtGlobalConnectionStateChange.attach(
             (stateChange: threema.GlobalConnectionStateChange) => {
-                this.onStateChange(stateChange.state, stateChange.prevState);
+                $scope.$apply(() => {
+                    this.onStateChange(stateChange.state, stateChange.prevState);
+                });
             },
         );
         this.stateService.evtUnreadCountChange.attach(

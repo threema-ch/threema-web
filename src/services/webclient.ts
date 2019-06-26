@@ -524,6 +524,7 @@ export class WebClientService {
                         }
                         break;
                     case 'task':
+                        this.onTaskEstablished(resumeSession);
                         break;
                     case 'closing':
                     case 'closed':
@@ -534,59 +535,6 @@ export class WebClientService {
                 }
             }
             this.stateService.updateSignalingConnectionState(state, this.chosenTask, this.handoverDone);
-        });
-
-        // Once the connection is established, if this is a WebRTC connection,
-        // initiate the peer connection and start the handover.
-        this.salty.once('state-change:task', () => {
-            // Pushing complete
-            this.resetPushSession(true);
-
-            // Peer handshake
-            this.stateService.updateConnectionBuildupState('peer_handshake');
-
-            // Determine chosen task
-            const task = this.salty.getTask();
-            if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
-                this.chosenTask = threema.ChosenTask.WebRTC;
-            } else if (task.getName().indexOf('relayed-data.tasks.saltyrtc.org') !== -1) {
-                this.chosenTask = threema.ChosenTask.RelayedData;
-            } else {
-                throw new Error('Invalid or unknown task name: ' + task.getName());
-            }
-
-            // If the WebRTC task was chosen, initialize handover.
-            if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                const browser = this.browserService.getBrowser();
-
-                // Firefox <53 does not yet support TLS. Skip it, to save allocations.
-                if (browser.isFirefox(true) && browser.version < 53) {
-                    this.skipIceTls();
-                }
-
-                // Safari does not support our dual-stack TURN servers.
-                if (browser.isSafari(false)) {
-                    this.skipIceDs();
-                }
-
-                this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
-                    this.$rootScope, this.webrtcTask,
-                    this.config.ICE_SERVERS,
-                    !this.config.VERBOSE_DEBUGGING);
-
-                // On state changes in the PeerConnectionHelper class, let state service know about it
-                this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
-                    this.stateService.updateTaskConnectionState(state);
-                };
-
-                // Initiate handover
-                this.webrtcTask.handover(this.pcHelper.peerConnection);
-
-            // Otherwise, no handover is necessary.
-            } else {
-                this.onHandover(resumeSession);
-                return;
-            }
         });
 
         // Handle disconnecting of a peer
@@ -863,6 +811,63 @@ export class WebClientService {
                     this.schedulePush();
                 }
             }, cooldownMs);
+        }
+    }
+
+    /**
+     * Once the SaltyRTC task has been established...
+     *
+     * - for Android, initiate the peer connection and start the handover,
+     * - for iOS, no further action is necessary and the connection is
+     *   considered established.
+     */
+    private onTaskEstablished(resumeSession: boolean) {
+        // Pushing complete
+        this.resetPushSession(true);
+
+        // Peer handshake
+        this.stateService.updateConnectionBuildupState('peer_handshake');
+
+        // Determine chosen task
+        const task = this.salty.getTask();
+        if (task.getName().indexOf('webrtc.tasks.saltyrtc.org') !== -1) {
+            this.chosenTask = threema.ChosenTask.WebRTC;
+        } else if (task.getName().indexOf('relayed-data.tasks.saltyrtc.org') !== -1) {
+            this.chosenTask = threema.ChosenTask.RelayedData;
+        } else {
+            throw new Error('Invalid or unknown task name: ' + task.getName());
+        }
+
+        // If the WebRTC task was chosen, initialize handover.
+        if (this.chosenTask === threema.ChosenTask.WebRTC) {
+            const browser = this.browserService.getBrowser();
+
+            // Firefox <53 does not yet support TLS. Skip it, to save allocations.
+            if (browser.isFirefox(true) && browser.version < 53) {
+                this.skipIceTls();
+            }
+
+            // Safari does not support our dual-stack TURN servers.
+            if (browser.isSafari(false)) {
+                this.skipIceDs();
+            }
+
+            this.pcHelper = new PeerConnectionHelper(this.$log, this.$q, this.$timeout,
+                this.$rootScope, this.webrtcTask,
+                this.config.ICE_SERVERS,
+                !this.config.VERBOSE_DEBUGGING);
+
+            // On state changes in the PeerConnectionHelper class, let state service know about it
+            this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
+                this.stateService.updateTaskConnectionState(state);
+            };
+
+            // Initiate handover
+            this.webrtcTask.handover(this.pcHelper.peerConnection);
+
+        // Otherwise, no handover is necessary.
+        } else {
+            this.onHandover(resumeSession);
         }
     }
 
