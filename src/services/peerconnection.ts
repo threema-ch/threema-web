@@ -15,10 +15,10 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as SDPUtils from 'sdp';
-
 import TaskConnectionState = threema.TaskConnectionState;
 import {Logger} from 'ts-log';
+
+import {ConfidentialIceCandidate} from '../helpers/confidential';
 import {LogService} from './log';
 
 /**
@@ -39,13 +39,8 @@ export class PeerConnectionHelper {
     public connectionState: TaskConnectionState = TaskConnectionState.New;
     public onConnectionStateChange: (state: TaskConnectionState) => void = null;
 
-    // Debugging
-    private censorCandidates: boolean;
-
     constructor($q: ng.IQService, $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
-                logService: LogService, webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
-                iceServers: RTCIceServer[],
-                censorCandidates: boolean = true) {
+                logService: LogService, webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask, iceServers: RTCIceServer[]) {
         this.log = logService.getLogger('PeerConnection', 'color: #fff; background-color: #3333ff');
         this.log.info('Initialize WebRTC PeerConnection');
         this.log.debug('ICE servers used:', [].concat(...iceServers.map((c) => c.urls)));
@@ -54,8 +49,6 @@ export class PeerConnectionHelper {
         this.$rootScope = $rootScope;
 
         this.webrtcTask = webrtcTask;
-
-        this.censorCandidates = censorCandidates;
 
         // Set up peer connection
         this.pc = new RTCPeerConnection({iceServers: iceServers});
@@ -97,8 +90,7 @@ export class PeerConnectionHelper {
         this.log.debug('Setting up ICE candidate handling');
         this.pc.onicecandidate = (e: RTCPeerConnectionIceEvent) => {
             if (e.candidate) {
-                this.log.debug('Gathered local ICE candidate:',
-                    this.censorCandidate(e.candidate.candidate));
+                this.log.debug('Gathered local ICE candidate:', new ConfidentialIceCandidate(e.candidate.candidate));
                 this.webrtcTask.sendCandidate({
                     candidate: e.candidate.candidate,
                     sdpMid: e.candidate.sdpMid,
@@ -143,7 +135,7 @@ export class PeerConnectionHelper {
             for (const candidateInit of e.data) {
                 if (candidateInit) {
                     this.log.debug('Adding remote ICE candidate:',
-                        this.censorCandidate(candidateInit.candidate));
+                        new ConfidentialIceCandidate(candidateInit.candidate));
                 } else {
                     this.log.debug('No more remote ICE candidates');
                 }
@@ -207,23 +199,5 @@ export class PeerConnectionHelper {
         this.pc.onicegatheringstatechange = null;
         this.pc.ondatachannel = null;
         this.pc.close();
-    }
-
-    /**
-     * Censor an ICE candidate's address and port (unless censoring is disabled).
-     *
-     * Return the censored ICE candidate.
-     */
-    private censorCandidate(candidateInit: string): string {
-        const candidate = SDPUtils.parseCandidate(candidateInit);
-        if (this.censorCandidates) {
-            if (candidate.type !== 'relay') {
-                candidate.ip = '***';
-                candidate.port = 1;
-            }
-            candidate.relatedAddress = '***';
-            candidate.relatedPort = 2;
-        }
-        return SDPUtils.writeCandidate(candidate);
     }
 }

@@ -870,8 +870,7 @@ export class WebClientService {
                 this.$q, this.$timeout, this.$rootScope,
                 this.logService,
                 this.webrtcTask,
-                this.config.ICE_SERVERS,
-                !this.config.ARP_LOG_TRACE);
+                this.config.ICE_SERVERS);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {

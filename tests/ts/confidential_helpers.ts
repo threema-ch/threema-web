@@ -20,6 +20,7 @@ import {
     censor,
     BaseConfidential,
     ConfidentialArray,
+    ConfidentialIceCandidate,
     ConfidentialObjectValues,
     ConfidentialWireMessage
 } from '../../src/helpers/confidential';
@@ -238,6 +239,65 @@ describe('Confidential Helpers', () => {
                     priority: '[Number]',
                 },
             });
+        });
+    });
+
+    describe('ConfidentialIceCandidate', () => {
+        it('subclass of BaseConfidential', () => {
+            expect(ConfidentialIceCandidate.prototype instanceof BaseConfidential).toBeTruthy();
+        });
+
+        it('returns underlying ICE candidate directly when unveiling', () => {
+            const input = 'cannot be bothered to use valid SDP here';
+            const confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.uncensored).toBe(input);
+        });
+
+        it('returns underlying ICE candidate directly if it cannot be parsed', () => {
+            const input = 'certainly invalid';
+            const confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.censored()).toBe(input);
+        });
+
+        it('does not censor mDNS concealed candidates', () => {
+            const input = 'candidate:1 1 UDP 1234 aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee.local 1337 typ host';
+            const confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.censored()).toBe(input);
+        });
+
+        it('censors host candidates', () => {
+            // IPv4
+            let input = 'candidate:1 1 UDP 1234 192.168.0.42 1337 typ host';
+            let expected = 'candidate:1 1 UDP 1234 192.168.*.* 1337 typ host';
+            let confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.censored()).toBe(expected);
+
+            // IPv6
+            input = 'candidate:1 1 UDP 1234 fe80::1 1337 typ host';
+            expected = 'candidate:1 1 UDP 1234 fe80::* 1337 typ host';
+            confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.censored()).toBe(expected);
+        });
+
+        it('censors srflx candidates', () => {
+            const input = 'candidate:1 1 UDP 1234 1.2.3.4 42 typ srflx raddr 192.168.0.42 rport 1337';
+            const expected = 'candidate:1 1 UDP 1234 1.2.*.* 42 typ srflx raddr 192.168.*.* rport 1337';
+            const confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.censored()).toBe(expected);
+        });
+
+        it('censors relay candidates', () => {
+            // IPv4
+            let input = 'candidate:1 1 UDP 1234 1.2.3.4 42 typ relay raddr 192.168.0.42 rport 1337';
+            let expected = 'candidate:1 1 UDP 1234 1.2.3.4 42 typ relay raddr 192.168.*.* rport 1337';
+            let confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.censored()).toBe(expected);
+
+            // IPv6
+            input = 'candidate:1 1 UDP 1234 2a02:1:2::3 42 typ relay raddr 2a02:dead:beef::1 rport 1337';
+            expected = 'candidate:1 1 UDP 1234 2a02:1:2::3 42 typ relay raddr 2a02:*:*::* rport 1337';
+            confidential = new ConfidentialIceCandidate(input);
+            expect(confidential.censored()).toBe(expected);
         });
     });
 });

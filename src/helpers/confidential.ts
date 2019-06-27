@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import * as SDPUtils from 'sdp';
+
 /**
  * Recursively sanitises `value` in the following way:
  *
@@ -155,5 +157,58 @@ export class ConfidentialWireMessage extends BaseConfidential<threema.WireMessag
         }
 
         return message;
+    }
+}
+
+/**
+ * Wraps an ICE candidate's SDP attribute.
+ *
+ * When sanitising, this returns all attributes unchanged apart from the
+ * candidate's IP address which will be partially sanitised.
+ */
+export class ConfidentialIceCandidate extends BaseConfidential<string, string> {
+    public readonly uncensored: string;
+
+    constructor(candidateSdp: string) {
+        super();
+        this.uncensored = candidateSdp;
+    }
+
+    public censored(): string {
+        try {
+            // Parse into candidate object
+            const candidate = SDPUtils.parseCandidate(this.uncensored);
+
+            // Sanitise IP and port
+            if (candidate.type !== 'relay') {
+                candidate.address = candidate.ip = ConfidentialIceCandidate.censorIp(candidate.address);
+            }
+            if (candidate.relatedAddress !== undefined) {
+                candidate.relatedAddress = ConfidentialIceCandidate.censorIp(candidate.relatedAddress);
+            }
+
+            // Return as SDP
+            return SDPUtils.writeCandidate(candidate);
+        } catch (error) {
+            return this.uncensored;
+        }
+    }
+
+    private static censorIp(ip: string): string {
+        // Handle UUID (mDNS)
+        if (ip.includes('-')) {
+            return ip;
+        }
+
+        // Handle IPv4 address
+        const ipv4 = ip.split('.');
+        if (ipv4.length > 1) {
+            return `${ipv4.slice(0, 2).join('.')}.*.*`;
+        }
+
+        // Handle IPv6 address (catch-all)
+        const ipv6 = ip.split(':');
+        const head = ipv6.shift();
+        return `${head}:${ipv6.map((item) => item.length > 0 ? '*' : item).join(':')}`;
     }
 }
