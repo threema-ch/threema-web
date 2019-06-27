@@ -34,7 +34,6 @@ module.exports = function(config) {
             'tests/service/mime.js',
             'tests/service/qrcode.js',
             'tests/service/uri.js',
-            'tests/service/webclient.js',
             'tests/service/string.js',
             'tests/service/browser.js',
             'tests/service/keystore.js',

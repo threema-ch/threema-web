@@ -856,11 +856,6 @@ export class WebClientService {
         if (this.chosenTask === threema.ChosenTask.WebRTC) {
             const browser = this.browserService.getBrowser();
 
-            // Firefox <53 does not yet support TLS. Skip it, to save allocations.
-            if (browser.isFirefox(true) && browser.version < 53) {
-                this.skipIceTls();
-            }
-
             // Safari does not support our dual-stack TURN servers.
             if (browser.isSafari(false)) {
                 this.skipIceDs();
@@ -1360,25 +1355,6 @@ export class WebClientService {
             // Translate close flag
             const state = args.close !== false ? args.close : 'welcome';
             this.$state.go(state);
-        }
-    }
-
-    /**
-     * Remove "turns:" servers from the ICE_SERVERS configuration
-     * if at least one "turn:" server with tcp transport is in the list.
-     */
-    public skipIceTls(): void {
-        this.arpLog.debug('Requested to remove TURN-TLS server from ICE configuration');
-        const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
-        if (allUrls.some((url) => url.startsWith('turn:') && url.endsWith('=tcp'))) {
-            // There's at least one TURN server with TCP transport in the list
-            for (const server of this.config.ICE_SERVERS) {
-                // Remove TLS entries
-                const urls = Array.isArray(server.urls) ? server.urls : [server.urls];
-                server.urls = urls.filter((url) => !url.startsWith('turns:'));
-            }
-        } else {
-            this.arpLog.debug('No fallback TURN-TCP server present, keeping TURN-TLS server');
         }
     }
 
