@@ -6,14 +6,12 @@ describe('UriService', function() {
     beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function() {
-
         module('3ema.services');
 
         // Inject the service
         inject(function(UriService) {
             $service = UriService;
         });
-
     });
 
     it('parses query parameters', () => {

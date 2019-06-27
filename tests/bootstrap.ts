@@ -18,8 +18,13 @@
  */
 
 // tslint:disable:no-console
+import config from '../src/config';
 
 // A dependency graph that contains any wasm must all be imported asynchronously.
 import('../src/app')
-    .then(() => console.info('Bundle loaded'))
+    .then(() => {
+        // @ts-ignore
+        window.config = config;
+        console.info('Bundle loaded')
+    })
     .catch((e) => console.error('Could not load bundle', e));

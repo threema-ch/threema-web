@@ -14,7 +14,7 @@ describe('BrowserService', function() {
     function testUserAgent(agent) {
         let $service;
         module('3ema.services');
-        module(function($provide) {
+        module(($provide) => {
             $provide.value('$window', {
                 navigator: { userAgent: agent }
             });

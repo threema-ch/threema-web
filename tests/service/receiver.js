@@ -6,14 +6,12 @@ describe('ReceiverService', function () {
     beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function () {
-
         module('3ema.services');
 
         // Inject the service
         inject(function (ReceiverService) {
             $service = ReceiverService;
         });
-
     });
 
     describe('Receiver', () => {

@@ -6,7 +6,6 @@ describe('MimeService', function() {
     beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function() {
-
         module('pascalprecht.translate');
         module('3ema.services');
 
@@ -14,7 +13,6 @@ describe('MimeService', function() {
         inject(function(MimeService) {
             $service = MimeService;
         });
-
     });
 
     it('getLabel', () => {
