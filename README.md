@@ -87,6 +87,7 @@ To run unit tests:
 
 To run UI tests:
 
+    npm run build  # Required for CSS to be rebuilt
     npm run test:ui <browser>
 
 For example:

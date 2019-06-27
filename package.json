@@ -42,7 +42,7 @@
     "@saltyrtc/client": "^0.14.4",
     "@saltyrtc/task-relayed-data": "^0.3.1",
     "@saltyrtc/task-webrtc": "^0.13.0",
-    "@threema/compose-area": "^0.3.2",
+    "@threema/compose-area": "^0.3.3",
     "@types/angular": "^1.6.54",
     "@types/angular-material": "^1.1.68",
     "@types/angular-sanitize": "^1.3.7",
