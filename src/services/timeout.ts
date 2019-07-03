@@ -15,46 +15,42 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export class TimeoutService {
-    private logTag: string = '[TimeoutService]';
+import {Logger} from 'ts-log';
 
+import {LogService} from './log';
+
+export class TimeoutService {
     // Config
     private config: threema.Config;
 
     // Angular services
-    private $log: ng.ILogService;
     private $timeout: ng.ITimeoutService;
+
+    // Logging
+    private readonly log: Logger;
 
     // List of registered timeouts
     private timeouts: Set<ng.IPromise<any>> = new Set();
 
-    public static $inject = ['CONFIG', '$log', '$timeout'];
-    constructor(config: threema.Config, $log: ng.ILogService, $timeout: ng.ITimeoutService) {
+    public static $inject = ['CONFIG', '$timeout', 'LogService'];
+    constructor(config: threema.Config, $timeout: ng.ITimeoutService, logService: LogService) {
         this.config = config;
-        this.$log = $log;
         this.$timeout = $timeout;
-    }
-
-    /**
-     * Log a message on debug log level, but only if the `DEBUG` flag is enabled.
-     */
-    private logDebug(msg: string): void {
-        if (this.config.VERBOSE_DEBUGGING) {
-            this.$log.debug(this.logTag, msg);
-        }
+        this.log = logService.getLogger(
+            'Timeout-S', 'color: #fff; background-color: #669900', this.config.TIMER_LOG_LEVEL);
     }
 
     /**
      * Register a timeout.
      */
     public register<T>(fn: (...args: any[]) => T, delay: number, invokeApply: boolean, name?: string): ng.IPromise<T> {
-        this.logDebug('Registering timeout' + (name === undefined ? '' : ` (${name})`));
+        this.log.debug(`Registering timeout${name === undefined ? '' : ` (${name})`}`);
         const timeout = this.$timeout(fn, delay, invokeApply);
         timeout
             .then(() => this.timeouts.delete(timeout))
             .catch((reason) => {
                 if (reason !== 'canceled') { // We can safely ignore cancellation
-                    this.$log.error(this.logTag, 'Registered timeout promise rejected:', reason);
+                    this.log.error('Registered timeout promise rejected:', reason);
                 }
             });
 
@@ -75,8 +71,7 @@ export class TimeoutService {
         // Retrieve name from promise for debugging purposes
         // tslint:disable-next-line: no-string-literal
         const name = timeout['_timeout_name'];
-
-        this.logDebug('Cancelling timeout' + (name === undefined ? '' : ` (${name})`));
+        this.log.debug(`Cancelling timeout${name === undefined ? '' : ` (${name})`}`);
         const cancelled = this.$timeout.cancel(timeout);
 
         this.timeouts.delete(timeout);
@@ -87,7 +82,7 @@ export class TimeoutService {
      * Cancel all pending timeouts.
      */
     public cancelAll() {
-        this.$log.debug(this.logTag, 'Cancelling ' + this.timeouts.size + ' timeouts');
+        this.log.debug('Cancelling ' + this.timeouts.size + ' timeouts');
         for (const timeout of this.timeouts) {
             this.$timeout.cancel(timeout);
         }

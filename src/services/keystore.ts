@@ -15,9 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
 import * as nacl from 'tweetnacl';
 import {hexToU8a, u8aToHex} from '../helpers';
 import {stringToUtf8a, utf8aToString} from '../helpers';
+import {LogService} from './log';
 
 /**
  * This service stores trusted keys in the local browser storage.
@@ -41,24 +44,21 @@ import {stringToUtf8a, utf8aToString} from '../helpers';
 export class TrustedKeyStoreService {
     private STORAGE_KEY = 'trusted';
 
-    private logTag: string = '[TrustedKeyStoreService]';
-
-    private $log: ng.ILogService;
+    private readonly log: Logger;
     private storage: Storage = null;
 
     public blocked = false;
 
-    public static $inject = ['$log', '$window'];
-    constructor($log: ng.ILogService, $window: ng.IWindowService) {
-        this.$log = $log;
-
+    public static $inject = ['$window', 'LogService'];
+    constructor($window: ng.IWindowService, logService: LogService) {
+        this.log = logService.getLogger('TrustedKeyStore-S', 'color: #fff; background-color: #666699');
         try {
             if ($window.localStorage === null) {
                 this.blocked = true;
             }
             this.storage = $window.localStorage;
         } catch (e) {
-            $log.warn(this.logTag, 'LocalStorage blocked:', e);
+            this.log.warn('LocalStorage blocked:', e);
             this.blocked = true;
         }
     }
@@ -119,7 +119,7 @@ export class TrustedKeyStoreService {
         data.set(peerPublicKey, 64);
         data.set(token, 96);
         const encrypted: Uint8Array = nacl.secretbox(data, nonce, this.pwToKey(password));
-        this.$log.debug(this.logTag, 'Storing trusted key');
+        this.log.debug('Storing trusted key');
         this.storage.setItem(this.STORAGE_KEY, u8aToHex(nonce) + ':' + u8aToHex(encrypted));
     }
 
@@ -167,7 +167,7 @@ export class TrustedKeyStoreService {
                     tokenType = threema.PushTokenType.Apns;
                     break;
                 default:
-                    this.$log.error(this.logTag, 'Invalid push token type:', tokenString[0]);
+                    this.log.error('Invalid push token type:', tokenString[0]);
                     return null;
             }
             token = tokenString.slice(2);
@@ -190,7 +190,7 @@ export class TrustedKeyStoreService {
      * Delete any stored trusted keys.
      */
     public clearTrustedKey(): void {
-        this.$log.debug(this.logTag, 'Clearing trusted key');
+        this.log.debug('Clearing trusted key');
         this.storage.removeItem(this.STORAGE_KEY);
     }
 }

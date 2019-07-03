@@ -6,21 +6,12 @@ describe('QrCodeService', function() {
     beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function() {
-
-        module(($provide) => {
-            $provide.constant('PROTOCOL_VERSION', 1337);
-            $provide.constant('CONFIG', {
-                'SELF_HOSTED': false,
-            });
-        });
-
         module('3ema.services');
 
         // Inject the service
         inject(function(QrCodeService) {
             $service = QrCodeService;
         });
-
     });
 
     it('generates correct payload', () => {

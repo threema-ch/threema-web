@@ -16,7 +16,6 @@ describe('NotificationService', function() {
         inject(function(NotificationService) {
             $service = NotificationService;
         });
-
     });
 
     describe('getAppNotificationSettings', function () {

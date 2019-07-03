@@ -15,9 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
 import {StateService as UiStateService} from '@uirouter/angularjs';
 
 import {ControllerService} from '../services/controller';
+import {LogService} from '../services/log';
 import {StateService} from '../services/state';
 import {TimeoutService} from '../services/timeout';
 import {WebClientService} from '../services/webclient';
@@ -33,8 +36,8 @@ import DisconnectReason = threema.DisconnectReason;
  * Status updates should be done through the state service.
  */
 export class StatusController {
-
-    private logTag: string = '[StatusController]';
+    // Logging
+    private readonly log: Logger;
 
     // State variable
     private state = GlobalConnectionState.Error;
@@ -50,7 +53,6 @@ export class StatusController {
 
     // Angular services
     private $timeout: ng.ITimeoutService;
-    private $log: ng.ILogService;
     private $state: UiStateService;
 
     // Custom services
@@ -60,16 +62,18 @@ export class StatusController {
     private webClientService: WebClientService;
 
     public static $inject = [
-        '$scope', '$timeout', '$log', '$state',
-        'ControllerService', 'StateService', 'TimeoutService', 'WebClientService',
+        '$scope', '$timeout', '$state',
+        'ControllerService', 'StateService', 'LogService', 'TimeoutService', 'WebClientService',
     ];
-    constructor($scope, $timeout: ng.ITimeoutService, $log: ng.ILogService, $state: UiStateService,
-                controllerService: ControllerService, stateService: StateService,
+    constructor($scope, $timeout: ng.ITimeoutService, $state: UiStateService,
+                controllerService: ControllerService, stateService: StateService, logService: LogService,
                 timeoutService: TimeoutService, webClientService: WebClientService) {
+
+        // Logging
+        this.log = logService.getLogger('Status-C', 'color: #000; background-color: #ffff99');
 
         // Angular services
         this.$timeout = $timeout;
-        this.$log = $log;
         this.$state = $state;
 
         // Custom services
@@ -105,7 +109,7 @@ export class StatusController {
      */
     private onStateChange(newValue: threema.GlobalConnectionState,
                           oldValue: threema.GlobalConnectionState): void {
-        this.$log.debug(this.logTag, 'State change:', oldValue, '->', newValue);
+        this.log.debug('State change:', oldValue, '->', newValue);
         if (newValue === oldValue) {
             return;
         }
@@ -136,7 +140,7 @@ export class StatusController {
                 }
                 break;
             default:
-                this.$log.error(this.logTag, 'Invalid state change: From', oldValue, 'to', newValue);
+                this.log.error('Invalid state change: From', oldValue, 'to', newValue);
         }
     }
 
@@ -163,7 +167,7 @@ export class StatusController {
      * Attempt to reconnect an Android device after a connection loss.
      */
     private reconnectAndroid(): void {
-        this.$log.info(this.logTag, `Connection lost (Android). Reconnect attempt #${this.stateService.attempt + 1}`);
+        this.log.info(`Connection lost (Android). Reconnect attempt #${this.stateService.attempt + 1}`);
 
         // Show expanded status bar (if on 'messenger')
         if (this.$state.includes('messenger')) {
@@ -198,12 +202,12 @@ export class StatusController {
             .then(
                 () => { /* ignored */ },
                 (error) => {
-                    this.$log.error(this.logTag, 'Error state:', error);
+                    this.log.error('Error state:', error);
                     // Note: The web client service has already been stopped at
                     // this point.
                 },
                 (progress: threema.ConnectionBuildupStateChange) => {
-                    this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
+                    this.log.debug('Connection buildup advanced:', progress);
                 },
             )
             .finally(() => {
@@ -217,7 +221,7 @@ export class StatusController {
      * Attempt to reconnect an iOS device after a connection loss.
      */
     private reconnectIos(): void {
-        this.$log.info(this.logTag, `Connection lost (iOS). Reconnect attempt #${++this.stateService.attempt}`);
+        this.log.info(`Connection lost (iOS). Reconnect attempt #${++this.stateService.attempt}`);
 
         // Get original keys
         const originalKeyStore = this.webClientService.salty.keyStore;
@@ -226,7 +230,7 @@ export class StatusController {
         // Delay connecting a bit to wait for old websocket to close
         // TODO: Make this more robust and hopefully faster
         const startTimeout = 500;
-        this.$log.debug(this.logTag, 'Stopping old connection');
+        this.log.debug('Stopping old connection');
         this.webClientService.stop({
             reason: DisconnectReason.SessionStopped,
             send: true,
@@ -262,9 +266,9 @@ export class StatusController {
         this.$timeout.cancel(this.reconnectTimeout);
         this.reconnectTimeout = this.$timeout(() => {
             if (push.send) {
-                this.$log.debug(`Starting new connection with push, reason: ${push.reason}`);
+                this.log.debug(`Starting new connection with push, reason: ${push.reason}`);
             } else {
-                this.$log.debug('Starting new connection without push');
+                this.log.debug('Starting new connection without push');
             }
             this.webClientService.init({
                 keyStore: originalKeyStore,
@@ -275,12 +279,12 @@ export class StatusController {
             this.webClientService.start(!push.send).then(
                 () => { /* ignored */ },
                 (error) => {
-                    this.$log.error(this.logTag, 'Error state:', error);
+                    this.log.error('Error state:', error);
                     // Note: The web client service has already been stopped at
                     // this point.
                 },
                 (progress: threema.ConnectionBuildupStateChange) => {
-                    this.$log.debug(this.logTag, 'Connection buildup advanced:', progress);
+                    this.log.debug('Connection buildup advanced:', progress);
                 },
             );
         }, startTimeout);

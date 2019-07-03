@@ -15,19 +15,21 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
 import {hasValue} from '../helpers';
+import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
 import {AvatarControllerModel} from './avatar';
 
 import ControllerModelMode = threema.ControllerModelMode;
 
 export class MeControllerModel implements threema.ControllerModel<threema.MeReceiver> {
-    private logTag: string = '[MeControllerModel]';
-
     // Angular services
-    private $log: ng.ILogService;
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
+
+    // Logging
+    private readonly log: Logger;
 
     // Own services
     private webClientService: WebClientService;
@@ -48,13 +50,13 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
     // Editing mode
     private mode = ControllerModelMode.VIEW;
 
-    constructor($log: ng.ILogService,
-                $translate: ng.translate.ITranslateService,
+    constructor($translate: ng.translate.ITranslateService,
                 $mdDialog: ng.material.IDialogService,
+                logService: LogService,
                 webClientService: WebClientService,
                 mode: ControllerModelMode,
                 me: threema.MeReceiver) {
-        this.$log = $log;
+        this.log = logService.getLogger('Me-CM');
         this.$translate = $translate;
         this.$mdDialog = $mdDialog;
         this.me = me;
@@ -66,14 +68,14 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
             case ControllerModelMode.EDIT:
                 this.subject = $translate.instant('messenger.EDIT_RECEIVER');
                 this.avatarController = new AvatarControllerModel(
-                    this.$log, this.webClientService, this.me,
+                    logService, this.webClientService, this.me,
                 );
                 break;
             case ControllerModelMode.VIEW:
                 this.subject = $translate.instant('messenger.MY_THREEMA_ID');
                 break;
             default:
-                $log.error(this.logTag, 'Invalid controller model mode: ', this.getMode());
+                this.log.error('Invalid controller model mode: ', this.getMode());
         }
     }
 
@@ -173,7 +175,7 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
                     return this.me;
                 });
             default:
-                this.$log.error(this.logTag, 'Not allowed to save profile: Invalid mode');
+                this.log.error('Not allowed to save profile: Invalid mode');
                 return Promise.reject('unknown');
         }
     }

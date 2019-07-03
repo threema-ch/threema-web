@@ -6,14 +6,12 @@ describe('StringService', function() {
     beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function() {
-
         module('3ema.services');
 
         // Inject the service
         inject(function(StringService) {
             $service = StringService;
         });
-
     });
 
     describe('byteChunkSplit', function() {

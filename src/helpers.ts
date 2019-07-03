@@ -17,6 +17,8 @@
 // tslint:disable:no-reference
 /// <reference path="threema.d.ts" />
 
+import {Logger} from 'ts-log';
+
 /**
  * Convert an Uint8Array to a hex string.
  *
@@ -282,28 +284,24 @@ export function msgpackVisualizer(array: Uint8Array): string {
  */
 export function hasFeature(contactReceiver: threema.ContactReceiver,
                            feature: threema.ContactReceiverFeature,
-                           $log: ng.ILogService): boolean {
-    const logTag = '[helpers.hasFeature]';
+                           log: Logger): boolean {
     if (contactReceiver !== undefined) {
         if (contactReceiver.featureMask === 0) {
-            $log.warn(logTag, contactReceiver.id, 'featureMask', contactReceiver.featureMask);
+            log.warn(`Contact receiver with id ${contactReceiver.id} has featureMask 0`);
             return false;
         }
         // tslint:disable:no-bitwise
         return (contactReceiver.featureMask & feature) !== 0;
         // tslint:enable:no-bitwise
     }
-    $log.warn(logTag, 'Cannot check featureMask of a undefined contactReceiver');
+    log.warn('Cannot check featureMask of a undefined contact receiver');
     return false;
 }
 
 /**
  * Convert an ArrayBuffer to a data URL.
  */
-export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (msg: string) => void): string {
-    if (buffer === null || buffer === undefined) {
-        throw new Error('Called bufferToUrl on null or undefined');
-    }
+export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, log: Logger): string {
     switch (mimeType) {
         case 'image/jpg':
         case 'image/jpeg':
@@ -317,22 +315,12 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, logWarning: (
             // OK
             break;
         default:
-            logWarning('bufferToUrl: Unknown mimeType: ' + mimeType);
-            mimeType = 'image/jpeg';
+            const fallbackMimeType = 'image/jpeg';
+            log.warn(`Unknown mimeType "${mimeType}", falling back to "${fallbackMimeType}"`);
+            mimeType = fallbackMimeType;
             break;
     }
     return 'data:' + mimeType + ';base64,' + u8aToBase64(new Uint8Array(buffer));
-}
-
-/**
- * Adapter for creating a logging function.
- *
- * Example usage:
- *
- * const logWarning = logAdapter($log.warn, '[AvatarService]');
- */
-export function logAdapter(logFunc: (...msg: string[]) => void, logTag: string): ((msg: string) => void) {
-    return (msg: string) => logFunc(logTag, msg);
 }
 
 /**
@@ -382,18 +370,61 @@ export function isActionTrigger(ev: KeyboardEvent): boolean {
     }
 }
 
-/*
+/**
  * Create a shallow copy of an object.
  */
-export function copyShallow<T extends object>(obj: T): T {
-    return Object.assign({}, obj);
+export function copyShallow(object: object): object {
+    return Object.assign({}, object);
 }
 
 /**
- * Create a deep copy of an object by serializing and deserializing it.
+ * Create a deep copy (mostly).
+ *
+ * This handles the following types:
+ *
+ * - copies `undefined` and `null`,
+ * - copies `Boolean`, `Number` and `String`,
+ * - copies `object` recursively,
+ * - copies `Array` recursively,
+ * - copies `ArrayBuffer`,
+ * - copies `Uint8Array`,
+ *
+ * Everything else will be **referenced**.
  */
-export function copyDeep<T extends object>(obj: T): T {
-    return JSON.parse(JSON.stringify(obj));
+export function copyDeepOrReference(value: any): any {
+    // Handle `null` and `undefined` early
+    if (value === null || value === undefined) {
+        return value;
+    }
+
+    // Plain object
+    if (value.constructor === Object) {
+        const object = {};
+        for (const [k, v] of Object.entries(value)) {
+            object[k] = copyDeepOrReference(v);
+        }
+        return object;
+    }
+
+    // Plain array
+    if (value instanceof Array) {
+        return value.map((item) => copyDeepOrReference(item));
+    }
+
+    // ArrayBuffer
+    if (value instanceof ArrayBuffer) {
+        return value.slice(0);
+    }
+
+    // Uint8Array
+    if (value instanceof Uint8Array) {
+        // Note: To mimic the byte offset, we copy the whole underlying buffer.
+        const buffer = value.buffer.slice(0);
+        return new Uint8Array(buffer, value.byteOffset, value.byteLength);
+    }
+
+    // Reference everything else
+    return value;
 }
 
 /**

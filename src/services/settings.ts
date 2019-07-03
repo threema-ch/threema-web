@@ -15,21 +15,22 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
+import {LogService} from './log';
+
 /**
  * The settings service can update variables for settings and persist them to
  * LocalStorage.
  */
 export class SettingsService {
-    private $log: ng.ILogService;
-
     private static STORAGE_KEY_PREFIX = 'settings-';
-    private logTag: string = '[SettingsService]';
-
+    private readonly log: Logger;
     private storage: Storage;
 
-    public static $inject = ['$log', '$window'];
-    constructor($log: ng.ILogService, $window: ng.IWindowService) {
-        this.$log = $log;
+    public static $inject = ['$window', 'LogService'];
+    constructor($window: ng.IWindowService, logService: LogService) {
+        this.log = logService.getLogger('Settings-S');
         this.storage = $window.localStorage;
     }
 
@@ -37,7 +38,7 @@ export class SettingsService {
      * Store settings key-value pair in LocalStorage.
      */
     public storeUntrustedKeyValuePair(key: string, value: string): void {
-        this.$log.debug(this.logTag, 'Storing settings key:', key);
+        this.log.debug('Storing settings key:', key);
         this.storage.setItem(SettingsService.STORAGE_KEY_PREFIX + key, value);
     }
 
@@ -48,7 +49,7 @@ export class SettingsService {
      * with an empty value if it does not yet exist.
      */
     public retrieveUntrustedKeyValuePair(key: string, alwaysCreate: boolean = true): string {
-        this.$log.debug(this.logTag, 'Retrieving settings key:', key);
+        this.log.debug('Retrieving settings key:', key);
         if (this.hasUntrustedKeyValuePair(key)) {
             return this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + key);
         } else {
@@ -63,7 +64,7 @@ export class SettingsService {
      * Remove settings key-value pair from LocalStorage if it exists.
      */
     public removeUntrustedKeyValuePair(key: string): void {
-        this.$log.debug(this.logTag, 'Removing settings key:', key);
+        this.log.debug('Removing settings key:', key);
         this.storage.removeItem(SettingsService.STORAGE_KEY_PREFIX + key);
     }
 

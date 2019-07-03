@@ -6,14 +6,6 @@ describe('MessageService', function() {
     beforeAll(() => window.onbeforeunload = () => null);
 
     beforeEach(function() {
-
-        // Inject constants
-        module(($provide) => {
-            $provide.constant('CONFIG', {
-                'DEBUG': true,
-            });
-        });
-
         // Load threema services
         module('3ema.services');
 
@@ -21,7 +13,6 @@ describe('MessageService', function() {
         inject(function(MessageService) {
             messageService = MessageService;
         });
-
     });
 
     describe ('getAccess', () => {

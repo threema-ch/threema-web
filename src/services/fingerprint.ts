@@ -18,13 +18,6 @@
 import {sha256} from '../helpers/crypto';
 
 export class FingerPrintService {
-    private $log: ng.ILogService;
-
-    public static $inject = ['$log'];
-    constructor($log: ng.ILogService) {
-        this.$log = $log;
-    }
-
     public async generate(publicKey: ArrayBuffer): Promise<string> {
         if (publicKey !== undefined && publicKey.byteLength === 32) {
             const sha256PublicKey = await sha256(publicKey);

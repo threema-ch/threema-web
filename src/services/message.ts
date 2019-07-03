@@ -29,10 +29,6 @@ export class MessageAccess {
 }
 
 export class MessageService {
-
-    // Angular services
-    private $log: ng.ILogService;
-
     // Own services
     private receiverService: ReceiverService;
     private timeoutService: TimeoutService;
@@ -40,9 +36,8 @@ export class MessageService {
     // Other
     private timeoutDelaySeconds = 30;
 
-    public static $inject = ['$log', 'ReceiverService', 'TimeoutService'];
-    constructor($log: ng.ILogService, receiverService: ReceiverService, timeoutService: TimeoutService) {
-        this.$log = $log;
+    public static $inject = ['ReceiverService', 'TimeoutService'];
+    constructor(receiverService: ReceiverService, timeoutService: TimeoutService) {
         this.receiverService = receiverService;
         this.timeoutService = timeoutService;
     }

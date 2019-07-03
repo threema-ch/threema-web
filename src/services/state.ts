@@ -16,6 +16,9 @@
  */
 
 import {AsyncEvent} from 'ts-events';
+import {Logger} from 'ts-log';
+
+import {LogService} from './log';
 
 import TaskConnectionState = threema.TaskConnectionState;
 import GlobalConnectionState = threema.GlobalConnectionState;
@@ -27,12 +30,11 @@ const enum Stage {
 }
 
 export class StateService {
-
-    private logTag: string = '[StateService]';
-
     // Angular services
-    private $log: ng.ILogService;
     private $interval: ng.IIntervalService;
+
+    // Logging
+    private readonly log: Logger;
 
     // Events
     public evtConnectionBuildupStateChange = new AsyncEvent<threema.ConnectionBuildupStateChange>();
@@ -57,10 +59,10 @@ export class StateService {
     // Unread messages
     private _unreadCount: number = 0;
 
-    public static $inject = ['$log', '$interval'];
-    constructor($log: ng.ILogService, $interval: ng.IIntervalService) {
-        this.$log = $log;
+    public static $inject = ['$interval', 'LogService'];
+    constructor($interval: ng.IIntervalService, logService: LogService) {
         this.$interval = $interval;
+        this.log = logService.getLogger('State-S', 'color: #fff; background-color: #cc9900');
         this.reset();
     }
 
@@ -89,7 +91,7 @@ export class StateService {
         const prevState = this.signalingConnectionState;
         this.signalingConnectionState = state;
         if (!handoverDone) {
-            this.$log.debug(this.logTag, 'Signaling connection state:', prevState, '=>', state);
+            this.log.debug('Signaling connection state:', prevState, '=>', state);
             switch (state) {
                 case 'new':
                 case 'ws-connecting':
@@ -110,10 +112,10 @@ export class StateService {
                     this.state = GlobalConnectionState.Error;
                     break;
                 default:
-                    this.$log.warn(this.logTag, `Unknown signaling connection state: ${state}`);
+                    this.log.warn(`Unknown signaling connection state: ${state}`);
             }
         } else {
-            this.$log.debug(this.logTag, 'Ignored signaling connection state to "' + state + '"');
+            this.log.debug('Ignored signaling connection state to "' + state + '"');
         }
     }
 
@@ -124,7 +126,7 @@ export class StateService {
         const prevState = this.taskConnectionState;
         this.taskConnectionState = state;
         if (this.stage === Stage.Task) {
-            this.$log.debug(this.logTag, 'Task connection state:', prevState, '=>', state);
+            this.log.debug('Task connection state:', prevState, '=>', state);
             switch (state) {
                 case TaskConnectionState.New:
                 case TaskConnectionState.Connecting:
@@ -139,10 +141,10 @@ export class StateService {
                     this.state = GlobalConnectionState.Error;
                     break;
                 default:
-                    this.$log.warn(this.logTag, 'Ignored task connection state change to "' + state + '"');
+                    this.log.warn('Ignored task connection state change to "' + state + '"');
             }
         } else {
-            this.$log.debug(this.logTag, 'Ignored task connection state change to "' + state + '"');
+            this.log.debug('Ignored task connection state change to "' + state + '"');
         }
     }
 
@@ -154,7 +156,7 @@ export class StateService {
             return;
         }
         const prevState = this.connectionBuildupState;
-        this.$log.debug(this.logTag, 'Connection buildup state:', prevState, '=>', state);
+        this.log.debug('Connection buildup state:', prevState, '=>', state);
 
         // Update state
         this.connectionBuildupState = state;
@@ -265,7 +267,7 @@ export class StateService {
      * Reset all states.
      */
     public reset(connectionBuildupState: threema.ConnectionBuildupState = 'new'): void {
-        this.$log.debug(this.logTag, 'Reset states');
+        this.log.debug('Reset states');
 
         // Reset state
         this.signalingConnectionState = 'new';

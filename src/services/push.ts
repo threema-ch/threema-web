@@ -15,9 +15,12 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
 import {TimeoutError} from '../exceptions';
 import {randomString, sleep} from '../helpers';
 import {sha256} from '../helpers/crypto';
+import {LogService} from './log';
 
 /**
  * A push session will send pushes continuously until an undefined goal has
@@ -44,13 +47,12 @@ import {sha256} from '../helpers/crypto';
  * stored on the push server.
  */
 export class PushSession {
-    private readonly $log: ng.ILogService;
     private readonly service: PushService;
     private readonly session: Uint8Array;
     private readonly config: threema.PushSessionConfig;
     private readonly doneFuture: Future<any> = new Future();
     private readonly affiliation: string = randomString(6);
-    private logTag: string = '[Push]';
+    private log: Logger;
     private running: boolean = false;
     private retryTimeoutMs: number;
     private tries: number = 0;
@@ -99,7 +101,7 @@ export class PushSession {
      * @param config Push session configuration.
      */
     public constructor(service: PushService, session: Uint8Array, config?: threema.PushSessionConfig) {
-        this.$log = service.$log;
+        this.log = service.logService.getLogger(`Push.${this.affiliation}`, 'color: #fff; background-color: #9900cc');
         this.service = service;
         this.session = session;
         this.config = config !== undefined ? config : PushSession.defaultConfig;
@@ -129,7 +131,7 @@ export class PushSession {
         // Start sending
         if (!this.running) {
             this.run().catch((error) => {
-                this.$log.error(this.logTag, 'Push runner failed:', error);
+                this.log.error('Push runner failed:', error);
                 this.doneFuture.reject(error);
             });
             this.running = true;
@@ -143,14 +145,13 @@ export class PushSession {
      * This will resolve all pending promises.
      */
     public done(): void {
-        this.$log.info(this.logTag, 'Push done');
+        this.log.info('Push done');
         this.doneFuture.resolve();
     }
 
     private async run(): Promise<void> {
         // Calculate session hash
         const sessionHash = await sha256(this.session.buffer);
-        this.logTag = `[Push.${sessionHash}]`;
 
         // Prepare data
         const data = new URLSearchParams();
@@ -193,9 +194,9 @@ export class PushSession {
             ++this.tries;
 
             // Send push
-            this.$log.debug(this.logTag, `Sending push ${this.tries}/${this.config.triesMax} (ttl=${timeToLive})`);
-            if (this.service.config.VERBOSE_DEBUGGING) {
-                this.$log.debug(this.logTag, 'Push data:', `${data}`);
+            this.log.debug(`Sending push ${this.tries}/${this.config.triesMax} (ttl=${timeToLive})`);
+            if (this.service.config.ARP_LOG_TRACE) {
+                this.log.debug('Push data:', `${data}`);
             }
             try {
                 const response = await fetch(this.service.url, {
@@ -209,18 +210,18 @@ export class PushSession {
                 // Check if successful
                 if (response.ok) {
                     // Success: Retry
-                    this.$log.debug(this.logTag, 'Push sent successfully');
+                    this.log.debug('Push sent successfully');
                 } else if (response.status >= 400 && response.status < 500) {
                     // Client error: Don't retry
                     const error = `Push rejected (client error), status: ${response.status}`;
-                    this.$log.warn(this.logTag, error);
+                    this.log.warn(error);
                     this.doneFuture.reject(new Error(error));
                 } else {
                     // Server error: Retry
-                    this.$log.warn(this.logTag, `Push rejected (server error), status: ${response.status}`);
+                    this.log.warn(`Push rejected (server error), status: ${response.status}`);
                 }
             } catch (error) {
-                this.$log.warn(this.logTag, 'Sending push failed:', error);
+                this.log.warn('Sending push failed:', error);
             }
 
             // Retry after timeout
@@ -232,7 +233,7 @@ export class PushSession {
             // Maximum tries reached?
             if (!this.doneFuture.done && this.tries === this.config.triesMax) {
                 const error = `Push session timeout after ${this.tries} tries`;
-                this.$log.warn(this.logTag, error);
+                this.log.warn(error);
                 this.doneFuture.reject(new TimeoutError(error));
             }
         }
@@ -240,7 +241,7 @@ export class PushSession {
 }
 
 export class PushService {
-    public static readonly $inject = ['$log', 'CONFIG', 'PROTOCOL_VERSION'];
+    public static readonly $inject = ['CONFIG', 'PROTOCOL_VERSION', 'LogService'];
 
     public static readonly ARG_TYPE = 'type';
     public static readonly ARG_TOKEN = 'token';
@@ -252,19 +253,20 @@ export class PushService {
     public static readonly ARG_TIME_TO_LIVE = 'ttl';
     public static readonly ARG_COLLAPSE_KEY = 'collapse_key';
 
-    private readonly logTag: string = '[PushService]';
-    public readonly $log: ng.ILogService;
     public readonly config: threema.Config;
     public readonly url: string;
     public readonly version: number = null;
+    public readonly logService: LogService;
+    public readonly log: Logger;
     private _pushToken: string = null;
     private _pushType = threema.PushTokenType.Gcm;
 
-    constructor($log: ng.ILogService, CONFIG: threema.Config, PROTOCOL_VERSION: number) {
-        this.$log = $log;
+    constructor(CONFIG: threema.Config, PROTOCOL_VERSION: number, logService: LogService) {
         this.config = CONFIG;
         this.url = CONFIG.PUSH_URL;
         this.version = PROTOCOL_VERSION;
+        this.logService = logService;
+        this.log = logService.getLogger(`Push-S`, 'color: #fff; background-color: #9900ff');
     }
 
     public get pushToken(): string {
@@ -279,7 +281,7 @@ export class PushService {
      * Initiate the push service with a push token.
      */
     public init(pushToken: string, pushTokenType: threema.PushTokenType): void {
-        this.$log.info(this.logTag, 'Initialized with', pushTokenType, 'token');
+        this.log.info('Initialized with', pushTokenType, 'token');
         this._pushToken = pushToken;
         this._pushType = pushTokenType;
     }

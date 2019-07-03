@@ -22,6 +22,7 @@ import {ControllerService} from './services/controller';
 import {ControllerModelService} from './services/controller_model';
 import {FingerPrintService} from './services/fingerprint';
 import {TrustedKeyStoreService} from './services/keystore';
+import {LogService} from './services/log';
 import {MediaboxService} from './services/mediabox';
 import {MessageService} from './services/message';
 import {MimeService} from './services/mime';
@@ -42,6 +43,7 @@ import {WebClientService} from './services/webclient';
 angular.module('3ema.services', [])
 
 // Register services
+.service('LogService', LogService)
 .service('BatteryStatusService', BatteryStatusService)
 .service('ContactService', ContactService)
 .service('ControllerModelService', ControllerModelService)

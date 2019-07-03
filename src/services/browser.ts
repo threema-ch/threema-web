@@ -15,23 +15,23 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Logger} from 'ts-log';
+
 import {BrowserInfo} from '../helpers/browser_info';
+import {LogService} from './log';
 
 import BrowserName = threema.BrowserName;
 
 export class BrowserService {
-    private logTag: string = '[BrowserService]';
-
     private browser: BrowserInfo;
-    private $log: ng.ILogService;
     private $window: ng.IWindowService;
+    private readonly log: Logger;
     private supportsExtendedLocaleCompareCache: boolean;
 
-    public static $inject = ['$log', '$window'];
-    constructor($log: ng.ILogService, $window: ng.IWindowService) {
-        // Angular services
-        this.$log = $log;
+    public static $inject = ['$window', 'LogService'];
+    constructor($window: ng.IWindowService, logService: LogService) {
         this.$window = $window;
+        this.log = logService.getLogger('Browser-S');
     }
 
     public getBrowser(): BrowserInfo {
@@ -158,9 +158,7 @@ export class BrowserService {
 
         const support = getSupport();
         this.supportsExtendedLocaleCompareCache = support;
-        this.$log.debug(this.logTag, 'Browser',
-            support ? 'supports' : 'does not support',
-            'extended locale compare options');
+        this.log.debug(`Browser ${support ? 'supports' : 'does not support'} extended locale compare options`);
         return support;
     }
 }

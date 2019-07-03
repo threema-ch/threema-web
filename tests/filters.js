@@ -50,7 +50,7 @@ describe('Filters', function() {
         module('3ema.services');
         module('3ema.filters');
 
-        module(function($provide) {
+        module(($provide) => {
             $provide.value('WebClientService', webClientServiceMock);
             $provide.value('$translate', translationMock);
             $provide.constant('$state', null);

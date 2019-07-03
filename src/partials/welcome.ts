@@ -19,6 +19,8 @@
 
 /// <reference path="../types/broadcastchannel.d.ts" />
 
+import {Logger} from 'ts-log';
+
 import {
     StateProvider as UiStateProvider,
     StateService as UiStateService,
@@ -28,6 +30,7 @@ import {BrowserInfo} from '../helpers/browser_info';
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
+import {LogService} from '../services/log';
 import {PushService} from '../services/push';
 import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
@@ -55,14 +58,10 @@ class DialogController {
 }
 
 class WelcomeController {
-
     private static REDIRECT_DELAY = 500;
-
-    private logTag: string = '[WelcomeController]';
 
     // Angular services
     private $scope: ng.IScope;
-    private $log: ng.ILogService;
     private $window: ng.IWindowService;
     private $state: UiStateService;
 
@@ -79,6 +78,9 @@ class WelcomeController {
     private timeoutService: TimeoutService;
     private config: threema.Config;
 
+    // Logging
+    private readonly log: Logger;
+
     // Other
     public name = 'welcome';
     private mode: 'scan' | 'unlock';
@@ -90,14 +92,15 @@ class WelcomeController {
     private browserWarningShown: boolean = false;
 
     public static $inject = [
-        '$scope', '$state', '$log', '$window', '$mdDialog', '$translate',
-        'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
+        '$scope', '$state', '$window', '$mdDialog', '$translate',
+        'LogService', 'WebClientService', 'TrustedKeyStore', 'StateService', 'PushService', 'BrowserService',
         'VersionService', 'SettingsService', 'TimeoutService', 'ControllerService',
         'BROWSER_MIN_VERSIONS', 'CONFIG',
     ];
     constructor($scope: ng.IScope, $state: UiStateService,
-                $log: ng.ILogService, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
+                $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
+                logService: LogService,
                 webClientService: WebClientService, trustedKeyStore: TrustedKeyStoreService,
                 stateService: StateService, pushService: PushService,
                 browserService: BrowserService,
@@ -111,7 +114,6 @@ class WelcomeController {
         // Angular services
         this.$scope = $scope;
         this.$state = $state;
-        this.$log = $log;
         this.$window = $window;
         this.$mdDialog = $mdDialog;
         this.$translate = $translate;
@@ -125,37 +127,40 @@ class WelcomeController {
         this.timeoutService = timeoutService;
         this.config = config;
 
+        // Logging
+        this.log = logService.getLogger('Welcome-C');
+
         // TODO: Allow to trigger below behaviour by using state parameters
 
         // Determine whether browser warning should be shown
         this.browser = browserService.getBrowser();
         const version = this.browser.version;
-        $log.debug('Detected browser:', this.browser.description());
+        this.log.debug('Detected browser:', this.browser.description());
         if (!this.browser.wasDetermined()) {
-            $log.warn('Could not determine browser version');
+            this.log.warn('Could not determine browser version');
             this.showBrowserWarning();
         } else if (this.browser.name === threema.BrowserName.Chrome) {
             if (version < minVersions.CHROME) {
-                $log.warn('Chrome is too old (' + version + ' < ' + minVersions.CHROME + ')');
+                this.log.warn('Chrome is too old (' + version + ' < ' + minVersions.CHROME + ')');
                 this.showBrowserWarning();
             }
         } else if (this.browser.name === threema.BrowserName.Firefox) {
             if (version < minVersions.FF) {
-                $log.warn('Firefox is too old (' + version + ' < ' + minVersions.FF + ')');
+                this.log.warn('Firefox is too old (' + version + ' < ' + minVersions.FF + ')');
                 this.showBrowserWarning();
             }
         } else if (this.browser.name === threema.BrowserName.Opera) {
             if (version < minVersions.OPERA) {
-                $log.warn('Opera is too old (' + version + ' < ' + minVersions.OPERA + ')');
+                this.log.warn('Opera is too old (' + version + ' < ' + minVersions.OPERA + ')');
                 this.showBrowserWarning();
             }
         } else if (this.browser.name === threema.BrowserName.Safari) {
             if (version < minVersions.SAFARI) {
-                $log.warn('Safari is too old (' + version + ' < ' + minVersions.SAFARI + ')');
+                this.log.warn('Safari is too old (' + version + ' < ' + minVersions.SAFARI + ')');
                 this.showBrowserWarning();
             }
         } else {
-            $log.warn('Non-supported browser, please use Chrome, Firefox or Opera');
+            this.log.warn('Non-supported browser, please use Chrome, Firefox or Opera');
             this.showBrowserWarning();
         }
 
@@ -165,7 +170,7 @@ class WelcomeController {
 
         // Determine whether local storage is available
         if (this.trustedKeyStore.blocked === true) {
-            $log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
+            this.log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
             this.showLocalStorageWarning();
         }
 
@@ -190,7 +195,7 @@ class WelcomeController {
         try {
             hasTrustedKey = this.trustedKeyStore.hasTrustedKey();
         } catch (e) {
-            $log.error('Exception while accessing local storage:', e);
+            this.log.error('Exception while accessing local storage:', e);
             this.showLocalStorageException(e);
         }
 
@@ -257,7 +262,7 @@ class WelcomeController {
      * Initiate a new session by scanning a new QR code.
      */
     private scan(stopArguments?: threema.WebClientServiceStopArguments): void {
-        this.$log.info(this.logTag, 'Initialize session by scanning QR code...');
+        this.log.info('Initialize session by scanning QR code...');
 
         // Initialize webclient with new keystore
         this.webClientService.stop(stopArguments !== undefined ? stopArguments : {
@@ -288,7 +293,7 @@ class WelcomeController {
      */
     private unlock(): void {
         this.stateService.reset('new');
-        this.$log.info(this.logTag, 'Initialize session by unlocking trusted key...');
+        this.log.info('Initialize session by unlocking trusted key...');
     }
 
     /**
@@ -324,7 +329,7 @@ class WelcomeController {
     private setupBroadcastChannel(publicKeyHex: string) {
         if (!('BroadcastChannel' in this.$window)) {
             // No BroadcastChannel support in this browser
-            this.$log.warn(this.logTag, 'BroadcastChannel not supported in this browser');
+            this.log.warn('BroadcastChannel not supported in this browser');
             return;
         }
 
@@ -347,10 +352,7 @@ class WelcomeController {
                             && (this.stateService.connectionBuildupState === 'loading'
                              || this.stateService.connectionBuildupState === 'done')) {
                         // Yes it is, notify them that the session is already active
-                        this.$log.debug(
-                            this.logTag,
-                            'Another tab is trying to connect to our session. Respond with a broadcast.',
-                        );
+                        this.log.debug('Another tab is trying to connect to our session. Respond with a broadcast.');
                         channel.postMessage(JSON.stringify({
                             type: TYPE_ALREADY_OPEN,
                             key: publicKeyHex,
@@ -361,7 +363,7 @@ class WelcomeController {
                     // Another tab notified us that the session we're trying to connect to
                     // is already active.
                     if (message.key === publicKeyHex && this.stateService.connectionBuildupState !== 'done') {
-                        this.$log.error(this.logTag, 'Session already connected in another tab or window');
+                        this.log.error('Session already connected in another tab or window');
                         this.timeoutService.register(() => {
                             this.stateService.updateConnectionBuildupState('already_connected');
                             this.stateService.state = GlobalConnectionState.Error;
@@ -369,13 +371,13 @@ class WelcomeController {
                     }
                     break;
                 default:
-                    this.$log.warn(this.logTag, 'Unknown broadcast message type:', message.type);
+                    this.log.warn('Unknown broadcast message type:', message.type);
                     break;
             }
         };
 
         // Notify other tabs that we're trying to connect
-        this.$log.debug(this.logTag, 'Checking if the session is already open in another tab or window');
+        this.log.debug('Checking if the session is already open in another tab or window');
         channel.postMessage(JSON.stringify({
             type: TYPE_PUBLIC_KEY,
             key: publicKeyHex,
@@ -543,7 +545,7 @@ class WelcomeController {
         } else if (len <= 586) {
             version = 16;
         } else {
-            this.$log.error(this.logTag, 'QR Code payload too large: Is your SaltyRTC host string huge?');
+            this.log.error('QR Code payload too large: Is your SaltyRTC host string huge?');
             version = 40;
         }
         return {
@@ -581,7 +583,7 @@ class WelcomeController {
 
             // If an error occurs...
             (error) => {
-                this.$log.error(this.logTag, 'Error state:', error);
+                this.log.error('Error state:', error);
                 // Note: On rejection, the web client service will already
                 //       redirect to 'welcome' and show a protocol error.
             },

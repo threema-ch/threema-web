@@ -16,13 +16,15 @@
  */
 
 import {hasFeature} from '../helpers';
+import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
 
 const AUTOCOMPLETE_MAX_RESULTS = 20;
 
 export default [
-    '$log', 'WebClientService',
-    function($log: ng.ILogService, webClientService: WebClientService) {
+    'LogService', 'WebClientService',
+    function(logService: LogService, webClientService: WebClientService) {
+        const log = logService.getLogger('MemberListEditor-C');
         return {
             restrict: 'EA',
             scope: {},
@@ -39,7 +41,7 @@ export default [
                     .filter((contactReceiver: threema.ContactReceiver) => hasFeature(
                         contactReceiver,
                         threema.ContactReceiverFeature.GROUP_CHAT,
-                        $log,
+                        log,
                     )) as threema.ContactReceiver[];
 
                 this.selectedItemChange = (contactReceiver: threema.ContactReceiver) => {

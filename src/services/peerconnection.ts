@@ -15,18 +15,18 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as SDPUtils from 'sdp';
-
 import TaskConnectionState = threema.TaskConnectionState;
+import {Logger} from 'ts-log';
+
+import {ConfidentialIceCandidate} from '../helpers/confidential';
+import {LogService} from './log';
 
 /**
  * Wrapper around the WebRTC PeerConnection.
  */
 export class PeerConnectionHelper {
-    private logTag: string = '[PeerConnectionHelper]';
-
     // Angular services
-    private $log: ng.ILogService;
+    private log: Logger;
     private $q: ng.IQService;
     private $timeout: ng.ITimeoutService;
     private $rootScope: ng.IRootScopeService;
@@ -39,40 +39,32 @@ export class PeerConnectionHelper {
     public connectionState: TaskConnectionState = TaskConnectionState.New;
     public onConnectionStateChange: (state: TaskConnectionState) => void = null;
 
-    // Debugging
-    private censorCandidates: boolean;
-
-    constructor($log: ng.ILogService, $q: ng.IQService,
-                $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
-                webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
-                iceServers: RTCIceServer[],
-                censorCandidates: boolean = true) {
-        this.$log = $log;
-        this.$log.info(this.logTag, 'Initialize WebRTC PeerConnection');
-        this.$log.debug(this.logTag, 'ICE servers used:', [].concat(...iceServers.map((c) => c.urls)).join(', '));
+    constructor($q: ng.IQService, $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
+                logService: LogService, webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask, iceServers: RTCIceServer[]) {
+        this.log = logService.getLogger('PeerConnection', 'color: #fff; background-color: #3333ff');
+        this.log.info('Initialize WebRTC PeerConnection');
+        this.log.debug('ICE servers used:', [].concat(...iceServers.map((c) => c.urls)));
         this.$q = $q;
         this.$timeout = $timeout;
         this.$rootScope = $rootScope;
 
         this.webrtcTask = webrtcTask;
 
-        this.censorCandidates = censorCandidates;
-
         // Set up peer connection
         this.pc = new RTCPeerConnection({iceServers: iceServers});
         this.pc.onnegotiationneeded = (e: Event) => {
-            this.$log.debug(this.logTag, 'RTCPeerConnection: negotiation needed');
+            this.log.debug('RTCPeerConnection: negotiation needed');
             this.initiatorFlow().then(
-                (_) => this.$log.debug(this.logTag, 'Initiator flow done'),
+                (_) => this.log.debug('Initiator flow done'),
             );
         };
 
         // Handle state changes
         this.pc.onconnectionstatechange = (e: Event) => {
-            $log.debug(this.logTag, 'Connection state change:', this.pc.connectionState);
+            this.log.debug('Connection state change:', this.pc.connectionState);
         };
         this.pc.onsignalingstatechange = (e: Event) => {
-            $log.debug(this.logTag, 'Signaling state change:', this.pc.signalingState);
+            this.log.debug('Signaling state change:', this.pc.signalingState);
         };
 
         // Set up ICE candidate handling
@@ -80,7 +72,7 @@ export class PeerConnectionHelper {
 
         // Log incoming data channels
         this.pc.ondatachannel = (e: RTCDataChannelEvent) => {
-            $log.debug(this.logTag, 'New data channel was created:', e.channel.label);
+            this.log.debug('New data channel was created:', e.channel.label);
         };
     }
 
@@ -95,25 +87,24 @@ export class PeerConnectionHelper {
      * Set up receiving / sending of ICE candidates.
      */
     private setupIceCandidateHandling() {
-        this.$log.debug(this.logTag, 'Setting up ICE candidate handling');
+        this.log.debug('Setting up ICE candidate handling');
         this.pc.onicecandidate = (e: RTCPeerConnectionIceEvent) => {
             if (e.candidate) {
-                this.$log.debug(this.logTag, 'Gathered local ICE candidate:',
-                    this.censorCandidate(e.candidate.candidate));
+                this.log.debug('Gathered local ICE candidate:', new ConfidentialIceCandidate(e.candidate.candidate));
                 this.webrtcTask.sendCandidate({
                     candidate: e.candidate.candidate,
                     sdpMid: e.candidate.sdpMid,
                     sdpMLineIndex: e.candidate.sdpMLineIndex,
                 });
             } else {
-                this.$log.debug(this.logTag, 'No more local ICE candidates');
+                this.log.debug('No more local ICE candidates');
             }
         };
         this.pc.onicecandidateerror = (e: RTCPeerConnectionIceErrorEvent) => {
-            this.$log.error(this.logTag, 'ICE candidate error:', e);
+            this.log.error('ICE candidate error:', e);
         };
         this.pc.oniceconnectionstatechange = (e: Event) => {
-            this.$log.debug(this.logTag, 'ICE connection state change:', this.pc.iceConnectionState);
+            this.log.debug('ICE connection state change:', this.pc.iceConnectionState);
             this.$rootScope.$apply(() => {
                 switch (this.pc.iceConnectionState) {
                     case 'new':
@@ -132,21 +123,21 @@ export class PeerConnectionHelper {
                         this.setConnectionState(TaskConnectionState.Disconnected);
                         break;
                     default:
-                        this.$log.warn(this.logTag, 'Ignored ICE connection state change to',
+                        this.log.warn('Ignored ICE connection state change to',
                                        this.pc.iceConnectionState);
                 }
             });
         };
         this.pc.onicegatheringstatechange = (e: Event) => {
-            this.$log.debug(this.logTag, 'ICE gathering state change:', this.pc.iceGatheringState);
+            this.log.debug('ICE gathering state change:', this.pc.iceGatheringState);
         };
         this.webrtcTask.on('candidates', (e: saltyrtc.tasks.webrtc.CandidatesEvent) => {
             for (const candidateInit of e.data) {
                 if (candidateInit) {
-                    this.$log.debug(this.logTag, 'Adding remote ICE candidate:',
-                        this.censorCandidate(candidateInit.candidate));
+                    this.log.debug('Adding remote ICE candidate:',
+                        new ConfidentialIceCandidate(candidateInit.candidate));
                 } else {
-                    this.$log.debug(this.logTag, 'No more remote ICE candidates');
+                    this.log.debug('No more remote ICE candidates');
                 }
                 this.pc.addIceCandidate(candidateInit);
             }
@@ -157,7 +148,7 @@ export class PeerConnectionHelper {
         // Send offer
         const offer: RTCSessionDescriptionInit = await this.pc.createOffer();
         await this.pc.setLocalDescription(offer);
-        this.$log.debug(this.logTag, 'Created offer, set local description');
+        this.log.debug('Created offer, set local description');
         this.webrtcTask.sendOffer(offer);
 
         // Receive answer
@@ -170,7 +161,7 @@ export class PeerConnectionHelper {
         };
         const answer: RTCSessionDescriptionInit = await receiveAnswer();
         await this.pc.setRemoteDescription(answer);
-        this.$log.debug(this.logTag, 'Received answer, set remote description');
+        this.log.debug('Received answer, set remote description');
     }
 
     /**
@@ -208,23 +199,5 @@ export class PeerConnectionHelper {
         this.pc.onicegatheringstatechange = null;
         this.pc.ondatachannel = null;
         this.pc.close();
-    }
-
-    /**
-     * Censor an ICE candidate's address and port (unless censoring is disabled).
-     *
-     * Return the censored ICE candidate.
-     */
-    private censorCandidate(candidateInit: string): string {
-        const candidate = SDPUtils.parseCandidate(candidateInit);
-        if (this.censorCandidates) {
-            if (candidate.type !== 'relay') {
-                candidate.ip = '***';
-                candidate.port = 1;
-            }
-            candidate.relatedAddress = '***';
-            candidate.relatedPort = 2;
-        }
-        return SDPUtils.writeCandidate(candidate);
     }
 }

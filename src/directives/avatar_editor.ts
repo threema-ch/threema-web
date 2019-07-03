@@ -20,22 +20,22 @@
 
 // tslint:disable:max-line-length
 
-import {bufferToUrl, logAdapter} from '../helpers';
+import {bufferToUrl} from '../helpers';
+import {LogService} from '../services/log';
 
 /**
  * Support uploading and resizing avatar
  */
 export default [
-    '$log',
-    function($log: ng.ILogService) {
+    'LogService',
+    function(logService: LogService) {
+        const log = logService.getLogger('AvatarEditor-C');
         return {
             restrict: 'EA',
             scope: {
                 onChange: '=',
             },
             link(scope: any, element, attrs, controller) {
-                const logTag: string = '[AvatarEditorDirective]';
-
                 // Constants
                 const DRAGOVER_CSS_CLASS = 'is-dragover';
                 const VIEWPORT_SIZE = 220;
@@ -123,10 +123,10 @@ export default [
                     }
                     // get first
                     fetchFileContent(fileList[0]).then((data: ArrayBuffer) => {
-                        const image = bufferToUrl(data, 'image/jpeg', logAdapter($log.warn, logTag));
+                        const image = bufferToUrl(data, 'image/jpeg', log);
                         setImage(image);
                     }).catch((ev: ErrorEvent) => {
-                        $log.error(logTag, 'Could not load file:', ev.message);
+                        log.error('Could not load file:', ev.message);
                     });
                 }
 
@@ -177,7 +177,7 @@ export default [
                     // load image to calculate size
                     const img = new Image();
                     img.addEventListener('load', async () => {
-                        $log.debug(logTag, 'Image loaded');
+                        log.debug('Image loaded');
 
                         const w = img.naturalWidth;
                         const h = img.naturalHeight;
@@ -197,14 +197,14 @@ export default [
                                 points: imageSize,
                             });
                         } catch (error) {
-                            $log.error(logTag, 'Could not bind avatar preview:', error);
+                            log.error('Could not bind avatar preview:', error);
                         }
                         loading(false);
                     });
 
                     img.addEventListener('error', function(e) {
                         // this is not a valid image
-                        $log.error(logTag, 'Could not load image:', e);
+                        log.error('Could not load image:', e);
                         loading(false);
                     });
 

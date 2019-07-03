@@ -18,7 +18,8 @@
 import {Transition as UiTransition, TransitionService as UiTransitionService} from '@uirouter/angularjs';
 import {saveAs} from 'file-saver';
 
-import {bufferToUrl, hasValue, logAdapter} from '../helpers';
+import {bufferToUrl, hasValue} from '../helpers';
+import {LogService} from '../services/log';
 import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';
 import {TimeoutService} from '../services/timeout';
@@ -26,18 +27,15 @@ import {WebClientService} from '../services/webclient';
 
 function showAudioDialog(
     $mdDialog: ng.material.IDialogService,
-    $log: ng.ILogService,
+    logService: LogService,
     blobInfo: threema.BlobInfo,
 ): void {
+    const log = logService.getLogger('AudioPlayerDialog-C');
     $mdDialog.show({
         controllerAs: 'ctrl',
         controller: function() {
             this.cancel = () => $mdDialog.cancel();
-            this.audioSrc = bufferToUrl(
-                blobInfo.buffer,
-                blobInfo.mimetype,
-                logAdapter($log.warn, '[AudioPlayerDialog]'),
-            );
+            this.audioSrc = bufferToUrl(blobInfo.buffer, blobInfo.mimetype, log);
         },
         template: `
             <md-dialog translate-attr="{'aria-label': 'messageTypes.AUDIO_MESSAGE'}">
@@ -63,6 +61,7 @@ function showAudioDialog(
 }
 
 export default [
+    'LogService',
     'WebClientService',
     'MediaboxService',
     'MessageService',
@@ -72,10 +71,10 @@ export default [
     '$timeout',
     '$transitions',
     '$translate',
-    '$log',
     '$filter',
     '$window',
-    function(webClientService: WebClientService,
+    function(logService: LogService,
+             webClientService: WebClientService,
              mediaboxService: MediaboxService,
              messageService: MessageService,
              timeoutService: TimeoutService,
@@ -84,9 +83,9 @@ export default [
              $timeout: ng.ITimeoutService,
              $transitions: UiTransitionService,
              $translate: ng.translate.ITranslateService,
-             $log: ng.ILogService,
              $filter: ng.IFilterService,
              $window: ng.IWindowService) {
+        const log = logService.getLogger('MessageMedia-C');
         return {
             restrict: 'EA',
             scope: {},
@@ -97,8 +96,6 @@ export default [
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                this.logTag = '[MessageMedia]';
-
                 // On state transitions, clear mediabox
                 $transitions.onStart({}, function(trans: UiTransition) {
                     mediaboxService.clearMedia();
@@ -130,7 +127,7 @@ export default [
                             thumbnailPreviewUri = bufferToUrl(
                                 (this.message as threema.Message).thumbnail.preview,
                                 webClientService.appCapabilities.imageFormat.thumbnail,
-                                logAdapter($log.warn, this.logTag),
+                                log,
                             );
                         }
                         return thumbnailPreviewUri;
@@ -175,7 +172,7 @@ export default [
                                     this.thumbnail = bufferToUrl(
                                         buf,
                                         webClientService.appCapabilities.imageFormat.thumbnail,
-                                        logAdapter($log.warn, this.logTag),
+                                        log,
                                     );
                                 };
 
@@ -194,7 +191,7 @@ export default [
                                             .catch((error) => {
                                                 // TODO: Handle this properly / show an error message
                                                 const message = `Thumbnail request has been rejected: ${error}`;
-                                                this.$log.error(this.logTag, message);
+                                                this.log.error(message);
                                             });
                                     }, 1000, false, 'thumbnail');
                                 }
@@ -215,13 +212,13 @@ export default [
                     };
 
                     // Play a Audio file in a dialog
-                    this.playAudio = (blobInfo: threema.BlobInfo) => showAudioDialog($mdDialog, $log, blobInfo);
+                    this.playAudio = (blobInfo: threema.BlobInfo) => showAudioDialog($mdDialog, logService, blobInfo);
 
                     // Download function
                     this.download = () => {
-                        $log.debug(this.logTag, 'Download blob');
+                        log.debug('Download blob');
                         if (this.downloading) {
-                            $log.debug(this.logTag, 'Download already in progress...');
+                            log.debug('Download already in progress...');
                             return;
                         }
                         const message: threema.Message = this.message;
@@ -230,7 +227,7 @@ export default [
                         webClientService.requestBlob(message.id, receiver)
                             .then((blobInfo: threema.BlobInfo) => {
                                 $rootScope.$apply(() => {
-                                    $log.debug(this.logTag, 'Blob loaded');
+                                    log.debug('Blob loaded');
                                     this.downloading = false;
                                     this.downloaded = true;
 
@@ -251,10 +248,7 @@ export default [
                                             if (this.message.file.type === 'image/gif') {
                                                 // Show inline
                                                 this.blobBufferUrl = bufferToUrl(
-                                                    blobInfo.buffer,
-                                                    'image/gif',
-                                                    logAdapter($log.warn, this.logTag),
-                                                );
+                                                    blobInfo.buffer, 'image/gif', log);
                                                 // Hide thumbnail
                                                 this.showThumbnail = false;
                                             } else {
@@ -266,8 +260,7 @@ export default [
                                             this.playAudio(blobInfo);
                                             break;
                                         default:
-                                            $log.warn(this.logTag,
-                                                'Ignored download request for message type', this.message.type);
+                                            log.warn('Ignored download request for message type', this.message.type);
                                     }
                                 });
                             })

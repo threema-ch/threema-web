@@ -14,10 +14,12 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
+import {LogService} from '../services/log';
 
 export default [
-    '$log', '$translate',
-    function($log: ng.ILogService, $translate: ng.translate.ITranslateService) {
+    '$translate', 'LogService',
+    function($translate: ng.translate.ITranslateService, logService: LogService) {
+        const log = logService.getLogger('VerificationLevel-C');
         return {
             restrict: 'EA',
             scope: {},
@@ -52,7 +54,7 @@ export default [
                     }
 
                     if (label === undefined) {
-                        $log.error('invalid verification level', this.level);
+                        log.error('invalid verification level', this.level);
                         return;
                     }
 

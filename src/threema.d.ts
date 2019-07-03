@@ -18,6 +18,19 @@
 declare const angular: ng.IAngularStatic;
 
 declare namespace threema {
+    type LogType = 'debug' | 'trace' | 'info' | 'warn' | 'error';
+    type LogLevel = 'none' | 'debug' | 'info' | 'warn' | 'error';
+    type LogRecord = [Date, LogType, any?, ...any[]];
+
+    /**
+     * An object can be marked as confidential in which case it needs to
+     * implement the censor method. This mixin is being used for sanitising log
+     * records when using the report tool.
+     */
+    interface Confidential<U, C> {
+        uncensored: U;
+        censored(): C;
+    }
 
     interface Avatar {
         // Low resolution avatar URI
@@ -624,25 +637,40 @@ declare namespace threema {
     }
 
     interface Config {
+        // General
         SELF_HOSTED: boolean;
-        PREV_PROTOCOL_LAST_VERSION: string | null;
         VERSION_MOUNTAIN: string;
         VERSION_MOUNTAIN_URL: string;
         VERSION_MOUNTAIN_IMAGE_URL: string;
         VERSION_MOUNTAIN_IMAGE_COPYRIGHT: string;
         VERSION_MOUNTAIN_HEIGHT: number;
+        PREV_PROTOCOL_LAST_VERSION: string | null;
         GIT_BRANCH: string;
-        SALTYRTC_PORT: number;
-        SALTYRTC_SERVER_KEY: string | null;
+
+        // SaltyRTC
         SALTYRTC_HOST: string | null;
         SALTYRTC_HOST_PREFIX: string | null;
         SALTYRTC_HOST_SUFFIX: string | null;
-        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
+        SALTYRTC_PORT: number;
+        SALTYRTC_SERVER_KEY: string | null;
+
+        // ICE
         ICE_SERVERS: RTCIceServer[];
+
+        // Push
         PUSH_URL: string;
-        VERBOSE_DEBUGGING: boolean;
-        MSG_DEBUGGING: boolean;
-        MSGPACK_DEBUGGING: boolean;
+
+        // Logging/debugging
+        LOG_TAG_PADDING: number,
+        CONSOLE_LOG_LEVEL: LogLevel;
+        REPORT_LOG_LEVEL: LogLevel;
+        REPORT_LOG_LIMIT: number;
+        COMPOSE_AREA_LOG_LEVEL: LogLevel;
+        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
+        TIMER_LOG_LEVEL: LogLevel;
+        ARP_LOG_LEVEL: LogLevel;
+        ARP_LOG_TRACE: boolean;
+        MSGPACK_LOG_TRACE: boolean;
     }
 
     interface InitialConversationData {
