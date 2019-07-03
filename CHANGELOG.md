@@ -4,6 +4,24 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.2.0-beta.3][v2.2.0-beta.3] (2019-07-03)
+
+Changes:
+
+* [feature] Add Portuguese translations ([#832][i832])
+* [feature] Overhauled logging system ([#826][i826])
+* [change] Update Czech, French, Chinese translations ([#832][i832])
+* [bug] Fix connection bar being flaky ([#824][i824])
+* [bug] Fix collapsing of consecutive whitespace in compose area ([#821][i821])
+* [bug] Fix undo behavior in compose area ([#827][i827])
+
+Contributors:
+
+- [Nuno\_M](https://www.transifex.com/user/profile/Nuno_M/) (PT translations)
+- [Marcel Krüse](https://www.transifex.com/user/profile/blogkaizzenn/) (PT translations)
+- [Johannes Müller](https://www.transifex.com/user/profile/tscho/) (PT translations)
+
+
 ### [v2.2.0-beta.2][v2.2.0-beta.2] (2019-06-13)
 
 Changes:
@@ -770,7 +788,13 @@ First public release.
 [i816]: https://github.com/threema-ch/threema-web/issues/816
 [i817]: https://github.com/threema-ch/threema-web/issues/817
 [i818]: https://github.com/threema-ch/threema-web/issues/818
+[i821]: https://github.com/threema-ch/threema-web/issues/821
+[i824]: https://github.com/threema-ch/threema-web/issues/824
+[i826]: https://github.com/threema-ch/threema-web/issues/826
+[i827]: https://github.com/threema-ch/threema-web/issues/827
+[i832]: https://github.com/threema-ch/threema-web/issues/832
 
+[v2.2.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.2...v2.2.0-beta.3
 [v2.2.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.1...v2.2.0-beta.2
 [v2.2.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0-beta.1
 [v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
