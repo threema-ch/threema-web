@@ -12,7 +12,7 @@
         "PLEASE_RELOAD": "Znovu načtěte stránku a zkuste to znovu.",
         "RELOAD": "Načíst znovu",
         "PASSWORD": "Heslo",
-        "CHOOSE_PASSWORD": "Pokud chcete zůstat trvale přihlášeni, zadejte prosím<br>heslo před naskenováním QR kódu.",
+        "CHOOSE_PASSWORD": "Pokud chcete zůstat trvale přihlášeni, zadejte prosím<br>heslo relace před naskenováním QR kódu.",
         "UNLOCK_FAILED_TEXT": "Zadali jste nesprávné heslo, relaci nelze obnovit.",
         "ENTER_PASSWORD": "Chcete-li se znovu připojit k vaší předchozí relaci,<br> zadejte prosím heslo:",
         "UNLOCK_FAILED_TITLE": "Odemknutí se nezdařilo",
@@ -193,7 +193,7 @@
         "PINNED_CONVERSATION_ERROR": "Konverzace nemůže být připnuta",
         "UNPINNED_CONVERSATION_OK": "Konverzace odepnuta",
         "UNPINNED_CONVERSATION_ERROR": "Konverzace nemůže být odepnuta",
-        "ME": "Me"
+        "ME": "Mě"
     },
     "messageStates": {
         "WE_ACK": "Poslali jste \"palec nahoru\"",
