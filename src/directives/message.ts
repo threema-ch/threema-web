@@ -19,6 +19,8 @@
 
 import {saveAs} from 'file-saver';
 
+import * as clipboard from '../helpers/clipboard';
+
 import {BrowserInfo} from '../helpers/browser_info';
 import {getSenderIdentity} from '../helpers/messages';
 import {BrowserService} from '../services/browser';
@@ -120,40 +122,14 @@ export default [
                             return;
                         }
 
-                        // In order to copy the text to the clipboard,
-                        // put it into a temporary textarea element.
-                        const textArea = document.createElement('textarea');
-                        textArea.value = text;
-                        document.body.appendChild(textArea);
-
-                        if ((this.browserInfo as BrowserInfo).isSafari()) {
-                            // Safari: Create a selection range.
-                            // Inspiration: https://stackoverflow.com/a/34046084/284318
-                            textArea.contentEditable = 'true';
-                            textArea.readOnly = false;
-                            const range = document.createRange();
-                            const selection = self.getSelection();
-                            selection.removeAllRanges();
-                            selection.addRange(range);
-                            textArea.setSelectionRange(0, 999999);
-                        } else {
-                            textArea.focus();
-                            textArea.select();
-                        }
-
-                        // Copy selection to clipboard
-                        let toastString = 'messenger.COPY_ERROR';
+                        // Copy to clipboard
+                        let toastString = 'messenger.COPIED';
                         try {
-                            const successful = document.execCommand('copy');
-                            if (!successful) {
-                                log.warn('Could not copy text to clipboard');
-                            } else {
-                                toastString = 'messenger.COPIED';
-                            }
-                        } catch (err) {
-                            log.warn('Could not copy text to clipboard:', err);
+                            clipboard.copyString(text, (this.browserInfo as BrowserInfo).isSafari());
+                        } catch (error) {
+                            log.warn('Could not copy text to clipboard:', error);
+                            toastString = 'messenger.COPY_ERROR';
                         }
-                        document.body.removeChild(textArea);
 
                         // Show toast
                         const toast = $mdToast.simple()
