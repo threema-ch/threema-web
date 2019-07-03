@@ -3,9 +3,10 @@
 Major release with backwards incompatible changes? Check for `TODO` comments
 with deprecations. Remove them if possible.
 
-Update translations:
+Update translations (https://github.com/transifex/transifex-client/):
 
-    $ # Download translation files from transifex.com
+    $ tx pull --all
+    $ git diff public/i18n/
     $ git add public/i18n/
     $ git commit -m 'Update translation strings from Transifex'
 
