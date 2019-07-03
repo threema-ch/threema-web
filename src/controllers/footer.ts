@@ -16,6 +16,7 @@
  */
 
 import {isActionTrigger} from '../helpers';
+import {TroubleshootingController} from './troubleshooting';
 
 /**
  * Handle footer information.
@@ -54,6 +55,20 @@ export class FooterController {
             ],
             controllerAs: 'ctrl',
             templateUrl: 'partials/dialog.version.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            fullscreen: true,
+        });
+    }
+
+    public showTroubleshooting(ev?: KeyboardEvent): void {
+        if (ev !== undefined && !isActionTrigger(ev)) {
+            return;
+        }
+        this.$mdDialog.show({
+            controller: TroubleshootingController,
+            controllerAs: 'ctrl',
+            templateUrl: 'partials/dialog.troubleshooting.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             fullscreen: true,

@@ -1693,203 +1693,216 @@ export class WebClientService {
     /**
      * Send a message to the specified receiver.
      */
-    public sendMessage(
+    public async sendMessage(
         baseReceiver: threema.BaseReceiver,
         sendType: threema.MessageContentType,
         data: threema.MessageData,
-        previewDataUrl?: string,
-    ): Promise<void> {
-        return new Promise<void> (
-            (resolve, reject) => {
-                // This is the expected message type that will be reflected
-                // back once the message has been created successfully.
-                let reflectedType: threema.MessageType;
+        options: {
+            previewDataUrl?: string,
+            waitUntilAcknowledged?: boolean,
+        } = {},
+    ): Promise<any> {
+        // This is the expected message type that will be reflected
+        // back once the message has been created successfully.
+        let reflectedType: threema.MessageType;
 
-                // Try to load receiver
-                const receiver = this.receivers.getData(baseReceiver);
+        // Try to load receiver
+        const receiver = this.receivers.getData(baseReceiver);
 
-                // Check blocked flag
-                if (isContactReceiver(receiver) && receiver.isBlocked) {
-                    return reject(this.$translate.instant('error.CONTACT_BLOCKED'));
+        // Check blocked flag
+        if (isContactReceiver(receiver) && receiver.isBlocked) {
+            throw this.$translate.instant('error.CONTACT_BLOCKED');
+        }
+
+        // Decide on subtype
+        let subType;
+        switch (sendType) {
+            case 'text':
+                reflectedType = 'text';
+                subType = WebClientService.SUB_TYPE_TEXT_MESSAGE;
+
+                const textData = data as threema.TextMessageData;
+                const msgLength = textData.text.length;
+
+                // Ignore empty text messages
+                if (msgLength === 0) {
+                    this.log.warn('Ignored empty text message');
+                    throw this.$translate.instant('error.ERROR_OCCURRED');
                 }
 
-                // Decide on subtype
-                let subType;
-                switch (sendType) {
-                    case 'text':
-                        reflectedType = 'text';
-                        subType = WebClientService.SUB_TYPE_TEXT_MESSAGE;
+                // Ignore text messages that are too long.
+                if (msgLength > WebClientService.MAX_TEXT_LENGTH) {
+                    throw this.$translate.instant('error.TEXT_TOO_LONG', {
+                        max: WebClientService.MAX_TEXT_LENGTH,
+                    });
+                }
 
-                        const textData = data as threema.TextMessageData;
-                        const msgLength = textData.text.length;
+                break;
+            case 'file':
+                const fileData = data as threema.FileMessageData;
 
-                        // Ignore empty text messages
-                        if (msgLength === 0) {
-                            this.log.warn('Ignored empty text message');
-                            return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                        }
+                // Validate max file size
+                if (this.chosenTask === threema.ChosenTask.WebRTC) {
+                    if (fileData.size > WebClientService.MAX_FILE_SIZE_WEBRTC) {
+                        throw this.$translate.instant('error.FILE_TOO_LARGE_WEB');
+                    }
+                } else {
+                    if (fileData.size > this.clientInfo.capabilities.maxFileSize) {
+                        throw this.$translate.instant('error.FILE_TOO_LARGE', {
+                            maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
+                        });
+                    }
+                }
 
-                        // Ignore text messages that are too long.
-                        if (msgLength > WebClientService.MAX_TEXT_LENGTH) {
-                            return reject(this.$translate.instant('error.TEXT_TOO_LONG', {
-                                max: WebClientService.MAX_TEXT_LENGTH,
-                            }));
-                        }
+                // Determine reflected type and required feature mask
+                reflectedType = 'file';
+                let requiredFeature = ContactReceiverFeature.FILE;
+                let invalidFeatureMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
+                if (fileData.sendAsFile !== true) {
+                    // File will be dispatched to the app as a file but the actual type sent
+                    // to the recipient depends on the MIME type.
+                    const mimeType = fileData.fileType;
+                    if (this.mimeService.isAudio(mimeType, this.clientInfo.os)) {
+                        reflectedType = 'audio';
+                        requiredFeature = ContactReceiverFeature.AUDIO;
+                        invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
+                    } else if (this.mimeService.isImage(mimeType)) {
+                        reflectedType = 'image';
+                    } else if (this.mimeService.isVideo(mimeType)) {
+                        reflectedType = 'video';
+                    }
+                }
 
-                        break;
-                    case 'file':
-                        const fileData = data as threema.FileMessageData;
+                subType = WebClientService.SUB_TYPE_FILE_MESSAGE;
 
-                        // Validate max file size
-                        if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                            if (fileData.size > WebClientService.MAX_FILE_SIZE_WEBRTC) {
-                                return reject(this.$translate.instant('error.FILE_TOO_LARGE_WEB'));
-                            }
-                        } else {
-                            if (fileData.size > this.clientInfo.capabilities.maxFileSize) {
-                                return reject(this.$translate.instant('error.FILE_TOO_LARGE', {
-                                    maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
-                                }));
-                            }
-                        }
-
-                        // Determine reflected type and required feature mask
-                        reflectedType = 'file';
-                        let requiredFeature = ContactReceiverFeature.FILE;
-                        let invalidFeatureMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
-                        if (fileData.sendAsFile !== true) {
-                            // File will be dispatched to the app as a file but the actual type sent
-                            // to the recipient depends on the MIME type.
-                            const mimeType = fileData.fileType;
-                            if (this.mimeService.isAudio(mimeType, this.clientInfo.os)) {
-                                reflectedType = 'audio';
-                                requiredFeature = ContactReceiverFeature.AUDIO;
-                                invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
-                            } else if (this.mimeService.isImage(mimeType)) {
-                                reflectedType = 'image';
-                            } else if (this.mimeService.isVideo(mimeType)) {
-                                reflectedType = 'video';
-                            }
-                        }
-
-                        subType = WebClientService.SUB_TYPE_FILE_MESSAGE;
-
-                        // check receiver
+                // check receiver
+                switch (receiver.type) {
+                    case 'group':
+                    case 'distributionList':
+                        const unsupportedMembers = [];
+                        let members: string[];
                         switch (receiver.type) {
                             case 'group':
+                                const group = this.groups.get(receiver.id);
+                                if (group === undefined) {
+                                    this.log.error(`Group ${receiver.id} not found`);
+                                    throw this.$translate.instant('error.ERROR_OCCURRED');
+                                }
+                                members = group.members;
+                                break;
                             case 'distributionList':
-                                const unsupportedMembers = [];
-                                let members: string[];
-                                switch (receiver.type) {
-                                    case 'group':
-                                        const group = this.groups.get(receiver.id);
-                                        if (group === undefined) {
-                                            this.log.error(`Group ${receiver.id} not found`);
-                                            return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                                        }
-                                        members = group.members;
-                                        break;
-                                    case 'distributionList':
-                                        const distributionList = this.distributionLists.get(receiver.id);
-                                        if (distributionList === undefined) {
-                                            this.log.error(`Distribution list ${receiver.id} not found`);
-                                            return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                                        }
-                                        members = distributionList.members;
-                                        break;
+                                const distributionList = this.distributionLists.get(receiver.id);
+                                if (distributionList === undefined) {
+                                    this.log.error(`Distribution list ${receiver.id} not found`);
+                                    throw this.$translate.instant('error.ERROR_OCCURRED');
                                 }
-                                for (const identity of members) {
-                                    if (identity !== this.me.id) {
-                                        // tslint:disable-next-line: no-shadowed-variable
-                                        const contact = this.contacts.get(identity);
-                                        if (contact === undefined) {
-                                            // This shouldn't actually happen. But if it happens, log an error
-                                            // and assume image support. It's much more likely that the contact
-                                            // can receive images (feature flag 0x01) than otherwise. And if one
-                                            // of the contacts really cannot receive images, the app will return
-                                            // an error message.
-                                            this.log.error(`Cannot retrieve contact ${identity}`);
-                                        } else if (!hasFeature(contact, requiredFeature, this.log)) {
-                                            unsupportedMembers.push(contact.displayName);
-                                        }
-                                    }
-                                }
-
-                                if (unsupportedMembers.length > 0) {
-                                    return reject(this.$translate.instant(
-                                        invalidFeatureMessage, {receiverName: unsupportedMembers.join(',')},
-                                    ));
-                                }
+                                members = distributionList.members;
                                 break;
-                            case 'contact':
-                                const contact = this.contacts.get(receiver.id);
+                        }
+                        for (const identity of members) {
+                            if (identity !== this.me.id) {
+                                // tslint:disable-next-line: no-shadowed-variable
+                                const contact = this.contacts.get(identity);
                                 if (contact === undefined) {
-                                    this.log.error('Cannot retrieve contact');
-                                    return reject(this.$translate.instant('error.ERROR_OCCURRED'));
+                                    // This shouldn't actually happen. But if it happens, log an error
+                                    // and assume image support. It's much more likely that the contact
+                                    // can receive images (feature flag 0x01) than otherwise. And if one
+                                    // of the contacts really cannot receive images, the app will return
+                                    // an error message.
+                                    this.log.error(`Cannot retrieve contact ${identity}`);
                                 } else if (!hasFeature(contact, requiredFeature, this.log)) {
-                                    this.log.debug('Cannot send message: Feature level mismatch:',
-                                        contact.featureMask, 'does not include', requiredFeature);
-                                    return reject(this.$translate.instant(invalidFeatureMessage, {
-                                        receiverName: contact.displayName}));
+                                    unsupportedMembers.push(contact.displayName);
                                 }
-                                break;
-                            default:
-                                this.log.error('Invalid receiver type:', receiver.type);
-                                return reject(this.$translate.instant('error.ERROR_OCCURRED'));
+                            }
+                        }
+
+                        if (unsupportedMembers.length > 0) {
+                            throw this.$translate.instant(
+                                invalidFeatureMessage, {receiverName: unsupportedMembers.join(',')},
+                            );
+                        }
+                        break;
+                    case 'contact':
+                        const contact = this.contacts.get(receiver.id);
+                        if (contact === undefined) {
+                            this.log.error('Cannot retrieve contact');
+                            throw this.$translate.instant('error.ERROR_OCCURRED');
+                        } else if (!hasFeature(contact, requiredFeature, this.log)) {
+                            this.log.debug('Cannot send message: Feature level mismatch:',
+                                contact.featureMask, 'does not include', requiredFeature);
+                            throw this.$translate.instant(invalidFeatureMessage, {
+                                receiverName: contact.displayName});
                         }
                         break;
                     default:
-                        this.log.error('Invalid message type:', sendType);
-                        return reject(this.$translate.instant('error.ERROR_OCCURRED'));
+                        this.log.error('Invalid receiver type:', receiver.type);
+                        throw this.$translate.instant('error.ERROR_OCCURRED');
                 }
+                break;
+            default:
+                this.log.error('Invalid message type:', sendType);
+                throw this.$translate.instant('error.ERROR_OCCURRED');
+        }
 
-                const id = this.createRandomWireMessageId();
-                let temporaryMessage: threema.Message;
-                try {
-                    temporaryMessage = this.messageService.createTemporary(
-                        id, receiver, reflectedType, data, previewDataUrl);
-                } catch (error) {
-                    this.log.error(error);
-                    return reject(this.$translate.instant('error.ERROR_OCCURRED'));
-                }
-                this.messages.addNewer(receiver, [temporaryMessage]);
+        // Request the conversation to be loaded
+        // Note: This is required since we need to retrieve updates of the
+        //       message we're going to send.
+        if (this.messages.getList(receiver).length === 0) {
+            await this.requestMessages(receiver);
+        }
 
-                const args = {
-                    [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
-                    [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
-                };
+        // Create temporary message to be displayed until acknowledged by the
+        // mobile device
+        const id = this.createRandomWireMessageId();
+        let temporaryMessage: threema.Message;
+        try {
+            temporaryMessage = this.messageService.createTemporary(
+                id, receiver, reflectedType, data, options.previewDataUrl);
+        } catch (error) {
+            this.log.error(error);
+            throw this.$translate.instant('error.ERROR_OCCURRED');
+        }
+        this.messages.addNewer(receiver, [temporaryMessage]);
 
-                // Send message
-                this.sendCreateWireMessage(subType, true, args, data, id)
-                    .catch((error) => {
-                        this.arpLog.error('Error sending message:', error);
+        const args = {
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: receiver.type,
+            [WebClientService.ARGUMENT_RECEIVER_ID]: receiver.id,
+        };
 
-                        // Remove temporary message
-                        this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
+        // Send message
+        const sendPromise = this.sendCreateWireMessage(subType, true, args, data, id);
+        sendPromise.catch((error) => {
+            this.arpLog.error('Error sending message:', error);
 
-                        // Determine error message
-                        let errorMessage;
-                        switch (error) {
-                            case 'file_too_large': // TODO: deprecated
-                            case 'fileTooLarge':
-                                errorMessage = this.$translate.instant('error.FILE_TOO_LARGE_GENERIC');
-                                break;
-                            case 'blocked':
-                                errorMessage = this.$translate.instant('error.CONTACT_BLOCKED');
-                                break;
-                            default:
-                                errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
-                        }
+            // Remove temporary message
+            this.messages.removeTemporary(receiver, temporaryMessage.temporaryId);
 
-                        // Show alert
-                        this.alerts.push({
-                            source: 'sendMessage',
-                            type: 'alert',
-                            message: errorMessage,
-                        } as threema.Alert);
-                    });
-                resolve();
-            });
+            // Determine error message
+            let errorMessage;
+            switch (error) {
+                case 'file_too_large': // TODO: deprecated
+                case 'fileTooLarge':
+                    errorMessage = this.$translate.instant('error.FILE_TOO_LARGE_GENERIC');
+                    break;
+                case 'blocked':
+                    errorMessage = this.$translate.instant('error.CONTACT_BLOCKED');
+                    break;
+                default:
+                    errorMessage = this.$translate.instant('error.ERROR_OCCURRED');
+            }
+
+            // Show alert
+            this.alerts.push({
+                source: 'sendMessage',
+                type: 'alert',
+                message: errorMessage,
+            } as threema.Alert);
+        });
+
+        // Wait until the wire message has been acknowledged (if requested)
+        if (options.waitUntilAcknowledged) {
+            await sendPromise;
+        }
     }
 
     /**

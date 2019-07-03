@@ -636,13 +636,14 @@ class ConversationController {
                         //       type.
                         const caption = data.caption;
                         const sendAsFile = data.sendAsFile;
-                        const previewDataUrl = data.previewDataUrl || undefined;
+                        const options = { previewDataUrl: data.previewDataUrl || undefined };
                         contents.forEach((msg: threema.FileMessageData, index: number) => {
                             if (caption !== undefined && caption.length > 0) {
                                 msg.caption = caption;
                             }
                             msg.sendAsFile = sendAsFile;
-                            this.webClientService.sendMessage(this.$stateParams, type, msg, previewDataUrl)
+
+                            this.webClientService.sendMessage(this.$stateParams, type, msg, options)
                                 .then(() => {
                                     nextCallback(index);
                                 })

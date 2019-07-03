@@ -66,7 +66,17 @@
         "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
         "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?",
         "PLEASE_UPDATE_APP": "Bitte stellen Sie sicher, dass Sie die <a href=\"https://threema.ch/de/whats-new\" target=\"_blank\">neuste App-Version</a> von Threema nutzen!",
-        "USE_ARCHIVE_VERSION": "Alternativ können Sie zu der <a href=\"{archiveUrl}\">vorherigen Version</a> von Threema Web wechseln."
+        "USE_ARCHIVE_VERSION": "Alternativ können Sie zu der <a href=\"{archiveUrl}\">vorherigen Version</a> von Threema Web wechseln.",
+        "TROUBLESHOOTING": "Fehlerbehebung",
+        "REPORT_FAQ": "Für allgemeine Fragen und Lösungsvorschläge für häufige Probleme, <a target=\"_blank\" href=\"https://threema.ch/faq\">schauen Sie bitte zuerst in das FAQ</a>.",
+        "REPORT_LOG": "Sollte das FAQ Ihre Frage nicht beantworten oder das Problem bestehen bleiben, können Sie einen Fehlerbericht an den Threema Support senden.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Das Senden eines Fehlerberichts ist zur Zeit nicht möglich, da keine Verbindung zu Ihrem Mobilgerät besteht. Stellen Sie zuerst eine Verbindung mit Ihrem Mobilgerät her.",
+        "REPORT_VIA_CLIPBOARD": "Alternativ können Sie den Fehlerbericht in die Zwischenablage kopieren und <a target=\"_blank\" href=\"https://threema.ch/support\">per Webformular an den Threema Support senden</a>",
+        "DESCRIBE_PROBLEM": "Bitte beschreiben Sie das Problem.",
+        "COPY_LOG_CLIPBOARD": "In die Zwischenablage kopieren",
+        "REPORT_VIA_THREEMA": "Fehlerbericht an *SUPPORT senden",
+        "REPORT_VIA_THREEMA_FAILED": "Der Fehlerbericht konnte nicht an *SUPPORT gesendet werden.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Ein Fehlerbericht wurde an *SUPPORT gesendet."
     },
     "common": {
         "YES": "Ja",
