@@ -26,6 +26,7 @@ import {
     StateService as UiStateService,
 } from '@uirouter/angularjs';
 
+import {DialogController} from '../controllers/dialog';
 import {BrowserInfo} from '../helpers/browser_info';
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
@@ -40,22 +41,6 @@ import {WebClientService} from '../services/webclient';
 
 import GlobalConnectionState = threema.GlobalConnectionState;
 import DisconnectReason = threema.DisconnectReason;
-
-class DialogController {
-    // TODO: This is also used in partials/messenger.ts. We could somehow
-    // extract it into a separate file.
-    public static $inject = ['$mdDialog'];
-
-    public $mdDialog;
-
-    constructor($mdDialog) {
-        this.$mdDialog = $mdDialog;
-    }
-
-    public cancel() {
-        this.$mdDialog.cancel();
-    }
-}
 
 class WelcomeController {
     private static REDIRECT_DELAY = 500;
