@@ -29,21 +29,13 @@ export default [
             restrict: 'EA',
             scope: {},
             bindToController: {
-                members: '=eeeMembers',
-                onChange: '=eeeOnChange',
-                placeholder: '=eeePlaceholder',
+                requiredMemberFeatureMask: '<',
+                members: '=activeMembers',
+                onChange: '=onChange',
+                placeholder: '=placeholder',
             },
             controllerAs: 'ctrl',
             controller: [function() {
-                // Cache all contacts with group chat support
-                this.allContacts = Array
-                    .from(webClientService.contacts.values())
-                    .filter((contactReceiver: threema.ContactReceiver) => hasFeature(
-                        contactReceiver,
-                        threema.ContactReceiverFeature.GROUP_CHAT,
-                        log,
-                    )) as threema.ContactReceiver[];
-
                 this.selectedItemChange = (contactReceiver: threema.ContactReceiver) => {
                     if (contactReceiver !== undefined) {
                         this.members.push(contactReceiver.id);
@@ -100,6 +92,17 @@ export default [
                     );
                     return true;
                 };
+
+                this.$onInit = function() {
+                    // Cache all contacts
+                    this.allContacts = Array.from(webClientService.contacts.values())
+                        .filter((contactReceiver: threema.ContactReceiver) => hasFeature(
+                            contactReceiver,
+                            this.requiredMemberFeatureMask,
+                            log,
+                        )) as threema.ContactReceiver[];
+                };
+
             }],
             template: `
                 <ul class="member-list">

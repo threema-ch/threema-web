@@ -28,17 +28,22 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
 
+    // Custom services
+    private readonly log: Logger;
+    private readonly webClientService: WebClientService;
+
+    // Fields required by interface
+    public readonly receiverType = 'contact';
+    public subject: string;
+    public isLoading = false;
+
     private onRemovedCallback: threema.OnRemovedCallback;
     public firstName?: string;
     public lastName?: string;
     public identity: string;
-    public subject: string;
     public access: threema.ContactReceiverAccess;
-    public isLoading = false;
 
-    private readonly log: Logger;
     private contact: threema.ContactReceiver | null;
-    private webClientService: WebClientService;
     private firstNameLabel: string;
     private avatarController: AvatarControllerModel;
     private mode = ControllerModelMode.NEW;
@@ -179,13 +184,5 @@ export class ContactControllerModel implements threema.ControllerModel<threema.C
                 this.log.error('Cannot save contact, invalid mode');
                 return Promise.reject('Cannot save contact, invalid mode');
         }
-    }
-
-    public onChangeMembers(identities: string[]): void {
-        // Do nothing
-    }
-
-    public getMembers(): string[] {
-        return [this.identity];
     }
 }

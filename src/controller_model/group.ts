@@ -23,20 +23,29 @@ import {AvatarControllerModel} from './avatar';
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
 
-export class GroupControllerModel implements threema.ControllerModel<threema.GroupReceiver> {
-    private log: Logger;
+export class GroupControllerModel
+        implements threema.ControllerModel<threema.GroupReceiver>,
+                   threema.ControllerModelWithMembers {
+    // Angular services
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
+
+    // Custom services
+    private readonly log: Logger;
+    private readonly webClientService: WebClientService;
+
+    // Fields required by interface
+    public readonly receiverType = 'group';
+    public subject: string;
+    public isLoading = false; // TODO: Show loading indicator
+    public readonly requiredMemberFeatureMask = threema.ContactReceiverFeature.GROUP_CHAT;
+
     public members: string[];
     public name: string;
     public access: threema.GroupReceiverAccess;
-    public subject: string;
-
-    public isLoading = false; // TODO: Show loading indicator
 
     private addContactPlaceholder: string;
     private group: threema.GroupReceiver | null;
-    private webClientService: WebClientService;
     private avatarController: AvatarControllerModel;
     private mode: ControllerModelMode;
     private onRemovedCallback: threema.OnRemovedCallback;

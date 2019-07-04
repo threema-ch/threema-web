@@ -41,7 +41,7 @@ import {StateService} from '../services/state';
 import {TimeoutService} from '../services/timeout';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
-import {isContactReceiver} from '../typeguards';
+import {controllerModelHasMembers, isContactReceiver} from '../typeguards';
 
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
@@ -500,7 +500,7 @@ class ConversationController {
                 this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
 
                 // Enable mentions only in group chats
-                if (this.type === 'group') {
+                if (this.type === 'group' && controllerModelHasMembers(this.controllerModel)) {
                     this.allMentions.push({
                         identity: null,
                         query: this.$translate.instant('messenger.ALL').toLowerCase(),
