@@ -297,7 +297,7 @@ export function hasFeature(contactReceiver: threema.ContactReceiver,
         return (contactReceiver.featureMask & feature) !== 0;
         // tslint:enable:no-bitwise
     }
-    log.warn('Cannot check featureMask of a undefined contact receiver');
+    log.warn('Cannot check featureMask of an undefined contact receiver');
     return false;
 }
 
