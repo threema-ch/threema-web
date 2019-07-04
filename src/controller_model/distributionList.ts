@@ -34,7 +34,7 @@ export class DistributionListControllerModel
     private readonly webClientService: WebClientService;
 
     // Fields required by interface
-    public readonly receiverType = 'contact';
+    public readonly receiverType = 'distributionList';
     public subject: string;
     public isLoading = false;
     public readonly requiredMemberFeatureMask = threema.ContactReceiverFeature.NONE;
