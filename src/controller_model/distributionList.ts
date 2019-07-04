@@ -30,7 +30,7 @@ export class DistributionListControllerModel implements threema.ControllerModel<
     public name: string;
     public subject: string;
     public isLoading = false;
-    public readonly requiredMemberFeatureMask = null; // No constraints
+    public readonly requiredMemberFeatureMask: threema.ContactReceiverFeature = null; // No capability constraints
 
     private addContactPlaceholder: string;
     private distributionList: threema.DistributionListReceiver | null;
