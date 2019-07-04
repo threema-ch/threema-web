@@ -614,6 +614,13 @@ declare namespace threema {
          * Set the on removed callback.
          */
         setOnRemoved(callback: OnRemovedCallback): void;
+    }
+
+    interface ControllerModelWithMembers {
+        /**
+         * Optionally add a required feature flag that all members must have.
+         */
+        requiredMemberFeatureMask: threema.ContactReceiverFeature | null;
 
         /**
          * Callback called when the members change.

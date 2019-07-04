@@ -22,7 +22,9 @@ import {WebClientService} from '../services/webclient';
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
 
-export class DistributionListControllerModel implements threema.ControllerModel<threema.DistributionListReceiver> {
+export class DistributionListControllerModel
+        implements threema.ControllerModel<threema.DistributionListReceiver>,
+                   threema.ControllerModelWithMembers {
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
     private readonly log: Logger;
@@ -30,7 +32,7 @@ export class DistributionListControllerModel implements threema.ControllerModel<
     public name: string;
     public subject: string;
     public isLoading = false;
-    public readonly requiredMemberFeatureMask: threema.ContactReceiverFeature = null; // No capability constraints
+    public readonly requiredMemberFeatureMask = null; // No capability constraints
 
     private addContactPlaceholder: string;
     private distributionList: threema.DistributionListReceiver | null;
