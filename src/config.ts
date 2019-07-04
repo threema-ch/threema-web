@@ -42,7 +42,7 @@ export default {
     LOG_TAG_PADDING: 20,
     // Console log level
     // Note: It is advisable to set this to `info` on production.
-    CONSOLE_LOG_LEVEL: 'info',
+    CONSOLE_LOG_LEVEL: 'debug',
     // Report log level and maximum amount of log records to keep in memory.
     // Note: There's no reason to change this unless you want to disable
     //       the report tool.
