@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {hasFeature, hasValue} from '../helpers';
+import {hasFeature} from '../helpers';
 import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
 
@@ -95,17 +95,12 @@ export default [
 
                 this.$onInit = function() {
                     // Cache all contacts
-                    const contacts = webClientService.contacts.values();
-                    if (hasValue(this.requiredMemberFeatureMask)) {
-                        this.allContacts = Array.from(contacts)
-                            .filter((contactReceiver: threema.ContactReceiver) => hasFeature(
-                                contactReceiver,
-                                this.requiredMemberFeatureMask,
-                                log,
-                            )) as threema.ContactReceiver[];
-                    } else {
-                        this.allContacts = Array.from(contacts) as threema.ContactReceiver[];
-                    }
+                    this.allContacts = Array.from(webClientService.contacts.values())
+                        .filter((contactReceiver: threema.ContactReceiver) => hasFeature(
+                            contactReceiver,
+                            this.requiredMemberFeatureMask,
+                            log,
+                        )) as threema.ContactReceiver[];
                 };
 
             }],

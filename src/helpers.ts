@@ -290,6 +290,9 @@ export function hasFeature(contactReceiver: threema.ContactReceiver,
             log.warn(`Contact receiver with id ${contactReceiver.id} has featureMask 0`);
             return false;
         }
+        if (feature === threema.ContactReceiverFeature.NONE) {
+            return true;
+        }
         // tslint:disable:no-bitwise
         return (contactReceiver.featureMask & feature) !== 0;
         // tslint:enable:no-bitwise

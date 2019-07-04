@@ -101,3 +101,14 @@ export function isEmojiInfo(val: string | threema.EmojiInfo): val is threema.Emo
         && val.imgPath !== undefined
         && val.codepoint !== undefined;
 }
+
+/**
+ * Controller model has members.
+ *
+ * This returns true if the `ControllerModel` also implements the `ControllerModelWithMembers` interface.
+ */
+export function controllerModelHasMembers<T extends threema.BaseReceiver>(
+    cm: threema.ControllerModel<T>,
+): cm is threema.ControllerModel<T> & threema.ControllerModelWithMembers {
+    return cm.receiverType === 'group' || cm.receiverType === 'distributionList';
+}

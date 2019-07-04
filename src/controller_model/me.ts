@@ -28,21 +28,20 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
 
-    // Logging
+    // Custom services services
     private readonly log: Logger;
-
-    // Own services
     private webClientService: WebClientService;
+
+    // Fields required by interface
+    public readonly receiverType = 'me';
+    public subject: string;
+    public isLoading = false;
 
     // Own receiver instance
     private me: threema.MeReceiver;
 
     // Avatar controller
     private avatarController: AvatarControllerModel;
-
-    // Controller model fields
-    public subject: string;
-    public isLoading = false;
 
     // Profile data
     public nickname: string;
@@ -84,20 +83,6 @@ export class MeControllerModel implements threema.ControllerModel<threema.MeRece
      */
     public setOnRemoved(callback: threema.OnRemovedCallback): void {
         // Not applicable
-    }
-
-    /**
-     * Callback called when the members change.
-     */
-    public onChangeMembers(identities: string[]): void {
-        // Not possible
-    }
-
-    /**
-     * Return the members of this receiver.
-     */
-    public getMembers(): string[] {
-        return [this.me.id];
     }
 
     /**

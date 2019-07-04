@@ -25,18 +25,25 @@ import ControllerModelMode = threema.ControllerModelMode;
 export class DistributionListControllerModel
         implements threema.ControllerModel<threema.DistributionListReceiver>,
                    threema.ControllerModelWithMembers {
+    // Angular services
     private $translate: ng.translate.ITranslateService;
     private $mdDialog: ng.material.IDialogService;
+
+    // Custom services
     private readonly log: Logger;
-    public members: string[];
-    public name: string;
+    private readonly webClientService: WebClientService;
+
+    // Fields required by interface
+    public readonly receiverType = 'contact';
     public subject: string;
     public isLoading = false;
-    public readonly requiredMemberFeatureMask = null; // No capability constraints
+    public readonly requiredMemberFeatureMask = threema.ContactReceiverFeature.NONE;
+
+    public members: string[];
+    public name: string;
 
     private addContactPlaceholder: string;
     private distributionList: threema.DistributionListReceiver | null;
-    private webClientService: WebClientService;
     private mode: ControllerModelMode;
     private onRemovedCallback: threema.OnRemovedCallback;
 

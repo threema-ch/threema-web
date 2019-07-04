@@ -552,6 +552,7 @@ declare namespace threema {
     }
 
     const enum ContactReceiverFeature {
+        NONE = 0x00,
         AUDIO = 0x01,
         GROUP_CHAT = 0x02,
         BALLOT = 0x04,
@@ -560,6 +561,11 @@ declare namespace threema {
     }
 
     interface ControllerModel<T extends BaseReceiver> {
+        /**
+         * The receiver type that is handled by this controller model.
+         */
+        receiverType: threema.ReceiverType;
+
         /**
          * The title shown in the header.
          */
@@ -618,9 +624,9 @@ declare namespace threema {
 
     interface ControllerModelWithMembers {
         /**
-         * Optionally add a required feature flag that all members must have.
+         * A required feature flag that all members must have.
          */
-        requiredMemberFeatureMask: threema.ContactReceiverFeature | null;
+        requiredMemberFeatureMask: threema.ContactReceiverFeature;
 
         /**
          * Callback called when the members change.
