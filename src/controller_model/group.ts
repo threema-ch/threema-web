@@ -31,6 +31,7 @@ export class GroupControllerModel implements threema.ControllerModel<threema.Gro
     public name: string;
     public access: threema.GroupReceiverAccess;
     public subject: string;
+    public readonly requiredMemberFeatureMask = threema.ContactReceiverFeature.GROUP_CHAT;
 
     public isLoading = false; // TODO: Show loading indicator
 

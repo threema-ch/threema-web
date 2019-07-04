@@ -25,9 +25,10 @@
     <md-card-content>
         <ul class="member-list">
             <member-list-editor
-                    eee-members="ctrl.controllerModel.members",
-                    eee-placeholder="ctrl.controllerModel.addContactPlaceholder"
-                    eee-on-change="ctrl.controllerModel.onChangeMembers" />
+                required-member-feature-mask="ctrl.controllerModel.requiredMemberFeatureMask"
+                active-members="ctrl.controllerModel.members"
+                placeholder="ctrl.controllerModel.addContactPlaceholder"
+                on-change="ctrl.controllerModel.onChangeMembers" />
         </ul>
     </md-card-content>
 </md-card>
