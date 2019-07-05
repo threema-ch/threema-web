@@ -44,6 +44,14 @@ jobs:
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui chrome
+  link-check:
+    docker:
+      - image: docker:stable
+    steps:
+      - run: apk update && apk add git grep
+      - checkout
+      - setup_remote_docker
+      - run: grep -EorIh "(http|https)://[a-zA-Z0-9./()?=%&:,_-]*" src | grep -Ev "localhost|threema-web/blob/$" | sort | uniq | sed 's/\.$//' | sed '/(.*)/! s/).*$//' | docker run --rm -i ovalseven8/simple-link-checker
   lint:
     docker:
       - image: circleci/node:8-browsers
@@ -106,6 +114,7 @@ workflows:
       - unittest-node10
       - uitest-firefox
       - uitest-chrome
+      - link-check
       - lint
       - docker-build:
           filters:
