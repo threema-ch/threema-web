@@ -369,6 +369,16 @@ export class WebClientService {
         this.stateService.evtGlobalConnectionStateChange.attach(this.handleGlobalConnectionStateChange.bind(this));
     }
 
+    /**
+     * Return whether wire messages can be sent (or queued to be sent).
+     *
+     * Note: This will not return `true` before an initial connection has been
+     *       established successfully.
+     */
+    get readyToSubmit(): boolean {
+        return this.stateService.readyToSubmit(this.chosenTask, this.startupDone);
+    }
+
     get me(): threema.MeReceiver {
         return this.receivers.me;
     }
