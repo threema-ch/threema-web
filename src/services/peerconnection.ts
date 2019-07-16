@@ -107,7 +107,8 @@ export class PeerConnectionHelper {
             }
         };
         this.pc.onicecandidateerror = (e: RTCPeerConnectionIceErrorEvent) => {
-            this.log.error('ICE candidate error:', e);
+            this.log.warn(`ICE candidate error: ${e.errorText} ` +
+                `(url=${e.url}, host-candidate=${e.hostCandidate}, code=${e.errorCode})`);
         };
         this.pc.oniceconnectionstatechange = () => {
             this.log.debug('ICE connection state change:', this.pc.iceConnectionState);
