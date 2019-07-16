@@ -20,50 +20,56 @@ import {Logger} from 'ts-log';
 
 import {ConfidentialIceCandidate} from '../helpers/confidential';
 import {LogService} from './log';
+import {TimeoutService} from './timeout';
 
 /**
  * Wrapper around the WebRTC PeerConnection.
  */
 export class PeerConnectionHelper {
-    // Angular services
-    private log: Logger;
-    private $q: ng.IQService;
-    private $timeout: ng.ITimeoutService;
-    private $rootScope: ng.IRootScopeService;
+    private static readonly CONNECTION_FAILED_TIMEOUT_MS = 15000;
 
-    // WebRTC
-    private pc: RTCPeerConnection;
-    private webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask;
+    // Angular services
+    private readonly log: Logger;
+    private readonly $q: ng.IQService;
+    private readonly $rootScope: ng.IRootScopeService;
+
+    // Custom services
+    private readonly timeoutService: TimeoutService;
+
+        // WebRTC
+    private readonly pc: RTCPeerConnection;
+    private readonly webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask;
+    private connectionFailedTimer: ng.IPromise<void> | null = null;
 
     // Calculated connection state
     public connectionState: TaskConnectionState = TaskConnectionState.New;
     public onConnectionStateChange: (state: TaskConnectionState) => void = null;
 
-    constructor($q: ng.IQService, $timeout: ng.ITimeoutService, $rootScope: ng.IRootScopeService,
-                logService: LogService, webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask, iceServers: RTCIceServer[]) {
+    constructor($q: ng.IQService, $rootScope: ng.IRootScopeService,
+                logService: LogService, timeoutService: TimeoutService,
+                webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask, iceServers: RTCIceServer[]) {
         this.log = logService.getLogger('PeerConnection', 'color: #fff; background-color: #3333ff');
         this.log.info('Initialize WebRTC PeerConnection');
         this.log.debug('ICE servers used:', [].concat(...iceServers.map((c) => c.urls)));
         this.$q = $q;
-        this.$timeout = $timeout;
         this.$rootScope = $rootScope;
 
+        this.timeoutService = timeoutService;
         this.webrtcTask = webrtcTask;
 
         // Set up peer connection
         this.pc = new RTCPeerConnection({iceServers: iceServers});
-        this.pc.onnegotiationneeded = (e: Event) => {
+        this.pc.onnegotiationneeded = () => {
             this.log.debug('RTCPeerConnection: negotiation needed');
-            this.initiatorFlow().then(
-                (_) => this.log.debug('Initiator flow done'),
-            );
+            this.initiatorFlow()
+                .then(() => this.log.debug('Initiator flow done'));
         };
 
         // Handle state changes
-        this.pc.onconnectionstatechange = (e: Event) => {
+        this.pc.onconnectionstatechange = () => {
             this.log.debug('Connection state change:', this.pc.connectionState);
         };
-        this.pc.onsignalingstatechange = (e: Event) => {
+        this.pc.onsignalingstatechange = () => {
             this.log.debug('Signaling state change:', this.pc.signalingState);
         };
 
@@ -101,11 +107,19 @@ export class PeerConnectionHelper {
             }
         };
         this.pc.onicecandidateerror = (e: RTCPeerConnectionIceErrorEvent) => {
-            this.log.error('ICE candidate error:', e);
+            this.log.warn(`ICE candidate error: ${e.errorText} ` +
+                `(url=${e.url}, host-candidate=${e.hostCandidate}, code=${e.errorCode})`);
         };
-        this.pc.oniceconnectionstatechange = (e: Event) => {
+        this.pc.oniceconnectionstatechange = () => {
             this.log.debug('ICE connection state change:', this.pc.iceConnectionState);
             this.$rootScope.$apply(() => {
+                // Cancel connection failed timer
+                if (this.connectionFailedTimer !== null) {
+                    this.timeoutService.cancel(this.connectionFailedTimer);
+                    this.connectionFailedTimer = null;
+                }
+
+                // Handle state
                 switch (this.pc.iceConnectionState) {
                     case 'new':
                         this.setConnectionState(TaskConnectionState.New);
@@ -113,6 +127,17 @@ export class PeerConnectionHelper {
                     case 'checking':
                     case 'disconnected':
                         this.setConnectionState(TaskConnectionState.Connecting);
+
+                        // Setup connection failed timer
+                        // Note: There is no guarantee that we will end up in the 'failed' state, so we need to set up
+                        // our own timer as well.
+                        this.connectionFailedTimer = this.timeoutService.register(() => {
+                            // Closing the peer connection to prevent "SURPRISE, the connection works after all!"
+                            // situations which certainly would lead to ugly race conditions.
+                            this.connectionFailedTimer = null;
+                            this.log.debug('ICE connection considered failed');
+                            this.pc.close();
+                        }, PeerConnectionHelper.CONNECTION_FAILED_TIMEOUT_MS, true, 'connectionFailedTimer');
                         break;
                     case 'connected':
                     case 'completed':
@@ -128,7 +153,7 @@ export class PeerConnectionHelper {
                 }
             });
         };
-        this.pc.onicegatheringstatechange = (e: Event) => {
+        this.pc.onicegatheringstatechange = () => {
             this.log.debug('ICE gathering state change:', this.pc.iceGatheringState);
         };
         this.webrtcTask.on('candidates', (e: saltyrtc.tasks.webrtc.CandidatesEvent) => {
@@ -139,7 +164,8 @@ export class PeerConnectionHelper {
                 } else {
                     this.log.debug('No more remote ICE candidates');
                 }
-                this.pc.addIceCandidate(candidateInit);
+                this.pc.addIceCandidate(candidateInit)
+                    .catch((error) => this.log.warn('Unable to add ice candidate:', error));
             }
         });
     }
@@ -180,7 +206,7 @@ export class PeerConnectionHelper {
         if (state !== this.connectionState) {
             this.connectionState = state;
             if (this.onConnectionStateChange !== null) {
-                this.$timeout(() => this.onConnectionStateChange(state), 0);
+                this.onConnectionStateChange(state);
             }
         }
     }

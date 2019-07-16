@@ -862,10 +862,9 @@ export class WebClientService {
             }
 
             this.pcHelper = new PeerConnectionHelper(
-                this.$q, this.$timeout, this.$rootScope,
-                this.logService,
-                this.webrtcTask,
-                this.config.ICE_SERVERS);
+                this.$q, this.$rootScope,
+                this.logService, this.timeoutService,
+                this.webrtcTask, this.config.ICE_SERVERS);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
