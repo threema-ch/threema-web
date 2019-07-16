@@ -1774,7 +1774,7 @@ export class WebClientService {
                                         members = distributionList.members;
                                         break;
                                 }
-                                members.forEach((identity: string) => {
+                                for (const identity of members) {
                                     if (identity !== this.me.id) {
                                         // tslint:disable-next-line: no-shadowed-variable
                                         const contact = this.contacts.get(identity);
@@ -1789,7 +1789,7 @@ export class WebClientService {
                                             unsupportedMembers.push(contact.displayName);
                                         }
                                     }
-                                });
+                                }
 
                                 if (unsupportedMembers.length > 0) {
                                     return reject(this.$translate.instant(
