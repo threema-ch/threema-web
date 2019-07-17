@@ -1751,18 +1751,29 @@ export class WebClientService {
 
                         // check receiver
                         switch (receiver.type) {
-                            case 'distributionList':
-                                return reject(this.$translate.instant(
-                                    invalidFeatureMessage, {receiverName: receiver.displayName},
-                                ));
                             case 'group':
+                            case 'distributionList':
                                 const unsupportedMembers = [];
-                                const group = this.groups.get(receiver.id);
-
-                                if (group === undefined) {
-                                    return reject();
+                                let members: string[];
+                                switch (receiver.type) {
+                                    case 'group':
+                                        const group = this.groups.get(receiver.id);
+                                        if (group === undefined) {
+                                            this.log.error(`Group ${receiver.id} not found`);
+                                            return reject(this.$translate.instant('error.ERROR_OCCURRED'));
+                                        }
+                                        members = group.members;
+                                        break;
+                                    case 'distributionList':
+                                        const distributionList = this.distributionLists.get(receiver.id);
+                                        if (distributionList === undefined) {
+                                            this.log.error(`Distribution list ${receiver.id} not found`);
+                                            return reject(this.$translate.instant('error.ERROR_OCCURRED'));
+                                        }
+                                        members = distributionList.members;
+                                        break;
                                 }
-                                group.members.forEach((identity: string) => {
+                                for (const identity of members) {
                                     if (identity !== this.me.id) {
                                         // tslint:disable-next-line: no-shadowed-variable
                                         const contact = this.contacts.get(identity);
@@ -1772,12 +1783,12 @@ export class WebClientService {
                                             // can receive images (feature flag 0x01) than otherwise. And if one
                                             // of the contacts really cannot receive images, the app will return
                                             // an error message.
-                                            this.arpLog.error(`Cannot retrieve contact ${identity}`);
+                                            this.log.error(`Cannot retrieve contact ${identity}`);
                                         } else if (!hasFeature(contact, requiredFeature, this.log)) {
                                             unsupportedMembers.push(contact.displayName);
                                         }
                                     }
-                                });
+                                }
 
                                 if (unsupportedMembers.length > 0) {
                                     return reject(this.$translate.instant(
@@ -1788,10 +1799,10 @@ export class WebClientService {
                             case 'contact':
                                 const contact = this.contacts.get(receiver.id);
                                 if (contact === undefined) {
-                                    this.arpLog.error('Cannot retrieve contact');
+                                    this.log.error('Cannot retrieve contact');
                                     return reject(this.$translate.instant('error.ERROR_OCCURRED'));
                                 } else if (!hasFeature(contact, requiredFeature, this.log)) {
-                                    this.arpLog.debug('Cannot send message: Feature level mismatch:',
+                                    this.log.debug('Cannot send message: Feature level mismatch:',
                                         contact.featureMask, 'does not include', requiredFeature);
                                     return reject(this.$translate.instant(invalidFeatureMessage, {
                                         receiverName: contact.displayName}));
