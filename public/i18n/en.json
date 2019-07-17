@@ -124,6 +124,7 @@
         "GROUP_CREATOR": "Group creator",
         "GROUP_ROLE_NORMAL": "Member",
         "GROUP_ROLE_CREATOR": "Creator",
+        "UPLOADING": "Uploading …",
         "DOWNLOAD": "Download",
         "DOWNLOADING": "Downloading …",
         "COPY": "Copy",

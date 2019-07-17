@@ -75,8 +75,9 @@ declare namespace threema {
     }
 
     interface Thumbnail {
-        img?: string;
+        img?: ArrayBuffer; // Note: Does not exist in ARP
         preview: ArrayBuffer;
+        previewDataUrl?: string, // Note: Does not exist in ARP
         width: number;
         height: number;
     }
@@ -107,7 +108,7 @@ declare namespace threema {
     interface Message {
         type: MessageType;
         id: string;
-        body: string;
+        body?: string;
         thumbnail?: Thumbnail;
         date?: number;
         events?: MessageEvent[];
@@ -131,11 +132,10 @@ declare namespace threema {
     }
 
     interface FileInfo {
-        description: string;
         name: string;
         size: number;
         type: string;
-        inApp: boolean;
+        inApp: boolean; // See: https://github.com/threema-ch/app-remote-protocol/issues/4
     }
 
     interface VideoInfo {
@@ -871,7 +871,7 @@ declare namespace threema {
             addOlder(receiver: BaseReceiver, messages: Message[]): void;
             addStatusMessage(receiver: BaseReceiver, text: string): void;
             update(receiver: BaseReceiver, message: Message): boolean;
-            setThumbnail(receiver: BaseReceiver, messageId: string, thumbnailImage: string): boolean;
+            setThumbnail(receiver: BaseReceiver, messageId: string, thumbnailImage: ArrayBuffer): boolean;
             remove(receiver: BaseReceiver, messageId: string): boolean;
             removeTemporary(receiver: BaseReceiver, temporaryMessageId: string): boolean;
             bindTemporaryToMessageId(receiver: BaseReceiver, temporaryId: string, messageId: string): boolean;

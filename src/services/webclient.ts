@@ -1684,30 +1684,39 @@ export class WebClientService {
      * Send a message to the specified receiver.
      */
     public sendMessage(
-        receiver,
-        type: threema.MessageContentType,
-        message: threema.MessageData,
+        baseReceiver: threema.BaseReceiver,
+        sendType: threema.MessageContentType,
+        data: threema.MessageData,
+        previewDataUrl?: string,
     ): Promise<void> {
         return new Promise<void> (
             (resolve, reject) => {
-                // Try to load receiver object
-                const receiverObject = this.receivers.getData(receiver);
+                // This is the expected message type that will be reflected
+                // back once the message has been created successfully.
+                let reflectedType: threema.MessageType;
+
+                // Try to load receiver
+                const receiver = this.receivers.getData(baseReceiver);
+
                 // Check blocked flag
-                if (isContactReceiver(receiverObject) && receiverObject.isBlocked) {
+                if (isContactReceiver(receiver) && receiver.isBlocked) {
                     return reject(this.$translate.instant('error.CONTACT_BLOCKED'));
                 }
+
                 // Decide on subtype
                 let subType;
-                switch (type) {
+                switch (sendType) {
                     case 'text':
+                        reflectedType = 'text';
                         subType = WebClientService.SUB_TYPE_TEXT_MESSAGE;
 
-                        const textMessage = message as threema.TextMessageData;
-                        const msgLength = textMessage.text.length;
+                        const textData = data as threema.TextMessageData;
+                        const msgLength = textData.text.length;
 
                         // Ignore empty text messages
                         if (msgLength === 0) {
-                            return reject();
+                            this.log.warn('Ignored empty text message');
+                            return reject(this.$translate.instant('error.ERROR_OCCURRED'));
                         }
 
                         // Ignore text messages that are too long.
@@ -1719,31 +1728,37 @@ export class WebClientService {
 
                         break;
                     case 'file':
+                        const fileData = data as threema.FileMessageData;
+
                         // Validate max file size
                         if (this.chosenTask === threema.ChosenTask.WebRTC) {
-                            if ((message as threema.FileMessageData).size > WebClientService.MAX_FILE_SIZE_WEBRTC) {
+                            if (fileData.size > WebClientService.MAX_FILE_SIZE_WEBRTC) {
                                 return reject(this.$translate.instant('error.FILE_TOO_LARGE_WEB'));
                             }
                         } else {
-                            if ((message as threema.FileMessageData).size > this.clientInfo.capabilities.maxFileSize) {
+                            if (fileData.size > this.clientInfo.capabilities.maxFileSize) {
                                 return reject(this.$translate.instant('error.FILE_TOO_LARGE', {
                                     maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
                                 }));
                             }
                         }
 
-                        // Determine required feature mask
-                        let requiredFeature: ContactReceiverFeature = ContactReceiverFeature.FILE;
+                        // Determine reflected type and required feature mask
+                        reflectedType = 'file';
+                        let requiredFeature = ContactReceiverFeature.FILE;
                         let invalidFeatureMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
-                        if ((message as threema.FileMessageData).sendAsFile !== true) {
-                            // check mime type
-                            const mime = (message as threema.FileMessageData).fileType;
-                            if (this.mimeService.isAudio(mime, this.clientInfo.os)) {
+                        if (fileData.sendAsFile !== true) {
+                            // File will be dispatched to the app as a file but the actual type sent
+                            // to the recipient depends on the MIME type.
+                            const mimeType = fileData.fileType;
+                            if (this.mimeService.isAudio(mimeType, this.clientInfo.os)) {
+                                reflectedType = 'audio';
                                 requiredFeature = ContactReceiverFeature.AUDIO;
                                 invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
-                            } else if (this.mimeService.isImage(mime) || this.mimeService.isVideo(mime)) {
-                                requiredFeature = ContactReceiverFeature.AUDIO;
-                                invalidFeatureMessage = 'error.MESSAGE_NOT_SUPPORTED';
+                            } else if (this.mimeService.isImage(mimeType)) {
+                                reflectedType = 'image';
+                            } else if (this.mimeService.isVideo(mimeType)) {
+                                reflectedType = 'video';
                             }
                         }
 
@@ -1809,16 +1824,24 @@ export class WebClientService {
                                 }
                                 break;
                             default:
-                                return reject();
+                                this.log.error('Invalid receiver type:', receiver.type);
+                                return reject(this.$translate.instant('error.ERROR_OCCURRED'));
                         }
                         break;
                     default:
-                        this.arpLog.warn('Invalid message type:', type);
-                        return reject();
+                        this.log.error('Invalid message type:', sendType);
+                        return reject(this.$translate.instant('error.ERROR_OCCURRED'));
                 }
 
                 const id = this.createRandomWireMessageId();
-                const temporaryMessage = this.messageService.createTemporary(id, receiver, type, message);
+                let temporaryMessage: threema.Message;
+                try {
+                    temporaryMessage = this.messageService.createTemporary(
+                        id, receiver, reflectedType, data, previewDataUrl);
+                } catch (error) {
+                    this.log.error(error);
+                    return reject(this.$translate.instant('error.ERROR_OCCURRED'));
+                }
                 this.messages.addNewer(receiver, [temporaryMessage]);
 
                 const args = {
@@ -1827,7 +1850,7 @@ export class WebClientService {
                 };
 
                 // Send message
-                this.sendCreateWireMessage(subType, true, args, message, id)
+                this.sendCreateWireMessage(subType, true, args, data, id)
                     .catch((error) => {
                         this.arpLog.error('Error sending message:', error);
 

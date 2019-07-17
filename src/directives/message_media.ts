@@ -102,7 +102,8 @@ export default [
                 });
 
                 this.$onInit = function() {
-                    this.type = this.message.type;
+                    const message = this.message as threema.Message;
+                    this.type = message.type;
 
                     // Downloading
                     this.downloading = false;
@@ -110,39 +111,45 @@ export default [
                     this.downloaded = false;
 
                     // Uploading
-                    this.uploading = this.message.temporaryId !== undefined
-                        && this.message.temporaryId !== null;
+                    this.uploading = message.temporaryId !== undefined
+                        && message.temporaryId !== null;
 
                     // AnimGIF detection
-                    this.isAnimGif = !this.uploading
-                        && (this.message as threema.Message).type === 'file'
-                        && (this.message as threema.Message).file.type === 'image/gif';
+                    this.isGif = message.type === 'file' && message.file.type === 'image/gif';
+
+                    // Has a preview thumbnail
+                    this.hasPreviewThumbnail = (): boolean => {
+                        return hasValue(message.thumbnail) && (
+                            hasValue(message.thumbnail.previewDataUrl) || hasValue(message.thumbnail.preview));
+                    };
 
                     // Preview thumbnail
-                    let thumbnailPreviewUri = null;
-                    this.getThumbnailPreviewUri = () => {
+                    this.getThumbnailPreviewUri = (): string | null => {
                         // Cache thumbnail preview URI
-                        if (thumbnailPreviewUri === null
-                                && hasValue(this.message) && hasValue(this.message.thumbnail)) {
-                            thumbnailPreviewUri = bufferToUrl(
-                                (this.message as threema.Message).thumbnail.preview,
+                        if (hasValue(message.thumbnail.previewDataUrl)) {
+                            return message.thumbnail.previewDataUrl;
+                        }
+                        if (hasValue(message.thumbnail.preview)) {
+                            message.thumbnail.previewDataUrl = bufferToUrl(
+                                message.thumbnail.preview,
                                 webClientService.appCapabilities.imageFormat.thumbnail,
                                 log,
                             );
+                            return message.thumbnail.previewDataUrl;
                         }
-                        return thumbnailPreviewUri;
+                        return null;
+                    };
+                    // TODO: Uuuuugly!
+                    this.getThumbnailPreviewUriStyle = (): string => {
+                        const previewUri = hasValue(message.thumbnail) ? this.getThumbnailPreviewUri() : null;
+                        return previewUri !== null ? `url(${previewUri})` : 'none';
                     };
 
-                    // Thumbnail loading
-                    //
-                    // Do not show thumbnail in file messages (except anim gif).
-                    // If a thumbnail in file messages are available, the thumbnail
-                    // will be shown in the file circle
-                    this.showThumbnail = this.message.thumbnail !== undefined
-                        && ((this.message as threema.Message).type !== 'file' || this.isAnimGif);
+                    // Only show thumbnails for images, videos and GIFs
+                    // If a preview image is not available, we fall back to
+                    // icons depending on the type.
                     this.thumbnail = null;
-                    this.thumbnailFormat = webClientService.appCapabilities.imageFormat.thumbnail;
-                    if (this.message.thumbnail !== undefined) {
+                    if (message.thumbnail !== undefined) {
                         this.thumbnailStyle = {
                             width: this.message.thumbnail.width + 'px',
                             height: this.message.thumbnail.height + 'px',
@@ -153,8 +160,7 @@ export default [
 
                     this.wasInView = false;
                     this.thumbnailInView = (inView: boolean) => {
-                        if (this.message.thumbnail === undefined
-                                || this.wasInView === inView) {
+                        if (this.uploading || message.thumbnail === undefined || this.wasInView === inView) {
                             // do nothing
                             return;
                         }
@@ -169,29 +175,29 @@ export default [
                         } else {
                             if (this.thumbnail === null) {
                                 const setThumbnail = (buf: ArrayBuffer) => {
-                                    this.thumbnail = bufferToUrl(
+                                    this.thumbnail = `url(${bufferToUrl(
                                         buf,
                                         webClientService.appCapabilities.imageFormat.thumbnail,
                                         log,
-                                    );
+                                    )})`;
                                 };
 
-                                if (this.message.thumbnail.img !== undefined) {
-                                    setThumbnail(this.message.thumbnail.img);
+                                if (message.thumbnail.img !== undefined) {
+                                    setThumbnail(message.thumbnail.img);
                                     return;
                                 } else {
                                     this.thumbnailDownloading = true;
                                     loadingThumbnailTimeout = timeoutService.register(() => {
                                         webClientService
-                                            .requestThumbnail(this.receiver, this.message)
+                                            .requestThumbnail(this.receiver, message)
                                             .then((img) => $timeout(() => {
                                                 setThumbnail(img);
                                                 this.thumbnailDownloading = false;
                                             }))
                                             .catch((error) => {
                                                 // TODO: Handle this properly / show an error message
-                                                const message = `Thumbnail request has been rejected: ${error}`;
-                                                this.log.error(message);
+                                                const description = `Thumbnail request has been rejected: ${error}`;
+                                                this.log.error(description);
                                             });
                                     }, 1000, false, 'thumbnail');
                                 }
@@ -201,8 +207,8 @@ export default [
 
                     // For locations, retrieve the coordinates
                     this.location = null;
-                    if (this.message.location !== undefined) {
-                        this.location = this.message.location;
+                    if (message.location !== undefined) {
+                        this.location = message.location;
                         this.downloaded = true;
                     }
 
@@ -217,11 +223,14 @@ export default [
                     // Download function
                     this.download = () => {
                         log.debug('Download blob');
+                        if (this.uploading) {
+                            log.debug('Cannot download, still uploading');
+                            return;
+                        }
                         if (this.downloading) {
                             log.debug('Download already in progress...');
                             return;
                         }
-                        const message: threema.Message = this.message;
                         const receiver: threema.Receiver = this.receiver;
                         this.downloading = true;
                         webClientService.requestBlob(message.id, receiver)
@@ -231,7 +240,7 @@ export default [
                                     this.downloading = false;
                                     this.downloaded = true;
 
-                                    switch (this.message.type) {
+                                    switch (message.type) {
                                         case 'image':
                                             const caption = message.caption || '';
                                             mediaboxService.setMedia(
@@ -245,7 +254,7 @@ export default [
                                             saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
                                             break;
                                         case 'file':
-                                            if (this.message.file.type === 'image/gif') {
+                                            if (message.file.type === 'image/gif') {
                                                 // Show inline
                                                 this.blobBufferUrl = bufferToUrl(
                                                     blobInfo.buffer, 'image/gif', log);
@@ -260,7 +269,7 @@ export default [
                                             this.playAudio(blobInfo);
                                             break;
                                         default:
-                                            log.warn('Ignored download request for message type', this.message.type);
+                                            log.warn('Ignored download request for message type', message.type);
                                     }
                                 });
                             })
@@ -286,6 +295,10 @@ export default [
                                     $mdDialog.show(confirm);
                                 });
                             });
+                    };
+
+                    this.isLoading = () => {
+                        return this.uploading || this.isDownloading();
                     };
 
                     this.isDownloading = () => {

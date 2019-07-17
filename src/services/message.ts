@@ -136,31 +136,85 @@ export class MessageService {
     }
 
     /**
-     * Create a message object with a temporary id
+     * Get a preview Thumbnail object from a data URI.
+     */
+    public getPreviewThumbnail(uri: string, preview: ArrayBuffer): threema.Thumbnail {
+        const image = new Image();
+        image.src = uri;
+        return {
+            previewDataUrl: uri,
+            preview: preview,
+            width: image.width,
+            height: image.height,
+        };
+    }
+
+    /**
+     * Create a message object with a temporary id.
      */
     public createTemporary(
         temporaryId: string,
         receiver: threema.Receiver,
-        msgType: string,
-        messageData: threema.MessageData,
+        type: threema.MessageType,
+        data: threema.MessageData,
+        previewDataUrl?: string,
     ): threema.Message {
-        const message = {
-            temporaryId: temporaryId,
-            type: msgType,
-            isOutbox: true,
-            state: 'pending',
-            id: undefined,
-            body: undefined,
-            date: Math.floor(Date.now() / 1000),
+        // Populate base message
+        const timestampS = Math.floor(Date.now() / 1000);
+        const message: threema.Message = {
+            type: type,
+            id: undefined, // Note: Hack, violates the interface
+            date: timestampS,
+            sortKey: Number.MAX_SAFE_INTEGER, // Note: Ugly hack
             partnerId: receiver.id,
+            isOutbox: true,
             isStatus: false,
-            quote: undefined,
-            caption: msgType === 'file' ? (messageData as threema.FileMessageData).caption : null,
+            state: 'pending',
+            quote: data.quote,
+            temporaryId: temporaryId,
         } as threema.Message;
 
-        if (msgType === 'text') {
-            message.body = (messageData as threema.TextMessageData).text;
-            message.quote = (messageData as threema.TextMessageData).quote;
+        // Populate message depending on type
+        switch (type) {
+            case 'text':
+                const textData = data as threema.TextMessageData;
+                message.body = textData.text;
+                break;
+            case 'image': {
+                const fileData = data as threema.FileMessageData;
+                message.caption = fileData.caption;
+                if (previewDataUrl !== undefined) {
+                    message.thumbnail = this.getPreviewThumbnail(previewDataUrl, fileData.data);
+                }
+                break;
+            }
+            case 'video': {
+                const fileData = data as threema.FileMessageData;
+                // TODO: Set spinner placeholder if not already set, or set movie icon
+                // message.thumbnail = {
+                // };
+                message.video = {
+                    duration: null, // Note: Hack, violates the interface
+                    size: fileData.size,
+                };
+                break;
+            }
+            case 'file': {
+                const fileData = data as threema.FileMessageData;
+                message.caption = fileData.caption;
+                message.file = {
+                    name: fileData.name,
+                    size: fileData.size,
+                    type: fileData.fileType,
+                    inApp: false,
+                };
+                if (previewDataUrl !== undefined) {
+                    message.thumbnail = this.getPreviewThumbnail(previewDataUrl, fileData.data);
+                }
+                break;
+            }
+            default:
+                throw new Error(`Cannot create temporary message for type: ${type}`);
         }
 
         // Add delay for timeout checking
