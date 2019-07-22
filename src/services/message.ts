@@ -230,4 +230,18 @@ export class MessageService {
         }
         return message;
     }
+
+    /**
+     * Return whether the app has attempted to send this message to the server
+     * (successful or not).
+     */
+    public isSentOrSendingFailed(message: threema.Message): boolean {
+        switch (message.state) {
+            case 'pending':
+            case 'sending':
+                return false;
+            default:
+                return true;
+        }
+    }
 }

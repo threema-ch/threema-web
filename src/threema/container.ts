@@ -694,6 +694,7 @@ class Messages implements threema.Container.Messages {
         }
         return false;
     }
+
     /**
      * Remove a message.
      *
@@ -711,24 +712,33 @@ class Messages implements threema.Container.Messages {
         return false;
     }
 
-    public bindTemporaryToMessageId(receiver: threema.BaseReceiver, temporaryId: string, messageId: string): boolean {
+    /**
+     * Look up a message with a specific temporary id. If it has been found,
+     * replaces the temporary id with the message id and returns the message
+     * instance.
+     */
+    public bindTemporaryToMessageId(
+        receiver: threema.BaseReceiver,
+        temporaryId: string,
+        messageId: string,
+    ): threema.Message | null {
         const list = this.getList(receiver);
-        for (const item of list) {
-            if (item.temporaryId === temporaryId) {
-                if (item.id !== undefined) {
+        for (const message of list) {
+            if (message.temporaryId === temporaryId) {
+                if (message.id !== undefined) {
                     // do not bind to a new message id
-                    return false;
+                    return message;
                 }
 
                 // reset temporary id
-                item.temporaryId = null;
+                message.temporaryId = null;
 
                 // assign to "real" message id
-                item.id = messageId;
-                return true;
+                message.id = messageId;
+                return message;
             }
         }
-        return false;
+        return null;
     }
 
     /**
