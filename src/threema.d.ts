@@ -59,8 +59,8 @@ declare namespace threema {
 
     type MessageType = 'text' | 'image' | 'video' | 'audio' | 'location' | 'contact' |
                        'status' | 'ballot' | 'file' | 'voipStatus' | 'unknown';
-    type MessageState = 'delivered' | 'read' | 'send-failed' | 'sent' | 'user-ack' |
-                        'user-dec' | 'pending' | 'timeout' | 'sending';
+    type MessageState = 'pending' | 'sending' | 'send-failed' | 'sent' | 'delivered' |
+                        'read' | 'user-ack' | 'user-dec';
 
     const enum InitializationStep {
         ClientInfo = 'client info',

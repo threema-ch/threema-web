@@ -205,8 +205,8 @@
         "SENT": "Het bericht is afgeleverd op de Threema server",
         "DELIVERED": "Het bericht is afgeleverd op het apparaat van de ontvanger",
         "READ": "Het bericht is gelezen door de ontvanger",
-        "FAILED": "Het bericht kon niet worden verstuurd",
-        "TIMEOUT": "Het bericht kon niet worden afgeleverd naar je apparaat"},
+        "FAILED": "Het bericht kon niet worden verstuurd"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audiobericht",
         "FILE_MESSAGE": "Bericht met bestand",

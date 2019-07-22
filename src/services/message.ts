@@ -228,19 +228,6 @@ export class MessageService {
             default:
                 throw new Error(`Cannot create temporary message for type: ${type}`);
         }
-
-        // Add delay for timeout checking
-        // TODO: This should be removed once Android has reliable message delivery.
-        this.timeoutService.register(() => {
-            // Set the state to timeout if it is still pending.
-            // Note: If sending the message worked, by now the message object
-            // will have been replaced by a new one and the state change would
-            // have no effect anyways...
-            if (message.state === 'pending') {
-                message.state = 'timeout';
-            }
-        }, this.timeoutDelaySeconds * 1000, true, 'messageTimeout');
-
         return message;
     }
 }
