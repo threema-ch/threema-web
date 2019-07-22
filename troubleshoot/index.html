@@ -171,18 +171,11 @@
                     text-no="Threema Web must be able to open a working WebSocket connection to the SaltyRTC signaling server.">
             </div>
 
-            <div id="check-pc" ng-if="$ctrl.os === 'android'">
-                <h2>Is WebRTC available?</h2>
-                <check
-                    result="$ctrl.resultPc"
-                    text-no="RTCPeerConnection is a part of WebRTC.<br>Threema Web cannot work without it.">
-            </div>
-
             <div id="check-dc" ng-if="$ctrl.os === 'android'">
-                <h2>Are WebRTC DataChannels available?</h2>
+                <h2>Are WebRTC DataChannel connections possible?</h2>
                 <check
                     result="$ctrl.resultDc"
-                    text-no="RTCDataChannel is a part of WebRTC.<br>Threema Web cannot work without it.">
+                    text-no="RTCDataChannel is a part of WebRTC.<br>Threema Web for Android cannot work without it.">
             </div>
 
             <div id="check-turn" ng-if="$ctrl.os === 'android'">
