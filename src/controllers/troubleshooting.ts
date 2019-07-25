@@ -186,9 +186,16 @@ export class TroubleshootingController extends DialogController {
      * Serialise the memory log and add some metadata.
      */
     private getLog(): string {
-        const records = this.logService.memory.getRecords();
+        const browser = this.browserService.getBrowser();
 
-        // TODO: Add metadata to report
-        return JSON.stringify(records, MemoryLogger.replacer);
+        // Create container for meta data and log records
+        const container = {
+            config: this.config,
+            browser: browser.description(),
+            log: this.logService.memory.getRecords(),
+        };
+
+        // Return serialised and sanitised
+        return JSON.stringify(container, MemoryLogger.replacer, 2);
     }
 }
