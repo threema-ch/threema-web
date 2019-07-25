@@ -100,8 +100,8 @@ for target in "${targets[@]}"; do
 done
 
 echo "+ Update version number..."
-sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/index.html $DIR/*.bundle.js $DIR/manifest.webmanifest $DIR/browserconfig.xml $DIR/version.txt
-rm $DIR/*.bak $DIR/troubleshoot/index.html.bak
+sed -i.bak -e "s/\[\[VERSION\]\]/${VERSION}/g" $DIR/index.html $DIR/troubleshoot/*.html $DIR/*.bundle.js $DIR/manifest.webmanifest $DIR/browserconfig.xml $DIR/version.txt
+rm $DIR/*.bak $DIR/troubleshoot/*.html.bak
 
 echo "+ Update permissions..."
 find $DIR/ -type f -exec chmod 644 {} \;
