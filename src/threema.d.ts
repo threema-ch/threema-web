@@ -20,7 +20,7 @@ declare const angular: ng.IAngularStatic;
 declare namespace threema {
     type LogType = 'debug' | 'trace' | 'info' | 'warn' | 'error';
     type LogLevel = 'none' | 'debug' | 'info' | 'warn' | 'error';
-    type LogRecord = [Date, LogType, any?, ...any[]];
+    type LogRecord = [number, LogType, any?, ...any[]];
 
     /**
      * An object can be marked as confidential in which case it needs to

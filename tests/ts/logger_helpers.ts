@@ -298,7 +298,7 @@ describe('Logger Helpers', () => {
             }
             const end = Date.now();
             const timestamps = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry[0]);
             expect(timestamps.length).toBe(10);
             for (const timestamp of timestamps) {
@@ -323,7 +323,7 @@ describe('Logger Helpers', () => {
             ];
             logger.debug(...record.slice(1));
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(record);
@@ -344,7 +344,7 @@ describe('Logger Helpers', () => {
             ];
             logger.debug('  te%cst  ', 'color: #fff', ...args);
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual((['debug', 'test'] as any[]).concat(args));
@@ -371,7 +371,7 @@ describe('Logger Helpers', () => {
             ];
             logger.debug(...record.slice(1));
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(record);
@@ -391,7 +391,7 @@ describe('Logger Helpers', () => {
             ];
             logger.debug(...record.slice(1));
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(record);
@@ -404,7 +404,7 @@ describe('Logger Helpers', () => {
             const confidential = new TestConfidential();
             logger.debug(confidential, confidential, confidential);
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(['debug', 'censored', 'censored', 'censored']);
@@ -417,7 +417,7 @@ describe('Logger Helpers', () => {
             const error = new Error('WTF!');
             logger.error(error);
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(['error', error.toString()]);
@@ -433,7 +433,7 @@ describe('Logger Helpers', () => {
             const blob = new Blob([JSON.stringify({ a: 10 })], { type: 'application/json'} );
             logger.debug(buffer, array, blob);
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual([
@@ -450,7 +450,7 @@ describe('Logger Helpers', () => {
             // Ensure instances are being represented with their name.
             logger.debug(logger);
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(['debug', '[MemoryLogger]']);
@@ -469,7 +469,7 @@ describe('Logger Helpers', () => {
             };
             logger.debug(object);
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(['debug', object]);
@@ -486,7 +486,7 @@ describe('Logger Helpers', () => {
             ];
             logger.debug(array);
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
             expect(records[0]).toEqual(['debug', array]);
@@ -500,7 +500,7 @@ describe('Logger Helpers', () => {
                 logger.debug(i);
             }
             const records = JSON
-                .parse(logger.serialize())
+                .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records).toEqual([
                 ['debug', 8],

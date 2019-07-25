@@ -20,6 +20,7 @@ import {Logger} from 'ts-log';
 import {arrayToBuffer, hasFeature, sleep} from '../helpers';
 import * as clipboard from '../helpers/clipboard';
 
+import {MemoryLogger} from '../helpers/logger';
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
@@ -92,8 +93,8 @@ export class TroubleshootingController extends DialogController {
         this.isSending = true;
         this.sendingFailed = false;
 
-        // Serialise the log
-        const log = new TextEncoder().encode(this.logService.memory.serialize());
+        // Get the log
+        const log = new TextEncoder().encode(this.getLog());
 
         // Error handler
         const fail = () => {
@@ -192,7 +193,9 @@ export class TroubleshootingController extends DialogController {
      * Serialise the memory log.
      */
     private getLog(): string {
-        // TODO: Add metadata
-        return this.logService.memory.serialize();
+        const records = this.logService.memory.getRecords();
+
+        // TODO: Add metadata to report
+        return JSON.stringify(records, MemoryLogger.replacer);
     }
 }

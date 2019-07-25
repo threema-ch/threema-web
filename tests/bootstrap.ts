@@ -17,14 +17,16 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// tslint:disable:no-console
 import config from '../src/config';
+import {MemoryLogger} from '../src/helpers/logger';
 
 // A dependency graph that contains any wasm must all be imported asynchronously.
 import('../src/app')
     .then(() => {
         // @ts-ignore
         window.config = config;
+        // @ts-ignore
+        window.MemoryLogger = MemoryLogger;
         console.info('Bundle loaded')
     })
     .catch((e) => console.error('Could not load bundle', e));
