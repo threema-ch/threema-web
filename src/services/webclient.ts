@@ -524,7 +524,7 @@ export class WebClientService {
             builder = builder.withTrustedPeerKey(flags.peerTrustedKey);
         }
         this.salty = builder.asInitiator();
-        this.arpLog.debug('Public key:', this.salty.permanentKeyHex);
+        this.arpLog.info('Public key:', this.salty.permanentKeyHex);
         this.arpLogV.debug('Auth token:', this.salty.authTokenHex);
 
         // We want to know about state changes
