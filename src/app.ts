@@ -62,14 +62,14 @@ angular.module('3ema', [
 ])
 
 // Set versions
-.value('VERSION', '[[VERSION]]')
+.value('VERSION', config.VERSION)
 .value('PROTOCOL_VERSION', 2)
 
 // Configuration object
 .constant('CONFIG', config)
 
 // Set cache bust parameter
-.constant('CACHE_BUST', 'v=[[VERSION]]')
+.constant('CACHE_BUST', `v=${config.VERSION}`)
 
 // Constants to be used by controllers
 .constant('BROWSER_MIN_VERSIONS', {

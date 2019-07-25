@@ -650,6 +650,9 @@ declare namespace threema {
     }
 
     interface Config {
+        // Version
+        VERSION: string;
+
         // General
         SELF_HOSTED: boolean;
         VERSION_MOUNTAIN: string;

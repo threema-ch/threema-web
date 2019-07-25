@@ -28,12 +28,13 @@ import {DialogController} from './dialog';
 export class TroubleshootingController extends DialogController {
     public static readonly $inject = [
         '$scope', '$mdDialog', '$mdToast', '$translate',
-        'LogService', 'BrowserService', 'WebClientService',
+        'CONFIG', 'LogService', 'BrowserService', 'WebClientService',
     ];
 
     private readonly $scope: ng.IScope;
     private readonly $mdToast: ng.material.IToastService;
     private readonly $translate: ng.translate.ITranslateService;
+    private readonly config: threema.Config;
     private readonly logService: LogService;
     private readonly browserService: BrowserService;
     private readonly webClientService: WebClientService;
@@ -47,6 +48,7 @@ export class TroubleshootingController extends DialogController {
         $mdDialog: ng.material.IDialogService,
         $mdToast: ng.material.IToastService,
         $translate: ng.translate.ITranslateService,
+        config: threema.Config,
         logService: LogService,
         browserService: BrowserService,
         webClientService: WebClientService,
@@ -55,6 +57,7 @@ export class TroubleshootingController extends DialogController {
         this.$scope = $scope;
         this.$mdToast = $mdToast;
         this.$translate = $translate;
+        this.config = config;
         this.logService = logService;
         this.browserService = browserService;
         this.webClientService = webClientService;
@@ -139,7 +142,7 @@ export class TroubleshootingController extends DialogController {
             }
         }
         const message: threema.FileMessageData = {
-            name: `webclient-[[VERSION]]-${browserShortInfo}.log`,
+            name: `webclient-${this.config.VERSION}-${browserShortInfo}.log`,
             fileType: 'text/plain',
             size: log.byteLength,
             data: arrayToBuffer(log),
