@@ -135,15 +135,8 @@ export class TroubleshootingController extends DialogController {
 
         // Send as file to *SUPPORT
         const browser = this.browserService.getBrowser();
-        let browserShortInfo = 'unknown';
-        if (browser.wasDetermined()) {
-            browserShortInfo = `${browser.name}-${browser.version}`;
-            if (browser.mobile) {
-                browserShortInfo += '-mobile';
-            }
-        }
         const message: threema.FileMessageData = {
-            name: `webclient-${this.config.VERSION}-${browserShortInfo}.log`,
+            name: `webclient-${this.config.VERSION}-${browser.description('-')}.log`,
             fileType: 'text/plain',
             size: log.byteLength,
             data: arrayToBuffer(log),
@@ -190,7 +183,7 @@ export class TroubleshootingController extends DialogController {
     }
 
     /**
-     * Serialise the memory log.
+     * Serialise the memory log and add some metadata.
      */
     private getLog(): string {
         const records = this.logService.memory.getRecords();
