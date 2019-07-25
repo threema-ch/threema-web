@@ -221,23 +221,9 @@ export class MemoryLogger implements Logger {
      */
     public getRecords(): LogRecord[] {
         return this.records.map(([date, type, message, ...args]: LogRecord) => {
-            // Strip message formatting
+            // Trim first message (tag)
             if (message !== null && message !== undefined && message.constructor === String) {
-                let stripped = false;
-
-                // Strip first style formatting placeholder if any
-                message = message.replace(/%c/, () => {
-                    stripped = true;
-                    return '';
-                });
-
-                // Trim
                 message = message.trim();
-
-                // Remove next argument if stripped
-                if (stripped) {
-                    args.shift();
-                }
             }
             return [date, type, message, ...args];
         });

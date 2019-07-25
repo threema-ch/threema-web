@@ -138,7 +138,7 @@ describe('LogService', function() {
                 .parse(JSON.stringify($service.memory.getRecords(), MemoryLogger.replacer))
                 .map((record) => record.slice(1))
             ).toEqual([
-                ['info', '[test]', 'test']
+                ['info', '%c[test]', style, 'test']
             ]);
         });
 

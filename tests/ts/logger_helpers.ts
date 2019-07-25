@@ -329,11 +329,11 @@ describe('Logger Helpers', () => {
             expect(records[0]).toEqual(record);
         });
 
-        it("strips style formatting of the log record's message (tag)", () => {
+        it("trims the first log record's message (tag)", () => {
             const logger = new MemoryLogger();
 
-            // Ensure %c CSS style formatting placeholder and the following
-            // argument is being stripped.
+            // Ensure %c CSS style formatting placeholder remains but the tag
+            // is being trimmed.
             const args = [
                 null,
                 true,
@@ -347,7 +347,7 @@ describe('Logger Helpers', () => {
                 .parse(JSON.stringify(logger.getRecords(), MemoryLogger.replacer))
                 .map((entry) => entry.slice(1));
             expect(records.length).toBe(1);
-            expect(records[0]).toEqual((['debug', 'test'] as any[]).concat(args));
+            expect(records[0]).toEqual((['debug', 'te%cst', 'color: #fff'] as any[]).concat(args));
         });
 
         it("ignores style formatting beyond the log record's message (args)", () => {
