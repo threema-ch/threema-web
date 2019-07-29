@@ -27,7 +27,6 @@ LICENSE_FILES=(
     'saltyrtc-task-webrtc' 'node_modules/@saltyrtc/task-webrtc/LICENSE.md'
     'sdp' 'node_modules/sdp/LICENSE'
     'ts-events' 'node_modules/ts-events/LICENSE'
-    'tsify' '.licenses/tsify'
     'tweetnacl' 'node_modules/tweetnacl/LICENSE'
     'typescript' 'node_modules/typescript/LICENSE.txt'
     'webrtc-adapter' 'node_modules/webrtc-adapter/LICENSE.md'
