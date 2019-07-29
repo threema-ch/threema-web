@@ -629,15 +629,6 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 
 ----------
-License for tsify
-----------
-
-Copyright by https://github.com/TypeStrong/tsify, MIT License
-
-
-
-
-----------
 License for tweetnacl
 ----------
 
