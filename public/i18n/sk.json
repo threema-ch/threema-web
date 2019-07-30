@@ -206,7 +206,7 @@
         "DELIVERED": "Správa bola doručená na zariadenie príjemcu",
         "READ": "Správa bola prečítaná príjemcom",
         "FAILED": "Správa nemohla byť poslaná",
-        "TIMEOUT": "Správa nemôže byť prenesená do Vašeho zariadenia."},
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Zvuková správa",
         "FILE_MESSAGE": "Súborová správa",

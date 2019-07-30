@@ -207,7 +207,6 @@
         "DELIVERED": "The message was delivered to the recipient's device",
         "READ": "The message was read by the recipient",
         "FAILED": "The message could not be sent",
-        "TIMEOUT": "The message could not be transferred to your device.",
         "UNKNOWN": ""
     },
     "messageTypes": {

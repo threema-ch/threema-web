@@ -206,8 +206,7 @@
         "SENT": "Die Nachricht wurde erfolgreich an den Server übermittelt",
         "DELIVERED": "Die Nachricht ist beim Gerät des Empfängers angekommen",
         "READ": "Die Nachricht wurde vom Empfänger gelesen",
-        "FAILED": "Die Nachricht konnte nicht gesendet werden",
-        "TIMEOUT": "Die Nachricht konnte nicht auf Ihr Gerät übertragen werden."
+        "FAILED": "Die Nachricht konnte nicht gesendet werden"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",

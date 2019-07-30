@@ -59,8 +59,8 @@ declare namespace threema {
 
     type MessageType = 'text' | 'image' | 'video' | 'audio' | 'location' | 'contact' |
                        'status' | 'ballot' | 'file' | 'voipStatus' | 'unknown';
-    type MessageState = 'delivered' | 'read' | 'send-failed' | 'sent' | 'user-ack' |
-                        'user-dec' | 'pending' | 'timeout' | 'sending';
+    type MessageState = 'pending' | 'sending' | 'send-failed' | 'sent' | 'delivered' |
+                        'read' | 'user-ack' | 'user-dec';
 
     const enum InitializationStep {
         ClientInfo = 'client info',
@@ -874,7 +874,7 @@ declare namespace threema {
             setThumbnail(receiver: BaseReceiver, messageId: string, thumbnailImage: ArrayBuffer): boolean;
             remove(receiver: BaseReceiver, messageId: string): boolean;
             removeTemporary(receiver: BaseReceiver, temporaryMessageId: string): boolean;
-            bindTemporaryToMessageId(receiver: BaseReceiver, temporaryId: string, messageId: string): boolean;
+            bindTemporaryToMessageId(receiver: BaseReceiver, temporaryId: string, messageId: string): Message | null;
             notify(receiver: BaseReceiver, $scope: ng.IScope): void;
             register(receiver: BaseReceiver, $scope: ng.IScope, callback: any): Message[];
             updateFirstUnreadMessage(receiver: BaseReceiver);

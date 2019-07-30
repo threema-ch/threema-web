@@ -205,8 +205,8 @@
         "SENT": "消息已经被发送到服务器",
         "DELIVERED": "消息已经送达对方的设备",
         "READ": "消息已读",
-        "FAILED": "消息无法发送",
-        "TIMEOUT": "消息无法发送到您的设备"},
+        "FAILED": "消息无法发送"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "音频消息",
         "FILE_MESSAGE": "文件消息",

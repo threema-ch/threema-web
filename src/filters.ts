@@ -238,8 +238,6 @@ angular.module('3ema.filters', [])
                 return 'thumb_up';
             case 'user-dec':
                 return 'thumb_down';
-            case 'timeout':
-                return 'sync_problem';
             default:
                 return '';
         }
@@ -282,8 +280,6 @@ angular.module('3ema.filters', [])
                 return 'messageStates.USER_ACK';
             case 'user-dec':
                 return 'messageStates.USER_DEC';
-            case 'timeout':
-                return 'messageStates.TIMEOUT';
             default:
                 return 'messageStates.UNKNOWN';
         }

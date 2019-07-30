@@ -205,8 +205,8 @@
         "SENT": "Zpráva byla doručena na Threema server",
         "DELIVERED": "Zpráva byla doručena do zařízení příjemce",
         "READ": "Zpráva byla přečtena příjemcem",
-        "FAILED": "Zpráva nemohla být odeslána",
-        "TIMEOUT": "Zpráva nemohla být přenesena do vašeho zařízení."},
+        "FAILED": "Zpráva nemohla být odeslána"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Zvuková zpráva",
         "FILE_MESSAGE": "Souborová zpráva",

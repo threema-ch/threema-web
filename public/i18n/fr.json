@@ -205,8 +205,8 @@
         "SENT": "Le message a été transmis au serveur Threema",
         "DELIVERED": "Le message a été transmis sur l'appareil du destinataire",
         "READ": "Le message a été lu par le destinataire",
-        "FAILED": "Le message n'a pas pu être envoyé",
-        "TIMEOUT": "Le message ne peut être transféré sur votre appareil."},
+        "FAILED": "Le message n'a pas pu être envoyé"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Message audio",
         "FILE_MESSAGE": "Fichier",

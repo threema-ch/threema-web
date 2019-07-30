@@ -2583,18 +2583,18 @@ export class WebClientService {
         this._receiveReplyReceiver(message, 'distributionList', future);
     }
 
-    private _receiveCreateMessage(message: threema.WireMessage): void {
+    private _receiveCreateMessage(wireMessage: threema.WireMessage): void {
         this.arpLog.debug('Received create message response');
-        const future = this.popWireMessageFuture(message);
+        const future = this.popWireMessageFuture(wireMessage);
 
         // Handle error (if any)
-        if (!message.ack.success) {
-            return future.reject(message.ack.error);
+        if (!wireMessage.ack.success) {
+            return future.reject(wireMessage.ack.error);
         }
 
         // Unpack data and arguments
-        const args = message.args;
-        const data = message.data;
+        const args = wireMessage.args;
+        const data = wireMessage.data;
         if (args === undefined || data === undefined) {
             this.arpLog.warn('Invalid create message received, arguments or data missing');
             return future.reject('invalidResponse');
@@ -2613,12 +2613,22 @@ export class WebClientService {
             type: receiverType,
             id: receiverId,
         } as threema.Receiver;
-        this.messages.bindTemporaryToMessageId(
+        const message = this.messages.bindTemporaryToMessageId(
             receiver,
-            message.ack.id,
+            wireMessage.ack.id,
             messageId,
         );
         future.resolve(messageId);
+
+        // Add a special future that resolves once the message has been
+        // identified as sent. As long as an unacknowledged wire message future
+        // exists, the app will be continuously awoken if the connection
+        // has been lost.
+        if (!this.messageService.isSentOrSendingFailed(message)) {
+            const sentId = `${message.id}-sent`;
+            this.wireMessageFutures.set(sentId, new Future());
+            this.arpLogV.debug(`Added special wire message future: ${sentId}`);
+        }
     }
 
     private _receiveResponseConversations(message: threema.WireMessage) {
@@ -2863,18 +2873,18 @@ export class WebClientService {
         }
     }
 
-    private _receiveUpdateMessages(message: threema.WireMessage): void {
+    private _receiveUpdateMessages(wireMessage: threema.WireMessage): void {
         this.arpLog.debug('Received messages update');
-        const future = this.popWireMessageFuture(message, true);
+        const future = this.popWireMessageFuture(wireMessage, true);
 
         // Handle error (if any)
-        if (message.ack !== undefined && !message.ack.success) {
-            return future.reject(message.ack.error);
+        if (wireMessage.ack !== undefined && !wireMessage.ack.success) {
+            return future.reject(wireMessage.ack.error);
         }
 
         // Unpack data and arguments
-        const args = message.args;
-        const data: threema.Message[] = message.data;
+        const args = wireMessage.args;
+        const data: threema.Message[] = wireMessage.data;
         if (args === undefined || data === undefined) {
             this.arpLog.warn('Invalid message update, data or arguments missing');
             return future.reject('invalidResponse');
@@ -2893,19 +2903,31 @@ export class WebClientService {
             return future.reject('invalidResponse');
         }
         if (this.config.ARP_LOG_TRACE) {
-            this.logChatMessages(message.type, message.subType, type, id, mode, data);
+            this.logChatMessages(wireMessage.type, wireMessage.subType, type, id, mode, data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
 
         // React depending on mode
         let notify = false;
-        for (const msg of data) {
+        for (const message of data) {
+            // Pop special future to be resolved if the message has been
+            // identified as sent.
+            if (this.messageService.isSentOrSendingFailed(message)) {
+                const sentId = `${message.id}-sent`;
+                const sentFuture = this.wireMessageFutures.get(sentId);
+                if (sentFuture !== undefined) {
+                    this.wireMessageFutures.delete(sentId);
+                    this.arpLogV.debug(`Removed special wire message future: ${sentId}`);
+                    sentFuture.resolve();
+                }
+            }
+
             switch (mode) {
                 case WebClientService.ARGUMENT_MODE_NEW:
                     // It's possible that this message already exists (placeholder message on send).
                     // Try to update it first. If not, add it as a new msg.
-                    if (!this.messages.update(receiver, msg)) {
-                        this.messages.addNewer(receiver, [msg]);
+                    if (!this.messages.update(receiver, message)) {
+                        this.messages.addNewer(receiver, [message]);
 
                         // If we have received a new message, it is highly unlikely that the contact is still typing
                         this.typing.unsetTyping(receiver);
@@ -2913,8 +2935,8 @@ export class WebClientService {
                     notify = true;
                     break;
                 case WebClientService.ARGUMENT_MODE_MODIFIED:
-                    if (!this.messages.update(receiver, msg)) {
-                        const log = `Received message update for unknown message (id ${msg.id})`;
+                    if (!this.messages.update(receiver, message)) {
+                        const log = `Received message update for unknown message (id ${message.id})`;
                         this.arpLog.error(log);
                         if (this.config.ARP_LOG_TRACE) {
                             this.messages.addStatusMessage(receiver, 'Warning: ' + log);
@@ -2923,8 +2945,8 @@ export class WebClientService {
                     }
                     break;
                 case WebClientService.ARGUMENT_MODE_REMOVED:
-                    if (!this.messages.remove(receiver, msg.id)) {
-                        this.arpLog.error(`Received message deletion for unknown message (id ${msg.id})`);
+                    if (!this.messages.remove(receiver, message.id)) {
+                        this.arpLog.error(`Received message deletion for unknown message (id ${message.id})`);
                     }
                     notify = true;
                     break;
