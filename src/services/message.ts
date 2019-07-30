@@ -29,6 +29,11 @@ export class MessageAccess {
 }
 
 export class MessageService {
+    // Maximum thumbnail size (width and height)
+    // Note: Keep this in sync with `.thumbnail`s `max-width` and `max-height`
+    //       properties!
+    private static readonly MAX_THUMBNAIL_SIZE = 350;
+
     // Own services
     private receiverService: ReceiverService;
     private timeoutService: TimeoutService;
@@ -141,6 +146,16 @@ export class MessageService {
     public getPreviewThumbnail(uri: string, preview: ArrayBuffer): threema.Thumbnail {
         const image = new Image();
         image.src = uri;
+
+        // Downscale image (if necessary)
+        if (image.width > MessageService.MAX_THUMBNAIL_SIZE || image.height > MessageService.MAX_THUMBNAIL_SIZE) {
+            const scale = Math.min(
+                MessageService.MAX_THUMBNAIL_SIZE / image.width,
+                MessageService.MAX_THUMBNAIL_SIZE / image.height);
+            image.width = Math.round(scale * image.width);
+            image.height = Math.round(scale * image.height);
+        }
+
         return {
             previewDataUrl: uri,
             preview: preview,
