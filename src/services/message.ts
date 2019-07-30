@@ -190,9 +190,6 @@ export class MessageService {
             }
             case 'video': {
                 const fileData = data as threema.FileMessageData;
-                // TODO: Set spinner placeholder if not already set, or set movie icon
-                // message.thumbnail = {
-                // };
                 message.video = {
                     duration: null, // Note: Hack, violates the interface
                     size: fileData.size,
