@@ -30,6 +30,7 @@ $loading-ring-thickness: 5px;
         outline: none;
         border-radius: $circle-size / 2;
         background-color: #808080;
+        background-size: cover;
         width: $circle-size;
         min-width: $circle-size;
         height: $circle-size;
@@ -64,14 +65,27 @@ $loading-ring-thickness: 5px;
         height: $circle-size - (2 * $loading-ring-thickness);
     }
 
-    // Thumbnails (Images, GIFs, Locations, ...)
+    // Thumbnails
     .thumbnail {
-        // Make it clickable
         position: relative;
-        // For absolute positioning of children
-        cursor: pointer;
-        // For big pictures
+        max-width: 350px;
+        max-height: 350px;
         overflow: hidden;
+
+        &.large-preview {
+            min-width: 160px;
+            min-height: 100px;
+        }
+
+        &.clickable {
+            cursor: pointer;
+        }
+
+        .preview-image {
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+        }
 
         // Styling of loader
         .loading-wrapper {
@@ -132,8 +146,11 @@ $loading-ring-thickness: 5px;
 
     // File messages (Files, Audio, ...)
     .file-message {
-        cursor: pointer;
         height: $circle-size;
+
+        &.clickable {
+            cursor: pointer;
+        }
 
         .message-text {
             padding-top: 8px;
@@ -160,9 +177,5 @@ $loading-ring-thickness: 5px;
             }
         }
 
-    }
-
-    img {
-        max-width: 100%;
     }
 }

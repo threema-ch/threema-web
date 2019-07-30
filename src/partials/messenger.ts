@@ -111,6 +111,7 @@ class SendFileController extends DialogController {
         this.hide({
             caption: this.caption,
             sendAsFile: this.sendAsFile,
+            previewDataUrl: this.previewDataUrl,
         });
     }
 
@@ -696,12 +697,13 @@ class ConversationController {
                         //       type.
                         const caption = data.caption;
                         const sendAsFile = data.sendAsFile;
+                        const previewDataUrl = data.previewDataUrl || undefined;
                         contents.forEach((msg: threema.FileMessageData, index: number) => {
                             if (caption !== undefined && caption.length > 0) {
                                 msg.caption = caption;
                             }
                             msg.sendAsFile = sendAsFile;
-                            this.webClientService.sendMessage(this.$stateParams, type, msg)
+                            this.webClientService.sendMessage(this.$stateParams, type, msg, previewDataUrl)
                                 .then(() => {
                                     nextCallback(index);
                                 })

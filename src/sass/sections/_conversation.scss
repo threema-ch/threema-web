@@ -259,23 +259,12 @@
         max-width: 85%;
 
         &:not(.text-message-body) {
-            // set fixed height to thumbnails
             .thumbnail-loader {
-                position: absolute;
-                width: calc(100%);
-                max-width: 100%;
-                height: calc(100%);
-                max-height: 100%;
-                overflow: hidden;
-
-                img {
-                    width: 100%;
-                    filter: blur(10px);
-                }
+                width: 100%;
+                filter: blur(10px);
             }
 
             .thumbnail {
-                max-width: 100%;
                 text-align: center;
             }
 

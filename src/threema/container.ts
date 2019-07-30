@@ -662,7 +662,7 @@ class Messages implements threema.Container.Messages {
     /**
      * Update a thumbnail of a message, if a message was found the method will return true
      */
-    public setThumbnail(receiver: threema.BaseReceiver, messageId: string, thumbnailImage: string): boolean {
+    public setThumbnail(receiver: threema.BaseReceiver, messageId: string, thumbnailImage: ArrayBuffer): boolean {
         const list = this.getList(receiver);
         for (const message of list) {
             if (message.id === messageId) {
