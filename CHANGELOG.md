@@ -4,16 +4,31 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.2.0-beta.4][v2.2.0-beta.4] (2019-07-31)
+
+Changes:
+
+* [feature] New log reporting tool ([#839][i839])
+* [change] Improve message upload preview and thumbnails ([#858][i858])
+* [change] Troubleshooting tool: Actually establish a P2P connection ([#838][i838])
+* [bug] Workaround for connection loss detection in latest Chrome ([#844][i844])
+* [bug] Allow adding all contacts to distribution lists ([#837][i837])
+* [bug] Fix sending files and pictures to distribution lists ([#394][i394])
+* [bug] iOS: Recurrent wakeup for unsent messages ([#856][i856])
+* [bug] Do not apply the receiver's color as background color ([#851][i851])
+
+Contributors:
+
 ### [v2.2.0-beta.3][v2.2.0-beta.3] (2019-07-03)
 
 Changes:
 
 * [feature] Add Portuguese translations ([#832][i832])
 * [feature] Overhauled logging system ([#826][i826])
-* [change] Update Czech, French, Chinese translations ([#832][i832])
 * [bug] Fix connection bar being flaky ([#824][i824])
 * [bug] Fix collapsing of consecutive whitespace in compose area ([#821][i821])
 * [bug] Fix undo behavior in compose area ([#827][i827])
+* [change] Update Czech, French, Chinese translations ([#832][i832])
 
 Contributors:
 
@@ -690,6 +705,7 @@ First public release.
 [i385]: https://github.com/threema-ch/threema-web/issues/385
 [i390]: https://github.com/threema-ch/threema-web/issues/390
 [i393]: https://github.com/threema-ch/threema-web/issues/393
+[i394]: https://github.com/threema-ch/threema-web/issues/394
 [i396]: https://github.com/threema-ch/threema-web/issues/396
 [i401]: https://github.com/threema-ch/threema-web/issues/401
 [i402]: https://github.com/threema-ch/threema-web/issues/402
@@ -793,7 +809,15 @@ First public release.
 [i826]: https://github.com/threema-ch/threema-web/issues/826
 [i827]: https://github.com/threema-ch/threema-web/issues/827
 [i832]: https://github.com/threema-ch/threema-web/issues/832
+[i837]: https://github.com/threema-ch/threema-web/issues/837
+[i838]: https://github.com/threema-ch/threema-web/issues/838
+[i839]: https://github.com/threema-ch/threema-web/issues/839
+[i844]: https://github.com/threema-ch/threema-web/issues/844
+[i851]: https://github.com/threema-ch/threema-web/issues/851
+[i856]: https://github.com/threema-ch/threema-web/issues/856
+[i858]: https://github.com/threema-ch/threema-web/issues/858
 
+[v2.2.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.3...v2.2.0-beta.4
 [v2.2.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.2...v2.2.0-beta.3
 [v2.2.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.1...v2.2.0-beta.2
 [v2.2.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0-beta.1
