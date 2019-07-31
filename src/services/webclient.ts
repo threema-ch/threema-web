@@ -3090,6 +3090,11 @@ export class WebClientService {
         const type: string = args[WebClientService.ARGUMENT_MODE];
         switch (type) {
             case WebClientService.ARGUMENT_MODE_NEW:
+                if (this.conversations.find(data) !== null) {
+                    this.arpLog.error('Received update/conversation with mode=new for existing conversation');
+                    // Ignore message
+                    break;
+                }
                 this.conversations.add(data);
                 break;
             case WebClientService.ARGUMENT_MODE_MODIFIED:
