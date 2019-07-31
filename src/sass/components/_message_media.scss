@@ -65,6 +65,13 @@ $loading-ring-thickness: 5px;
         height: $circle-size - (2 * $loading-ring-thickness);
     }
 
+    .animgif {
+        img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+    }
+
     // Thumbnails
     .thumbnail {
         position: relative;
@@ -82,9 +89,8 @@ $loading-ring-thickness: 5px;
         }
 
         .preview-image {
-            background-size: cover;
-            width: 100%;
-            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
         }
 
         // Styling of loader
