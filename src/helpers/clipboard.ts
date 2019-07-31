@@ -30,7 +30,9 @@ export function copyString(text: string, useSelectionRange: boolean = false): vo
     // Create temporary (and hidden) textarea element
     const textArea = document.createElement('textarea');
     textArea.value = text;
-    textArea.style.visibility = 'hidden';
+    textArea.style.position = 'absolute';
+    textArea.style.left = '-9999px';
+    textArea.style.top = '-9999px';
     document.body.appendChild(textArea);
     try {
         // Copy the text into the textarea element and select the text
