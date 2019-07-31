@@ -135,4 +135,14 @@ describe('BrowserService', function() {
         expect(browser.description()).toEqual('Safari 10 [Mobile]');
     });
 
+    it('with dash as separator', () => {
+        const ua = 'Mozilla/5.0 (iPad; CPU OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) FxiOS/8.3b5826 Mobile/14A403 Safari/602.1.50';
+        const service = testUserAgent(ua);
+        const browser = service.getBrowser();
+        expect(browser.name).toBe(BrowserName.FirefoxIos);
+        expect(browser.version).toEqual(8);
+        expect(browser.mobile).toBe(true);
+        expect(browser.description('-')).toEqual('Firefox-(iOS)-8-[Mobile]');
+    });
+
 });

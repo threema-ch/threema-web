@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--
+
+    Copyright © 2017-2019 Threema GmbH (https://threema.ch/).
+
+    This file is part of Threema Web.
+
+    Threema Web is free software: you can redistribute it and/or modify it
+    under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or (at
+    your option) any later version.
+
+    This program is distributed in the hope that it will be useful, but
+    WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+    General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
+
+-->
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex">
+
+    <title>Threema Web Log Viewer</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="../img/favicon/favicon.ico?v=[[VERSION]]" type="image/x-icon">
+    <link rel="shortcut icon" href="../img/favicon/favicon.ico?v=[[VERSION]]" type="image/x-icon">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="../fonts/roboto.css?v=[[VERSION]]" type="text/css">
+    <link rel="stylesheet" href="../fonts/material.css?v=[[VERSION]]" type="text/css">
+
+    <!-- Styling -->
+    <style>
+        body {
+            padding: 16px;
+            font-family: 'Roboto';
+            background: url('../img/bg.jpg?v=[[VERSION]]') no-repeat fixed center;
+            background-size: cover;
+        }
+
+        #wrapper {
+            background-color: white;
+            margin: 0 auto;
+            padding: 16px 32px 32px;
+            text-align: center;
+        }
+
+        .drag-over {
+            background-color: #a5d6a7 !important;
+        }
+
+        #logo {
+            width: 300px;
+            color: white;
+            margin: 0 auto 16px;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 30px;
+            font-weight: 500;
+        }
+        h2 {
+            font-weight: 300;
+            font-size: 22px;
+        }
+        p {
+            font-weight: 300;
+        }
+        summary h1, summary h2 {
+            display: inline-block;
+        }
+
+        #config {
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: left;
+            overflow: auto;
+        }
+
+        #log {
+            width: 100%;
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #log {
+            border-collapse: collapse;
+            font-family: monospace;
+        }
+
+        #log td {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 2px 6px;
+        }
+
+        .record .message > details {
+            display: inline-block;
+        }
+        .record ol, .record ul {
+            margin: 0 0 0 3px;
+            padding: 0 10px 0;
+            border-left: 1px solid #1565c0;
+            list-style-type: none;
+        }
+
+        .record.debug, .record.trace {
+            background-color: #fafafa;
+        }
+        .record.info {
+            background-color: #e3f2fd;
+        }
+        .record.warn {
+            background-color: #fff59d;
+        }
+        .record.error {
+            background-color: #ef9a9a;
+        }
+
+        .record .date {
+            color: #757575;
+        }
+        .record .tag {
+            text-align: right;
+        }
+
+        .record .null {
+            color: #616161;
+        }
+        .record .boolean {
+            color: #ab47bc;
+        }
+        .record .number {
+            color: #388e3c;
+        }
+        .record .type {
+            color: #1565c0;
+        }
+        .record .converted {
+            color: #00796b;
+        }
+        .record .error {
+            color: #c62828;
+        }
+
+        footer {
+            color: white;
+            font-weight: 300;
+            text-align: center;
+            padding-top: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div id="title">
+        <div id="logo">
+            <img src="../img/logo.svg?v=[[VERSION]]" alt="Logo">
+        </div>
+    </div>
+</header>
+
+<div id="wrapper">
+    <h1>Log Viewer</h1>
+
+    <p id="prompt">Paste or drag the log to be displayed here.</p>
+
+    <div id="container">
+        <h2>Browser: <span id="browser"></span></h2>
+
+        <details>
+            <summary><h2>Config</h2></summary>
+            <pre id="config" class="log-data"></pre>
+        </details>
+
+        <h2>Log</h2>
+        <table id="log"></table>
+    </div>
+</div>
+
+<footer>&copy; 2017&ndash;2019 Threema GmbH</footer>
+
+<!-- JS -->
+<script src="log.js?v=[[VERSION]]"></script>
+</body>
+</html>

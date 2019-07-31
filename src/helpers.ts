@@ -327,6 +327,20 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, log: Logger):
 }
 
 /**
+ * Convert a TypedArray to an ArrayBuffer.
+ *
+ * **Important:** If the source array's data occupies the underlying buffer
+ *   completely, the underlying buffer will be returned directly. Thus, the
+ *   caller may not assume that the data has been copied.
+ */
+export function arrayToBuffer(array: ArrayBufferView): ArrayBuffer {
+    if (array.byteOffset === 0 && array.byteLength === array.buffer.byteLength) {
+        return array.buffer;
+    }
+    return array.buffer.slice(array.byteOffset, array.byteOffset + array.byteLength);
+}
+
+/**
  * Return whether a value is not null and not undefined.
  */
 export function hasValue<T>(val?: T | null): val is T {

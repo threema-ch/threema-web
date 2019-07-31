@@ -38,7 +38,7 @@ export class BrowserInfo {
         return this.name !== null && this.version !== null;
     }
 
-    public description(): string {
+    public description(separator: string = ' '): string {
         if (this.name === null) {
             return 'Unknown';
         }
@@ -72,7 +72,7 @@ export class BrowserInfo {
         if (this.mobile) {
             description += ' [Mobile]';
         }
-        return description;
+        return description.split(' ').join(separator);
     }
 
     /**

@@ -5,6 +5,8 @@
  */
 // tslint:disable:max-line-length
 export default {
+    // Version
+    VERSION: '[[VERSION]]',
 
     // General
     SELF_HOSTED: false,

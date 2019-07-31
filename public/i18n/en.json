@@ -66,7 +66,17 @@
         "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
         "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?",
         "PLEASE_UPDATE_APP": "Please make sure that you're using the <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">latest version</a> of the Threema app!",
-        "USE_ARCHIVE_VERSION": "Alternatively you can switch back to the <a href=\"{archiveUrl}\">previous version</a> of Threema Web."
+        "USE_ARCHIVE_VERSION": "Alternatively you can switch back to the <a href=\"{archiveUrl}\">previous version</a> of Threema Web.",
+        "TROUBLESHOOTING": "Troubleshooting",
+        "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
+        "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
+        "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
+        "DESCRIBE_PROBLEM": "Please describe the problem here.",
+        "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
+        "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
+        "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
+        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to *SUPPORT."
     },
     "common": {
         "YES": "Yes",

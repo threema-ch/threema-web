@@ -25,6 +25,7 @@ import {
 import {Logger} from 'ts-log';
 
 import {ContactControllerModel} from '../controller_model/contact';
+import {DialogController} from '../controllers/dialog';
 import {bufferToUrl, hasValue, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {emojify} from '../helpers/emoji';
 import {ContactService} from '../services/contact';
@@ -46,49 +47,11 @@ import {controllerModelHasMembers, isContactReceiver} from '../typeguards';
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
 
-class DialogController {
-    public $mdDialog: ng.material.IDialogService;
-    public activeElement: HTMLElement | null;
-    public config: threema.Config;
-
-    public static $inject = ['$mdDialog', 'CONFIG'];
-    constructor($mdDialog: ng.material.IDialogService, CONFIG: threema.Config) {
-        this.$mdDialog = $mdDialog;
-        this.activeElement = document.activeElement as HTMLElement;
-        this.config = CONFIG;
-    }
-
-    public cancel(): void {
-        this.$mdDialog.cancel();
-        this.done();
-    }
-
-    protected hide(data?: any): void {
-        this.$mdDialog.hide(data);
-        this.done();
-    }
-
-    private done(): void {
-        if (this.resumeFocusOnClose() === true && this.activeElement !== null) {
-            // reset focus
-            this.activeElement.focus();
-        }
-    }
-
-    /**
-     * If true, the focus on the active element (before opening the dialog)
-     * will be restored. Default `true`, override if desired.
-     */
-    protected resumeFocusOnClose(): boolean {
-        return true;
-    }
-}
-
 /**
  * Handle sending of files.
  */
 class SendFileController extends DialogController {
-    public static $inject = ['$mdDialog', 'CONFIG', 'LogService', 'preview'];
+    public static $inject = ['$mdDialog', 'LogService', 'preview'];
 
     public caption: string;
     public sendAsFile: boolean = false;
@@ -96,10 +59,9 @@ class SendFileController extends DialogController {
     public previewDataUrl: string | null = null;
 
     constructor($mdDialog: ng.material.IDialogService,
-                CONFIG: threema.Config,
                 logService: LogService,
                 preview: threema.FileMessageData) {
-        super($mdDialog, CONFIG);
+        super($mdDialog);
         const log = logService.getLogger('SendFile-C');
         this.preview = preview;
         if (preview !== null) {
@@ -132,7 +94,7 @@ class SendFileController extends DialogController {
 export class DeviceUnreachableController extends DialogController {
     public static readonly $inject = [
         '$rootScope', '$window', '$mdDialog',
-        'CONFIG', 'StateService', 'WebClientService',
+        'StateService', 'WebClientService',
     ];
     private readonly $rootScope: any;
     private readonly $window: ng.IWindowService;
@@ -143,9 +105,9 @@ export class DeviceUnreachableController extends DialogController {
 
     constructor(
         $rootScope: any, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
-        CONFIG: threema.Config, stateService: StateService, webClientService: WebClientService,
+        stateService: StateService, webClientService: WebClientService,
     ) {
-        super($mdDialog, CONFIG);
+        super($mdDialog);
         this.$rootScope = $rootScope;
         this.$window = $window;
         this.stateService = stateService;
@@ -204,14 +166,12 @@ export class DeviceUnreachableController extends DialogController {
 /**
  * Handle settings
  */
-class SettingsController {
+class SettingsController extends DialogController {
     public static $inject = ['$mdDialog', '$window', 'SettingsService', 'NotificationService'];
 
-    public $mdDialog: ng.material.IDialogService;
     public $window: ng.IWindowService;
     public settingsService: SettingsService;
     private notificationService: NotificationService;
-    public activeElement: HTMLElement | null;
 
     private desktopNotifications: boolean;
     private notificationApiAvailable: boolean;
@@ -223,33 +183,15 @@ class SettingsController {
                 $window: ng.IWindowService,
                 settingsService: SettingsService,
                 notificationService: NotificationService) {
-        this.$mdDialog = $mdDialog;
+        super($mdDialog);
         this.$window = $window;
         this.settingsService = settingsService;
         this.notificationService = notificationService;
-        this.activeElement = document.activeElement as HTMLElement;
         this.desktopNotifications = notificationService.getWantsNotifications();
         this.notificationApiAvailable = notificationService.isNotificationApiAvailable();
         this.notificationPermission = notificationService.getNotificationPermission();
         this.notificationPreview = notificationService.getWantsPreview();
         this.notificationSound = notificationService.getWantsSound();
-    }
-
-    public cancel(): void {
-        this.$mdDialog.cancel();
-        this.done();
-    }
-
-    protected hide(data: any): void {
-        this.$mdDialog.hide(data);
-        this.done();
-    }
-
-    private done(): void {
-        if (this.activeElement !== null) {
-            // Reset focus
-            this.activeElement.focus();
-        }
     }
 
     public setWantsNotifications(desktopNotifications: boolean) {
@@ -604,10 +546,7 @@ class ConversationController {
     public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): Promise<any> => {
         // Validate whether a connection is available
         return new Promise((resolve, reject) => {
-            if (!this.stateService.readyToSubmit(
-                this.webClientService.chosenTask,
-                this.webClientService.startupDone,
-            )) {
+            if (!this.webClientService.readyToSubmit) {
                 // Invalid connection, show toast and abort
                 this.showError(this.$translate.instant('error.NO_CONNECTION'));
                 return reject();
@@ -697,13 +636,14 @@ class ConversationController {
                         //       type.
                         const caption = data.caption;
                         const sendAsFile = data.sendAsFile;
-                        const previewDataUrl = data.previewDataUrl || undefined;
+                        const options = { previewDataUrl: data.previewDataUrl || undefined };
                         contents.forEach((msg: threema.FileMessageData, index: number) => {
                             if (caption !== undefined && caption.length > 0) {
                                 msg.caption = caption;
                             }
                             msg.sendAsFile = sendAsFile;
-                            this.webClientService.sendMessage(this.$stateParams, type, msg, previewDataUrl)
+
+                            this.webClientService.sendMessage(this.$stateParams, type, msg, options)
                                 .then(() => {
                                     nextCallback(index);
                                 })

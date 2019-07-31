@@ -209,13 +209,30 @@ export class MemoryLogger implements Logger {
         }
 
         // Add newest record
-        this.records.push([new Date(), type, message, ...args]);
+        this.records.push([Date.now(), type, message, ...args]);
     }
 
     /**
-     * Serialise all log records to JSON.
+     * Get a copy of all currently logged records. Strips any style formatting
+     * of the log tags.
      *
-     * While serialising, a recursive filter will be applied:
+     * Important: Objects implementing the `Confidential` interface will be
+     *            returned as is.
+     */
+    public getRecords(): LogRecord[] {
+        return this.records.map(([date, type, message, ...args]: LogRecord) => {
+            // Trim first message (tag)
+            if (message !== null && message !== undefined && message.constructor === String) {
+                message = message.trim();
+            }
+            return [date, type, message, ...args];
+        });
+    }
+
+    /**
+     * Replacer function for serialising log records to JSON.
+     *
+     * A recursive filter will be applied:
      *
      * - the types `null`, `string`, `number` and `boolean` will be returned
      *   unmodified,
@@ -226,77 +243,47 @@ export class MemoryLogger implements Logger {
      *   information about the content, and
      * - everything else will return the value's type instead of the value
      *   itself.
-     *
-     * @param space Amount of white spaces used for nested block indentation.
      */
-    public serialize(space: number = 2): string {
-        const records = this.records.map(([date, type, message, ...args]: LogRecord) => {
-            // Strip message formatting
-            if (message !== null && message !== undefined && message.constructor === String) {
-                let stripped = false;
+    public static replacer(key: string, value: any): any {
+        // Handle `null` and `undefined` early
+        if (value === null || value === undefined) {
+            return value;
+        }
 
-                // Strip first style formatting placeholder if any
-                message = message.replace(/%c/, () => {
-                    stripped = true;
-                    return '';
-                });
+        // Apply filter to confidential data
+        if (value instanceof BaseConfidential) {
+            return value.censored();
+        }
 
-                // Trim
-                message = message.trim();
-
-                // Remove next argument if stripped
-                if (stripped) {
-                    args.shift();
-                }
-            }
-
-            // Convert date to a timestamp with millisecond accuracy
-            const timestampMs = date.getTime();
-            return [timestampMs, type, message, ...args];
-        });
-
-        // Serialise to JSON
-        return JSON.stringify(records, (_, value) => {
-            // Handle `null` and `undefined` early
-            if (value === null || value === undefined) {
+        // Allowed (standard) types
+        for (const allowedType of ALLOWED_TYPES) {
+            if (value.constructor === allowedType) {
                 return value;
             }
+        }
 
-            // Apply filter to confidential data
-            if (value instanceof BaseConfidential) {
-                return value.censored();
-            }
+        // Allow exceptions
+        if (value instanceof Error) {
+            return value.toString();
+        }
 
-            // Allowed (standard) types
-            for (const allowedType of ALLOWED_TYPES) {
-                if (value.constructor === allowedType) {
-                    return value;
-                }
-            }
+        // Filter binary data
+        if (value instanceof ArrayBuffer) {
+            return `[ArrayBuffer: length=${value.byteLength}]`;
+        }
+        if (value instanceof Uint8Array) {
+            return `[Uint8Array: length=${value.byteLength}, offset=${value.byteOffset}]`;
+        }
+        if (value instanceof Blob) {
+            return `[Blob: length=${value.size}, type=${value.type}]`;
+        }
 
-            // Allow exceptions
-            if (value instanceof Error) {
-                return value.toString();
-            }
+        // Plain object
+        if (value.constructor === Object) {
+            return value;
+        }
 
-            // Filter binary data
-            if (value instanceof ArrayBuffer) {
-                return `[ArrayBuffer: length=${value.byteLength}]`;
-            }
-            if (value instanceof Uint8Array) {
-                return `[Uint8Array: length=${value.byteLength}, offset=${value.byteOffset}]`;
-            }
-            if (value instanceof Blob) {
-                return `[Blob: length=${value.size}, type=${value.type}]`;
-            }
-
-            // Plain object
-            if (value.constructor === Object) {
-                return value;
-            }
-
-            // Not listed
-            return `[${value.constructor.name}]`;
-        }, space);
+        // Not listed
+        return `[${value.constructor.name}]`;
     }
 }

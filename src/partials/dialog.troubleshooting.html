@@ -1,0 +1,43 @@
+<md-dialog aria-label="Troubleshooting">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>troubleshooting.TROUBLESHOOTING</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="ctrl.cancel()">
+                    <md-icon aria-label="Close dialog" class="material-icons md-24">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p translate>troubleshooting.REPORT_FAQ</p>
+
+                <p translate>troubleshooting.REPORT_LOG</p>
+
+                <p ng-if="!ctrl.isConnected" translate>troubleshooting.REPORT_VIA_THREEMA_UNAVAILABLE</p>
+                <p ng-if="!ctrl.isConnected || ctrl.sendingFailed" translate>troubleshooting.REPORT_VIA_CLIPBOARD</p>
+
+                <md-input-container ng-if="ctrl.isConnected" class="md-block">
+                    <label translate>troubleshooting.DESCRIBE_PROBLEM</label>
+                    <textarea ng-model="ctrl.description" rows="2" max-rows="10" md-select-on-focus></textarea>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button role="button" class="md-primary" ng-click="ctrl.copyToClipboard()" aria-labelledby="aria-label-copy-log-clipboard">
+                <span translate id="aria-label-copy-log-clipboard">troubleshooting.COPY_LOG_CLIPBOARD</span>
+            </md-button>
+            <md-button role="button" class="md-accent circular-progress-button" ng-click="ctrl.send()" ng-disabled="!ctrl.canSend" aria-labelledby="aria-label-report-via-threema">
+                <md-progress-circular ng-if="ctrl.isSending" md-mode="indeterminate" md-diameter="20"></md-progress-circular>
+                <span translate id="aria-label-report-via-threema">troubleshooting.REPORT_VIA_THREEMA</span>
+            </md-button>
+            <md-button role="button" class="md-primary" ng-click="ctrl.cancel()" aria-labelledby="aria-label-close">
+                <span translate id="aria-label-close">common.CLOSE</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
