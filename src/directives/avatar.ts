@@ -118,6 +118,7 @@ export default [
                     // Set initial values
                     this.highResolution = this.resolution === 'high';
                     this.isLoading = this.highResolution;
+                    this.backgroundColor = receiver.color;
                     this.receiverName = receiver.displayName;
                 };
 
@@ -139,6 +140,8 @@ export default [
                             return false;
                         }
                         this.isLoading = false;
+                        // Reset background color
+                        this.backgroundColor = null;
                         return true;
                     };
 
@@ -276,6 +279,7 @@ export default [
                     </div>
                     <img
                          ng-class="ctrl.avatarClass()"
+                         ng-style="{ 'background-color': ctrl.backgroundColor }"
                          ng-src="{{ ctrl.getAvatarUri() }}"
                          in-view="ctrl.requestAvatar($inview)"
                          aria-label="avatar {{ ctrl.receiverName }}">
