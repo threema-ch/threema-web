@@ -16,6 +16,7 @@
 #main-wrapper {
     margin: 0 auto;
     width: 98vw;
+    min-width: 350px;
     max-width: 450px;
     height: calc(
         100vh - #{$header-height} - #{$footer-height} - #{$main-padding} * 2 - #{$main-border-top});

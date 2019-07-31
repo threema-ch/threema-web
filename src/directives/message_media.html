@@ -22,12 +22,12 @@
 
     <!-- Thumbnails -->
     <span class="in-view-indicator" ng-if="ctrl.type !== 'location'" in-view="ctrl.thumbnailInView($inview)"></span>
-    <div ng-if="ctrl.thumbnail"
+    <img ng-if="ctrl.thumbnail"
          class="preview-image"
-         ng-style="{'background-image': ctrl.thumbnail }"></div>
-    <div ng-if="!ctrl.thumbnail && ctrl.hasPreviewThumbnail()"
+         ng-src="{{ ctrl.thumbnail }}" />
+    <img ng-if="!ctrl.thumbnail && ctrl.hasPreviewThumbnail()"
          class="thumbnail-loader preview-image"
-         ng-style="{'background-image': ctrl.getThumbnailPreviewUriStyle() }"></div>
+         ng-src="{{ ctrl.getThumbnailPreviewUri() }}" />
     <div ng-if="!ctrl.thumbnail && !ctrl.hasPreviewThumbnail()" class="circle">
         <i ng-if="ctrl.type === 'image' || ctrl.isGif" class="material-icons md-24">photo</i>
         <i ng-if="ctrl.type === 'video'" class="material-icons md-24">movie</i>

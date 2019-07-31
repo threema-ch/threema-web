@@ -175,11 +175,11 @@ export default [
                         } else {
                             if (this.thumbnail === null) {
                                 const setThumbnail = (buf: ArrayBuffer) => {
-                                    this.thumbnail = `url(${bufferToUrl(
+                                    this.thumbnail = bufferToUrl(
                                         buf,
                                         webClientService.appCapabilities.imageFormat.thumbnail,
                                         log,
-                                    )})`;
+                                    );
                                 };
 
                                 if (message.thumbnail.img !== undefined) {
