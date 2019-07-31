@@ -6,18 +6,26 @@
  */
 class Future extends Promise {
     constructor(executor) {
-        let resolve, reject;
-        super((resolve_, reject_) => {
-            resolve = resolve_;
-            reject = reject_;
+        const resolve = (...args) => {
+            this.resolve(...args);
+        };
+        const reject = (...args) => {
+            this.reject(...args);
+        };
+        let innerResolve, innerReject;
+
+        super((resolveFunc, rejectFunc) => {
+            innerResolve = resolveFunc;
+            innerReject = rejectFunc;
             if (executor) {
-                return executor(resolve_, reject_);
+                return executor(resolve, reject);
             }
         });
 
         this._done = false;
-        this._resolve = resolve;
-        this._reject = reject;
+        console.assert(innerResolve !== undefined && innerReject !== undefined, 'THERE IS NO HOPE!');
+        this._resolve = innerResolve;
+        this._reject = innerReject;
     }
 
     /**
