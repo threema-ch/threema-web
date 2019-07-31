@@ -17,7 +17,7 @@
 
 import {Logger} from 'ts-log';
 
-import {arrayToBuffer, hasFeature, sleep} from '../helpers';
+import {arrayToBuffer, copyShallow, hasFeature, sleep} from '../helpers';
 import * as clipboard from '../helpers/clipboard';
 
 import {MemoryLogger} from '../helpers/logger';
@@ -188,9 +188,21 @@ export class TroubleshootingController extends DialogController {
     private getLog(): string {
         const browser = this.browserService.getBrowser();
 
+        // Sanitise usernames and credentials from ICE servers in config
+        const config = copyShallow(this.config) as threema.Config;
+        config.ICE_SERVERS = config.ICE_SERVERS.map((server: RTCIceServer) => {
+            server = copyShallow(server) as RTCIceServer;
+            for (const key of ['username', 'credential', 'credentialType']) {
+                if (server[key] !== undefined) {
+                    server[key] = `[${server[key].constructor.name}]`;
+                }
+            }
+            return server;
+        });
+
         // Create container for meta data and log records
         const container = {
-            config: this.config,
+            config: config,
             browser: browser.description(),
             log: this.logService.memory.getRecords(),
         };
