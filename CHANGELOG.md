@@ -15,9 +15,7 @@ Changes:
 * [bug] Allow adding all contacts to distribution lists ([#837][i837])
 * [bug] Fix sending files and pictures to distribution lists ([#394][i394])
 * [bug] iOS: Recurrent wakeup for unsent messages ([#856][i856])
-* [bug] Do not apply the receiver's color as background color ([#851][i851])
 
-Contributors:
 
 ### [v2.2.0-beta.3][v2.2.0-beta.3] (2019-07-03)
 
