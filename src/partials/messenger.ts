@@ -26,6 +26,7 @@ import {Logger} from 'ts-log';
 
 import {ContactControllerModel} from '../controller_model/contact';
 import {DialogController} from '../controllers/dialog';
+import {TroubleshootingController} from '../controllers/troubleshooting';
 import {bufferToUrl, hasValue, supportsPassive, throttle, u8aToHex} from '../helpers';
 import {emojify} from '../helpers/emoji';
 import {ContactService} from '../services/contact';
@@ -1047,6 +1048,20 @@ class NavigationController {
      */
     public about(ev): void {
         this.showDialog('about', ev);
+    }
+
+    /**
+     * Show troubleshooting dialog.
+     */
+    public troubleshooting(): void {
+        this.$mdDialog.show({
+            controller: TroubleshootingController,
+            controllerAs: 'ctrl',
+            templateUrl: 'partials/dialog.troubleshooting.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            fullscreen: true,
+        });
     }
 
     /**
