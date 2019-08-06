@@ -16,16 +16,11 @@
  */
 
 import {AsyncEvent} from 'ts-events';
-import {Logger} from 'ts-log';
-
-import {LogService} from './log';
 
 /**
  * This service is responsible for showing / hiding the media box.
  */
 export class MediaboxService {
-    private readonly log: Logger;
-
     /**
      * This event is triggered every time the media element changes.
      *
@@ -41,16 +36,10 @@ export class MediaboxService {
     public filename: string = '';
     public mimetype: string = '';
 
-    public static $inject = ['LogService'];
-    constructor(logService: LogService) {
-        this.log = logService.getLogger('Mediabox-S');
-    }
-
     /**
      * Update media data.
      */
     public setMedia(data: ArrayBuffer, filename: string, mimetype: string, caption: string) {
-        this.log.debug('Media data updated');
         this.data = data;
         this.filename = filename;
         this.mimetype = mimetype;
@@ -62,7 +51,6 @@ export class MediaboxService {
      * Clear media data.
      */
     public clearMedia() {
-        this.log.debug('Media data cleared');
         this.data = null;
         this.filename = '';
         this.mimetype = '';
