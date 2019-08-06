@@ -7,6 +7,6 @@ assignees: ''
 
 ---
 
-Note: Do NOT file support requests as issues on Github!
-Instead, use the support form at https://threema.ch/support
-or send a Threema message to the contact *SUPPORT.
+Do NOT file support requests as issues on Github! Instead, use the support
+form at https://threema.ch/support or send a Threema message to the contact
+*SUPPORT.
