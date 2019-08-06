@@ -528,6 +528,7 @@ export default [
                 function onEmojiChosen(ev: MouseEvent): void {
                     ev.stopPropagation();
                     insertSingleEmojiString((ev.target as Element).textContent);
+                    updateView();
                 }
 
                 // Emoji tab is selected
