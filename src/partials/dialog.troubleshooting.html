@@ -19,10 +19,18 @@
                 <p ng-if="!ctrl.isConnected" translate>troubleshooting.REPORT_VIA_THREEMA_UNAVAILABLE</p>
                 <p ng-if="!ctrl.isConnected || ctrl.sendingFailed" translate>troubleshooting.REPORT_VIA_CLIPBOARD</p>
 
-                <md-input-container ng-if="ctrl.isConnected" class="md-block">
-                    <label translate>troubleshooting.DESCRIBE_PROBLEM</label>
-                    <textarea ng-model="ctrl.description" rows="2" max-rows="10" md-select-on-focus></textarea>
-                </md-input-container>
+                <p>
+                    <md-input-container ng-if="ctrl.isConnected" class="md-block md-hide-errors-spacer">
+                        <label translate>troubleshooting.DESCRIBE_PROBLEM</label>
+                        <textarea ng-model="ctrl.description" rows="2" max-rows="10" md-select-on-focus></textarea>
+                    </md-input-container>
+                </p>
+
+                <p>
+                    <md-checkbox ng-model="ctrl.sanitize" aria-label="Remove sensitive data">
+                        <span translate>troubleshooting.REMOVE_SENSITIVE_DATA</span>
+                    </md-checkbox>
+                </p>
             </div>
         </md-dialog-content>
 

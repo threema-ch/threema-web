@@ -72,6 +72,7 @@
         "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
         "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
         "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
+        "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
         "DESCRIBE_PROBLEM": "Please describe the problem here.",
         "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
         "REPORT_VIA_THREEMA": "Send log to *SUPPORT",

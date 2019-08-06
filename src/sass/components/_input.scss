@@ -1,0 +1,6 @@
+// Do not display an error spacer underneath input/textarea fields
+.md-hide-errors-spacer {
+    .md-errors-spacer {
+        display: none;
+    }
+}

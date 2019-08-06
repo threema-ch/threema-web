@@ -25,8 +25,6 @@ import('../src/app')
     .then(() => {
         // @ts-ignore
         window.config = config;
-        // @ts-ignore
-        window.MemoryLogger = MemoryLogger;
         console.info('Bundle loaded')
     })
     .catch((e) => console.error('Could not load bundle', e));

@@ -230,60 +230,63 @@ export class MemoryLogger implements Logger {
     }
 
     /**
-     * Replacer function for serialising log records to JSON.
+     * Create a replacer function for serialising log records to JSON.
      *
-     * A recursive filter will be applied:
+     * The replacer function can be used as a recursive filter for JSON
+     * serialisation. It will filter values in the following way:
      *
      * - the types `null`, `string`, `number` and `boolean` will be returned
      *   unmodified,
      * - an object implementing the `Confidential` interface will be returned
-     *   sanitised,
+     *   sanitised if requested, otherwise as is,
      * - an `Error` instance will be left as is,
      * - the binary types `Uint8Array` and `Blob` will only return meta
      *   information about the content, and
      * - everything else will return the value's type instead of the value
      *   itself.
      */
-    public static replacer(key: string, value: any): any {
-        // Handle `null` and `undefined` early
-        if (value === null || value === undefined) {
-            return value;
-        }
-
-        // Apply filter to confidential data
-        if (value instanceof BaseConfidential) {
-            return value.censored();
-        }
-
-        // Allowed (standard) types
-        for (const allowedType of ALLOWED_TYPES) {
-            if (value.constructor === allowedType) {
+    public getReplacer(sanitize: boolean): (key: string, value: any) => any {
+        return (key: string, value: any) => {
+            // Handle `null` and `undefined` early
+            if (value === null || value === undefined) {
                 return value;
             }
-        }
 
-        // Allow exceptions
-        if (value instanceof Error) {
-            return value.toString();
-        }
+            // Apply filter to confidential data
+            if (value instanceof BaseConfidential) {
+                value = sanitize ? value.censored() : value.uncensored;
+            }
 
-        // Filter binary data
-        if (value instanceof ArrayBuffer) {
-            return `[ArrayBuffer: length=${value.byteLength}]`;
-        }
-        if (value instanceof Uint8Array) {
-            return `[Uint8Array: length=${value.byteLength}, offset=${value.byteOffset}]`;
-        }
-        if (value instanceof Blob) {
-            return `[Blob: length=${value.size}, type=${value.type}]`;
-        }
+            // Allowed (standard) types
+            for (const allowedType of ALLOWED_TYPES) {
+                if (value.constructor === allowedType) {
+                    return value;
+                }
+            }
 
-        // Plain object
-        if (value.constructor === Object) {
-            return value;
-        }
+            // Allow exceptions
+            if (value instanceof Error) {
+                return value.toString();
+            }
 
-        // Not listed
-        return `[${value.constructor.name}]`;
+            // Filter binary data
+            if (value instanceof ArrayBuffer) {
+                return `[ArrayBuffer: length=${value.byteLength}]`;
+            }
+            if (value instanceof Uint8Array) {
+                return `[Uint8Array: length=${value.byteLength}, offset=${value.byteOffset}]`;
+            }
+            if (value instanceof Blob) {
+                return `[Blob: length=${value.size}, type=${value.type}]`;
+            }
+
+            // Plain object
+            if (value.constructor === Object) {
+                return value;
+            }
+
+            // Not listed
+            return `[${value.constructor.name}]`;
+        };
     }
 }
