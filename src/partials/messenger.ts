@@ -793,7 +793,7 @@ class ConversationController {
     public requestMessages(): void {
         const refMsgId = this.webClientService.requestMessages(this.$stateParams);
 
-        // TODO: Couldn't this cause a race condition when called twice in parallel?
+        // TODO: Couldn't this cause a race condition when called twice asynchronously?
         //       Might be related to #277.
         if (hasValue(refMsgId)) {
             // New messages are requested, scroll to refMsgId
