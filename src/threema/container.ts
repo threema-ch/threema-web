@@ -567,16 +567,31 @@ class Messages implements threema.Container.Messages {
      * Messages must be sorted ascending by date.
      */
     public addNewer(receiver: threema.BaseReceiver, messages: threema.Message[]): void {
+        // Ignore empty list
         if (messages.length === 0) {
-            // do nothing
             return;
         }
         const receiverMessages = this.getReceiverMessages(receiver);
-        // if the list is empty, add the current message as ref
+
+        // Set oldest message if none previously available
         if (receiverMessages.list.length === 0) {
             receiverMessages.referenceMsgId = messages[0].id;
         }
-        receiverMessages.list.push.apply(receiverMessages.list, messages);
+
+        // Append new messages
+        for (const message of messages) {
+            // Determine sort key (if not set)
+            // Note: This resolves an ugly interface violation of temporary
+            //       messages.
+            if (message.sortKey === undefined) {
+                message.sortKey = receiverMessages.list.length > 0
+                    ? receiverMessages.list[receiverMessages.list.length - 1].sortKey
+                    : 0;
+            }
+
+            // Append message
+            receiverMessages.list.push(message);
+        }
     }
 
     /**
@@ -618,18 +633,13 @@ class Messages implements threema.Container.Messages {
         // Get reference to message list for the specified receiver
         const receiverMessages = this.getReceiverMessages(receiver);
 
-        // Determine sort key
-        const sortKey = receiverMessages.list.length > 0
-            ? receiverMessages.list[receiverMessages.list.length - 1].sortKey
-            : 0;
-
         // Create fake status message
         receiverMessages.list.push({
             type: 'status',
             id: randomString(6),
             body: '',
             caption: text,
-            sortKey: sortKey,
+            sortKey: undefined, // Note: Hack, violates the interface
             partnerId: receiver.id,
             isOutbox: false,
             isStatus: true,

@@ -180,7 +180,7 @@ export class MessageService {
             type: type,
             id: undefined, // Note: Hack, violates the interface
             date: timestampS,
-            sortKey: Number.MAX_SAFE_INTEGER, // Note: Ugly hack
+            sortKey: undefined, // Note: Hack, violates the interface
             partnerId: receiver.id,
             isOutbox: true,
             isStatus: false,
