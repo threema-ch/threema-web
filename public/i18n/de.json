@@ -72,6 +72,7 @@
         "REPORT_LOG": "Sollte das FAQ Ihre Frage nicht beantworten oder das Problem bestehen bleiben, können Sie einen Fehlerbericht an den Threema Support senden.",
         "REPORT_VIA_THREEMA_UNAVAILABLE": "Das Senden eines Fehlerberichts ist zur Zeit nicht möglich, da keine Verbindung zu Ihrem Mobilgerät besteht. Stellen Sie zuerst eine Verbindung mit Ihrem Mobilgerät her.",
         "REPORT_VIA_CLIPBOARD": "Alternativ können Sie den Fehlerbericht in die Zwischenablage kopieren und <a target=\"_blank\" href=\"https://threema.ch/support\">per Webformular an den Threema Support senden</a>",
+        "REMOVE_SENSITIVE_DATA": "Sensible Daten entfernen (Kontakte, Nachrichteninhalte, etc.)",
         "DESCRIBE_PROBLEM": "Bitte beschreiben Sie das Problem.",
         "COPY_LOG_CLIPBOARD": "In die Zwischenablage kopieren",
         "REPORT_VIA_THREEMA": "Fehlerbericht an *SUPPORT senden",

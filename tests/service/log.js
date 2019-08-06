@@ -94,7 +94,7 @@ describe('LogService', function() {
             // Expect the memory logger to have been called for 'debug' and above
             // (i.e. all log levels).
             expect(JSON
-                .parse(JSON.stringify($service.memory.getRecords(), MemoryLogger.replacer))
+                .parse(JSON.stringify($service.memory.getRecords(), $service.memory.getReplacer(true)))
                 .map((record) => record.slice(1))
             ).toEqual([
                 ['debug', '[test]', 'debug'],
@@ -116,7 +116,7 @@ describe('LogService', function() {
 
             // Expect the memory logger tag to be unpadded
             expect(JSON
-                .parse(JSON.stringify($service.memory.getRecords(), MemoryLogger.replacer))
+                .parse(JSON.stringify($service.memory.getRecords(), $service.memory.getReplacer(true)))
                 .map((record) => record.slice(1))
             ).toEqual([
                 ['info', '[test]', 'test']
@@ -135,7 +135,7 @@ describe('LogService', function() {
 
             // Expect the memory logger tag to be unpadded and unstyled
             expect(JSON
-                .parse(JSON.stringify($service.memory.getRecords(), MemoryLogger.replacer))
+                .parse(JSON.stringify($service.memory.getRecords(), $service.memory.getReplacer(true)))
                 .map((record) => record.slice(1))
             ).toEqual([
                 ['info', '%c[test]', style, 'test']
@@ -155,7 +155,7 @@ describe('LogService', function() {
 
             // Expect the memory logger to only contain the 'info' log
             expect(JSON
-                .parse(JSON.stringify($service.memory.getRecords(), MemoryLogger.replacer))
+                .parse(JSON.stringify($service.memory.getRecords(), $service.memory.getReplacer(true)))
                 .map((record) => record.slice(1))
             ).toEqual([
                 ['info', '[test]', 'info']

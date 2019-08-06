@@ -20,7 +20,6 @@ import {Logger} from 'ts-log';
 import {arrayToBuffer, copyShallow, hasFeature, sleep} from '../helpers';
 import * as clipboard from '../helpers/clipboard';
 
-import {MemoryLogger} from '../helpers/logger';
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
 import {WebClientService} from '../services/webclient';
@@ -40,6 +39,7 @@ export class TroubleshootingController extends DialogController {
     private readonly browserService: BrowserService;
     private readonly webClientService: WebClientService;
     private readonly log: Logger;
+    public sanitize: boolean = true;
     public isSending: boolean = false;
     public sendingFailed: boolean = false;
     public description: string = '';
@@ -94,7 +94,7 @@ export class TroubleshootingController extends DialogController {
         this.sendingFailed = false;
 
         // Get the log
-        const log = new TextEncoder().encode(this.getLog());
+        const log = new TextEncoder().encode(this.getLog(this.sanitize));
 
         // Error handler
         const fail = () => {
@@ -165,7 +165,7 @@ export class TroubleshootingController extends DialogController {
      */
     public copyToClipboard(): void {
         // Get the log
-        const log = this.getLog();
+        const log = this.getLog(this.sanitize);
 
         // Copy to clipboard
         let toastString = 'messenger.COPIED';
@@ -185,20 +185,22 @@ export class TroubleshootingController extends DialogController {
     /**
      * Serialise the memory log and add some metadata.
      */
-    private getLog(): string {
+    private getLog(sanitize: boolean): string {
         const browser = this.browserService.getBrowser();
 
         // Sanitise usernames and credentials from ICE servers in config
         const config = copyShallow(this.config) as threema.Config;
-        config.ICE_SERVERS = config.ICE_SERVERS.map((server: RTCIceServer) => {
-            server = copyShallow(server) as RTCIceServer;
-            for (const key of ['username', 'credential', 'credentialType']) {
-                if (server[key] !== undefined) {
-                    server[key] = `[${server[key].constructor.name}]`;
+        if (sanitize) {
+            config.ICE_SERVERS = config.ICE_SERVERS.map((server: RTCIceServer) => {
+                server = copyShallow(server) as RTCIceServer;
+                for (const key of ['username', 'credential', 'credentialType']) {
+                    if (server[key] !== undefined) {
+                        server[key] = `[${server[key].constructor.name}]`;
+                    }
                 }
-            }
-            return server;
-        });
+                return server;
+            });
+        }
 
         // Create container for meta data and log records
         const container = {
@@ -208,6 +210,7 @@ export class TroubleshootingController extends DialogController {
         };
 
         // Return serialised and sanitised
-        return JSON.stringify(container, MemoryLogger.replacer, 2);
+        const replacer = this.logService.memory.getReplacer(sanitize);
+        return JSON.stringify(container, replacer, 2);
     }
 }
