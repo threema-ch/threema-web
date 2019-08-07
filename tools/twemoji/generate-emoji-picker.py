@@ -46,7 +46,7 @@ for i, category in enumerate(category_order):
             hex_codepoint = emoji['codepoint'].lower()
         else:
             hex_codepoint = emoji['codepoint_fully_qualified']
-        print('            <span class="em em-{3}-{0}" role="option" data-c="{0}" data-s="{1}" title="{2}">{4}</span>'.format(
+        print('            <span class="em em-{3}-{0}" role="option" tabindex="0" data-c="{0}" data-s="{1}" title="{2}">{4}</span>'.format(
             emoji['codepoint'].lower(),
             emoji['shortname'],
             emoji['name'],

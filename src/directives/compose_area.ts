@@ -24,7 +24,7 @@ import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
-import {isEmojiInfo} from '../typeguards';
+import {isEmojiInfo, isKeyboardEvent} from '../typeguards';
 
 /**
  * The compose area where messages are written.
@@ -491,6 +491,7 @@ export default [
 
                         // Add event handlers
                         allEmoji.on('click', onEmojiChosen as any);
+                        allEmoji.on('keydown', onEmojiChosen as any);
                         allEmojiTabs.on('keydown', onEmojiTabSelected as any);
 
                         // Focus compose area again
@@ -514,6 +515,7 @@ export default [
 
                     // Remove event handlers
                     allEmoji.off('click', onEmojiChosen as any);
+                    allEmoji.off('keydown', onEmojiChosen as any);
                     allEmojiTabs.off('keydown', onEmojiTabSelected as any);
                 }
 
@@ -533,15 +535,20 @@ export default [
                 }
 
                 // Emoji is chosen
-                function onEmojiChosen(ev: MouseEvent): void {
-                    ev.stopPropagation();
-                    insertSingleEmojiString((ev.target as Element).textContent);
-                    updateView();
+                function onEmojiChosen(ev: MouseEvent | KeyboardEvent): void {
+                    if (ev.type === 'click' || (isKeyboardEvent(ev) && isActionTrigger(ev))) {
+                        ev.stopPropagation();
+                        if (isKeyboardEvent(ev)) {
+                            ev.preventDefault();
+                        }
+                        insertSingleEmojiString((ev.target as Element).textContent);
+                        updateView();
+                    }
                 }
 
                 // Emoji tab is selected
                 function onEmojiTabSelected(ev: KeyboardEvent): void {
-                    if (ev.key === ' ' || ev.key === 'Enter') {
+                    if (isActionTrigger(ev)) {
                         // Warning: Hacky
                         (ev.target as any).parentElement.previousElementSibling.checked = true;
                     }
