@@ -10,11 +10,11 @@ export default {
 
     // General
     SELF_HOSTED: false,
-    VERSION_MOUNTAIN: 'Glärnisch',
-    VERSION_MOUNTAIN_URL: 'https://de.wikipedia.org/wiki/Gl%C3%A4rnisch',
-    VERSION_MOUNTAIN_IMAGE_URL: 'https://commons.wikimedia.org/wiki/File:Glarus_mit_Gl%C3%A4rnisch,_Sicht_Ennetberge_(18948043634).jpg',
-    VERSION_MOUNTAIN_IMAGE_COPYRIGHT: 'CC BY Hans Bühler',
-    VERSION_MOUNTAIN_HEIGHT: 2915,
+    VERSION_MOUNTAIN: 'Fluebrig',
+    VERSION_MOUNTAIN_URL: 'https://en.wikipedia.org/wiki/Fluebrig',
+    VERSION_MOUNTAIN_IMAGE_URL: 'img/bg.original.jpg',
+    VERSION_MOUNTAIN_IMAGE_COPYRIGHT: '',  // Own work
+    VERSION_MOUNTAIN_HEIGHT: 2098,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
     GIT_BRANCH: 'master',
 
