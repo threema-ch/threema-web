@@ -4,6 +4,16 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.2.0-beta.5][v2.2.0-beta.5] (2019-08-07)
+
+Changes:
+
+* [change] Add troubleshooting dialog to options menu ([#869][i869])
+* [bug] Fix send button when sending only emoji ([#822][i822])
+* [bug] Fix laggy loading of conversations ([#870][i870])
+* [bug] Fix conversations not being properly marked as read ([#871][i871])
+
+
 ### [v2.2.0-beta.4][v2.2.0-beta.4] (2019-07-31)
 
 Changes:
@@ -803,6 +813,7 @@ First public release.
 [i817]: https://github.com/threema-ch/threema-web/issues/817
 [i818]: https://github.com/threema-ch/threema-web/issues/818
 [i821]: https://github.com/threema-ch/threema-web/issues/821
+[i822]: https://github.com/threema-ch/threema-web/issues/822
 [i824]: https://github.com/threema-ch/threema-web/issues/824
 [i826]: https://github.com/threema-ch/threema-web/issues/826
 [i827]: https://github.com/threema-ch/threema-web/issues/827
@@ -814,7 +825,11 @@ First public release.
 [i851]: https://github.com/threema-ch/threema-web/issues/851
 [i856]: https://github.com/threema-ch/threema-web/issues/856
 [i858]: https://github.com/threema-ch/threema-web/issues/858
+[i869]: https://github.com/threema-ch/threema-web/issues/869
+[i870]: https://github.com/threema-ch/threema-web/issues/870
+[i871]: https://github.com/threema-ch/threema-web/issues/871
 
+[v2.2.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.4...v2.2.0-beta.5
 [v2.2.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.3...v2.2.0-beta.4
 [v2.2.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.2...v2.2.0-beta.3
 [v2.2.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.1...v2.2.0-beta.2
