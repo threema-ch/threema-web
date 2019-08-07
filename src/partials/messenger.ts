@@ -906,6 +906,16 @@ class ConversationController {
     }
 }
 
+class AboutDialogController extends DialogController {
+    public readonly config: threema.Config;
+
+    public static readonly $inject = ['$mdDialog', 'CONFIG'];
+    constructor($mdDialog: ng.material.IDialogService, config: threema.Config) {
+        super($mdDialog);
+        this.config = config;
+    }
+}
+
 class NavigationController {
 
     public name = 'navigation';
@@ -1031,9 +1041,12 @@ class NavigationController {
     /**
      * Show dialog.
      */
-    public showDialog(name, ev) {
+    public showDialog(name, ev, controller?) {
+        if (controller === undefined) {
+            controller = DialogController;
+        }
         this.$mdDialog.show({
-            controller: DialogController,
+            controller: controller,
             controllerAs: 'ctrl',
             templateUrl: 'partials/dialog.' + name + '.html',
             parent: angular.element(document.body),
@@ -1047,7 +1060,7 @@ class NavigationController {
      * Show about dialog.
      */
     public about(ev): void {
-        this.showDialog('about', ev);
+        this.showDialog('about', ev, AboutDialogController);
     }
 
     /**
