@@ -37,16 +37,16 @@ print('<div class="twemoji-picker">')
 for i, category in enumerate(category_order):
     print('    <div class="tab">')
     print('        <input type="radio" id="tab-%d" name="tabs"%s>' % (i, ' checked' if i == 0 else ''))
-    print('        <label for="tab-%d" title="%s">' % (i, category['name']))
+    print('        <label for="tab-{0}" title="{1}" aria-label="{1} Emoji">'.format(i, category['name']))
     print('            <img src="emoji/{0}.svg" class="em-{0}" height="24" width="24" role="button" tabindex="0"></span>'.format(category['id']))
     print('        </label>')
-    print('        <div class="content">')
+    print('        <div class="content" role="listbox">')
     for emoji in groups[category['id']]:
         if emoji['representation'] == 'emoji-default':
             hex_codepoint = emoji['codepoint'].lower()
         else:
             hex_codepoint = emoji['codepoint_fully_qualified']
-        print('            <span class="em em-{3}-{0}" data-c="{0}" data-s="{1}" title="{2}">{4}</span>'.format(
+        print('            <span class="em em-{3}-{0}" role="option" tabindex="0" data-c="{0}" data-s="{1}" title="{2}">{4}</span>'.format(
             emoji['codepoint'].lower(),
             emoji['shortname'],
             emoji['name'],

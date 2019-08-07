@@ -24,7 +24,7 @@ import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
-import {isEmojiInfo} from '../typeguards';
+import {isEmojiInfo, isKeyboardEvent} from '../typeguards';
 
 /**
  * The compose area where messages are written.
@@ -481,6 +481,8 @@ export default [
 
                         // Show
                         emojiKeyboard.addClass('active');
+                        emojiKeyboard.attr('aria-expanded', 'true');
+                        emojiTrigger.attr('aria-pressed', 'true');
                         emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                         // Find some selectors
@@ -489,6 +491,7 @@ export default [
 
                         // Add event handlers
                         allEmoji.on('click', onEmojiChosen as any);
+                        allEmoji.on('keydown', onEmojiChosen as any);
                         allEmojiTabs.on('keydown', onEmojiTabSelected as any);
 
                         // Focus compose area again
@@ -502,6 +505,8 @@ export default [
 
                     // Hide
                     emojiKeyboard.removeClass('active');
+                    emojiKeyboard.attr('aria-expanded', 'false');
+                    emojiTrigger.attr('aria-pressed', 'false');
                     emojiTrigger.removeClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                     // Find some selectors
@@ -510,6 +515,7 @@ export default [
 
                     // Remove event handlers
                     allEmoji.off('click', onEmojiChosen as any);
+                    allEmoji.off('keydown', onEmojiChosen as any);
                     allEmojiTabs.off('keydown', onEmojiTabSelected as any);
                 }
 
@@ -529,15 +535,20 @@ export default [
                 }
 
                 // Emoji is chosen
-                function onEmojiChosen(ev: MouseEvent): void {
-                    ev.stopPropagation();
-                    insertSingleEmojiString((ev.target as Element).textContent);
-                    updateView();
+                function onEmojiChosen(ev: MouseEvent | KeyboardEvent): void {
+                    if (ev.type === 'click' || (isKeyboardEvent(ev) && isActionTrigger(ev))) {
+                        ev.stopPropagation();
+                        if (isKeyboardEvent(ev)) {
+                            ev.preventDefault();
+                        }
+                        insertSingleEmojiString((ev.target as Element).textContent);
+                        updateView();
+                    }
                 }
 
                 // Emoji tab is selected
                 function onEmojiTabSelected(ev: KeyboardEvent): void {
-                    if (ev.key === ' ' || ev.key === 'Enter') {
+                    if (isActionTrigger(ev)) {
                         // Warning: Hacky
                         (ev.target as any).parentElement.previousElementSibling.checked = true;
                     }
@@ -703,7 +714,7 @@ export default [
             template: `
                 <div>
                     <div>
-                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji" tabindex="0">tag_faces</i>
+                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji" aria-pressed="false" tabindex="0">tag_faces</i>
                     </div>
                     <div>
                         <div
@@ -723,7 +734,7 @@ export default [
                         <input class="file-input" type="file" style="visibility: hidden" multiple>
                     </div>
                 </div>
-                <div class="emoji-keyboard">
+                <div class="emoji-keyboard" aria-expanded="false">
                     <ng-include src="'partials/emoji-picker.html'" include-replace></ng-include>
                 </div>
             `,

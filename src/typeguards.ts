@@ -112,3 +112,10 @@ export function controllerModelHasMembers<T extends threema.BaseReceiver>(
 ): cm is threema.ControllerModel<T> & threema.ControllerModelWithMembers {
     return cm.receiverType === 'group' || cm.receiverType === 'distributionList';
 }
+
+/**
+ * Return whether this event is a keyboard event.
+ */
+export function isKeyboardEvent(ev: Event): ev is KeyboardEvent {
+    return ev.type === 'keydown' || ev.type === 'keypress' || ev.type === 'keyup';
+}
