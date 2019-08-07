@@ -2,7 +2,7 @@
 name: Support request
 about: 'You need support related to Threema or Threema Web '
 title: '[SUPPORT]'
-labels: ''
+labels: 'contact-support'
 assignees: ''
 
 ---
