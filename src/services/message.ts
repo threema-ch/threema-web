@@ -211,6 +211,8 @@ export class MessageService {
                 };
                 break;
             }
+            case 'audio':
+                break;
             case 'file': {
                 const fileData = data as threema.FileMessageData;
                 message.caption = fileData.caption;
