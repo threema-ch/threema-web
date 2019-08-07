@@ -481,6 +481,8 @@ export default [
 
                         // Show
                         emojiKeyboard.addClass('active');
+                        emojiKeyboard.attr('aria-expanded', 'true');
+                        emojiTrigger.attr('aria-pressed', 'true');
                         emojiTrigger.addClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                         // Find some selectors
@@ -502,6 +504,8 @@ export default [
 
                     // Hide
                     emojiKeyboard.removeClass('active');
+                    emojiKeyboard.attr('aria-expanded', 'false');
+                    emojiTrigger.attr('aria-pressed', 'false');
                     emojiTrigger.removeClass(TRIGGER_ACTIVE_CSS_CLASS);
 
                     // Find some selectors
@@ -703,7 +707,7 @@ export default [
             template: `
                 <div>
                     <div>
-                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji" tabindex="0">tag_faces</i>
+                        <i class="md-primary emoji-trigger trigger is-enabled material-icons" role="button" aria-label="emoji" aria-pressed="false" tabindex="0">tag_faces</i>
                     </div>
                     <div>
                         <div
@@ -723,7 +727,7 @@ export default [
                         <input class="file-input" type="file" style="visibility: hidden" multiple>
                     </div>
                 </div>
-                <div class="emoji-keyboard">
+                <div class="emoji-keyboard" aria-expanded="false">
                     <ng-include src="'partials/emoji-picker.html'" include-replace></ng-include>
                 </div>
             `,
