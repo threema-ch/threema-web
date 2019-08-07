@@ -248,6 +248,7 @@ export default [
                 // Handle typing events
 
                 let isComposing = false;
+                let compositionHasJustEnded = false; // We all love Safari!
 
                 function onCompositionStart(ev: CompositionEvent): void {
                     isComposing = true;
@@ -255,6 +256,7 @@ export default [
 
                 function onCompositionEnd(ev: CompositionEvent): void {
                     isComposing = false;
+                    compositionHasJustEnded = true;
                 }
 
                 function onKeyDown(ev: KeyboardEvent): void {
@@ -272,7 +274,7 @@ export default [
                     // If the enter key is part of a composition (e.g. when
                     // entering text with an IME), don't submit the text.
                     // See https://github.com/threema-ch/threema-web/issues/777
-                    if ((ev as any).isComposing || isComposing) {
+                    if ((ev as any).isComposing || isComposing || compositionHasJustEnded) {
                         return;
                     }
 
@@ -300,6 +302,8 @@ export default [
                 }
 
                 function onKeyUp(ev: KeyboardEvent): void {
+                    compositionHasJustEnded = false;
+
                     // If the compose area contains only a single <br>, make it fully empty.
                     // See also: https://stackoverflow.com/q/14638887/284318
                     const text = composeArea.get_text(true);
