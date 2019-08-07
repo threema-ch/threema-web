@@ -66,7 +66,18 @@
         "PLUGIN": "您的浏览器中是否安装了一个阻止WebRTC通信的隐私插件？",
         "ADBLOCKER": "您是否使用了阻止WebRTC通信的广告拦截软件？",
         "PLEASE_UPDATE_APP": "请确保您使用的是Threema APP的 <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">latest version</a>！",
-        "USE_ARCHIVE_VERSION": "或者您可以使用Threema APP<a href=\"{archiveUrl}\">之前的版本</a>。"
+        "USE_ARCHIVE_VERSION": "或者您可以使用Threema APP<a href=\"{archiveUrl}\">之前的版本</a>。",
+        "TROUBLESHOOTING": "疑难解答",
+        "REPORT_FAQ": "请先查看我们的常见问题解答，了解一般性问题并解决常见问题。",
+        "REPORT_LOG": "如果您无法找到问题的答案或问题仍然存在，您可以向Threema支持团队发送日志报告。",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "由于没有与您的移动设备连接，因此目前无法通过Threema报告日志。 首先连接到您的移动设备。",
+        "REPORT_VIA_CLIPBOARD": "您可以将日志复制到剪贴板，并通过Web表单将报告发送给Threema支持https://threema.ch/support团队",
+        "REMOVE_SENSITIVE_DATA": "删除敏感数据（联系人，消息内容等）",
+        "DESCRIBE_PROBLEM": "请在此描述问题",
+        "COPY_LOG_CLIPBOARD": "将日志复制到剪贴板",
+        "REPORT_VIA_THREEMA": "将日志发送到支持",
+        "REPORT_VIA_THREEMA_FAILED": "日志报告发送失败",
+        "REPORT_VIA_THREEMA_SUCCESS": "日志报告已发送至支持"
     },
     "common": {
         "YES": "是",
@@ -124,6 +135,7 @@
         "GROUP_CREATOR": "群主",
         "GROUP_ROLE_NORMAL": "成员",
         "GROUP_ROLE_CREATOR": "创建人",
+        "UPLOADING": "正在上传",
         "DOWNLOAD": "下载",
         "DOWNLOADING": "下载中...",
         "COPY": "复制",
@@ -205,8 +217,7 @@
         "SENT": "消息已经被发送到服务器",
         "DELIVERED": "消息已经送达对方的设备",
         "READ": "消息已读",
-        "FAILED": "消息无法发送"
-    },
+        "FAILED": "消息无法发送"},
     "messageTypes": {
         "AUDIO_MESSAGE": "音频消息",
         "FILE_MESSAGE": "文件消息",

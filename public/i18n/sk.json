@@ -66,7 +66,18 @@
         "PLUGIN": "Je v prehliadači nainštalovaný akýsi bezpečnostný plugin, ktorý blokuje komunikáciu WebRTC?",
         "ADBLOCKER": "Používate blokovanie reklám, ktorý tiež blokuje WebRTC?",
         "PLEASE_UPDATE_APP": "Prosím, uistite sa, že používate <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">poslednú verziu</a> aplikácie Threema!",
-        "USE_ARCHIVE_VERSION": "Prípadne môžete prejsť na <a href=\"{archiveUrl}\">predchádzajúcu verziu</a> Threema Web."
+        "USE_ARCHIVE_VERSION": "Prípadne môžete prejsť na <a href=\"{archiveUrl}\">predchádzajúcu verziu</a> Threema Web.",
+        "TROUBLESHOOTING": "Troubleshooting",
+        "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
+        "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
+        "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
+        "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
+        "DESCRIBE_PROBLEM": "Please describe the problem here.",
+        "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
+        "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
+        "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
+        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to *SUPPORT."
     },
     "common": {
         "YES": "Áno",
@@ -124,6 +135,7 @@
         "GROUP_CREATOR": "Tvorca skupiny",
         "GROUP_ROLE_NORMAL": "Člen",
         "GROUP_ROLE_CREATOR": "Tvorca",
+        "UPLOADING": "Uploading …",
         "DOWNLOAD": "Stiahnuť",
         "DOWNLOADING": "Sťahovanie ...",
         "COPY": "Kopírovať",
@@ -205,8 +217,7 @@
         "SENT": "Správa bola doručená na Threema server",
         "DELIVERED": "Správa bola doručená na zariadenie príjemcu",
         "READ": "Správa bola prečítaná príjemcom",
-        "FAILED": "Správa nemohla byť poslaná",
-    },
+        "FAILED": "Správa nemohla byť poslaná"},
     "messageTypes": {
         "AUDIO_MESSAGE": "Zvuková správa",
         "FILE_MESSAGE": "Súborová správa",

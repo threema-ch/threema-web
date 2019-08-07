@@ -66,7 +66,18 @@
         "PLUGIN": "Est-ce qu'un module de confidentialité pouvant bloquer la communication WebRTC a été installé dans votre navigateur ?",
         "ADBLOCKER": "Utilisez-vous un bloqueur de publicité bloquant aussi la communication WebRTC?",
         "PLEASE_UPDATE_APP": "S'il vous plaît vérifier que vous utilisez la <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">dernière version</a> de l'app Threema!",
-        "USE_ARCHIVE_VERSION": "Vous pouvez aussi revenir à l'<a href=\"{archiveUrl}\">ancienne version</a>de Threema Web."
+        "USE_ARCHIVE_VERSION": "Vous pouvez aussi revenir à l'<a href=\"{archiveUrl}\">ancienne version</a>de Threema Web.",
+        "TROUBLESHOOTING": "Troubleshooting",
+        "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
+        "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
+        "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
+        "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
+        "DESCRIBE_PROBLEM": "Please describe the problem here.",
+        "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
+        "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
+        "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
+        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to *SUPPORT."
     },
     "common": {
         "YES": "Oui",
@@ -124,6 +135,7 @@
         "GROUP_CREATOR": "Auteur du groupe",
         "GROUP_ROLE_NORMAL": "Membres",
         "GROUP_ROLE_CREATOR": "Auteur",
+        "UPLOADING": "Uploading …",
         "DOWNLOAD": "Télécharger",
         "DOWNLOADING": "En cours de téléchargement ...",
         "COPY": "Copier",
@@ -205,8 +217,7 @@
         "SENT": "Le message a été transmis au serveur Threema",
         "DELIVERED": "Le message a été transmis sur l'appareil du destinataire",
         "READ": "Le message a été lu par le destinataire",
-        "FAILED": "Le message n'a pas pu être envoyé"
-    },
+        "FAILED": "Le message n'a pas pu être envoyé"},
     "messageTypes": {
         "AUDIO_MESSAGE": "Message audio",
         "FILE_MESSAGE": "Fichier",
