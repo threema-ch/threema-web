@@ -85,9 +85,10 @@ jobs:
       - checkout
       - setup_remote_docker
       - run: >
-          export minortag=$(echo $CIRCLE_TAG | sed 's/^\(v[0-9]*\.[0-9]*\)\..*$/\1/')
-                 majortag=$(echo $CIRCLE_TAG | sed 's/^\(v[0-9]*\)\..*$/\1/')
-          docker build .  --no-cache -t $IMAGE:$CIRCLE_TAG -t $IMAGE:$minortag -t $IMAGE:$majortag
+          export tag=$(git describe --tags --abbrev=0)
+                 minortag=$(echo $tag | sed 's/^\(v[0-9]*\.[0-9]*\)\..*$/\1/')
+                 majortag=$(echo $tag | sed 's/^\(v[0-9]*\)\..*$/\1/')
+          docker build .  --no-cache -t $IMAGE:$tag -t $IMAGE:$minortag -t $IMAGE:$majortag
           && docker login -u $DOCKER_USER -p $DOCKER_API_KEY
           && docker push $IMAGE
   docker-rebuild-images:
@@ -120,7 +121,7 @@ workflows:
       - docker-push-tag:
           filters:
             tags:
-              only: /v.*/
+              only: /^v.*/
   rebuild-images:
     triggers:
       - schedule:
