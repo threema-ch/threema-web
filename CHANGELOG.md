@@ -4,6 +4,14 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.2.1][v2.2.1] (2019-08-08)
+
+Changes:
+
+* [change] Show warning if browser does not support WebAssembly ([#887][i887])
+* [change] Invert order of messages in notifications ([#888][i888])
+
+
 ### [v2.2.0][v2.2.0] (2019-08-08)
 
 This is quite a big release. It contains improvements to device wakeup
@@ -794,7 +802,10 @@ First public release.
 [i851]: https://github.com/threema-ch/threema-web/issues/851
 [i856]: https://github.com/threema-ch/threema-web/issues/856
 [i858]: https://github.com/threema-ch/threema-web/issues/858
+[i887]: https://github.com/threema-ch/threema-web/issues/887
+[i888]: https://github.com/threema-ch/threema-web/issues/888
 
+[v2.2.1]: https://github.com/threema-ch/threema-web/compare/v2.2.0...v2.2.1
 [v2.2.0]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0
 [v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
 [v2.1.6]: https://github.com/threema-ch/threema-web/compare/v2.1.5...v2.1.6
