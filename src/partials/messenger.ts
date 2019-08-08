@@ -44,6 +44,7 @@ import {TimeoutService} from '../services/timeout';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
 import {controllerModelHasMembers, isContactReceiver} from '../typeguards';
+import {Type} from '../types/helpers';
 
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
@@ -1041,10 +1042,7 @@ class NavigationController {
     /**
      * Show dialog.
      */
-    public showDialog(name, ev, controller?) {
-        if (controller === undefined) {
-            controller = DialogController;
-        }
+    public showDialog(name: string, ev: Event, controller: Type<DialogController> = DialogController) {
         this.$mdDialog.show({
             controller: controller,
             controllerAs: 'ctrl',
