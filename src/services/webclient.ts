@@ -3165,6 +3165,11 @@ export class WebClientService {
 
         // Get receiver
         const receiver = this.receivers.getData({type: data.type, id: data.id});
+        if (!hasValue(receiver)) {
+            const log = `Received conversation update for unknown receiver (${data.type}/${data.id})`;
+            this.arpLog.error(log);
+            return;
+        }
 
         // Unpack required argument fields
         const type: string = args[WebClientService.ARGUMENT_MODE];
