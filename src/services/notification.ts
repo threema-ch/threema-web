@@ -362,9 +362,9 @@ export class NotificationService {
             this.clearCache(tag);
         }
 
-        // If the cache is not empty, append old messages
+        // If the cache is not empty, prepend old messages
         if (this.notificationCache[tag]) {
-            body += '\n' + this.notificationCache[tag].body;
+            body = `${this.notificationCache[tag].body}\n${body}`;
         }
 
         // Show notification
