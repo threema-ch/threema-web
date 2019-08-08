@@ -4,83 +4,42 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
-### [v2.2.0-beta.5][v2.2.0-beta.5] (2019-08-07)
+### [v2.2.0][v2.2.0] (2019-08-08)
 
-Changes:
+This is quite a big release. It contains improvements to device wakeup
+functionality, adds support for five new languages, provides a new log
+reporting tool for troubleshooting and fixes a lot of bugs.
 
-* [change] Add troubleshooting dialog to options menu ([#869][i869])
-* [bug] Fix send button when sending only emoji ([#822][i822])
-* [bug] Fix laggy loading of conversations ([#870][i870])
-* [bug] Fix conversations not being properly marked as read ([#871][i871])
-
-
-### [v2.2.0-beta.4][v2.2.0-beta.4] (2019-07-31)
-
-Changes:
-
-* [feature] New log reporting tool ([#839][i839])
-* [change] Improve message upload preview and thumbnails ([#858][i858])
-* [change] Troubleshooting tool: Actually establish a P2P connection ([#838][i838])
-* [bug] Workaround for connection loss detection in latest Chrome ([#844][i844])
-* [bug] Allow adding all contacts to distribution lists ([#837][i837])
-* [bug] Fix sending files and pictures to distribution lists ([#394][i394])
-* [bug] iOS: Recurrent wakeup for unsent messages ([#856][i856])
-
-
-### [v2.2.0-beta.3][v2.2.0-beta.3] (2019-07-03)
-
-Changes:
-
-* [feature] Add Portuguese translations ([#832][i832])
-* [feature] Overhauled logging system ([#826][i826])
-* [bug] Fix connection bar being flaky ([#824][i824])
-* [bug] Fix collapsing of consecutive whitespace in compose area ([#821][i821])
-* [bug] Fix undo behavior in compose area ([#827][i827])
-* [change] Update Czech, French, Chinese translations ([#832][i832])
-
-Contributors:
-
-- [Nuno\_M](https://www.transifex.com/user/profile/Nuno_M/) (PT translations)
-- [Marcel Krüse](https://www.transifex.com/user/profile/blogkaizzenn/) (PT translations)
-- [Johannes Müller](https://www.transifex.com/user/profile/tscho/) (PT translations)
-
-
-### [v2.2.0-beta.2][v2.2.0-beta.2] (2019-06-13)
-
-Changes:
-
-* [change] Improvements for reconnection behavior ([#815][i815] / [#816][i816]
-  / [#817][i817] / [#818][i818])
-* [change] Update Czech, French, German and Chinese translations
-* [feature] Add Dutch, Slovak, Spanish and Ukrainian translations
-
-Contributors:
-
-- [@IndianaDschones][@IndianaDschones]
-- [Artem Nachtigall](https://www.transifex.com/user/profile/artem.nachtigall/) (UK translations)
-- [Boris Klokoc](https://www.transifex.com/user/profile/klokyno/) (SK translations)
-- [Fernando Alvarez Junco](https://www.transifex.com/user/profile/arbesulo/) (ES translations)
-- [frau\_lutzn](https://www.transifex.com/user/profile/frau_lutzn/) (NL translations)
-- [Maik Holzhauer](https://www.transifex.com/user/profile/mkhlzhr/) (ES translations)
-- [Sergiy Kotyk](https://www.transifex.com/user/profile/kitser/) (UK translations)
-- [vollkorntomate](https://www.transifex.com/user/profile/vollkorntomate/) (NL translations)
-
-
-### [v2.2.0-beta.1][v2.2.0-beta.1] (2019-05-23)
+For the detailed list of changes, see below. Note that changes to your web
+server configuration are required in case you're self-hosting Threema Web.
 
 Changes:
 
 * [feature] Improvements to the device wakeup functionality, automatic
-  reconnects after connection loss should now be more reliable ([#792][i792])
-* [feature] Rewritten compose area, many bugs should now be fixed
-  ([#773][i773], fixes [#502][i502] / [#674][i674] / [#679][i679] / [#777][i777])
+  reconnects after connection loss should now be more reliable ([#792][i792] /
+  [#815][i815] / [#816][i816] / [#817][i817] / [#818][i818])
+* [feature] Add Dutch, Portuguese, Slovak, Spanish and Ukrainian translations
+* [feature] New log reporting tool ([#839][i839] / [#826][i826])
+* [change] Rewritten compose area, many bugs should now be fixed ([#773][i773],
+  fixes [#502][i502] / [#674][i674] / [#679][i679] / [#821][i821])
 * [change] Revised VoIP status message texts ([#787][i787])
 * [change] Better MIME handling for audio messages ([#756][i756])
-* [bug] Markup parser: Ignore markup in URLs ([#778][i778])
+* [change] Improve message upload preview and thumbnails ([#858][i858])
+* [change] Troubleshooting tool: Actually establish a P2P connection ([#838][i838])
 * [bug] Fixed connection problems when large profile picture was set ([#768][i768])
+* [bug] Workaround for connection loss detection in latest Chrome ([#844][i844])
+* [bug] Markup parser: Ignore markup in URLs ([#778][i778])
 * [bug] Hide input for blocked contacts ([#462][i462])
 * [bug] Only show pin/unpin button if conversation exists ([#752][i752])
 * [bug] Clamp text in quotes ([#767][i767])
+* [bug] Fix connection bar being flaky ([#824][i824])
+* [bug] Allow adding all contacts to distribution lists ([#837][i837])
+* [bug] Fix sending files and pictures to distribution lists ([#394][i394])
+* [bug] iOS: Recurrent wakeup for unsent messages ([#856][i856])
+* [bug] Fix send button when sending only emoji ([#822][i822])
+* [bug] Fix fallback image for contacts without avatar ([#851][i851])
+* [bug] Fix support for japanese IME ([#777][i777])
+* [bug] Accessibility improvements for emoji picker ([#811][i811])
 
 Changes relevant when self-hosting:
 
@@ -97,6 +56,16 @@ Contributors:
 
 - [@IndianaDschones][@IndianaDschones]
 - [@joelfischerr][@joelfischerr]
+- [Artem Nachtigall](https://www.transifex.com/user/profile/artem.nachtigall/) (UK translations)
+- [Boris Klokoc](https://www.transifex.com/user/profile/klokyno/) (SK translations)
+- [Fernando Alvarez Junco](https://www.transifex.com/user/profile/arbesulo/) (ES translations)
+- [frau\_lutzn](https://www.transifex.com/user/profile/frau_lutzn/) (NL translations)
+- [Johannes Müller](https://www.transifex.com/user/profile/tscho/) (PT translations)
+- [Maik Holzhauer](https://www.transifex.com/user/profile/mkhlzhr/) (ES translations)
+- [Marcel Krüse](https://www.transifex.com/user/profile/blogkaizzenn/) (PT translations)
+- [Nuno\_M](https://www.transifex.com/user/profile/Nuno_M/) (PT translations)
+- [Sergiy Kotyk](https://www.transifex.com/user/profile/kitser/) (UK translations)
+- [vollkorntomate](https://www.transifex.com/user/profile/vollkorntomate/) (NL translations)
 
 
 ### [v2.1.7][v2.1.7] (2019-02-07)
@@ -808,6 +777,7 @@ First public release.
 [i778]: https://github.com/threema-ch/threema-web/issues/778
 [i787]: https://github.com/threema-ch/threema-web/issues/787
 [i792]: https://github.com/threema-ch/threema-web/issues/792
+[i811]: https://github.com/threema-ch/threema-web/issues/811
 [i815]: https://github.com/threema-ch/threema-web/issues/815
 [i816]: https://github.com/threema-ch/threema-web/issues/816
 [i817]: https://github.com/threema-ch/threema-web/issues/817
@@ -816,7 +786,6 @@ First public release.
 [i822]: https://github.com/threema-ch/threema-web/issues/822
 [i824]: https://github.com/threema-ch/threema-web/issues/824
 [i826]: https://github.com/threema-ch/threema-web/issues/826
-[i827]: https://github.com/threema-ch/threema-web/issues/827
 [i832]: https://github.com/threema-ch/threema-web/issues/832
 [i837]: https://github.com/threema-ch/threema-web/issues/837
 [i838]: https://github.com/threema-ch/threema-web/issues/838
@@ -825,15 +794,8 @@ First public release.
 [i851]: https://github.com/threema-ch/threema-web/issues/851
 [i856]: https://github.com/threema-ch/threema-web/issues/856
 [i858]: https://github.com/threema-ch/threema-web/issues/858
-[i869]: https://github.com/threema-ch/threema-web/issues/869
-[i870]: https://github.com/threema-ch/threema-web/issues/870
-[i871]: https://github.com/threema-ch/threema-web/issues/871
 
-[v2.2.0-beta.5]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.4...v2.2.0-beta.5
-[v2.2.0-beta.4]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.3...v2.2.0-beta.4
-[v2.2.0-beta.3]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.2...v2.2.0-beta.3
-[v2.2.0-beta.2]: https://github.com/threema-ch/threema-web/compare/v2.2.0-beta.1...v2.2.0-beta.2
-[v2.2.0-beta.1]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0-beta.1
+[v2.2.0]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0
 [v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
 [v2.1.6]: https://github.com/threema-ch/threema-web/compare/v2.1.5...v2.1.6
 [v2.1.5]: https://github.com/threema-ch/threema-web/compare/v2.1.4...v2.1.5
