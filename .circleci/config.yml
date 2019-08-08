@@ -65,14 +65,16 @@ jobs:
   docker-push-branch:
     docker:
       - image: docker:stable
+    environment:
+      IMAGE: threema/threema-web
     steps:
       - run: apk update && apk add git openssh
       - checkout
       - setup_remote_docker
       - run: >
-          docker build .  --no-cache -t threema/threema-web:${CIRCLE_BRANCH}
+          docker build .  --no-cache -t $IMAGE:${CIRCLE_BRANCH}
           && docker login -u $DOCKER_USER -p $DOCKER_API_KEY
-          && docker push threema/threema-web
+          && docker push $IMAGE
   docker-push-tag:
     docker:
       - image: docker:stable
@@ -85,9 +87,9 @@ jobs:
       - run: >
           export minortag=$(echo $CIRCLE_TAG | sed 's/^\(v[0-9]*\.[0-9]*\)\..*$/\1/')
                  majortag=$(echo $CIRCLE_TAG | sed 's/^\(v[0-9]*\)\..*$/\1/')
-          && docker build .  --no-cache -t $IMAGE:$CIRCLE_TAG -t $IMAGE:$minortag -t $IMAGE:$majortag
+          docker build .  --no-cache -t $IMAGE:$CIRCLE_TAG -t $IMAGE:$minortag -t $IMAGE:$majortag
           && docker login -u $DOCKER_USER -p $DOCKER_API_KEY
-          && docker push threema/threema-web
+          && docker push $IMAGE
   docker-rebuild-images:
     docker:
       - image: docker:stable
