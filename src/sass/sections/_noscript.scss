@@ -1,4 +1,4 @@
-noscript {
+.compat {
     div {
         display: block;
         margin: 16px auto 0;
@@ -6,9 +6,10 @@ noscript {
         padding: 16px;
         width: 50%;
         text-align: center;
+        line-height: 1.5em;
     }
 
-    #logo-noscript {
+    .logo-compat {
         display: block;
         margin: 16px auto;
         min-width: 100px;

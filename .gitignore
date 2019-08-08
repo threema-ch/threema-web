@@ -5,7 +5,7 @@
 .idea/
 
 # Generated files
-js/
+/js/
 dist/generated/
 dist/*.tar.gz
 public/css/*.css

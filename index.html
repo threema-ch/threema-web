@@ -59,13 +59,23 @@
 <body class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
     <img src="img/bg.jpg?v=[[VERSION]]" aria-label="Background image: Blurred photo of a mountain" id="background-image" draggable="false">
 
-    <noscript>
-        <img id="logo-noscript" src="img/logo.svg?v=[[VERSION]]"/>
+    <noscript class="compat">
+        <img class="logo-compat" src="img/logo.svg?v=[[VERSION]]"/>
         <div>
             <h2>Error: JavaScript not supported</h2>
             <p>Please enable JavaScript in your browser to be able to use Threema Web.</p>
         </div>
     </noscript>
+
+    <div class="compat wasm" style="display: none;">
+        <img class="logo-compat" src="img/logo.svg?v=[[VERSION]]"/>
+        <div>
+            <h2>Error: Browser not supported</h2>
+            <p>You are using a browser without WebAssembly support. Please
+            upgrade to the latest version of a
+            <a href="https://threema.ch/faq/web_requirements">supported browser</a>.</p>
+        </div>
+    </div>
 
     <div id="main-wrapper" ng-cloak ng-class="{wide: ctrl.wide()}">
         <header>
@@ -140,6 +150,7 @@
 
     <!-- App -->
     <script src="app.bundle.js?v=[[VERSION]]"></script>
+    <script src="js/compat.js?v=[[VERSION]]"></script>
 
 </body>
 </html>
