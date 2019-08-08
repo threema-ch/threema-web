@@ -140,7 +140,6 @@ export default [
                             return false;
                         }
                         this.isLoading = false;
-                        // Reset background color
                         this.backgroundColor = null;
                         return true;
                     };
@@ -162,7 +161,7 @@ export default [
                             case 'me':
                             default:
                                 return highResolution
-                                    ? 'img/ic_contact_picture_big.png'
+                                    ? 'img/ic_contact_picture_big.svg'
                                     : 'img/ic_contact_picture_t.png';
                         }
                     };
@@ -183,6 +182,7 @@ export default [
                         // Otherwise, if we requested a high res avatar but
                         // there is only a low-res version, show that.
                         if (this.highResolution
+                            && this.isLoading
                             && this.receiver.avatar !== undefined
                             && this.receiver.avatar.low !== undefined
                             && this.receiver.avatar.low !== null) {
@@ -199,28 +199,31 @@ export default [
                             return;
                         }
 
+                        // We only want to load an avatar if the avatar is in view.
+                        //
+                        // To avoid having a lot of avatars being loaded when
+                        // just scrolling through a list of contacts, trigger
+                        // the avatar loading logic after a timeout. If the
+                        // avatar goes out of view again before the timeout has
+                        // elapsed, cancel the loading.
                         if (inView) {
                             if (loadingPromise === null) {
                                 // Do not wait on high resolution avatar
                                 const loadingTimeout = this.highResolution ? 0 : 500;
+
+                                // Register loading promise
                                 loadingPromise = timeoutService.register(() => {
-                                    // show loading only on high res images!
                                     webClientService.requestAvatar({
                                         type: this.receiver.type,
                                         id: this.receiver.id,
                                     } as threema.Receiver, this.highResolution)
                                     .then((avatar) => {
-                                        $rootScope.$apply(() => {
-                                            this.isLoading = false;
-                                        });
+                                        $rootScope.$apply(() => this.isLoading = false);
                                         loadingPromise = null;
                                     })
                                     .catch((error) => {
-                                        // TODO: Handle this properly / show an error message
                                         log.error(`Avatar request has been rejected: ${error}`);
-                                        $rootScope.$apply(() => {
-                                            this.isLoading = false;
-                                        });
+                                        $rootScope.$apply(() => this.isLoading = false);
                                         loadingPromise = null;
                                     });
                                 }, loadingTimeout, false, 'avatar');
