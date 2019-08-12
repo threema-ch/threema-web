@@ -5,14 +5,13 @@ const webpack = require('webpack');
 // https://stackoverflow.com/q/43307607
 // This does not mean that we support Firefox <60ESR!
 // We will increase the target again once FF52 has died out.
-const minFirefoxTarget = 44;
 const babelOptions = {
   presets: [
     ['@babel/preset-env', {
       corejs: 3,
       useBuiltIns: 'entry',
       targets: {
-        firefox: minFirefoxTarget,
+        firefox: 60,
         chrome: 65,
         opera: 52,
         safari: 11,
