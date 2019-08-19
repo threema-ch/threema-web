@@ -1301,7 +1301,8 @@ export class WebClientService {
         }
 
         // Session replaced or error'ed: Force close
-        if (args.reason === DisconnectReason.SessionReplaced || args.reason === DisconnectReason.SessionError) {
+        if (args.reason === DisconnectReason.SessionReplaced || args.reason === DisconnectReason.OutOfMemory ||
+            args.reason === DisconnectReason.SessionError) {
             close = true;
         }
 
@@ -2530,6 +2531,9 @@ export class WebClientService {
                 break;
             case DisconnectReason.SessionReplaced:
                 alertMessage = 'connection.SESSION_REPLACED';
+                break;
+            case DisconnectReason.OutOfMemory:
+                alertMessage = 'connection.OUT_OF_MEMORY';
                 break;
             case DisconnectReason.SessionError:
                 alertMessage = 'connection.SESSION_ERROR';
