@@ -19,6 +19,7 @@ import TaskConnectionState = threema.TaskConnectionState;
 import {Logger} from 'ts-log';
 
 import {ConfidentialIceCandidate} from '../helpers/confidential';
+import {UnboundedFlowControlledDataChannel} from '../helpers/data_channel';
 import {LogService} from './log';
 import {TimeoutService} from './timeout';
 
@@ -34,25 +35,38 @@ export class PeerConnectionHelper {
     private readonly $rootScope: ng.IRootScopeService;
 
     // Custom services
+    private readonly config: threema.Config;
+    private readonly logService: LogService;
     private readonly timeoutService: TimeoutService;
 
-        // WebRTC
-    private readonly pc: RTCPeerConnection;
+    // WebRTC
+    public readonly pc: RTCPeerConnection;
     private readonly webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask;
     private connectionFailedTimer: ng.IPromise<void> | null = null;
+
+    // Handed over signalling channel
+    private sdc: UnboundedFlowControlledDataChannel | null = null;
 
     // Calculated connection state
     public connectionState: TaskConnectionState = TaskConnectionState.New;
     public onConnectionStateChange: (state: TaskConnectionState) => void = null;
 
-    constructor($q: ng.IQService, $rootScope: ng.IRootScopeService,
-                logService: LogService, timeoutService: TimeoutService,
-                webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask, iceServers: RTCIceServer[]) {
+    constructor(
+        $q: ng.IQService,
+        $rootScope: ng.IRootScopeService,
+        config: threema.Config,
+        logService: LogService,
+        timeoutService: TimeoutService,
+        webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
+        iceServers: RTCIceServer[],
+    ) {
         this.log = logService.getLogger('PeerConnection', 'color: #fff; background-color: #3333ff');
         this.log.info('Initialize WebRTC PeerConnection');
         this.log.debug('ICE servers used:', [].concat(...iceServers.map((c) => c.urls)));
         this.$q = $q;
         this.$rootScope = $rootScope;
+        this.config = config;
+        this.logService = logService;
 
         this.timeoutService = timeoutService;
         this.webrtcTask = webrtcTask;
@@ -191,12 +205,68 @@ export class PeerConnectionHelper {
     }
 
     /**
-     * Create a new secure data channel.
+     * Initiate the handover process.
      */
-    public createSecureDataChannel(label: string): saltyrtc.tasks.webrtc.SecureDataChannel {
-        const dc: RTCDataChannel = this.pc.createDataChannel(label);
+    public handover(): void {
+        if (this.sdc !== null) {
+            throw new Error('Handover already inintiated');
+        }
+
+        // Get transport link
+        const link: saltyrtc.tasks.webrtc.SignalingTransportLink = this.webrtcTask.getTransportLink();
+
+        // Create data channel
+        const dc = this.pc.createDataChannel(link.label, {
+            id: link.id,
+            negotiated: true,
+            ordered: true,
+            protocol: link.protocol,
+        });
         dc.binaryType = 'arraybuffer';
-        return this.webrtcTask.wrapDataChannel(dc);
+
+        // Wrap as an unbounded, flow-controlled data channel
+        this.sdc = new UnboundedFlowControlledDataChannel(dc, this.logService, this.config.TRANSPORT_LOG_LEVEL);
+
+        // Create transport handler
+        const self = this;
+        const handler = {
+            get maxMessageSize(): number {
+                return self.pc.sctp.maxMessageSize;
+            },
+            close(): void {
+                self.log.debug(`Signalling data channel close request`);
+                dc.close();
+            },
+            send(message: Uint8Array): void {
+                self.log.debug(`Signalling data channel outgoing signaling message of ` +
+                    `length ${message.byteLength}`);
+                self.sdc.write(message);
+            },
+        };
+
+        // Bind events
+        dc.onopen = () => {
+            this.log.info(`Signalling data channel open`);
+
+            // Rebind close event
+            dc.onclose = () => {
+                this.log.info(`Signalling data channel closed`);
+                link.closed();
+            };
+
+            // Initiate handover
+            this.webrtcTask.handover(handler);
+        };
+        dc.onclose = () => {
+            this.log.error(`Signalling data channel closed`);
+        };
+        dc.onerror = (event) => {
+            this.log.error(`Signalling data channel error:`, event);
+        };
+        dc.onmessage = (event) => {
+            this.log.debug(`Signalling data channel incoming message of length ${event.data.byteLength}`);
+            link.receive(new Uint8Array(event.data));
+        };
     }
 
     /**

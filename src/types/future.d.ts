@@ -36,7 +36,7 @@ interface Future<T> extends Promise<T> {
     reject(reason?: any): void;
 }
 
-interface FutureStatic {
+interface FutureStatic extends PromiseConstructor {
     new<T>(executor?: (resolveFn: (value?: T | PromiseLike<T>) => void,
                        rejectFn: (reason?: any) => void) => void,
     ): Future<T>
