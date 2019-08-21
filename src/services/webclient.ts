@@ -577,6 +577,17 @@ export class WebClientService {
                         this.arpLog.warn('Unknown signaling state:', state);
                 }
             }
+
+            // Close the peer connection.
+            // Note: For some reason, we do not receive 'close' events for the main data channel,
+            //       so this is a fallback mechanism.
+            if (this.pcHelper !== null && state === 'closed') {
+                this.arpLog.debug('Closing peer connection');
+                this.stateService.updateTaskConnectionState(threema.TaskConnectionState.Disconnected);
+                this.pcHelper.onConnectionStateChange = null;
+                this.pcHelper.close();
+            }
+
             this.stateService.updateSignalingConnectionState(state, this.chosenTask, this.handoverDone);
         });
 
@@ -1095,7 +1106,10 @@ export class WebClientService {
                 });
             };
             dc.onclose = () => {
-                this.arpLog.info(`Data channel ${dc.label} closed`);
+                this.arpLog.info(`Data channel ${dc.label} closed, closing peer connection`);
+                this.stateService.updateTaskConnectionState(threema.TaskConnectionState.Disconnected);
+                this.pcHelper.onConnectionStateChange = null;
+                this.pcHelper.close();
             };
             dc.onerror = (event) => {
                 this.arpLog.error(`Data channel ${dc.label} error:`, event);
