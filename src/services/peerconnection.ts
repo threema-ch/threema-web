@@ -150,7 +150,8 @@ export class PeerConnectionHelper {
                             // situations which certainly would lead to ugly race conditions.
                             this.connectionFailedTimer = null;
                             this.log.debug('ICE connection considered failed');
-                            this.pc.close();
+                            this.setConnectionState(TaskConnectionState.Disconnected);
+                            this.close();
                         }, PeerConnectionHelper.CONNECTION_FAILED_TIMEOUT_MS, true, 'connectionFailedTimer');
                         break;
                     case 'connected':
@@ -160,6 +161,7 @@ export class PeerConnectionHelper {
                     case 'failed':
                     case 'closed':
                         this.setConnectionState(TaskConnectionState.Disconnected);
+                        this.close();
                         break;
                     default:
                         this.log.warn('Ignored ICE connection state change to',
@@ -285,7 +287,18 @@ export class PeerConnectionHelper {
      * Unbind all event handler and abruptly close the peer connection.
      */
     public close(): void {
+        // Cancel connection failed timer
+        if (this.connectionFailedTimer !== null) {
+            this.timeoutService.cancel(this.connectionFailedTimer);
+            this.connectionFailedTimer = null;
+        }
+
+        // Unbind all events
         this.webrtcTask.off();
+        this.sdc.dc.onopen = null;
+        this.sdc.dc.onclose = null;
+        this.sdc.dc.onerror = null;
+        this.sdc.dc.onmessage = null;
         this.pc.onnegotiationneeded = null;
         this.pc.onconnectionstatechange = null;
         this.pc.onsignalingstatechange = null;
@@ -294,6 +307,8 @@ export class PeerConnectionHelper {
         this.pc.oniceconnectionstatechange = null;
         this.pc.onicegatheringstatechange = null;
         this.pc.ondatachannel = null;
+
+        // Close peer connection
         this.pc.close();
     }
 }
