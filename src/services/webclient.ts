@@ -265,6 +265,8 @@ export class WebClientService {
     private drafts: threema.Container.Drafts;
     private pcHelper: PeerConnectionHelper = null;
     private trustedKeyStore: TrustedKeyStoreService;
+    private keyStore: saltyrtc.KeyStore | null = null;
+    private peerTrustedKey: Uint8Array | null = null;
     public clientInfo: threema.ClientInfo = null;
     public version = null;
 
@@ -449,14 +451,17 @@ export class WebClientService {
      *          messages can be queued by the user.
      */
     public init(flags: {
-        keyStore?: saltyrtc.KeyStore,
-        peerTrustedKey?: Uint8Array,
+        keyStore?: saltyrtc.KeyStore | 'reuse',
+        peerTrustedKey?: Uint8Array | 'reuse',
         resume: boolean,
     }): void {
         let keyStore = flags.keyStore;
         let resumeSession = flags.resume;
-        this.log.info(`Initializing (keyStore=${keyStore !== undefined ? 'yes' : 'no'}, peerTrustedKey=` +
-            `${flags.peerTrustedKey !== undefined ? 'yes' : 'no'}, resume=${resumeSession})`);
+        let peerTrustedKey = flags.peerTrustedKey;
+        const keyStoreInfo = keyStore === 'reuse' ? 'reuse' : (keyStore !== undefined ? 'yes' : 'no');
+        const peerTrustedKeyInfo = peerTrustedKey === 'reuse' ? 'reuse' : (peerTrustedKey !== undefined ? 'yes' : 'no');
+        this.log.info(`Initializing (keyStore=${keyStoreInfo}, peerTrustedKey=${peerTrustedKeyInfo}, ` + `
+            resume=${resumeSession})`);
 
         // Reset fields, blob cache, pending requests and pending timeouts in case the session
         // should explicitly not be resumed
@@ -524,9 +529,16 @@ export class WebClientService {
         tasks.push(this.relayedDataTask);
 
         // Create new keystore if necessary
-        if (!keyStore) {
+        if (keyStore === 'reuse') {
+            if (this.keyStore === null) {
+                throw new Error('Key store cannot be reused as it is null');
+            }
+            keyStore = this.keyStore;
+        }
+        if (keyStore === undefined) {
             keyStore = new saltyrtcClient.KeyStore();
         }
+        this.keyStore = keyStore;
 
         // Determine SaltyRTC host, replace the inner prefix (if any)
         this.saltyRtcHost = this.config.SALTYRTC_HOST.replace('{prefix}', keyStore.publicKeyHex.substr(0, 2));
@@ -539,8 +551,15 @@ export class WebClientService {
             .withKeyStore(keyStore)
             .usingTasks(tasks)
             .withPingInterval(30);
-        if (flags.peerTrustedKey !== undefined) {
-            builder = builder.withTrustedPeerKey(flags.peerTrustedKey);
+        if (peerTrustedKey === 'reuse') {
+            if (this.peerTrustedKey === null) {
+                throw new Error('Peer trusted key cannot be reused as it is null');
+            }
+            peerTrustedKey = this.peerTrustedKey;
+        }
+        if (peerTrustedKey !== undefined) {
+            builder = builder.withTrustedPeerKey(peerTrustedKey);
+            this.peerTrustedKey = peerTrustedKey;
         }
         this.salty = builder.asInitiator();
         this.arpLog.info('Public key:', this.salty.permanentKeyHex);
@@ -873,6 +892,9 @@ export class WebClientService {
      *   considered established.
      */
     private onTaskEstablished(resumeSession: boolean) {
+        // Store peer's key
+        this.peerTrustedKey = this.salty.peerPermanentKeyBytes;
+
         // Pushing complete
         this.resetPushSession(true);
 
@@ -1097,7 +1119,7 @@ export class WebClientService {
                 // Determine chunk length
                 this.secureDataChannelChunkLength = Math.min(
                     WebClientService.DATA_CHANNEL_MAX_CHUNK_SIZE, this.pcHelper.pc.sctp.maxMessageSize);
-                this.arpLog.debug(`Using chunk length: ${this.secureDataChannelChunkLength} for data channel` +
+                this.arpLog.debug(`Using chunk length: ${this.secureDataChannelChunkLength} for data channel ` +
                     dc.label);
 
                 // Connection established
@@ -1357,6 +1379,8 @@ export class WebClientService {
 
         // Clear stored data (trusted key, push token, etc) if deleting the session
         if (remove) {
+            this.keyStore = null;
+            this.peerTrustedKey = null;
             this.trustedKeyStore.clearTrustedKey();
         }
 
