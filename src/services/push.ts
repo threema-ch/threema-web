@@ -17,7 +17,7 @@
 
 import {Logger} from 'ts-log';
 
-import {TimeoutError} from '../exceptions';
+import {PushError, TimeoutError} from '../exceptions';
 import {randomString, sleep} from '../helpers';
 import {sha256} from '../helpers/crypto';
 import {LogService} from './log';
@@ -124,6 +124,7 @@ export class PushSession {
      *
      * @throws TimeoutError in case the maximum amount of retries has been
      *   reached.
+     * @throws PushError if the push was rejected by the push relay server.
      * @throws Error in case of an unrecoverable error which prevents further
      *   pushes.
      */
@@ -215,7 +216,7 @@ export class PushSession {
                     // Client error: Don't retry
                     const error = `Push rejected (client error), status: ${response.status}`;
                     this.log.warn(error);
-                    this.doneFuture.reject(new Error(error));
+                    this.doneFuture.reject(new PushError(error, response.status));
                 } else {
                     // Server error: Retry
                     this.log.warn(`Push rejected (server error), status: ${response.status}`);

@@ -1,0 +1,25 @@
+<md-dialog aria-label="Device Unreachable">
+    <form ng-cloak>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>common.ERROR</h2>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <p translate>connection.PUSH_ERROR_INFO</p>
+                <p translate>connection.PUSH_ERROR_ACTION</p>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button role="button" class="md-primary" ng-click="ctrl.forget()" aria-labelledby="aria-label-forget">
+                <span translate id="aria-label-forget">welcome.FORGET_SESSION_BTN</span>
+            </md-button>
+            <md-button role="button" class="md-primary" ng-click="ctrl.cancel()" aria-labelledby="aria-label-cancel">
+                <span translate id="aria-label-cancel">common.CANCEL</span>
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
+

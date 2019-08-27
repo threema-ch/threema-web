@@ -16,3 +16,12 @@
  */
 
 export class TimeoutError extends Error {}
+
+export class PushError extends Error {
+    public readonly responseCode: number;
+
+    public constructor(msg: string, responseCode: number) {
+        super(msg);
+        this.responseCode = responseCode;
+    }
+}

@@ -355,6 +355,8 @@
         "WEBCLIENT_DISABLED": "Threema Web was disabled on your device.",
         "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window.",
         "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
-        "SESSION_ERROR": "The session was stopped due to a protocol error."
+        "SESSION_ERROR": "The session was stopped due to a protocol error.",
+        "PUSH_ERROR_INFO": "Could not wake up your device with a push notification. This happens for example if you recently switched to a new mobile device.",
+        "PUSH_ERROR_ACTION": "If this error persists, you should click \"Forget Session\" and create a new session."
     }
 }
