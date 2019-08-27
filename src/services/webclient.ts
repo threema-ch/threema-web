@@ -1175,7 +1175,7 @@ export class WebClientService {
                     // Handle errors
                     if (error instanceof TimeoutError) {
                         this.showDeviceUnreachableDialog();
-                    } else if (error instanceof PushError && error.responseCode === 400) {
+                    } else if (error instanceof PushError && error.statusCode === 400) {
                         // Can happen if the push token is invalid
                         this.showPushRejectedDialog();
                     } else {
