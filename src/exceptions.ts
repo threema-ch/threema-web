@@ -18,10 +18,11 @@
 export class TimeoutError extends Error {}
 
 export class PushError extends Error {
-    public readonly responseCode: number;
+    // HTTP response status code returned by push relay server.
+    public readonly statusCode: number;
 
-    public constructor(msg: string, responseCode: number) {
+    public constructor(msg: string, statusCode: number) {
         super(msg);
-        this.responseCode = responseCode;
+        this.statusCode = statusCode;
     }
 }
