@@ -3166,7 +3166,7 @@ export class WebClientService {
         // Get receiver
         const receiver = this.receivers.getData({type: data.type, id: data.id});
         if (!hasValue(receiver)) {
-            const log = `Received conversation update for unknown receiver (${data.type}/${data.id})`;
+            const log = `Received conversation update for unknown ${data.type} receiver`;
             this.arpLog.error(log);
             return;
         }
