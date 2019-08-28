@@ -16,3 +16,13 @@
  */
 
 export class TimeoutError extends Error {}
+
+export class PushError extends Error {
+    // HTTP response status code returned by push relay server.
+    public readonly statusCode: number;
+
+    public constructor(msg: string, statusCode: number) {
+        super(msg);
+        this.statusCode = statusCode;
+    }
+}

@@ -166,6 +166,40 @@ export class DeviceUnreachableController extends DialogController {
 }
 
 /**
+ * Handle device unreachable
+ */
+export class PushRejectedDialogController extends DialogController {
+    private readonly log: Logger;
+
+    private readonly $window: ng.IWindowService;
+
+    private readonly trustedKeyStore: TrustedKeyStoreService;
+
+    public static readonly $inject = ['$mdDialog', '$window', 'TrustedKeyStore' , 'LogService'];
+    constructor(
+        $mdDialog: ng.material.IDialogService,
+        $window: ng.IWindowService,
+        trustedKeyStore: TrustedKeyStoreService,
+        logService: LogService,
+    ) {
+        super($mdDialog);
+        this.$window = $window;
+        this.log = logService.getLogger('PushRejectedDialog-C');
+        this.trustedKeyStore = trustedKeyStore;
+    }
+
+    /**
+     * Remove the stored session.
+     */
+    public forget(): void {
+        this.log.info('Forgetting stored session');
+        this.trustedKeyStore.clearTrustedKey();
+        this.cancel();
+        this.$window.location.reload();
+    }
+}
+
+/**
  * Handle settings
  */
 class SettingsController extends DialogController {

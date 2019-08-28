@@ -354,6 +354,8 @@
         "WEBCLIENT_DISABLED": "Threema Web wurde auf Ihrem Gerät deaktiviert.",
         "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben.",
         "OUT_OF_MEMORY": "Die Sitzung musste beendet werden, da auf dem Gerät nicht genügend Arbeitsspeicher zur Verfügung steht.",
-        "SESSION_ERROR": "Die Sitzung wurde aufgrund eines Protokollfehlers beendet."
+        "SESSION_ERROR": "Die Sitzung wurde aufgrund eines Protokollfehlers beendet.",
+        "PUSH_ERROR_INFO": "Threema Web konnte Ihr Gerät nicht mit einer Push-Benachrichtigung aufwecken. Dies passiert oft beim Wechsel auf ein neues Gerät.",
+        "PUSH_ERROR_ACTION": "Falls der Fehler weiterhin besteht, klicken Sie bitte auf \"Sitzung vergessen\" und erstellen Sie eine neue Sitzung."
     }
 }

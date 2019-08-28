@@ -58,10 +58,10 @@ import {TimeoutService} from './timeout';
 import {TitleService} from './title';
 import {VersionService} from './version';
 
-import {TimeoutError} from '../exceptions';
+import {PushError, TimeoutError} from '../exceptions';
 import {ConfidentialWireMessage} from '../helpers/confidential';
 import {UnboundedFlowControlledDataChannel} from '../helpers/data_channel';
-import {DeviceUnreachableController} from '../partials/messenger';
+import {DeviceUnreachableController, PushRejectedDialogController} from '../partials/messenger';
 import {ChunkCache} from '../protocol/cache';
 import {SequenceNumber} from '../protocol/sequence_number';
 
@@ -1172,9 +1172,12 @@ export class WebClientService {
                     // Reset push session
                     this.resetPushSession(false);
 
-                    // Handle error
+                    // Handle errors
                     if (error instanceof TimeoutError) {
                         this.showDeviceUnreachableDialog();
+                    } else if (error instanceof PushError && error.statusCode === 400) {
+                        // Can happen if the push token is invalid
+                        this.showPushRejectedDialog();
                     } else {
                         this.failSession();
                     }
@@ -1227,6 +1230,16 @@ export class WebClientService {
             })
                 .finally(() => this.deviceUnreachableDialog = null);
         }
+    }
+
+    public showPushRejectedDialog(): void {
+        this.$mdDialog.show({
+            controller: PushRejectedDialogController,
+            controllerAs: 'ctrl',
+            templateUrl: 'partials/dialog.push-rejected.html',
+            parent: angular.element(document.body),
+            escapeToClose: false,
+        });
     }
 
     /**
