@@ -100,7 +100,6 @@ export class WebClientService {
     private static SEQUENCE_NUMBER_MAX = (2 ** 32) - 1;
     private static CHUNK_CACHE_SIZE_MAX = 2 * 1024 * 1024;
     private static AVATAR_LOW_MAX_SIZE = 48;
-    private static MAX_TEXT_LENGTH = 3500;
     private static MAX_FILE_SIZE_WEBRTC_TASK_V0 = 15 * 1024 * 1024;
     private static CONNECTION_ID_NONCE = stringToUtf8a('connectionidconnectionid');
 
@@ -1783,12 +1782,11 @@ export class WebClientService {
                     throw this.$translate.instant('error.ERROR_OCCURRED');
                 }
 
-                // Ignore text messages that are too long.
-                if (msgLength > WebClientService.MAX_TEXT_LENGTH) {
-                    throw this.$translate.instant('error.TEXT_TOO_LONG', {
-                        max: WebClientService.MAX_TEXT_LENGTH,
-                    });
-                }
+                // Note: Not validating message length again here, since that
+                // would require us to re-encode the text a second time (since
+                // the compose area already checks the length). If we still end
+                // up with messages that are too large for some unexpected
+                // reason, we'd get an error message from the app.
 
                 break;
             case 'file':
@@ -3367,6 +3365,7 @@ export class WebClientService {
             capabilities: {
                 maxGroupSize: getOrDefault<number>(data.capabilities.maxGroupSize, 50),
                 maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
+                maxMessageBodySize: getOrDefault<number>(data.capabilities.maxMessageBodySize, 3500),
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
                 imageFormat: data.capabilities.imageFormat,
                 mdm: data.capabilities.mdm,
@@ -3465,7 +3464,7 @@ export class WebClientService {
      * Return the max text length
      */
     public getMaxTextLength(): number {
-        return WebClientService.MAX_TEXT_LENGTH;
+        return this.clientInfo.capabilities.maxMessageBodySize;
     }
 
     /**

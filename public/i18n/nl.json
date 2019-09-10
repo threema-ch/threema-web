@@ -259,7 +259,6 @@
         "FILE_TOO_LARGE": "Bestanden groter dan {maxmb} MiB kunnen niet worden verstuurd",
         "FILE_TOO_LARGE_WEB": "Momenteel kunnen bestanden groter dan 15 MiB niet worden verstuurd met Threema Web",
         "FILE_TOO_LARGE_GENERIC": "Het bestand is te groot om te versturen",
-        "TEXT_TOO_LONG": "Dit bericht is te lang en kan niet verstuurd worden (Max lengte {max} karakters).",
         "NOTIFICATION_PERMISSION_DENIED": "Je moet handmatig Threema Web toegang geven om desktop notificaties te ontvangen.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Kom meer te weten",
         "NOTIFICATION_API_NOT_AVAILABLE": "Je browser ondersteunt geen desktop notificaties.",

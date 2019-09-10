@@ -745,6 +745,7 @@ declare namespace threema {
     interface AppCapabilities {
         maxGroupSize: number;
         maxFileSize: number;
+        maxMessageBodySize: number;
         distributionLists: boolean;
         imageFormat: ImageFormat;
         mdm?: MdmRestrictions;

@@ -259,7 +259,6 @@
         "FILE_TOO_LARGE": "Soubory větší než {maxmb} MiB nelze odeslat",
         "FILE_TOO_LARGE_WEB": "Aktuálně nelze prostřednictvím Threema Web odeslat soubory větší než 15 MiB",
         "FILE_TOO_LARGE_GENERIC": "Soubor je moc velký na odeslání",
-        "TEXT_TOO_LONG": "Tato zpráva je příliš dlouhá a nemůže být odeslána (Max. délka je {max} znaků).",
         "NOTIFICATION_PERMISSION_DENIED": "Chcete-li přijímat upozornění v prohlížeči, musíte ručně udělit povolení oznámení pro Threema Web.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Další informace.",
         "NOTIFICATION_API_NOT_AVAILABLE": "Váš prohlížeč nepodporuje oznámení z aplikace.",

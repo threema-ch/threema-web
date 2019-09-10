@@ -259,7 +259,6 @@
         "FILE_TOO_LARGE": "Les fichiers plus grands que {maxmb} MiB ne peuvent pas être envoyés",
         "FILE_TOO_LARGE_WEB": "Actuellement les fichiers plus grands que 15 MiB ne peuvent pas être envoyés avec Threema Web",
         "FILE_TOO_LARGE_GENERIC": "Le fichier est trop lourd pour être envoyé.",
-        "TEXT_TOO_LONG": "Le fichier est trop long et ne peut pas être envoyé (Longueur max {max} caractères).",
         "NOTIFICATION_PERMISSION_DENIED": "Vous devez autoriser les notifications pour Threema Web manuellement pour pouvoir recevoir les notifications sur votre ordinateur.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "En savoir davantage.",
         "NOTIFICATION_API_NOT_AVAILABLE": "Votre ordinateur ne supporte pas les notifications.",
