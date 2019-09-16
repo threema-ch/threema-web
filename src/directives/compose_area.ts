@@ -199,7 +199,9 @@ export default [
                                 .catch(reject);
                         };
 
-                        if (text.length > scope.maxTextLength) {
+                        // Check for max length
+                        const byteLength = (new TextEncoder().encode(text)).length;
+                        if (byteLength > scope.maxTextLength) {
                             const pieces: string[] = stringService.byteChunk(text, scope.maxTextLength, 50);
                             const confirm = $mdDialog.confirm()
                                 .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
