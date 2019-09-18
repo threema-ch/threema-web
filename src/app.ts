@@ -111,12 +111,30 @@ angular.module('3ema', [
 
 // Configure theme
 .config(['$mdThemingProvider', ($mdThemingProvider) => {
+    $mdThemingProvider.definePalette('threema', {
+        50: 'f2faf5',
+        100: 'e6f6eb',
+        200: 'cdedd9',
+        300: 'b4e4c5',
+        400: '9bdbb2',
+        500: '82d29f',
+        600: '69ca8c',
+        700: '50c078',
+        800: '37b865',
+        900: '1eae52',
+        A100: '05a63f',
+        A200: '048432',
+        A400: '03732b',
+        A700: '036325',
+        contrastDefaultColor: 'light',
+        contrastDarkColors: ['50', '100', '200', '300', '400', '500', '600'],
+    });
     $mdThemingProvider.theme('default')
         .primaryPalette('grey', {
              default: '800',
         })
-        .accentPalette('teal', {
-            default: '500',
+        .accentPalette('threema', {
+            default: 'A100',
         });
 }])
 

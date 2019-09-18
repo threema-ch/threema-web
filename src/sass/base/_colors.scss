@@ -11,3 +11,8 @@ body {
 footer {
     color: #ffffff;
 }
+
+dl.key-values dt {
+    color: $theme-primary;
+    font-weight: 500;
+}

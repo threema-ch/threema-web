@@ -2,19 +2,18 @@
 a {
     transition: color .4s;
     text-decoration: none;
-    color: #265c83;
+    color: $theme-primary;
 
     &:link,
     &:visited {
-        color: #265c83;
+        color: $theme-primary;
     }
 
     &:hover {
-        color: lighten(#265c83, 30%);
+        color: $theme-b400;
     }
 
     &:active {
-        transition: color .3s;
-        color: #007be6;
+        color: $theme-b400;
     }
 }

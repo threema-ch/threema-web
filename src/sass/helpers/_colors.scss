@@ -1,4 +1,9 @@
-$status-ok: #4caf50;
+$theme-primary: #05a63f;
+$theme-b300: #03732b;
+$theme-b400: #036325;
+$theme-b500: #02521f;
+$theme-green: $theme-primary;
+$status-ok: $theme-primary;
 $status-warning: #ff9800;
 $status-error: #f44336;
 $status-starred: #ffc107;
@@ -6,7 +11,6 @@ $border-grey: #dddddd;
 $background-grey: lighten($border-grey, 7%);
 $material-grey: rgba(0, 0, 0, .54);
 $material-grey-dark: rgba(0, 0, 0, .87);
-$url-light-blue: #63a6cf;
 $work-blue: #3b84df;
 
 $dark-background-color: #f6f6f6;
