@@ -49,12 +49,16 @@ body {
     }
 }
 
+#title .dot {
+    fill: white;
+}
+
 .status-ok {
     #status-bar {
         background-color: $status-ok;
     }
 
-    #title .dot {
+    &.visualize-state #title .dot {
         fill: $status-ok;
     }
 }
@@ -64,7 +68,7 @@ body {
         background-color: $status-warning;
     }
 
-    #title .dot {
+    &.visualize-state #title .dot {
         fill: $status-warning;
     }
 }
@@ -74,7 +78,7 @@ body {
         background-color: $status-error;
     }
 
-    #title .dot {
+    &.visualize-state #title .dot {
         fill: $status-error;
     }
 }

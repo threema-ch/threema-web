@@ -73,5 +73,7 @@ export default {
     MSGPACK_LOG_TRACE: false,
     // Transport log level
     TRANSPORT_LOG_LEVEL: 'warn',
+    // Always show the real connection state using the dot in the logo
+    VISUALIZE_STATE: true,
 
 } as threema.Config;
