@@ -110,7 +110,7 @@ angular.module('3ema', [
 }])
 
 // Configure theme
-.config(['$mdThemingProvider', ($mdThemingProvider) => {
+.config(['$mdThemingProvider', ($mdThemingProvider: ng.material.IThemingProvider) => {
     $mdThemingProvider.definePalette('threema', {
         50: 'f2faf5',
         100: 'e6f6eb',
@@ -129,13 +129,31 @@ angular.module('3ema', [
         contrastDefaultColor: 'light',
         contrastDarkColors: ['50', '100', '200', '300', '400', '500', '600'],
     });
-    $mdThemingProvider.theme('default')
-        .primaryPalette('grey', {
-             default: '800',
-        })
-        .accentPalette('threema', {
-            default: 'A100',
-        });
+    $mdThemingProvider.definePalette('threemawork', {
+        50: '#f2f9ff',
+        100: 'e5f4ff',
+        200: 'cceaff',
+        300: 'b2dfff',
+        400: '99d5ff',
+        500: '7fcaff',
+        600: '66c0ff',
+        700: '4cb5ff',
+        800: '33abff',
+        900: '19a0ff',
+        A100: '0096ff',
+        A200: '0086e5',
+        A400: '0068b2',
+        A700: '004a7f',
+        contrastDefaultColor: 'light',
+        contrastDarkColors: ['50', '100', '200', '300', '400', '500', '600'],
+    });
+    $mdThemingProvider.theme('threema')
+        .primaryPalette('grey', {default: '800'})
+        .accentPalette('threema', {default: 'A100'});
+    $mdThemingProvider.theme('threemawork')
+        .primaryPalette('grey', {default: '800'})
+        .accentPalette('threemawork', {default: 'A100'});
+    $mdThemingProvider.alwaysWatchTheme(true);
 }])
 
 // Optimizations: https://docs.angularjs.org/guide/production

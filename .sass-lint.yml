@@ -31,6 +31,8 @@ rules:
   property-sort-order:
     - 2
     - order: concentric
+  force-attribute-nesting:
+    - 0
 
 # Auto-Fix Configuration
 resolvers:

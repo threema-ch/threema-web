@@ -22,13 +22,14 @@ import * as clipboard from '../helpers/clipboard';
 
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
+import {ThemeService} from '../services/theme';
 import {WebClientService} from '../services/webclient';
 import {DialogController} from './dialog';
 
 export class TroubleshootingController extends DialogController {
     public static readonly $inject = [
         '$scope', '$mdDialog', '$mdToast', '$translate',
-        'CONFIG', 'LogService', 'BrowserService', 'WebClientService',
+        'CONFIG', 'LogService', 'BrowserService', 'ThemeService', 'WebClientService',
     ];
 
     private readonly $scope: ng.IScope;
@@ -52,9 +53,10 @@ export class TroubleshootingController extends DialogController {
         config: threema.Config,
         logService: LogService,
         browserService: BrowserService,
+        themeService: ThemeService,
         webClientService: WebClientService,
     ) {
-        super($mdDialog);
+        super($scope, $mdDialog, themeService);
         this.$scope = $scope;
         this.$mdToast = $mdToast;
         this.$translate = $translate;

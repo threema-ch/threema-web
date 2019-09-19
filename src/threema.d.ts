@@ -713,6 +713,11 @@ declare namespace threema {
         Ios = 'ios',
     }
 
+    const enum Theme {
+        Regular = 'threema',
+        Work = 'threemawork',
+    }
+
     interface ClientInfo {
         // The device name
         device: string;

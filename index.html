@@ -56,7 +56,7 @@
     <link rel="stylesheet" href="css/app.css?v=[[VERSION]]">
 </head>
 
-<body class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}">
+<body ng-controller="ThemeController as themeCtrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}" md-theme="{{ themeCtrl.theme }}">
     <img src="img/bg.jpg?v=[[VERSION]]" aria-label="Background image: Blurred photo of a mountain" id="background-image" draggable="false">
 
     <noscript class="compat compat-nojs">
@@ -101,7 +101,7 @@
         </div>
         <footer ng-controller="FooterController as ctrl">
             <ul translate-cloak>
-                <li><a ng-click="ctrl.showVersionInfo('[[VERSION]]')" ng-keypress="ctrl.showVersionInfo('[[VERSION]]', $event)" tabindex="0">Version [[VERSION]] {{ ctrl.config.VERSION_MOUNTAIN }}</a></li>
+                <li><a ng-click="ctrl.showVersionInfo()" ng-keypress="ctrl.showVersionInfo($event)" tabindex="0">Version [[VERSION]] {{ ctrl.config.VERSION_MOUNTAIN }}</a></li>
                 <li><a href="https://threema.ch/threema-web" target="_blank" rel="noopener noreferrer" tabindex="0" translate>welcome.MORE_ABOUT_WEB</a></li>
                 <li><a ng-click="ctrl.showTroubleshooting()" ng-keypress="ctrl.showTroubleshooting($event)" translate>troubleshooting.TROUBLESHOOTING</a></li>
                 <li><a href="https://github.com/threema-ch/threema-web/blob/master/TRANSLATING.md" target="_blank" rel="noopener noreferrer" tabindex="0" translate>welcome.HELP_TRANSLATE</a></li>

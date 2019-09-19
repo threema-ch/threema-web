@@ -15,6 +15,8 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ThemeService} from '../services/theme';
+
 /**
  * A general purpose dialog controller.
  */
@@ -22,10 +24,25 @@ export class DialogController {
     public readonly $mdDialog: ng.material.IDialogService;
     public readonly activeElement: HTMLElement | null;
 
-    public static readonly $inject = ['$mdDialog'];
-    constructor($mdDialog: ng.material.IDialogService, activeElement?: HTMLElement) {
+    public theme: string;
+
+    public static readonly $inject = ['$scope', '$mdDialog', 'ThemeService'];
+    constructor(
+        $scope: ng.IScope,
+        $mdDialog: ng.material.IDialogService,
+        themeService: ThemeService,
+        activeElement?: HTMLElement,
+    ) {
         this.$mdDialog = $mdDialog;
         this.activeElement = activeElement !== undefined ? activeElement : document.activeElement as HTMLElement;
+
+        // Unfortunately md-dialog does not properly update when the root theme is changed.
+        // This means that we have to listen to theme changes manually and
+        // update the md-theme attribute on the dialog template.
+        this.theme = themeService.theme;
+        themeService.evtThemeChange.attach(
+            (newTheme: threema.Theme) => $scope.$apply(() => this.theme = newTheme),
+        );
     }
 
     /**

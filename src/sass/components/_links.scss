@@ -1,7 +1,11 @@
-// Based on http://mrmrs.io/links/
+// sass-lint:disable no-mergeable-selectors
+
 a {
     transition: color .4s;
     text-decoration: none;
+}
+
+a {
     color: $theme-primary;
 
     &:link,
@@ -15,5 +19,22 @@ a {
 
     &:active {
         color: $theme-b400;
+    }
+}
+
+body[md-theme='threemawork'] a {
+    color: $work-primary;
+
+    &:link,
+    &:visited {
+        color: $work-primary;
+    }
+
+    &:hover {
+        color: $work-b500;
+    }
+
+    &:active {
+        color: $work-b500;
     }
 }
