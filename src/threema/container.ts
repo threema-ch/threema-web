@@ -113,7 +113,7 @@ class Receivers implements threema.Container.Receivers {
     /**
      * Get the receiver matching a certain template.
      */
-    public getData(receiver: threema.BaseReceiver): threema.Receiver | null {
+    public getData(receiver: threema.BaseReceiver): threema.Receiver | undefined {
         if (receiver.type === 'me') {
             return this.me.id === receiver.id ? this.me : undefined;
         } else {
