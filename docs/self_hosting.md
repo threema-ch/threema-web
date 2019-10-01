@@ -28,8 +28,13 @@ release version yourself, a recent version of npm is required.
 
     application/wasm    wasm;
 
+If you're using Apache, add the following line to
+`/etc/apache2/mods-enabled/mime.conf`:
+
+    AddType application/wasm .wasm
+
 When using Python,
-[someting like this](https://gist.github.com/dbrgn/6bf88d32b1b44b1b1d4140f92b8a7a0a)
+[something like this](https://gist.github.com/dbrgn/6bf88d32b1b44b1b1d4140f92b8a7a0a)
 should work.
 
 ### Building from source
