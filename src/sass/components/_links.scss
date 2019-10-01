@@ -1,20 +1,40 @@
-// Based on http://mrmrs.io/links/
+// sass-lint:disable no-mergeable-selectors
+
 a {
     transition: color .4s;
     text-decoration: none;
-    color: #265c83;
+}
+
+a {
+    color: $theme-primary;
 
     &:link,
     &:visited {
-        color: #265c83;
+        color: $theme-primary;
     }
 
     &:hover {
-        color: lighten(#265c83, 30%);
+        color: $theme-b400;
     }
 
     &:active {
-        transition: color .3s;
-        color: #007be6;
+        color: $theme-b400;
+    }
+}
+
+body[md-theme='threemawork'] a {
+    color: $work-primary;
+
+    &:link,
+    &:visited {
+        color: $work-primary;
+    }
+
+    &:hover {
+        color: $work-b500;
+    }
+
+    &:active {
+        color: $work-b500;
     }
 }

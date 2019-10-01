@@ -4,18 +4,18 @@
 // - https://www.sitepoint.com/architecture-sass-project/
 // - http://vanseodesign.com/css/sass-directory-structures/
 
+// Helpers: Tools, helper files, variables, config files.
+@import 'helpers/colors';
+@import 'helpers/sizes';
+@import 'helpers/message_bubble';
+@import 'helpers/texts';
+
 // Base: Boilerplate content. It holds the styles every page of your site
 // should receive.
 @import 'base/reset';
 @import 'base/typography';
 @import 'base/colors';
 @import 'base/cloak';
-
-// Helpers: Tools, helper files, variables, config files.
-@import 'helpers/colors';
-@import 'helpers/sizes';
-@import 'helpers/message_bubble';
-@import 'helpers/texts';
 
 // Layouts: Macro layout files. Styles for major sections of the layout like a
 // header or footer and styles for a grid system would belong here.

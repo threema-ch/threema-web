@@ -40,6 +40,7 @@ import {NotificationService} from '../services/notification';
 import {ReceiverService} from '../services/receiver';
 import {SettingsService} from '../services/settings';
 import {StateService} from '../services/state';
+import {ThemeService} from '../services/theme';
 import {TimeoutService} from '../services/timeout';
 import {VersionService} from '../services/version';
 import {WebClientService} from '../services/webclient';
@@ -53,17 +54,20 @@ import ControllerModelMode = threema.ControllerModelMode;
  * Handle sending of files.
  */
 class SendFileController extends DialogController {
-    public static $inject = ['$mdDialog', 'LogService', 'preview'];
-
     public caption: string;
     public sendAsFile: boolean = false;
     private preview: threema.FileMessageData | null = null;
     public previewDataUrl: string | null = null;
 
-    constructor($mdDialog: ng.material.IDialogService,
-                logService: LogService,
-                preview: threema.FileMessageData) {
-        super($mdDialog);
+    public static $inject = ['$scope', '$mdDialog', 'LogService', 'ThemeService', 'preview'];
+    constructor(
+        $scope: ng.IScope,
+        $mdDialog: ng.material.IDialogService,
+        logService: LogService,
+        themeService: ThemeService,
+        preview: threema.FileMessageData,
+    ) {
+        super($scope, $mdDialog, themeService);
         const log = logService.getLogger('SendFile-C');
         this.preview = preview;
         if (preview !== null) {
@@ -94,10 +98,6 @@ class SendFileController extends DialogController {
  * Handle device unreachable
  */
 export class DeviceUnreachableController extends DialogController {
-    public static readonly $inject = [
-        '$rootScope', '$window', '$mdDialog',
-        'StateService', 'WebClientService',
-    ];
     private readonly $rootScope: any;
     private readonly $window: ng.IWindowService;
     private readonly stateService: StateService;
@@ -105,11 +105,19 @@ export class DeviceUnreachableController extends DialogController {
     public retrying: boolean = false;
     public progress: number = 0;
 
+    public static readonly $inject = [
+        '$rootScope', '$window', '$mdDialog',
+        'StateService', 'ThemeService', 'WebClientService',
+    ];
     constructor(
-        $rootScope: any, $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
-        stateService: StateService, webClientService: WebClientService,
+        $rootScope: any,
+        $window: ng.IWindowService,
+        $mdDialog: ng.material.IDialogService,
+        stateService: StateService,
+        themeService: ThemeService,
+        webClientService: WebClientService,
     ) {
-        super($mdDialog);
+        super($rootScope, $mdDialog, themeService);
         this.$rootScope = $rootScope;
         this.$window = $window;
         this.stateService = stateService;
@@ -175,14 +183,18 @@ export class PushRejectedDialogController extends DialogController {
 
     private readonly trustedKeyStore: TrustedKeyStoreService;
 
-    public static readonly $inject = ['$mdDialog', '$window', 'TrustedKeyStore' , 'LogService'];
+    public static readonly $inject = [
+        '$scope', '$mdDialog', '$window', 'ThemeService', 'TrustedKeyStore', 'LogService',
+    ];
     constructor(
+        $scope: ng.IScope,
         $mdDialog: ng.material.IDialogService,
         $window: ng.IWindowService,
+        themeService: ThemeService,
         trustedKeyStore: TrustedKeyStoreService,
         logService: LogService,
     ) {
-        super($mdDialog);
+        super($scope, $mdDialog, themeService);
         this.$window = $window;
         this.log = logService.getLogger('PushRejectedDialog-C');
         this.trustedKeyStore = trustedKeyStore;
@@ -203,8 +215,6 @@ export class PushRejectedDialogController extends DialogController {
  * Handle settings
  */
 class SettingsController extends DialogController {
-    public static $inject = ['$mdDialog', '$window', 'SettingsService', 'NotificationService'];
-
     public $window: ng.IWindowService;
     public settingsService: SettingsService;
     private notificationService: NotificationService;
@@ -215,11 +225,18 @@ class SettingsController extends DialogController {
     private notificationPreview: boolean;
     private notificationSound: boolean;
 
-    constructor($mdDialog: ng.material.IDialogService,
-                $window: ng.IWindowService,
-                settingsService: SettingsService,
-                notificationService: NotificationService) {
-        super($mdDialog);
+    public static $inject = [
+        '$scope', '$mdDialog', '$window', 'SettingsService', 'ThemeService', 'NotificationService',
+    ];
+    constructor(
+        $scope: ng.IScope,
+        $mdDialog: ng.material.IDialogService,
+        $window: ng.IWindowService,
+        settingsService: SettingsService,
+        themeService: ThemeService,
+        notificationService: NotificationService,
+    ) {
+        super($scope, $mdDialog, themeService);
         this.$window = $window;
         this.settingsService = settingsService;
         this.notificationService = notificationService;
@@ -944,9 +961,14 @@ class ConversationController {
 class AboutDialogController extends DialogController {
     public readonly config: threema.Config;
 
-    public static readonly $inject = ['$mdDialog', 'CONFIG'];
-    constructor($mdDialog: ng.material.IDialogService, config: threema.Config) {
-        super($mdDialog);
+    public static readonly $inject = ['$scope', '$mdDialog', 'ThemeService', 'CONFIG'];
+    constructor(
+        $scope: ng.IScope,
+        $mdDialog: ng.material.IDialogService,
+        themeService: ThemeService,
+        config: threema.Config,
+    ) {
+        super($scope, $mdDialog, themeService);
         this.config = config;
     }
 }
@@ -1309,6 +1331,31 @@ class MessengerController {
     }
 }
 
+class QrDialogController extends DialogController {
+    public readonly profile: threema.MeReceiver;
+    public readonly qrCode;
+
+    public static readonly $inject = ['$scope', '$mdDialog', 'ThemeService', 'WebClientService'];
+    constructor(
+        $scope: ng.IScope,
+        $mdDialog: ng.material.IDialogService,
+        themeService: ThemeService,
+        webClientService: WebClientService,
+    ) {
+        super($scope, $mdDialog, themeService);
+
+        this.profile = webClientService.me;
+        this.qrCode = {
+             errorCorrectionLevel: 'L',
+             size: '400px',
+             data: '3mid:'
+             + this.profile.id
+             + ','
+             + u8aToHex(new Uint8Array(this.profile.publicKey)),
+         };
+    }
+}
+
 class ReceiverDetailController {
     // Angular services
     private $mdDialog: any;
@@ -1471,24 +1518,10 @@ class ReceiverDetailController {
      * Show the QR code of the public key.
      */
     public showQr(): void {
-        const profile = this.webClientService.me;
         const $mdDialog = this.$mdDialog;
         $mdDialog.show({
             controllerAs: 'ctrl',
-            controller: [function() {
-               this.cancel = () =>  {
-                   $mdDialog.cancel();
-               };
-               this.profile = profile;
-               this.qrCode = {
-                    errorCorrectionLevel: 'L',
-                    size: '400px',
-                    data: '3mid:'
-                    + profile.id
-                    + ','
-                    + u8aToHex(new Uint8Array(profile.publicKey)),
-                };
-            }],
+            controller: QrDialogController,
             templateUrl: 'partials/dialog.qr.html',
             parent: angular.element(document.body),
             clickOutsideToClose: true,

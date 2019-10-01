@@ -688,6 +688,7 @@ declare namespace threema {
         ARP_LOG_TRACE: boolean;
         MSGPACK_LOG_TRACE: boolean;
         TRANSPORT_LOG_LEVEL: LogLevel;
+        VISUALIZE_STATE: boolean;
     }
 
     interface InitialConversationData {
@@ -710,6 +711,11 @@ declare namespace threema {
     const enum OperatingSystem {
         Android = 'android',
         Ios = 'ios',
+    }
+
+    const enum Theme {
+        Regular = 'threema',
+        Work = 'threemawork',
     }
 
     interface ClientInfo {

@@ -11,3 +11,12 @@ body {
 footer {
     color: #ffffff;
 }
+
+dl.key-values dt {
+    color: $theme-primary;
+    font-weight: 500;
+}
+
+body[md-theme='threemawork'] dl.key-values dt {
+    color: $work-primary;
+}

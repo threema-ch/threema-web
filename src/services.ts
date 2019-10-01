@@ -33,6 +33,7 @@ import {ReceiverService} from './services/receiver';
 import {SettingsService} from './services/settings';
 import {StateService} from './services/state';
 import {StringService} from './services/string';
+import {ThemeService} from './services/theme';
 import {TimeoutService} from './services/timeout';
 import {TitleService} from './services/title';
 import {UriService} from './services/uri';
@@ -54,6 +55,7 @@ angular.module('3ema.services', [])
 .service('QrCodeService', QrCodeService)
 .service('ReceiverService', ReceiverService)
 .service('StateService', StateService)
+.service('ThemeService', ThemeService)
 .service('TimeoutService', TimeoutService)
 .service('TitleService', TitleService)
 .service('TrustedKeyStore', TrustedKeyStoreService)

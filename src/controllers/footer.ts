@@ -16,7 +16,29 @@
  */
 
 import {isActionTrigger} from '../helpers';
+import {ThemeService} from '../services/theme';
+import {DialogController} from './dialog';
 import {TroubleshootingController} from './troubleshooting';
+
+class VersionDialogController extends DialogController {
+    public readonly version: string;
+    public readonly fullVersion: string;
+
+    public readonly config: threema.Config;
+
+    public static readonly $inject = ['$scope', '$mdDialog', 'ThemeService', 'CONFIG'];
+    constructor(
+        $scope: ng.IScope,
+        $mdDialog: ng.material.IDialogService,
+        themeService: ThemeService,
+        config: threema.Config,
+    ) {
+        super($scope, $mdDialog, themeService);
+        this.version = config.VERSION;
+        this.fullVersion = `${config.VERSION} ${config.VERSION_MOUNTAIN}`;
+        this.config = config;
+    }
+}
 
 /**
  * Handle footer information.
@@ -32,27 +54,12 @@ export class FooterController {
         this.config = CONFIG;
     }
 
-    public showVersionInfo(version: string, ev?: KeyboardEvent): void {
+    public showVersionInfo(ev?: KeyboardEvent): void {
         if (ev !== undefined && !isActionTrigger(ev)) {
             return;
         }
         this.$mdDialog.show({
-            controller: [
-                '$mdDialog',
-                'CONFIG',
-                function($mdDialog: ng.material.IDialogService, CONFIG: threema.Config) {
-                    this.activeElement = null;
-                    this.version = version;
-                    this.fullVersion = `${version} ${CONFIG.VERSION_MOUNTAIN}`;
-                    this.config = CONFIG;
-                    this.cancel = () => {
-                        $mdDialog.cancel();
-                        if (this.activeElement !== null) {
-                            this.activeElement.focus(); // reset focus
-                        }
-                    };
-                },
-            ],
+            controller: VersionDialogController,
             controllerAs: 'ctrl',
             templateUrl: 'partials/dialog.version.html',
             parent: angular.element(document.body),

@@ -54,6 +54,7 @@ import {PushService, PushSession} from './push';
 import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
+import {ThemeService} from './theme';
 import {TimeoutService} from './timeout';
 import {TitleService} from './title';
 import {VersionService} from './version';
@@ -193,6 +194,7 @@ export class WebClientService {
     private pushService: PushService;
     private qrCodeService: QrCodeService;
     private receiverService: ReceiverService;
+    private themeService: ThemeService;
     private timeoutService: TimeoutService;
     private titleService: TitleService; // Don't remove, needs to be initialized to handle events
     private versionService: VersionService;
@@ -286,7 +288,7 @@ export class WebClientService {
         'LogService', 'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
         'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
-        'VersionService', 'BatteryStatusService', 'TimeoutService',
+        'VersionService', 'BatteryStatusService', 'ThemeService', 'TimeoutService',
         'CONFIG',
     ];
     constructor($rootScope: any,
@@ -311,6 +313,7 @@ export class WebClientService {
                 receiverService: ReceiverService,
                 versionService: VersionService,
                 batteryStatusService: BatteryStatusService,
+                themeService: ThemeService,
                 timeoutService: TimeoutService,
                 CONFIG: threema.Config) {
 
@@ -334,6 +337,7 @@ export class WebClientService {
         this.pushService = pushService;
         this.qrCodeService = qrCodeService;
         this.receiverService = receiverService;
+        this.themeService = themeService;
         this.timeoutService = timeoutService;
         this.titleService = titleService;
         this.versionService = versionService;
@@ -3408,6 +3412,12 @@ export class WebClientService {
         }
         if (this.pushToken !== null && this.pushTokenType !== null) {
             this.pushService.init(this.pushToken, this.pushTokenType);
+        }
+
+        // If this is a work app, set a class on the HTML body
+        // that can be used for customization.
+        if (this.clientInfo.isWork) {
+            this.themeService.changeTheme(threema.Theme.Work);
         }
 
         this.registerInitializationStep(InitializationStep.ClientInfo);
