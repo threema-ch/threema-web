@@ -664,9 +664,7 @@ declare namespace threema {
         GIT_BRANCH: string;
 
         // SaltyRTC
-        SALTYRTC_HOST: string | null;
-        SALTYRTC_HOST_PREFIX: string | null;
-        SALTYRTC_HOST_SUFFIX: string | null;
+        SALTYRTC_HOST: string;
         SALTYRTC_PORT: number;
         SALTYRTC_SERVER_KEY: string | null;
 

@@ -62,7 +62,7 @@ export class PeerConnectionHelper {
     ) {
         this.log = logService.getLogger('PeerConnection', 'color: #fff; background-color: #3333ff');
         this.log.info('Initialize WebRTC PeerConnection');
-        this.log.debug('ICE servers used:', [].concat(...iceServers.map((c) => c.urls)));
+        this.log.debug('ICE servers used:', [].concat(...iceServers.map((server) => server.urls)));
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.config = config;
