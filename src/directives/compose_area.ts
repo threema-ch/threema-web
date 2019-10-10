@@ -724,6 +724,7 @@ export default [
                             id="composeDiv"
                             contenteditable
                             autofocus
+                            data-gramm="false"
                             translate
                             translate-attr-data-placeholder="messenger.COMPOSE_MESSAGE"
                             translate-attr-aria-label="messenger.COMPOSE_MESSAGE"
