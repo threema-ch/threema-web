@@ -33,7 +33,7 @@ export default [
     ) {
 
         const validateThreemaId = (id: string): boolean => {
-            return id !== undefined && id !== null && /^[0-9A-Z]{8}/.test(id);
+            return id !== undefined && id !== null && /^([a-zA-Z0-9\*][a-zA-Z0-9]{7})$/.test(id);
         };
         const viewReceiver = (receiver: threema.Receiver) => {
             return function(e: Event) {
@@ -48,6 +48,8 @@ export default [
                 if (!validateThreemaId(params.id)) {
                     return false;
                 }
+
+                e.preventDefault();
 
                 // Verify the receiver already exists
                 const contactReceiver = webClientService.contacts.get(params.id);
@@ -104,13 +106,21 @@ export default [
                             switch ( node.tagName.toLowerCase()) {
                                 case 'a':
                                     const link = (node as HTMLElement).innerText;
-                                    if (link !== undefined && link.toLowerCase().startsWith('threema://')) {
-                                        const matches = (/\bthreema:\/\/([a-z]+)\?([^\s]+)\b/gi).exec(link);
-                                        if (matches !== null) {
-                                            const handler = getThreemaActionHandler(matches[1]);
-                                            const params = uriService.parseQueryParams(matches[2]);
-                                            if (handler !== null && params !== null) {
-                                                node.addEventListener('click', handler(params));
+                                    if (link !== undefined) {
+                                        if (link.toLowerCase().startsWith('threema://')) {
+                                            const matches = (/\bthreema:\/\/([a-z]+)\?([^\s]+)\b/gi).exec(link);
+                                            if (matches !== null) {
+                                                const handler = getThreemaActionHandler(matches[1]);
+                                                const params = uriService.parseQueryParams(matches[2]);
+                                                if (handler !== null && params !== null) {
+                                                    node.addEventListener('click', handler(params));
+                                                }
+                                            }
+                                        } else if (link.toLowerCase().startsWith('https://threema.id/')) {
+                                            // tslint:disable-next-line:max-line-length
+                                            const matches = (/\bhttps:\/\/threema\.id\/([a-zA-Z0-9\*][a-zA-Z0-9]{7})\b/gi).exec(link);
+                                            if (matches !== null) {
+                                                node.addEventListener('click',  addAction({id: matches[1]}));
                                             }
                                         }
                                     }
