@@ -33,7 +33,7 @@ export default [
     ) {
 
         const validateThreemaId = (id: string): boolean => {
-            return id !== undefined && id !== null && /^([a-zA-Z0-9\*]{1}[a-zA-Z0-9]{7})$/.test(id);
+            return id !== undefined && id !== null && /^([a-zA-Z0-9\*][a-zA-Z0-9]{7})$/.test(id);
         };
         const viewReceiver = (receiver: threema.Receiver) => {
             return function(e: Event) {
@@ -48,6 +48,8 @@ export default [
                 if (!validateThreemaId(params.id)) {
                     return false;
                 }
+
+                e.preventDefault();
 
                 // Verify the receiver already exists
                 const contactReceiver = webClientService.contacts.get(params.id);
@@ -116,7 +118,7 @@ export default [
                                             }
                                         } else if (link.toLowerCase().startsWith('https://threema.id/')) {
                                             // tslint:disable-next-line:max-line-length
-                                            const matches = (/\bhttps:\/\/threema\.id\/([a-zA-Z0-9\*]{1}[a-zA-Z0-9]{7})\b/gi).exec(link);
+                                            const matches = (/\bhttps:\/\/threema\.id\/([a-zA-Z0-9\*][a-zA-Z0-9]{7})\b/gi).exec(link);
                                             if (matches !== null) {
                                                 node.addEventListener('click',  addAction({id: matches[1]}));
                                             }
