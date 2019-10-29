@@ -125,8 +125,9 @@ The configuration of Threema Web can be tweaked in `src/config.ts`:
 **SaltyRTC**
 
 - `SALTYRTC_HOST`: Set this to the hostname of the SaltyRTC server that you
-  want to use. If set to `null`, the hostname will be constructed based on the
-  `SALTYRTC_HOST_PREFIX` and the `SALTYRTC_HOST_SUFFIX` values.
+  want to use. If supplied, the substring `{prefix}` will be replaced by the
+  first byte of the initiator's public key, represented as a lowercase
+  hexadecimal value.
 - `SALTYRTC_PORT`: The port of the SaltyRTC server to be used.
 - `SALTYRTC_SERVER_KEY`: The public permanent key of the SaltyRTC server. Set
   this value to `null` if your server does not provide a public permanent key,
@@ -135,6 +136,8 @@ The configuration of Threema Web can be tweaked in `src/config.ts`:
 **ICE**
 
 - `ICE_SERVERS`: Configuration object for the WebRTC STUN and ICE servers.
+  Each URL may contain the substring `{prefix}`, which will be replaced by a
+  random byte represented as a lowercase hexadecimal value. 
 
 **Push**
 

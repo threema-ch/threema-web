@@ -23,11 +23,12 @@ import {StateService as UiStateService} from '@uirouter/angularjs';
 import {Logger} from 'ts-log';
 
 import * as msgpack from 'msgpack-lite';
+import * as nacl from 'tweetnacl';
 import {
     arraysAreEqual,
     base64ToU8a,
     bufferToUrl,
-    copyDeepOrReference,
+    copyDeepOrReference, copyShallow,
     hasFeature,
     hasValue,
     hexToU8a,
@@ -527,16 +528,8 @@ export class WebClientService {
             keyStore = new saltyrtcClient.KeyStore();
         }
 
-        // Determine SaltyRTC host
-        if (this.config.SALTYRTC_HOST !== null) {
-            // Static URL
-            this.saltyRtcHost = this.config.SALTYRTC_HOST;
-        } else {
-            // Construct URL using prefix and suffix
-            this.saltyRtcHost = this.config.SALTYRTC_HOST_PREFIX
-                + keyStore.publicKeyHex.substr(0, 2)
-                + this.config.SALTYRTC_HOST_SUFFIX;
-        }
+        // Determine SaltyRTC host, replace the inner prefix (if any)
+        this.saltyRtcHost = this.config.SALTYRTC_HOST.replace('{prefix}', keyStore.publicKeyHex.substr(0, 2));
 
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()
@@ -889,16 +882,20 @@ export class WebClientService {
         if (this.chosenTask === threema.ChosenTask.WebRTC) {
             const browser = this.browserService.getBrowser();
 
-            // Safari does not support our dual-stack TURN servers.
-            if (browser.isSafari(false)) {
-                this.skipIceDs();
-            }
+            // Determine ICE servers and replace random prefix (if any)
+            const prefix = u8aToHex(nacl.randomBytes(1));
+            const iceServers = this.config.ICE_SERVERS.map((server) => {
+                server = copyShallow(server) as RTCIceServer;
+                const urls = Array.isArray(server.urls) ? server.urls : [server.urls];
+                server.urls = urls.map((url) => url.replace('{prefix}', prefix));
+                return server;
+            });
 
             // Create peer connection
             this.pcHelper = new PeerConnectionHelper(
                 this.$q, this.$rootScope,
                 this.config, this.logService, this.timeoutService,
-                task as saltyrtc.tasks.webrtc.WebRTCTask, this.config.ICE_SERVERS);
+                task as saltyrtc.tasks.webrtc.WebRTCTask, iceServers);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
             this.pcHelper.onConnectionStateChange = (state: threema.TaskConnectionState) => {
@@ -1433,28 +1430,6 @@ export class WebClientService {
             // Translate close flag
             const state = args.close !== false ? args.close : 'welcome';
             this.$state.go(state);
-        }
-    }
-
-    /**
-     * Safari has issues with dual-stack TURN servers:
-     * https://bugs.webkit.org/show_bug.cgi?id=173307#c13
-     * As a workaround, replace ds-turn.threema.ch servers
-     * in the ICE_SERVERS configuration with turn.threema.ch.
-     */
-    public skipIceDs(): void {
-        this.arpLog.debug('Requested to replace DS servers in ICE configuration');
-        const allUrls = [].concat(...this.config.ICE_SERVERS.map((conf) => conf.urls));
-        if (allUrls.some((url) => url.includes('ds-turn.threema.ch'))) {
-            for (const server of this.config.ICE_SERVERS) {
-                // Replace dual stack entries
-                const urls = Array.isArray(server.urls) ? server.urls : [server.urls];
-                server.urls = urls.map((url) => {
-                    return url.replace('ds-turn.threema.ch', 'turn.threema.ch');
-                });
-            }
-        } else {
-            this.arpLog.debug('No ds-turn ICE server present');
         }
     }
 
