@@ -410,7 +410,7 @@ class ConversationController {
                 $rootScope.$apply(() => {
                     this.updateScrollJump();
                 });
-            }, 100, this), supportsPassive() ? {passive: true} : false);
+            }, 0, this), supportsPassive() ? {passive: true} : false);
         }
 
         // Set receiver, conversation and type
@@ -915,12 +915,12 @@ class ConversationController {
     }
 
     /**
-     * Only show the scroll to bottom button if user scrolled more than 10px
+     * Only show the scroll to bottom button if user scrolled more than 1px
      * away from bottom.
      */
     private updateScrollJump(): void {
         const chat = this.domChatElement;
-        this.showScrollJump = chat.scrollHeight - (chat.scrollTop + chat.offsetHeight) > 10;
+        this.showScrollJump = chat.scrollHeight - (chat.scrollTop + chat.offsetHeight) > 1;
     }
 
     /**
