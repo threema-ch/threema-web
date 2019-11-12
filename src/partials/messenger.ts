@@ -27,7 +27,7 @@ import {Logger} from 'ts-log';
 import {ContactControllerModel} from '../controller_model/contact';
 import {DialogController} from '../controllers/dialog';
 import {TroubleshootingController} from '../controllers/troubleshooting';
-import {bufferToUrl, hasValue, supportsPassive, throttle, u8aToHex} from '../helpers';
+import {bufferToUrl, hasValue, supportsPassive, u8aToHex} from '../helpers';
 import {emojify} from '../helpers/emoji';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
