@@ -406,11 +406,11 @@ class ConversationController {
             this.domChatElement = document.querySelector('#conversation-chat') as HTMLElement;
 
             // Add custom event handlers
-            this.domChatElement.addEventListener('scroll', throttle(() => {
+            this.domChatElement.addEventListener('scroll', () => {
                 $rootScope.$apply(() => {
                     this.updateScrollJump();
                 });
-            }, 0, this), supportsPassive() ? {passive: true} : false);
+            }, supportsPassive() ? {passive: true} : false);
         }
 
         // Set receiver, conversation and type
