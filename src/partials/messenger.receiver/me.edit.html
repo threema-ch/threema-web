@@ -12,7 +12,7 @@
     <md-card-content>
         <md-input-container class="md-block">
             <label translate>messenger.MY_PUBLIC_NICKNAME</label>
-            <input ng-disabled="ctrl.isSaving()" ng-model="ctrl.controllerModel.nickname" ng-keypress="ctrl.keypress($event)">
+            <input ng-disabled="ctrl.isSaving()" ng-model="ctrl.controllerModel.nickname" ng-keypress="ctrl.keypress($event)" maxlength="32">
         </md-input-container>
     </md-card-content>
 </md-card>

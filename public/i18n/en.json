@@ -249,7 +249,8 @@
             "disabledByPolicy": "Feature disabled by administrator",
             "syncFailed": "Group synchronization failed",
             "noMembers": "No members defined",
-            "alreadyLeft": "You have already left this group"
+            "alreadyLeft": "You have already left this group",
+            "valueTooLong": "A value you entered is too long"
         }
     },
     "error": {
