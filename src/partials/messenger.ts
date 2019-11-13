@@ -27,7 +27,7 @@ import {Logger} from 'ts-log';
 import {ContactControllerModel} from '../controller_model/contact';
 import {DialogController} from '../controllers/dialog';
 import {TroubleshootingController} from '../controllers/troubleshooting';
-import {bufferToUrl, hasValue, supportsPassive, throttle, u8aToHex} from '../helpers';
+import {bufferToUrl, hasValue, supportsPassive, u8aToHex} from '../helpers';
 import {emojify} from '../helpers/emoji';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
@@ -406,11 +406,11 @@ class ConversationController {
             this.domChatElement = document.querySelector('#conversation-chat') as HTMLElement;
 
             // Add custom event handlers
-            this.domChatElement.addEventListener('scroll', throttle(() => {
+            this.domChatElement.addEventListener('scroll', () => {
                 $rootScope.$apply(() => {
                     this.updateScrollJump();
                 });
-            }, 100, this), supportsPassive() ? {passive: true} : false);
+            }, supportsPassive() ? {passive: true} : false);
         }
 
         // Set receiver, conversation and type
@@ -915,12 +915,12 @@ class ConversationController {
     }
 
     /**
-     * Only show the scroll to bottom button if user scrolled more than 10px
+     * Only show the scroll to bottom button if user scrolled more than 1px
      * away from bottom.
      */
     private updateScrollJump(): void {
         const chat = this.domChatElement;
-        this.showScrollJump = chat.scrollHeight - (chat.scrollTop + chat.offsetHeight) > 10;
+        this.showScrollJump = chat.scrollHeight - (chat.scrollTop + chat.offsetHeight) > 1;
     }
 
     /**

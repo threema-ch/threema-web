@@ -220,32 +220,6 @@ export function isString(val: any): boolean {
 }
 
 /**
- * Throttle function.
- *
- * Taken from https://remysharp.com/2010/07/21/throttling-function-calls
- */
-export function throttle(fn, threshold: number = 250, scope) {
-    let last;
-    let deferTimer;
-    return function() {
-        const context = scope || this;
-        const now = +(new Date());
-        const args = arguments;
-        if (last && now < last + threshold) {
-            // hold on to it
-            clearTimeout(deferTimer);
-            deferTimer = setTimeout(function() {
-                last = now;
-                fn.apply(context, args);
-            }, threshold);
-        } else {
-            last = now;
-            fn.apply(context, args);
-        }
-    };
-}
-
-/**
  * Detect whether browser supports passive event listeners.
  *
  * Taken from https://github.com/WICG/EventListenerOptions/blob/gh-pages/explainer.md
