@@ -124,7 +124,7 @@ export class StatusController {
      */
     private onStateChange(newValue: threema.GlobalConnectionState,
                           oldValue: threema.GlobalConnectionState): void {
-        this.log.debug('State change:', oldValue, '->', newValue);
+        this.log.debug(`State change: ${oldValue} -> ${newValue} (attempt=${this.stateService.attempt})`);
         if (newValue === oldValue) {
             return;
         }
@@ -142,7 +142,7 @@ export class StatusController {
                     this.scheduleStatusBar();
                 }
                 this.webClientService.clearIsTypingFlags();
-                if (isRelayedData) {
+                if (this.stateService.attempt === 0 && isRelayedData) {
                     this.reconnectIos();
                 }
                 break;
