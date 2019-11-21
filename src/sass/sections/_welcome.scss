@@ -23,6 +23,10 @@
     md-input-container {
         margin-right: 32px;
         margin-left: 32px;
+
+        .md-errors-spacer {
+            display: none;
+        }
     }
 
     .scan {
@@ -57,6 +61,10 @@
         md-input-container {
             margin-top: 12px;
             margin-bottom: 0;
+
+            input {
+                border-bottom-width: 0;
+            }
         }
 
         qrcode {
@@ -163,5 +171,24 @@
                 height: 35px;
             }
         }
+    }
+
+    .password-strength-indicator {
+        display: flex;
+        align-content: stretch;
+        width: 100%;
+        height: 2px;
+
+        .reached {
+            background-color: #999999;
+        }
+
+        .unreached {
+            background-color: $background-grey;
+        }
+    }
+
+    md-input-container.md-input-focused .password-strength-indicator .unreached {
+        background-color: darken($background-grey, 7%);
     }
 }

@@ -20,7 +20,17 @@
                                    ng-model="ctrl.password"
                                    aria-labelledby="aria-label-password-create"
                                    translate-attr="{'placeholder': 'welcome.PASSWORD', 'aria-label': 'welcome.PASSWORD'}"
+                                   title="{{ 'welcome.PASSWORD_STRENGTH' | translate }}: {{ ctrl.passwordStrength.score }} ({{ ctrl.passwordStrength.strength }})"
                                    autocomplete="new-password">
+                            <div class="password-strength-indicator" aria-hidden="true">
+                                <div class="reached" ng-style="{
+                                    'flex-grow': ctrl.passwordStrength.score,
+                                    'background-color': (ctrl.passwordStrength.strength | strengthToColor),
+                                }"></div>
+                                <div class="unreached" ng-style="{
+                                    'flex-grow': 80 - ctrl.passwordStrength.score,
+                                }"></div>
+                            </div>
                         </md-input-container>
                     </form>
                 </label>

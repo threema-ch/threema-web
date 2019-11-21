@@ -15,6 +15,7 @@
         "CHOOSE_PASSWORD": "Falls Sie die Sitzung speichern möchten,<br>legen Sie vor dem Scannen ein Passwort fest.",
         "UNLOCK_FAILED_TEXT": "Sie haben das falsche Passwort eingegeben. Die Verbindung kann nicht aufgebaut werden.",
         "ENTER_PASSWORD": "Um die letzte Sitzung wiederherzustellen, <br> geben Sie bitte das entsprechende Passwort ein.",
+        "PASSWORD_STRENGTH": "Passwortstärke",
         "UNLOCK_FAILED_TITLE": "Verbindung aufbauen fehlgeschlagen",
         "ALTERNATIVELY": "Alternativ:",
         "UNLOCK_FAILED_FORGOTTEN": "Haben Sie Ihr Passwort vergessen? W\u00e4hlen Sie \"gespeicherte Sitzung l\u00f6schen\" und setzen Sie ein neues Passwort.",

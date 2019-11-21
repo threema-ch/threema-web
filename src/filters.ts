@@ -19,6 +19,7 @@ import Autolinker from 'autolinker';
 
 import {bufferToUrl, escapeRegExp, filter, hasValue} from './helpers';
 import {emojify} from './helpers/emoji';
+import {Strength} from './helpers/password_strength';
 import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {WebClientService} from './services/webclient';
@@ -416,6 +417,25 @@ angular.module('3ema.filters', [])
                 return contact.displayName;
             }
         };
+}])
+
+/**
+ * Convert a password strength to a color.
+ */
+.filter('strengthToColor', [function() {
+    return function(strength: Strength) {
+        switch (strength) {
+            case Strength.STRONG:
+                return '#05a63f';
+            case Strength.GOOD:
+                return '#cddc39';
+            case Strength.WEAK:
+                return '#ff9800';
+            case Strength.BAD:
+            default:
+                return '#f44336';
+        }
+    };
 }])
 
 ;
