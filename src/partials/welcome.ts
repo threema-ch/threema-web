@@ -28,6 +28,7 @@ import {
 
 import {DialogController} from '../controllers/dialog';
 import {BrowserInfo} from '../helpers/browser_info';
+import {scorePassword, Strength} from '../helpers/password_strength';
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
 import {TrustedKeyStoreService} from '../services/keystore';
@@ -71,6 +72,7 @@ class WelcomeController {
     private mode: 'scan' | 'unlock';
     private qrCode;
     private password: string = '';
+    private passwordStrength: {score: number, strength: Strength} = {score: 0, strength: Strength.BAD};
     private formLocked: boolean = false;
     private pleaseUpdateAppMsg: string = null;
     private browser: BrowserInfo;
@@ -267,6 +269,7 @@ class WelcomeController {
         this.$scope.$watch(() => this.password, () => {
             const payload = this.webClientService.buildQrCodePayload(this.password.length > 0);
             this.qrCode = this.buildQrCode(payload);
+            this.passwordStrength = scorePassword(this.password);
         });
 
         // Start webclient
@@ -486,7 +489,7 @@ class WelcomeController {
         this.$mdDialog.show(confirm).then(() =>  {
             // Go back to scan mode
             this.mode = 'scan';
-            this.password = '';
+            this.clearPassword();
             this.formLocked = false;
 
             // Force-stop the webclient and initiate scan
@@ -541,6 +544,11 @@ class WelcomeController {
         };
     }
 
+    private clearPassword() {
+        this.password = '';
+        this.passwordStrength = {score: 0, strength: Strength.BAD};
+    }
+
     /**
      * Actually start the webclient.
      *
@@ -554,7 +562,7 @@ class WelcomeController {
                 this.webClientService.setPassword(this.password);
 
                 // Clear local password variable
-                this.password = '';
+                this.clearPassword();
                 this.formLocked = false;
 
                 // Redirect to home
