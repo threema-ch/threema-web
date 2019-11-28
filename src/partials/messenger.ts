@@ -100,28 +100,36 @@ class SendFileController extends DialogController {
 export class DeviceUnreachableController extends DialogController {
     private readonly $rootScope: any;
     private readonly $window: ng.IWindowService;
+    private readonly $translate: ng.translate.ITranslateService;
     private readonly stateService: StateService;
     private readonly webClientService: WebClientService;
+    private readonly log: Logger;
     public retrying: boolean = false;
     public progress: number = 0;
 
     public static readonly $inject = [
-        '$rootScope', '$window', '$mdDialog',
-        'StateService', 'ThemeService', 'WebClientService',
+        '$rootScope', '$window', '$mdDialog', '$translate',
+        'StateService', 'ThemeService', 'WebClientService', 'LogService',
     ];
     constructor(
         $rootScope: any,
         $window: ng.IWindowService,
         $mdDialog: ng.material.IDialogService,
+        $translate: ng.translate.ITranslateService,
         stateService: StateService,
         themeService: ThemeService,
         webClientService: WebClientService,
+        logService: LogService,
     ) {
         super($rootScope, $mdDialog, themeService);
         this.$rootScope = $rootScope;
         this.$window = $window;
+        this.$translate = $translate;
         this.stateService = stateService;
         this.webClientService = webClientService;
+        this.log = logService.getLogger('DeviceUnreachableDialog-C');
+
+        this.log.info(`Showing "device unreachable" dialog (canRetry=${this.canRetry})`);
     }
 
     /**
@@ -145,6 +153,8 @@ export class DeviceUnreachableController extends DialogController {
      * Retry wakeup of the device via a push session.
      */
     public async retry(): Promise<void> {
+        this.log.debug('Retrying...');
+
         // Reset attempt counter
         this.stateService.attempt = 0;
 
@@ -169,7 +179,17 @@ export class DeviceUnreachableController extends DialogController {
      * Reload the page.
      */
     public reload(): void {
+        this.log.info('Reloading page');
         this.$window.location.reload();
+    }
+
+    public closeWithWarning(): void {
+        this.log.info('Dialog dismissed by user');
+        this.cancel();
+        this.$mdDialog.show(this.$mdDialog.alert()
+            .title(this.$translate.instant('common.WARNING'))
+            .textContent(this.$translate.instant('deviceUnreachable.DISMISS_WARNING'))
+            .ok(this.$translate.instant('common.OK')));
     }
 }
 

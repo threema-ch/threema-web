@@ -3,4 +3,8 @@ button {
         margin-bottom: 3px;
         vertical-align: middle;
     }
+
+    &.button-small {
+        min-width: initial;
+    }
 }
