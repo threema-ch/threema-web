@@ -447,6 +447,12 @@ export class WebClientService {
     /**
      * Initialize the webclient service.
      *
+     * @param keyStore Key store to be used. Will create a new one if `undefined` or reuse the currently used one if
+     *   `reuse`.
+     * @param peerTrustedKey The peer's trusted key. Will not use this feature if `undefined` or reuse the currently
+     *   used one if `reuse`.
+     * @param resume Whether the previous session can be resumed.
+     *
      * Warning: Do not call this with `flags.resume` set to `false` in case
      *          messages can be queued by the user.
      */
