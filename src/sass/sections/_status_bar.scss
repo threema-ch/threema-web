@@ -89,6 +89,7 @@ body {
 .status-task-relayed-data {
     &.status-warning #status-bar {
         background-color: $status-ok;
+        height: 0;
     }
 }
 
