@@ -57,9 +57,9 @@ is documented [here](https://threema-ch.github.io/app-remote-protocol/).
 
 Threema Web is written using [TypeScript](https://www.typescriptlang.org/) and
 [AngularJS 1](https://www.angularjs.org/). Dependencies are managed with
-[npm](https://www.npmjs.com/). You currently need Node.js 8 or later to build
-Threema Web. (Note that Node.js is only a build dependency, the result is plain
-old client-side JavaScript.)
+[npm](https://www.npmjs.com/). You currently need Node.js 12 to build Threema
+Web. (Note that Node.js is only a build dependency, the result is plain old
+client-side JavaScript.)
 
 Install development dependencies:
 
@@ -137,7 +137,7 @@ The configuration of Threema Web can be tweaked in `src/config.ts`:
 
 - `ICE_SERVERS`: Configuration object for the WebRTC STUN and ICE servers.
   Each URL may contain the substring `{prefix}`, which will be replaced by a
-  random byte represented as a lowercase hexadecimal value. 
+  random byte represented as a lowercase hexadecimal value.
 
 **Push**
 
