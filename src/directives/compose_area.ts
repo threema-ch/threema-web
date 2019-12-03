@@ -490,11 +490,14 @@ export default [
                         // Find some selectors
                         const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
                         const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
+                        const skinSelectors = angular.element(emojiPicker.querySelectorAll('.skins img'));
 
                         // Add event handlers
                         allEmoji.on('click', onEmojiChosen as any);
                         allEmoji.on('keydown', onEmojiChosen as any);
                         allEmojiTabs.on('keydown', onEmojiTabSelected as any);
+                        skinSelectors.on('click', onSkintoneSelected as any);
+                        skinSelectors.on('keydown', onSkintoneSelected as any);
 
                         // Focus compose area again
                         composeArea.focus();
@@ -545,6 +548,21 @@ export default [
                         }
                         insertSingleEmojiString((ev.target as Element).textContent);
                         updateView();
+                    }
+                }
+
+                // Skintone is chosen
+                function onSkintoneSelected(ev: MouseEvent | KeyboardEvent): void {
+                    if (ev.type === 'click' || (isKeyboardEvent(ev) && isActionTrigger(ev))) {
+                        ev.stopPropagation();
+                        if (isKeyboardEvent(ev)) {
+                            ev.preventDefault();
+                        }
+                        const tone: string = (ev.target as Element).getAttribute('data-tone');
+                        log.debug(`Skintone selected: Tone ${tone}`);
+
+                        const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
+                        emojiPicker.setAttribute('data-skintone', tone);
                     }
                 }
 
