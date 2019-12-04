@@ -18,7 +18,7 @@
  */
 
 import twemoji from 'twemoji';
-import {emojify, emojifyNew, enlargeSingleEmoji, shortnameToUnicode} from '../../src/helpers/emoji';
+import {emojify, enlargeSingleEmoji, parseEmoji, shortnameToUnicode} from '../../src/helpers/emoji';
 
 
 const textVariantSelector = '\ufe0e';
@@ -48,7 +48,7 @@ describe('Emoji Helpers', () => {
         it('emojifies with img tag', function() {
             expect(emojify('hello 🐦'))
                 .toEqual('hello <img class="em" draggable="false" '
-                       + 'alt="🐦" src="emoji/png32/1f426.png" data-c="1f426"/>');
+                       + 'alt="🐦" src="emoji/png32/1f426.png" data-c="1f426">');
         });
 
         it('ignores certain codepoints', function() {
@@ -58,64 +58,64 @@ describe('Emoji Helpers', () => {
         });
     });
 
-    describe('emojifyNew', () => {
+    describe('parseEmoji', () => {
         it('returns text unmodified', function() {
-            expect(emojifyNew('hello world')).toEqual(['hello world']);
+            expect(parseEmoji('hello world')).toEqual(['hello world']);
         });
 
         it('emojifies single emoji', function() {
-            expect(emojifyNew(bird))
+            expect(parseEmoji(bird))
                 .toEqual([makeEmoji(bird)]);
-            expect(emojifyNew(beer))
+            expect(parseEmoji(beer))
                 .toEqual([makeEmoji(beer)]);
         });
 
         it('emojifies multiple emoji', function() {
-            expect(emojifyNew(`${beer}${bird}`))
+            expect(parseEmoji(`${beer}${bird}`))
                 .toEqual([makeEmoji(beer), makeEmoji(bird)]);
         });
 
         it('emojifies mixed content', function() {
-            expect(emojifyNew(`hi ${bird}`))
+            expect(parseEmoji(`hi ${bird}`))
                 .toEqual(['hi ', makeEmoji(bird)]);
-            expect(emojifyNew(`${bird} bird`))
+            expect(parseEmoji(`${bird} bird`))
                 .toEqual([makeEmoji(bird), ' bird']);
-            expect(emojifyNew(`hi ${bird} bird`))
+            expect(parseEmoji(`hi ${bird} bird`))
                 .toEqual(['hi ', makeEmoji(bird), ' bird']);
-            expect(emojifyNew(`hi ${bird}${beer}`))
+            expect(parseEmoji(`hi ${bird}${beer}`))
                 .toEqual(['hi ', makeEmoji(bird), makeEmoji(beer)]);
         });
 
         it('emojifies most text-default codepoints', function() {
-            expect(emojifyNew(biohazard))
+            expect(parseEmoji(biohazard))
                 .toEqual([makeEmoji(biohazard)]);
         });
 
         it('ignores certain codepoints', function() {
-            expect(emojifyNew('©')).toEqual(['©']);
-            expect(emojifyNew('®')).toEqual(['®']);
-            expect(emojifyNew('™')).toEqual(['™']);
+            expect(parseEmoji('©')).toEqual(['©']);
+            expect(parseEmoji('®')).toEqual(['®']);
+            expect(parseEmoji('™')).toEqual(['™']);
         });
 
         it('properly handles variant selectors (text-default)', function() {
             // Copyright: Text-default
             const copy = '©';
-            expect(emojifyNew(copy))
+            expect(parseEmoji(copy))
                 .toEqual([copy]);
-            expect(emojifyNew(copy + textVariantSelector))
+            expect(parseEmoji(copy + textVariantSelector))
                 .toEqual([copy + textVariantSelector]);
-            expect(emojifyNew(copy + emojiVariantSelector))
+            expect(parseEmoji(copy + emojiVariantSelector))
                 .toEqual([makeEmoji(copy + emojiVariantSelector, 'a9-fe0f', 'a9')]);
         });
 
         it('properly handles variant selectors (emoji-default)', function() {
             // Exclamation mark: Emoji-default
             const exclamation = '\u2757';
-            expect(emojifyNew(exclamation))
+            expect(parseEmoji(exclamation))
                 .toEqual([makeEmoji(exclamation, '2757', '2757')]);
-            expect(emojifyNew(exclamation + textVariantSelector))
+            expect(parseEmoji(exclamation + textVariantSelector))
                 .toEqual([exclamation + textVariantSelector]);
-            expect(emojifyNew(exclamation + emojiVariantSelector))
+            expect(parseEmoji(exclamation + emojiVariantSelector))
                 .toEqual([makeEmoji(exclamation + emojiVariantSelector, '2757-fe0f', '2757')]);
         });
     });

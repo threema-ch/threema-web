@@ -3127,25 +3127,24 @@ const TEXT_WHEN_UNQUALIFIED = ['©', '®', '™'];
  * Convert emoji unicode characters to images.
  */
 export function emojify(text: string): string {
-    if (text !== null) {
-        return twemoji.parse(text, {
-            callback: (icon, options, variant) => {
-                return 'emoji/png32/' + icon + '.png';
-            },
-            attributes: (icon, variant) => {
-                return {'data-c': variant};
-            },
-            className: 'em',
-        });
+    const tokens = parseEmoji(text);
+    let output = '';
+    for (const token of tokens) {
+        if (isEmojiInfo(token)) {
+            output += `<img class="em" draggable="false" `;
+            output += `alt="${token.emojiString}" src="${token.imgPath}" data-c="${token.codepoint}">`;
+        } else {
+            // Plain text
+            output += token;
+        }
     }
-    return text;
+    return output;
 }
 
 /**
- * Process emoji unicode characters.
- * TODO: Rename once emojify fn is removed.
+ * Convert emoji unicode characters to structured EmojiInfo objects.
  */
-export function emojifyNew(text: string): Array<threema.EmojiInfo | string> {
+export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
     // Create a global RegExp, which stores state
     const regex = new RegExp(EMOJI_REGEX, 'g');
     const result = [];

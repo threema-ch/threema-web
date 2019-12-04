@@ -18,7 +18,7 @@
 import {ComposeArea} from '@threema/compose-area';
 
 import {isActionTrigger} from '../helpers';
-import {emojifyNew, shortnameToUnicode} from '../helpers/emoji';
+import {parseEmoji, shortnameToUnicode} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
@@ -454,7 +454,7 @@ export default [
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
                         if (text) {
-                            const tokens = emojifyNew(text);
+                            const tokens = parseEmoji(text);
                             for (const token of tokens) {
                                 if (isEmojiInfo(token)) {
                                     insertEmoji(token);
@@ -576,7 +576,7 @@ export default [
 
                 // Insert a single emoji, passed in as string
                 function insertSingleEmojiString(emojiString: string): void {
-                    const tokens = emojifyNew(emojiString);
+                    const tokens = parseEmoji(emojiString);
                     if (tokens.length !== 1) {
                         throw new Error(`Emoji parsing failed: Expected 1 element, found ${tokens.length}`);
                     }
