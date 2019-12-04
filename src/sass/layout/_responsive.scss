@@ -22,7 +22,13 @@
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 750px) {
+    .twemoji-picker .tab label img {
+        margin: 3px 0 0 !important;
+    }
+}
+
+@media (max-width: 630px) {
     #messenger {
         &.show-detail {
             #navigation {
