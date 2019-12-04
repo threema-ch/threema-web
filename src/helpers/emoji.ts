@@ -2401,6 +2401,8 @@ const SHORTNAMES = {
     'sled': '🛷',
     'sleeping': '😴',
     'sleepy': '😪',
+    'slight_frown': '🙁',
+    'slight_smile': '🙂',
     'slot_machine': '🎰',
     'sloth': '🦥',
     'small_airplane': '🛩️',
