@@ -1,4 +1,8 @@
 .twemoji-picker {
+    $label-height: 32px;
+    $label-padding: 4px;
+    $content-offset: $label-height + 2 * $label-padding + 1px;
+
     margin: 0;
     background-color: $background-grey;
     padding: 0 8px;
@@ -9,64 +13,82 @@
         border-radius: 4px;
         width: 366px;
     }
-}
 
-.tab {
-    float: left;
+    .tab {
+        float: left;
 
-    .em {
-        display: inline-block;
-        margin-right: 5px;
-        margin-bottom: 8px;
-        cursor: pointer;
-        text-indent: -99999px;
-    }
+        .em {
+            display: inline-block;
+            margin-right: 5px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            text-indent: -99999px;
+        }
 
-    label {
-        display: block;
-        position: relative;
-        left: 1px;
-        margin-left: -1px;
-        border: 1px solid $background-grey;
-        background: $background-grey;
-        cursor: pointer;
-        padding: 4px;
-        height: 32px;
-
-        img {
+        label {
+            display: block;
             position: relative;
-            margin: 3px 4px 0;
+            left: 1px;
+            margin-left: -1px;
+            border: 1px solid $background-grey;
+            background: $background-grey;
+            cursor: pointer;
+            padding: $label-padding;
+            height: $label-height;
+
+            img {
+                position: relative;
+                margin: 3px 4px 0;
+            }
         }
-    }
 
-    .content {
-        @include scrollbar;
-        position: absolute;
-        top: 32px + 8px + 1px;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        border: 1px solid #ffffff;
-        background: #ffffff;
-        padding: 10px 10px 0;
-        overflow-y: scroll;
-
-        &::selection {
-            background: rgba(255, 255, 255, 0);
-        }
-    }
-
-    [type='radio'] {
-        display: none;
-
-        &:checked ~ label {
-            z-index: 2;
-            border-bottom: 1px solid #ffffff;
+        .content {
+            @include scrollbar;
+            position: absolute;
+            top: $content-offset;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            border: 1px solid #ffffff;
             background: #ffffff;
+            padding: 10px 10px 0;
+            overflow-y: scroll;
+
+            &::selection {
+                background: rgba(255, 255, 255, 0);
+            }
         }
 
-        &:checked ~ label ~ .content {
-            z-index: 1;
+        [type='radio'] {
+            display: none;
+
+            &:checked ~ label {
+                z-index: 2;
+                border-bottom: 1px solid #ffffff;
+                background: #ffffff;
+            }
+
+            &:checked ~ label ~ .content {
+                z-index: 1;
+            }
         }
     }
+
+    .skins {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        cursor: pointer;
+        height: $content-offset;
+    }
+
+    // Hide emoji that don't match the currently selected skintone
+    // sass-lint:disable force-pseudo-nesting empty-line-between-blocks
+    &[data-skintone='0'] .em[data-t]:not([data-t='0']) { display: none; }
+    &[data-skintone='1'] .em[data-t]:not([data-t='1']) { display: none; }
+    &[data-skintone='2'] .em[data-t]:not([data-t='2']) { display: none; }
+    &[data-skintone='3'] .em[data-t]:not([data-t='3']) { display: none; }
+    &[data-skintone='4'] .em[data-t]:not([data-t='4']) { display: none; }
+    &[data-skintone='5'] .em[data-t]:not([data-t='5']) { display: none; }
+    // sass-lint:enable force-pseudo-nesting empty-line-between-blocks
 }

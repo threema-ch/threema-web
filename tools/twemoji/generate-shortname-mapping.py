@@ -11,9 +11,14 @@ mappings = []
 for emoji_list in groups.values():
     for emoji in emoji_list:
         for shortname in emoji['shortnames']:
-            mappings.append((shortname.strip(':'), emoji['codepoint_fully_qualified']))
+            mappings.append((shortname.strip(':'), emoji['emoji']))
 
-print('const shortnames = {')
+# Custom shortcodes
+mappings.append(('slight_smile', '🙂'))
+mappings.append(('slight_frown', '🙁'))
+
+print('// Generated with tools/twemoji/generate-shortname-mapping.py')
+print('const SHORTNAMES = {')
 for (k, v) in sorted(mappings):
     print("    '{}': '{}',".format(k, v))
-print('}')
+print('};')

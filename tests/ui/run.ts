@@ -147,7 +147,7 @@ async function regression574(driver: WebDriver) {
 
     // Insert emoji
     await driver.findElement(emojiTrigger).click();
-    await driver.findElement(By.css('.em[data-s=":smile:"]')).click();
+    await driver.findElement(By.css('.em[data-s=":happy:"]')).click();
 
     const text = await extractText(driver);
     expect(text).to.equal('hello\nthreema\nweb\n😄');
@@ -165,7 +165,7 @@ async function regression671(driver: WebDriver) {
 
     // Insert emoji
     await driver.findElement(emojiTrigger).click();
-    const emoji = await driver.findElement(By.css('.em[data-s=":smile:"]'));
+    const emoji = await driver.findElement(By.css('.em[data-s=":happy:"]'));
     await emoji.click();
     await emoji.click();
 
@@ -188,7 +188,7 @@ async function regression672(driver: WebDriver) {
 
     // Insert two emoji
     await driver.findElement(emojiTrigger).click();
-    const emoji = await driver.findElement(By.css('.em[data-s=":tired_face:"]'));
+    const emoji = await driver.findElement(By.css('.em[data-s=":tired:"]'));
     await emoji.click();
     await emoji.click();
 

@@ -18,7 +18,7 @@
 import {ComposeArea} from '@threema/compose-area';
 
 import {isActionTrigger} from '../helpers';
-import {emojifyNew, shortnameToUnicode} from '../helpers/emoji';
+import {parseEmoji, shortnameToUnicode} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
@@ -454,7 +454,7 @@ export default [
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
                         if (text) {
-                            const tokens = emojifyNew(text);
+                            const tokens = parseEmoji(text);
                             for (const token of tokens) {
                                 if (isEmojiInfo(token)) {
                                     insertEmoji(token);
@@ -490,11 +490,14 @@ export default [
                         // Find some selectors
                         const allEmoji = angular.element(emojiPicker.querySelectorAll('.content .em'));
                         const allEmojiTabs = angular.element(emojiPicker.querySelectorAll('.tab label img'));
+                        const skinSelectors = angular.element(emojiPicker.querySelectorAll('.skins img'));
 
                         // Add event handlers
                         allEmoji.on('click', onEmojiChosen as any);
                         allEmoji.on('keydown', onEmojiChosen as any);
                         allEmojiTabs.on('keydown', onEmojiTabSelected as any);
+                        skinSelectors.on('click', onSkintoneSelected as any);
+                        skinSelectors.on('keydown', onSkintoneSelected as any);
 
                         // Focus compose area again
                         composeArea.focus();
@@ -548,6 +551,21 @@ export default [
                     }
                 }
 
+                // Skintone is chosen
+                function onSkintoneSelected(ev: MouseEvent | KeyboardEvent): void {
+                    if (ev.type === 'click' || (isKeyboardEvent(ev) && isActionTrigger(ev))) {
+                        ev.stopPropagation();
+                        if (isKeyboardEvent(ev)) {
+                            ev.preventDefault();
+                        }
+                        const tone: string = (ev.target as Element).getAttribute('data-tone');
+                        log.debug(`Skintone selected: Tone ${tone}`);
+
+                        const emojiPicker = wrapper[0].querySelector('div.twemoji-picker');
+                        emojiPicker.setAttribute('data-skintone', tone);
+                    }
+                }
+
                 // Emoji tab is selected
                 function onEmojiTabSelected(ev: KeyboardEvent): void {
                     if (isActionTrigger(ev)) {
@@ -558,7 +576,7 @@ export default [
 
                 // Insert a single emoji, passed in as string
                 function insertSingleEmojiString(emojiString: string): void {
-                    const tokens = emojifyNew(emojiString);
+                    const tokens = parseEmoji(emojiString);
                     if (tokens.length !== 1) {
                         throw new Error(`Emoji parsing failed: Expected 1 element, found ${tokens.length}`);
                     }
