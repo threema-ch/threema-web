@@ -15,7 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as emojiRegex from 'emoji-regex/es2015/index';
+import EMOJI_REGEX from 'emojibase-regex';
 import twemoji from 'twemoji';
 
 import {isEmojiInfo} from './../typeguards';
@@ -24,7 +24,7 @@ import {isEmojiInfo} from './../typeguards';
 // Try to keep all functions pure!
 
 // Generated with tools/twemoji/generate-shortname-mapping.py
-const shortnames = {
+const SHORTNAMES = {
     '+1': '👍️',
     '+1_tone1': '👍🏻',
     '+1_tone2': '👍🏼',
@@ -3120,6 +3120,9 @@ const shortnames = {
     'zzz': '💤',
 };
 
+// Characters that should never be matches as emoji when unqualified.
+const TEXT_WHEN_UNQUALIFIED = ['©', '®', '™'];
+
 /**
  * Convert emoji unicode characters to images.
  */
@@ -3143,7 +3146,8 @@ export function emojify(text: string): string {
  * TODO: Rename once emojify fn is removed.
  */
 export function emojifyNew(text: string): Array<threema.EmojiInfo | string> {
-    const regex: RegExp = emojiRegex();
+    // Create a global RegExp, which stores state
+    const regex = new RegExp(EMOJI_REGEX, 'g');
     const result = [];
 
     const textVariantSelector = '\ufe0e';
@@ -3166,41 +3170,31 @@ export function emojifyNew(text: string): Array<threema.EmojiInfo | string> {
             result.push(text.substring(prevEndIndex, startIndex));
         }
 
+        let forceText = false;
+        if (TEXT_WHEN_UNQUALIFIED.includes(emoji)) {
+            // Emoji that should always be shown as text when unqualified
+            forceText = true;
+        } else if (emoji.length > 1 && emoji.slice(-1) === textVariantSelector) {
+            // Emoji with text variant selector
+            forceText = true;
+        }
+
         // Push emoji
-        const codepoint = twemoji.convert.toCodePoint(emoji);
-        const strippedCodepoint = codepoint.replace(/-fe0[ef]$/, '');
-        result.push({
-            emojiString: emoji,
-            imgPath: `emoji/png32/${strippedCodepoint}.png`,
-            codepoint: codepoint,
-        });
+        if (forceText) {
+            result.push(emoji);
+        } else {
+            const codepoint = twemoji.convert.toCodePoint(emoji);
+            const strippedCodepoint = codepoint.replace(/-fe0[ef]$/, '');
+            result.push({
+                emojiString: emoji,
+                imgPath: `emoji/png32/${strippedCodepoint}.png`,
+                codepoint: codepoint,
+            });
+        }
     }
 
     if (endIndex < text.length) {
         result.push(text.substring(endIndex, text.length));
-    }
-
-    // Handle variant selectors.
-    // See also: https://github.com/mathiasbynens/emoji-regex/issues/61
-    for (let i = 0; i < result.length; i++) {
-        if (i > 0) {
-            const curr = result[i];
-            const prev = result[i - 1];
-            // If an emoji variant selector follows an emoji, append it
-            // to the emoji text.
-            if (curr === emojiVariantSelector && isEmojiInfo(prev)) {
-                if (!prev.emojiString.endsWith(emojiVariantSelector)) {
-                    prev.emojiString += emojiVariantSelector;
-                }
-                result[i] = null;
-            }
-            // If a text variant selector follows an emoji, convert the
-            // preceding emoji back to text.
-            if (curr === textVariantSelector && isEmojiInfo(prev)) {
-                result[i - 1] = prev.emojiString + textVariantSelector;
-                result[i] = null;
-            }
-        }
     }
 
     return result.filter((x) => x !== null);
@@ -3210,7 +3204,7 @@ export function emojifyNew(text: string): Array<threema.EmojiInfo | string> {
  * Translate a shortname to UTF8.
  */
 export function shortnameToUnicode(shortname: string): string | null {
-    return shortnames[shortname] || null;
+    return SHORTNAMES[shortname] || null;
 }
 
 /**

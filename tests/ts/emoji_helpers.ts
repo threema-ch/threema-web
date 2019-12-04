@@ -26,6 +26,7 @@ const emojiVariantSelector = '\ufe0f';
 
 const beer = '\ud83c\udf7b';
 const bird = '\ud83d\udc26';
+const biohazard = '\u2623';
 
 function makeEmoji(emojiString: string, codepoint?: string, imgCodepoint?: string): threema.EmojiInfo {
     if (codepoint === undefined) {
@@ -65,6 +66,8 @@ describe('Emoji Helpers', () => {
         it('emojifies single emoji', function() {
             expect(emojifyNew(bird))
                 .toEqual([makeEmoji(bird)]);
+            expect(emojifyNew(beer))
+                .toEqual([makeEmoji(beer)]);
         });
 
         it('emojifies multiple emoji', function() {
@@ -81,6 +84,11 @@ describe('Emoji Helpers', () => {
                 .toEqual(['hi ', makeEmoji(bird), ' bird']);
             expect(emojifyNew(`hi ${bird}${beer}`))
                 .toEqual(['hi ', makeEmoji(bird), makeEmoji(beer)]);
+        });
+
+        it('emojifies most text-default codepoints', function() {
+            expect(emojifyNew(biohazard))
+                .toEqual([makeEmoji(biohazard)]);
         });
 
         it('ignores certain codepoints', function() {
@@ -108,14 +116,13 @@ describe('Emoji Helpers', () => {
             expect(emojifyNew(exclamation + textVariantSelector))
                 .toEqual([exclamation + textVariantSelector]);
             expect(emojifyNew(exclamation + emojiVariantSelector))
-                .toEqual([makeEmoji(exclamation + emojiVariantSelector, '2757', '2757')]);
+                .toEqual([makeEmoji(exclamation + emojiVariantSelector, '2757-fe0f', '2757')]);
         });
     });
 
     describe('shortnameToUnicode', () => {
         it('converts valid shortnames', function() {
             expect(shortnameToUnicode('+1')).toEqual('\ud83d\udc4d\ufe0f');
-            expect(shortnameToUnicode('thumbup')).toEqual('\ud83d\udc4d\ufe0f');
             expect(shortnameToUnicode('thumbsup')).toEqual('\ud83d\udc4d\ufe0f');
         });
 
@@ -124,7 +131,7 @@ describe('Emoji Helpers', () => {
         });
 
         it('handles multi-codepoint emoji', function() {
-            expect(shortnameToUnicode('ch')).toEqual('\ud83c\udde8\ud83c\udded');
+            expect(shortnameToUnicode('flag_ch')).toEqual('\ud83c\udde8\ud83c\udded');
         });
     });
 
