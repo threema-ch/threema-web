@@ -14,8 +14,7 @@ for emoji_list in groups.values():
             mappings.append((shortname.strip(':'), emoji['emoji']))
 
 # Custom shortcodes
-mappings.append(('slight_smile', '🙂'))
-mappings.append(('slight_frown', '🙁'))
+mappings.append(('joy', '😂'))
 
 print('// Generated with tools/twemoji/generate-shortname-mapping.py')
 print('const SHORTNAMES = {')
