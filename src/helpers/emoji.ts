@@ -3105,7 +3105,6 @@ export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
     const result = [];
 
     const textVariantSelector = '\ufe0e';
-    const emojiVariantSelector = '\ufe0f';
 
     let match: string[];
     let startIndex: number = 0;
@@ -3162,7 +3161,7 @@ export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
 /**
  * Translate a shortname to UTF8.
  */
-export function shortnameToUnicode(shortname: string): string | null {
+export function shortnameToUtf8(shortname: string): string | null {
     return SHORTNAMES[shortname] || null;
 }
 

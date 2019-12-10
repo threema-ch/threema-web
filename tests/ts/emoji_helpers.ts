@@ -18,7 +18,7 @@
  */
 
 import twemoji from 'twemoji';
-import {emojify, enlargeSingleEmoji, parseEmoji, shortnameToUnicode} from '../../src/helpers/emoji';
+import {emojify, enlargeSingleEmoji, parseEmoji, shortnameToUtf8} from '../../src/helpers/emoji';
 
 
 const textVariantSelector = '\ufe0e';
@@ -120,18 +120,18 @@ describe('Emoji Helpers', () => {
         });
     });
 
-    describe('shortnameToUnicode', () => {
+    describe('shortnameToUtf8', () => {
         it('converts valid shortnames', function() {
-            expect(shortnameToUnicode('+1')).toEqual('\ud83d\udc4d\ufe0f');
-            expect(shortnameToUnicode('thumbsup')).toEqual('\ud83d\udc4d\ufe0f');
+            expect(shortnameToUtf8('+1')).toEqual('\ud83d\udc4d\ufe0f');
+            expect(shortnameToUtf8('thumbsup')).toEqual('\ud83d\udc4d\ufe0f');
         });
 
         it('returns null for unknown shortcodes', function() {
-            expect(shortnameToUnicode('sömbsöp')).toBeNull();
+            expect(shortnameToUtf8('sömbsöp')).toBeNull();
         });
 
         it('handles multi-codepoint emoji', function() {
-            expect(shortnameToUnicode('flag_ch')).toEqual('\ud83c\udde8\ud83c\udded');
+            expect(shortnameToUtf8('flag_ch')).toEqual('\ud83c\udde8\ud83c\udded');
         });
     });
 

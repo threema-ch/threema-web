@@ -18,7 +18,7 @@
 import {ComposeArea} from '@threema/compose-area';
 
 import {isActionTrigger} from '../helpers';
-import {parseEmoji, shortnameToUnicode} from '../helpers/emoji';
+import {parseEmoji, shortnameToUtf8} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
@@ -613,7 +613,7 @@ export default [
                     if (after.length === 0 && before.length > 2) {
                         if (before.startsWith(trigger) && before.endsWith(trigger)) {
                             const trimmed = before.substr(1, before.length - 2);
-                            const unicodeEmoji = shortnameToUnicode(trimmed);
+                            const unicodeEmoji = shortnameToUtf8(trimmed);
                             if (unicodeEmoji !== null) {
                                 composeArea.select_word_at_caret();
                                 composeArea.store_selection_range();
