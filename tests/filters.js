@@ -210,18 +210,21 @@ describe('Filters', function() {
     });
 
     describe('linkify', function() {
+        const autolinker_attributes_url = 'class="autolinked autolinked-url" target="_blank" rel="noopener noreferrer"';
+        const autolinker_attributes_email = 'class="autolinked autolinked-email" target="_blank" rel="noopener noreferrer"';
+
         let process = (text) => {
             return $filter('linkify')(text)
         };
 
         it('links http urls', () => {
             expect(process('hello https://threema.ch/!'))
-                .toEqual('hello <a href="https://threema.ch/" class="autolinked autolinked-url" target="_blank" rel="noopener noreferrer">https://threema.ch/</a>!');
+                .toEqual(`hello <a href="https://threema.ch/" ${autolinker_attributes_url}>https://threema.ch/</a>!`);
         });
 
         it('links e-mails', () => {
             expect(process('hello info@threema.ch!'))
-                .toEqual('hello <a href="mailto:info@threema.ch" class="autolinked autolinked-email" target="_blank" rel="noopener noreferrer">info@threema.ch</a>!');
+                .toEqual(`hello <a href="mailto:info@threema.ch" ${autolinker_attributes_email}>info@threema.ch</a>!`);
         });
 
         it('does not link phone numbers', () => {
@@ -237,6 +240,20 @@ describe('Filters', function() {
         it('does not link hashtags', () => {
             const input = 'hello #threema';
             expect(process(input)).toEqual(input);
+        });
+
+        it('handles square brackets properly', () => {
+            const url = 'https://threema.ch?query=a';
+            expect(process(`[${url}]`))
+                .toEqual(`[<a href="${url}" ${autolinker_attributes_url}>${url}</a>]`);
+        });
+
+        it('handles round parentheses properly', () => {
+            const url = 'https://de.wikipedia.org/wiki/Bundeshaus_(Bern)';
+            expect(process(`${url}`))
+                .toEqual(`<a href="${url}" ${autolinker_attributes_url}>${url}</a>`);
+            expect(process(`(${url})`))
+                .toEqual(`(<a href="${url}" ${autolinker_attributes_url}>${url}</a>)`);
         });
     });
 
