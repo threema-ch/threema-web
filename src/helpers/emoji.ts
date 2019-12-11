@@ -1151,6 +1151,7 @@ const SHORTNAMES = {
     'jeans': '👖',
     'jigsaw': '🧩',
     'jolly_roger': '🏴‍☠️',
+    'joy': '😂',
     'joyful': '😂',
     'joyful_cat': '😹',
     'joystick': '🕹️',
@@ -1284,12 +1285,6 @@ const SHORTNAMES = {
     'man_biking_tone3': '🚴🏽‍♂️',
     'man_biking_tone4': '🚴🏾‍♂️',
     'man_biking_tone5': '🚴🏿‍♂️',
-    'man_bouncing_ball': '⛹️‍♂️',
-    'man_bouncing_ball_tone1': '⛹🏻‍♂️',
-    'man_bouncing_ball_tone2': '⛹🏼‍♂️',
-    'man_bouncing_ball_tone3': '⛹🏽‍♂️',
-    'man_bouncing_ball_tone4': '⛹🏾‍♂️',
-    'man_bouncing_ball_tone5': '⛹🏿‍♂️',
     'man_bowing': '🙇‍♂️',
     'man_bowing_tone1': '🙇🏻‍♂️',
     'man_bowing_tone2': '🙇🏼‍♂️',
@@ -1338,12 +1333,6 @@ const SHORTNAMES = {
     'man_deaf_tone3': '🧏🏽‍♂️',
     'man_deaf_tone4': '🧏🏾‍♂️',
     'man_deaf_tone5': '🧏🏿‍♂️',
-    'man_detective': '🕵️‍♂️',
-    'man_detective_tone1': '🕵🏻‍♂️',
-    'man_detective_tone2': '🕵🏼‍♂️',
-    'man_detective_tone3': '🕵🏽‍♂️',
-    'man_detective_tone4': '🕵🏾‍♂️',
-    'man_detective_tone5': '🕵🏿‍♂️',
     'man_elf': '🧝‍♂️',
     'man_elf_tone1': '🧝🏻‍♂️',
     'man_elf_tone2': '🧝🏼‍♂️',
@@ -1411,12 +1400,6 @@ const SHORTNAMES = {
     'man_getting_haircut_tone3': '💇🏽‍♂️',
     'man_getting_haircut_tone4': '💇🏾‍♂️',
     'man_getting_haircut_tone5': '💇🏿‍♂️',
-    'man_golfing': '🏌️‍♂️',
-    'man_golfing_tone1': '🏌🏻‍♂️',
-    'man_golfing_tone2': '🏌🏼‍♂️',
-    'man_golfing_tone3': '🏌🏽‍♂️',
-    'man_golfing_tone4': '🏌🏾‍♂️',
-    'man_golfing_tone5': '🏌🏿‍♂️',
     'man_guard': '💂‍♂️',
     'man_guard_tone1': '💂🏻‍♂️',
     'man_guard_tone2': '💂🏼‍♂️',
@@ -1459,12 +1442,6 @@ const SHORTNAMES = {
     'man_kneeling_tone3': '🧎🏽‍♂️',
     'man_kneeling_tone4': '🧎🏾‍♂️',
     'man_kneeling_tone5': '🧎🏿‍♂️',
-    'man_lifting_weights': '🏋️‍♂️',
-    'man_lifting_weights_tone1': '🏋🏻‍♂️',
-    'man_lifting_weights_tone2': '🏋🏼‍♂️',
-    'man_lifting_weights_tone3': '🏋🏽‍♂️',
-    'man_lifting_weights_tone4': '🏋🏾‍♂️',
-    'man_lifting_weights_tone5': '🏋🏿‍♂️',
     'man_lotus_position': '🧘‍♂️',
     'man_lotus_position_tone1': '🧘🏻‍♂️',
     'man_lotus_position_tone2': '🧘🏼‍♂️',
@@ -2712,12 +2689,6 @@ const SHORTNAMES = {
     'woman_biking_tone3': '🚴🏽‍♀️',
     'woman_biking_tone4': '🚴🏾‍♀️',
     'woman_biking_tone5': '🚴🏿‍♀️',
-    'woman_bouncing_ball': '⛹️‍♀️',
-    'woman_bouncing_ball_tone1': '⛹🏻‍♀️',
-    'woman_bouncing_ball_tone2': '⛹🏼‍♀️',
-    'woman_bouncing_ball_tone3': '⛹🏽‍♀️',
-    'woman_bouncing_ball_tone4': '⛹🏾‍♀️',
-    'woman_bouncing_ball_tone5': '⛹🏿‍♀️',
     'woman_bowing': '🙇‍♀️',
     'woman_bowing_tone1': '🙇🏻‍♀️',
     'woman_bowing_tone2': '🙇🏼‍♀️',
@@ -2760,12 +2731,6 @@ const SHORTNAMES = {
     'woman_deaf_tone3': '🧏🏽‍♀️',
     'woman_deaf_tone4': '🧏🏾‍♀️',
     'woman_deaf_tone5': '🧏🏿‍♀️',
-    'woman_detective': '🕵️‍♀️',
-    'woman_detective_tone1': '🕵🏻‍♀️',
-    'woman_detective_tone2': '🕵🏼‍♀️',
-    'woman_detective_tone3': '🕵🏽‍♀️',
-    'woman_detective_tone4': '🕵🏾‍♀️',
-    'woman_detective_tone5': '🕵🏿‍♀️',
     'woman_elf': '🧝‍♀️',
     'woman_elf_tone1': '🧝🏻‍♀️',
     'woman_elf_tone2': '🧝🏼‍♀️',
@@ -2833,12 +2798,6 @@ const SHORTNAMES = {
     'woman_getting_haircut_tone3': '💇🏽‍♀️',
     'woman_getting_haircut_tone4': '💇🏾‍♀️',
     'woman_getting_haircut_tone5': '💇🏿‍♀️',
-    'woman_golfing': '🏌️‍♀️',
-    'woman_golfing_tone1': '🏌🏻‍♀️',
-    'woman_golfing_tone2': '🏌🏼‍♀️',
-    'woman_golfing_tone3': '🏌🏽‍♀️',
-    'woman_golfing_tone4': '🏌🏾‍♀️',
-    'woman_golfing_tone5': '🏌🏿‍♀️',
     'woman_guard': '💂‍♀️',
     'woman_guard_tone1': '💂🏻‍♀️',
     'woman_guard_tone2': '💂🏼‍♀️',
@@ -2887,12 +2846,6 @@ const SHORTNAMES = {
     'woman_kneeling_tone3': '🧎🏽‍♀️',
     'woman_kneeling_tone4': '🧎🏾‍♀️',
     'woman_kneeling_tone5': '🧎🏿‍♀️',
-    'woman_lifting_weights': '🏋️‍♀️',
-    'woman_lifting_weights_tone1': '🏋🏻‍♀️',
-    'woman_lifting_weights_tone2': '🏋🏼‍♀️',
-    'woman_lifting_weights_tone3': '🏋🏽‍♀️',
-    'woman_lifting_weights_tone4': '🏋🏾‍♀️',
-    'woman_lifting_weights_tone5': '🏋🏿‍♀️',
     'woman_lotus_position': '🧘‍♀️',
     'woman_lotus_position_tone1': '🧘🏻‍♀️',
     'woman_lotus_position_tone2': '🧘🏼‍♀️',
@@ -3152,7 +3105,6 @@ export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
     const result = [];
 
     const textVariantSelector = '\ufe0e';
-    const emojiVariantSelector = '\ufe0f';
 
     let match: string[];
     let startIndex: number = 0;
@@ -3185,7 +3137,12 @@ export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
             result.push(emoji);
         } else {
             const codepoint = twemoji.convert.toCodePoint(emoji);
-            const strippedCodepoint = codepoint.replace(/-fe0[ef]$/, '');
+            const strippedCodepoint = codepoint
+                // Strip trailing emoji variant selector from filename
+                .replace(/-fe0[ef]$/, '')
+                // Because for some reason twemoji filenames don't include the
+                // emoji specifier in the keycap signs, remove it manually.
+                .replace(/-fe0[ef]-20e3$/, '-20e3');
             result.push({
                 emojiString: emoji,
                 imgPath: `emoji/png32/${strippedCodepoint}.png`,
@@ -3204,7 +3161,7 @@ export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
 /**
  * Translate a shortname to UTF8.
  */
-export function shortnameToUnicode(shortname: string): string | null {
+export function shortnameToUtf8(shortname: string): string | null {
     return SHORTNAMES[shortname] || null;
 }
 
