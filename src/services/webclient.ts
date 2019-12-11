@@ -1855,8 +1855,10 @@ export class WebClientService {
                         invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
                     } else if (this.mimeService.isImage(mimeType)) {
                         reflectedType = 'image';
+                        requiredFeature = ContactReceiverFeature.NONE;
                     } else if (this.mimeService.isVideo(mimeType)) {
                         reflectedType = 'video';
+                        requiredFeature = ContactReceiverFeature.NONE;
                     }
                 }
 
