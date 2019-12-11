@@ -248,7 +248,8 @@
             "disabledByPolicy": "Funktion wurde durch den Administrator deaktiviert",
             "syncFailed": "Gruppen-Synchronisation fehlgeschlagen",
             "noMembers": "Keine Mitglieder definiert",
-            "alreadyLeft": "Sie haben diese Gruppe bereits verlassen"
+            "alreadyLeft": "Sie haben diese Gruppe bereits verlassen",
+            "valueTooLong": "Ein eingegebener Wert ist zu lang"
         }
     },
     "error": {
