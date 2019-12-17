@@ -44,6 +44,7 @@ import GlobalConnectionState = threema.GlobalConnectionState;
 import DisconnectReason = threema.DisconnectReason;
 
 class WelcomeController {
+    private static BROADCAST_DELAY = 100;
     private static REDIRECT_DELAY = 500;
 
     // Angular services
@@ -262,9 +263,6 @@ class WelcomeController {
             resume: false,
         });
 
-        // Set up the broadcast channel that checks whether we're already connected in another tab
-        this.setupBroadcastChannel(this.webClientService.salty.keyStore.publicKeyHex);
-
         // Initialize QR code params
         this.$scope.$watch(() => this.password, () => {
             const payload = this.webClientService.buildQrCodePayload(this.password.length > 0);
@@ -272,8 +270,22 @@ class WelcomeController {
             this.passwordStrength = scorePassword(this.password);
         });
 
-        // Start webclient
-        this.start();
+        // Set up the broadcast channel that checks whether we're already connected in another tab
+        this.setupBroadcastChannel(this.webClientService.salty.keyStore.publicKeyHex, 0)
+            .then((result) => {
+                switch (result) {
+                    case 'already_open':
+                        this.log.warn('Session already connected in another tab or window');
+                        break;
+                    case 'no_answer':
+                        this.start();
+                        break;
+                }
+            })
+            .catch((error) => {
+                this.log.warn('Unable to set up broadcast channel:', error);
+                this.start();
+            });
     }
 
     /**
@@ -301,24 +313,39 @@ class WelcomeController {
         const keyStore = new saltyrtcClient.KeyStore(decrypted.ownSecretKey);
 
         // Set up the broadcast channel that checks whether we're already connected in another tab
-        this.setupBroadcastChannel(keyStore.publicKeyHex);
-
-        // Reconnect
-        this.reconnect(keyStore, decrypted);
+        this.setupBroadcastChannel(keyStore.publicKeyHex, WelcomeController.BROADCAST_DELAY)
+            .then((result) => {
+                switch (result) {
+                    case 'already_open':
+                        this.log.warn('Session already connected in another tab or window');
+                        break;
+                    case 'no_answer':
+                        this.log.debug('No broadcast received indicating that a session is already open, continuing');
+                        this.reconnect(keyStore, decrypted);
+                        break;
+                }
+            })
+            .catch((error) => {
+                this.log.warn('Unable to set up broadcast channel:', error);
+                this.reconnect(keyStore, decrypted);
+            })
     }
 
     /**
      * Set up a `BroadcastChannel` to check if there are other tabs running on
-     * the same session.
+     * the same session. Resolves when either an `already_connected` message has
+     * been received or a timeout of `delayMs` has been elapsed.
      *
      * The `publicKeyHex` parameter is the hex-encoded public key of the keystore
      * used to establish the SaltyRTC connection.
      */
-    private setupBroadcastChannel(publicKeyHex: string) {
+    private setupBroadcastChannel(publicKeyHex: string, delayMs: number): Future<'already_open' | 'no_answer'> {
+        const future: Future<'already_open' | 'no_answer'> = new Future();
+
+        // Check for broadcast support in the browser
         if (!('BroadcastChannel' in this.$window)) {
-            // No BroadcastChannel support in this browser
-            this.log.warn('BroadcastChannel not supported in this browser');
-            return;
+            future.reject('BroadcastChannel not supported in this browser');
+            return future;
         }
 
         // Config constants
@@ -351,7 +378,7 @@ class WelcomeController {
                     // Another tab notified us that the session we're trying to connect to
                     // is already active.
                     if (message.key === publicKeyHex && this.stateService.connectionBuildupState !== 'done') {
-                        this.log.error('Session already connected in another tab or window');
+                        future.resolve('already_open');
                         this.timeoutService.register(() => {
                             this.stateService.updateConnectionBuildupState('already_connected');
                             this.stateService.state = GlobalConnectionState.Error;
@@ -370,6 +397,10 @@ class WelcomeController {
             type: TYPE_PUBLIC_KEY,
             key: publicKeyHex,
         }));
+
+        // Resolve after the specified delay without an `already_connected` response
+        setTimeout(() => future.resolve('no_answer'), delayMs);
+        return future;
     }
 
     /**
