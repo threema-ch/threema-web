@@ -273,18 +273,22 @@ class WelcomeController {
         // Set up the broadcast channel that checks whether we're already connected in another tab
         this.setupBroadcastChannel(this.webClientService.salty.keyStore.publicKeyHex, 0)
             .then((result) => {
-                switch (result) {
-                    case 'already_open':
-                        this.log.warn('Session already connected in another tab or window');
-                        break;
-                    case 'no_answer':
-                        this.start();
-                        break;
-                }
+                this.$scope.$apply(() => {
+                    switch (result) {
+                        case 'already_open':
+                            this.log.warn('Session already connected in another tab or window');
+                            break;
+                        case 'no_answer':
+                            this.start();
+                            break;
+                    }
+                });
             })
             .catch((error) => {
-                this.log.warn('Unable to set up broadcast channel:', error);
-                this.start();
+                this.$scope.$apply(() => {
+                    this.log.warn('Unable to set up broadcast channel:', error);
+                    this.start();
+                });
             });
     }
 
@@ -315,19 +319,23 @@ class WelcomeController {
         // Set up the broadcast channel that checks whether we're already connected in another tab
         this.setupBroadcastChannel(keyStore.publicKeyHex, WelcomeController.BROADCAST_DELAY)
             .then((result) => {
-                switch (result) {
-                    case 'already_open':
-                        this.log.warn('Session already connected in another tab or window');
-                        break;
-                    case 'no_answer':
-                        this.log.debug('No broadcast received indicating that a session is already open, continuing');
-                        this.reconnect(keyStore, decrypted);
-                        break;
-                }
+                this.$scope.$apply(() => {
+                    switch (result) {
+                        case 'already_open':
+                            this.log.warn('Session already connected in another tab or window');
+                            break;
+                        case 'no_answer':
+                            this.log.debug('No broadcast received indicating that a session is already open');
+                            this.reconnect(keyStore, decrypted);
+                            break;
+                    }
+                });
             })
             .catch((error) => {
-                this.log.warn('Unable to set up broadcast channel:', error);
-                this.reconnect(keyStore, decrypted);
+                this.$scope.$apply(() => {
+                    this.log.warn('Unable to set up broadcast channel:', error);
+                    this.reconnect(keyStore, decrypted);
+                });
             });
     }
 
@@ -343,7 +351,7 @@ class WelcomeController {
         const future: Future<'already_open' | 'no_answer'> = new Future();
 
         // Check for broadcast support in the browser
-        if (!('BroadcastChannel' in this.$window)) {
+        if (!('BroadcastChannel' in this.$window) || true) {
             future.reject('BroadcastChannel not supported in this browser');
             return future;
         }
