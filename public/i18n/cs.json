@@ -15,6 +15,7 @@
         "CHOOSE_PASSWORD": "Pokud chcete zůstat trvale přihlášeni, zadejte prosím<br>heslo relace před naskenováním QR kódu.",
         "UNLOCK_FAILED_TEXT": "Zadali jste nesprávné heslo, relaci nelze obnovit.",
         "ENTER_PASSWORD": "Chcete-li se znovu připojit k vaší předchozí relaci,<br> zadejte prosím heslo:",
+        "PASSWORD_STRENGTH": "Síla hesla",
         "UNLOCK_FAILED_TITLE": "Odemknutí se nezdařilo",
         "ALTERNATIVELY": "Nebo,",
         "UNLOCK_FAILED_FORGOTTEN": "Pokud si nepamatujete heslo, jednoduše zvolte \"odstranit tuto relaci\" a zadejte heslo nové.",
@@ -67,13 +68,13 @@
         "ADBLOCKER": "Používáte blokování reklam, které také blokuje komunikaci WebRTC?",
         "PLEASE_UPDATE_APP": "Ujistěte se, že používáte <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">nejnovější verzi</a> aplikace Threema!",
         "USE_ARCHIVE_VERSION": "Případně se můžete přepnout na <a href=\"{archiveUrl}\">předchozí verzi</a> Threema Web.",
-        "TROUBLESHOOTING": "Odstraňování problémů",
-        "REPORT_FAQ": "Nejprve si prosím<a target=\"_blank\" href=\"https://threema.ch/faq\"> přečtěte nejčastější dotazy a odpovědi - FAQs</a>kde najdete popis, jak odstranit většinu problémů.",
+        "TROUBLESHOOTING": "Řešení problémů",
+        "REPORT_FAQ": "Nejprve si prosím<a target=\"_blank\" href=\"https://threema.ch/faq\"> přečtěte nejčastější dotazy a odpovědi - FAQs</a> kde najdete popis, jak odstranit většinu problémů.",
         "REPORT_LOG": "Pokud nemůžete najít odpověď na svůj dotaz nebo problém přetrvává, můžete týmu podpory Threema odeslat protokol chyb.",
         "REPORT_VIA_THREEMA_UNAVAILABLE": "Odeslání protokolu přes Threema je momentálně nedostupné, protože není funkční připojení k Vašemu mobilnímu telefonu. Nejprve aktivujte připojení k Vašemu telefonu.",
         "REPORT_VIA_CLIPBOARD": "Případně můžete zkopírovat protokol chyb do schránky a <a target=\"_blank\" href=\"https://threema.ch/support\">nahlásit jej týmu podpory Threema, prostřednictvím webového formuláře</a>.",
-        "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
-        "DESCRIBE_PROBLEM": "Prosím, popište zde problém.",
+        "REMOVE_SENSITIVE_DATA": "Odstranit citlivá data (kontakty, obsah zpráv,..)",
+        "DESCRIBE_PROBLEM": "Zde prosím popiště problém.",
         "COPY_LOG_CLIPBOARD": "Zkopírovat protokol do schránky",
         "REPORT_VIA_THREEMA": "Odeslat protokol na *SUPPORT",
         "REPORT_VIA_THREEMA_FAILED": "Došlo k chybě při odeslání logu chyb na *SUPPORT.",
@@ -205,7 +206,7 @@
         "PINNED_CONVERSATION_ERROR": "Konverzace nemůže být připnuta",
         "UNPINNED_CONVERSATION_OK": "Konverzace odepnuta",
         "UNPINNED_CONVERSATION_ERROR": "Konverzace nemůže být odepnuta",
-        "ME": "Mě"
+        "ME": "Já"
     },
     "messageStates": {
         "WE_ACK": "Poslali jste \"palec nahoru\"",
@@ -246,7 +247,8 @@
             "disabledByPolicy": "Funkce zakázána správcem",
             "syncFailed": "Chyba při synchronizaci skupiny",
             "noMembers": "Žádní členové nejsou definováni",
-            "alreadyLeft": "Již jste tuto skupinu opustili"
+            "alreadyLeft": "Již jste tuto skupinu opustili",
+            "valueTooLong": "Zadaná hodnota je příliš dlouhá"
         }
     },
     "error": {
@@ -304,7 +306,8 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Zařízení je nedostupné",
-        "UNABLE_TO_CONNECT": "Nelze se připojit k zařízení ..."
+        "UNABLE_TO_CONNECT": "Nelze se připojit k zařízení ...",
+        "DISMISS_WARNING": "Chcete-li obnovit připojení, znovu načtěte okno prohlížeče."
     },
     "version": {
         "NEW_VERSION": "Je k dispozici nová verze",
@@ -351,6 +354,9 @@
         "SESSION_DELETED": "Relace byla ve vašem mobilu smazána.",
         "WEBCLIENT_DISABLED": "Služba Threema Web byla ve vašem zřízení vypnuta.",
         "SESSION_REPLACED": "Tato relace byla přerušena, protože jste spustili relaci Threema Web i v dalším okně prohlížeče.",
-        "SESSION_ERROR": "Relace byla ukončena kvůli chybě komunikačního protokolu."
+        "OUT_OF_MEMORY": "Tato relace byla přerušena, protože ve vašem mobilu došlo k nedostatku paměti",
+        "SESSION_ERROR": "Relace byla ukončena kvůli chybě komunikačního protokolu.",
+        "PUSH_ERROR_INFO": "Pokusy o probuzení mobilu pomocí push oznámení selhaly. K tomu může dojít například v případě, že jste nedávno změnili mobil.",
+        "PUSH_ERROR_ACTION": "Pokud se tato chyba opakuje, klikněte na „Zapomenout relaci“ a spusťte novou relaci Threema Web."
     }
 }
