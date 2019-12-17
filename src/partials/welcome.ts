@@ -351,7 +351,7 @@ class WelcomeController {
         const future: Future<'already_open' | 'no_answer'> = new Future();
 
         // Check for broadcast support in the browser
-        if (!('BroadcastChannel' in this.$window) || true) {
+        if (!('BroadcastChannel' in this.$window)) {
             future.reject('BroadcastChannel not supported in this browser');
             return future;
         }
