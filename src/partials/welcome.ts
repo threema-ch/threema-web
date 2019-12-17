@@ -328,7 +328,7 @@ class WelcomeController {
             .catch((error) => {
                 this.log.warn('Unable to set up broadcast channel:', error);
                 this.reconnect(keyStore, decrypted);
-            })
+            });
     }
 
     /**
