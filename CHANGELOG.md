@@ -4,7 +4,7 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
-### [v2.3.0][v2.3.0] (2019-12-17)
+### [v2.3.0][v2.3.0] Säntis (2019-12-17)
 
 Changes:
 
@@ -41,7 +41,7 @@ Changes:
 * [change] Invert order of messages in notifications ([#888][i888])
 
 
-### [v2.2.0][v2.2.0] (2019-08-08)
+### [v2.2.0][v2.2.0] Fluebrig (2019-08-08)
 
 This is quite a big release. It contains improvements to device wakeup
 functionality, adds support for five new languages, provides a new log
@@ -188,7 +188,7 @@ Contributors:
 - [@MarcoZehe][@MarcoZehe]
 
 
-### [v2.1.0][v2.1.0] (2018-10-23)
+### [v2.1.0][v2.1.0] Glärnisch (2018-10-23)
 
 Changes:
 

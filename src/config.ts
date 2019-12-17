@@ -10,11 +10,11 @@ export default {
 
     // General
     SELF_HOSTED: false,
-    VERSION_MOUNTAIN: 'Fluebrig',
-    VERSION_MOUNTAIN_URL: 'https://en.wikipedia.org/wiki/Fluebrig',
-    VERSION_MOUNTAIN_IMAGE_URL: 'img/bg.original.jpg',
-    VERSION_MOUNTAIN_IMAGE_COPYRIGHT: '',  // Own work
-    VERSION_MOUNTAIN_HEIGHT: 2098,
+    VERSION_MOUNTAIN: 'Säntis',
+    VERSION_MOUNTAIN_URL: 'https://en.wikipedia.org/wiki/Säntis',
+    VERSION_MOUNTAIN_IMAGE_URL: 'https://en.wikipedia.org/wiki/S%C3%A4ntis#/media/File:S%C3%A4ntis_mountain_by_sunset..JPG',
+    VERSION_MOUNTAIN_IMAGE_COPYRIGHT: 'CC BY-SA 3.0 B0rder',
+    VERSION_MOUNTAIN_HEIGHT: 2502,
     PREV_PROTOCOL_LAST_VERSION: '1.8.2',
     GIT_BRANCH: 'master',
 
