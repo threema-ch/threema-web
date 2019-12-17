@@ -4,6 +4,35 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.0][v2.3.0] (2019-12-17)
+
+Changes:
+
+* [feature] Allow sending files larger than 15 MiB ([#769][i769] / [#594][i594] / [#7][i7])
+* [feature] Add support for `https://threema.id/` URLs ([#918][i918])
+* [feature] Add graphical password strength indicator ([#929][i929])
+* [feature] Update emoji to 12.1, add skintone selector ([#933][i933])
+* [feature] Add Polish translations ([#941][i941])
+* [change] CI: New Threema / ThreemaWork themes ([#904][i904])
+* [change] Improved URL parsing ([#935][i935])
+* [change] Allow dismissing the "device unreachable" dialog ([#931][i931])
+* [change] Add length limits to text input fields ([#938][i938])
+* [change] Improve TURN pairing ([#910][i910])
+* [change] Disable Grammarly on compose area ([#911][i911])
+* [change] Upgrade dependencies ([#921][i921] / [#928][i928])
+* [bug] Fix bug where scrolling up sometimes fails ([#18][i18] / [#923][i923])
+* [bug] Fix feature level check when sending image/video messages ([#936][i936])
+* [bug] Fix some race conditions in connection handling ([#893][i893])
+* [bug] Handle rejected pushes gracefully ([#894][i894])
+* [bug] Fix max text message size checks ([#903][i903])
+* [bug] Show warning if browser does not support TextDecoder ([#891][i891])
+
+Contributors:
+
+- [@vortex852456][@vortex852456]
+- [Karol Kołaciński](https://www.transifex.com/user/profile/Numbie/) (PL translations)
+
+
 ### [v2.2.1][v2.2.1] (2019-08-08)
 
 Changes:
@@ -564,6 +593,7 @@ First public release.
 
 [i4]: https://github.com/threema-ch/threema-web/issues/4
 [i6]: https://github.com/threema-ch/threema-web/issues/6
+[i7]: https://github.com/threema-ch/threema-web/issues/7
 [i8]: https://github.com/threema-ch/threema-web/issues/8
 [i11]: https://github.com/threema-ch/threema-web/issues/11
 [i17]: https://github.com/threema-ch/threema-web/issues/17
@@ -729,6 +759,7 @@ First public release.
 [i572]: https://github.com/threema-ch/threema-web/issues/572
 [i574]: https://github.com/threema-ch/threema-web/issues/574
 [i590]: https://github.com/threema-ch/threema-web/pull/590
+[i594]: https://github.com/threema-ch/threema-web/issues/594
 [i597]: https://github.com/threema-ch/threema-web/pull/597
 [i602]: https://github.com/threema-ch/threema-web/pull/602
 [i606]: https://github.com/threema-ch/threema-web/pull/606
@@ -780,6 +811,7 @@ First public release.
 [i756]: https://github.com/threema-ch/threema-web/issues/756
 [i767]: https://github.com/threema-ch/threema-web/issues/767
 [i768]: https://github.com/threema-ch/threema-web/issues/768
+[i769]: https://github.com/threema-ch/threema-web/issues/769
 [i773]: https://github.com/threema-ch/threema-web/issues/773
 [i777]: https://github.com/threema-ch/threema-web/issues/777
 [i778]: https://github.com/threema-ch/threema-web/issues/778
@@ -804,7 +836,26 @@ First public release.
 [i858]: https://github.com/threema-ch/threema-web/issues/858
 [i887]: https://github.com/threema-ch/threema-web/issues/887
 [i888]: https://github.com/threema-ch/threema-web/issues/888
+[i891]: https://github.com/threema-ch/threema-web/issues/891
+[i893]: https://github.com/threema-ch/threema-web/issues/893
+[i894]: https://github.com/threema-ch/threema-web/issues/894
+[i903]: https://github.com/threema-ch/threema-web/issues/903
+[i904]: https://github.com/threema-ch/threema-web/issues/904
+[i910]: https://github.com/threema-ch/threema-web/issues/910
+[i911]: https://github.com/threema-ch/threema-web/issues/911
+[i918]: https://github.com/threema-ch/threema-web/issues/918
+[i921]: https://github.com/threema-ch/threema-web/issues/921
+[i923]: https://github.com/threema-ch/threema-web/issues/923
+[i928]: https://github.com/threema-ch/threema-web/issues/928
+[i929]: https://github.com/threema-ch/threema-web/issues/929
+[i931]: https://github.com/threema-ch/threema-web/issues/931
+[i933]: https://github.com/threema-ch/threema-web/issues/933
+[i935]: https://github.com/threema-ch/threema-web/issues/935
+[i936]: https://github.com/threema-ch/threema-web/issues/936
+[i938]: https://github.com/threema-ch/threema-web/issues/938
+[i941]: https://github.com/threema-ch/threema-web/issues/941
 
+[v2.3.0]: https://github.com/threema-ch/threema-web/compare/v2.2.1...v2.3.0
 [v2.2.1]: https://github.com/threema-ch/threema-web/compare/v2.2.0...v2.2.1
 [v2.2.0]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0
 [v2.1.7]: https://github.com/threema-ch/threema-web/compare/v2.1.6...v2.1.7
