@@ -15,6 +15,7 @@
         "CHOOSE_PASSWORD": "Si deseas mantenerte conectado, por favor, introduce<br>una contraseña de sesión antes de escanear.",
         "UNLOCK_FAILED_TEXT": "Has introducido una contraseña incorrecta, la sesión no se puede restaurar.",
         "ENTER_PASSWORD": "Para volver a conectarte a la sesión anterior, <br>por favor, introduce la contraseña:",
+        "PASSWORD_STRENGTH": "Seguridad de contraseña",
         "UNLOCK_FAILED_TITLE": "Desbloqueo fallido",
         "ALTERNATIVELY": "Alternativamente,",
         "UNLOCK_FAILED_FORGOTTEN": "Si no recuerdas tu contraseña, sólo tienes que elegir \"olvidar esta sesión\", y establecer una nueva contraseña.",
@@ -67,13 +68,13 @@
         "ADBLOCKER": "¿Utilizas un bloqueador de anuncios que también bloquea la comunicación de WebRTC?",
         "PLEASE_UPDATE_APP": "¡Asegúrate de estar usando la <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">última versión</a> de la aplicación Threema!",
         "USE_ARCHIVE_VERSION": "Como alternativa, puedes volver a la <a href=\"{archiveUrl}\">versión anterior</a> de Threema Web.",
-        "TROUBLESHOOTING": "Troubleshooting",
+        "TROUBLESHOOTING": "Solución de problemas",
         "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
         "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
         "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
         "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
         "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
-        "DESCRIBE_PROBLEM": "Please describe the problem here.",
+        "DESCRIBE_PROBLEM": "Por favor describe el problema aquí.",
         "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
         "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
         "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
@@ -135,7 +136,7 @@
         "GROUP_CREATOR": "Creador de grupo",
         "GROUP_ROLE_NORMAL": "Miembro",
         "GROUP_ROLE_CREATOR": "Creador",
-        "UPLOADING": "Uploading …",
+        "UPLOADING": "Subir …",
         "DOWNLOAD": "Descargar",
         "DOWNLOADING": "Descargando ...",
         "COPY": "Copiar",
@@ -246,7 +247,8 @@
             "disabledByPolicy": "Funcionalidad deshabilitada por el administrador",
             "syncFailed": "Fallo en la sincronización del grupo ",
             "noMembers": "No hay miembros definidos",
-            "alreadyLeft": "Ya has salido de este grupo"
+            "alreadyLeft": "Ya has salido de este grupo",
+            "valueTooLong": "A value you entered is too long"
         }
     },
     "error": {
@@ -304,7 +306,8 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Dispositivo Inaccesible",
-        "UNABLE_TO_CONNECT": "Unable to connect to your device …"
+        "UNABLE_TO_CONNECT": "Unable to connect to your device …",
+        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
     },
     "version": {
         "NEW_VERSION": "Nueva versión disponible",
@@ -351,6 +354,9 @@
         "SESSION_DELETED": "Se ha eliminado la sesión en tu dispositivo.",
         "WEBCLIENT_DISABLED": "Threema Web fue deshabilitado en tu dispositivo.",
         "SESSION_REPLACED": "Se ha terminado esta sesión porque has abierto una nueva sesión de Threema Web en otra pestaña del navegador.",
-        "SESSION_ERROR": "Se ha cerrado esta sesión debido a un error de protocolo."
+        "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
+        "SESSION_ERROR": "Se ha cerrado esta sesión debido a un error de protocolo.",
+        "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
+        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new Threema Web session."
     }
 }

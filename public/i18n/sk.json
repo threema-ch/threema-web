@@ -15,6 +15,7 @@
         "CHOOSE_PASSWORD": "Pokiaľ chcete zostať trvalo prihlásený, zadajte prosím <br> heslo pred naskenovaním QR kódu.",
         "UNLOCK_FAILED_TEXT": "Zadali ste zlé heslo, relácia nemôže byť obnovená.",
         "ENTER_PASSWORD": "Pre znovu pripojenie Vašej predchádzajúcej relácie, <br>prosím zadajte heslo:",
+        "PASSWORD_STRENGTH": "Password strength",
         "UNLOCK_FAILED_TITLE": "Odomknutie zlyhalo",
         "ALTERNATIVELY": "Alebo,",
         "UNLOCK_FAILED_FORGOTTEN": "Pokiaľ si nepamätáte svoje heslo, jednoducho zvoľte \"zabudnúť túto reláciu\" a nastavte nové heslo.",
@@ -246,7 +247,8 @@
             "disabledByPolicy": "Funkcia zakázaná správcom",
             "syncFailed": "Synchronizácia skupiny zlyhala",
             "noMembers": "Neboli definovaný žiadny členovia",
-            "alreadyLeft": "Už ste opustili túto skupinu"
+            "alreadyLeft": "Už ste opustili túto skupinu",
+            "valueTooLong": "A value you entered is too long"
         }
     },
     "error": {
@@ -304,7 +306,8 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Zariadenie nedostupné",
-        "UNABLE_TO_CONNECT": "Nie je možné pripojiť sa k Vašemu zariadeniu."
+        "UNABLE_TO_CONNECT": "Nie je možné pripojiť sa k Vašemu zariadeniu.",
+        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
     },
     "version": {
         "NEW_VERSION": "Je k dispozícii nová verzia",
@@ -351,6 +354,9 @@
         "SESSION_DELETED": "Relácia bola na Vašom zariadení zmazaná.",
         "WEBCLIENT_DISABLED": "Threema Web bola vypnutá na Vašom zariadení.",
         "SESSION_REPLACED": "Relácia bola zrušenia lebo ste začali novú reláciu Threema Web v inom okne prehliadača.",
-        "SESSION_ERROR": "Relácia bola zrušená kvôli chybe komunikačného protokolu. "
+        "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
+        "SESSION_ERROR": "Relácia bola zrušená kvôli chybe komunikačného protokolu. ",
+        "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
+        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new Threema Web session."
     }
 }

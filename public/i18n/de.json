@@ -61,24 +61,24 @@
         "APP_STARTED": "Ist die Threema-App gestartet?",
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
-        "UNLOCK_OR_CHARGE": "Es kann hilfreich sein, das Gerät zu entsperren oder an ein Ladegerät anzuschließen.",
-        "PUSH_FAQ": "Ihr Gerät kann von Problemen mit der Push-Benachrichtigung betroffen sein. Lesen Sie die FAQ-Artikel für<a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\"> Android</a> und <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> zur Fehlerbehebung.",
+        "UNLOCK_OR_CHARGE": "Es kann hilfreich sein, das Gerät zu entsperren oder an ein Ladegerät anzuschliessen.",
+        "PUSH_FAQ": "Ihr Gerät kann von Problemen mit der Push-Benachrichtigung betroffen sein. Lesen Sie die FAQ-Artikel für<a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> und <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> zur Fehlerbehebung.",
         "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?",
         "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
         "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?",
         "PLEASE_UPDATE_APP": "Bitte stellen Sie sicher, dass Sie die <a href=\"https://threema.ch/de/whats-new\" target=\"_blank\">neuste App-Version</a> von Threema nutzen!",
         "USE_ARCHIVE_VERSION": "Alternativ können Sie zu der <a href=\"{archiveUrl}\">vorherigen Version</a> von Threema Web wechseln.",
         "TROUBLESHOOTING": "Fehlerbehebung",
-        "REPORT_FAQ": "Für allgemeine Fragen und Lösungsvorschläge für häufige Probleme, <a target=\"_blank\" href=\"https://threema.ch/faq\">schauen Sie bitte zuerst in das FAQ</a>.",
-        "REPORT_LOG": "Sollte das FAQ Ihre Frage nicht beantworten oder das Problem bestehen bleiben, können Sie einen Fehlerbericht an den Threema Support senden.",
-        "REPORT_VIA_THREEMA_UNAVAILABLE": "Das Senden eines Fehlerberichts ist zur Zeit nicht möglich, da keine Verbindung zu Ihrem Mobilgerät besteht. Stellen Sie zuerst eine Verbindung mit Ihrem Mobilgerät her.",
-        "REPORT_VIA_CLIPBOARD": "Alternativ können Sie den Fehlerbericht in die Zwischenablage kopieren und <a target=\"_blank\" href=\"https://threema.ch/support\">per Webformular an den Threema Support senden</a>",
-        "REMOVE_SENSITIVE_DATA": "Sensible Daten entfernen (Kontakte, Nachrichteninhalte, etc.)",
-        "DESCRIBE_PROBLEM": "Bitte beschreiben Sie das Problem.",
-        "COPY_LOG_CLIPBOARD": "In die Zwischenablage kopieren",
-        "REPORT_VIA_THREEMA": "Fehlerbericht an *SUPPORT senden",
-        "REPORT_VIA_THREEMA_FAILED": "Der Fehlerbericht konnte nicht an *SUPPORT gesendet werden.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Ein Fehlerbericht wurde an *SUPPORT gesendet."
+        "REPORT_FAQ": "Bitte lesen Sie zuerst unsere <a target=\"_blank\" href=\"https://threema.ch/faq\">FAQs</a> für allgemeine Fragen und zur Lösung häufiger Probleme.",
+        "REPORT_LOG": "Wenn Sie keine Antwort auf ihre Frage finden, oder das Problem weiterhin besteht, können Sie einen Protokollbericht an das Threema Support-Team senden.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Das Senden des Protokolls über Threema ist derzeit nicht möglich, da keine Verbindung zu Ihrem Mobilgerät besteht. Verbinden Sie sich zuerst mit Ihrem Mobilgerät.",
+        "REPORT_VIA_CLIPBOARD": "Alternativ können Sie das Protokoll in die Zwischenablage kopieren und über das <a target=\"_blank\" href=\"https://threema.ch/support\">Webformular an das Threema-Support-Team senden</a>.",
+        "REMOVE_SENSITIVE_DATA": "Sensible Daten entfernen (Kontakte, Nachrichten-Inhalte, etc.)",
+        "DESCRIBE_PROBLEM": "Bitte beschreiben Sie hier das Problem.",
+        "COPY_LOG_CLIPBOARD": "Protokoll in die Zwischenablage kopieren",
+        "REPORT_VIA_THREEMA": "Protokoll an Support senden",
+        "REPORT_VIA_THREEMA_FAILED": "Das Senden des Protokolls an den Support ist fehlgeschlagen.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Ein Protokollbericht wurde an den Support gesendet."
     },
     "common": {
         "YES": "Ja",
@@ -136,9 +136,9 @@
         "GROUP_CREATOR": "Ersteller",
         "GROUP_ROLE_NORMAL": "Mitglied",
         "GROUP_ROLE_CREATOR": "Ersteller",
-        "UPLOADING": "Wird hochgeladen …",
+        "UPLOADING": "Hochladen ...",
         "DOWNLOAD": "Herunterladen",
-        "DOWNLOADING": "Wird heruntergeladen …",
+        "DOWNLOADING": "Laden …",
         "COPY": "Kopieren",
         "COPIED": "Inhalt wurde in die Zwischenablage kopiert!",
         "COPY_ERROR": "Fehler: Konnte Inhalt nicht in die Zwischenablage kopieren",
@@ -218,8 +218,7 @@
         "SENT": "Die Nachricht wurde erfolgreich an den Server übermittelt",
         "DELIVERED": "Die Nachricht ist beim Gerät des Empfängers angekommen",
         "READ": "Die Nachricht wurde vom Empfänger gelesen",
-        "FAILED": "Die Nachricht konnte nicht gesendet werden"
-    },
+        "FAILED": "Die Nachricht konnte nicht gesendet werden"},
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
         "FILE_MESSAGE": "Datei",
@@ -291,7 +290,7 @@
         "OPEN_SOURCE": "Threema Web ist vollständig Open Source.",
         "SOURCE_CODE": "Der Quellcode und die Lizenzbedingungen finden sich auf GitHub:",
         "EMOJI_ART": "Verwendete Emoji stammen von <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
-        "NOTIFICATION_SOUNDS": "Benachrichtigunstöne &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
+        "NOTIFICATION_SOUNDS": "Benachrichtigungstöne &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
         "LICENSE_TEXT": "Lizenzen der verwendeten Open Source-Komponenten finden Sie <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">im Quellcode</a>.",
         "CHANGELOG": "Änderungsprotokoll",
         "CHANGELOG_TEXT": "Das Threema Web-Änderungsprotokoll finden Sie <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">auf GitHub</a>."
@@ -308,7 +307,7 @@
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Gerät nicht erreichbar",
         "UNABLE_TO_CONNECT": "Verbindung zum Gerät fehlgeschlagen …",
-        "DISMISS_WARNING": "Um die Verbindung wiederherzustellen, laden Sie bitte Ihr Browser-Fenster neu."
+        "DISMISS_WARNING": "Um die Verbindung wiederherzustellen, laden Sie diese Seite bitte neu."
     },
     "version": {
         "NEW_VERSION": "Neue Version Verfügbar",
@@ -355,9 +354,9 @@
         "SESSION_DELETED": "Die Sitzung wurde auf Ihrem Gerät gelöscht.",
         "WEBCLIENT_DISABLED": "Threema Web wurde auf Ihrem Gerät deaktiviert.",
         "SESSION_REPLACED": "Die Sitzung wurde beendet, weil Sie eine andere Sitzung gestartet haben.",
-        "OUT_OF_MEMORY": "Die Sitzung musste beendet werden, da auf dem Gerät nicht genügend Arbeitsspeicher zur Verfügung steht.",
+        "OUT_OF_MEMORY": "Die Sitzung wurde beendet, weil ihr Gerät nicht genügend freien Arbeitsspeicher hat.",
         "SESSION_ERROR": "Die Sitzung wurde aufgrund eines Protokollfehlers beendet.",
-        "PUSH_ERROR_INFO": "Threema Web konnte Ihr Gerät nicht mit einer Push-Benachrichtigung aufwecken. Dies passiert oft beim Wechsel auf ein neues Gerät.",
-        "PUSH_ERROR_ACTION": "Falls der Fehler weiterhin besteht, klicken Sie bitte auf \"Sitzung vergessen\" und erstellen Sie eine neue Sitzung."
+        "PUSH_ERROR_INFO": "Der Versuch, ihr Gerät mit einer Push-Benachrichtigung einzuschalten, ist fehlgeschlagen. Dies kann zum Beispiel passieren, wenn Sie kürzlich zu einem neuen Gerät gewechselt sind.",
+        "PUSH_ERROR_ACTION": "Wenn dieser Fehler wieder auftritt, klicken Sie auf \"Sitzung vergessen\" und starten Sie eine neue Threema Web Sitzung."
     }
 }

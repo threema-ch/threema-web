@@ -15,6 +15,7 @@
         "CHOOSE_PASSWORD": "如果你要保持登录状态，请在扫描二维码之前输入<br>个连接密码。",
         "UNLOCK_FAILED_TEXT": "密码错误，无法恢复连接",
         "ENTER_PASSWORD": "如要恢复之前的连接，<br>请输入密码。",
+        "PASSWORD_STRENGTH": "Password strength",
         "UNLOCK_FAILED_TITLE": "解锁失败",
         "ALTERNATIVELY": "或者",
         "UNLOCK_FAILED_FORGOTTEN": "如果你想不起你的密码，请选择“忘记这个连接会话”， 然后设置一个新密码。",
@@ -246,7 +247,8 @@
             "disabledByPolicy": "管理员禁用功能",
             "syncFailed": "群组同步失败",
             "noMembers": "没有成员",
-            "alreadyLeft": "你已经退出了这个群"
+            "alreadyLeft": "你已经退出了这个群",
+            "valueTooLong": "A value you entered is too long"
         }
     },
     "error": {
@@ -304,7 +306,8 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "无法访问设备",
-        "UNABLE_TO_CONNECT": "无法连接到您的设备"
+        "UNABLE_TO_CONNECT": "无法连接到您的设备",
+        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
     },
     "version": {
         "NEW_VERSION": "有可用的新版本",
@@ -351,6 +354,9 @@
         "SESSION_DELETED": "连接已被您的设备删除。",
         "WEBCLIENT_DISABLED": "您的设备禁用了Threema web端登录。",
         "SESSION_REPLACED": "您在其他地方登录了Threema web，本次连接会话已停止。",
-        "SESSION_ERROR": "协议错误导致连接关闭"
+        "OUT_OF_MEMORY": "内存不足，连接终止。",
+        "SESSION_ERROR": "协议错误导致连接关闭",
+        "PUSH_ERROR_INFO": "尝试通过推送通知唤醒设备失败了，这种情况可能是您最近更换了新的移动设备",
+        "PUSH_ERROR_ACTION": "如果错误依旧存在，请点击“忘记会话”，然后开始一个新的会话"
     }
 }

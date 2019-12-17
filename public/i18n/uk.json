@@ -15,6 +15,7 @@
         "CHOOSE_PASSWORD": "If you want to stay logged in, please enter<br>a session password before scanning.",
         "UNLOCK_FAILED_TEXT": "Ви ввели невірний пароль, сесія не може бути відновлена.",
         "ENTER_PASSWORD": "Щоб відновити твою минулу сесію, <br>будь ласка введи пароль.",
+        "PASSWORD_STRENGTH": "Password strength",
         "UNLOCK_FAILED_TITLE": "Не вдалось розблокувати",
         "ALTERNATIVELY": "Альтернативно,",
         "UNLOCK_FAILED_FORGOTTEN": "Якщо Ви забули пароль, просто оберіть \"видалити цю сесію\" та встановіть новий пароль",
@@ -246,7 +247,8 @@
             "disabledByPolicy": "Функцію вимкнено адміністратором",
             "syncFailed": "Помилка синхронізації групи",
             "noMembers": "Не визначено жодного учасника",
-            "alreadyLeft": "Ви вийшли з цієї групи"
+            "alreadyLeft": "Ви вийшли з цієї групи",
+            "valueTooLong": "A value you entered is too long"
         }
     },
     "error": {
@@ -304,7 +306,8 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Device Unreachable",
-        "UNABLE_TO_CONNECT": "Unable to connect to your device …"
+        "UNABLE_TO_CONNECT": "Unable to connect to your device …",
+        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
     },
     "version": {
         "NEW_VERSION": "Доступна нова версія",
@@ -351,6 +354,9 @@
         "SESSION_DELETED": "Сесія була видалена на вашому пристрої.",
         "WEBCLIENT_DISABLED": "Threema Web була вимкнена на вашому пристрої.",
         "SESSION_REPLACED": "Ця сесія була зупинена, тому що ви почали сесію Threema Web в іншому вікні браузера.",
-        "SESSION_ERROR": "Сесія була зупинена через помилку протоколу."
+        "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
+        "SESSION_ERROR": "Сесія була зупинена через помилку протоколу.",
+        "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
+        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new Threema Web session."
     }
 }
