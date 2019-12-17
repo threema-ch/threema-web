@@ -94,13 +94,14 @@ angular.module('3ema', [
             suffix: '.json',
         })
         .uniformLanguageTag('java')
-        .registerAvailableLanguageKeys(['cs', 'de', 'en', 'es', 'fr', 'nl', 'sk', 'uk', 'zh'], {
+        .registerAvailableLanguageKeys(['cs', 'de', 'en', 'es', 'fr', 'nl', 'pl', 'sk', 'uk', 'zh'], {
             'cs_*': 'cs',
             'de_*': 'de',
             'en_*': 'en',
             'es_*': 'es',
             'fr_*': 'fr',
             'nl_*': 'nl',
+            'pl_*': 'pl',
             'sk_*': 'sk',
             'uk_*': 'uk',
             'zh_*': 'zh',
