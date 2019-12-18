@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
-        "target": "ES2017",
-        "module": "esNext",
-        "moduleResolution": "node",
+        "lib": ["DOM", "ESNext"],
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
         "removeComments": true
     },
     "exclude": [
