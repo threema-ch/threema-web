@@ -248,7 +248,7 @@
             "syncFailed": "La synchronisation du groupe a échouée",
             "noMembers": "Pas de membres définis",
             "alreadyLeft": "Vous avez déjà quitté ce groupe.",
-            "valueTooLong": "A value you entered is too long"
+            "valueTooLong": "Une valeur trop longue a été saisie"
         }
     },
     "error": {
@@ -307,7 +307,7 @@
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Appareil inaccessible",
         "UNABLE_TO_CONNECT": "Impossible de se connecter à votre appareil",
-        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
+        "DISMISS_WARNING": "Pour ré-établir la connexion, veuillez recharger la fenêtre de votre navigateur."
     },
     "version": {
         "NEW_VERSION": "Novelle version disponible",

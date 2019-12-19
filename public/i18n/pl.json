@@ -15,7 +15,7 @@
         "CHOOSE_PASSWORD": "Jeśli chcesz pozostać zalogowanym, wprowadź<br>hasło sesji przed zeskanowaniem.",
         "UNLOCK_FAILED_TEXT": "Wprowadzono złe hasło, sesja nie może być przywrócona.",
         "ENTER_PASSWORD": "Aby połączyć się ponownie z poprzednią sesją,<br>wprowadź hasło.",
-        "PASSWORD_STRENGTH": "Password strength",
+        "PASSWORD_STRENGTH": "Siła hasła",
         "UNLOCK_FAILED_TITLE": "Odblokowanie nieudane",
         "ALTERNATIVELY": "Alternatywnie,",
         "UNLOCK_FAILED_FORGOTTEN": "Jeśli nie pamiętasz hasła, wybierz \"zapomnij tę sesję\" i ustaw nowe hasło.",
@@ -248,7 +248,7 @@
             "syncFailed": "Synchronizacja grupy nieudana",
             "noMembers": "Nie zdefiniowano członków",
             "alreadyLeft": "Już opuściłeś tę grupę",
-            "valueTooLong": "A value you entered is too long"
+            "valueTooLong": "Wprowadzona wartość jest zbyt długa"
         }
     },
     "error": {
@@ -307,7 +307,7 @@
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Urządzenie nieosiągalne",
         "UNABLE_TO_CONNECT": "Nie można połączyć się z twoim urządzeniem ...",
-        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
+        "DISMISS_WARNING": "Aby ponowić połączenie, odśwież okno przeglądarki."
     },
     "version": {
         "NEW_VERSION": "Dostępna nowa wersja",

@@ -62,7 +62,7 @@
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
         "UNLOCK_OR_CHARGE": "Es kann hilfreich sein, das Gerät zu entsperren oder an ein Ladegerät anzuschliessen.",
-        "PUSH_FAQ": "Ihr Gerät kann von Problemen mit der Push-Benachrichtigung betroffen sein. Lesen Sie die FAQ-Artikel für<a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> und <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> zur Fehlerbehebung.",
+        "PUSH_FAQ": "Ihr Gerät kann von Problemen mit der Push-Benachrichtigung betroffen sein. Lesen Sie die FAQ-Artikel für <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> und <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> zur Fehlerbehebung.",
         "WEBCLIENT_ENABLED": "Ist Threema Web in der Threema-App aktiviert?",
         "PLUGIN": "Ist in Ihrem Browser ein Plugin zum Blockieren von WebRTC installiert?",
         "ADBLOCKER": "Ist in Ihrem Browser ein Ad-Blocker installiert?",
