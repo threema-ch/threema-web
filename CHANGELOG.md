@@ -4,7 +4,7 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
-### [v2.3.1][v2.3.1] Säntis (2019-12-19)
+### [v2.3.1][v2.3.1] (2019-12-19)
 
 This is a small bugfix release, no new features.
 
