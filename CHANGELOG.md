@@ -4,6 +4,16 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.1][v2.3.1] Säntis (2019-12-19)
+
+This is a small bugfix release, no new features.
+
+Changes:
+
+* [bug] Don't connect if another session is active ([#927][i927])
+* [change] Update translation strings
+
+
 ### [v2.3.0][v2.3.0] Säntis (2019-12-17)
 
 Changes:
@@ -846,6 +856,7 @@ First public release.
 [i918]: https://github.com/threema-ch/threema-web/issues/918
 [i921]: https://github.com/threema-ch/threema-web/issues/921
 [i923]: https://github.com/threema-ch/threema-web/issues/923
+[i927]: https://github.com/threema-ch/threema-web/issues/927
 [i928]: https://github.com/threema-ch/threema-web/issues/928
 [i929]: https://github.com/threema-ch/threema-web/issues/929
 [i931]: https://github.com/threema-ch/threema-web/issues/931
@@ -855,6 +866,7 @@ First public release.
 [i938]: https://github.com/threema-ch/threema-web/issues/938
 [i941]: https://github.com/threema-ch/threema-web/issues/941
 
+[v2.3.1]: https://github.com/threema-ch/threema-web/compare/v2.3.0...v2.3.1
 [v2.3.0]: https://github.com/threema-ch/threema-web/compare/v2.2.1...v2.3.0
 [v2.2.1]: https://github.com/threema-ch/threema-web/compare/v2.2.0...v2.2.1
 [v2.2.0]: https://github.com/threema-ch/threema-web/compare/v2.1.7...v2.2.0
