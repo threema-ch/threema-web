@@ -6,23 +6,13 @@
 function createPeerConnection(role) {
     // Detect safari
     const uagent = window.navigator.userAgent.toLowerCase();
-    const isSafari  = /safari/.test(uagent) && /applewebkit/.test(uagent) && !/chrome/.test(uagent);
 
     // Determine ICE servers
-    let iceServers;
-    if (isSafari) {
-        iceServers = [
-            'turn:turn.threema.ch:443?transport=udp',
-            'turn:turn.threema.ch:443?transport=tcp',
-            'turns:turn.threema.ch:443',
-        ];
-    } else {
-        iceServers = [
-            'turn:ds-turn.threema.ch:443?transport=udp',
-            'turn:ds-turn.threema.ch:443?transport=tcp',
-            'turns:ds-turn.threema.ch:443',
-        ];
-    }
+    const iceServers = [
+        'turn:turn-ff.threema.ch:443?transport=udp',
+        'turn:turn-ff.threema.ch:443?transport=tcp',
+        'turns:turn-ff.threema.ch:443',
+    ];
     console.debug('Using ICE servers: ' + iceServers);
     const configuration = {iceServers: [{
         urls: iceServers,
