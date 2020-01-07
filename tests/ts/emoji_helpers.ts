@@ -136,8 +136,6 @@ describe('Emoji Helpers', () => {
 
         it('ignores case', function() {
             expect(shortnameToUtf8('Flag_CH')).toEqual('\ud83c\udde8\ud83c\udded');
-            expect(shortnameToUtf8('Flag_CH', true)).toEqual('\ud83c\udde8\ud83c\udded');
-            expect(shortnameToUtf8('Flag_CH', false)).toEqual(null);
         });
     });
 

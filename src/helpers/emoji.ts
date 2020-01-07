@@ -3163,11 +3163,10 @@ export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
  *
  * If the shortname is unknown, `null` will be returned.
  *
- * Case will be ignored (the input will be converted to lowercase) until
- * `ignoreCase` is set to `false`.
+ * Case will be ignored (the input will be converted to lowercase).
  */
-export function shortnameToUtf8(shortname: string, ignoreCase: boolean = true): string | null {
-    return SHORTNAMES[ignoreCase ? shortname.toLowerCase() : shortname] || null;
+export function shortnameToUtf8(shortname: string): string | null {
+    return SHORTNAMES[shortname.toLowerCase()] || null;
 }
 
 /**
