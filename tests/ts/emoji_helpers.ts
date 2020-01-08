@@ -133,6 +133,10 @@ describe('Emoji Helpers', () => {
         it('handles multi-codepoint emoji', function() {
             expect(shortnameToUtf8('flag_ch')).toEqual('\ud83c\udde8\ud83c\udded');
         });
+
+        it('ignores case', function() {
+            expect(shortnameToUtf8('Flag_CH')).toEqual('\ud83c\udde8\ud83c\udded');
+        });
     });
 
     describe('enlargeSingleEmoji', function() {
