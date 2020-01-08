@@ -4,6 +4,20 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.2][v2.3.2] (2020-01-08)
+
+Changes:
+
+* [feature] Ignore case when translating shortcodes ([#953][i953])
+* [bug] Fix compose area size calculation ([#950][i950])
+* [bug] Update ICE servers in troubleshoot tool to reflect config ([#952][i952])
+* [change] Revert PR [#893][i893] ([#954][i954])
+
+Contributors:
+
+- [@ovalseven8][@ovalseven8]
+
+
 ### [v2.3.1][v2.3.1] (2019-12-19)
 
 This is a small bugfix release, no new features.
@@ -865,7 +879,12 @@ First public release.
 [i936]: https://github.com/threema-ch/threema-web/issues/936
 [i938]: https://github.com/threema-ch/threema-web/issues/938
 [i941]: https://github.com/threema-ch/threema-web/issues/941
+[i950]: https://github.com/threema-ch/threema-web/issues/950
+[i952]: https://github.com/threema-ch/threema-web/issues/952
+[i953]: https://github.com/threema-ch/threema-web/issues/953
+[i954]: https://github.com/threema-ch/threema-web/issues/954
 
+[v2.3.2]: https://github.com/threema-ch/threema-web/compare/v2.3.1...v2.3.2
 [v2.3.1]: https://github.com/threema-ch/threema-web/compare/v2.3.0...v2.3.1
 [v2.3.0]: https://github.com/threema-ch/threema-web/compare/v2.2.1...v2.3.0
 [v2.2.1]: https://github.com/threema-ch/threema-web/compare/v2.2.0...v2.2.1
