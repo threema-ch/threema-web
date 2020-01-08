@@ -6,6 +6,7 @@ compose-area {
             display: flex;
             flex-direction: row;
             margin: 0;
+            max-height: calc(1.3em * 7);
 
             > div {
                 align-content: center;
@@ -32,7 +33,6 @@ compose-area {
                         cursor: text;
                         padding: $main-padding;
                         min-height: 22px;
-                        max-height: calc(1.3em * 5);
                         line-height: 20px;
                         white-space: pre-wrap;
 
