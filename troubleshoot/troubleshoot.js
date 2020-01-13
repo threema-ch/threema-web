@@ -9,9 +9,9 @@ function createPeerConnection(role) {
 
     // Determine ICE servers
     const iceServers = [
-        'turn:turn-ff.threema.ch:443?transport=udp',
-        'turn:turn-ff.threema.ch:443?transport=tcp',
-        'turns:turn-ff.threema.ch:443',
+        'turn:ds-turn-ff.threema.ch:443?transport=udp',
+        'turn:ds-turn-ff.threema.ch:443?transport=tcp',
+        'turns:ds-turn-ff.threema.ch:443',
     ];
     console.debug('Using ICE servers: ' + iceServers);
     const configuration = {iceServers: [{
