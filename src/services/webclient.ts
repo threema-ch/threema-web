@@ -1926,9 +1926,11 @@ export class WebClientService {
             // Determine error message
             let errorMessage;
             switch (error) {
-                case 'file_too_large': // TODO: deprecated
                 case 'fileTooLarge':
                     errorMessage = this.$translate.instant('error.FILE_TOO_LARGE_GENERIC');
+                    break;
+                case 'valueTooLong':
+                    errorMessage = this.$translate.instant('validationError.modifyReceiver.valueTooLong');
                     break;
                 case 'blocked':
                     errorMessage = this.$translate.instant('error.CONTACT_BLOCKED');

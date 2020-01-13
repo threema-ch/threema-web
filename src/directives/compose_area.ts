@@ -202,7 +202,14 @@ export default [
                         // Check for max length
                         const byteLength = (new TextEncoder().encode(text)).length;
                         if (byteLength > scope.maxTextLength) {
-                            const pieces: string[] = stringService.byteChunk(text, scope.maxTextLength, 50);
+                            // Messages that use the entire available message size become a problem
+                            // when being quoted, since the quote also becomes part of the message.
+                            // As a workaround, until a better quote system is implemented, reduce
+                            // the chunk size so that reaching the limit becomes more unlikely.
+                            const chunkSize = scope.maxTextLength * 0.85;
+
+                            const pieces: string[] = stringService.byteChunk(text, chunkSize, 50);
+
                             const confirm = $mdDialog.confirm()
                                 .title($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_SUBJECT'))
                                 .textContent($translate.instant('messenger.MESSAGE_TOO_LONG_SPLIT_BODY', {
@@ -211,7 +218,6 @@ export default [
                                 }))
                                 .ok($translate.instant('common.YES'))
                                 .cancel($translate.instant('common.NO'));
-
                             $mdDialog.show(confirm).then(function() {
                                 submitTexts(pieces);
                             }, () => {
