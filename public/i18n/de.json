@@ -18,7 +18,7 @@
         "PASSWORD_STRENGTH": "Passwortstärke",
         "UNLOCK_FAILED_TITLE": "Verbindung aufbauen fehlgeschlagen",
         "ALTERNATIVELY": "Alternativ:",
-        "UNLOCK_FAILED_FORGOTTEN": "Haben Sie Ihr Passwort vergessen? W\u00e4hlen Sie \"gespeicherte Sitzung l\u00f6schen\" und setzen Sie ein neues Passwort.",
+        "UNLOCK_FAILED_FORGOTTEN": "Haben Sie Ihr Passwort vergessen? Wählen Sie «gespeicherte Sitzung löschen» und setzen Sie ein neues Passwort.",
         "FORGET_SESSION": "gespeicherte Sitzung löschen",
         "FORGET_SESSION_BTN": "Sitzung vergessen",
         "BTN_RECONNECT": "Verbindung aufbauen",
@@ -33,9 +33,9 @@
         "MANUAL_START": "Bitte starten Sie die Sitzung",
         "MANUAL_START_TEXT1": "Push Service ist nicht verfügbar. Sind die Google Play Services auf Ihrem Mobilgerät installiert?",
         "MANUAL_START_TEXT2": "Sie können Threema Web auch ohne Google Play Services nutzen, aber Sie müssen in diesem Fall die Sitzung manuell starten:",
-        "MANUAL_START_STEP1": "Öffnen Sie die Threema App und tippen Sie auf \"Threema Web\" in der linken Navigation",
+        "MANUAL_START_STEP1": "Öffnen Sie die Threema App und tippen Sie auf «Threema Web» in der linken Navigation",
         "MANUAL_START_STEP2": "Tippen Sie auf die Sitzung, die Sie wiederherstellen möchten",
-        "MANUAL_START_STEP3": "Wählen Sie im Menu \"Sitzung starten\"",
+        "MANUAL_START_STEP3": "Wählen Sie im Menu «Sitzung starten»",
         "MORE_ABOUT_WEB": "Weitere Infos",
         "LOCAL_STORAGE_MISSING_DETAILS": "Zugriff auf LocalStorage ist nicht möglich. Dieses Problem kann auftreten, wenn in Ihrem Browser Cookies blockiert werden, oder wenn ein Browser-Add-On installiert ist, welches den Zugriff auf LocalStorage blockiert. Bitte erlauben Sie die Nutzung von LocalStorage in Ihrem Browser oder deaktivieren Sie die installierten Browser-Add-Ons.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Kritischer Fehler beim Zugriff auf LocalStorage: {errorMsg}.<br>Bitte starten Sie Ihren Browser neu.",
@@ -310,8 +310,8 @@
         "DISMISS_WARNING": "Um die Verbindung wiederherzustellen, laden Sie diese Seite bitte neu."
     },
     "version": {
-        "NEW_VERSION": "Neue Version Verfügbar",
-        "NEW_VERSION_BODY": "Eine neue Version von Threema Web ({version}) ist verfügbar. Mehr Informationen finden Sie im {changelog}. Drücken Sie \"OK\", um das Update zu aktivieren."
+        "NEW_VERSION": "Neue Version verfügbar",
+        "NEW_VERSION_BODY": "Eine neue Version von Threema Web ({version}) ist verfügbar. Mehr Informationen finden Sie im {changelog}. Klicken Sie «OK», um das Update zu aktivieren."
     },
     "voip": {
         "CALL_MISSED": "Verpasster Anruf",
@@ -357,6 +357,6 @@
         "OUT_OF_MEMORY": "Die Sitzung wurde beendet, weil ihr Gerät nicht genügend freien Arbeitsspeicher hat.",
         "SESSION_ERROR": "Die Sitzung wurde aufgrund eines Protokollfehlers beendet.",
         "PUSH_ERROR_INFO": "Der Versuch, ihr Gerät mit einer Push-Benachrichtigung einzuschalten, ist fehlgeschlagen. Dies kann zum Beispiel passieren, wenn Sie kürzlich zu einem neuen Gerät gewechselt sind.",
-        "PUSH_ERROR_ACTION": "Wenn dieser Fehler wieder auftritt, klicken Sie auf \"Sitzung vergessen\" und starten Sie eine neue Threema Web Sitzung."
+        "PUSH_ERROR_ACTION": "Wenn dieser Fehler wieder auftritt, klicken Sie auf «Sitzung vergessen» und starten Sie eine neue Threema Web Sitzung."
     }
 }
