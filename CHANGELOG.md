@@ -10,7 +10,7 @@ Changes:
 
 * [bug] Handle valueTooLong error when sending text message ([#956][i956])
 * [bug] Reintroduce dual stack TURN servers ([#957][i957])
-* [bug] Do not show protocol error alert when data channel closes ([#958](i958])
+* [bug] Do not show protocol error alert when data channel closes ([#958][i958])
 
 
 ### [v2.3.2][v2.3.2] (2020-01-08)
