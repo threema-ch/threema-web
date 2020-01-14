@@ -1095,8 +1095,8 @@ export class WebClientService {
                 });
             };
             dc.onclose = () => {
-                this.arpLog.error(`Data channel ${dc.label} closed prematurely`);
-                this.failSession();
+                this.arpLog.warn(`Data channel ${dc.label} closed`);
+                this.failSession(false);
             };
             dc.onerror = (event) => {
                 this.arpLog.error(`Data channel ${dc.label} error:`, event);
