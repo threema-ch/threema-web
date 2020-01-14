@@ -4,6 +4,15 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.3][v2.3.3] (2020-01-14)
+
+Changes:
+
+* [bug] Handle valueTooLong error when sending text message ([#956][i956])
+* [bug] Reintroduce dual stack TURN servers ([#957][i957])
+* [bug] Do not show protocol error alert when data channel closes ([#958](i958])
+
+
 ### [v2.3.2][v2.3.2] (2020-01-08)
 
 Changes:
@@ -883,7 +892,11 @@ First public release.
 [i952]: https://github.com/threema-ch/threema-web/issues/952
 [i953]: https://github.com/threema-ch/threema-web/issues/953
 [i954]: https://github.com/threema-ch/threema-web/issues/954
+[i956]: https://github.com/threema-ch/threema-web/issues/956
+[i957]: https://github.com/threema-ch/threema-web/issues/957
+[i958]: https://github.com/threema-ch/threema-web/issues/958
 
+[v2.3.3]: https://github.com/threema-ch/threema-web/compare/v2.3.2...v2.3.3
 [v2.3.2]: https://github.com/threema-ch/threema-web/compare/v2.3.1...v2.3.2
 [v2.3.1]: https://github.com/threema-ch/threema-web/compare/v2.3.0...v2.3.1
 [v2.3.0]: https://github.com/threema-ch/threema-web/compare/v2.2.1...v2.3.0
