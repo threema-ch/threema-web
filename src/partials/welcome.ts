@@ -152,10 +152,6 @@ class WelcomeController {
             this.showBrowserWarning();
         }
 
-        // Clean up local storage
-        // TODO: Remove this in future version
-        this.settingsService.removeUntrustedKeyValuePair('v2infoShown');
-
         // Determine whether local storage is available
         if (this.trustedKeyStore.blocked === true) {
             this.log.error('Cannot access local storage. Is it being blocked by a browser add-on?');
