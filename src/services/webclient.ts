@@ -1096,8 +1096,7 @@ export class WebClientService {
                 });
             };
             dc.onclose = () => {
-                this.arpLog.warn(`Data channel ${dc.label} closed`);
-                this.failSession(false);
+                this.arpLog.warn(`Data channel ${dc.label} closed (ICE state: ${pc.iceConnectionState})`);
             };
             dc.onerror = (event) => {
                 this.arpLog.error(`Data channel ${dc.label} error:`, event);
