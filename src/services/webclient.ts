@@ -1062,7 +1062,8 @@ export class WebClientService {
 
             // Create data channel
             this.arpLog.debug(`Creating data channel ${WebClientService.DC_LABEL}`);
-            const dc = this.pcHelper.pc.createDataChannel(WebClientService.DC_LABEL);
+            const pc = this.pcHelper.pc;
+            const dc = pc.createDataChannel(WebClientService.DC_LABEL);
             dc.binaryType = 'arraybuffer';
 
             // Wrap as unbounded, flow-controlled data channel
@@ -1085,7 +1086,7 @@ export class WebClientService {
 
                 // Determine chunk length
                 this.secureDataChannelChunkLength = Math.min(
-                    WebClientService.DATA_CHANNEL_MAX_CHUNK_SIZE, this.pcHelper.pc.sctp.maxMessageSize);
+                    WebClientService.DATA_CHANNEL_MAX_CHUNK_SIZE, pc.sctp.maxMessageSize);
                 this.arpLog.debug(`Using chunk length: ${this.secureDataChannelChunkLength} for data channel` +
                     dc.label);
 
