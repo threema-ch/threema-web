@@ -15,7 +15,7 @@
         "CHOOSE_PASSWORD": "如果你要保持登录状态，请在扫描二维码之前输入<br>个连接密码。",
         "UNLOCK_FAILED_TEXT": "密码错误，无法恢复连接",
         "ENTER_PASSWORD": "如要恢复之前的连接，<br>请输入密码。",
-        "PASSWORD_STRENGTH": "Password strength",
+        "PASSWORD_STRENGTH": "密码强度",
         "UNLOCK_FAILED_TITLE": "解锁失败",
         "ALTERNATIVELY": "或者",
         "UNLOCK_FAILED_FORGOTTEN": "如果你想不起你的密码，请选择“忘记这个连接会话”， 然后设置一个新密码。",
@@ -50,10 +50,10 @@
         "GENERIC": "正在尝试重连...",
         "RECOVERING_CONNECTION": "正在尝试恢复连接...",
         "WAITING_FOR_APP": "等待唤醒客户端...",
-        "WAITING_FOR_APP_MANUAL": "Google Play Services没有安装，请手动开启会话。",
+        "WAITING_FOR_APP_MANUAL": "谷歌商店服务没有安装，请手动开启会话。",
         "CONNECTING_TO_SERVER": "正在连接到服务器...",
         "CONNECTING_TO_APP": "正在建立与客户端之间的连接...",
-        "CONNECTION_CLOSED": "到服务器的连接已经被关系",
+        "CONNECTION_CLOSED": "于服务器的连接已经关闭",
         "RECONNECT_FAILED": "与客户端连接失败"
     },
     "troubleshooting": {
@@ -107,7 +107,7 @@
         "VERIFICATION_LEVEL2_EXPLAIN": "已使用电子邮件或短信验证此人的身份。",
         "VERIFICATION_LEVEL3_EXPLAIN": "您已经通过扫描对方的二维码验证了此人的身份",
         "VERIFICATION_LEVEL1_EXPLAIN": "无法保证此人的资料真实性",
-        "VERIFICATION_LEVEL2_WORK_EXPLAIN": "Threema管理员已认证此人的资料信息属实。",
+        "VERIFICATION_LEVEL2_WORK_EXPLAIN": "Threema work 企业版管理员已认证此人资料信息属实。",
         "COMPOSE_MESSAGE_DRAGOVER": "拖放文件发送",
         "COMPOSE_MESSAGE": "输入信息或者拖放一个文件",
         "UNREAD_MESSAGES": "未读信息",
@@ -248,7 +248,7 @@
             "syncFailed": "群组同步失败",
             "noMembers": "没有成员",
             "alreadyLeft": "你已经退出了这个群",
-            "valueTooLong": "A value you entered is too long"
+            "valueTooLong": "输入内容过长"
         }
     },
     "error": {
@@ -307,7 +307,7 @@
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "无法访问设备",
         "UNABLE_TO_CONNECT": "无法连接到您的设备",
-        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
+        "DISMISS_WARNING": "请刷新浏览器重建连接"
     },
     "version": {
         "NEW_VERSION": "有可用的新版本",
@@ -316,7 +316,7 @@
     "voip": {
         "CALL_MISSED": "未接来电",
         "CALL_MISSED_BUSY": "未接来电（忙碌）",
-        "CALL_FINISHED_IN": "呼入",
+        "CALL_FINISHED_IN": "来电",
         "CALL_FINISHED_OUT": "呼出",
         "CALL_REJECTED": "已拒绝",
         "CALL_REJECTED_BUSY": "对方正忙",
@@ -349,14 +349,14 @@
         }
     },
     "connection": {
-        "SESSION_CLOSED_TITLE": "连接关闭",
-        "SESSION_STOPPED": "连接已被您的设备终止",
-        "SESSION_DELETED": "连接已被您的设备删除。",
-        "WEBCLIENT_DISABLED": "您的设备禁用了Threema web端登录。",
-        "SESSION_REPLACED": "您在其他地方登录了Threema web，本次连接会话已停止。",
+        "SESSION_CLOSED_TITLE": "会话关闭",
+        "SESSION_STOPPED": "会话已被您的设备终止",
+        "SESSION_DELETED": "会话已被您的设备删除。",
+        "WEBCLIENT_DISABLED": "您的设备没有开启了Threema 网页端登录。",
+        "SESSION_REPLACED": "您在其他地方登录了Threema 网页端，本次会话已停止。",
         "OUT_OF_MEMORY": "内存不足，连接终止。",
-        "SESSION_ERROR": "协议错误导致连接关闭",
+        "SESSION_ERROR": "协议错误导致会话关闭",
         "PUSH_ERROR_INFO": "尝试通过推送通知唤醒设备失败了，这种情况可能是您最近更换了新的移动设备",
-        "PUSH_ERROR_ACTION": "如果错误依旧存在，请点击“忘记会话”，然后开始一个新的会话"
+        "PUSH_ERROR_ACTION": "如果错误依旧存在，请点击“忽略会话”，然后开始一个新的会话"
     }
 }

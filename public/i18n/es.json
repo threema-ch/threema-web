@@ -61,7 +61,7 @@
         "APP_STARTED": "¿Se inició la aplicación Threema?",
         "SESSION_DELETED": "¿Has eliminado esta sesión en tu teléfono?",
         "PHONE_ONLINE": "¿Tú teléfono está conectado a Internet?",
-        "UNLOCK_OR_CHARGE": "It may help to unlock your device or connect it to a charger.",
+        "UNLOCK_OR_CHARGE": "Puede ayudar desbloquear su dispositivo o conectarlo a un cargador.",
         "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
         "WEBCLIENT_ENABLED": "¿Está Threema Web habilitado en la aplicación Threema?",
         "PLUGIN": "¿Hay un complemento de privacidad instalado en tu navegador que bloquea la comunicación de WebRTC?",
@@ -71,11 +71,11 @@
         "TROUBLESHOOTING": "Solución de problemas",
         "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
         "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
-        "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Informar el registro a través de Threema no está disponible actualmente ya que no hay conexión a su dispositivo móvil. Conéctese primero a su dispositivo móvil.",
         "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
-        "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
+        "REMOVE_SENSITIVE_DATA": "Eliminar datos confidenciales (contactos, contenido de mensajes, etc.)",
         "DESCRIBE_PROBLEM": "Por favor describe el problema aquí.",
-        "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
+        "COPY_LOG_CLIPBOARD": "Copiar registro al portapapeles",
         "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
         "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
         "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to *SUPPORT."
@@ -125,7 +125,7 @@
         "DECLINE": "Discrepar",
         "DELETE": "Eliminar",
         "QUOTE": "Citar",
-        "MESSAGE_NOTIFICATION_SUBJECT": "{messageCount, plural, one {masajes Threema de} other {{messageCount} mensajes Threema de}}",
+        "MESSAGE_NOTIFICATION_SUBJECT": "{messageCount, plural, one {Mensaje Threema de} other {{messageCount} mensajes Threema de}}",
         "MY_THREEMA_ID": "Mi ID de Threema",
         "MY_PUBLIC_NICKNAME": "Apodo público",
         "MEMBER_OF_GROUPS": "Miembro de estos grupos",
@@ -209,8 +209,8 @@
         "ME": "Yo"
     },
     "messageStates": {
-        "WE_ACK": "You sent thumbs-up",
-        "WE_DEC": "You sent thumbs-down",
+        "WE_ACK": "Enviaste un pulgar hacia arriba",
+        "WE_DEC": "Enviaste un pulgar hacia abajo",
         "USER_ACK": "Recipient sent thumbs-up",
         "USER_DEC": "Recipient sent thumbs-down",
         "PENDING": "El mensaje está siendo transferido a tu dispositivo",
@@ -248,7 +248,7 @@
             "syncFailed": "Fallo en la sincronización del grupo ",
             "noMembers": "No hay miembros definidos",
             "alreadyLeft": "Ya has salido de este grupo",
-            "valueTooLong": "A value you entered is too long"
+            "valueTooLong": "Un valor que ingresó es demasiado largo"
         }
     },
     "error": {
@@ -289,7 +289,7 @@
         "LICENSES": "Licencias",
         "OPEN_SOURCE": "Threema Web es completamente código abierto.",
         "SOURCE_CODE": "El código fuente y los términos de licencia se encuentran en GitHub:",
-        "EMOJI_ART": "Emoji art supplied by <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
+        "EMOJI_ART": "Arte Emoji suministrado por <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
         "NOTIFICATION_SOUNDS": "Sound files &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
         "LICENSE_TEXT": "Licenses of used open source components can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">in the source code</a>.",
         "CHANGELOG": "Historial de cambios",
@@ -306,8 +306,8 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Dispositivo Inaccesible",
-        "UNABLE_TO_CONNECT": "Unable to connect to your device …",
-        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
+        "UNABLE_TO_CONNECT": "No se puede conectar a su dispositivo ...",
+        "DISMISS_WARNING": "Para restablecer la conexión, vuelva a cargar la ventana de su navegador web."
     },
     "version": {
         "NEW_VERSION": "Nueva versión disponible",
@@ -357,6 +357,6 @@
         "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
         "SESSION_ERROR": "Se ha cerrado esta sesión debido a un error de protocolo.",
         "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
-        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new Threema Web session."
+        "PUSH_ERROR_ACTION": "Si este error persiste, haga clic en \"Olvidar Sesión\" e inicie una nueva sesión de Threema."
     }
 }
