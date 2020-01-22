@@ -4,6 +4,13 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.4][v2.3.4] (2020-01-22)
+
+Changes:
+
+* [bug] Do not fail the session when the data channel has been closed ([#961][i961])
+
+
 ### [v2.3.3][v2.3.3] (2020-01-14)
 
 Changes:
@@ -895,7 +902,9 @@ First public release.
 [i956]: https://github.com/threema-ch/threema-web/issues/956
 [i957]: https://github.com/threema-ch/threema-web/issues/957
 [i958]: https://github.com/threema-ch/threema-web/issues/958
+[i961]: https://github.com/threema-ch/threema-web/issues/961
 
+[v2.3.4]: https://github.com/threema-ch/threema-web/compare/v2.3.3...v2.3.4
 [v2.3.3]: https://github.com/threema-ch/threema-web/compare/v2.3.2...v2.3.3
 [v2.3.2]: https://github.com/threema-ch/threema-web/compare/v2.3.1...v2.3.2
 [v2.3.1]: https://github.com/threema-ch/threema-web/compare/v2.3.0...v2.3.1
