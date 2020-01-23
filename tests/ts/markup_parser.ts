@@ -257,6 +257,7 @@ describe('Markup Parser', () => {
                 ['random *asterisk', 'random *asterisk'],
                 ['***three asterisks', '***three asterisks'],
                 ['***three asterisks*', '**<span class="text-bold">three asterisks</span>'],
+                ['**double asterisks*', '**double asterisks*'],
             ]);
         });
 
