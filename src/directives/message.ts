@@ -169,11 +169,13 @@ export default [
                     };
 
                     this.showHistory = (ev) => {
-                        const getEvents = () => this.message.events;
+                        const getEvents = () => (this.message as threema.Message).events;
+                        const getMessageId = () => (this.message as threema.Message).id;
                         $mdDialog.show({
                             controllerAs: 'ctrl',
                             controller: function() {
                                 this.getEvents = getEvents;
+                                this.getMessageId = getMessageId;
                                 this.close = () => {
                                     $mdDialog.hide();
                                 };
@@ -187,6 +189,7 @@ export default [
                                             </div>
                                         </md-toolbar>
                                         <md-dialog-content>
+                                            <p><span class="message-id">Message ID:</span> {{ ctrl.getMessageId() }}</p>
                                             <p ng-repeat="event in ctrl.getEvents()">
                                                 <span class="event-type" ng-if="event.type === 'created'" translate>messenger.MSG_HISTORY_CREATED</span>
                                                 <span class="event-type" ng-if="event.type === 'sent'" translate>messenger.MSG_HISTORY_SENT</span>
