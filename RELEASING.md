@@ -6,6 +6,7 @@ with deprecations. Remove them if possible.
 Update translations (https://github.com/transifex/transifex-client/):
 
     $ tx pull --all
+    $ mv public/i18n/en_US.json public/i18n/en.json
     $ git diff public/i18n/
     $ git add public/i18n/
     $ git commit -m 'Update translation strings from Transifex'

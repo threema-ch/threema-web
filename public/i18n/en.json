@@ -218,8 +218,7 @@
         "SENT": "The message was delivered to the Threema server",
         "DELIVERED": "The message was delivered to the recipient's device",
         "READ": "The message was read by the recipient",
-        "FAILED": "The message could not be sent",
-        "UNKNOWN": ""
+        "FAILED": "The message could not be sent"
     },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audio Message",
