@@ -2288,14 +2288,14 @@ export class WebClientService {
     /**
      * Return the curring quoted message model
      */
-    public getQuote(receiver: threema.Receiver): threema.Quote {
+    public getQuote(receiver: threema.Receiver): threema.Quote | undefined {
         return this.drafts.getQuote(receiver);
     }
 
     /**
      * Set or remove (if message is null) a quoted message model.
      */
-    public setQuote(receiver: threema.Receiver, message: threema.Message = null): void {
+    public setQuote(receiver: threema.Receiver, message: threema.Message): void {
         // Remove current quote
         this.drafts.removeQuote(receiver);
 
