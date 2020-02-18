@@ -50,7 +50,7 @@
     "@types/file-saver": "^2.0.1",
     "@types/jquery": "^3.3.29",
     "@types/msgpack-lite": "^0.1.6",
-    "@types/webrtc": "0.0.25",
+    "@types/webrtc": "0.0.26",
     "@uirouter/angularjs": "^1.0.22",
     "angular": "^1.7.9",
     "angular-animate": "^1.7.9",
@@ -81,7 +81,7 @@
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "webpack-merge": "^4.2.2",
-    "webrtc-adapter": "^7.2.4"
+    "webrtc-adapter": "^7.5.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.9",
