@@ -75,7 +75,7 @@
     "ts-events": "~3.4.0",
     "ts-loader": "~6.2.1",
     "ts-log": "^2.1.4",
-    "tweetnacl": "^1.0.1",
+    "tweetnacl": "^1.0.3",
     "twemoji": "^11.3.0",
     "typescript": "~3.7.5",
     "webpack": "^4.41.6",
