@@ -68,7 +68,7 @@
     "croppie": "^2.6.4",
     "emojibase-regex": "^3.2.0",
     "file-saver": "^2.0.2",
-    "messageformat": "^2.2.1",
+    "messageformat": "^2.3.0",
     "msgpack-lite": "~0.1.26",
     "node-sass": "^4.13.1",
     "sdp": "~2.12.0",
