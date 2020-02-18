@@ -70,7 +70,7 @@
     "file-saver": "^2.0.2",
     "messageformat": "^2.2.1",
     "msgpack-lite": "~0.1.26",
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "sdp": "~2.9.0",
     "ts-events": "^3.3.1",
     "ts-loader": "^6",
