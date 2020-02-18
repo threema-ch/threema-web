@@ -78,9 +78,9 @@
     "tweetnacl": "^1.0.1",
     "twemoji": "^11.3.0",
     "typescript": "^3.5.2",
-    "webpack": "^4.35.0",
-    "webpack-cli": "^3.3.5",
-    "webpack-merge": "^4.2.1",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "webpack-merge": "^4.2.2",
     "webrtc-adapter": "^7.2.4"
   },
   "devDependencies": {
@@ -103,6 +103,6 @@
     "term-color": "^1.0.1",
     "ts-node": "^8",
     "tslint": "^5.18.0",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^3.10.3"
   }
 }
