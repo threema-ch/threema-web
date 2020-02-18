@@ -3099,7 +3099,7 @@ export function emojify(text: string): string {
 /**
  * Convert emoji unicode characters to structured EmojiInfo objects.
  */
-export function parseEmoji(text: string): Array<threema.EmojiInfo | string> {
+export function parseEmoji(text: string): (threema.EmojiInfo | string)[] {
     // Create a global RegExp, which stores state
     const regex = new RegExp(EMOJI_REGEX, 'g');
     const result = [];
