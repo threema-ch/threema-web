@@ -146,9 +146,9 @@ function showLog(data) {
         elements.log.appendChild(createElementFromHTML(`
             <tbody>
                 <tr class="record ${escapeHTML(type)}">
-                    <td class="date">${((timestampMs - startTimestampMs) / 1000).toFixed(3)}</td>
+                    <td class="date" title="${new Date(timestampMs)}">${((timestampMs - startTimestampMs) / 1000).toFixed(3)}</td>
                     <td class="tag">${tag}</td>
-                    <td class="message">${values.map((value) => formatRecordValue(value)).join('\n')}</td>  
+                    <td class="message">${values.map((value) => formatRecordValue(value)).join('\n')}</td>
                 </tr>
             </tbody>`));
     }
