@@ -46,6 +46,7 @@ export class PeerConnectionHelper {
 
     // Handed over signalling channel
     private sdc: UnboundedFlowControlledDataChannel | null = null;
+    private closed: boolean = false;
 
     // Calculated connection state
     public connectionState: TaskConnectionState = TaskConnectionState.New;
@@ -150,7 +151,12 @@ export class PeerConnectionHelper {
                             // situations which certainly would lead to ugly race conditions.
                             this.connectionFailedTimer = null;
                             this.log.debug('ICE connection considered failed');
-                            this.pc.close();
+
+                            // Close and raise disconnected event
+                            // Note: We need to simulate a 'closed' event here due to browser inconsistencies
+                            this.closed = true;
+                            this.close();
+                            this.setConnectionState(TaskConnectionState.Disconnected);
                         }, PeerConnectionHelper.CONNECTION_FAILED_TIMEOUT_MS, true, 'connectionFailedTimer');
                         break;
                     case 'connected':
@@ -159,6 +165,7 @@ export class PeerConnectionHelper {
                         break;
                     case 'failed':
                     case 'closed':
+                        this.closed = true;
                         this.setConnectionState(TaskConnectionState.Disconnected);
                         break;
                     default:
@@ -234,8 +241,12 @@ export class PeerConnectionHelper {
                 return self.pc.sctp.maxMessageSize;
             },
             close(): void {
-                self.log.debug(`Signalling data channel close request`);
-                dc.close();
+                if (self.closed) {
+                    self.log.debug('Ignoring signalling data channel close request, already closed');
+                } else {
+                    self.log.debug(`Signalling data channel close request`);
+                    dc.close();
+                }
             },
             send(message: Uint8Array): void {
                 self.log.debug(`Signalling data channel outgoing signaling message of ` +
@@ -250,8 +261,12 @@ export class PeerConnectionHelper {
 
             // Rebind close event
             dc.onclose = () => {
-                this.log.info(`Signalling data channel closed`);
-                link.closed();
+                if (this.closed) {
+                    self.log.debug('Ignoring signalling data channel closed');
+                } else {
+                    this.log.info(`Signalling data channel closed`);
+                    link.closed();
+                }
             };
 
             // Initiate handover
@@ -261,7 +276,7 @@ export class PeerConnectionHelper {
             this.log.error(`Signalling data channel closed`);
         };
         dc.onerror = (event) => {
-            this.log.error(`Signalling data channel error:`, event);
+            this.log.warn(`Signalling data channel error (closed=${this.closed}):`, event.error);
         };
         dc.onmessage = (event) => {
             this.log.debug(`Signalling data channel incoming message of length ${event.data.byteLength}`);
@@ -285,6 +300,13 @@ export class PeerConnectionHelper {
      * Unbind all event handler and abruptly close the peer connection.
      */
     public close(): void {
+        // Cancel connection failed timer
+        if (this.connectionFailedTimer !== null) {
+            this.timeoutService.cancel(this.connectionFailedTimer);
+            this.connectionFailedTimer = null;
+        }
+
+        // Unbind events
         this.webrtcTask.off();
         this.pc.onnegotiationneeded = null;
         this.pc.onconnectionstatechange = null;
@@ -294,6 +316,8 @@ export class PeerConnectionHelper {
         this.pc.oniceconnectionstatechange = null;
         this.pc.onicegatheringstatechange = null;
         this.pc.ondatachannel = null;
+
+        // Close peer connection
         this.pc.close();
     }
 }
