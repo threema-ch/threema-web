@@ -262,7 +262,7 @@ export class PeerConnectionHelper {
             // Rebind close event
             dc.onclose = () => {
                 if (this.closed) {
-                    self.log.debug('Ignoring signalling data channel closed');
+                    this.log.debug('Ignoring signalling data channel closed');
                 } else {
                     this.log.info(`Signalling data channel closed`);
                     link.closed();
