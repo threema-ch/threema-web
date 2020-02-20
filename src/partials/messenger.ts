@@ -590,7 +590,7 @@ class ConversationController {
 
     public cancelQuoting(): void {
         // Clear current quote
-        this.webClientService.setQuote(this.receiver);
+        this.webClientService.setQuote(this.receiver, null);
     }
 
     public showError(errorMessage?: string, hideDelayMs = 3000) {
@@ -733,9 +733,12 @@ class ConversationController {
                 case 'text':
                     // do not show confirmation, send directly
                     contents.forEach((msg: threema.MessageData, index: number) => {
-                        msg.quote = this.webClientService.getQuote(this.receiver);
-                        // remove quote
-                        this.webClientService.setQuote(this.receiver);
+                        const quote = this.webClientService.getQuote(this.receiver);
+                        if (hasValue(quote)) {
+                            msg.quote = quote;
+                        }
+                        // Remove quote
+                        this.webClientService.setQuote(this.receiver, null);
                         // send message
                         // TODO: This should probably be moved into the
                         //       WebClientService as a specific method for the

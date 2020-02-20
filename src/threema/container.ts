@@ -874,7 +874,7 @@ class Drafts implements threema.Container.Drafts {
         this.quotes.delete(this.getReceiverUid(receiver));
     }
 
-    public getQuote(receiver: threema.Receiver): threema.Quote {
+    public getQuote(receiver: threema.Receiver): threema.Quote | undefined {
         return this.quotes.get(this.getReceiverUid(receiver));
     }
 
@@ -886,7 +886,7 @@ class Drafts implements threema.Container.Drafts {
         this.texts.delete(this.getReceiverUid(receiver));
     }
 
-    public getText(receiver: threema.Receiver): string {
+    public getText(receiver: threema.Receiver): string | undefined {
         return this.texts.get(this.getReceiverUid(receiver));
     }
 }
