@@ -4,6 +4,15 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.5][v2.3.5] (2020-02-24)
+
+Changes:
+
+* [bug] Fix auto-reconnecting in Chrome 80+ ([#969][i969])
+* [bug] Don't add null quote objects to outgoing messages ([#966][i966])
+* [feature] Show message ID in history dialog ([#965][i965])
+
+
 ### [v2.3.4][v2.3.4] (2020-01-22)
 
 Changes:
@@ -903,7 +912,11 @@ First public release.
 [i957]: https://github.com/threema-ch/threema-web/issues/957
 [i958]: https://github.com/threema-ch/threema-web/issues/958
 [i961]: https://github.com/threema-ch/threema-web/issues/961
+[i965]: https://github.com/threema-ch/threema-web/issues/965
+[i966]: https://github.com/threema-ch/threema-web/issues/966
+[i969]: https://github.com/threema-ch/threema-web/issues/969
 
+[v2.3.5]: https://github.com/threema-ch/threema-web/compare/v2.3.4...v2.3.5
 [v2.3.4]: https://github.com/threema-ch/threema-web/compare/v2.3.3...v2.3.4
 [v2.3.3]: https://github.com/threema-ch/threema-web/compare/v2.3.2...v2.3.3
 [v2.3.2]: https://github.com/threema-ch/threema-web/compare/v2.3.1...v2.3.2
