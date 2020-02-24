@@ -29,7 +29,7 @@
         "CONNECTING": "Łączenie",
         "WAITING_FOR_PUSH": "Oczekiwanie na<br>wybudzenie aplikacji.",
         "CONNECTING_TO_APP": "Połączenie z aplikacją jest<br>zestawiane.",
-        "LOADING_INITIAL_DATA": "Ładowanie wstępnych danych ...",
+        "LOADING_INITIAL_DATA": "Ładowanie danych ...",
         "MANUAL_START": "Rozpocznij sesję",
         "MANUAL_START_TEXT1": "Usługa push jest niedostępna. Czy Usługi Google Play są zainstalowane na twoim urządzeniu mobilnym?",
         "MANUAL_START_TEXT2": "Możesz używać Threemna Web bez Usług Google Play, ale mususz uruchomić sesję ręcznie:",
@@ -218,7 +218,8 @@
         "SENT": "Wiadomość została dostarczona na serwer Threema",
         "DELIVERED": "Wiadomość została dostarczona na urządzenie adresata",
         "READ": "Wiadomość została przeczytana przez adresata",
-        "FAILED": "Wiadomość nie mogła zostać wysłana"},
+        "FAILED": "Wiadomość nie mogła zostać wysłana"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Wiadomość głosowa",
         "FILE_MESSAGE": "Plik",
