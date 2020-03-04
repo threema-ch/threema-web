@@ -49,12 +49,12 @@ export class BrowserService {
 
             const uagent = this.$window.navigator.userAgent.toLowerCase();
 
-            browser.chrome = /webkit/.test(uagent) && /chrome/.test(uagent) && !/edge/.test(uagent);
+            browser.chrome = /webkit/.test(uagent) && /chrome/.test(uagent) && !/edg/.test(uagent);
             browser.chromeIos = /mozilla/.test(uagent) && /crios/.test(uagent);
             browser.firefox = /mozilla/.test(uagent) && /firefox/.test(uagent);
             browser.firefoxIos = /mozilla/.test(uagent) && /fxios/.test(uagent);
             browser.ie = (/msie/.test(uagent) || /trident/.test(uagent)) && !/edge/.test(uagent);
-            browser.edge = /edge/.test(uagent);
+            browser.edge = /edg/.test(uagent);
             browser.safari = /safari/.test(uagent) && /applewebkit/.test(uagent)
                           && !/chrome/.test(uagent) && !/fxios/.test(uagent) && !/crios/.test(uagent);
             browser.opera = /mozilla/.test(uagent) && /applewebkit/.test(uagent)
@@ -71,7 +71,7 @@ export class BrowserService {
                     if (x === 'ie') {
                         b = 'msie';
                     } else if (x === 'edge') {
-                        b = 'edge';
+                        b = 'edge?';
                     } else if (x === 'opera') {
                         b = 'opr';
                     } else if (x === 'firefoxIos') {
