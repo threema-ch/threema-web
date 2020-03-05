@@ -95,6 +95,36 @@ describe('BrowserService', function() {
         expect(browser.description()).toEqual('Edge 12');
     });
 
+    it('edge14', () => {
+        const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML like Gecko) Chrome/51.0.2704.79 Safari/537.36 Edge/14.14931';
+        const service = testUserAgent(ua);
+        const browser = service.getBrowser();
+        expect(browser.name).toBe(BrowserName.Edge);
+        expect(browser.version).toEqual(14);
+        expect(browser.mobile).toBe(false);
+        expect(browser.description()).toEqual('Edge 14');
+    });
+
+    it('edge18', () => {
+        const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/18.17763';
+        const service = testUserAgent(ua);
+        const browser = service.getBrowser();
+        expect(browser.name).toBe(BrowserName.Edge);
+        expect(browser.version).toEqual(18);
+        expect(browser.mobile).toBe(false);
+        expect(browser.description()).toEqual('Edge 18');
+    });
+
+    it('edge80', () => {
+        const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.122 Safari/537.36 Edg/80.0.361.62';
+        const service = testUserAgent(ua);
+        const browser = service.getBrowser();
+        expect(browser.name).toBe(BrowserName.Edge);
+        expect(browser.version).toEqual(80);
+        expect(browser.mobile).toBe(false);
+        expect(browser.description()).toEqual('Edge 80');
+    });
+
     it('opera', () => {
         const ua = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36 OPR/51.0.2830.55';
         const service = testUserAgent(ua);

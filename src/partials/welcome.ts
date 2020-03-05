@@ -123,7 +123,7 @@ class WelcomeController {
         // Determine whether browser warning should be shown
         this.browser = browserService.getBrowser();
         const version = this.browser.version;
-        this.log.debug('Detected browser:', this.browser.description());
+        this.log.info('Detected browser:', this.browser.description());
         if (!this.browser.wasDetermined()) {
             this.log.warn('Could not determine browser version');
             this.showBrowserWarning();
@@ -147,8 +147,13 @@ class WelcomeController {
                 this.log.warn('Safari is too old (' + version + ' < ' + minVersions.SAFARI + ')');
                 this.showBrowserWarning();
             }
+        } else if (this.browser.name === threema.BrowserName.Edge) {
+            if (version < minVersions.EDGE) {
+                this.log.warn('Edge is too old (' + version + ' < ' + minVersions.EDGE + ')');
+                this.showBrowserWarning();
+            }
         } else {
-            this.log.warn('Non-supported browser, please use Chrome, Firefox or Opera');
+            this.log.warn('Non-supported browser, please use Chrome, Firefox, Edge or Opera');
             this.showBrowserWarning();
         }
 
@@ -441,11 +446,19 @@ class WelcomeController {
     private showBrowserWarning(): void {
         this.browserWarningShown = true;
         this.$translate.onReady().then(() => {
+            // tslint:disable:max-line-length
             const confirm = this.$mdDialog.confirm()
                 .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
-                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
+                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS', {
+                    firefoxLink: '<a href="https://www.mozilla.org/firefox/" target="_blank" rel="noopener noreferrer">Firefox</a>',
+                    chromeLink: '<a href="https://www.google.com/chrome/browser/desktop/" target="_blank" rel="noopener noreferrer">Chrome</a>',
+                    operaLink: '<a href="https://www.opera.com/" target="_blank" rel="noopener noreferrer">Opera</a>',
+                    edgeLink: '<a href="https://www.microsoft.com/edge" target="_blank" rel="noopener noreferrer">Edge</a>',
+                    safariLink: '<a href="https://www.apple.com/safari/" target="_blank" rel="noopener noreferrer">Safari</a>',
+                }))
                 .ok(this.$translate.instant('welcome.CONTINUE_ANYWAY'))
                 .cancel(this.$translate.instant('welcome.ABORT'));
+            // tslint:enable:max-line-length
             this.$mdDialog.show(confirm).then(() => {
                 // do nothing
             }, () => {

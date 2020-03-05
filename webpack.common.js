@@ -11,6 +11,7 @@ const babelOptions = {
         chrome: 65,
         opera: 52,
         safari: 11,
+        edge: 79,
       },
     }],
   ],
