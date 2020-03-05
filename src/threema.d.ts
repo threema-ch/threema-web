@@ -699,6 +699,7 @@ declare namespace threema {
         CHROME: number;
         OPERA: number;
         SAFARI: number;
+        EDGE: number;
     }
 
     interface BatteryStatus {

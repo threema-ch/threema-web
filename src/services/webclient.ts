@@ -619,10 +619,17 @@ export class WebClientService {
      */
     private showWebrtcAndroidWarning(): void {
         this.$translate.onReady().then(() => {
+            // tslint:disable:max-line-length
             const confirm = this.$mdDialog.alert()
                 .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_ANDROID'))
-                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS'))
+                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_ANDROID_DETAILS', {
+                    firefoxLink: '<a href="https://www.mozilla.org/firefox/" target="_blank" rel="noopener noreferrer">Firefox</a>',
+                    chromeLink: '<a href="https://www.google.com/chrome/browser/desktop/" target="_blank" rel="noopener noreferrer">Chrome</a>',
+                    operaLink: '<a href="https://www.opera.com/" target="_blank" rel="noopener noreferrer">Opera</a>',
+                    edgeLink: '<a href="https://www.microsoft.com/edge" target="_blank" rel="noopener noreferrer">Edge</a>',
+                }))
                 .ok(this.$translate.instant('welcome.ABORT'));
+            // tslint:enable:max-line-length
             this.$mdDialog.show(confirm).then(() => {
                 // Redirect to Threema website
                 window.location.replace('https://threema.ch/threema-web');

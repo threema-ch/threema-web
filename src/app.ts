@@ -77,6 +77,7 @@ angular.module('3ema', [
     CHROME: 65,
     OPERA: 52,
     SAFARI: 11,
+    EDGE: 79,
 })
 
 // Set default route
