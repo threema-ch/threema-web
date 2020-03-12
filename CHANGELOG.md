@@ -4,6 +4,14 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.6][v2.3.6] (2020-03-12)
+
+Changes:
+
+* [feature] Add official support for Edge 79+ ([#971][i971])
+* [change] Upgrade dependencies ([#968][i968])
+
+
 ### [v2.3.5][v2.3.5] (2020-02-24)
 
 Changes:
@@ -914,8 +922,11 @@ First public release.
 [i961]: https://github.com/threema-ch/threema-web/issues/961
 [i965]: https://github.com/threema-ch/threema-web/issues/965
 [i966]: https://github.com/threema-ch/threema-web/issues/966
+[i968]: https://github.com/threema-ch/threema-web/issues/968
 [i969]: https://github.com/threema-ch/threema-web/issues/969
+[i971]: https://github.com/threema-ch/threema-web/issues/971
 
+[v2.3.6]: https://github.com/threema-ch/threema-web/compare/v2.3.5...v2.3.6
 [v2.3.5]: https://github.com/threema-ch/threema-web/compare/v2.3.4...v2.3.5
 [v2.3.4]: https://github.com/threema-ch/threema-web/compare/v2.3.3...v2.3.4
 [v2.3.3]: https://github.com/threema-ch/threema-web/compare/v2.3.2...v2.3.3
