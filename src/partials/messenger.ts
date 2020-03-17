@@ -847,7 +847,9 @@ class ConversationController {
      */
     public startTyping = () => {
         // Notify app
-        this.webClientService.sendMeIsTyping(this.$stateParams, true);
+        if (isContactReceiver(this.receiver)) {
+            this.webClientService.sendMeIsTyping(this.receiver, true);
+        }
     }
 
     /**
@@ -855,7 +857,9 @@ class ConversationController {
      */
     public stopTyping = () => {
         // Notify app
-        this.webClientService.sendMeIsTyping(this.$stateParams, false);
+        if (isContactReceiver(this.receiver)) {
+            this.webClientService.sendMeIsTyping(this.receiver, false);
+        }
     }
 
     /**
