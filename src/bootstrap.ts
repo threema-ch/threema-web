@@ -23,6 +23,16 @@
 import('./app')
     .then(() => {
         console.info('Bundle loaded, bootstrapping application.');
+        // register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(function (registration) {
+                    console.info('Service worker registration successful, scope is:', registration.scope);
+                })
+                .catch(function (error) {
+                    console.warn('Service worker registration failed, error:', error);
+                });
+        }
         angular.bootstrap(document, ['3ema']);
     })
     .catch((e) => console.error('Could not bootstrap application', e));
