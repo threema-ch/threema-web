@@ -256,9 +256,11 @@ export function msgpackVisualizer(array: Uint8Array): string {
 /**
  * Check the featureMask of a contactReceiver
  */
-export function hasFeature(contactReceiver: threema.ContactReceiver,
-                           feature: threema.ContactReceiverFeature,
-                           log: Logger): boolean {
+export function hasFeature(
+    contactReceiver: threema.ContactReceiver,
+    feature: threema.ContactReceiverFeature,
+    log: Logger,
+): boolean {
     if (contactReceiver !== undefined) {
         if (contactReceiver.featureMask === 0) {
             log.warn(`Contact receiver with id ${contactReceiver.id} has featureMask 0`);
