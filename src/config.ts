@@ -37,6 +37,13 @@ export default {
     // Push
     PUSH_URL: 'https://push-web.threema.ch/push',
 
+    // Fonts
+    // Note: If you want to use the Lab Grotesque font in your self-hosted
+    //       instance (with SELF_HOSTED=true), you need to obtain a license for
+    //       it and update the font URL below. Otherwise, Threema Web will
+    //       fall back to Roboto.
+    FONT_CSS_URL: null,
+
     // Padding length (in characters) of the log tag
     // Note: The padding will be stripped by the report log.
     LOG_TAG_PADDING: 20,
