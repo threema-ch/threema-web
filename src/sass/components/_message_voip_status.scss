@@ -9,3 +9,8 @@ eee-message-voip-status {
         }
     }
 }
+
+// Left align icon for incoming status messages
+.message-in eee-message-voip-status span {
+    flex-grow: 1;
+}
