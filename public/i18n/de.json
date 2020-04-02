@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht angepinnt werden",
         "UNPINNED_CONVERSATION_OK": "Unterhaltung entpinnt",
         "UNPINNED_CONVERSATION_ERROR": "Unterhaltung konnte nicht entpinnt werden",
-        "ME": "Ich"
+        "ME": "Ich",
+        "CONTACT_STATE_INACTIVE": "Inaktiv",
+        "CONTACT_STATE_INVALID": "Ungültig",
+        "CONTACT_STATE_REVOKED": "Widerrufen"
     },
     "messageStates": {
         "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",
@@ -258,6 +261,7 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Sprachnachrichten erhalten.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
         "CONTACT_BLOCKED":  "Sie können keine Nachrichten an blockierte Kontakte senden.",
+        "CONTACT_INVALID": "Sie können keine Nachrichten an einen ungültigen Kontakt senden.",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
         "FILE_TOO_LARGE": "Dateien grösser als {maxmb} MiB können nicht versendet werden",
         "FILE_TOO_LARGE_WEB": "Aktuell können keine Dateien grösser als 15 MiB über Threema Web versendet werden",

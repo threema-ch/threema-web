@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "Konverzace nemůže být připnuta",
         "UNPINNED_CONVERSATION_OK": "Konverzace odepnuta",
         "UNPINNED_CONVERSATION_ERROR": "Konverzace nemůže být odepnuta",
-        "ME": "Já"
+        "ME": "Já",
+        "CONTACT_STATE_INACTIVE": "Neaktivní",
+        "CONTACT_STATE_INVALID": "Chybný",
+        "CONTACT_STATE_REVOKED": "Odvolaná"
     },
     "messageStates": {
         "WE_ACK": "Poslali jste \"palec nahoru\"",
@@ -257,7 +260,8 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nemůže tuto zprávu přijmout.",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemůže tuto hlasovou zprávu přijmout.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemůže přijmout soubory.",
-        "CONTACT_BLOCKED":  "Nelze odesílat zprávy blokovanému kontaktu.",
+        "CONTACT_BLOCKED": "Nelze odesílat zprávy blokovanému kontaktu.",
+        "CONTACT_INVALID": "Nelze odeslat zprávu neplatnému kontaktu.",
         "ERROR_OCCURRED": "Došlo k chybě.",
         "FILE_TOO_LARGE": "Soubory větší než {maxmb} MiB nelze odeslat",
         "FILE_TOO_LARGE_WEB": "Aktuálně nelze prostřednictvím Threema Web odeslat soubory větší než 15 MiB",

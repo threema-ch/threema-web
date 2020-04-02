@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "La conversación no se pudo anclar",
         "UNPINNED_CONVERSATION_OK": "Conversación desanclada",
         "UNPINNED_CONVERSATION_ERROR": "La conversación no se pudo desanclar",
-        "ME": "Yo"
+        "ME": "Yo",
+        "CONTACT_STATE_INACTIVE": "Inactivo",
+        "CONTACT_STATE_INVALID": "No válido",
+        "CONTACT_STATE_REVOKED": "Borrado"
     },
     "messageStates": {
         "WE_ACK": "Enviaste un pulgar hacia arriba",
@@ -258,6 +261,7 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» no puede recibir mensajes de voz.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» no puede recibir ficheros.",
         "CONTACT_BLOCKED":  "No puede enviar mensajes a un contacto bloqueado.",
+        "CONTACT_INVALID": "No puede enviar mensajes a un contacto no válido.",
         "ERROR_OCCURRED": "Ha ocurrido un error.",
         "FILE_TOO_LARGE": "No se pueden enviar archivos de más de {maxmb} MiB",
         "FILE_TOO_LARGE_WEB": "Actualmente no se pueden enviar archivos de más de 15 MiB a través de Threema Web",

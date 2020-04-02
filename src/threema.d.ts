@@ -275,7 +275,7 @@ declare namespace threema {
         featureMask: number;
 
         // The identity state
-        state: 'ACTIVE' | 'INACTIVE';
+        state: 'ACTIVE' | 'INACTIVE' | 'INVALID';
 
         // Contact hidden?
         hidden: boolean;
