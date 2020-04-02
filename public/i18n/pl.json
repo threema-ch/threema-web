@@ -207,7 +207,9 @@
         "PINNED_CONVERSATION_ERROR": "Konwersacja nie mogła zostać przypięta",
         "UNPINNED_CONVERSATION_OK": "Konwersacja odpięta",
         "UNPINNED_CONVERSATION_ERROR": "Konwersacja nie mogła zostać odpięta",
-        "ME": "Ja"
+        "ME": "Ja",
+        "CONTACT_STATE_INACTIVE": "Nieaktywny",
+        "CONTACT_STATE_INVALID": "Nieprawidłowy"
     },
     "messageStates": {
         "WE_ACK": "Wysłałeś kciuk w górę",

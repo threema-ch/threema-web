@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "Conversation could not be pinned",
         "UNPINNED_CONVERSATION_OK": "Conversation unpinned",
         "UNPINNED_CONVERSATION_ERROR": "Conversation could not be unpinned",
-        "ME": "Me"
+        "ME": "Me",
+        "CONTACT_STATE_INACTIVE": "Inactive",
+        "CONTACT_STATE_INVALID": "Invalid",
+        "CONTACT_STATE_REVOKED": "Revoked"
     },
     "messageStates": {
         "WE_ACK": "You sent thumbs-up",

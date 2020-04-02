@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "La conversación no se pudo anclar",
         "UNPINNED_CONVERSATION_OK": "Conversación desanclada",
         "UNPINNED_CONVERSATION_ERROR": "La conversación no se pudo desanclar",
-        "ME": "Yo"
+        "ME": "Yo",
+        "CONTACT_STATE_INACTIVE": "Inactivo",
+        "CONTACT_STATE_INVALID": "No válido",
+        "CONTACT_STATE_REVOKED": "Borrado"
     },
     "messageStates": {
         "WE_ACK": "Enviaste un pulgar hacia arriba",

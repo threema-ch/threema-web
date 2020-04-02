@@ -206,7 +206,10 @@
         "PINNED_CONVERSATION_ERROR": "Conversatie kon niet worden vastgepind",
         "UNPINNED_CONVERSATION_OK": "Conversatie losgemaakt",
         "UNPINNED_CONVERSATION_ERROR": "Conversatie kon niet worden losgemaakt",
-        "ME": "Me"
+        "ME": "Me",
+        "CONTACT_STATE_INACTIVE": "Inactief",
+        "CONTACT_STATE_INVALID": "Ongeldig",
+        "CONTACT_STATE_REVOKED": "Verwijderde"
     },
     "messageStates": {
         "WE_ACK": "Je hebt een duim omhoog gestuurd",

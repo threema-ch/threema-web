@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "Les conversations n'ont pas pu être épinglées",
         "UNPINNED_CONVERSATION_OK": "Les conversations non épinglées",
         "UNPINNED_CONVERSATION_ERROR": "La conversation n'a pas pu être désépinglé",
-        "ME": "Moi"
+        "ME": "Moi",
+        "CONTACT_STATE_INACTIVE": "Inactif",
+        "CONTACT_STATE_INVALID": "Erroné",
+        "CONTACT_STATE_REVOKED": "Supprimé"
     },
     "messageStates": {
         "WE_ACK": "Vous avez envoyé un pouce levé",

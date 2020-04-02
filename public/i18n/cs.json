@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "Konverzace nemůže být připnuta",
         "UNPINNED_CONVERSATION_OK": "Konverzace odepnuta",
         "UNPINNED_CONVERSATION_ERROR": "Konverzace nemůže být odepnuta",
-        "ME": "Já"
+        "ME": "Já",
+        "CONTACT_STATE_INACTIVE": "Neaktivní",
+        "CONTACT_STATE_INVALID": "Chybný",
+        "CONTACT_STATE_REVOKED": "Odvolaná"
     },
     "messageStates": {
         "WE_ACK": "Poslali jste \"palec nahoru\"",
