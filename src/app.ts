@@ -187,15 +187,18 @@ angular.module('3ema', [
 
 .factory('$exceptionHandler', ['LogService', function(logService: LogService) {
     const logger = logService.getLogger('UncaughtException');
-    return function myExceptionHandler(exception, cause) {
-        let info = String(exception.stack ? exception.stack : exception);
+    return function myExceptionHandler(exception: Error, cause) {
+        const data: any[] = [];
+        const message = exception.message.includes(exception.name)
+            ? exception.message
+            : `${exception.name}: ${exception.message}`;
+        data.push(`Unhandled exception (ng): ${message}\n`);
+        data.push(exception.stack ? exception.stack : exception);
         if (cause) {
-            info += `\nCaused by:\n${cause}`;
-            if (cause.stack) {
-                info += `\n${cause.stack}`;
-            }
+            data.push('\nCaused by:\n');
+            data.push(cause.stack ? cause.stack : cause);
         }
-        logger.error(info);
+        logger.error(...data);
     };
 }])
 

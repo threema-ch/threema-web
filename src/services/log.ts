@@ -96,27 +96,31 @@ export class LogService {
      * See $exceptionHandler factory in app.ts.
      */
     public setupUncaughtExceptionHandling() {
-        this.getLogger('Log-S').info('Registering uncaught exception handler');
+        // tslint:disable-next-line:no-console (not using the logger here because it confuses unit tests)
+        console.debug('LogService: Registering uncaught exception handler');
+
         const logger = this.getLogger('UncaughtException');
+
+        // Listen for uncaught exceptions
         window.addEventListener('error', (e: ErrorEvent) => {
-            let info = e.message;
-            if (e.error) {
-                info += e.error.stack ? `\n${e.error.stack}` : `\n${e.error}`;
-            }
-            logger.error(info);
+            const data: any[] = [];
+            data.push(`Unhandled exception (w): ${e.message}\n`);
+            data.push((e.error && e.error.stack) ? e.error.stack : e.error);
+            logger.error(...data);
             e.stopPropagation();
             e.preventDefault();
             return true;
         });
+
+        // Listen for unhandled rejections
         window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
-            let info = 'Unhandled promise rejection: ';
-            if (e.reason) {
-                info += String(e.reason.stack ? e.reason.stack : e.reason);
-            }
-            logger.error(info);
+            logger.error(
+                'Unhandled promise rejection:',
+                (e.reason && e.reason.stack) ? e.reason.stack : e.reason,
+            )
             e.stopPropagation();
             e.preventDefault();
             return true;
-        })
+        });
     }
 }
