@@ -24,6 +24,7 @@ import config from './config';
 import './controllers';
 import './directives';
 import './filters';
+import {hasValue} from './helpers';
 import './partials/messenger';
 import './partials/welcome';
 import './services';
@@ -187,13 +188,19 @@ angular.module('3ema', [
 
 .factory('$exceptionHandler', ['LogService', function(logService: LogService) {
     const logger = logService.getLogger('UncaughtException');
-    return function myExceptionHandler(exception: Error, cause) {
+    return function myExceptionHandler(e: any, cause: any) {
+        if (!hasValue(e)) {
+            // Fun fact: `throw null` is prefectly valid
+            logger.error(`Unhandled exception (ng): ${e}`);
+            return;
+        }
         const data: any[] = [];
-        const message = exception.message.includes(exception.name)
-            ? exception.message
-            : `${exception.name}: ${exception.message}`;
-        data.push(`Unhandled exception (ng): ${message}\n`);
-        data.push(exception.stack ? exception.stack : exception);
+        data.push('Unhandled exception (ng):');
+        if (e.message && e.name) {
+            // Firefox does not include the exception name in the message, Chrome does.
+            data.push(e.message.includes(e.name) ? `${e.message}\n` : `${e.name}: ${e.message}\n`);
+        }
+        data.push(e.stack ? e.stack : e);
         if (cause) {
             data.push('\nCaused by:\n');
             data.push(cause.stack ? cause.stack : cause);
