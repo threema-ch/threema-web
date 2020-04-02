@@ -674,6 +674,9 @@ declare namespace threema {
         // Push
         PUSH_URL: string;
 
+        // Fonts
+        FONT_CSS_URL: string;
+
         // Logging/debugging
         LOG_TAG_PADDING: number,
         CONSOLE_LOG_LEVEL: LogLevel;

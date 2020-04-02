@@ -20,7 +20,7 @@
 
 -->
 <html ng-strict-di ng-controller="StatusController as ctrl">
-<head>
+<head ng-controller="HeaderController as hdrCtrl">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="referrer" content="no-referrer">
@@ -49,7 +49,8 @@
     <link rel="stylesheet" href="node_modules/croppie/croppie.css?v=[[VERSION]]">
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="fonts/roboto.css?v=[[VERSION]]" type="text/css">
+    <link rel="stylesheet" ng-href="{{ hdrCtrl.fontUrl() }}" type="text/css" ng-if="hdrCtrl.useThreemaFont()">
+    <link rel="stylesheet" ng-href="fonts/roboto.css?v=[[VERSION]]" type="text/css" ng-if="!hdrCtrl.useThreemaFont()">
     <link rel="stylesheet" href="fonts/material.css?v=[[VERSION]]" type="text/css">
 
     <!-- Own stylesheets -->

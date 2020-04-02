@@ -27,9 +27,6 @@ export class ThemeController {
     // Logging
     private readonly log: Logger;
 
-    // Config
-    private config: threema.Config;
-
     // Theme name
     public theme: string;
 
