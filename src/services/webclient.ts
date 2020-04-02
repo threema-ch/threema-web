@@ -1759,9 +1759,16 @@ export class WebClientService {
         // Try to load receiver
         const receiver = this.receivers.getData(baseReceiver);
 
-        // Check blocked flag
-        if (isContactReceiver(receiver) && receiver.isBlocked) {
-            throw this.$translate.instant('error.CONTACT_BLOCKED');
+        if (isContactReceiver(receiver)) {
+            // Check blocked flag
+            if (receiver.isBlocked) {
+                throw this.$translate.instant('error.CONTACT_BLOCKED');
+            }
+
+            // Check identity state
+            if (receiver.state === 'INVALID') {
+                throw this.$translate.instant('error.CONTACT_INVALID');
+            }
         }
 
         // Decide on subtype

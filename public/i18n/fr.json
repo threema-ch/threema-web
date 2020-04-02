@@ -258,6 +258,7 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "« {receiverName} » ne peut pas recevoir des messages audio.",
         "FILE_MESSAGES_NOT_SUPPORTED": "« {receiverName} » ne peut pas recevoir de fichiers.",
         "CONTACT_BLOCKED":  "Vous ne pouvez pas envoyer des messages à un contact bloqué.",
+        "CONTACT_INVALID": "Vous ne pouvez pas envoyer de message à un contact erroné.",
         "ERROR_OCCURRED": "Une erreur est apparue.",
         "FILE_TOO_LARGE": "Les fichiers plus grands que {maxmb} MiB ne peuvent pas être envoyés",
         "FILE_TOO_LARGE_WEB": "Actuellement les fichiers plus grands que 15 MiB ne peuvent pas être envoyés avec Threema Web",

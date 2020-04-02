@@ -256,6 +256,7 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kan geen spraakberichten ontvangen.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kan geen bestanden ontvangen.",
         "CONTACT_BLOCKED":  "Je kan geen berichten sturen aan een geblokkeerde contactpersoon.",
+        "CONTACT_INVALID": "U kunt geen berichten versturen aan ongeldige contactpersonen.",
         "ERROR_OCCURRED": "Een fout is opgetreden.",
         "FILE_TOO_LARGE": "Bestanden groter dan {maxmb} MiB kunnen niet worden verstuurd",
         "FILE_TOO_LARGE_WEB": "Momenteel kunnen bestanden groter dan 15 MiB niet worden verstuurd met Threema Web",
