@@ -96,9 +96,6 @@ export class LogService {
      * See $exceptionHandler factory in app.ts.
      */
     public setupUncaughtExceptionHandling() {
-        // tslint:disable-next-line:no-console (not using the logger here because it confuses unit tests)
-        console.debug('LogService: Registering uncaught exception handler');
-
         const logger = this.getLogger('UncaughtException');
 
         // Listen for uncaught exceptions
