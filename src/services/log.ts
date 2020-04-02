@@ -51,6 +51,9 @@ export class LogService {
 
         // Initialise tee logging
         this.root = new TeeLogger(loggers);
+
+        // Log uncaught exceptions
+        this.setupUncaughtExceptionHandling()
     }
 
     /**
@@ -84,5 +87,36 @@ export class LogService {
             logger = new LevelLogger(logger, level);
         }
         return logger;
+    }
+
+    /**
+     * Catch uncaught exceptions and log them.
+     *
+     * Note: Most uncaught exceptions should already be caught by AngularJS!
+     * See $exceptionHandler factory in app.ts.
+     */
+    public setupUncaughtExceptionHandling() {
+        this.getLogger('Log-S').info('Registering uncaught exception handler');
+        const logger = this.getLogger('UncaughtException');
+        window.addEventListener('error', (e: ErrorEvent) => {
+            let info = e.message;
+            if (e.error) {
+                info += e.error.stack ? `\n${e.error.stack}` : `\n${e.error}`;
+            }
+            logger.error(info);
+            e.stopPropagation();
+            e.preventDefault();
+            return true;
+        });
+        window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
+            let info = 'Unhandled promise rejection: ';
+            if (e.reason) {
+                info += String(e.reason.stack ? e.reason.stack : e.reason);
+            }
+            logger.error(info);
+            e.stopPropagation();
+            e.preventDefault();
+            return true;
+        })
     }
 }

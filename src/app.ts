@@ -27,6 +27,7 @@ import './filters';
 import './partials/messenger';
 import './partials/welcome';
 import './services';
+import {LogService} from './services/log';
 import './threema/container';
 
 // Configure asynchronous events
@@ -182,6 +183,20 @@ angular.module('3ema', [
             },
         };
     }]);
+}])
+
+.factory('$exceptionHandler', ['LogService', function(logService: LogService) {
+    const logger = logService.getLogger('UncaughtException');
+    return function myExceptionHandler(exception, cause) {
+        let info = String(exception.stack ? exception.stack : exception);
+        if (cause) {
+            info += `\nCaused by:\n${cause}`;
+            if (cause.stack) {
+                info += `\n${cause.stack}`;
+            }
+        }
+        logger.error(info);
+    };
 }])
 
 ;
