@@ -10,7 +10,8 @@
 				<dt>Threema ID</dt>
 				<dd>
 					<span class="complex-values">
-						<span>{{ctrl.receiver.id}}</span>
+						<span>{{ ctrl.receiver.id }}</span>
+						<span ng-if="ctrl.receiver.state !== 'ACTIVE'">({{ ctrl.receiver.state }})</span>
 						<span class="indicator-icon" ng-if="ctrl.showBlocked()"
 							  translate-attr="{'aria-label': 'messenger.THREEMA_BLOCKED_RECEIVER'}">
 								(<span translate>messenger.THREEMA_BLOCKED_RECEIVER</span>)
