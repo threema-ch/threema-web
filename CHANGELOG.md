@@ -15,6 +15,11 @@ Changes:
 * [bug] Only send typing update to contact receivers ([#974][i974])
 * [bug] Correctly handle invalid / revoked contacts ([#980][i980])
 
+Changes relevant when self-hosting:
+
+* If you deployed Threema Web on a server with restrictive CSP rules, make sure
+  to add `static.threema.ch` as an allowed style / font source ([#979][i979])
+
 Contributors:
 
 - [@chrisly-bear][@chrisly-bear]
