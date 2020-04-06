@@ -15,7 +15,7 @@
         "CHOOSE_PASSWORD": "Pokiaľ chcete zostať trvalo prihlásený, zadajte prosím <br> heslo pred naskenovaním QR kódu.",
         "UNLOCK_FAILED_TEXT": "Zadali ste zlé heslo, relácia nemôže byť obnovená.",
         "ENTER_PASSWORD": "Pre znovu pripojenie Vašej predchádzajúcej relácie, <br>prosím zadajte heslo:",
-        "PASSWORD_STRENGTH": "Password strength",
+        "PASSWORD_STRENGTH": "Sila hesla",
         "UNLOCK_FAILED_TITLE": "Odomknutie zlyhalo",
         "ALTERNATIVELY": "Alebo,",
         "UNLOCK_FAILED_FORGOTTEN": "Pokiaľ si nepamätáte svoje heslo, jednoducho zvoľte \"zabudnúť túto reláciu\" a nastavte nové heslo.",
@@ -69,17 +69,17 @@
         "ADBLOCKER": "Používate blokovanie reklám, ktorý tiež blokuje WebRTC?",
         "PLEASE_UPDATE_APP": "Prosím, uistite sa, že používate <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">poslednú verziu</a> aplikácie Threema!",
         "USE_ARCHIVE_VERSION": "Prípadne môžete prejsť na <a href=\"{archiveUrl}\">predchádzajúcu verziu</a> Threema Web.",
-        "TROUBLESHOOTING": "Troubleshooting",
+        "TROUBLESHOOTING": "Riešenie problémov",
         "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
         "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
         "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
         "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
-        "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
-        "DESCRIBE_PROBLEM": "Please describe the problem here.",
-        "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
-        "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
-        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to *SUPPORT."
+        "REMOVE_SENSITIVE_DATA": "Odstrániť citlivé údaje (kontakty, obsahy správ, atď.)",
+        "DESCRIBE_PROBLEM": "Prosím tu popíšte Váš problém.",
+        "COPY_LOG_CLIPBOARD": "Skopírovať log do schránky",
+        "REPORT_VIA_THREEMA": "Odoslať protokol pre *SUPPORT",
+        "REPORT_VIA_THREEMA_FAILED": "Odoslanie protokolu pre *SUPPORT zlyhalo.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Protokol bol odoslaný pre *SUPPORT."
     },
     "common": {
         "YES": "Áno",
@@ -137,7 +137,7 @@
         "GROUP_CREATOR": "Tvorca skupiny",
         "GROUP_ROLE_NORMAL": "Člen",
         "GROUP_ROLE_CREATOR": "Tvorca",
-        "UPLOADING": "Uploading …",
+        "UPLOADING": "Nahrávanie ...",
         "DOWNLOAD": "Stiahnuť",
         "DOWNLOADING": "Sťahovanie ...",
         "COPY": "Kopírovať",
@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "Konverzácia nemôže byť pripnutá",
         "UNPINNED_CONVERSATION_OK": "Konverzácia odopnutá",
         "UNPINNED_CONVERSATION_ERROR": "Konverzácia nemôže byť odopnutá",
-        "ME": "Me"
+        "ME": "Ja",
+        "CONTACT_STATE_INACTIVE": "Inactive",
+        "CONTACT_STATE_INVALID": "Invalid",
+        "CONTACT_STATE_REVOKED": "Revoked"
     },
     "messageStates": {
         "WE_ACK": "Poslali ste \"palec nahor\"",
@@ -219,7 +222,8 @@
         "SENT": "Správa bola doručená na Threema server",
         "DELIVERED": "Správa bola doručená na zariadenie príjemcu",
         "READ": "Správa bola prečítaná príjemcom",
-        "FAILED": "Správa nemohla byť poslaná"},
+        "FAILED": "Správa nemohla byť poslaná"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Zvuková správa",
         "FILE_MESSAGE": "Súborová správa",
@@ -249,7 +253,7 @@
             "syncFailed": "Synchronizácia skupiny zlyhala",
             "noMembers": "Neboli definovaný žiadny členovia",
             "alreadyLeft": "Už ste opustili túto skupinu",
-            "valueTooLong": "A value you entered is too long"
+            "valueTooLong": "Zadaná hodnota je príliš dlhá"
         }
     },
     "error": {
@@ -257,7 +261,8 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nemôže prijať túto správu.",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemôže prijať hlasovú správu.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemôže prijať súbor.",
-        "CONTACT_BLOCKED":  "Nemôžete poslať správu zablokovanému kontaktu.",
+        "CONTACT_BLOCKED": "Nemôžete poslať správu zablokovanému kontaktu.",
+        "CONTACT_INVALID": "You cannot send messages to an invalid contact.",
         "ERROR_OCCURRED": "Došlo k chybe.",
         "FILE_TOO_LARGE": "Súbory väčšie ako {maxmb} MiB nemôžu byť poslané",
         "FILE_TOO_LARGE_WEB": "V súčastnosti nemôžu byť poslané, cez Threema Web, súbory väčšie ako 15 MiB",
@@ -308,7 +313,7 @@
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Zariadenie nedostupné",
         "UNABLE_TO_CONNECT": "Nie je možné pripojiť sa k Vašemu zariadeniu.",
-        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
+        "DISMISS_WARNING": "Pre obnovenie pripojenia, prosím obnovte stránku"
     },
     "version": {
         "NEW_VERSION": "Je k dispozícii nová verzia",
@@ -355,9 +360,9 @@
         "SESSION_DELETED": "Relácia bola na Vašom zariadení zmazaná.",
         "WEBCLIENT_DISABLED": "Threema Web bola vypnutá na Vašom zariadení.",
         "SESSION_REPLACED": "Relácia bola zrušenia lebo ste začali novú reláciu Threema Web v inom okne prehliadača.",
-        "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
+        "OUT_OF_MEMORY": "Relácia bola ukončená, pretože vaša pamäť je plná.",
         "SESSION_ERROR": "Relácia bola zrušená kvôli chybe komunikačného protokolu. ",
         "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
-        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new Threema Web session."
+        "PUSH_ERROR_ACTION": "Pokiaľ by tento problém pretrvával, prosím kliknite na \"Zabudnúť Reláciu\" a vytvorte novú reláciu Threema Web."
     }
 }

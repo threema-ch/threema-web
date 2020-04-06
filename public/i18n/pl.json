@@ -24,8 +24,8 @@
         "BTN_RECONNECT": "Połącz ponownie",
         "BROWSER_NOT_SUPPORTED": "Ta przeglądarka jest niewspierana ",
         "BROWSER_NOT_SUPPORTED_ANDROID": "Ta przeglądarka jest niewspierana na systemie Android.",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Używaj najnowszej wersji {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} lub {safariLink} (tylko iOS), w przeciwnym wypadku klient web może nie działać poprawnie.",
-        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Używaj najnowszej wersji {firefoxLink}, {chromeLink}, {operaLink} lub {edgeLink}, w przeciwnym wypadku klient web może nie działać poprawnie.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Używaj najnowszej wersji {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} lub {safariLink} (tylko iOS), w przeciwnym razie Threema Web może nie działać poprawnie.",
+        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Używaj najnowszej wersji {firefoxLink}, {chromeLink}, {operaLink} lub {edgeLink}, w przeciwnym razie Threema Web może nie działać poprawnie.",
         "SAFARI": "Safari jest kompatybilny tylko z Threemą Web dla iOS.<br>Jeżeli korzystasz z systemu Android, użyj innej przeglądarki.",
         "CONNECTING": "Łączenie",
         "WAITING_FOR_PUSH": "Oczekiwanie na<br>wybudzenie aplikacji.",
@@ -209,7 +209,8 @@
         "UNPINNED_CONVERSATION_ERROR": "Konwersacja nie mogła zostać odpięta",
         "ME": "Ja",
         "CONTACT_STATE_INACTIVE": "Nieaktywny",
-        "CONTACT_STATE_INVALID": "Nieprawidłowy"
+        "CONTACT_STATE_INVALID": "Nieprawidłowy",
+        "CONTACT_STATE_REVOKED": "Wycofany"
     },
     "messageStates": {
         "WE_ACK": "Wysłałeś kciuk w górę",
@@ -260,8 +261,8 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nie może otrzymać tej wiadomości",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nie może otrzymywać wiadomości głosowych.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nie może otrzymywać plików.",
-        "CONTACT_BLOCKED":  "Nie możesz wysyłać wiadomości do zablokowanego kontaktu.",
-        "CONTACT_INVALID": "Nie możesz wysyłać wiadomości do nieprawidłowego kontaktu.",
+        "CONTACT_BLOCKED": "Nie możesz wysyłać wiadomości do zablokowanego kontaktu.",
+        "CONTACT_INVALID": "Nie możesz wysyłać wiadomości do nieprawidłowego kontaktu",
         "ERROR_OCCURRED": "Wystąpił błąd.",
         "FILE_TOO_LARGE": "Pliki większe niż {maxmb} MiB nie mogą być wysłyane",
         "FILE_TOO_LARGE_WEB": "Obecnie pliki większe niż 15 MiB nie mogą być wysyłane przez Threema Web",

@@ -24,8 +24,8 @@
         "BTN_RECONNECT": "重连",
         "BROWSER_NOT_SUPPORTED": "不支持您的浏览器",
         "BROWSER_NOT_SUPPORTED_ANDROID": "安卓系统不支持这个浏览器",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "请使用最新版的{firefoxLink}，{chromeLink}，{operaLink}，{edgeLink}或者{safariLink}（仅限iOS）， 使用其他浏览器可能导致无法正常使用。",
-        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "请使用最新版的{firefoxLink}，{chromeLink}，{operaLink}或者{edgeLink}，使用其他浏览器可能导致无法正常使用。",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "請升級至最新版本的 瀏覽器：{firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} 或{safariLink} (僅iOS)，否則Threema Web可能無法正常工作",
+        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "請升級至最新版本的 瀏覽器：{firefoxLink}, {chromeLink}, {operaLink}, {edgeLink}，否則Threema Web可能無法正常工作",
         "SAFARI": "Safari仅与适用于iOS的Threema Web兼容。如果您使用的是Android，请使用其他浏览器。",
         "CONNECTING": "连接中",
         "WAITING_FOR_PUSH": "等待唤醒APP",
@@ -207,7 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "聊天不能置顶",
         "UNPINNED_CONVERSATION_OK": "取消了聊天置顶",
         "UNPINNED_CONVERSATION_ERROR": "聊天不能取消置顶",
-        "ME": "我"
+        "ME": "我",
+        "CONTACT_STATE_INACTIVE": "Inactive",
+        "CONTACT_STATE_INVALID": "Invalid",
+        "CONTACT_STATE_REVOKED": "Revoked"
     },
     "messageStates": {
         "WE_ACK": "你点了赞",
@@ -219,7 +222,8 @@
         "SENT": "消息已经被发送到服务器",
         "DELIVERED": "消息已经送达对方的设备",
         "READ": "消息已读",
-        "FAILED": "消息无法发送"},
+        "FAILED": "消息无法发送"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "音频消息",
         "FILE_MESSAGE": "文件消息",
@@ -257,7 +261,8 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» 无法接收到此消息。",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 无法接收音频消息",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 不支持接收文件。",
-        "CONTACT_BLOCKED":  "不能向拉黑的联系人发送消息",
+        "CONTACT_BLOCKED": "不能向拉黑的联系人发送消息",
+        "CONTACT_INVALID": "You cannot send messages to an invalid contact.",
         "ERROR_OCCURRED": "发生错误",
         "FILE_TOO_LARGE": "无法发送大于{maxmb} M的文件",
         "FILE_TOO_LARGE_WEB": "这个文件大于15M，无法通过Threema Web发送",
@@ -354,7 +359,7 @@
         "SESSION_STOPPED": "会话已被您的设备终止",
         "SESSION_DELETED": "会话已被您的设备删除。",
         "WEBCLIENT_DISABLED": "您的设备没有开启了Threema 网页端登录。",
-        "SESSION_REPLACED": "您在其他地方登录了Threema 网页端，本次会话已停止。",
+        "SESSION_REPLACED": "您正在其他地方進行了Threema 网页端會話，本次会话已停止。",
         "OUT_OF_MEMORY": "内存不足，连接终止。",
         "SESSION_ERROR": "协议错误导致会话关闭",
         "PUSH_ERROR_INFO": "尝试通过推送通知唤醒设备失败了，这种情况可能是您最近更换了新的移动设备",
