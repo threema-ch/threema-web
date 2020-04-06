@@ -4,6 +4,22 @@ This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
 
+### [v2.3.7][v2.3.7] (2020-04-06)
+
+Changes:
+
+* [feature] Make Threema Web a simple PWA ([#972][i972])
+* [feature] Improved error and exception logging ([#981][i981] / [#978][i978])
+* [change] Design update: New font, new logo ([#979][i979])
+* [change] Password input field: Remove autocomplete=off attribute ([#976][i976])
+* [bug] Only send typing update to contact receivers ([#974][i974])
+* [bug] Correctly handle invalid / revoked contacts ([#980][i980])
+
+Contributors:
+
+- [@chrisly-bear][@chrisly-bear]
+
+
 ### [v2.3.6][v2.3.6] (2020-03-12)
 
 Changes:
@@ -925,7 +941,15 @@ First public release.
 [i968]: https://github.com/threema-ch/threema-web/issues/968
 [i969]: https://github.com/threema-ch/threema-web/issues/969
 [i971]: https://github.com/threema-ch/threema-web/issues/971
+[i972]: https://github.com/threema-ch/threema-web/issues/972
+[i974]: https://github.com/threema-ch/threema-web/issues/974
+[i976]: https://github.com/threema-ch/threema-web/issues/976
+[i978]: https://github.com/threema-ch/threema-web/issues/978
+[i979]: https://github.com/threema-ch/threema-web/issues/979
+[i980]: https://github.com/threema-ch/threema-web/issues/980
+[i981]: https://github.com/threema-ch/threema-web/issues/981
 
+[v2.3.7]: https://github.com/threema-ch/threema-web/compare/v2.3.6...v2.3.7
 [v2.3.6]: https://github.com/threema-ch/threema-web/compare/v2.3.5...v2.3.6
 [v2.3.5]: https://github.com/threema-ch/threema-web/compare/v2.3.4...v2.3.5
 [v2.3.4]: https://github.com/threema-ch/threema-web/compare/v2.3.3...v2.3.4
@@ -988,3 +1012,4 @@ First public release.
 [@SirTyson]: https://github.com/SirTyson
 [@MarcoZehe]: https://github.com/MarcoZehe
 [@vortex852456]: https://github.com/vortex852456
+[@chrisly-bear]: https://github.com/chrisly-bear
