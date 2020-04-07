@@ -1871,7 +1871,7 @@ export class WebClientService {
                                     this.log.error(`Cannot retrieve contact ${identity}`);
                                 } else if (!hasFeature(contact, requiredFeature, this.log)) {
                                     this.log.warn(
-                                        `Contact ${identity} has feature masks ${contact.featureMask} ` +
+                                        `Contact ${identity} has feature mask ${contact.featureMask} ` +
                                         `which does not include ${requiredFeature}`
                                     );
                                     unsupportedMembers.push(contact.displayName);
