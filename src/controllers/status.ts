@@ -190,15 +190,26 @@ export class StatusController {
         }
 
         // Get original keys
-        const originalKeyStore = this.webClientService.salty.keyStore;
-        const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+        let close: boolean | string = false;
+        let originalKeyStore: saltyrtc.KeyStore;
+        let originalPeerPermanentKeyBytes: Uint8Array;
+        try {
+            originalKeyStore = this.webClientService.salty.keyStore;
+            originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+        } catch (error) {
+            this.log.warn('Unable to get original keys, redirecting', error);
+            close = 'welcome';
+        }
 
-        // Soft reconnect: Does not reset the loaded data
+        // Soft reconnect: Does not reset the loaded data (unless the keys could not be retrived)
         this.webClientService.stop({
             reason: DisconnectReason.SessionStopped,
             send: true,
-            close: false,
+            close: close,
         });
+        if (close !== false) {
+            return;
+        }
         this.webClientService.init({
             keyStore: originalKeyStore,
             peerTrustedKey: originalPeerPermanentKeyBytes,
@@ -239,19 +250,32 @@ export class StatusController {
         this.log.info(`Connection lost (iOS). Reconnect attempt #${++this.stateService.attempt}`);
 
         // Get original keys
-        const originalKeyStore = this.webClientService.salty.keyStore;
-        const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+        let close: boolean | string = false;
+        let originalKeyStore: saltyrtc.KeyStore;
+        let originalPeerPermanentKeyBytes: Uint8Array;
+        try {
+            originalKeyStore = this.webClientService.salty.keyStore;
+            originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+        } catch (error) {
+            this.log.warn('Unable to get original keys, redirecting', error);
+            close = 'welcome';
+        }
 
-        // Delay connecting a bit to wait for old websocket to close
-        // TODO: Make this more robust and hopefully faster
-        const startTimeout = 500;
+        // Soft reconnect: Does not reset the loaded data (unless the keys could not be retrived)
         this.log.debug('Stopping old connection');
         this.webClientService.stop({
             reason: DisconnectReason.SessionStopped,
             send: true,
-            close: false,
+            close: close,
             connectionBuildupState: 'push',
         });
+        if (close !== false) {
+            return;
+        }
+
+        // Delay reconnecting a bit to wait for old websocket to close
+        // TODO: Make this more robust and hopefully faster
+        const startTimeout = 500;
 
         // Only send a push...
         const push = ((): { send: boolean, reason?: string } => {

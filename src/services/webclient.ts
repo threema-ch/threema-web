@@ -1287,18 +1287,6 @@ export class WebClientService {
      * Stop the webclient service.
      *
      * This is a forced stop, meaning that all connections are being closed.
-     *
-     * @reason The disconnect reason.
-     * @send will send a disconnect message to the remote peer containing the
-     *   disconnect reason if set to `true`.
-     * @close will close the session (meaning all cached data will be
-     *   invalidated) if set to `true`. Note that the session will always be
-     *   closed in case `reason` indicates that the session is to be deleted,
-     *   has been replaced, a protocol error occurred or in case `redirect` has
-     *   been set to `true`.
-     * @redirect will redirect to the welcome page if set to `true`.
-     * @connectionBuildupState: The connection buildup state the state service
-     *   will be reset to.
      */
     public stop(args: threema.WebClientServiceStopArguments): void {
         if (args.close === true) {
