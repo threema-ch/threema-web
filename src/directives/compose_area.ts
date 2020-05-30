@@ -735,6 +735,9 @@ export default [
                     });
                     stopTyping();
                 });
+
+                // When losing browser or tab focus, send stopTyping message
+                window.onblur = () => stopTyping();
             },
             // tslint:disable:max-line-length
             template: `
