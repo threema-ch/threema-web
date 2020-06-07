@@ -721,11 +721,17 @@ export default [
 
                 updateView();
 
+                const stopTypingOnBlur = () => stopTyping();
+
+                window.addEventListener('blur', stopTypingOnBlur);
+
                 // Listen to broadcasts
                 const unsubscribeListeners = [];
                 unsubscribeListeners.push($rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
-                    composeArea.focus();
-                }));
+                        composeArea.focus();
+                    }),
+                    () => window.removeEventListener('blur', stopTypingOnBlur)
+                );
 
                 // When switching chat, send stopTyping message
                 scope.$on('$destroy', () => {
@@ -735,9 +741,6 @@ export default [
                     });
                     stopTyping();
                 });
-
-                // When losing browser or tab focus, send stopTyping message
-                window.onblur = () => stopTyping();
             },
             // tslint:disable:max-line-length
             template: `
