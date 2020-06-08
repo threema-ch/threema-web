@@ -721,24 +721,25 @@ export default [
 
                 updateView();
 
-                const stopTypingOnBlur = () => stopTyping();
+                // Callbacks to unsubscribe listeners in $destroy
+                const unsubscribeListeners = [];
 
+                // Send "stop typing" message when switching tab or window
+                const stopTypingOnBlur = () => stopTyping();
                 window.addEventListener('blur', stopTypingOnBlur);
+                unsubscribeListeners.push(() => window.removeEventListener('blur', stopTypingOnBlur));
 
                 // Listen to broadcasts
-                const unsubscribeListeners = [];
                 unsubscribeListeners.push($rootScope.$on('onQuoted', (event: ng.IAngularEvent, args: any) => {
-                        composeArea.focus();
-                    }),
-                    () => window.removeEventListener('blur', stopTypingOnBlur)
-                );
+                    composeArea.focus();
+                }));
 
-                // When switching chat, send stopTyping message
+                // When closing the chat view...
                 scope.$on('$destroy', () => {
-                    unsubscribeListeners.forEach((u) => {
-                        // Unsubscribe
-                        u();
-                    });
+                    // ...unsubscribe listeners...
+                    unsubscribeListeners.forEach((u) => u());
+
+                    // ...and send "stop typing" message.
                     stopTyping();
                 });
             },
