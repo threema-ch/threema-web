@@ -7,23 +7,9 @@ assignees: ''
 
 ---
 
-## Summary
-
 <!--
-A short one-sentence summary of the feature you would like to have in
-Threema Web.
--->
-
-## Detailed Description
-
-<!---
-A clear and concise description of the proposed feature.
-Describe the solution you'd like.
-Describe alternatives you've considered.
--->
-
-## Additional context
-
-<!---
-Add any other context or screenshots about the feature request here.
+NOTE: Threema Web is in maintenance mode while we are working on a new solution
+that should resolve some of the long-standing issues we were having with
+Threema Web. We will still do regular maintenance and fix critical bugs, but
+for now there will be no major new features.
 -->
