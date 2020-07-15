@@ -239,6 +239,7 @@ export default [
                                     log.debug('Blob loaded');
                                     this.downloading = false;
                                     this.downloaded = true;
+                                    const options = {type: blobInfo.mimetype};
 
                                     switch (message.type) {
                                         case 'image':
@@ -251,7 +252,13 @@ export default [
                                             );
                                             break;
                                         case 'video':
-                                            saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
+                                            saveAs(
+                                                new Blob(
+                                                    [blobInfo.buffer],
+                                                    options
+                                                ),
+                                                blobInfo.filename
+                                            );
                                             break;
                                         case 'file':
                                             if (message.file.type === 'image/gif') {
@@ -261,7 +268,13 @@ export default [
                                                 // Hide thumbnail
                                                 this.showThumbnail = false;
                                             } else {
-                                                saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
+                                                saveAs(
+                                                    new Blob(
+                                                        [blobInfo.buffer],
+                                                        options
+                                                    ),
+                                                    blobInfo.filename
+                                                );
                                             }
                                             break;
                                         case 'audio':

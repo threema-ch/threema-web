@@ -54,7 +54,12 @@ export default [
                     }
                 };
                 this.save = () => {
-                    saveAs(new Blob([mediaboxService.data]), mediaboxService.filename || 'image.jpg');
+                    saveAs(
+                        new Blob([mediaboxService.data], {
+                            type: mediaboxService.mimetype,
+                        }),
+                        mediaboxService.filename || 'image.jpg'
+                    );
                 };
 
                 // Listen to Mediabox service events
