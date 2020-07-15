@@ -150,7 +150,14 @@ export default [
                                         case 'video':
                                         case 'file':
                                         case 'audio':
-                                            saveAs(new Blob([blobInfo.buffer]), blobInfo.filename);
+                                            const options = {type: blobInfo.mimetype};
+                                            saveAs(
+                                                new Blob(
+                                                    [blobInfo.buffer],
+                                                    options
+                                                ),
+                                                blobInfo.filename
+                                            );
                                             break;
                                         default:
                                             log.warn('Ignored download request for message type', this.message.type);
