@@ -466,6 +466,11 @@ export class WebClientService {
         if (flags.reuseKeyStoreAndTrustedKey) {
             keyStore = this.initParameters.keyStore;
             peerTrustedKey = this.initParameters.peerTrustedKey;
+        } else {
+            this.initParameters = {
+                keyStore: keyStore,
+                peerTrustedKey: peerTrustedKey,
+            };
         }
         this.log.info(`Initializing (keyStore=${keyStore !== undefined ? 'yes' : 'no'}, peerTrustedKey=` +
         `${peerTrustedKey !== undefined ? 'yes' : 'no'}, reuseKeyStoreAndTrustedKey=` +
@@ -559,12 +564,6 @@ export class WebClientService {
         this.arpLog.info('Public key:', this.salty.permanentKeyHex);
         this.arpLogV.debug('Auth token:', this.salty.authTokenHex);
 
-        // Store determined init parameters
-        this.initParameters = {
-            keyStore: keyStore,
-            peerTrustedKey: peerTrustedKey,
-        };
-
         // We want to know about state changes
         this.salty.on('state-change', (ev: saltyrtc.SaltyRTCEvent) => {
             const state: saltyrtc.SignalingState = ev.data;
@@ -586,10 +585,6 @@ export class WebClientService {
                         }
                         break;
                     case 'task':
-                        // Update stored trusted key of the peer
-                        this.initParameters.peerTrustedKey = this.salty.peerPermanentKeyBytes;
-
-                        // Task established
                         this.onTaskEstablished(resumeSession);
                         break;
                     case 'closing':
