@@ -815,6 +815,11 @@ declare namespace threema {
         SessionError = 'error',
     }
 
+    const enum ComposeAreaSubmitKey {
+        Enter = 0,
+        ShiftEnter = 1,
+    }
+
     interface EmojiInfo {
         // The plain emoji string
         emojiString: string;
