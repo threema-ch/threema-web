@@ -189,6 +189,10 @@ export class StatusController {
             this.scheduleStatusBar();
         }
 
+        // Get original keys
+        const originalKeyStore = this.webClientService.salty.keyStore;
+        const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
+
         // Soft reconnect: Does not reset the loaded data
         this.webClientService.stop({
             reason: DisconnectReason.SessionStopped,
@@ -196,7 +200,8 @@ export class StatusController {
             close: false,
         });
         this.webClientService.init({
-            reuseKeyStoreAndTrustedKey: true,
+            keyStore: originalKeyStore,
+            peerTrustedKey: originalPeerPermanentKeyBytes,
             resume: true,
         });
 
@@ -232,6 +237,10 @@ export class StatusController {
      */
     private reconnectIos(): void {
         this.log.info(`Connection lost (iOS). Reconnect attempt #${++this.stateService.attempt}`);
+
+        // Get original keys
+        const originalKeyStore = this.webClientService.salty.keyStore;
+        const originalPeerPermanentKeyBytes = this.webClientService.salty.peerPermanentKeyBytes;
 
         // Delay connecting a bit to wait for old websocket to close
         // TODO: Make this more robust and hopefully faster
@@ -277,7 +286,8 @@ export class StatusController {
                 this.log.debug('Starting new connection without push');
             }
             this.webClientService.init({
-                reuseKeyStoreAndTrustedKey: true,
+                keyStore: originalKeyStore,
+                peerTrustedKey: originalPeerPermanentKeyBytes,
                 resume: true,
             });
 
