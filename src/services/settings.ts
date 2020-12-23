@@ -32,7 +32,6 @@ class ComposeAreaSettings {
     }
 
     public setSubmitKey(submitKey: string | threema.ComposeAreaSubmitKey): void {
-        console.warn('SETSUBMITKEY', submitKey, typeof submitKey, this.parseSubmitKey(submitKey).toString());
         this.settingsService.storeUntrustedKeyValuePair('submitKey', this.parseSubmitKey(submitKey).toString());
     }
 
@@ -44,11 +43,9 @@ class ComposeAreaSettings {
             case threema.ComposeAreaSubmitKey.Enter: // fallthrough
             case threema.ComposeAreaSubmitKey.ShiftEnter:
                 // Valid
-                console.warn('VALID!', submitKey); // TODO: REMOVE
                 return submitKey;
             default:
                 // Invalid or not set. Fall back to 'Enter'.
-                console.warn('INVALID! FALLING BACK TO ENTER!', submitKey); // TODO: REMOVE
                 return threema.ComposeAreaSubmitKey.Enter;
         }
     }
