@@ -38,7 +38,9 @@ class ComposeAreaSettings {
     private parseSubmitKey(submitKey: any): threema.ComposeAreaSubmitKey {
         try {
             submitKey = parseInt(submitKey, 10);
-        } catch {}
+        } catch {
+            // Ignored
+        }
         switch (submitKey) {
             case threema.ComposeAreaSubmitKey.Enter: // fallthrough
             case threema.ComposeAreaSubmitKey.ShiftEnter:
