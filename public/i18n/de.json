@@ -309,7 +309,7 @@
             "PLAY_SOUND": "Ton abspielen"
         },
         "composearea": {
-            "COMPOSE_AREA": "Textnachrichtverfassungsdingsbumswasweissichdenn",
+            "COMPOSE_AREA": "Eingabefeld",
             "SUBMIT_KEY_ENTER": "'Enter' um eine Nachricht zu senden. 'Shift+Enter' um eine neue Zeile hinzuzufügen.",
             "SUBMIT_KEY_SHIFT_ENTER": "'Shift+Enter' um eine Nachricht zu senden. 'Enter' um eine neue Zeile hinzuzufügen."
         }
