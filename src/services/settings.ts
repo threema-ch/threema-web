@@ -16,15 +16,52 @@
  */
 
 import {Logger} from 'ts-log';
+import {AsyncEvent} from 'ts-events';
 
 import {LogService} from './log';
+
+class ComposeAreaSettings {
+    private readonly settingsService: SettingsService;
+
+    constructor(settingsService: SettingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public getSubmitKey(): threema.ComposeAreaSubmitKey {
+        return this.parseSubmitKey(this.settingsService.retrieveUntrustedKeyValuePair('submitKey', false));
+    }
+
+    public setSubmitKey(submitKey: string | threema.ComposeAreaSubmitKey): void {
+        console.warn('SETSUBMITKEY', submitKey, typeof submitKey, this.parseSubmitKey(submitKey).toString());
+        this.settingsService.storeUntrustedKeyValuePair('submitKey', this.parseSubmitKey(submitKey).toString());
+    }
+
+    private parseSubmitKey(submitKey: any): threema.ComposeAreaSubmitKey {
+        try {
+            submitKey = parseInt(submitKey, 10);
+        } catch {}
+        switch (submitKey) {
+            case threema.ComposeAreaSubmitKey.Enter: // fallthrough
+            case threema.ComposeAreaSubmitKey.ShiftEnter:
+                // Valid
+                console.warn('VALID!', submitKey); // TODO: REMOVE
+                return submitKey;
+            default:
+                // Invalid or not set. Fall back to 'Enter'.
+                console.warn('INVALID! FALLING BACK TO ENTER!', submitKey); // TODO: REMOVE
+                return threema.ComposeAreaSubmitKey.Enter;
+        }
+    }
+}
 
 /**
  * The settings service can update variables for settings and persist them to
  * LocalStorage.
  */
 export class SettingsService {
+    public readonly settingsChangedEvent = new AsyncEvent<void>();
     private static STORAGE_KEY_PREFIX = 'settings-';
+    public readonly composeArea: ComposeAreaSettings;
     private readonly log: Logger;
     private storage: Storage;
 
@@ -32,6 +69,7 @@ export class SettingsService {
     constructor($window: ng.IWindowService, logService: LogService) {
         this.log = logService.getLogger('Settings-S');
         this.storage = $window.localStorage;
+        this.composeArea = new ComposeAreaSettings(this);
     }
 
     /**
@@ -40,6 +78,7 @@ export class SettingsService {
     public storeUntrustedKeyValuePair(key: string, value: string): void {
         this.log.debug('Storing settings key:', key);
         this.storage.setItem(SettingsService.STORAGE_KEY_PREFIX + key, value);
+        this.settingsChangedEvent.post();
     }
 
     /**
@@ -66,6 +105,7 @@ export class SettingsService {
     public removeUntrustedKeyValuePair(key: string): void {
         this.log.debug('Removing settings key:', key);
         this.storage.removeItem(SettingsService.STORAGE_KEY_PREFIX + key);
+        this.settingsChangedEvent.post();
     }
 
     /**
@@ -77,5 +117,4 @@ export class SettingsService {
         const item: string = this.storage.getItem(SettingsService.STORAGE_KEY_PREFIX + key);
         return item !== null;
     }
-
 }

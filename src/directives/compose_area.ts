@@ -22,6 +22,7 @@ import {parseEmoji, shortnameToUtf8} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
+import { SettingsService } from '../services/settings';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
 import {isEmojiInfo, isKeyboardEvent} from '../typeguards';
@@ -35,6 +36,7 @@ export default [
     'StringService',
     'TimeoutService',
     'ReceiverService',
+    'SettingsService',
     '$timeout',
     '$translate',
     '$mdDialog',
@@ -46,6 +48,7 @@ export default [
              stringService: StringService,
              timeoutService: TimeoutService,
              receiverService: ReceiverService,
+             settingsService: SettingsService,
              $timeout: ng.ITimeoutService,
              $translate: ng.translate.ITranslateService,
              $mdDialog: ng.material.IDialogService,
@@ -53,6 +56,7 @@ export default [
              $rootScope: ng.IRootScopeService,
              CONFIG: threema.Config) {
         const log = logService.getLogger('ComposeArea-C');
+
         return {
             restrict: 'EA',
             scope: {
@@ -146,6 +150,17 @@ export default [
 
                 // Typing events
                 let stopTypingTimer: ng.IPromise<void> = null;
+
+                // Callbacks to unsubscribe listeners in $destroy
+                const unsubscribeListeners = [];
+
+                // Determine submit key and listen for changes
+                let submitKey: threema.ComposeAreaSubmitKey = settingsService.composeArea.getSubmitKey();
+                const settingsChangedEventHandler = () => {
+                    submitKey = settingsService.composeArea.getSubmitKey();
+                };
+                settingsService.settingsChangedEvent.attach(settingsChangedEventHandler);
+                unsubscribeListeners.push(() => settingsService.settingsChangedEvent.detach(settingsChangedEventHandler));
 
                 function stopTyping() {
                     // We can only stop typing of the timer is set (meaning
@@ -268,8 +283,18 @@ export default [
                 }
 
                 function onKeyDown(ev: KeyboardEvent): void {
-                    // If enter is pressed, prevent default event from being dispatched
-                    if (!ev.shiftKey && ev.key === 'Enter') {
+                    let submit = false;
+                    switch (submitKey) {
+                        case threema.ComposeAreaSubmitKey.ShiftEnter:
+                            submit = ev.key === 'Enter' && ev.shiftKey;
+                            break;
+                        case threema.ComposeAreaSubmitKey.Enter: // fallthrough
+                        default:
+                            submit = ev.key === 'Enter' && !ev.shiftKey;
+                    }
+
+                    // Prevent new-line when submitting
+                    if (submit) {
                         ev.preventDefault();
                     }
 
@@ -298,8 +323,8 @@ export default [
                     // At link time, the element is not yet evaluated.
                     // Therefore add following code to end of event loop.
                     $timeout(() => {
-                        // Shift + enter to insert a newline. Enter to send.
-                        if (!ev.shiftKey && ev.key === 'Enter') {
+                        // Check if the text should be submitted
+                        if (submit) {
                             if (sendText()) {
                                 return;
                             }
@@ -720,9 +745,6 @@ export default [
                 });
 
                 updateView();
-
-                // Callbacks to unsubscribe listeners in $destroy
-                const unsubscribeListeners = [];
 
                 // Send "stop typing" message when switching tab or window
                 const stopTypingOnBlur = () => stopTyping();

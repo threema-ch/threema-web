@@ -54,6 +54,22 @@
                         </a>
                     </div>
                 </section>
+                <section>
+                    <md-subheader class="md-accent"><span translate>settings.composearea.COMPOSE_AREA</span>
+                    </md-subheader>
+                    <md-list flex>
+                        <md-list-item>
+                            <md-radio-group ng-model="ctrl.submitKey" ng-change="ctrl.setSubmitKey(ctrl.submitKey)">
+                                <md-radio-button value="0" class="md-primary">
+                                    <span translate>settings.composearea.SUBMIT_KEY_ENTER</span>
+                                </md-radio-button>
+                                <md-radio-button value="1" class="md-primary">
+                                    <span translate>settings.composearea.SUBMIT_KEY_SHIFT_ENTER</span>
+                                </md-radio-button>
+                            </md-radio-group>
+                        </md-list-item>
+                    </md-list>
+                </section>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
