@@ -22,7 +22,7 @@ import {parseEmoji, shortnameToUtf8} from '../helpers/emoji';
 import {BrowserService} from '../services/browser';
 import {LogService} from '../services/log';
 import {ReceiverService} from '../services/receiver';
-import { SettingsService } from '../services/settings';
+import {SettingsService} from '../services/settings';
 import {StringService} from '../services/string';
 import {TimeoutService} from '../services/timeout';
 import {isEmojiInfo, isKeyboardEvent} from '../typeguards';
