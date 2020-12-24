@@ -78,8 +78,8 @@
     "tweetnacl": "^1.0.3",
     "twemoji": "^12.1.5",
     "typescript": "~3.8.3",
-    "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
     "webpack-merge": "^4.2.2",
     "webrtc-adapter": "^7.5.0"
   },
@@ -103,6 +103,6 @@
     "term-color": "^1.0.1",
     "ts-node": "~8.6.2",
     "tslint": "~6.0.0",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.11.0"
   }
 }
