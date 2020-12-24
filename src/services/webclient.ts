@@ -259,10 +259,6 @@ export class WebClientService {
     private batteryStatusTimeout: ng.IPromise<void> = null;
 
     // Other
-    private initParameters: {
-        keyStore?: saltyrtc.KeyStore,
-        peerTrustedKey?: Uint8Array,
-    } = {};
     private config: threema.Config;
     private container: threema.Container.Factory;
     private typingInstance: threema.Container.Typing;
@@ -455,21 +451,12 @@ export class WebClientService {
     public init(flags: {
         keyStore?: saltyrtc.KeyStore,
         peerTrustedKey?: Uint8Array,
-        reuseKeyStoreAndTrustedKey?: boolean,
         resume: boolean,
     }): void {
         let keyStore = flags.keyStore;
-        let peerTrustedKey = flags.peerTrustedKey;
         let resumeSession = flags.resume;
-
-        // Reuse
-        if (flags.reuseKeyStoreAndTrustedKey) {
-            keyStore = this.initParameters.keyStore;
-            peerTrustedKey = this.initParameters.peerTrustedKey;
-        }
         this.log.info(`Initializing (keyStore=${keyStore !== undefined ? 'yes' : 'no'}, peerTrustedKey=` +
-        `${peerTrustedKey !== undefined ? 'yes' : 'no'}, reuseKeyStoreAndTrustedKey=` +
-        `${flags.reuseKeyStoreAndTrustedKey}, resume=${resumeSession})`);
+            `${flags.peerTrustedKey !== undefined ? 'yes' : 'no'}, resume=${resumeSession})`);
 
         // Reset fields, blob cache, pending requests and pending timeouts in case the session
         // should explicitly not be resumed
@@ -552,18 +539,12 @@ export class WebClientService {
             .withKeyStore(keyStore)
             .usingTasks(tasks)
             .withPingInterval(30);
-        if (peerTrustedKey !== undefined) {
-            builder = builder.withTrustedPeerKey(peerTrustedKey);
+        if (flags.peerTrustedKey !== undefined) {
+            builder = builder.withTrustedPeerKey(flags.peerTrustedKey);
         }
         this.salty = builder.asInitiator();
         this.arpLog.info('Public key:', this.salty.permanentKeyHex);
         this.arpLogV.debug('Auth token:', this.salty.authTokenHex);
-
-        // Store determined init parameters
-        this.initParameters = {
-            keyStore: keyStore,
-            peerTrustedKey: peerTrustedKey,
-        };
 
         // We want to know about state changes
         this.salty.on('state-change', (ev: saltyrtc.SaltyRTCEvent) => {
@@ -586,10 +567,6 @@ export class WebClientService {
                         }
                         break;
                     case 'task':
-                        // Update stored trusted key of the peer
-                        this.initParameters.peerTrustedKey = this.salty.peerPermanentKeyBytes;
-
-                        // Task established
                         this.onTaskEstablished(resumeSession);
                         break;
                     case 'closing':
