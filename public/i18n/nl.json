@@ -8,13 +8,14 @@
         "PLEASE_SCAN": "Scan deze QR code met uw Threema app",
         "PLEASE_UNLOCK": "Herverbinden van de sessie",
         "WAITING": "Wacht op connectie",
-        "RETRY": "Retry",
+        "RETRY": "Probeer opnieuw",
         "PLEASE_RELOAD": "Herladen om opnieuw te proberen, a.u.b.",
         "RELOAD": "Pagina herladen",
         "PASSWORD": "Wachtwoord",
-        "CHOOSE_PASSWORD": "If you want to stay logged in, please enter<br>a session password before scanning.",
+        "CHOOSE_PASSWORD": "Als u ingelogd wilt blijven, voer dan <br> een sessiewachtwoord in voordat u gaat scannen.",
         "UNLOCK_FAILED_TEXT": "Het ingevoerde wachtwoord is niet juist, de sessie kan niet hersteld worden.",
         "ENTER_PASSWORD": "Om verbinding te maken met de vorige sessie,<br>voer het wachtwoord in:",
+        "PASSWORD_STRENGTH": "Wachtwoordsterkte ",
         "UNLOCK_FAILED_TITLE": "Ontgrendelen gefaald",
         "ALTERNATIVELY": "Alternatief",
         "UNLOCK_FAILED_FORGOTTEN": "Indien u uw wachtwoord niet kunt herinneren, kunt u gewoon \"vergeet deze sessie\" kiezen en een nieuw wachtwoord instellen.",
@@ -23,8 +24,8 @@
         "BTN_RECONNECT": "Herverbinden",
         "BROWSER_NOT_SUPPORTED": "Deze browser wordt niet ondersteund",
         "BROWSER_NOT_SUPPORTED_ANDROID": "Deze browser wordt niet op Android ondersteund",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Gebruik de laatste versie van {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} of {safariLink} (alleen iOS), anders werkt Threema Web mogelijk niet goed.",
-        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Gebruik de laatste versie van {firefoxLink}, {chromeLink}, {operaLink} of {edgeLink}, anders werkt Threema Web mogelijk niet goed.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Gebruik de nieuwste versie van {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} of {safariLink} (alleen iOS), anders werkt Threema Web mogelijk niet correct.",
+        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Gebruik de nieuwste versie van {firefoxLink}, {chromeLink}, {operaLink} of {edgeLink}, anders werkt Threema Web mogelijk niet correct.",
         "SAFARI": "Safari is alleen compatible met Threema Web voor iOS.<br>Indien je Android gebruikt, gebruik dan een andere browser.",
         "CONNECTING": "Verbinden",
         "WAITING_FOR_PUSH": "Wachten tot<br>app reageert …",
@@ -61,24 +62,24 @@
         "APP_STARTED": "Is de Threema app gestart?",
         "SESSION_DELETED": "Heeft u deze sessie op uw telefoon verwijderd?",
         "PHONE_ONLINE": "Is uw telefoon met het internet verbonden?",
-        "UNLOCK_OR_CHARGE": "It may help to unlock your device or connect it to a charger.",
-        "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
+        "UNLOCK_OR_CHARGE": "Het kan helpen om uw apparaat te ontgrendelen of aan een oplader aan te sluiten.",
+        "PUSH_FAQ": "Uw apparaat kan worden beïnvloed door problemen met pushmeldingen. Zie de FAQ-artikelen voor <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> en <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> voor probleemoplossing.",
         "WEBCLIENT_ENABLED": "Staat Threema Web aan in de Threema app?",
         "PLUGIN": "Is er een privacy plugin geïnstalleerd in uw browser dat WebRTC communicatie blokkeerd?",
         "ADBLOCKER": "Gebruikt uw een ad blocker die ook WebRTC communicatie blokkeerd?",
         "PLEASE_UPDATE_APP": "Zorg dat je de <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">laatste versie</a> van de Threema app gebruikt!",
         "USE_ARCHIVE_VERSION": "Je kunt ook terugschakelen naar de <a href=\"{archiveUrl}\">vorige versie</a> van Threema Web.",
-        "TROUBLESHOOTING": "Troubleshooting",
-        "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
-        "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
-        "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
-        "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
-        "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
-        "DESCRIBE_PROBLEM": "Please describe the problem here.",
-        "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
-        "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
-        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to *SUPPORT."
+        "TROUBLESHOOTING": "Probleemoplossing",
+        "REPORT_FAQ": "<a target=\"_blank\" href=\"https://threema.ch/faq\">Bekijk eerst onze veelgestelde vragen</a> voor algemene vragen en om veelvoorkomende problemen op te lossen.",
+        "REPORT_LOG": "Als u geen antwoord op uw vraag kunt vinden of als het probleem aanhoudt, kunt u een logboekrapport sturen naar het Threema-ondersteuningsteam.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Het rapporteren van het logboek via Threema is momenteel niet beschikbaar omdat er geen verbinding is met uw mobiele apparaat. Maak eerst verbinding met uw mobiele apparaat.",
+        "REPORT_VIA_CLIPBOARD": "Als alternatief kunt u het logboek naar het klembord kopiëren en het via het webformulier <a target=\"_blank\" href=\"https://threema.ch/support\">melden aan het ondersteuningsteam van Threema.</a>",
+        "REMOVE_SENSITIVE_DATA": "Verwijder gevoelige gegevens (contacten, berichtinhoud, etc.)",
+        "DESCRIBE_PROBLEM": "Beschrijf hier het probleem.",
+        "COPY_LOG_CLIPBOARD": "Kopieer log naar klembord",
+        "REPORT_VIA_THREEMA": "Log verzenden naar * SUPPORT",
+        "REPORT_VIA_THREEMA_FAILED": "Het verzenden van het lograpport naar * SUPPORT is mislukt.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Het verzenden van het lograpport naar * SUPPORT is mislukt."
     },
     "common": {
         "YES": "Ja",
@@ -136,7 +137,7 @@
         "GROUP_CREATOR": "Groepsmaker",
         "GROUP_ROLE_NORMAL": "Lid",
         "GROUP_ROLE_CREATOR": "Schepper",
-        "UPLOADING": "Uploading …",
+        "UPLOADING": "Uploading ...",
         "DOWNLOAD": "Download",
         "DOWNLOADING": "Downloaden ...",
         "COPY": "Kopiëren",
@@ -206,10 +207,10 @@
         "PINNED_CONVERSATION_ERROR": "Conversatie kon niet worden vastgepind",
         "UNPINNED_CONVERSATION_OK": "Conversatie losgemaakt",
         "UNPINNED_CONVERSATION_ERROR": "Conversatie kon niet worden losgemaakt",
-        "ME": "Me",
+        "ME": "Ik",
         "CONTACT_STATE_INACTIVE": "Inactief",
         "CONTACT_STATE_INVALID": "Ongeldig",
-        "CONTACT_STATE_REVOKED": "Verwijderde"
+        "CONTACT_STATE_REVOKED": "Herroepen"
     },
     "messageStates": {
         "WE_ACK": "Je hebt een duim omhoog gestuurd",
@@ -221,7 +222,8 @@
         "SENT": "Het bericht is afgeleverd op de Threema server",
         "DELIVERED": "Het bericht is afgeleverd op het apparaat van de ontvanger",
         "READ": "Het bericht is gelezen door de ontvanger",
-        "FAILED": "Het bericht kon niet worden verstuurd"},
+        "FAILED": "Het bericht kon niet worden verstuurd"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Audiobericht",
         "FILE_MESSAGE": "Bericht met bestand",
@@ -250,7 +252,8 @@
             "disabledByPolicy": "Functie uitgeschakeld door administrator",
             "syncFailed": "Groep synchronisatie mislukt",
             "noMembers": "Geen leden gedefinieerd",
-            "alreadyLeft": "Je hebt deze groep al verlaten"
+            "alreadyLeft": "Je hebt deze groep al verlaten",
+            "valueTooLong": "De waarde die u heeft ingevoerd, is te lang"
         }
     },
     "error": {
@@ -258,8 +261,8 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» kan dit bericht niet ontvangen.",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kan geen spraakberichten ontvangen.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kan geen bestanden ontvangen.",
-        "CONTACT_BLOCKED":  "Je kan geen berichten sturen aan een geblokkeerde contactpersoon.",
-        "CONTACT_INVALID": "U kunt geen berichten versturen aan ongeldige contactpersonen.",
+        "CONTACT_BLOCKED": "Je kan geen berichten sturen aan een geblokkeerde contactpersoon.",
+        "CONTACT_INVALID": "Je kunt geen berichten sturen naar een ongeldig contact.",
         "ERROR_OCCURRED": "Een fout is opgetreden.",
         "FILE_TOO_LARGE": "Bestanden groter dan {maxmb} MiB kunnen niet worden verstuurd",
         "FILE_TOO_LARGE_WEB": "Momenteel kunnen bestanden groter dan 15 MiB niet worden verstuurd met Threema Web",
@@ -292,11 +295,11 @@
         "LICENSES": "Licenties",
         "OPEN_SOURCE": "Threema Web is volledig open source.",
         "SOURCE_CODE": "De broncode en de licentievoorwaarden zijn te vinden op GitHub:",
-        "EMOJI_ART": "Emoji art supplied by <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
+        "EMOJI_ART": "Emoji's geleverd door <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
         "NOTIFICATION_SOUNDS": "Geluidsbestanden &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Gelicentieerd onder de Soundsnap licentie",
-        "LICENSE_TEXT": "Licenses of used open source components can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">in the source code</a>.",
+        "LICENSE_TEXT": "Licenties van gebruikte open source componenten zijn te vinden <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">in de broncode</a>.",
         "CHANGELOG": "changelog",
-        "CHANGELOG_TEXT": "The Threema Web changelog can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">on GitHub</a>."
+        "CHANGELOG_TEXT": "De Threema Web changelog is te vinden <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">op GitHub</a>."
     },
     "settings": {
         "SETTINGS": "Instellingen",
@@ -305,11 +308,17 @@
             "SHOW_NOTIFICATIONS": "Toon desktop notificaties",
             "SHOW_PREVIEW": "Toon berichtinhoud in notificaties",
             "PLAY_SOUND": "Speel geluid af"
+        },
+        "composearea": {
+            "COMPOSE_AREA": "Compose area",
+            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
+            "SUBMIT_KEY_SHIFT_ENTER": "'Shift+Enter' to send a message. 'Enter' to add a new line."
         }
     },
     "deviceUnreachable": {
-        "DEVICE_UNREACHABLE": "Device Unreachable",
-        "UNABLE_TO_CONNECT": "Unable to connect to your device …"
+        "DEVICE_UNREACHABLE": "Apparaat onbereikbaar",
+        "UNABLE_TO_CONNECT": "Kan geen verbinding maken met uw apparaat ...",
+        "DISMISS_WARNING": "Laad uw browservenster opnieuw om de verbinding te herstellen."
     },
     "version": {
         "NEW_VERSION": "Nieuwe versie beschikbaar",
@@ -317,13 +326,13 @@
     },
     "voip": {
         "CALL_MISSED": "Gemiste oproep",
-        "CALL_MISSED_BUSY": "Missed call (Busy)",
+        "CALL_MISSED_BUSY": "Gemiste oproep (bezet)",
         "CALL_FINISHED_IN": "Inkomende oproep",
         "CALL_FINISHED_OUT": "Uitgaande oproep",
         "CALL_REJECTED": "Oproep geweigerd",
-        "CALL_REJECTED_BUSY": "Call recipient is busy",
-        "CALL_REJECTED_UNAVAILABLE": "Call recipient is unavailable",
-        "CALL_REJECTED_DISABLED": "Threema calls disabled by recipient",
+        "CALL_REJECTED_BUSY": "Ontvanger is bezet",
+        "CALL_REJECTED_UNAVAILABLE": "Ontvanger is niet beschikbaar",
+        "CALL_REJECTED_DISABLED": "Threema-oproepen zijn uitgeschakeld door ontvanger",
         "CALL_ABORTED": "Oproep afgebroken"
     },
     "battery": {
@@ -356,6 +365,9 @@
         "SESSION_DELETED": "De sessie is verwijderd op je apparaat.",
         "WEBCLIENT_DISABLED": "Threema Web is uitgeschakeld op je apparaat.",
         "SESSION_REPLACED": "De sessie is gestopt omdat je een Threema Web sessie in een andere browser hebt gestart.",
-        "SESSION_ERROR": "De sessie is afgebroken door een protocol fout."
+        "OUT_OF_MEMORY": "De sessie moest worden gestopt omdat je apparaat onvoldoende geheugen had.",
+        "SESSION_ERROR": "De sessie is afgebroken door een protocol fout.",
+        "PUSH_ERROR_INFO": "Pogingen om uw apparaat te activeren met pushmeldingen zijn mislukt. Dit kan bijvoorbeeld gebeuren als u onlangs bent overgestapt op een nieuw mobiel apparaat.",
+        "PUSH_ERROR_ACTION": "Als deze fout zich blijft voordoen, klik dan op \"Vergeet sessie\" en start een nieuwe Threema-websessie."
     }
 }

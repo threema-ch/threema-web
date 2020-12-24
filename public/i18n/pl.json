@@ -308,6 +308,11 @@
             "SHOW_NOTIFICATIONS": "Pokaż powiadomienia pulpitu",
             "SHOW_PREVIEW": "Pokaż zawartość wiadomości w powiadomieniach",
             "PLAY_SOUND": "Odtwórz dźwięk"
+        },
+        "composearea": {
+            "COMPOSE_AREA": "Compose area",
+            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
+            "SUBMIT_KEY_SHIFT_ENTER": "'Shift+Enter' to send a message. 'Enter' to add a new line."
         }
     },
     "deviceUnreachable": {

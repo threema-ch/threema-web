@@ -63,23 +63,23 @@
         "SESSION_DELETED": "Vymazali ste reláciu na Vašom telefóne?",
         "PHONE_ONLINE": "Je Váš telefón pripojený k internetu?",
         "UNLOCK_OR_CHARGE": "Môže pomôcť odomknutie zariadenia alebo pripojenie k nabíjačke.",
-        "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
+        "PUSH_FAQ": "Problémy s push oznámením môžu byť ovplyvnené na vašom zariadení.. Riešenie problémov nájdete v článkoch FAQ pre <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> a <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a>.",
         "WEBCLIENT_ENABLED": "Je povolená Threema Web v aplikácii Threema?",
         "PLUGIN": "Je v prehliadači nainštalovaný akýsi bezpečnostný plugin, ktorý blokuje komunikáciu WebRTC?",
         "ADBLOCKER": "Používate blokovanie reklám, ktorý tiež blokuje WebRTC?",
         "PLEASE_UPDATE_APP": "Prosím, uistite sa, že používate <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">poslednú verziu</a> aplikácie Threema!",
         "USE_ARCHIVE_VERSION": "Prípadne môžete prejsť na <a href=\"{archiveUrl}\">predchádzajúcu verziu</a> Threema Web.",
         "TROUBLESHOOTING": "Riešenie problémov",
-        "REPORT_FAQ": "Please <a target=\"_blank\" href=\"https://threema.ch/faq\">check out our FAQs</a> first for general questions and to resolve common problems.",
-        "REPORT_LOG": "If you can't find an answer to your question or the problem persists, you can send a log report to the Threema support team.",
-        "REPORT_VIA_THREEMA_UNAVAILABLE": "Reporting the log via Threema is currently unavailable since there is no connection to your mobile device. Connect to your mobile device first.",
-        "REPORT_VIA_CLIPBOARD": "Alternatively, you may copy the log into the clipboard and <a target=\"_blank\" href=\"https://threema.ch/support\">report it to the Threema support team via the web form</a>.",
+        "REPORT_FAQ": "Najprv si prečítajte <a target=\"_blank\" href=\"https://threema.ch/faq\">FAQ</a> na riešenie bežných problémov.",
+        "REPORT_LOG": "Ak nemôžete nájsť odpoveď na svoju otázku alebo problém pretrváva, môžete tímu podpory Threema poslať log záznam.",
+        "REPORT_VIA_THREEMA_UNAVAILABLE": "Posielanie log záznamu prostredníctvom aplikácie Threema je momentálne nedostupné, pretože nie ste pripojený k mobilnému zariadeniu. Najskôr sa pripojte k mobilnému zariadeniu.",
+        "REPORT_VIA_CLIPBOARD": "Prípadne môžete skopírovať log záznam do schránky a nahlásiť ho tímu podpory Threema prostredníctvom <a target=\"_blank\" href=\"https://threema.ch/support\">webového formulára</a>. ",
         "REMOVE_SENSITIVE_DATA": "Odstrániť citlivé údaje (kontakty, obsahy správ, atď.)",
         "DESCRIBE_PROBLEM": "Prosím tu popíšte Váš problém.",
-        "COPY_LOG_CLIPBOARD": "Skopírovať log do schránky",
-        "REPORT_VIA_THREEMA": "Odoslať protokol pre *SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Odoslanie protokolu pre *SUPPORT zlyhalo.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Protokol bol odoslaný pre *SUPPORT."
+        "COPY_LOG_CLIPBOARD": "Skopírovať log záznam do schránky",
+        "REPORT_VIA_THREEMA": "Odoslať log záznam pre *SUPPORT",
+        "REPORT_VIA_THREEMA_FAILED": "Odoslanie log záznamu pre *SUPPORT zlyhalo.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Log záznam bol odoslaný pre *SUPPORT."
     },
     "common": {
         "YES": "Áno",
@@ -195,7 +195,7 @@
         "THREEMA_HOME_CONTACT": "Súkromný Threema kontakt",
         "THREEMA_BLOCKED_RECEIVER": "zablokované",
         "DELETE_THREAD": "Zmazať chat",
-        "DELETE_THREAD_MESSAGE": "{count, plural, one {Naozaj chcete odstrániť chat? Správy už nebude možné nikdy obnoviť.} few {Naozaj chcete odstrániť {count} chaty? Správy už nebude možné nikdy obnoviť.} many {Naozaj chcete odstrániť {count} chaty? Správy už nebude možné nikdy obnoviť.} other {Naozaj chcete odstrániť {count} chatov? Správy už nebude možné nikdy obnoviť.}}",
+        "DELETE_THREAD_MESSAGE": "{count, plural, one {Naozaj chcete odstrániť chat? Správy už nebude možné nikdy obnoviť.} few {Naozaj chcete odstrániť {count} chaty? Správy už nebude možné nikdy obnoviť.} many {Naozaj chcete odstrániť {count} chaty? Správy už nebude možné nikdy obnoviť.} other {Naozaj chcete odstrániť {count} chat(ov)? Správy už nebude možné nikdy obnoviť.}}",
         "MUTED_NONE": "Žiadne oznámenia",
         "MUTED_MENTION_ONLY": "Zobraziť oznámenie len keď ste spomenutý",
         "MUTED_SILENT": "Tiché oznámenia",
@@ -208,9 +208,9 @@
         "UNPINNED_CONVERSATION_OK": "Konverzácia odopnutá",
         "UNPINNED_CONVERSATION_ERROR": "Konverzácia nemôže byť odopnutá",
         "ME": "Ja",
-        "CONTACT_STATE_INACTIVE": "Inactive",
-        "CONTACT_STATE_INVALID": "Invalid",
-        "CONTACT_STATE_REVOKED": "Revoked"
+        "CONTACT_STATE_INACTIVE": "Neaktívne",
+        "CONTACT_STATE_INVALID": "Neplatné",
+        "CONTACT_STATE_REVOKED": "Odvolané"
     },
     "messageStates": {
         "WE_ACK": "Poslali ste \"palec nahor\"",
@@ -229,7 +229,7 @@
         "FILE_MESSAGE": "Súborová správa",
         "image": "Obrázok",
         "video": "Video",
-        "file": "or",
+        "file": "Súbor",
         "audio": "Zvuk",
         "location": "Poloha",
         "ballot": "Hlasovanie",
@@ -262,7 +262,7 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemôže prijať hlasovú správu.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemôže prijať súbor.",
         "CONTACT_BLOCKED": "Nemôžete poslať správu zablokovanému kontaktu.",
-        "CONTACT_INVALID": "You cannot send messages to an invalid contact.",
+        "CONTACT_INVALID": "Nemôžete poslať správu neplatnému kontaktu.",
         "ERROR_OCCURRED": "Došlo k chybe.",
         "FILE_TOO_LARGE": "Súbory väčšie ako {maxmb} MiB nemôžu byť poslané",
         "FILE_TOO_LARGE_WEB": "V súčastnosti nemôžu byť poslané, cez Threema Web, súbory väčšie ako 15 MiB",
@@ -308,6 +308,11 @@
             "SHOW_NOTIFICATIONS": "Zobraziť oznámenia aplikácie",
             "SHOW_PREVIEW": "Zobraziť obsah správy v oznámení",
             "PLAY_SOUND": "Prehrať zvuk"
+        },
+        "composearea": {
+            "COMPOSE_AREA": "Compose area",
+            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
+            "SUBMIT_KEY_SHIFT_ENTER": "'Shift+Enter' to send a message. 'Enter' to add a new line."
         }
     },
     "deviceUnreachable": {
@@ -362,7 +367,7 @@
         "SESSION_REPLACED": "Relácia bola zrušenia lebo ste začali novú reláciu Threema Web v inom okne prehliadača.",
         "OUT_OF_MEMORY": "Relácia bola ukončená, pretože vaša pamäť je plná.",
         "SESSION_ERROR": "Relácia bola zrušená kvôli chybe komunikačného protokolu. ",
-        "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
+        "PUSH_ERROR_INFO": "Pokusy o prebudenie zariadenia pomocou push upozornení zlyhali. Môže sa to stať napríklad, ak ste nedávno prešli na nové mobilné zariadenie.",
         "PUSH_ERROR_ACTION": "Pokiaľ by tento problém pretrvával, prosím kliknite na \"Zabudnúť Reláciu\" a vytvorte novú reláciu Threema Web."
     }
 }

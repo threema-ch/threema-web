@@ -209,7 +209,7 @@
         "UNPINNED_CONVERSATION_ERROR": "Konverzace nemůže být odepnuta",
         "ME": "Já",
         "CONTACT_STATE_INACTIVE": "Neaktivní",
-        "CONTACT_STATE_INVALID": "Chybný",
+        "CONTACT_STATE_INVALID": "Neplatný",
         "CONTACT_STATE_REVOKED": "Odvolaná"
     },
     "messageStates": {
@@ -222,7 +222,8 @@
         "SENT": "Zpráva byla doručena na Threema server",
         "DELIVERED": "Zpráva byla doručena do zařízení příjemce",
         "READ": "Zpráva byla přečtena příjemcem",
-        "FAILED": "Zpráva nemohla být odeslána"},
+        "FAILED": "Zpráva nemohla být odeslána"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Zvuková zpráva",
         "FILE_MESSAGE": "Souborová zpráva",
@@ -307,6 +308,11 @@
             "SHOW_NOTIFICATIONS": "Zobrazovat oznámení v prohlížeči",
             "SHOW_PREVIEW": "V oznámení zobrazit i obsah zprávy",
             "PLAY_SOUND": "Přehrát zvuk"
+        },
+        "composearea": {
+            "COMPOSE_AREA": "Compose area",
+            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
+            "SUBMIT_KEY_SHIFT_ENTER": "'Shift+Enter' to send a message. 'Enter' to add a new line."
         }
     },
     "deviceUnreachable": {

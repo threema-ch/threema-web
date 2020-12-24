@@ -208,9 +208,9 @@
         "UNPINNED_CONVERSATION_OK": "取消了聊天置顶",
         "UNPINNED_CONVERSATION_ERROR": "聊天不能取消置顶",
         "ME": "我",
-        "CONTACT_STATE_INACTIVE": "Inactive",
-        "CONTACT_STATE_INVALID": "Invalid",
-        "CONTACT_STATE_REVOKED": "Revoked"
+        "CONTACT_STATE_INACTIVE": "不活跃",
+        "CONTACT_STATE_INVALID": "不可用",
+        "CONTACT_STATE_REVOKED": "已注销"
     },
     "messageStates": {
         "WE_ACK": "你点了赞",
@@ -262,7 +262,7 @@
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 无法接收音频消息",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 不支持接收文件。",
         "CONTACT_BLOCKED": "不能向拉黑的联系人发送消息",
-        "CONTACT_INVALID": "You cannot send messages to an invalid contact.",
+        "CONTACT_INVALID": "无法联系该用户",
         "ERROR_OCCURRED": "发生错误",
         "FILE_TOO_LARGE": "无法发送大于{maxmb} M的文件",
         "FILE_TOO_LARGE_WEB": "这个文件大于15M，无法通过Threema Web发送",
@@ -308,6 +308,11 @@
             "SHOW_NOTIFICATIONS": "显示桌面通知",
             "SHOW_PREVIEW": "通知里显示消息详情",
             "PLAY_SOUND": "播放声音"
+        },
+        "composearea": {
+            "COMPOSE_AREA": "Compose area",
+            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
+            "SUBMIT_KEY_SHIFT_ENTER": "'Shift+Enter' to send a message. 'Enter' to add a new line."
         }
     },
     "deviceUnreachable": {
