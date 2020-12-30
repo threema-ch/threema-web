@@ -196,6 +196,18 @@ describe('Filters', function() {
             ]);
         });
 
+        it('shows "yesterday" for yesterday also around DST change', () => {
+            // This test relies on being run in timezone Europe/Zurich
+            // FIXME: Mock timezone, so that test is portable.
+            const beforeDST = new Date(2020, 2, 29, 0, 42);
+            const duringDST = new Date(2020, 2, 30, 0, 23);
+            jasmine.clock().install();
+            jasmine.clock().mockDate(duringDST);
+            this.testPatterns([
+                [beforeDST.getTime() / 1000, 'date.YESTERDAY, 00:42'],
+            ]);
+        });
+
         it('shows full datetime for other days', () => {
             jasmine.clock().install();
             jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));
