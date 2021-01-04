@@ -77,9 +77,9 @@
         "REMOVE_SENSITIVE_DATA": "Verwijder gevoelige gegevens (contacten, berichtinhoud, etc.)",
         "DESCRIBE_PROBLEM": "Beschrijf hier het probleem.",
         "COPY_LOG_CLIPBOARD": "Kopieer log naar klembord",
-        "REPORT_VIA_THREEMA": "Log verzenden naar * SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Het verzenden van het lograpport naar * SUPPORT is mislukt.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Het verzenden van het lograpport naar * SUPPORT is mislukt."
+        "REPORT_VIA_THREEMA": "Log verzenden naar *SUPPORT",
+        "REPORT_VIA_THREEMA_FAILED": "Het verzenden van het lograpport naar *SUPPORT is mislukt.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Het verzenden van het lograpport naar *SUPPORT is mislukt."
     },
     "common": {
         "YES": "Ja",
