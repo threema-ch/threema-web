@@ -7,6 +7,14 @@ assignees: ''
 
 ---
 
+<!--
+NOTE: Threema Web is in maintenance mode while we are working on a new solution
+that should resolve some of the long-standing issues we were having with
+Threema Web. We will still do regular maintenance and fix critical bugs, but
+for now there will be no major new features or non-critical bugfixes.
+See https://github.com/threema-ch/threema-web/pull/996 for details.
+-->
+
 ## Bug Description
 
 <!---
