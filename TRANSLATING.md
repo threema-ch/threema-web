@@ -4,9 +4,9 @@ We are translating Threema Web using Transifex:
 
 https://www.transifex.com/threema-gmbh-1/threema-web/
 
-## Help Translating!
+## Help Translate!
 
-If you want to help translating Threema Web to your language, please follow
+If you want to help translate Threema Web to your language, please follow
 this guide:
 
 https://docs.transifex.com/getting-started-1/translators
