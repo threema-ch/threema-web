@@ -44,7 +44,7 @@
         "ALREADY_CONNECTED_DETAILS": "You are already connected to Threema Web in another tab or window!",
         "VERSION": "Version",
         "BACKGROUND_IMAGE": "Background Image",
-        "HELP_TRANSLATE": "Help Translating"
+        "HELP_TRANSLATE": "Help Translate"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Connection problems",

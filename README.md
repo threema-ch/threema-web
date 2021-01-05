@@ -51,7 +51,7 @@ include the experiment's version number (e.g. `1.2.3-experiment-beta4`).
 
 ## Translating
 
-If you want to help translating Threema Web to your language, please check out
+If you want to help translate Threema Web to your language, please check out
 [`TRANSLATING.md`](./TRANSLATING.md)!
 
 
