@@ -43,7 +43,7 @@ class ComposeAreaSettings {
         }
         switch (submitKey) {
             case threema.ComposeAreaSubmitKey.Enter: // fallthrough
-            case threema.ComposeAreaSubmitKey.ShiftEnter:
+            case threema.ComposeAreaSubmitKey.CtrlEnter:
                 // Valid
                 return submitKey;
             default:
