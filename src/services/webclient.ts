@@ -2324,6 +2324,9 @@ export class WebClientService {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
                     text: quoteText,
                 } as threema.Quote;
+                if (message.id != null && message.id.length > 0) {
+                    quote.messageId = message.id;
+                }
 
                 this.drafts.setQuote(receiver, quote);
                 this.$rootScope.$broadcast('onQuoted', {

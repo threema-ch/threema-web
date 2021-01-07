@@ -739,13 +739,14 @@ class ConversationController {
                 case 'text':
                     // do not show confirmation, send directly
                     contents.forEach((msg: threema.MessageData, index: number) => {
+                        // Move quote from receiver to message
                         const quote = this.webClientService.getQuote(this.receiver);
                         if (hasValue(quote)) {
                             msg.quote = quote;
                         }
-                        // Remove quote
                         this.webClientService.setQuote(this.receiver, null);
-                        // send message
+
+                        // Send message
                         // TODO: This should probably be moved into the
                         //       WebClientService as a specific method for the
                         //       type.
