@@ -817,7 +817,7 @@ declare namespace threema {
 
     const enum ComposeAreaSubmitKey {
         Enter = 0,
-        ShiftEnter = 1,
+        CtrlEnter = 1,
     }
 
     interface EmojiInfo {

@@ -285,8 +285,8 @@ export default [
                 function onKeyDown(ev: KeyboardEvent): void {
                     let submit = false;
                     switch (submitKey) {
-                        case threema.ComposeAreaSubmitKey.ShiftEnter:
-                            submit = ev.key === 'Enter' && ev.shiftKey;
+                        case threema.ComposeAreaSubmitKey.CtrlEnter:
+                            submit = ev.key === 'Enter' && ev.ctrlKey;
                             break;
                         case threema.ComposeAreaSubmitKey.Enter: // fallthrough
                         default:
