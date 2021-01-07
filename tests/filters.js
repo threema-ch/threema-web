@@ -196,6 +196,18 @@ describe('Filters', function() {
             ]);
         });
 
+        it('works across month and year boundaries', () => {
+            const in20thCentury1 = new Date(1999, 11, 30, 23, 59);
+            const in20thCentury2 = new Date(1999, 11, 31, 00, 00);
+            const in21thCentury = new Date(2000, 0, 1, 12, 34);
+            jasmine.clock().install();
+            jasmine.clock().mockDate(in21thCentury);
+            this.testPatterns([
+                [in20thCentury1.getTime() / 1000, '30. date.month_short.DEC 1999, 23:59'],
+                [in20thCentury2.getTime() / 1000, 'date.YESTERDAY, 00:00'],
+            ]);
+        });
+
         it('shows full datetime for other days', () => {
             jasmine.clock().install();
             jasmine.clock().mockDate(new Date(2018, 9, 9, 20, 42));

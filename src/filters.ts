@@ -382,7 +382,8 @@ angular.module('3ema.filters', [])
             return formatTime(date);
         }
 
-        const yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
+        const yesterday = new Date(now);
+        yesterday.setDate(now.getDate() - 1);
         if (!forceFull && isSameDay(date, yesterday)) {
             return $translate.instant('date.YESTERDAY') + ', ' + formatTime(date);
         }
