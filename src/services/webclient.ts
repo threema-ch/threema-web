@@ -55,6 +55,7 @@ import {PushService, PushSession} from './push';
 import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
+import {StringService} from './string';
 import {ThemeService} from './theme';
 import {TimeoutService} from './timeout';
 import {TitleService} from './title';
@@ -195,6 +196,7 @@ export class WebClientService {
     private pushService: PushService;
     private qrCodeService: QrCodeService;
     private receiverService: ReceiverService;
+    private stringService: StringService;
     private themeService: ThemeService;
     private timeoutService: TimeoutService;
     private titleService: TitleService; // Don't remove, needs to be initialized to handle events
@@ -288,7 +290,7 @@ export class WebClientService {
         '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout', '$mdDialog',
         'LogService', 'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
-        'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
+        'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService', 'StringService',
         'VersionService', 'BatteryStatusService', 'ThemeService', 'TimeoutService',
         'CONFIG',
     ];
@@ -312,6 +314,7 @@ export class WebClientService {
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
+                stringService: StringService,
                 versionService: VersionService,
                 batteryStatusService: BatteryStatusService,
                 themeService: ThemeService,
@@ -338,6 +341,7 @@ export class WebClientService {
         this.pushService = pushService;
         this.qrCodeService = qrCodeService;
         this.receiverService = receiverService;
+        this.stringService = stringService;
         this.themeService = themeService;
         this.timeoutService = timeoutService;
         this.titleService = titleService;
@@ -1787,11 +1791,31 @@ export class WebClientService {
                     throw this.$translate.instant('error.ERROR_OCCURRED');
                 }
 
-                // Note: Not validating message length again here, since that
-                // would require us to re-encode the text a second time (since
-                // the compose area already checks the length). If we still end
-                // up with messages that are too large for some unexpected
-                // reason, we'd get an error message from the app.
+                // Note: Not validating message length again here in the general case,
+                // since that would require us to re-encode the text a second time
+                // (because the compose area already checks the length). However, if a
+                // quote is present, then the message may still be too long. In that case,
+                // shorten the quote.
+                if (data.quote !== undefined && data.quote !== null) {
+                    // Do a rough estimation of the quote v1 overhead.
+                    const quoteOverhead = 12 /* first line prefix */
+                                        + (data.quote.text.match(/\n/g) || []).length * 2 /* prefix */
+                                        + 16 /* safety margin */;
+
+                    // Get combined text + quote length
+                    const textByteLength = (new TextEncoder().encode(textData.text)).length;
+                    const quoteByteLength = (new TextEncoder().encode(data.quote.text)).length;
+                    const totalByteLength = textByteLength + quoteByteLength + quoteOverhead;
+
+                    // If too long, shorten the quote.
+                    const maxLength = this.getMaxTextLength();
+                    if (totalByteLength > maxLength) {
+                        const newLength = Math.max(3, maxLength - textByteLength - quoteOverhead - 3 /* byte length of ellipsis */);
+                        const chunks = this.stringService.byteChunk(data.quote.text, newLength)
+                        this.log.warn(`Quote too long, reducing length from ${quoteByteLength} to ≤${newLength} bytes`);
+                        data.quote.text = chunks[0] + '…';
+                    }
+                }
 
                 break;
             case 'file':
