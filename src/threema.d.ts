@@ -498,6 +498,7 @@ declare namespace threema {
     interface Quote {
         identity: string;
         text: string;
+        messageId?: string;
     }
 
     interface PushSessionConfig {

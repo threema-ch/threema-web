@@ -215,14 +215,17 @@ export default [
                         };
 
                         // Check for max length
+                        //
+                        // Note: Messages that use the entire available message size become a
+                        // problem when being quoted, since the quote also becomes part of the
+                        // message. As a workaround, until a better quote system is implemented,
+                        // reduce the max length and the chunk size to counter this. (If the
+                        // message text + quote text are too long, then the quote will be shortened
+                        // in WebClientService.)
                         const byteLength = (new TextEncoder().encode(text)).length;
-                        if (byteLength > scope.maxTextLength) {
-                            // Messages that use the entire available message size become a problem
-                            // when being quoted, since the quote also becomes part of the message.
-                            // As a workaround, until a better quote system is implemented, reduce
-                            // the chunk size so that reaching the limit becomes more unlikely.
+                        const reducedMaxLength = scope.maxTextLength - 30;
+                        if (byteLength > reducedMaxLength) {
                             const chunkSize = scope.maxTextLength * 0.85;
-
                             const pieces: string[] = stringService.byteChunk(text, chunkSize, 50);
 
                             const confirm = $mdDialog.confirm()
