@@ -3,6 +3,30 @@
 This changelog lists the most important changes for each released version. For
 the full log, please refer to the git commit history.
 
+> :warning: **Note:** Threema Web is in maintenance mode while we are working on a new
+> solution that should resolve some of the long-standing issues we were having
+> with Threema Web. We will still do regular maintenance and fix critical bugs,
+> but for now there will be no major new features or non-critical bugfixes.
+> See https://github.com/threema-ch/threema-web/pull/996 for more details.
+
+
+### [v2.3.8][v2.3.8] (2021-01-12)
+
+Changes:
+
+* [feature] Add a setting for inverted newline/submit behavior ([#274][i274], [#1007][i1007])
+* [feature] Add Turkish, Russian, Hungarian and partial Esperanto translations ([#1021][i1021])
+* [bug] Fix double newlines when pasting text ([#1012][i1012])
+* [bug] Fix typing indicator on focus loss ([#992][i992])
+* [bug] Provide the mime type when creating a Blob ([#999][i999])
+* [bug] Fix logic for determining whether a point in time was yesterday ([#1014][i1014])
+* [change] Upgrade many dependencies ([#1011][i1011])
+
+Contributors:
+
+- [Dennis Heer][@dennisheer]
+- [Raphael Das Gupta][@das-g]
+
 
 ### [v2.3.7][v2.3.7] (2020-04-06)
 
@@ -752,6 +776,7 @@ First public release.
 [i264]: https://github.com/threema-ch/threema-web/issues/264
 [i265]: https://github.com/threema-ch/threema-web/issues/265
 [i271]: https://github.com/threema-ch/threema-web/issues/271
+[i274]: https://github.com/threema-ch/threema-web/issues/274
 [i275]: https://github.com/threema-ch/threema-web/issues/275
 [i281]: https://github.com/threema-ch/threema-web/issues/281
 [i282]: https://github.com/threema-ch/threema-web/issues/282
@@ -953,7 +978,15 @@ First public release.
 [i979]: https://github.com/threema-ch/threema-web/issues/979
 [i980]: https://github.com/threema-ch/threema-web/issues/980
 [i981]: https://github.com/threema-ch/threema-web/issues/981
+[i992]: https://github.com/threema-ch/threema-web/issues/992
+[i999]: https://github.com/threema-ch/threema-web/issues/999
+[i1007]: https://github.com/threema-ch/threema-web/issues/1007
+[i1014]: https://github.com/threema-ch/threema-web/issues/1014
+[i1012]: https://github.com/threema-ch/threema-web/issues/1012
+[i1011]: https://github.com/threema-ch/threema-web/issues/1011
+[i1021]: https://github.com/threema-ch/threema-web/issues/1021
 
+[v2.3.8]: https://github.com/threema-ch/threema-web/compare/v2.3.7...v2.3.8
 [v2.3.7]: https://github.com/threema-ch/threema-web/compare/v2.3.6...v2.3.7
 [v2.3.6]: https://github.com/threema-ch/threema-web/compare/v2.3.5...v2.3.6
 [v2.3.5]: https://github.com/threema-ch/threema-web/compare/v2.3.4...v2.3.5
@@ -1018,3 +1051,5 @@ First public release.
 [@MarcoZehe]: https://github.com/MarcoZehe
 [@vortex852456]: https://github.com/vortex852456
 [@chrisly-bear]: https://github.com/chrisly-bear
+[@dennisheer]: https://github.com/dennisheer
+[@das-g]: https://github.com/das-g
