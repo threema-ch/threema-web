@@ -77,9 +77,9 @@
         "REMOVE_SENSITIVE_DATA": "Remove sensitive data (contacts, message contents, etc.)",
         "DESCRIBE_PROBLEM": "Please describe the problem here.",
         "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
-        "REPORT_VIA_THREEMA": "Send log to *SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Sending log report to *SUPPORT failed.",
-        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to *SUPPORT."
+        "REPORT_VIA_THREEMA": "Send log to support",
+        "REPORT_VIA_THREEMA_FAILED": "Sending log report to support failed.",
+        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to support."
     },
     "common": {
         "YES": "Так",

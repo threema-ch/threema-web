@@ -44,7 +44,7 @@
         "ALREADY_CONNECTED_DETAILS": "U bent al in een andere tab of  een ander venster met Threema Web verbonden.",
         "VERSION": "Versie",
         "BACKGROUND_IMAGE": "Achtergrond beeld",
-        "HELP_TRANSLATE": "Help vertalen"
+        "HELP_TRANSLATE": "Help met vertalen"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Verbindingsproblemen",
@@ -77,9 +77,9 @@
         "REMOVE_SENSITIVE_DATA": "Verwijder gevoelige gegevens (contacten, berichtinhoud, etc.)",
         "DESCRIBE_PROBLEM": "Beschrijf hier het probleem.",
         "COPY_LOG_CLIPBOARD": "Kopieer log naar klembord",
-        "REPORT_VIA_THREEMA": "Log verzenden naar *SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Het verzenden van het lograpport naar *SUPPORT is mislukt.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Het verzenden van het lograpport naar *SUPPORT is mislukt."
+        "REPORT_VIA_THREEMA": "Stuur log naar support",
+        "REPORT_VIA_THREEMA_FAILED": "Het sturen van de log naar support is mislukt.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Een logreport is verzonden naar support."
     },
     "common": {
         "YES": "Ja",
@@ -311,8 +311,8 @@
         },
         "composearea": {
             "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "SUBMIT_KEY_ENTER": "'Enter' om een bericht te verzenden. 'Shift+Enter' om een nieuwe lijn te beginnen.",
+            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' om een bericht te verzenden. 'Enter' om een nieuwe lijn te beginnen."
         }
     },
     "deviceUnreachable": {

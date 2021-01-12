@@ -24,7 +24,7 @@
         "BTN_RECONNECT": "Reconnecter",
         "BROWSER_NOT_SUPPORTED": "Ce navigateur n’est pas compatible.",
         "BROWSER_NOT_SUPPORTED_ANDROID": "Ce navigateur n’est pas compatible sous Android.",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Veuillez utiliser la dernière version de {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} ou {safariLink} (iOS uniqument), sinon le client web pourrait ne pas fonctionner correctement.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Veuillez utiliser la dernière version de {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} ou {safariLink} (seulement iOS), sinon le client web pourrait ne pas fonctionner correctement. ",
         "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Veuillez utiliser la dernière version de {firefoxLink}, {chromeLink}, {operaLink} ou {edgeLink}, sinon le client web pourrait ne pas fonctionner correctement.",
         "SAFARI": "Safari est seulement compatible avec Threema Web pour iOS.<br>Si vous utilisez Android, veuillez utiliser un autre navigateur.",
         "CONNECTING": "Connexion en cours",
@@ -77,9 +77,9 @@
         "REMOVE_SENSITIVE_DATA": "Supprimer les données sensibles (contacts, contenu des messages, etc.)",
         "DESCRIBE_PROBLEM": "Veuillez décrire le problème ici.",
         "COPY_LOG_CLIPBOARD": "Copier le journal dans le presse-papier",
-        "REPORT_VIA_THREEMA": "Envoyer le journal au *SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Échec de l’envoi du journal au *SUPPORT.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Un fichier journal a été envoyé au *SUPPORT."
+        "REPORT_VIA_THREEMA": "Envoyer le journal au support",
+        "REPORT_VIA_THREEMA_FAILED": "Échec de l’envoi du journal au support.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Un fichier journal a été envoyé au support."
     },
     "common": {
         "YES": "Oui",
@@ -311,8 +311,8 @@
         },
         "composearea": {
             "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "SUBMIT_KEY_ENTER": "'Entrée' pour envoyer. 'Maj+Entrée' pour revenir à la ligne.",
+            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Entrée' pour envoyer. 'Entrée' pour revenir à la ligne."
         }
     },
     "deviceUnreachable": {

@@ -77,9 +77,9 @@
         "REMOVE_SENSITIVE_DATA": "Удалить конфиденциальные данные (контакты, содержание сообщения и т.д.)",
         "DESCRIBE_PROBLEM": "Пожалуйста, опишите проблему здесь.",
         "COPY_LOG_CLIPBOARD": "Скопировать журнал в буфер обмена",
-        "REPORT_VIA_THREEMA": "Отправить отчёт в *SUPPORT",
-        "REPORT_VIA_THREEMA_FAILED": "Не удалось отправить отчёт в *SUPPORT.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Отчёт был отправлен в *SUPPORT."
+        "REPORT_VIA_THREEMA": "Отправить отчёт в ПОДДЕРЖКУ",
+        "REPORT_VIA_THREEMA_FAILED": "Не удалось отправить отчёт в ПОДДЕРЖКУ.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Отчёт был отправлен в ПОДДЕРЖКУ."
     },
     "common": {
         "YES": "Да",

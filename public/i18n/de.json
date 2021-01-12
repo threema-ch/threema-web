@@ -24,8 +24,8 @@
         "BTN_RECONNECT": "Verbindung aufbauen",
         "BROWSER_NOT_SUPPORTED": "Dieser Browser wird nicht unterst\u00fctzt",
         "BROWSER_NOT_SUPPORTED_ANDROID": "Dieser Browser wird von Android-Geräten nicht unterst\u00fctzt",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die aktuelle Version von {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} oder {safariLink} (nur unter iOS), um Threema Web ohne Einschränkungen zu nutzen.",
-        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Bitte verwenden Sie die aktuelle Version von {firefoxLink}, {chromeLink}, {operaLink} oder {edgeLink}, um Threema Web ohne Einschränkungen zu nutzen.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Bitte verwenden Sie die neueste Version von {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} oder {safariLink} (nur iOS), anderenfalls könnte es passieren, dass Threema Web nicht korrekt funktioniert.",
+        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Bitte verwenden Sie die neueste Version von {firefoxLink}, {chromeLink}, {operaLink} oder {edgeLink}, anderenfalls könnte es passieren, dass Threema Web nicht korrekt funktioniert.",
         "SAFARI": "Safari ist nur kompatibel mit Threema Web für iOS. Android-Nutzer verwenden bitte einen anderen Browser.",
         "CONNECTING": "Verbindung wird aufgebaut",
         "WAITING_FOR_PUSH": "Threema-App wird<br>aufgeweckt …",
@@ -71,7 +71,7 @@
         "USE_ARCHIVE_VERSION": "Alternativ können Sie zu der <a href=\"{archiveUrl}\">vorherigen Version</a> von Threema Web wechseln.",
         "TROUBLESHOOTING": "Fehlerbehebung",
         "REPORT_FAQ": "Bitte lesen Sie zuerst unsere <a target=\"_blank\" href=\"https://threema.ch/faq\">FAQs</a> für allgemeine Fragen und zur Lösung häufiger Probleme.",
-        "REPORT_LOG": "Wenn Sie keine Antwort auf ihre Frage finden, oder das Problem weiterhin besteht, können Sie einen Protokollbericht an das Threema Support-Team senden.",
+        "REPORT_LOG": "Wenn Sie keine Antwort auf ihre Frage finden, oder das Problem weiterhin besteht, können Sie ein Protokoll an das Threema Support-Team senden.",
         "REPORT_VIA_THREEMA_UNAVAILABLE": "Das Senden des Protokolls über Threema ist derzeit nicht möglich, da keine Verbindung zu Ihrem Mobilgerät besteht. Verbinden Sie sich zuerst mit Ihrem Mobilgerät.",
         "REPORT_VIA_CLIPBOARD": "Alternativ können Sie das Protokoll in die Zwischenablage kopieren und über das <a target=\"_blank\" href=\"https://threema.ch/support\">Webformular an das Threema-Support-Team senden</a>.",
         "REMOVE_SENSITIVE_DATA": "Sensible Daten entfernen (Kontakte, Nachrichten-Inhalte, etc.)",
@@ -79,7 +79,7 @@
         "COPY_LOG_CLIPBOARD": "Protokoll in die Zwischenablage kopieren",
         "REPORT_VIA_THREEMA": "Protokoll an Support senden",
         "REPORT_VIA_THREEMA_FAILED": "Das Senden des Protokolls an den Support ist fehlgeschlagen.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Ein Protokollbericht wurde an den Support gesendet."
+        "REPORT_VIA_THREEMA_SUCCESS": "Das Protokoll wurde an den Support gesendet."
     },
     "common": {
         "YES": "Ja",
@@ -222,7 +222,8 @@
         "SENT": "Die Nachricht wurde erfolgreich an den Server übermittelt",
         "DELIVERED": "Die Nachricht ist beim Gerät des Empfängers angekommen",
         "READ": "Die Nachricht wurde vom Empfänger gelesen",
-        "FAILED": "Die Nachricht konnte nicht gesendet werden"},
+        "FAILED": "Die Nachricht konnte nicht gesendet werden"
+    },
     "messageTypes": {
         "AUDIO_MESSAGE": "Sprachnachricht",
         "FILE_MESSAGE": "Datei",
@@ -260,7 +261,7 @@
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» kann diese Nachricht noch nicht erhalten.",
         "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Sprachnachrichten erhalten.",
         "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
-        "CONTACT_BLOCKED":  "Sie können keine Nachrichten an blockierte Kontakte senden.",
+        "CONTACT_BLOCKED": "Sie können keine Nachrichten an blockierte Kontakte senden.",
         "CONTACT_INVALID": "Sie können keine Nachrichten an einen ungültigen Kontakt senden.",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",
         "FILE_TOO_LARGE": "Dateien grösser als {maxmb} MiB können nicht versendet werden",
@@ -310,8 +311,8 @@
         },
         "composearea": {
             "COMPOSE_AREA": "Eingabefeld",
-            "SUBMIT_KEY_ENTER": "'Enter' um eine Nachricht zu senden. 'Shift+Enter' um eine neue Zeile hinzuzufügen.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' um eine Nachricht zu senden. 'Enter' um eine neue Zeile hinzuzufügen."
+            "SUBMIT_KEY_ENTER": "'Eingabe'  zum Senden einer Nachricht. 'Umschalt+Eingabe' zum Hinzufügen einer neuen Zeile.",
+            "SUBMIT_KEY_CTRL_ENTER": "'Strg+Eingabe' zum Senden einer Nachricht. 'Eingabe' zum Hinzufügen einer neuen Zeile."
         }
     },
     "deviceUnreachable": {
