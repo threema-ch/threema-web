@@ -7,7 +7,7 @@
     <script>document.createElement('qrcode');</script>
   <![endif]-->
   <meta name="viewport" content="width=device-width">
-  <link rel="stylesheet" href="//necolas.github.io/normalize.css/2.1.1/normalize.css">
+  <link rel="stylesheet" href="https://necolas.github.io/normalize.css/2.1.1/normalize.css">
   <style>
     html {
       overflow-y: scroll;
@@ -108,13 +108,13 @@
     }
   </style>
 </head>
-<body data-ng-init="foo='here comes qr!';bar='https://github.com/monospaced/angular-qrcode';e='M';s=274;">
+<body data-ng-init="foo='here comes qr!';bar='https://github.com/monospaced/angular-qrcode';e='M';s=274;m=0;">
 
   <h1>Angular QR Code</h1>
 
   <pre>&lt;qrcode&gt;&lt;/qrcode&gt;</pre>
 
-  <qrcode error-correction-level="{{e}}" size="{{s}}" data="{{foo}}" color="#FF69B4" background="#000"></qrcode>
+  <qrcode error-correction-level="{{e}}" size="{{s}}" data="{{foo}}" color="#FF69B4" background="#000" margin="{{m}}></qrcode>
 
   <form>
     <p>
@@ -129,15 +129,19 @@
       <label for="level" title="Error Correction Level">Level</label>
       <select id="level" data-ng-model="e" data-ng-options="option.version as option.name for option in [{name:'Low', version:'L'},{name:'Medium', version:'M'},{name:'Quartile', version:'Q'},{name:'High', version:'H'}]"></select>
     </p>
+    <p>
+      <label for="margin">Margin</label>
+      <input id="margin" type="number" data-ng-model="m" min="0" max="50">
+    </p>
   </form>
 
   <h2>Downloadable</h2>
 
-  <qrcode error-correction-level="{{e}}" size="{{s}}" data="{{foo}}" download></qrcode>
+  <qrcode error-correction-level="{{e}}" size="{{s}}" data="{{foo}}" margin="{{m}}" download></qrcode>
 
   <h2>Linked</h2>
 
-  <qrcode size="274" data="{{bar}}" href="{{bar}}"></qrcode>
+  <qrcode size="274" data="{{bar}}" margin="{{m}}" href="{{bar}}"></qrcode>
 
   <form>
     <p>
@@ -154,8 +158,8 @@
 
   </div>
 
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
-  <script src="//kazuhikoarase.github.io/qrcode-generator/js/demo/assets/qrcode.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+  <script src="node_modules/qrcode-generator/qrcode.js"></script>
   <script src="angular-qrcode.js"></script>
 </body>
 </html>

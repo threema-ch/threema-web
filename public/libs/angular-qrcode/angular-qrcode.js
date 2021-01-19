@@ -20,15 +20,16 @@ angular.module('monospaced.qrcode', [])
           'Q': 'Quartile',
           'H': 'High'
         },
-        draw = function(context, qr, modules, tile, color) {
+        draw = function(context, qr, modules, tile, color, margin) {
           for (var row = 0; row < modules; row++) {
             for (var col = 0; col < modules; col++) {
               var w = (Math.ceil((col + 1) * tile) - Math.floor(col * tile)),
-                  h = (Math.ceil((row + 1) * tile) - Math.floor(row * tile));
+                  h = (Math.ceil((row + 1) * tile) - Math.floor(row * tile)),
+                  x = Math.round(col * tile) + Math.round(margin / 2),
+                  y = Math.round(row * tile) + Math.round(margin / 2);
 
               context.fillStyle = qr.isDark(row, col) ? color.foreground : color.background;
-              context.fillRect(Math.round(col * tile),
-                               Math.round(row * tile), w, h);
+              context.fillRect(x, y, w, h);
             }
           }
         };
@@ -50,6 +51,7 @@ angular.module('monospaced.qrcode', [])
             errorCorrectionLevel,
             data,
             size,
+            margin,
             modules,
             tile,
             qr,
@@ -98,8 +100,13 @@ angular.module('monospaced.qrcode', [])
             },
             setSize = function(value) {
               size = parseInt(value, 10) || modules * 2;
-              tile = size / modules;
+              tile = (size - margin) / modules;
               canvas.width = canvas.height = size;
+              context.fillStyle = '#fff';
+              context.fillRect(0, 0, size, size);
+            },
+            setMargin = function(value) {
+              margin = value || 0
             },
             render = function() {
               if (!qr) {
@@ -127,14 +134,14 @@ angular.module('monospaced.qrcode', [])
               }
 
               if (canvas2D) {
-                draw(context, qr, modules, tile, color);
+                draw(context, qr, modules, tile, color, margin);
 
                 if (download) {
                   domElement.href = canvas.toDataURL('image/png');
                   return;
                 }
               } else {
-                domElement.innerHTML = qr.createImgTag(tile, 0);
+                domElement.innerHTML = qr.createImgTag(tile, margin);
                 $img = element.find('img');
                 $img.addClass('qrcode');
 
@@ -159,6 +166,7 @@ angular.module('monospaced.qrcode', [])
         setBackground(attrs.background);
         setVersion(attrs.version);
         setErrorCorrectionLevel(attrs.errorCorrectionLevel);
+        setMargin(attrs.margin);
         setSize(attrs.size);
 
         attrs.$observe('version', function(value) {
@@ -217,6 +225,16 @@ angular.module('monospaced.qrcode', [])
           }
 
           setBackground(value);
+          render();
+        });
+
+        attrs.$observe('margin', function(value) {
+          if (!value) {
+            return;
+          }
+
+          setMargin(value);
+          setSize(size);
           render();
         });
 
