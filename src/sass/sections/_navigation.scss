@@ -68,7 +68,7 @@
         max-height: 0;
 
         input {
-            &[type='text'] {
+            &[type='search'] {
                 margin: 0;
                 border: 1px solid #dddddd;
                 border-radius: $material-radius;
@@ -89,6 +89,12 @@
 
             // Animation when appearing
             max-height: 50px;
+
+            // sass-lint:disable no-vendor-prefixes
+            ::-webkit-search-cancel-button {
+                -webkit-appearance: searchfield-cancel-button;
+            }
+            // sass-lint:enable no-vendor-prefixes
         }
     }
 }

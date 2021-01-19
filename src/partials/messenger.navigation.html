@@ -64,7 +64,7 @@
         </md-button>
     </div>
     <div class="search" searchbox searchbox-focus="ctrl.searchVisible">
-        <input type="text" ng-model="ctrl.searchText" translate translate-attr-placeholder="messenger.SEARCH" aria-label="Search" translate-attr-aria-label="messenger.SEARCH">
+        <input type="search" ng-model="ctrl.searchText" translate translate-attr-placeholder="messenger.SEARCH" aria-label="Search" translate-attr-aria-label="messenger.SEARCH" ng-keyup="ctrl.clearSearch($event)">
     </div>
 </div>
 
@@ -81,6 +81,7 @@
             ng-if="ctrl.isVisible(conversation)">
 
             <div class="conversation"
+                  ng-click="ctrl.toggleSearchOff()"
                   ng-class="{'unread': conversation.unreadCount > 0,
                             'starred': conversation.isStarred,
                             'active': ctrl.isActive(conversation)}">
@@ -126,7 +127,8 @@
 <div id="navigation-contacts" class="tab-content" ng-if="ctrl.activeTab == 'contacts'" in-view-container>
     <p class="empty" ng-if="ctrl.contacts().length === 0" translate>messenger.NO_CONTACTS_FOUND</p>
     <ul ng-class="{'hide-inactive': ctrl.hideInactiveContacts()}">
-        <li ng-repeat="contact in ctrl.contacts() | filter:ctrl.searchContact"
+        <li ng-click="ctrl.toggleSearchOff()"
+            ng-repeat="contact in ctrl.contacts() | filter:ctrl.searchContact"
             ui-sref="messenger.home.conversation({ type: 'contact', id: contact.id, initParams: null })"
             class="contact"
             ng-class="{'inactive': contact.state == 'INACTIVE'}">
