@@ -26,6 +26,5 @@ import './crypto_helpers';
 import './emoji_helpers';
 import './helpers';
 import './logger_helpers';
-import './markup_parser';
 import './password_strength_helpers';
 import './receiver_helpers';

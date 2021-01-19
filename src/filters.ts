@@ -16,11 +16,11 @@
  */
 
 import Autolinker from 'autolinker';
+import {markify} from '@threema/threema-markup';
 
 import {bufferToUrl, escapeRegExp, filter, hasValue} from './helpers';
 import {emojify} from './helpers/emoji';
 import {Strength} from './helpers/password_strength';
-import {markify} from './markup_parser';
 import {MimeService} from './services/mime';
 import {WebClientService} from './services/webclient';
 
