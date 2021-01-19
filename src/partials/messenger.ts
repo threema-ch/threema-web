@@ -1280,7 +1280,9 @@ class NavigationController {
      * Clear search when pressing ESC.
      */
     public clearSearch(ev): void {
-        if (ev.keyCode === 27) this.searchText = '';
+        if (ev.key === 'Escape') {
+            this.searchText = '';
+        }
     }
 
 
