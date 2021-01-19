@@ -1271,7 +1271,9 @@ class NavigationController {
      * Toggle search bar off.
      */
     public toggleSearchOff(): void {
-        if (this.searchVisible) this.searchVisible = false;
+        if (this.searchVisible) {
+            this.searchVisible = false;
+        }
     }
 
     /**
