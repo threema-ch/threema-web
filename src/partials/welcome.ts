@@ -588,6 +588,7 @@ class WelcomeController {
             version: version,
             errorCorrectionLevel: 'L',
             size: 384,
+            margin: 12,
             data: payload,
         };
     }

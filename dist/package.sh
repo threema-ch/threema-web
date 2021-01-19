@@ -73,7 +73,6 @@ targets=(
     webrtc-adapter/out/adapter.js
     qrcode-generator/qrcode.js
     qrcode-generator/qrcode_UTF8.js
-    angular-qrcode/angular-qrcode.js
     angularjs-scroll-glue/src/scrollglue.js
     angular-material/angular-material.min.js
     angular-material/angular-material.min.css
