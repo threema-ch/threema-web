@@ -1281,7 +1281,11 @@ class NavigationController {
      */
     public clearSearch(ev): void {
         if (ev.key === 'Escape') {
-            this.searchText = '';
+            if (this.searchText === '') {
+                this.searchVisible = false;
+            } else {
+                this.searchText = '';
+            }
         }
     }
 
