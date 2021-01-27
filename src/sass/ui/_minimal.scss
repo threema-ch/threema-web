@@ -1,0 +1,29 @@
+.user-interface {
+    &--minimal {
+        &.status-ok {
+            header, footer {
+                display: none;
+            }
+        }
+
+        #main-wrapper {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: none;
+
+            &.wide {
+                margin: 0;
+                max-width: none;
+                max-height: none;
+            }
+        }
+
+        #main {
+            border-radius: 0;
+        }
+    }
+}

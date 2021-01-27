@@ -19,6 +19,7 @@ import {Logger} from 'ts-log';
 
 import {LogService} from '../services/log';
 import {ThemeService} from '../services/theme';
+import {SettingsService} from '../services/settings'
 
 /**
  * This controller handles theming.
@@ -30,18 +31,34 @@ export class ThemeController {
     // Theme name
     public theme: string;
 
-    public static $inject = ['$scope', 'LogService', 'ThemeService'];
-    constructor($scope, logService: LogService, themeService: ThemeService) {
+    // User interface class
+    public userInterfaceClass: string;
+
+    public static $inject = ['$scope', 'LogService', 'ThemeService', 'SettingsService'];
+    constructor($scope, logService: LogService, themeService: ThemeService, settingsService: SettingsService) {
         // Logging
         this.log = logService.getLogger('Theme-C', 'color: #000; background-color: #ffff99');
 
         // Initialize theme
         this.theme = themeService.theme;
 
+        // Set user interface class
+        this.userInterfaceClass = ThemeController.getUserInterfaceClass(settingsService.userInterface.getUserInterface())
+
         // Listen to theme changes
         themeService.evtThemeChange.attach((newTheme: threema.Theme) => {
             this.log.debug(`Updating theme: ${this.theme} -> ${newTheme}`);
             $scope.$apply(() => this.theme = newTheme);
         });
+    }
+
+    private static getUserInterfaceClass (userInterface: threema.UserInterface): string {
+        const base = 'user-interface--'
+        switch (userInterface) {
+            case threema.UserInterface.Minimal:
+                return base + 'minimal'
+            default:
+                return base + 'default'
+        }
     }
 }
