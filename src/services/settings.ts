@@ -53,6 +53,38 @@ class ComposeAreaSettings {
     }
 }
 
+class UserInterfaceSettings {
+    private readonly settingsService: SettingsService;
+
+    constructor(settingsService: SettingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public getUserInterface(): threema.UserInterface {
+        return this.parseUserInterface(this.settingsService.retrieveUntrustedKeyValuePair('userInterface', false));
+    }
+
+    public setUserInterface(userInterface: string | threema.UserInterface): void {
+        this.settingsService.storeUntrustedKeyValuePair('userInterface', this.parseUserInterface(userInterface).toString());
+    }
+
+    private parseUserInterface(userInterface: any): threema.UserInterface {
+        try {
+            userInterface = parseInt(userInterface, 10);
+        } catch {
+            // Ignored
+        }
+        switch (userInterface) {
+            case threema.UserInterface.Default:
+                return threema.UserInterface.Default
+            case threema.UserInterface.Minimal:
+                return threema.UserInterface.Minimal
+            default:
+                return threema.UserInterface.Default
+        }
+    }
+}
+
 /**
  * The settings service can update variables for settings and persist them to
  * LocalStorage.
@@ -61,6 +93,7 @@ export class SettingsService {
     public readonly settingsChangedEvent = new AsyncEvent<void>();
     private static STORAGE_KEY_PREFIX = 'settings-';
     public readonly composeArea: ComposeAreaSettings;
+    public readonly userInterface: UserInterfaceSettings;
     private readonly log: Logger;
     private storage: Storage;
 
@@ -69,6 +102,7 @@ export class SettingsService {
         this.log = logService.getLogger('Settings-S');
         this.storage = $window.localStorage;
         this.composeArea = new ComposeAreaSettings(this);
+        this.userInterface = new UserInterfaceSettings(this);
     }
 
     /**

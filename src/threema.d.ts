@@ -821,6 +821,11 @@ declare namespace threema {
         CtrlEnter = 1,
     }
 
+    const enum UserInterface {
+        Default = 0,
+        Minimal = 1
+    }
+
     interface EmojiInfo {
         // The plain emoji string
         emojiString: string;

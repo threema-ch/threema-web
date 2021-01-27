@@ -245,6 +245,7 @@ class SettingsController extends DialogController {
     private notificationPreview: boolean;
     private notificationSound: boolean;
     private submitKey: string;
+    private userInterface: string;
 
     public static $inject = [
         '$scope', '$mdDialog', '$window', 'SettingsService', 'ThemeService', 'NotificationService',
@@ -267,6 +268,7 @@ class SettingsController extends DialogController {
         this.notificationPreview = notificationService.getWantsPreview();
         this.notificationSound = notificationService.getWantsSound();
         this.submitKey = settingsService.composeArea.getSubmitKey().toString();
+        this.userInterface = settingsService.userInterface.getUserInterface().toString();
     }
 
     public setWantsNotifications(desktopNotifications: boolean) {
@@ -283,6 +285,10 @@ class SettingsController extends DialogController {
 
     public setSubmitKey(submitKey: string) {
         this.settingsService.composeArea.setSubmitKey(submitKey);
+    }
+
+    public setUserInterface(userInterface: string) {
+        this.settingsService.userInterface.setUserInterface(userInterface);
     }
 }
 

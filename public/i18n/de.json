@@ -313,6 +313,11 @@
             "COMPOSE_AREA": "Eingabefeld",
             "SUBMIT_KEY_ENTER": "'Eingabe'  zum Senden einer Nachricht. 'Umschalt+Eingabe' zum Hinzufügen einer neuen Zeile.",
             "SUBMIT_KEY_CTRL_ENTER": "'Strg+Eingabe' zum Senden einer Nachricht. 'Eingabe' zum Hinzufügen einer neuen Zeile."
+        },
+        "ui": {
+           "UI": "Benutzeroberfläche",
+            "DEFAULT": "Standard",
+            "MINIMAL": "Minimal"
         }
     },
     "deviceUnreachable": {
