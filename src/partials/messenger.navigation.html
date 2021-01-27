@@ -43,6 +43,12 @@
                     <span translate>messenger.ABOUT</span>
                 </md-button>
             </md-menu-item>
+            <md-menu-item ng-show="ctrl.minimalUserInterface">
+                <md-button ng-click="ctrl.version()">
+                    <md-icon aria-hidden="true" class="material-icons md-24">update</md-icon>
+                    <span translate>messenger.VERSION</span>
+                </md-button>
+            </md-menu-item>
         </md-menu-content>
     </md-menu>
 </div>

@@ -49,6 +49,7 @@ import {Type} from '../types/helpers';
 
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
+import UserInterface = threema.UserInterface;
 
 /**
  * Handle sending of files.
@@ -1013,9 +1014,25 @@ class AboutDialogController extends DialogController {
     }
 }
 
+class VersionDialogController extends DialogController {
+    public readonly config: threema.Config;
+
+    public static readonly $inject = ['$scope', '$mdDialog', 'ThemeService', 'CONFIG'];
+    constructor(
+        $scope: ng.IScope,
+        $mdDialog: ng.material.IDialogService,
+        themeService: ThemeService,
+        config: threema.Config,
+    ) {
+        super($scope, $mdDialog, themeService);
+        this.config = config;
+    }
+}
+
 class NavigationController {
 
     public name = 'navigation';
+    public minimalUserInterface = false;
 
     private webClientService: WebClientService;
     private receiverService: ReceiverService;
@@ -1032,15 +1049,16 @@ class NavigationController {
     private $state: UiStateService;
 
     public static $inject = [
-        '$state', '$mdDialog', '$translate',
+        '$scope', '$state', '$mdDialog', '$translate',
         'LogService', 'WebClientService', 'StateService', 'ReceiverService', 'NotificationService', 'TrustedKeyStore',
+        'SettingsService'
     ];
 
-    constructor($state: UiStateService, $mdDialog: ng.material.IDialogService,
+    constructor($scope, $state: UiStateService, $mdDialog: ng.material.IDialogService,
                 $translate: ng.translate.ITranslateService,
                 logService: LogService, webClientService: WebClientService, stateService: StateService,
                 receiverService: ReceiverService, notificationService: NotificationService,
-                trustedKeyStoreService: TrustedKeyStoreService) {
+                trustedKeyStoreService: TrustedKeyStoreService, settingsService: SettingsService) {
         const log = logService.getLogger('Navigation-C');
 
         // Redirect to welcome if necessary
@@ -1049,6 +1067,14 @@ class NavigationController {
             $state.go('welcome');
             return;
         }
+
+        // Set if is minimal user interface
+        this.minimalUserInterface = this.isMinimalUserInterface(settingsService.userInterface.getUserInterface());
+
+        // Listen to user interface changes
+        settingsService.userInterfaceChange.attach((newUserInterface: threema.UserInterface) => {
+            $scope.$apply(() => this.minimalUserInterface = this.isMinimalUserInterface(newUserInterface));
+        })
 
         this.webClientService = webClientService;
         this.receiverService = receiverService;
@@ -1155,6 +1181,13 @@ class NavigationController {
      */
     public about(ev): void {
         this.showDialog('about', ev, AboutDialogController);
+    }
+
+    /**
+     * Show version dialog.
+     */
+    public version(ev): void {
+        this.showDialog('version', ev, VersionDialogController)
     }
 
     /**
@@ -1297,6 +1330,12 @@ class NavigationController {
         return this.notificationService.getDndModeSimplified(conversation);
     }
 
+    /**
+     * Return true if the minimal user interface is selected.
+     */
+    private isMinimalUserInterface(userInterface: UserInterface): boolean {
+        return userInterface === threema.UserInterface.Minimal;
+    }
 }
 
 class MessengerController {

@@ -210,7 +210,8 @@
         "ME": "Ich",
         "CONTACT_STATE_INACTIVE": "Inaktiv",
         "CONTACT_STATE_INVALID": "Ungültig",
-        "CONTACT_STATE_REVOKED": "Widerrufen"
+        "CONTACT_STATE_REVOKED": "Widerrufen",
+        "VERSION": "Version"
     },
     "messageStates": {
         "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",
