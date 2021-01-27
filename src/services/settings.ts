@@ -19,6 +19,7 @@ import {Logger} from 'ts-log';
 import {AsyncEvent} from 'ts-events';
 
 import {LogService} from './log';
+import UserInterface = threema.UserInterface;
 
 class ComposeAreaSettings {
     private readonly settingsService: SettingsService;
@@ -65,7 +66,11 @@ class UserInterfaceSettings {
     }
 
     public setUserInterface(userInterface: string | threema.UserInterface): void {
-        this.settingsService.storeUntrustedKeyValuePair('userInterface', this.parseUserInterface(userInterface).toString());
+        const parsedUserInterface: UserInterface = this.parseUserInterface(userInterface)
+        this.settingsService.storeUntrustedKeyValuePair('userInterface', parsedUserInterface.toString());
+
+        // Emit change
+        this.settingsService.userInterfaceChange.post(parsedUserInterface)
     }
 
     private parseUserInterface(userInterface: any): threema.UserInterface {
@@ -96,6 +101,9 @@ export class SettingsService {
     public readonly userInterface: UserInterfaceSettings;
     private readonly log: Logger;
     private storage: Storage;
+
+    // Events
+    public userInterfaceChange = new AsyncEvent<threema.UserInterface>();
 
     public static $inject = ['$window', 'LogService'];
     constructor($window: ng.IWindowService, logService: LogService) {

@@ -42,14 +42,21 @@ export class ThemeController {
         // Initialize theme
         this.theme = themeService.theme;
 
-        // Set user interface class
-        this.userInterfaceClass = ThemeController.getUserInterfaceClass(settingsService.userInterface.getUserInterface())
-
         // Listen to theme changes
         themeService.evtThemeChange.attach((newTheme: threema.Theme) => {
             this.log.debug(`Updating theme: ${this.theme} -> ${newTheme}`);
             $scope.$apply(() => this.theme = newTheme);
         });
+
+        // Set user interface class
+        this.userInterfaceClass = ThemeController.getUserInterfaceClass(settingsService.userInterface.getUserInterface())
+
+        // Listen to user interface changes
+        settingsService.userInterfaceChange.attach((newUserInterface: threema.UserInterface) => {
+            const newUserInterfaceClass = ThemeController.getUserInterfaceClass(newUserInterface);
+            this.log.debug(`Updating user interface class: ${this.userInterfaceClass} -> ${newUserInterfaceClass}`);
+            $scope.$apply(() => this.userInterfaceClass = newUserInterfaceClass);
+        })
     }
 
     private static getUserInterfaceClass (userInterface: threema.UserInterface): string {
