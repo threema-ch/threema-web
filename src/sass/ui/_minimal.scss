@@ -1,14 +1,15 @@
 .user-interface {
     &--minimal {
         &.messenger {
-            header, footer {
+            header,
+            footer {
                 display: none;
             }
         }
 
         #main-wrapper {
-            height: 100%;
             width: 100%;
+            height: 100%;
             max-height: none;
 
             &.wide {
