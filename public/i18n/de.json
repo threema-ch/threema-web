@@ -109,6 +109,7 @@
         "VERIFICATION_LEVEL3_EXPLAIN": "Sie haben die Identit\u00e4t dieser Person durch Scannen ihres Codes \u00fcberpr\u00fcft.",
         "VERIFICATION_LEVEL1_EXPLAIN": "Es gibt keinerlei Garantie, dass diese Person wirklich diejenige ist, die sie vorgibt zu sein.",
         "VERIFICATION_LEVEL2_WORK_EXPLAIN": "Ihr Threema Work Administrator hat die Identität dieser Person überprüft.",
+        "VERSION": "Version",
         "COMPOSE_MESSAGE_DRAGOVER": "Dateien zum Senden hier loslassen",
         "COMPOSE_MESSAGE": "Nachricht eingeben oder Dateien hineinziehen",
         "UNREAD_MESSAGES": "Ungelesene Nachrichten",
@@ -210,8 +211,7 @@
         "ME": "Ich",
         "CONTACT_STATE_INACTIVE": "Inaktiv",
         "CONTACT_STATE_INVALID": "Ungültig",
-        "CONTACT_STATE_REVOKED": "Widerrufen",
-        "VERSION": "Version"
+        "CONTACT_STATE_REVOKED": "Widerrufen"
     },
     "messageStates": {
         "WE_ACK": "Sie haben ein Daumen-Hoch gesendet",

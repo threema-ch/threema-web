@@ -104,6 +104,7 @@
         "NOTE": "Note:"
     },
     "messenger": {
+        "VERSION": "Version",
         "VERIFICATION_LEVEL": "Verification level",
         "VERIFICATION_LEVEL2_EXPLAIN": "The identity of this person has been verified using e-mail or SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "You have verified the identity of this person by scanning their code.",
@@ -313,6 +314,11 @@
             "COMPOSE_AREA": "Compose area",
             "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
             "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+        },
+        "ui": {
+            "UI": "User interface",
+            "DEFAULT": "Default",
+            "MINIMAL": "Minimal"
         }
     },
     "deviceUnreachable": {
