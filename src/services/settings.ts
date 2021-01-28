@@ -62,18 +62,18 @@ class UserInterfaceSettings {
     }
 
     public getUserInterface(): threema.UserInterface {
-        return this.parseUserInterface(this.settingsService.retrieveUntrustedKeyValuePair('userInterface', false));
+        return UserInterfaceSettings.parseUserInterface(this.settingsService.retrieveUntrustedKeyValuePair('userInterface', false));
     }
 
     public setUserInterface(userInterface: string | threema.UserInterface): void {
-        const parsedUserInterface: UserInterface = this.parseUserInterface(userInterface)
+        const parsedUserInterface: UserInterface = UserInterfaceSettings.parseUserInterface(userInterface)
         this.settingsService.storeUntrustedKeyValuePair('userInterface', parsedUserInterface.toString());
 
         // Emit change
         this.settingsService.userInterfaceChange.post(parsedUserInterface)
     }
 
-    private parseUserInterface(userInterface: any): threema.UserInterface {
+    private static parseUserInterface(userInterface: any): threema.UserInterface {
         try {
             userInterface = parseInt(userInterface, 10);
         } catch {
