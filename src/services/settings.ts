@@ -80,8 +80,6 @@ class UserInterfaceSettings {
             // Ignored
         }
         switch (userInterface) {
-            case threema.UserInterface.Default:
-                return threema.UserInterface.Default
             case threema.UserInterface.Minimal:
                 return threema.UserInterface.Minimal
             default:
