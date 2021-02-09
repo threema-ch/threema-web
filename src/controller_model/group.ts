@@ -38,7 +38,6 @@ export class GroupControllerModel
     public readonly receiverType = 'group';
     public subject: string;
     public isLoading = false; // TODO: Show loading indicator
-    public readonly requiredMemberFeatureMask = threema.ContactReceiverFeature.GROUP_CHAT;
 
     public members: string[];
     public name: string;

@@ -37,7 +37,6 @@ export class DistributionListControllerModel
     public readonly receiverType = 'distributionList';
     public subject: string;
     public isLoading = false;
-    public readonly requiredMemberFeatureMask = threema.ContactReceiverFeature.NONE;
 
     public members: string[];
     public name: string;
