@@ -310,7 +310,7 @@
             "PLAY_SOUND": "Jouer les sons"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
+            "COMPOSE_AREA": "Zone de rédaction",
             "SUBMIT_KEY_ENTER": "'Entrée' pour envoyer. 'Maj+Entrée' pour revenir à la ligne.",
             "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Entrée' pour envoyer. 'Entrée' pour revenir à la ligne."
         }

@@ -24,8 +24,8 @@
         "BTN_RECONNECT": "重连",
         "BROWSER_NOT_SUPPORTED": "不支持您的浏览器",
         "BROWSER_NOT_SUPPORTED_ANDROID": "安卓系统不支持这个浏览器",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "請升級至最新版本的 瀏覽器：{firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} 或{safariLink} (僅iOS)，否則Threema Web可能無法正常工作",
-        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "請升級至最新版本的 瀏覽器：{firefoxLink}, {chromeLink}, {operaLink}, {edgeLink}，否則Threema Web可能無法正常工作",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "请升级至最新版本的 浏览器：{firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} 或{safariLink} (仅iOS)，否则Threema Web可能无法正常工作。",
+        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "请升级至最新版本的 浏览器：{firefoxLink}, {chromeLink}, {operaLink}, {edgeLink}，否则Threema Web可能无法正常工作。",
         "SAFARI": "Safari仅与适用于iOS的Threema Web兼容。如果您使用的是Android，请使用其他浏览器。",
         "CONNECTING": "连接中",
         "WAITING_FOR_PUSH": "等待唤醒APP",
@@ -70,10 +70,10 @@
         "PLEASE_UPDATE_APP": "请确保您使用的是Threema APP的 <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">latest version</a>！",
         "USE_ARCHIVE_VERSION": "或者您可以使用Threema APP<a href=\"{archiveUrl}\">之前的版本</a>。",
         "TROUBLESHOOTING": "疑难解答",
-        "REPORT_FAQ": "请先查看我们的常见问题解答，了解一般性问题并解决常见问题。",
+        "REPORT_FAQ": "请先查看我们的<a target=\"_blank\" href=\"https://threema.ch/faq\">常见问题解答</a>，了解一般性问题并解决常见问题。",
         "REPORT_LOG": "如果您无法找到问题的答案或问题仍然存在，您可以向Threema支持团队发送日志报告。",
         "REPORT_VIA_THREEMA_UNAVAILABLE": "由于没有与您的移动设备连接，因此目前无法通过Threema报告日志。 首先连接到您的移动设备。",
-        "REPORT_VIA_CLIPBOARD": "您可以将日志复制到剪贴板，并通过Web表单将报告发送给Threema支持https://threema.ch/support团队",
+        "REPORT_VIA_CLIPBOARD": "您可以将日志复制到剪贴板，并<a target=\"_blank\" href=\"https://threema.ch/support\">通过Web表单将报告发送给Threema支持团队</a>。",
         "REMOVE_SENSITIVE_DATA": "删除敏感数据（联系人，消息内容等）",
         "DESCRIBE_PROBLEM": "请在此描述问题",
         "COPY_LOG_CLIPBOARD": "将日志复制到剪贴板",
@@ -108,7 +108,7 @@
         "VERIFICATION_LEVEL2_EXPLAIN": "已使用电子邮件或短信验证此人的身份。",
         "VERIFICATION_LEVEL3_EXPLAIN": "您已经通过扫描对方的二维码验证了此人的身份",
         "VERIFICATION_LEVEL1_EXPLAIN": "无法保证此人的资料真实性",
-        "VERIFICATION_LEVEL2_WORK_EXPLAIN": "Threema work 企业版管理员已认证此人资料信息属实。",
+        "VERIFICATION_LEVEL2_WORK_EXPLAIN": "Threema Work 管理员已认证此人资料信息属实。",
         "COMPOSE_MESSAGE_DRAGOVER": "拖放文件发送",
         "COMPOSE_MESSAGE": "输入信息或者拖放一个文件",
         "UNREAD_MESSAGES": "未读信息",
@@ -191,11 +191,11 @@
         "BALLOT_MESSAGES_NOT_SUPPORTED": "Threema Web尚未支持Polls",
         "UNKNOWN_MESSAGE_TYPE": "未知消息类型",
         "NICKNAME": "昵称",
-        "THREEMA_WORK_CONTACT": "Threema工作用户",
+        "THREEMA_WORK_CONTACT": "Threema Work 用户",
         "THREEMA_HOME_CONTACT": "Threema隐私联系人",
         "THREEMA_BLOCKED_RECEIVER": "被屏蔽",
         "DELETE_THREAD": "删除聊天记录",
-        "DELETE_THREAD_MESSAGE": "{count, plural, other {您确定要删除这{count}条记录？删除之后无法恢复.}}",
+        "DELETE_THREAD_MESSAGE": "{count, plural, other {您确定要删除这{count} 条记录？删除之后无法恢复.}}",
         "MUTED_NONE": "不通知",
         "MUTED_MENTION_ONLY": "只在提及我的时候通知我",
         "MUTED_SILENT": "无声通知",
@@ -299,7 +299,7 @@
         "NOTIFICATION_SOUNDS": "声音文件和副本; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - 根据Soundsnap许可证获得许可",
         "LICENSE_TEXT": "可以找到使用过的开源组件的许可证 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">在源代码里</a>。",
         "CHANGELOG": "更新日志",
-        "CHANGELOG_TEXT": "找不到更新日志 <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">在GitHub</a>。"
+        "CHANGELOG_TEXT": "<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">在GitHub上</a>找不到更新日志。"
     },
     "settings": {
         "SETTINGS": "设置",
@@ -310,9 +310,9 @@
             "PLAY_SOUND": "播放声音"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "COMPOSE_AREA": "撰写区域",
+            "SUBMIT_KEY_ENTER": "按 'Enter' 键发送消息。按 'Shift+Enter' 键添加新行。",
+            "SUBMIT_KEY_CTRL_ENTER": "按 'Ctrl+Enter' 键发送消息。按 'Enter' 键添加新行。"
         }
     },
     "deviceUnreachable": {
@@ -364,7 +364,7 @@
         "SESSION_STOPPED": "会话已被您的设备终止",
         "SESSION_DELETED": "会话已被您的设备删除。",
         "WEBCLIENT_DISABLED": "您的设备没有开启了Threema 网页端登录。",
-        "SESSION_REPLACED": "您正在其他地方進行了Threema 网页端會話，本次会话已停止。",
+        "SESSION_REPLACED": "您正在其他地方進行了Threema 网页端会话，本次会话已停止。",
         "OUT_OF_MEMORY": "内存不足，连接终止。",
         "SESSION_ERROR": "协议错误导致会话关闭",
         "PUSH_ERROR_INFO": "尝试通过推送通知唤醒设备失败了，这种情况可能是您最近更换了新的移动设备",

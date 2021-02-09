@@ -310,9 +310,9 @@
             "PLAY_SOUND": "Přehrát zvuk"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "COMPOSE_AREA": "Zde napište svůj text",
+            "SUBMIT_KEY_ENTER": "Stisknutím klávesy 'Enter' odešlete zprávu. Stisknutím 'Shift + Enter' přidáte nový řádek.",
+            "SUBMIT_KEY_CTRL_ENTER": "Stisknutím kláves 'Ctrl + Enter' odešlete zprávu. Stisknutím klávesy 'Enter' přidáte nový řádek."
         }
     },
     "deviceUnreachable": {

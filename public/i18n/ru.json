@@ -150,7 +150,7 @@
         "MSG_HISTORY_READ": "Прочитано",
         "MSG_HISTORY_ACKED": "Подтверждённый",
         "MSG_HISTORY_MODIFIED": "Изменено",
-        "NAVIGATE": "Navigate",
+        "NAVIGATE": "Навигация",
         "CONFIRM_FILE_SEND": "Отправить «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Необязательный заголовок",
         "CONFIRM_SEND_AS_FILE": "Отправить как файловое сообщения",
@@ -183,16 +183,16 @@
         "DISTRIBUTION_LIST_DELETE": "Удалить список рассылки",
         "DISTRIBUTION_LIST_DELETE_REALLY": "Вы действительно хотите удалить этот список рассылки?",
         "DRAFT": "Проект",
-        "PRIVATE": "Private",
-        "PRIVATE_CHAT": "Private chat",
-        "PRIVATE_CHAT_DESCRIPTION": "Private chat are not supported in Threema Web.",
+        "PRIVATE": "Личный",
+        "PRIVATE_CHAT": "Личный чат",
+        "PRIVATE_CHAT_DESCRIPTION": "Threema Web не поддерживает личные чаты.",
         "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Разделить сообщение",
         "MESSAGE_TOO_LONG_SPLIT_BODY": "На сообщение может быть отправлено не более {max} символов. Вы хотите разделить его на {count} отдельных сообщений?",
         "BALLOT_MESSAGES_NOT_SUPPORTED": "Опросы пока не поддерживаются в Threema Web.",
         "UNKNOWN_MESSAGE_TYPE": "Неизвестный тип сообщения",
         "NICKNAME": "Ник",
         "THREEMA_WORK_CONTACT": "Пользователь Threema Work",
-        "THREEMA_HOME_CONTACT": "Private Threema contact",
+        "THREEMA_HOME_CONTACT": "Личный Threema контакт",
         "THREEMA_BLOCKED_RECEIVER": "заблокирован",
         "DELETE_THREAD": "Удалить чат",
         "DELETE_THREAD_MESSAGE": "{count, plural, one {Вы действительно хотите удалить этот чат? Вы не сможете восстановить сообщения.} few {Вы действительно хотите удалить ({count}) чата? Вы не сможете восстановить сообщения.} many {Вы действительно хотите удалить ({count}) чатов? Вы не сможете восстановить сообщения.} other {Вы действительно хотите удалить ({count}) чатов? Вы не сможете восстановить сообщения.}}",
@@ -311,8 +311,8 @@
         },
         "composearea": {
             "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "SUBMIT_KEY_ENTER": "Отправка по 'Enter'. Перенос строки с помощи 'Shift+Enter'.",
+            "SUBMIT_KEY_CTRL_ENTER": "Отправка по 'Shift+Enter'. Перенос строки с помощи 'Enter'."
         }
     },
     "deviceUnreachable": {

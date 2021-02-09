@@ -1,6 +1,6 @@
 {
     "meta": {
-        "DESCRIPTION": "Chat vanaf je desktop met Threema Web en heb volledige toegang tot alle chats, contacten en media"
+        "DESCRIPTION": "Chat vanaf je desktop met Threema Web en heb volledige toegang tot alle chats, contacten en media bestanden."
     },
     "welcome": {
         "ABORT": "Afbreken",
@@ -310,7 +310,7 @@
             "PLAY_SOUND": "Speel geluid af"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
+            "COMPOSE_AREA": "Invulveld",
             "SUBMIT_KEY_ENTER": "'Enter' om een bericht te verzenden. 'Shift+Enter' om een nieuwe lijn te beginnen.",
             "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' om een bericht te verzenden. 'Enter' om een nieuwe lijn te beginnen."
         }
