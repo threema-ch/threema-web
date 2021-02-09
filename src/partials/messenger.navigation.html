@@ -64,7 +64,7 @@
         </md-button>
     </div>
     <div class="search" searchbox searchbox-focus="ctrl.searchVisible">
-        <input type="search" ng-model="ctrl.searchText" translate translate-attr-placeholder="messenger.SEARCH" aria-label="Search" translate-attr-aria-label="messenger.SEARCH" ng-keyup="ctrl.clearSearch($event)">
+        <input type="search" ng-model="ctrl.searchText" translate translate-attr-placeholder="messenger.SEARCH" aria-label="Search" translate-attr-aria-label="messenger.SEARCH" ng-keydown="ctrl.clearSearch($event)">
     </div>
 </div>
 
