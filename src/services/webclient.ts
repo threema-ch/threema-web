@@ -29,7 +29,6 @@ import {
     base64ToU8a,
     bufferToUrl,
     copyDeepOrReference, copyShallow,
-    hasFeature,
     hasValue,
     hexToU8a,
     msgpackVisualizer,
@@ -1819,6 +1818,8 @@ export class WebClientService {
 
                 break;
             case 'file':
+                subType = WebClientService.SUB_TYPE_FILE_MESSAGE;
+
                 const fileData = data as threema.FileMessageData;
 
                 // Validate max file size
@@ -1835,96 +1836,21 @@ export class WebClientService {
                     }
                 }
 
-                // Determine reflected type and required feature mask
+                // Determine reflected type
                 reflectedType = 'file';
-                let requiredFeature = ContactReceiverFeature.FILE;
-                let invalidFeatureMessage = 'error.FILE_MESSAGES_NOT_SUPPORTED';
                 if (fileData.sendAsFile !== true) {
                     // File will be dispatched to the app as a file but the actual type sent
                     // to the recipient depends on the MIME type.
                     const mimeType = fileData.fileType;
                     if (this.mimeService.isAudio(mimeType, this.clientInfo.os)) {
                         reflectedType = 'audio';
-                        requiredFeature = ContactReceiverFeature.AUDIO;
-                        invalidFeatureMessage = 'error.AUDIO_MESSAGES_NOT_SUPPORTED';
                     } else if (this.mimeService.isImage(mimeType)) {
                         reflectedType = 'image';
-                        requiredFeature = ContactReceiverFeature.NONE;
                     } else if (this.mimeService.isVideo(mimeType)) {
                         reflectedType = 'video';
-                        requiredFeature = ContactReceiverFeature.NONE;
                     }
                 }
 
-                subType = WebClientService.SUB_TYPE_FILE_MESSAGE;
-
-                // check receiver
-                switch (receiver.type) {
-                    case 'group':
-                    case 'distributionList':
-                        const unsupportedMembers = [];
-                        let members: string[];
-                        switch (receiver.type) {
-                            case 'group':
-                                const group = this.groups.get(receiver.id);
-                                if (group === undefined) {
-                                    this.log.error(`Group ${receiver.id} not found`);
-                                    throw this.$translate.instant('error.ERROR_OCCURRED');
-                                }
-                                members = group.members;
-                                break;
-                            case 'distributionList':
-                                const distributionList = this.distributionLists.get(receiver.id);
-                                if (distributionList === undefined) {
-                                    this.log.error(`Distribution list ${receiver.id} not found`);
-                                    throw this.$translate.instant('error.ERROR_OCCURRED');
-                                }
-                                members = distributionList.members;
-                                break;
-                        }
-                        for (const identity of members) {
-                            if (identity !== this.me.id) {
-                                // tslint:disable-next-line: no-shadowed-variable
-                                const contact = this.contacts.get(identity);
-                                if (contact === undefined) {
-                                    // This shouldn't actually happen. But if it happens, log an error
-                                    // and assume image support. It's much more likely that the contact
-                                    // can receive images (feature flag 0x01) than otherwise. And if one
-                                    // of the contacts really cannot receive images, the app will return
-                                    // an error message.
-                                    this.log.error(`Cannot retrieve contact ${identity}`);
-                                } else if (!hasFeature(contact, requiredFeature, this.log)) {
-                                    this.log.warn(
-                                        `Contact ${identity} has feature mask ${contact.featureMask} ` +
-                                        `which does not include ${requiredFeature}`
-                                    );
-                                    unsupportedMembers.push(contact.displayName);
-                                }
-                            }
-                        }
-
-                        if (unsupportedMembers.length > 0) {
-                            throw this.$translate.instant(
-                                invalidFeatureMessage, {receiverName: unsupportedMembers.join(',')},
-                            );
-                        }
-                        break;
-                    case 'contact':
-                        const contact = this.contacts.get(receiver.id);
-                        if (contact === undefined) {
-                            this.log.error('Cannot retrieve contact');
-                            throw this.$translate.instant('error.ERROR_OCCURRED');
-                        } else if (!hasFeature(contact, requiredFeature, this.log)) {
-                            this.log.debug('Cannot send message: Feature level mismatch:',
-                                contact.featureMask, 'does not include', requiredFeature);
-                            throw this.$translate.instant(invalidFeatureMessage, {
-                                receiverName: contact.displayName});
-                        }
-                        break;
-                    default:
-                        this.log.error('Invalid receiver type:', receiver.type);
-                        throw this.$translate.instant('error.ERROR_OCCURRED');
-                }
                 break;
             default:
                 this.log.error('Invalid message type:', sendType);
