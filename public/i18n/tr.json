@@ -11,21 +11,21 @@
         "RETRY": "Tekrar dene",
         "PLEASE_RELOAD": "Tekrar denemek için lütfen sayfayı tekrar yükleyiniz.",
         "RELOAD": "Sayfayı tekrar yükleyiniz.",
-        "PASSWORD": "Şifre",
-        "CHOOSE_PASSWORD": "Eğer giriş yapmış olarak kalmak istiyorsanız, taratmadan önce, <br> bir oturum şifresi yazın.",
-        "UNLOCK_FAILED_TEXT": "Yanlış şifre yazdınız, oturum çağrılamadı.",
-        "ENTER_PASSWORD": "Önceki oturuma tekrar bağlanmak için,<br>lütfen şifrenizi yazın:",
-        "PASSWORD_STRENGTH": "Şifre gücü",
+        "PASSWORD": "Parola",
+        "CHOOSE_PASSWORD": "Eğer giriş yapmış olarak kalmak istiyorsanız, taratmadan önce, <br> bir oturum parolası yazın.",
+        "UNLOCK_FAILED_TEXT": "Yanlış parola yazdınız, oturum çağrılamadı.",
+        "ENTER_PASSWORD": "Önceki oturuma tekrar bağlanmak için,<br>lütfen parolanızı yazın:",
+        "PASSWORD_STRENGTH": "Parola gücü",
         "UNLOCK_FAILED_TITLE": "Kilit Açma Başarısız",
         "ALTERNATIVELY": "Alternatif olarak,",
-        "UNLOCK_FAILED_FORGOTTEN": "Eğer şifrenizi hatırlamıyorsanız, \"bu oturumu  unut\"u seçin ve yeni bir şifre belirleyin. ",
+        "UNLOCK_FAILED_FORGOTTEN": "Eğer parolanızı hatırlamıyorsanız, \"bu oturumu unut\"u seçin ve yeni bir parola belirleyin. ",
         "FORGET_SESSION": "Bu oturumu unut",
         "FORGET_SESSION_BTN": "Oturumu unut",
         "BTN_RECONNECT": "Tekrar bağlan",
         "BROWSER_NOT_SUPPORTED": "Bu tarayıcı desteklenmemektedir",
         "BROWSER_NOT_SUPPORTED_ANDROID": "Bu tarayıcı Android'de desteklenmemektedir",
-        "BROWSER_NOT_SUPPORTED_DETAILS": "Please use the latest version of {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} or {safariLink} (iOS only), otherwise Threema Web might not work properly.",
-        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Please use the latest version of {firefoxLink}, {chromeLink}, {operaLink} or {edgeLink}, otherwise Threema Web might not work properly.",
+        "BROWSER_NOT_SUPPORTED_DETAILS": "Lütfen {firefoxLink}, {chromeLink}, {operaLink}, {edgeLink} ya da {safariLink} (yalnızca iOS için) tarayıcılarının son sürümünü kullanın, yoksa Threema Web düzgün çalışmayabilir.",
+        "BROWSER_NOT_SUPPORTED_ANDROID_DETAILS": "Lütfen {firefoxLink}, {chromeLink}, {operaLink} ya da {edgeLink} tarayıcılarının son sürümünü kullanın, yoksa Threema Web düzgün çalışmayabilir.",
         "SAFARI": "Safari sadece Threema Web for iOS ile uyumludur.<br> Eğer Android kullanıyorsanız, lütfen başka bir tarayıcı kullanınız.",
         "CONNECTING": "Bağlanıyor",
         "WAITING_FOR_PUSH": "Uygulama çağrılması <br>bekleniyor …",
@@ -44,7 +44,7 @@
         "ALREADY_CONNECTED_DETAILS": "Zaten Threema Web'e başka bir sekmede veya pencerede bağlısınız!",
         "VERSION": "Versiyon",
         "BACKGROUND_IMAGE": "Arkaplan Resmi",
-        "HELP_TRANSLATE": "Çeviriye yardım et"
+        "HELP_TRANSLATE": "Çeviriye Yardım Et"
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Bağlantı problemi",
@@ -63,7 +63,7 @@
         "SESSION_DELETED": "Bu oturumu telefonunuzda sildiniz mi?",
         "PHONE_ONLINE": "Telefonunuz internete bağlı mı?",
         "UNLOCK_OR_CHARGE": "Cihazınızın kilidini açmanız veya bir şarj cihazına bağlamanız bağlanmaya yardımcı olabilir.",
-        "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
+        "PUSH_FAQ": "Cihazınız anlık bildirim problemlerinden etkileniyor olabilir. Sorunu gidermek için <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> ve <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> SSS sayfalarımıza göz atın.",
         "WEBCLIENT_ENABLED": "Threema uygulamasında Threema Web etkin mi?",
         "PLUGIN": "Tarayıcınızda WebRTC iletişimini engelleyen bir gizlilik eklentisi var mı?",
         "ADBLOCKER": "WebRTC iletişimini engelleyen bir reklam engelleyici kullanıyor musunuz?",
@@ -77,9 +77,9 @@
         "REMOVE_SENSITIVE_DATA": "Hassas verileri kaldırın (kişiler, mesaj içerikleri vb.)",
         "DESCRIBE_PROBLEM": "Lütfen problemi burada tanımlayın.",
         "COPY_LOG_CLIPBOARD": "Günlüğü panoya kopyala",
-        "REPORT_VIA_THREEMA": "*SUPPORT için günlüğü gönder",
-        "REPORT_VIA_THREEMA_FAILED": "*SUPPORT günlük gönderme başarısız oldu.",
-        "REPORT_VIA_THREEMA_SUCCESS": "*SUPPORT bir günlük raporu gönderildi."
+        "REPORT_VIA_THREEMA": "Destek için günlüğü gönder",
+        "REPORT_VIA_THREEMA_FAILED": "Desteğe günlük raporunu gönderme başarısız oldu.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Desteğe bir günlük raporu gönderildi."
     },
     "common": {
         "YES": "Evet",
@@ -150,7 +150,7 @@
         "MSG_HISTORY_READ": "Oku",
         "MSG_HISTORY_ACKED": "Alındı",
         "MSG_HISTORY_MODIFIED": "Değiştirildi",
-        "NAVIGATE": "Navigate",
+        "NAVIGATE": "Gezin",
         "CONFIRM_FILE_SEND": "İsimli kullanıcıya gönderilsin mi ? «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "İsteğe bağlı başlık",
         "CONFIRM_SEND_AS_FILE": "Dosya mesajı olarak gönder",
@@ -161,7 +161,7 @@
         "FIRST_NAME": "İlk adı",
         "LAST_NAME": "Soyadı",
         "NAME": "Adı",
-        "SYSTEM_CONTACT": "System contact",
+        "SYSTEM_CONTACT": "Sistem kişisi",
         "EMAIL_ADDRESSES": "E-postalar",
         "PHONE_NUMBERS": "Telefon numaraları",
         "EDIT_RECEIVER": "Profili düzenle",
@@ -187,7 +187,7 @@
         "PRIVATE_CHAT": "Gizli sohbet",
         "PRIVATE_CHAT_DESCRIPTION": "Gizli sohbet Threema Web de desteklenmez.",
         "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Mesajı böl",
-        "MESSAGE_TOO_LONG_SPLIT_BODY": "No more than {max} characters can be sent per message, do you want to split it into {count} separate messages?",
+        "MESSAGE_TOO_LONG_SPLIT_BODY": "Mesaj başına en fazla {max} karakter gönderilebilir, mesajınızı {count} farklı mesaja bölmek ister misiniz?",
         "BALLOT_MESSAGES_NOT_SUPPORTED": "Anketler Threema Web'de henüz desteklenmemektedir.",
         "UNKNOWN_MESSAGE_TYPE": "Bilinmeyen mesaj türü",
         "NICKNAME": "Takma ad",
@@ -245,10 +245,10 @@
             "invalidIdentity": "Geçersiz Threema - Kimliği",
             "invalidContact": "Geçersiz kişi kimliği",
             "invalidGroup": "Geçersiz grup ismi",
-            "invalidDistributionList": "Invalid distribution list ID",
+            "invalidDistributionList": "Geçersiz dağıtım listesi numarası",
             "notAllowed": "Düzenlemeye izin verilmiyor.",
             "notAllowedLinked": "Kişi değiştirilemez: bir sistem kişisiyle bağlantılı",
-            "notAllowedBusiness": "Avatar cannot be changed: It's a Threema Gateway contact",
+            "notAllowedBusiness": "Bir Threema Gateway kişisi olduğu için profil resmi değiştirilemiyor",
             "disabledByPolicy": "Özellik yönetici tarafından kapatıldı.",
             "syncFailed": "Grup eşzamanlama başarısız oldu.",
             "noMembers": "Üye tanımlanmadı",
@@ -267,7 +267,7 @@
         "FILE_TOO_LARGE": "{maxmb} MiB boyutundan daha büyük dosyalar gönderilemez.",
         "FILE_TOO_LARGE_WEB": "Şu anda 15 MiB boyutundan daha büyük dosyalar Threema Web aracılığıyla gönderilemez.",
         "FILE_TOO_LARGE_GENERIC": "Dosya gönderilemeyecek kadar büyük",
-        "NOTIFICATION_PERMISSION_DENIED": "You have to grant the notification permission for Threema Web manually in order to receive desktop notifications.",
+        "NOTIFICATION_PERMISSION_DENIED": "Masaüstü bildirimleri almak için Threema Web'e bildirim iznini manuel olarak vermeniz gerekiyor.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Fazlasını öğren.",
         "NOTIFICATION_API_NOT_AVAILABLE": "Tarayıcınız masaüstü bildirimleri desteklemiyor.",
         "BLOB_DOWNLOAD_FAILED": "Dosya indirilemedi.",
@@ -285,7 +285,7 @@
         "image": "Görüntü dosyası",
         "pdf": "PDF belgesi",
         "presentation": "Sunum",
-        "spreadsheet": "Spreadsheet",
+        "spreadsheet": "Elektronik Tablo",
         "text": "Metin dosyası",
         "video": "Video dosyası",
         "word": "Metin belgesi"
@@ -296,33 +296,33 @@
         "OPEN_SOURCE": "Threema Web tamamıyla açık kaynaklıdır.",
         "SOURCE_CODE": "Kaynak kodu ve lisans şartları GitHub üzerinde bulunabilir:",
         "EMOJI_ART": "Bu emoji <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a> tarafından sağlanmıştır.",
-        "NOTIFICATION_SOUNDS": "Sound files &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Licensed under the Soundsnap License",
-        "LICENSE_TEXT": "Licenses of used open source components can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">in the source code</a>.",
+        "NOTIFICATION_SOUNDS": "Ses dosyaları &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> - Soundsnap Lisansı ile lisanslanmıştır.",
+        "LICENSE_TEXT": "Kullanılan açık kaynak kodlu bileşenlerin lisansları <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">kaynak kodunda</a> bulunabilir.",
         "CHANGELOG": "Değişiklikler",
-        "CHANGELOG_TEXT": "The Threema Web changelog can be found <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">on GitHub</a>."
+        "CHANGELOG_TEXT": "Threema Web değişenler listesi günlüğü  <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">GitHub</a>'da bulunabilir."
     },
     "settings": {
         "SETTINGS": "Ayarlar",
         "notifications": {
             "NOTIFICATIONS": "Bildirimler",
             "SHOW_NOTIFICATIONS": "Masaüstü bildirimlerini göster",
-            "SHOW_PREVIEW": "Show message contents in notifications",
+            "SHOW_PREVIEW": "Bildirimlerde mesaj içeriğini göster",
             "PLAY_SOUND": "Ses çal"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "COMPOSE_AREA": "Mesaj Alanı",
+            "SUBMIT_KEY_ENTER": "Mesaj göndermek için 'Enter' tuşunu, yeni satır eklemek için 'Shift+Enter' kombinasyonunu kullanın.",
+            "SUBMIT_KEY_CTRL_ENTER": "Mesaj göndermek için 'Ctrl+Enter'' kombinasyonunu, yeni satır eklemek için 'Enter' tuşunu kullanın."
         }
     },
     "deviceUnreachable": {
-        "DEVICE_UNREACHABLE": "Device Unreachable",
-        "UNABLE_TO_CONNECT": "Unable to connect to your device …",
-        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
+        "DEVICE_UNREACHABLE": "Cihaza Erişilemiyor",
+        "UNABLE_TO_CONNECT": "Cihazınıza bağlanılamıyor...",
+        "DISMISS_WARNING": "Bağlantıyı yeniden kurmak için lütfen sekmeyi yenileyin."
     },
     "version": {
         "NEW_VERSION": "Yeni sürüm mevcut",
-        "NEW_VERSION_BODY": "A new version of Threema Web ({version}) is available. Check out the {changelog} for more information. Click \"OK\" to activate the update."
+        "NEW_VERSION_BODY": "Threema Web ({version}) numaralı yeni bir sürümü çıktı. Daha fazla bilgi için {changelog}'a bakın. Güncellemeyi onaylamak için \"TAMAM\"'a tıklayın."
     },
     "voip": {
         "CALL_MISSED": "Cevapsız çağrı",
@@ -332,13 +332,13 @@
         "CALL_REJECTED": "Arama reddedildi",
         "CALL_REJECTED_BUSY": "Karşı taraf meşgul",
         "CALL_REJECTED_UNAVAILABLE": "Karşı taraf ulaşılmaz",
-        "CALL_REJECTED_DISABLED": "Threema calls disabled by recipient",
+        "CALL_REJECTED_DISABLED": "Threema aramaları alıcı tarafından devre dışı bırakılmış",
         "CALL_ABORTED": "Çağrı iptal edildi"
     },
     "battery": {
         "CHARGING": "Doluyor: {percent}%",
-        "DISCHARGING": "Discharging: {percent}%",
-        "ALERT": "Discharging: {percent}%",
+        "DISCHARGING": "Şarj Azalıyor: {percent}%",
+        "ALERT": "Şarj Azalıyor: {percent}%",
         "LEVEL_LOW": "Cihazınızın pil seviyesi düşük ({percent}%).",
         "LEVEL_CRITICAL": "Cihazınızın pil seviyesi kritik ({percent}%)!"
     },
@@ -360,14 +360,14 @@
         }
     },
     "connection": {
-        "SESSION_CLOSED_TITLE": "Session Closed",
+        "SESSION_CLOSED_TITLE": "Oturum Kapatıldı",
         "SESSION_STOPPED": "Oturum cihazınızda durdurulmuştur.",
         "SESSION_DELETED": "Oturum cihazınızdan silinmiştir.",
         "WEBCLIENT_DISABLED": "Threema Web cihazınızda devre dışı bırakılmıştır.",
-        "SESSION_REPLACED": "This session was stopped because you started a Threema Web session in another browser window.",
-        "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
-        "SESSION_ERROR": "The session was stopped due to a protocol error.",
-        "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
-        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new Threema Web session."
+        "SESSION_REPLACED": "Bu oturum durduruldu çünkü farklı bir sekmede Threema Web oturumu açtınız.",
+        "OUT_OF_MEMORY": "Oturum durdurulmalıydı çünkü cihazınınızın bellekte yeri kalmadı.",
+        "SESSION_ERROR": "Oturum protokol hatası sebebiyle durduruldu.",
+        "PUSH_ERROR_INFO": "Cihazınızı anlık bildirimlerle uyandırma denemelerimiz başarısız oldu. Bu durum örneğin, yeni bir mobil cihaza geçtiyseniz yaşanabilir.",
+        "PUSH_ERROR_ACTION": "Eğer bu hatayı almaya devam ediyorsanız, lütfen \"Oturumu kapat\"'a tıklayıp yeni bir Threema Web oturumu açın."
     }
 }
