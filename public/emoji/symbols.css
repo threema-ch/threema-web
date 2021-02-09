@@ -1,4 +1,4 @@
-/* glue: 0.13 hash: 671ae5b270 */
+/* glue: 0.13 hash: 3d5a770732 */
         .em-symbols-ae,
 .em-symbols-a9,
 .em-symbols-39-20e3,
@@ -48,6 +48,7 @@
 .em-symbols-26ce,
 .em-symbols-26ab,
 .em-symbols-26aa,
+.em-symbols-26a7,
 .em-symbols-26a0,
 .em-symbols-269c,
 .em-symbols-269b,
@@ -183,6 +184,8 @@
 .em-symbols-1f4f4,
 .em-symbols-1f4f3,
 .em-symbols-1f4db,
+.em-symbols-1f4b2,
+.em-symbols-1f4b1,
 .em-symbols-1f4a0,
 .em-symbols-1f3e7,
 .em-symbols-1f3a6,
@@ -216,7 +219,7 @@
 .em-symbols-1f17e,
 .em-symbols-1f171,
 .em-symbols-1f170 {
-            background-image: url('symbols.png?671ae5b270');
+            background-image: url('symbols.png?3d5a770732');
             background-repeat: no-repeat;
         }
         
@@ -514,1010 +517,1028 @@
             height: 32px;
         }
         
-        .em-symbols-26a0 {
+        .em-symbols-26a7 {
             background-position: -239px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-269c {
+        .em-symbols-26a0 {
             background-position: -239px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-269b {
+        .em-symbols-269c {
             background-position: -239px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2695 {
+        .em-symbols-269b {
             background-position: -239px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-267f {
+        .em-symbols-2695 {
             background-position: -239px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-267e {
+        .em-symbols-267f {
             background-position: -239px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-267b {
+        .em-symbols-267e {
             background-position: -239px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2653 {
+        .em-symbols-267b {
             background-position: -1px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2652 {
+        .em-symbols-2653 {
             background-position: -35px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2651 {
+        .em-symbols-2652 {
             background-position: -69px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2650 {
+        .em-symbols-2651 {
             background-position: -103px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-264f {
+        .em-symbols-2650 {
             background-position: -137px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-264e {
+        .em-symbols-264f {
             background-position: -171px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-264d {
+        .em-symbols-264e {
             background-position: -205px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-264c {
+        .em-symbols-264d {
             background-position: -239px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-264b {
+        .em-symbols-264c {
             background-position: -273px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-264a {
+        .em-symbols-264b {
             background-position: -273px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2649 {
+        .em-symbols-264a {
             background-position: -273px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2648 {
+        .em-symbols-2649 {
             background-position: -273px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2642 {
+        .em-symbols-2648 {
             background-position: -273px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2640 {
+        .em-symbols-2642 {
             background-position: -273px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2638 {
+        .em-symbols-2640 {
             background-position: -273px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-262f {
+        .em-symbols-2638 {
             background-position: -273px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-262e {
+        .em-symbols-262f {
             background-position: -1px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-262a {
+        .em-symbols-262e {
             background-position: -35px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2626 {
+        .em-symbols-262a {
             background-position: -69px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2623 {
+        .em-symbols-2626 {
             background-position: -103px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2622 {
+        .em-symbols-2623 {
             background-position: -137px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2611 {
+        .em-symbols-2622 {
             background-position: -171px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25fe {
+        .em-symbols-2611 {
             background-position: -205px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25fd {
+        .em-symbols-25fe {
             background-position: -239px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25fc {
+        .em-symbols-25fd {
             background-position: -273px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25fb {
+        .em-symbols-25fc {
             background-position: -307px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25c0 {
+        .em-symbols-25fb {
             background-position: -307px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25b6 {
+        .em-symbols-25c0 {
             background-position: -307px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25ab {
+        .em-symbols-25b6 {
             background-position: -307px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-25aa {
+        .em-symbols-25ab {
             background-position: -307px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-24c2 {
+        .em-symbols-25aa {
             background-position: -307px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23fa {
+        .em-symbols-24c2 {
             background-position: -307px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23f9 {
+        .em-symbols-23fa {
             background-position: -307px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23f8 {
+        .em-symbols-23f9 {
             background-position: -307px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23ef {
+        .em-symbols-23f8 {
             background-position: -1px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23ee {
+        .em-symbols-23ef {
             background-position: -35px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23ed {
+        .em-symbols-23ee {
             background-position: -69px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23ec {
+        .em-symbols-23ed {
             background-position: -103px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23eb {
+        .em-symbols-23ec {
             background-position: -137px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23ea {
+        .em-symbols-23eb {
             background-position: -171px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23e9 {
+        .em-symbols-23ea {
             background-position: -205px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23cf {
+        .em-symbols-23e9 {
             background-position: -239px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-23-20e3 {
+        .em-symbols-23cf {
             background-position: -273px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-21aa {
+        .em-symbols-23-20e3 {
             background-position: -307px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-21a9 {
+        .em-symbols-21aa {
             background-position: -341px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2199 {
+        .em-symbols-21a9 {
             background-position: -341px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2198 {
+        .em-symbols-2199 {
             background-position: -341px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2197 {
+        .em-symbols-2198 {
             background-position: -341px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2196 {
+        .em-symbols-2197 {
             background-position: -341px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2195 {
+        .em-symbols-2196 {
             background-position: -341px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2194 {
+        .em-symbols-2195 {
             background-position: -341px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2139 {
+        .em-symbols-2194 {
             background-position: -341px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2122 {
+        .em-symbols-2139 {
             background-position: -341px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-2049 {
+        .em-symbols-2122 {
             background-position: -341px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-203c {
+        .em-symbols-2049 {
             background-position: -1px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7eb {
+        .em-symbols-203c {
             background-position: -35px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7ea {
+        .em-symbols-1f7eb {
             background-position: -69px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e9 {
+        .em-symbols-1f7ea {
             background-position: -103px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e8 {
+        .em-symbols-1f7e9 {
             background-position: -137px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e7 {
+        .em-symbols-1f7e8 {
             background-position: -171px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e6 {
+        .em-symbols-1f7e7 {
             background-position: -205px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e5 {
+        .em-symbols-1f7e6 {
             background-position: -239px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e4 {
+        .em-symbols-1f7e5 {
             background-position: -273px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e3 {
+        .em-symbols-1f7e4 {
             background-position: -307px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e2 {
+        .em-symbols-1f7e3 {
             background-position: -341px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e1 {
+        .em-symbols-1f7e2 {
             background-position: -375px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f7e0 {
+        .em-symbols-1f7e1 {
             background-position: -375px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6d0 {
+        .em-symbols-1f7e0 {
             background-position: -375px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6c5 {
+        .em-symbols-1f6d0 {
             background-position: -375px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6c4 {
+        .em-symbols-1f6c5 {
             background-position: -375px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6c3 {
+        .em-symbols-1f6c4 {
             background-position: -375px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6c2 {
+        .em-symbols-1f6c3 {
             background-position: -375px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6be {
+        .em-symbols-1f6c2 {
             background-position: -375px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6bc {
+        .em-symbols-1f6be {
             background-position: -375px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6bb {
+        .em-symbols-1f6bc {
             background-position: -375px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6ba {
+        .em-symbols-1f6bb {
             background-position: -375px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6b9 {
+        .em-symbols-1f6ba {
             background-position: -1px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6b8 {
+        .em-symbols-1f6b9 {
             background-position: -35px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6b7 {
+        .em-symbols-1f6b8 {
             background-position: -69px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6b3 {
+        .em-symbols-1f6b7 {
             background-position: -103px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6b1 {
+        .em-symbols-1f6b3 {
             background-position: -137px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6b0 {
+        .em-symbols-1f6b1 {
             background-position: -171px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6af {
+        .em-symbols-1f6b0 {
             background-position: -205px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6ae {
+        .em-symbols-1f6af {
             background-position: -239px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6ad {
+        .em-symbols-1f6ae {
             background-position: -273px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f6ab {
+        .em-symbols-1f6ad {
             background-position: -307px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f54e {
+        .em-symbols-1f6ab {
             background-position: -341px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f549 {
+        .em-symbols-1f54e {
             background-position: -375px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f53d {
+        .em-symbols-1f549 {
             background-position: -409px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f53c {
+        .em-symbols-1f53d {
             background-position: -409px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f53b {
+        .em-symbols-1f53c {
             background-position: -409px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f53a {
+        .em-symbols-1f53b {
             background-position: -409px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f539 {
+        .em-symbols-1f53a {
             background-position: -409px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f538 {
+        .em-symbols-1f539 {
             background-position: -409px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f537 {
+        .em-symbols-1f538 {
             background-position: -409px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f536 {
+        .em-symbols-1f537 {
             background-position: -409px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f535 {
+        .em-symbols-1f536 {
             background-position: -409px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f534 {
+        .em-symbols-1f535 {
             background-position: -409px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f533 {
+        .em-symbols-1f534 {
             background-position: -409px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f532 {
+        .em-symbols-1f533 {
             background-position: -409px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f531 {
+        .em-symbols-1f532 {
             background-position: -1px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f530 {
+        .em-symbols-1f531 {
             background-position: -35px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f52f {
+        .em-symbols-1f530 {
             background-position: -69px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f524 {
+        .em-symbols-1f52f {
             background-position: -103px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f523 {
+        .em-symbols-1f524 {
             background-position: -137px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f522 {
+        .em-symbols-1f523 {
             background-position: -171px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f521 {
+        .em-symbols-1f522 {
             background-position: -205px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f520 {
+        .em-symbols-1f521 {
             background-position: -239px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f51f {
+        .em-symbols-1f520 {
             background-position: -273px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f51e {
+        .em-symbols-1f51f {
             background-position: -307px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f51d {
+        .em-symbols-1f51e {
             background-position: -341px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f51c {
+        .em-symbols-1f51d {
             background-position: -375px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f51b {
+        .em-symbols-1f51c {
             background-position: -409px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f51a {
+        .em-symbols-1f51b {
             background-position: -443px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f519 {
+        .em-symbols-1f51a {
             background-position: -443px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f518 {
+        .em-symbols-1f519 {
             background-position: -443px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f506 {
+        .em-symbols-1f518 {
             background-position: -443px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f505 {
+        .em-symbols-1f506 {
             background-position: -443px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f504 {
+        .em-symbols-1f505 {
             background-position: -443px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f503 {
+        .em-symbols-1f504 {
             background-position: -443px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f502 {
+        .em-symbols-1f503 {
             background-position: -443px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f501 {
+        .em-symbols-1f502 {
             background-position: -443px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f500 {
+        .em-symbols-1f501 {
             background-position: -443px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f4f6 {
+        .em-symbols-1f500 {
             background-position: -443px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f4f5 {
+        .em-symbols-1f4f6 {
             background-position: -443px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f4f4 {
+        .em-symbols-1f4f5 {
             background-position: -443px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f4f3 {
+        .em-symbols-1f4f4 {
             background-position: -1px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f4db {
+        .em-symbols-1f4f3 {
             background-position: -35px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f4a0 {
+        .em-symbols-1f4db {
             background-position: -69px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f3e7 {
+        .em-symbols-1f4b2 {
             background-position: -103px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f3a6 {
+        .em-symbols-1f4b1 {
             background-position: -137px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f251 {
+        .em-symbols-1f4a0 {
             background-position: -171px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f250 {
+        .em-symbols-1f3e7 {
             background-position: -205px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f23a {
+        .em-symbols-1f3a6 {
             background-position: -239px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f239 {
+        .em-symbols-1f251 {
             background-position: -273px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f238 {
+        .em-symbols-1f250 {
             background-position: -307px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f237 {
+        .em-symbols-1f23a {
             background-position: -341px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f236 {
+        .em-symbols-1f239 {
             background-position: -375px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f235 {
+        .em-symbols-1f238 {
             background-position: -409px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f234 {
+        .em-symbols-1f237 {
             background-position: -443px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f233 {
+        .em-symbols-1f236 {
             background-position: -477px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f232 {
+        .em-symbols-1f235 {
             background-position: -477px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f22f {
+        .em-symbols-1f234 {
             background-position: -477px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f21a {
+        .em-symbols-1f233 {
             background-position: -477px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f202 {
+        .em-symbols-1f232 {
             background-position: -477px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f201 {
+        .em-symbols-1f22f {
             background-position: -477px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f19a {
+        .em-symbols-1f21a {
             background-position: -477px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f199 {
+        .em-symbols-1f202 {
             background-position: -477px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f198 {
+        .em-symbols-1f201 {
             background-position: -477px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f197 {
+        .em-symbols-1f19a {
             background-position: -477px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f196 {
+        .em-symbols-1f199 {
             background-position: -477px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f195 {
+        .em-symbols-1f198 {
             background-position: -477px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f194 {
+        .em-symbols-1f197 {
             background-position: -477px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f193 {
+        .em-symbols-1f196 {
             background-position: -477px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f192 {
+        .em-symbols-1f195 {
             background-position: -1px -477px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f191 {
+        .em-symbols-1f194 {
             background-position: -35px -477px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f18e {
+        .em-symbols-1f193 {
             background-position: -69px -477px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f17f {
+        .em-symbols-1f192 {
             background-position: -103px -477px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f17e {
+        .em-symbols-1f191 {
             background-position: -137px -477px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f171 {
+        .em-symbols-1f18e {
             background-position: -171px -477px;
             width: 32px;
             height: 32px;
         }
         
-        .em-symbols-1f170 {
+        .em-symbols-1f17f {
             background-position: -205px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-symbols-1f17e {
+            background-position: -239px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-symbols-1f171 {
+            background-position: -273px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-symbols-1f170 {
+            background-position: -307px -477px;
             width: 32px;
             height: 32px;
         }
@@ -1572,6 +1593,7 @@
     .em-symbols-26ce,
     .em-symbols-26ab,
     .em-symbols-26aa,
+    .em-symbols-26a7,
     .em-symbols-26a0,
     .em-symbols-269c,
     .em-symbols-269b,
@@ -1707,6 +1729,8 @@
     .em-symbols-1f4f4,
     .em-symbols-1f4f3,
     .em-symbols-1f4db,
+    .em-symbols-1f4b2,
+    .em-symbols-1f4b1,
     .em-symbols-1f4a0,
     .em-symbols-1f3e7,
     .em-symbols-1f3a6,
@@ -1740,7 +1764,7 @@
     .em-symbols-1f17e,
     .em-symbols-1f171,
     .em-symbols-1f170 {
-                background-image: url('symbols.png?671ae5b270');
+                background-image: url('symbols.png?3d5a770732');
                 -webkit-background-size: 510px 510px;
                 -moz-background-size: 510px 510px;
                 background-size: 510px 510px;
@@ -1797,6 +1821,7 @@
     .em-symbols-26ce,
     .em-symbols-26ab,
     .em-symbols-26aa,
+    .em-symbols-26a7,
     .em-symbols-26a0,
     .em-symbols-269c,
     .em-symbols-269b,
@@ -1932,6 +1957,8 @@
     .em-symbols-1f4f4,
     .em-symbols-1f4f3,
     .em-symbols-1f4db,
+    .em-symbols-1f4b2,
+    .em-symbols-1f4b1,
     .em-symbols-1f4a0,
     .em-symbols-1f3e7,
     .em-symbols-1f3a6,
@@ -1965,7 +1992,7 @@
     .em-symbols-1f17e,
     .em-symbols-1f171,
     .em-symbols-1f170 {
-                background-image: url('symbols@2x.png?671ae5b270');
+                background-image: url('symbols@2x.png?3d5a770732');
                 -webkit-background-size: 510px 510px;
                 -moz-background-size: 510px 510px;
                 background-size: 510px 510px;
