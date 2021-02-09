@@ -625,11 +625,6 @@ declare namespace threema {
 
     interface ControllerModelWithMembers {
         /**
-         * A required feature flag that all members must have.
-         */
-        requiredMemberFeatureMask: threema.ContactReceiverFeature;
-
-        /**
          * Callback called when the members change.
          */
         onChangeMembers(identities: string[]): void;
