@@ -1,11 +1,22 @@
-/* glue: 0.13 hash: 05fe5373d7 */
+/* glue: 0.13 hash: a8caa0f7fd */
         .em-nature-2618,
+.em-nature-1fab6,
+.em-nature-1fab4,
+.em-nature-1fab3,
+.em-nature-1fab2,
+.em-nature-1fab1,
+.em-nature-1fab0,
 .em-nature-1f9ae,
+.em-nature-1f9ad,
+.em-nature-1f9ac,
+.em-nature-1f9ab,
 .em-nature-1f9a9,
 .em-nature-1f9a8,
 .em-nature-1f9a7,
 .em-nature-1f9a6,
 .em-nature-1f9a5,
+.em-nature-1f9a4,
+.em-nature-1f9a3,
 .em-nature-1f9a2,
 .em-nature-1f9a1,
 .em-nature-1f9a0,
@@ -48,6 +59,7 @@
 .em-nature-1f43d,
 .em-nature-1f43c,
 .em-nature-1f43b,
+.em-nature-1f43b-200d-2744,
 .em-nature-1f43a,
 .em-nature-1f439,
 .em-nature-1f438,
@@ -100,6 +112,7 @@
 .em-nature-1f40a,
 .em-nature-1f409,
 .em-nature-1f408,
+.em-nature-1f408-200d-2b1b,
 .em-nature-1f407,
 .em-nature-1f406,
 .em-nature-1f405,
@@ -126,7 +139,7 @@
 .em-nature-1f333,
 .em-nature-1f332,
 .em-nature-1f331 {
-            background-image: url('nature.png?05fe5373d7');
+            background-image: url('nature.png?a8caa0f7fd');
             background-repeat: no-repeat;
         }
         
@@ -136,770 +149,859 @@
             height: 32px;
         }
         
-        .em-nature-1f9ae {
+        .em-nature-1fab6 {
             background-position: -35px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a9 {
+        .em-nature-1fab4 {
             background-position: -1px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a8 {
+        .em-nature-1fab3 {
             background-position: -35px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a7 {
+        .em-nature-1fab2 {
             background-position: -69px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a6 {
+        .em-nature-1fab1 {
             background-position: -69px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a5 {
+        .em-nature-1fab0 {
             background-position: -1px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a2 {
+        .em-nature-1f9ae {
             background-position: -35px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a1 {
+        .em-nature-1f9ad {
             background-position: -69px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f9a0 {
+        .em-nature-1f9ac {
             background-position: -103px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f99f {
+        .em-nature-1f9ab {
             background-position: -103px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f99d {
+        .em-nature-1f9a9 {
             background-position: -103px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f99c {
+        .em-nature-1f9a8 {
             background-position: -1px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f99b {
+        .em-nature-1f9a7 {
             background-position: -35px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f99a {
+        .em-nature-1f9a6 {
             background-position: -69px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f999 {
+        .em-nature-1f9a5 {
             background-position: -103px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f998 {
+        .em-nature-1f9a4 {
             background-position: -137px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f997 {
+        .em-nature-1f9a3 {
             background-position: -137px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f996 {
+        .em-nature-1f9a2 {
             background-position: -137px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f995 {
+        .em-nature-1f9a1 {
             background-position: -137px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f994 {
+        .em-nature-1f9a0 {
             background-position: -1px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f993 {
+        .em-nature-1f99f {
             background-position: -35px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f992 {
+        .em-nature-1f99d {
             background-position: -69px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f98f {
+        .em-nature-1f99c {
             background-position: -103px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f98e {
+        .em-nature-1f99b {
             background-position: -137px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f98d {
+        .em-nature-1f99a {
             background-position: -171px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f98c {
+        .em-nature-1f999 {
             background-position: -171px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f98b {
+        .em-nature-1f998 {
             background-position: -171px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f98a {
+        .em-nature-1f997 {
             background-position: -171px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f989 {
+        .em-nature-1f996 {
             background-position: -171px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f988 {
+        .em-nature-1f995 {
             background-position: -1px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f987 {
+        .em-nature-1f994 {
             background-position: -35px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f986 {
+        .em-nature-1f993 {
             background-position: -69px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f985 {
+        .em-nature-1f992 {
             background-position: -103px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f984 {
+        .em-nature-1f98f {
             background-position: -137px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f983 {
+        .em-nature-1f98e {
             background-position: -171px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f982 {
+        .em-nature-1f98d {
             background-position: -205px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f981 {
+        .em-nature-1f98c {
             background-position: -205px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f940 {
+        .em-nature-1f98b {
             background-position: -205px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f578 {
+        .em-nature-1f98a {
             background-position: -205px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f577 {
+        .em-nature-1f989 {
             background-position: -205px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f54a {
+        .em-nature-1f988 {
             background-position: -205px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f4ae {
+        .em-nature-1f987 {
             background-position: -1px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f490 {
+        .em-nature-1f986 {
             background-position: -35px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f43f {
+        .em-nature-1f985 {
             background-position: -69px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f43e {
+        .em-nature-1f984 {
             background-position: -103px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f43d {
+        .em-nature-1f983 {
             background-position: -137px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f43c {
+        .em-nature-1f982 {
             background-position: -171px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f43b {
+        .em-nature-1f981 {
             background-position: -205px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f43a {
+        .em-nature-1f940 {
             background-position: -239px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f439 {
+        .em-nature-1f578 {
             background-position: -239px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f438 {
+        .em-nature-1f577 {
             background-position: -239px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f437 {
+        .em-nature-1f54a {
             background-position: -239px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f436 {
+        .em-nature-1f4ae {
             background-position: -239px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f435 {
+        .em-nature-1f490 {
             background-position: -239px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f434 {
+        .em-nature-1f43f {
             background-position: -239px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f433 {
+        .em-nature-1f43e {
             background-position: -1px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f432 {
+        .em-nature-1f43d {
             background-position: -35px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f431 {
+        .em-nature-1f43c {
             background-position: -69px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f430 {
+        .em-nature-1f43b {
             background-position: -103px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f42f {
+        .em-nature-1f43b-200d-2744 {
             background-position: -137px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f42e {
+        .em-nature-1f43a {
             background-position: -171px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f42d {
+        .em-nature-1f439 {
             background-position: -205px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f42c {
+        .em-nature-1f438 {
             background-position: -239px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f42b {
+        .em-nature-1f437 {
             background-position: -273px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f42a {
+        .em-nature-1f436 {
             background-position: -273px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f429 {
+        .em-nature-1f435 {
             background-position: -273px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f428 {
+        .em-nature-1f434 {
             background-position: -273px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f427 {
+        .em-nature-1f433 {
             background-position: -273px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f426 {
+        .em-nature-1f432 {
             background-position: -273px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f425 {
+        .em-nature-1f431 {
             background-position: -273px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f424 {
+        .em-nature-1f430 {
             background-position: -273px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f423 {
+        .em-nature-1f42f {
             background-position: -1px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f422 {
+        .em-nature-1f42e {
             background-position: -35px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f421 {
+        .em-nature-1f42d {
             background-position: -69px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f420 {
+        .em-nature-1f42c {
             background-position: -103px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f41f {
+        .em-nature-1f42b {
             background-position: -137px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f41e {
+        .em-nature-1f42a {
             background-position: -171px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f41d {
+        .em-nature-1f429 {
             background-position: -205px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f41c {
+        .em-nature-1f428 {
             background-position: -239px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f41b {
+        .em-nature-1f427 {
             background-position: -273px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f41a {
+        .em-nature-1f426 {
             background-position: -307px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f419 {
+        .em-nature-1f425 {
             background-position: -307px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f418 {
+        .em-nature-1f424 {
             background-position: -307px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f417 {
+        .em-nature-1f423 {
             background-position: -307px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f416 {
+        .em-nature-1f422 {
             background-position: -307px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f415 {
+        .em-nature-1f421 {
             background-position: -307px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f415-200d-1f9ba {
+        .em-nature-1f420 {
             background-position: -307px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f414 {
+        .em-nature-1f41f {
             background-position: -307px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f413 {
+        .em-nature-1f41e {
             background-position: -307px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f412 {
+        .em-nature-1f41d {
             background-position: -1px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f411 {
+        .em-nature-1f41c {
             background-position: -35px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f410 {
+        .em-nature-1f41b {
             background-position: -69px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f40f {
+        .em-nature-1f41a {
             background-position: -103px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f40e {
+        .em-nature-1f419 {
             background-position: -137px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f40d {
+        .em-nature-1f418 {
             background-position: -171px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f40c {
+        .em-nature-1f417 {
             background-position: -205px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f40b {
+        .em-nature-1f416 {
             background-position: -239px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f40a {
+        .em-nature-1f415 {
             background-position: -273px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f409 {
+        .em-nature-1f415-200d-1f9ba {
             background-position: -307px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f408 {
+        .em-nature-1f414 {
             background-position: -341px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f407 {
+        .em-nature-1f413 {
             background-position: -341px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f406 {
+        .em-nature-1f412 {
             background-position: -341px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f405 {
+        .em-nature-1f411 {
             background-position: -341px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f404 {
+        .em-nature-1f410 {
             background-position: -341px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f403 {
+        .em-nature-1f40f {
             background-position: -341px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f402 {
+        .em-nature-1f40e {
             background-position: -341px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f401 {
+        .em-nature-1f40d {
             background-position: -341px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f400 {
+        .em-nature-1f40c {
             background-position: -341px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f3f5 {
+        .em-nature-1f40b {
             background-position: -341px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f343 {
+        .em-nature-1f40a {
             background-position: -1px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f342 {
+        .em-nature-1f409 {
             background-position: -35px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f341 {
+        .em-nature-1f408 {
             background-position: -69px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f340 {
+        .em-nature-1f408-200d-2b1b {
             background-position: -103px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f33f {
+        .em-nature-1f407 {
             background-position: -137px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f33e {
+        .em-nature-1f406 {
             background-position: -171px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f33c {
+        .em-nature-1f405 {
             background-position: -205px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f33b {
+        .em-nature-1f404 {
             background-position: -239px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f33a {
+        .em-nature-1f403 {
             background-position: -273px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f339 {
+        .em-nature-1f402 {
             background-position: -307px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f338 {
+        .em-nature-1f401 {
             background-position: -341px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f337 {
+        .em-nature-1f400 {
             background-position: -375px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f335 {
+        .em-nature-1f3f5 {
             background-position: -375px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f334 {
+        .em-nature-1f343 {
             background-position: -375px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f333 {
+        .em-nature-1f342 {
             background-position: -375px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f332 {
+        .em-nature-1f341 {
             background-position: -375px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-nature-1f331 {
+        .em-nature-1f340 {
             background-position: -375px -171px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f33f {
+            background-position: -375px -205px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f33e {
+            background-position: -375px -239px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f33c {
+            background-position: -375px -273px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f33b {
+            background-position: -375px -307px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f33a {
+            background-position: -375px -341px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f339 {
+            background-position: -1px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f338 {
+            background-position: -35px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f337 {
+            background-position: -69px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f335 {
+            background-position: -103px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f334 {
+            background-position: -137px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f333 {
+            background-position: -171px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f332 {
+            background-position: -205px -375px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-nature-1f331 {
+            background-position: -239px -375px;
             width: 32px;
             height: 32px;
         }
         
         @media screen and (-webkit-min-device-pixel-ratio: 1.0), screen and (min--moz-device-pixel-ratio: 1.0), screen and (-o-min-device-pixel-ratio: 100/100), screen and (min-device-pixel-ratio: 1.0), screen and (min-resolution: 1.0dppx) {
             .em-nature-2618,
+    .em-nature-1fab6,
+    .em-nature-1fab4,
+    .em-nature-1fab3,
+    .em-nature-1fab2,
+    .em-nature-1fab1,
+    .em-nature-1fab0,
     .em-nature-1f9ae,
+    .em-nature-1f9ad,
+    .em-nature-1f9ac,
+    .em-nature-1f9ab,
     .em-nature-1f9a9,
     .em-nature-1f9a8,
     .em-nature-1f9a7,
     .em-nature-1f9a6,
     .em-nature-1f9a5,
+    .em-nature-1f9a4,
+    .em-nature-1f9a3,
     .em-nature-1f9a2,
     .em-nature-1f9a1,
     .em-nature-1f9a0,
@@ -942,6 +1044,7 @@
     .em-nature-1f43d,
     .em-nature-1f43c,
     .em-nature-1f43b,
+    .em-nature-1f43b-200d-2744,
     .em-nature-1f43a,
     .em-nature-1f439,
     .em-nature-1f438,
@@ -994,6 +1097,7 @@
     .em-nature-1f40a,
     .em-nature-1f409,
     .em-nature-1f408,
+    .em-nature-1f408-200d-2b1b,
     .em-nature-1f407,
     .em-nature-1f406,
     .em-nature-1f405,
@@ -1020,21 +1124,32 @@
     .em-nature-1f333,
     .em-nature-1f332,
     .em-nature-1f331 {
-                background-image: url('nature.png?05fe5373d7');
-                -webkit-background-size: 408px 374px;
-                -moz-background-size: 408px 374px;
-                background-size: 408px 374px;
+                background-image: url('nature.png?a8caa0f7fd');
+                -webkit-background-size: 408px 408px;
+                -moz-background-size: 408px 408px;
+                background-size: 408px 408px;
             }
         }
         
         @media screen and (-webkit-min-device-pixel-ratio: 2.0), screen and (min--moz-device-pixel-ratio: 2.0), screen and (-o-min-device-pixel-ratio: 200/100), screen and (min-device-pixel-ratio: 2.0), screen and (min-resolution: 2.0dppx) {
             .em-nature-2618,
+    .em-nature-1fab6,
+    .em-nature-1fab4,
+    .em-nature-1fab3,
+    .em-nature-1fab2,
+    .em-nature-1fab1,
+    .em-nature-1fab0,
     .em-nature-1f9ae,
+    .em-nature-1f9ad,
+    .em-nature-1f9ac,
+    .em-nature-1f9ab,
     .em-nature-1f9a9,
     .em-nature-1f9a8,
     .em-nature-1f9a7,
     .em-nature-1f9a6,
     .em-nature-1f9a5,
+    .em-nature-1f9a4,
+    .em-nature-1f9a3,
     .em-nature-1f9a2,
     .em-nature-1f9a1,
     .em-nature-1f9a0,
@@ -1077,6 +1192,7 @@
     .em-nature-1f43d,
     .em-nature-1f43c,
     .em-nature-1f43b,
+    .em-nature-1f43b-200d-2744,
     .em-nature-1f43a,
     .em-nature-1f439,
     .em-nature-1f438,
@@ -1129,6 +1245,7 @@
     .em-nature-1f40a,
     .em-nature-1f409,
     .em-nature-1f408,
+    .em-nature-1f408-200d-2b1b,
     .em-nature-1f407,
     .em-nature-1f406,
     .em-nature-1f405,
@@ -1155,10 +1272,10 @@
     .em-nature-1f333,
     .em-nature-1f332,
     .em-nature-1f331 {
-                background-image: url('nature@2x.png?05fe5373d7');
-                -webkit-background-size: 408px 374px;
-                -moz-background-size: 408px 374px;
-                background-size: 408px 374px;
+                background-image: url('nature@2x.png?a8caa0f7fd');
+                -webkit-background-size: 408px 408px;
+                -moz-background-size: 408px 408px;
+                background-size: 408px 408px;
             }
         }
         

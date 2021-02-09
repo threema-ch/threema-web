@@ -1,4 +1,4 @@
-/* glue: 0.13 hash: 52de55872c */
+/* glue: 0.13 hash: 9cd1b0be0f */
         .em-travel-2b50,
 .em-travel-2744,
 .em-travel-2708,
@@ -29,6 +29,8 @@
 .em-travel-23f0,
 .em-travel-231b,
 .em-travel-231a,
+.em-travel-1fab5,
+.em-travel-1faa8,
 .em-travel-1fa90,
 .em-travel-1fa82,
 .em-travel-1f9f3,
@@ -36,6 +38,8 @@
 .em-travel-1f9ed,
 .em-travel-1f9bd,
 .em-travel-1f9bc,
+.em-travel-1f6fc,
+.em-travel-1f6fb,
 .em-travel-1f6fa,
 .em-travel-1f6f9,
 .em-travel-1f6f8,
@@ -51,6 +55,7 @@
 .em-travel-1f6e4,
 .em-travel-1f6e3,
 .em-travel-1f6e2,
+.em-travel-1f6d6,
 .em-travel-1f6d5,
 .em-travel-1f6d1,
 .em-travel-1f6ce,
@@ -209,7 +214,7 @@
 .em-travel-1f302,
 .em-travel-1f301,
 .em-travel-1f300 {
-            background-image: url('travel.png?52de55872c');
+            background-image: url('travel.png?9cd1b0be0f');
             background-repeat: no-repeat;
         }
         
@@ -393,1082 +398,1112 @@
             height: 32px;
         }
         
-        .em-travel-1fa90 {
+        .em-travel-1fab5 {
             background-position: -1px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1fa82 {
+        .em-travel-1faa8 {
             background-position: -35px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f9f3 {
+        .em-travel-1fa90 {
             background-position: -69px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f9f1 {
+        .em-travel-1fa82 {
             background-position: -103px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f9ed {
+        .em-travel-1f9f3 {
             background-position: -137px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f9bd {
+        .em-travel-1f9f1 {
             background-position: -171px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f9bc {
+        .em-travel-1f9ed {
             background-position: -205px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6fa {
+        .em-travel-1f9bd {
             background-position: -205px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6f9 {
+        .em-travel-1f9bc {
             background-position: -205px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6f8 {
+        .em-travel-1f6fc {
             background-position: -205px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6f6 {
+        .em-travel-1f6fb {
             background-position: -205px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6f5 {
+        .em-travel-1f6fa {
             background-position: -205px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6f4 {
+        .em-travel-1f6f9 {
             background-position: -1px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6f3 {
+        .em-travel-1f6f8 {
             background-position: -35px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6f0 {
+        .em-travel-1f6f6 {
             background-position: -69px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6ec {
+        .em-travel-1f6f5 {
             background-position: -103px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6eb {
+        .em-travel-1f6f4 {
             background-position: -137px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6e9 {
+        .em-travel-1f6f3 {
             background-position: -171px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6e5 {
+        .em-travel-1f6f0 {
             background-position: -205px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6e4 {
+        .em-travel-1f6ec {
             background-position: -239px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6e3 {
+        .em-travel-1f6eb {
             background-position: -239px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6e2 {
+        .em-travel-1f6e9 {
             background-position: -239px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6d5 {
+        .em-travel-1f6e5 {
             background-position: -239px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6d1 {
+        .em-travel-1f6e4 {
             background-position: -239px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6ce {
+        .em-travel-1f6e3 {
             background-position: -239px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6b2 {
+        .em-travel-1f6e2 {
             background-position: -239px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a8 {
+        .em-travel-1f6d6 {
             background-position: -1px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a7 {
+        .em-travel-1f6d5 {
             background-position: -35px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a6 {
+        .em-travel-1f6d1 {
             background-position: -69px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a5 {
+        .em-travel-1f6ce {
             background-position: -103px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a4 {
+        .em-travel-1f6b2 {
             background-position: -137px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a2 {
+        .em-travel-1f6a8 {
             background-position: -171px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a1 {
+        .em-travel-1f6a7 {
             background-position: -205px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f6a0 {
+        .em-travel-1f6a6 {
             background-position: -239px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f69f {
+        .em-travel-1f6a5 {
             background-position: -273px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f69e {
+        .em-travel-1f6a4 {
             background-position: -273px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f69d {
+        .em-travel-1f6a2 {
             background-position: -273px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f69c {
+        .em-travel-1f6a1 {
             background-position: -273px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f69b {
+        .em-travel-1f6a0 {
             background-position: -273px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f69a {
+        .em-travel-1f69f {
             background-position: -273px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f699 {
+        .em-travel-1f69e {
             background-position: -273px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f698 {
+        .em-travel-1f69d {
             background-position: -273px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f697 {
+        .em-travel-1f69c {
             background-position: -1px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f696 {
+        .em-travel-1f69b {
             background-position: -35px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f695 {
+        .em-travel-1f69a {
             background-position: -69px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f694 {
+        .em-travel-1f699 {
             background-position: -103px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f693 {
+        .em-travel-1f698 {
             background-position: -137px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f692 {
+        .em-travel-1f697 {
             background-position: -171px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f691 {
+        .em-travel-1f696 {
             background-position: -205px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f690 {
+        .em-travel-1f695 {
             background-position: -239px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f68f {
+        .em-travel-1f694 {
             background-position: -273px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f68e {
+        .em-travel-1f693 {
             background-position: -307px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f68d {
+        .em-travel-1f692 {
             background-position: -307px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f68c {
+        .em-travel-1f691 {
             background-position: -307px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f68b {
+        .em-travel-1f690 {
             background-position: -307px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f68a {
+        .em-travel-1f68f {
             background-position: -307px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f689 {
+        .em-travel-1f68e {
             background-position: -307px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f688 {
+        .em-travel-1f68d {
             background-position: -307px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f687 {
+        .em-travel-1f68c {
             background-position: -307px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f686 {
+        .em-travel-1f68b {
             background-position: -307px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f685 {
+        .em-travel-1f68a {
             background-position: -1px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f684 {
+        .em-travel-1f689 {
             background-position: -35px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f683 {
+        .em-travel-1f688 {
             background-position: -69px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f682 {
+        .em-travel-1f687 {
             background-position: -103px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f681 {
+        .em-travel-1f686 {
             background-position: -137px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f680 {
+        .em-travel-1f685 {
             background-position: -171px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f5fe {
+        .em-travel-1f684 {
             background-position: -205px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f5fd {
+        .em-travel-1f683 {
             background-position: -239px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f5fc {
+        .em-travel-1f682 {
             background-position: -273px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f5fb {
+        .em-travel-1f681 {
             background-position: -307px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f5fa {
+        .em-travel-1f680 {
             background-position: -341px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f570 {
+        .em-travel-1f5fe {
             background-position: -341px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f567 {
+        .em-travel-1f5fd {
             background-position: -341px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f566 {
+        .em-travel-1f5fc {
             background-position: -341px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f565 {
+        .em-travel-1f5fb {
             background-position: -341px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f564 {
+        .em-travel-1f5fa {
             background-position: -341px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f563 {
+        .em-travel-1f570 {
             background-position: -341px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f562 {
+        .em-travel-1f567 {
             background-position: -341px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f561 {
+        .em-travel-1f566 {
             background-position: -341px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f560 {
+        .em-travel-1f565 {
             background-position: -341px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f55f {
+        .em-travel-1f564 {
             background-position: -1px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f55e {
+        .em-travel-1f563 {
             background-position: -35px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f55d {
+        .em-travel-1f562 {
             background-position: -69px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f55c {
+        .em-travel-1f561 {
             background-position: -103px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f55b {
+        .em-travel-1f560 {
             background-position: -137px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f55a {
+        .em-travel-1f55f {
             background-position: -171px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f559 {
+        .em-travel-1f55e {
             background-position: -205px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f558 {
+        .em-travel-1f55d {
             background-position: -239px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f557 {
+        .em-travel-1f55c {
             background-position: -273px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f556 {
+        .em-travel-1f55b {
             background-position: -307px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f555 {
+        .em-travel-1f55a {
             background-position: -341px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f554 {
+        .em-travel-1f559 {
             background-position: -375px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f553 {
+        .em-travel-1f558 {
             background-position: -375px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f552 {
+        .em-travel-1f557 {
             background-position: -375px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f551 {
+        .em-travel-1f556 {
             background-position: -375px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f550 {
+        .em-travel-1f555 {
             background-position: -375px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f54d {
+        .em-travel-1f554 {
             background-position: -375px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f54c {
+        .em-travel-1f553 {
             background-position: -375px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f54b {
+        .em-travel-1f552 {
             background-position: -375px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f525 {
+        .em-travel-1f551 {
             background-position: -375px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f4ba {
+        .em-travel-1f550 {
             background-position: -375px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f4a7 {
+        .em-travel-1f54d {
             background-position: -375px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f492 {
+        .em-travel-1f54c {
             background-position: -1px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f488 {
+        .em-travel-1f54b {
             background-position: -35px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3f0 {
+        .em-travel-1f525 {
             background-position: -69px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3ef {
+        .em-travel-1f4ba {
             background-position: -103px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3ed {
+        .em-travel-1f4a7 {
             background-position: -137px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3ec {
+        .em-travel-1f492 {
             background-position: -171px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3eb {
+        .em-travel-1f488 {
             background-position: -205px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3ea {
+        .em-travel-1f3f0 {
             background-position: -239px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e9 {
+        .em-travel-1f3ef {
             background-position: -273px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e8 {
+        .em-travel-1f3ed {
             background-position: -307px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e6 {
+        .em-travel-1f3ec {
             background-position: -341px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e5 {
+        .em-travel-1f3eb {
             background-position: -375px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e4 {
+        .em-travel-1f3ea {
             background-position: -409px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e3 {
+        .em-travel-1f3e9 {
             background-position: -409px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e2 {
+        .em-travel-1f3e8 {
             background-position: -409px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e1 {
+        .em-travel-1f3e6 {
             background-position: -409px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3e0 {
+        .em-travel-1f3e5 {
             background-position: -409px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3df {
+        .em-travel-1f3e4 {
             background-position: -409px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3de {
+        .em-travel-1f3e3 {
             background-position: -409px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3dd {
+        .em-travel-1f3e2 {
             background-position: -409px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3dc {
+        .em-travel-1f3e1 {
             background-position: -409px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3db {
+        .em-travel-1f3e0 {
             background-position: -409px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3da {
+        .em-travel-1f3df {
             background-position: -409px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3d9 {
+        .em-travel-1f3de {
             background-position: -409px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3d8 {
+        .em-travel-1f3dd {
             background-position: -1px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3d7 {
+        .em-travel-1f3dc {
             background-position: -35px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3d6 {
+        .em-travel-1f3db {
             background-position: -69px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3d5 {
+        .em-travel-1f3da {
             background-position: -103px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3d4 {
+        .em-travel-1f3d9 {
             background-position: -137px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3ce {
+        .em-travel-1f3d8 {
             background-position: -171px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3cd {
+        .em-travel-1f3d7 {
             background-position: -205px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3aa {
+        .em-travel-1f3d6 {
             background-position: -239px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3a2 {
+        .em-travel-1f3d5 {
             background-position: -273px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3a1 {
+        .em-travel-1f3d4 {
             background-position: -307px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f3a0 {
+        .em-travel-1f3ce {
             background-position: -341px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f32c {
+        .em-travel-1f3cd {
             background-position: -375px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f32b {
+        .em-travel-1f3aa {
             background-position: -409px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f32a {
+        .em-travel-1f3a2 {
             background-position: -443px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f329 {
+        .em-travel-1f3a1 {
             background-position: -443px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f328 {
+        .em-travel-1f3a0 {
             background-position: -443px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f327 {
+        .em-travel-1f32c {
             background-position: -443px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f326 {
+        .em-travel-1f32b {
             background-position: -443px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f325 {
+        .em-travel-1f32a {
             background-position: -443px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f324 {
+        .em-travel-1f329 {
             background-position: -443px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f321 {
+        .em-travel-1f328 {
             background-position: -443px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f320 {
+        .em-travel-1f327 {
             background-position: -443px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f31f {
+        .em-travel-1f326 {
             background-position: -443px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f31e {
+        .em-travel-1f325 {
             background-position: -443px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f31d {
+        .em-travel-1f324 {
             background-position: -443px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f31c {
+        .em-travel-1f321 {
             background-position: -443px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f31b {
+        .em-travel-1f320 {
             background-position: -1px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f31a {
+        .em-travel-1f31f {
             background-position: -35px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f319 {
+        .em-travel-1f31e {
             background-position: -69px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f318 {
+        .em-travel-1f31d {
             background-position: -103px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f317 {
+        .em-travel-1f31c {
             background-position: -137px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f316 {
+        .em-travel-1f31b {
             background-position: -171px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f315 {
+        .em-travel-1f31a {
             background-position: -205px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f314 {
+        .em-travel-1f319 {
             background-position: -239px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f313 {
+        .em-travel-1f318 {
             background-position: -273px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f312 {
+        .em-travel-1f317 {
             background-position: -307px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f311 {
+        .em-travel-1f316 {
             background-position: -341px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f310 {
+        .em-travel-1f315 {
             background-position: -375px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f30f {
+        .em-travel-1f314 {
             background-position: -409px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f30e {
+        .em-travel-1f313 {
             background-position: -443px -443px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f30d {
+        .em-travel-1f312 {
             background-position: -477px -1px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f30c {
+        .em-travel-1f311 {
             background-position: -477px -35px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f30b {
+        .em-travel-1f310 {
             background-position: -477px -69px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f30a {
+        .em-travel-1f30f {
             background-position: -477px -103px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f309 {
+        .em-travel-1f30e {
             background-position: -477px -137px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f308 {
+        .em-travel-1f30d {
             background-position: -477px -171px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f307 {
+        .em-travel-1f30c {
             background-position: -477px -205px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f306 {
+        .em-travel-1f30b {
             background-position: -477px -239px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f305 {
+        .em-travel-1f30a {
             background-position: -477px -273px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f304 {
+        .em-travel-1f309 {
             background-position: -477px -307px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f303 {
+        .em-travel-1f308 {
             background-position: -477px -341px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f302 {
+        .em-travel-1f307 {
             background-position: -477px -375px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f301 {
+        .em-travel-1f306 {
             background-position: -477px -409px;
             width: 32px;
             height: 32px;
         }
         
-        .em-travel-1f300 {
+        .em-travel-1f305 {
             background-position: -477px -443px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-travel-1f304 {
+            background-position: -1px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-travel-1f303 {
+            background-position: -35px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-travel-1f302 {
+            background-position: -69px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-travel-1f301 {
+            background-position: -103px -477px;
+            width: 32px;
+            height: 32px;
+        }
+        
+        .em-travel-1f300 {
+            background-position: -137px -477px;
             width: 32px;
             height: 32px;
         }
@@ -1504,6 +1539,8 @@
     .em-travel-23f0,
     .em-travel-231b,
     .em-travel-231a,
+    .em-travel-1fab5,
+    .em-travel-1faa8,
     .em-travel-1fa90,
     .em-travel-1fa82,
     .em-travel-1f9f3,
@@ -1511,6 +1548,8 @@
     .em-travel-1f9ed,
     .em-travel-1f9bd,
     .em-travel-1f9bc,
+    .em-travel-1f6fc,
+    .em-travel-1f6fb,
     .em-travel-1f6fa,
     .em-travel-1f6f9,
     .em-travel-1f6f8,
@@ -1526,6 +1565,7 @@
     .em-travel-1f6e4,
     .em-travel-1f6e3,
     .em-travel-1f6e2,
+    .em-travel-1f6d6,
     .em-travel-1f6d5,
     .em-travel-1f6d1,
     .em-travel-1f6ce,
@@ -1684,10 +1724,10 @@
     .em-travel-1f302,
     .em-travel-1f301,
     .em-travel-1f300 {
-                background-image: url('travel.png?52de55872c');
-                -webkit-background-size: 510px 476px;
-                -moz-background-size: 510px 476px;
-                background-size: 510px 476px;
+                background-image: url('travel.png?9cd1b0be0f');
+                -webkit-background-size: 510px 510px;
+                -moz-background-size: 510px 510px;
+                background-size: 510px 510px;
             }
         }
         
@@ -1722,6 +1762,8 @@
     .em-travel-23f0,
     .em-travel-231b,
     .em-travel-231a,
+    .em-travel-1fab5,
+    .em-travel-1faa8,
     .em-travel-1fa90,
     .em-travel-1fa82,
     .em-travel-1f9f3,
@@ -1729,6 +1771,8 @@
     .em-travel-1f9ed,
     .em-travel-1f9bd,
     .em-travel-1f9bc,
+    .em-travel-1f6fc,
+    .em-travel-1f6fb,
     .em-travel-1f6fa,
     .em-travel-1f6f9,
     .em-travel-1f6f8,
@@ -1744,6 +1788,7 @@
     .em-travel-1f6e4,
     .em-travel-1f6e3,
     .em-travel-1f6e2,
+    .em-travel-1f6d6,
     .em-travel-1f6d5,
     .em-travel-1f6d1,
     .em-travel-1f6ce,
@@ -1902,10 +1947,10 @@
     .em-travel-1f302,
     .em-travel-1f301,
     .em-travel-1f300 {
-                background-image: url('travel@2x.png?52de55872c');
-                -webkit-background-size: 510px 476px;
-                -moz-background-size: 510px 476px;
-                background-size: 510px 476px;
+                background-image: url('travel@2x.png?9cd1b0be0f');
+                -webkit-background-size: 510px 510px;
+                -moz-background-size: 510px 510px;
+                background-size: 510px 510px;
             }
         }
         

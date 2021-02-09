@@ -52,7 +52,7 @@ for i, category in enumerate(category_order):
             print(' data-t="0"', end='')
         if 'skintone' in emoji:
             print(' data-t="{}"'.format(emoji['skintone']), end='')
-        print(' title="{}"'.format(emoji['name']), end='')
+        print(' title="{}"'.format(emoji['shortname']), end='')
         if emoji['representation'] == 'text-default':
             hex_codepoint = emoji['codepoint'].lower() + '-fe0f'
         else:
