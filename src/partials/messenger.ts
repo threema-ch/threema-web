@@ -1268,6 +1268,29 @@ class NavigationController {
     }
 
     /**
+     * Toggle search bar off.
+     */
+    public toggleSearchOff(): void {
+        if (this.searchVisible) {
+            this.searchVisible = false;
+        }
+    }
+
+    /**
+     * Clear search when pressing ESC.
+     */
+    public clearSearch(ev): void {
+        if (ev.key === 'Escape') {
+            if (this.searchText === '') {
+                this.searchVisible = false;
+            } else {
+                this.searchText = '';
+            }
+        }
+    }
+
+
+    /**
      * Return the user profile.
      */
     public getMe(): threema.MeReceiver {
