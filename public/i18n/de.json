@@ -316,7 +316,7 @@
             "SUBMIT_KEY_CTRL_ENTER": "'Strg+Eingabe' zum Senden einer Nachricht. 'Eingabe' zum Hinzufügen einer neuen Zeile."
         },
         "ui": {
-           "UI": "Benutzeroberfläche",
+            "UI": "Benutzeroberfläche",
             "DEFAULT": "Standard",
             "MINIMAL": "Minimal"
         }
