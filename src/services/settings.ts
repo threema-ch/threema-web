@@ -19,7 +19,6 @@ import {Logger} from 'ts-log';
 import {AsyncEvent} from 'ts-events';
 
 import {LogService} from './log';
-import UserInterface = threema.UserInterface;
 
 class ComposeAreaSettings {
     private readonly settingsService: SettingsService;
@@ -62,29 +61,14 @@ class UserInterfaceSettings {
     }
 
     public getUserInterface(): threema.UserInterface {
-        return UserInterfaceSettings.parseUserInterface(this.settingsService.retrieveUntrustedKeyValuePair('userInterface', false));
+        return this.settingsService.retrieveUntrustedKeyValuePair('userInterface', false) as threema.UserInterface;
     }
 
-    public setUserInterface(userInterface: string | threema.UserInterface): void {
-        const parsedUserInterface: UserInterface = UserInterfaceSettings.parseUserInterface(userInterface)
-        this.settingsService.storeUntrustedKeyValuePair('userInterface', parsedUserInterface.toString());
+    public setUserInterface(userInterface: threema.UserInterface): void {
+        this.settingsService.storeUntrustedKeyValuePair('userInterface', userInterface);
 
         // Emit change
-        this.settingsService.userInterfaceChange.post(parsedUserInterface)
-    }
-
-    private static parseUserInterface(userInterface: any): threema.UserInterface {
-        try {
-            userInterface = parseInt(userInterface, 10);
-        } catch {
-            // Ignored
-        }
-        switch (userInterface) {
-            case threema.UserInterface.Minimal:
-                return threema.UserInterface.Minimal
-            default:
-                return threema.UserInterface.Default
-        }
+        this.settingsService.userInterfaceChange.post(userInterface)
     }
 }
 

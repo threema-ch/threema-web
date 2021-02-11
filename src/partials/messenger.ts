@@ -288,7 +288,7 @@ class SettingsController extends DialogController {
         this.settingsService.composeArea.setSubmitKey(submitKey);
     }
 
-    public setUserInterface(userInterface: string) {
+    public setUserInterface(userInterface: threema.UserInterface) {
         this.settingsService.userInterface.setUserInterface(userInterface);
     }
 }

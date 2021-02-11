@@ -822,8 +822,8 @@ declare namespace threema {
     }
 
     const enum UserInterface {
-        Default = 0,
-        Minimal = 1
+        Default = 'default',
+        Minimal = 'minimal'
     }
 
     interface EmojiInfo {
