@@ -60,7 +60,7 @@ export class ThemeController {
     }
 
     private static getUserInterfaceClass (userInterface: threema.UserInterface): string {
-        const base = 'user-interface--'
+        const base = 'user-interface-'
         switch (userInterface) {
             case threema.UserInterface.Minimal:
                 return base + 'minimal'
