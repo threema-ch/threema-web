@@ -305,7 +305,7 @@ export class StatusController {
         }, startTimeout);
     }
 
-    public showsMessenger(): boolean {
+    public showMessenger(): boolean {
         return this.controllerService.getControllerName() !== undefined
             && this.controllerService.getControllerName() === 'messenger';
     }
