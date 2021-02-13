@@ -61,7 +61,14 @@ class UserInterfaceSettings {
     }
 
     public getUserInterface(): threema.UserInterface {
-        return this.settingsService.retrieveUntrustedKeyValuePair('userInterface', false) as threema.UserInterface;
+        const value: string = this.settingsService.retrieveUntrustedKeyValuePair('userInterface', false);
+
+        switch (value) {
+            case threema.UserInterface.Minimal:
+                return threema.UserInterface.Minimal
+            default:
+                return threema.UserInterface.Default
+        }
     }
 
     public setUserInterface(userInterface: threema.UserInterface): void {
