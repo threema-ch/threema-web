@@ -49,7 +49,6 @@ import {Type} from '../types/helpers';
 
 // Type aliases
 import ControllerModelMode = threema.ControllerModelMode;
-import UserInterface = threema.UserInterface;
 
 /**
  * Handle sending of files.
@@ -1031,8 +1030,8 @@ class VersionDialogController extends DialogController {
 
 class NavigationController {
 
-    public name = 'navigation';
-    public minimalUserInterface = false;
+    public name: string = 'navigation';
+    public minimalUserInterface: boolean = false;
 
     private webClientService: WebClientService;
     private receiverService: ReceiverService;
@@ -1333,7 +1332,7 @@ class NavigationController {
     /**
      * Return true if the minimal user interface is selected.
      */
-    private isMinimalUserInterface(userInterface: UserInterface): boolean {
+    private isMinimalUserInterface(userInterface: threema.UserInterface): boolean {
         return userInterface === threema.UserInterface.Minimal;
     }
 }
