@@ -70,6 +70,22 @@
                         </md-list-item>
                     </md-list>
                 </section>
+                <section>
+                    <md-subheader class="md-accent"><span translate>settings.ui.UI</span>
+                    </md-subheader>
+                    <md-list flex>
+                        <md-list-item>
+                            <md-radio-group ng-model="ctrl.userInterface" ng-change="ctrl.setUserInterface(ctrl.userInterface)">
+                                <md-radio-button value="default" class="md-primary">
+                                    <span translate>settings.ui.DEFAULT</span>
+                                </md-radio-button>
+                                <md-radio-button value="minimal" class="md-primary">
+                                    <span translate>settings.ui.MINIMAL</span>
+                                </md-radio-button>
+                            </md-radio-group>
+                        </md-list-item>
+                    </md-list>
+                </section>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">

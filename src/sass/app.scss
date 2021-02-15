@@ -17,6 +17,9 @@
 @import 'base/colors';
 @import 'base/cloak';
 
+// UI: User interface. It contains the different user interface styles.
+@import 'ui/minimal';
+
 // Layouts: Macro layout files. Styles for major sections of the layout like a
 // header or footer and styles for a grid system would belong here.
 @import 'layout/main';

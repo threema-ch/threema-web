@@ -67,7 +67,7 @@
     <link rel="stylesheet" href="css/app.css?v=[[VERSION]]">
 </head>
 
-<body ng-controller="ThemeController as themeCtrl" class="{{ ctrl.statusClass }}" ng-class="{expanded: ctrl.expandStatusBar}" md-theme="{{ themeCtrl.theme }}">
+<body ng-controller="ThemeController as themeCtrl" class="{{ ctrl.statusClass }} {{ themeCtrl.userInterfaceClass }}" ng-class="{expanded: ctrl.expandStatusBar, messenger: ctrl.showMessenger()}" md-theme="{{ themeCtrl.theme }}">
     <img src="img/bg.jpg?v=[[VERSION]]" aria-label="Background image: Blurred photo of a mountain" id="background-image" draggable="false">
 
     <noscript class="compat compat-nojs">
@@ -94,7 +94,7 @@
         </div>
     </div>
 
-    <div id="main-wrapper" ng-cloak ng-class="{wide: ctrl.wide()}">
+    <div id="main-wrapper" ng-cloak ng-class="{wide: ctrl.showMessenger()}">
         <header>
             <h1 id="title" aria-label="Threema Web Logo">
                 <span id="logo" ng-include src="'img/logo.svg?v=[[VERSION]]'"></span>

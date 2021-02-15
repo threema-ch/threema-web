@@ -109,6 +109,7 @@
         "VERIFICATION_LEVEL3_EXPLAIN": "Sie haben die Identit\u00e4t dieser Person durch Scannen ihres Codes \u00fcberpr\u00fcft.",
         "VERIFICATION_LEVEL1_EXPLAIN": "Es gibt keinerlei Garantie, dass diese Person wirklich diejenige ist, die sie vorgibt zu sein.",
         "VERIFICATION_LEVEL2_WORK_EXPLAIN": "Ihr Threema Work Administrator hat die Identität dieser Person überprüft.",
+        "VERSION": "Version",
         "COMPOSE_MESSAGE_DRAGOVER": "Dateien zum Senden hier loslassen",
         "COMPOSE_MESSAGE": "Nachricht eingeben oder Dateien hineinziehen",
         "UNREAD_MESSAGES": "Ungelesene Nachrichten",
@@ -313,6 +314,11 @@
             "COMPOSE_AREA": "Eingabefeld",
             "SUBMIT_KEY_ENTER": "'Eingabe'  zum Senden einer Nachricht. 'Umschalt+Eingabe' zum Hinzufügen einer neuen Zeile.",
             "SUBMIT_KEY_CTRL_ENTER": "'Strg+Eingabe' zum Senden einer Nachricht. 'Eingabe' zum Hinzufügen einer neuen Zeile."
+        },
+        "ui": {
+            "UI": "Benutzeroberfläche",
+            "DEFAULT": "Standard",
+            "MINIMAL": "Minimal"
         }
     },
     "deviceUnreachable": {

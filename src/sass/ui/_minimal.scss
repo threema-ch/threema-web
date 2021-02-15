@@ -1,0 +1,26 @@
+.user-interface {
+    &-minimal {
+        &.messenger {
+            header,
+            footer {
+                display: none;
+            }
+        }
+
+        #main-wrapper {
+            width: 100%;
+            height: 100%;
+            max-height: none;
+
+            &.wide {
+                margin: 0;
+                max-width: none;
+                max-height: none;
+            }
+        }
+
+        #main {
+            border-radius: 0;
+        }
+    }
+}
