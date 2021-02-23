@@ -104,6 +104,7 @@
         "NOTE": "Note :"
     },
     "messenger": {
+        "VERSION": "Version",
         "VERIFICATION_LEVEL": "Niveau de vérification",
         "VERIFICATION_LEVEL2_EXPLAIN": "L’identité de cette personne a été vérifiée en utilisant une adresse de courriel ou un SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Vous avez vérifié l’identité de cette personne en scannant son code.",
@@ -313,6 +314,11 @@
             "COMPOSE_AREA": "Zone de rédaction",
             "SUBMIT_KEY_ENTER": "'Entrée' pour envoyer. 'Maj+Entrée' pour revenir à la ligne.",
             "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Entrée' pour envoyer. 'Entrée' pour revenir à la ligne."
+        },
+        "ui": {
+            "UI": "Interface utilisateur",
+            "DEFAULT": "Default",
+            "MINIMAL": "Minimal"
         }
     },
     "deviceUnreachable": {
