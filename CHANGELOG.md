@@ -10,7 +10,7 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
-### Unreleased
+### [v2.3.9][v2.3.9] (2021-02-23)
 
 Changes:
 
@@ -1013,6 +1013,7 @@ First public release.
 [i1035]: https://github.com/threema-ch/threema-web/issues/1035
 [i1036]: https://github.com/threema-ch/threema-web/issues/1036
 
+[v2.3.9]: https://github.com/threema-ch/threema-web/compare/v2.3.8...v2.3.9
 [v2.3.8]: https://github.com/threema-ch/threema-web/compare/v2.3.7...v2.3.8
 [v2.3.7]: https://github.com/threema-ch/threema-web/compare/v2.3.6...v2.3.7
 [v2.3.6]: https://github.com/threema-ch/threema-web/compare/v2.3.5...v2.3.6
