@@ -58,6 +58,11 @@ export default [
                                     return false;
                                 }
 
+                                // Ignore own contact
+                                if (contactReceiver.id === webClientService.me.id) {
+                                    return false;
+                                }
+
                                 // Potentially ignore inactive contacts
                                 if (hideInactiveContacts && contactReceiver.state === 'INACTIVE') {
                                     return false;
