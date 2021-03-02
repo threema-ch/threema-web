@@ -288,6 +288,8 @@ export function bufferToUrl(buffer: ArrayBuffer, mimeType: string, log: Logger):
         case 'image/webp':
         case 'image/gif':
         case 'audio/mp4':
+        case 'audio/m4a':
+        case 'audio/x-m4a':
         case 'audio/aac':
         case 'audio/ogg':
         case 'audio/webm':
