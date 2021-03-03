@@ -12,7 +12,7 @@
         "PLEASE_RELOAD": "请刷新页面后再尝试操作",
         "RELOAD": "重新加载页面",
         "PASSWORD": "密码",
-        "CHOOSE_PASSWORD": "如果你要保持登录状态，请在扫描二维码之前输入<br>个连接密码。",
+        "CHOOSE_PASSWORD": "如果你要保持登录状态，请在扫描二维码之前输入<br>连接密码。",
         "UNLOCK_FAILED_TEXT": "密码错误，无法恢复连接",
         "ENTER_PASSWORD": "如要恢复之前的连接，<br>请输入密码。",
         "PASSWORD_STRENGTH": "密码强度",
