@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.10][v2.3.10] (2021-03-03)
+
+Changes:
+
+* [bug] Fix playback of audio messages in newer Chromium browsers ([#1039][i1039])
+* [bug] Do not allow adding own ID to groups / distribution lists ([#1040][i1040])
+
+
 ### [v2.3.9][v2.3.9] (2021-02-23)
 
 Changes:
@@ -1012,7 +1020,10 @@ First public release.
 [i1034]: https://github.com/threema-ch/threema-web/issues/1034
 [i1035]: https://github.com/threema-ch/threema-web/issues/1035
 [i1036]: https://github.com/threema-ch/threema-web/issues/1036
+[i1039]: https://github.com/threema-ch/threema-web/issues/1039
+[i1040]: https://github.com/threema-ch/threema-web/issues/1040
 
+[v2.3.10]: https://github.com/threema-ch/threema-web/compare/v2.3.9...v2.3.10
 [v2.3.9]: https://github.com/threema-ch/threema-web/compare/v2.3.8...v2.3.9
 [v2.3.8]: https://github.com/threema-ch/threema-web/compare/v2.3.7...v2.3.8
 [v2.3.7]: https://github.com/threema-ch/threema-web/compare/v2.3.6...v2.3.7
