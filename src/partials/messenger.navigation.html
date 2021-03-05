@@ -87,7 +87,6 @@
             ng-if="ctrl.isVisible(conversation)">
 
             <div class="conversation"
-                  ng-click="ctrl.toggleSearchOff()"
                   ng-class="{'unread': conversation.unreadCount > 0,
                             'starred': conversation.isStarred,
                             'active': ctrl.isActive(conversation)}">
@@ -133,8 +132,7 @@
 <div id="navigation-contacts" class="tab-content" ng-if="ctrl.activeTab == 'contacts'" in-view-container>
     <p class="empty" ng-if="ctrl.contacts().length === 0" translate>messenger.NO_CONTACTS_FOUND</p>
     <ul ng-class="{'hide-inactive': ctrl.hideInactiveContacts()}">
-        <li ng-click="ctrl.toggleSearchOff()"
-            ng-repeat="contact in ctrl.contacts() | filter:ctrl.searchContact"
+        <li ng-repeat="contact in ctrl.contacts() | filter:ctrl.searchContact"
             ui-sref="messenger.home.conversation({ type: 'contact', id: contact.id, initParams: null })"
             class="contact"
             ng-class="{'inactive': contact.state == 'INACTIVE'}">
