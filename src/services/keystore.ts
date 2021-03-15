@@ -100,11 +100,17 @@ export class TrustedKeyStoreService {
         let pushTokenString = null;
         if (pushToken !== null && pushTokenType !== null) {
             switch (pushTokenType) {
-                case threema.PushTokenType.Gcm:
-                    pushTokenString = threema.PushTokenPrefix.Gcm + ':' + pushToken;
+                case threema.PushTokenType.Fcm:
+                    pushTokenString = threema.PushTokenPrefix.Fcm + ':' + pushToken;
                     break;
                 case threema.PushTokenType.Apns:
                     pushTokenString = threema.PushTokenPrefix.Apns + ':' + pushToken;
+                    break;
+                case threema.PushTokenType.HmsConsumer:
+                    pushTokenString = threema.PushTokenPrefix.HmsConsumer + ':' + pushToken;
+                    break;
+                case threema.PushTokenType.HmsWork:
+                    pushTokenString = threema.PushTokenPrefix.HmsWork + ':' + pushToken;
                     break;
             }
         }
@@ -160,11 +166,17 @@ export class TrustedKeyStoreService {
         let token: string = null;
         if (tokenString !== null && tokenString[1] === ':') {
             switch (tokenString[0]) {
-                case threema.PushTokenPrefix.Gcm:
-                    tokenType = threema.PushTokenType.Gcm;
+                case threema.PushTokenPrefix.Fcm:
+                    tokenType = threema.PushTokenType.Fcm;
                     break;
                 case threema.PushTokenPrefix.Apns:
                     tokenType = threema.PushTokenType.Apns;
+                    break;
+                case threema.PushTokenPrefix.HmsConsumer:
+                    tokenType = threema.PushTokenType.HmsConsumer;
+                    break;
+                case threema.PushTokenPrefix.HmsWork:
+                    tokenType = threema.PushTokenType.HmsWork;
                     break;
                 default:
                     this.log.error('Invalid push token type:', tokenString[0]);
@@ -174,7 +186,7 @@ export class TrustedKeyStoreService {
         } else if (tokenString !== null) {
             // Compat
             token = tokenString;
-            tokenType = threema.PushTokenType.Gcm;
+            tokenType = threema.PushTokenType.Fcm;
         }
 
         return {

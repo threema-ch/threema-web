@@ -509,13 +509,17 @@ declare namespace threema {
     }
 
     const enum PushTokenType {
-        Gcm = 'gcm',
+        Fcm = 'gcm',
         Apns = 'apns',
+        HmsConsumer = 'hms',
+        HmsWork = 'hmsWork',
     }
 
     const enum PushTokenPrefix {
-        Gcm = 'g',
+        Fcm = 'g',
         Apns = 'a',
+        HmsConsumer = 'h',
+        HmsWork = 'w',
     }
 
     interface TrustedKeyStoreData {
@@ -729,7 +733,8 @@ declare namespace threema {
         // Whether the app is the *work* variant of Threema
         isWork: boolean;
 
-        // The GCM / APNS push token
+        // The FCM / HMS / APNS push token
+        // (Note: HMS tokens are prefixed with "hms;")
         pushToken?: string;
 
         // The device configuration

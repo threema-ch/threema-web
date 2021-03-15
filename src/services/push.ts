@@ -169,8 +169,14 @@ export class PushSession {
             data.set(PushService.ARG_TOKEN, parts[0]);
             data.set(PushService.ARG_ENDPOINT, parts[1]);
             data.set(PushService.ARG_BUNDLE_ID, parts[2]);
-        } else if (this.service.pushType === threema.PushTokenType.Gcm) {
+        } else if (this.service.pushType === threema.PushTokenType.Fcm) {
             data.set(PushService.ARG_TOKEN, this.service.pushToken);
+        } else if (this.service.pushType === threema.PushTokenType.HmsConsumer) {
+            data.set(PushService.ARG_TOKEN, this.service.pushToken);
+            data.set(PushService.ARG_SUBTYPE, PushService.SUBTYPE_CONSUMER);
+        } else if (this.service.pushType === threema.PushTokenType.HmsWork) {
+            data.set(PushService.ARG_TOKEN, this.service.pushToken);
+            data.set(PushService.ARG_SUBTYPE, PushService.SUBTYPE_WORK);
         } else {
             throw new Error(`Invalid push type: ${this.service.pushType}`);
         }
@@ -245,6 +251,7 @@ export class PushService {
     public static readonly $inject = ['CONFIG', 'PROTOCOL_VERSION', 'LogService'];
 
     public static readonly ARG_TYPE = 'type';
+    public static readonly ARG_SUBTYPE = 'subtype';
     public static readonly ARG_TOKEN = 'token';
     public static readonly ARG_SESSION = 'session';
     public static readonly ARG_VERSION = 'version';
@@ -254,13 +261,16 @@ export class PushService {
     public static readonly ARG_TIME_TO_LIVE = 'ttl';
     public static readonly ARG_COLLAPSE_KEY = 'collapse_key';
 
+    public static readonly SUBTYPE_CONSUMER = 'consumer';
+    public static readonly SUBTYPE_WORK = 'work';
+
     public readonly config: threema.Config;
     public readonly url: string;
     public readonly version: number = null;
     public readonly logService: LogService;
     public readonly log: Logger;
     private _pushToken: string = null;
-    private _pushType = threema.PushTokenType.Gcm;
+    private _pushType = threema.PushTokenType.Fcm;
 
     constructor(CONFIG: threema.Config, PROTOCOL_VERSION: number, logService: LogService) {
         this.config = CONFIG;
