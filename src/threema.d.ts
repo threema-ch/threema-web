@@ -511,15 +511,13 @@ declare namespace threema {
     const enum PushTokenType {
         Fcm = 'gcm',
         Apns = 'apns',
-        HmsConsumer = 'hms',
-        HmsWork = 'hmsWork',
+        Hms = 'hms',
     }
 
     const enum PushTokenPrefix {
         Fcm = 'g',
         Apns = 'a',
-        HmsConsumer = 'h',
-        HmsWork = 'w',
+        Hms = 'h',
     }
 
     interface TrustedKeyStoreData {

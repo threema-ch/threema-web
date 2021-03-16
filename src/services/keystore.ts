@@ -106,11 +106,8 @@ export class TrustedKeyStoreService {
                 case threema.PushTokenType.Apns:
                     pushTokenString = threema.PushTokenPrefix.Apns + ':' + pushToken;
                     break;
-                case threema.PushTokenType.HmsConsumer:
-                    pushTokenString = threema.PushTokenPrefix.HmsConsumer + ':' + pushToken;
-                    break;
-                case threema.PushTokenType.HmsWork:
-                    pushTokenString = threema.PushTokenPrefix.HmsWork + ':' + pushToken;
+                case threema.PushTokenType.Hms:
+                    pushTokenString = threema.PushTokenPrefix.Hms + ':' + pushToken;
                     break;
             }
         }
@@ -172,11 +169,8 @@ export class TrustedKeyStoreService {
                 case threema.PushTokenPrefix.Apns:
                     tokenType = threema.PushTokenType.Apns;
                     break;
-                case threema.PushTokenPrefix.HmsConsumer:
-                    tokenType = threema.PushTokenType.HmsConsumer;
-                    break;
-                case threema.PushTokenPrefix.HmsWork:
-                    tokenType = threema.PushTokenType.HmsWork;
+                case threema.PushTokenPrefix.Hms:
+                    tokenType = threema.PushTokenType.Hms;
                     break;
                 default:
                     this.log.error('Invalid push token type:', tokenString[0]);

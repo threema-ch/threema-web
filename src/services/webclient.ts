@@ -3355,7 +3355,7 @@ export class WebClientService {
                     const hmsPrefix = 'hms;';
                     if (this.pushToken.startsWith(hmsPrefix)) {
                         this.pushToken = this.pushToken.substring(hmsPrefix.length);
-                        this.pushTokenType = this.clientInfo.isWork ? threema.PushTokenType.HmsWork : threema.PushTokenType.HmsConsumer;
+                        this.pushTokenType = threema.PushTokenType.Hms;
                     } else {
                         this.pushTokenType = threema.PushTokenType.Fcm;
                     }

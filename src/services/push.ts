@@ -171,12 +171,11 @@ export class PushSession {
             data.set(PushService.ARG_BUNDLE_ID, parts[2]);
         } else if (this.service.pushType === threema.PushTokenType.Fcm) {
             data.set(PushService.ARG_TOKEN, this.service.pushToken);
-        } else if (this.service.pushType === threema.PushTokenType.HmsConsumer) {
-            data.set(PushService.ARG_TOKEN, this.service.pushToken);
-            data.set(PushService.ARG_SUBTYPE, PushService.SUBTYPE_CONSUMER);
-        } else if (this.service.pushType === threema.PushTokenType.HmsWork) {
-            data.set(PushService.ARG_TOKEN, this.service.pushToken);
-            data.set(PushService.ARG_SUBTYPE, PushService.SUBTYPE_WORK);
+        } else if (this.service.pushType === threema.PushTokenType.Hms) {
+            // HMS token format: "<app-id>|<push-token>"
+            const parts = this.service.pushToken.split('|');
+            data.set(PushService.ARG_TOKEN, parts[1]);
+            data.set(PushService.ARG_APP_ID, parts[0]);
         } else {
             throw new Error(`Invalid push type: ${this.service.pushType}`);
         }
@@ -251,18 +250,15 @@ export class PushService {
     public static readonly $inject = ['CONFIG', 'PROTOCOL_VERSION', 'LogService'];
 
     public static readonly ARG_TYPE = 'type';
-    public static readonly ARG_SUBTYPE = 'subtype';
     public static readonly ARG_TOKEN = 'token';
     public static readonly ARG_SESSION = 'session';
     public static readonly ARG_VERSION = 'version';
     public static readonly ARG_AFFILIATION = 'affiliation';
+    public static readonly ARG_APP_ID = 'appid';
     public static readonly ARG_ENDPOINT = 'endpoint';
     public static readonly ARG_BUNDLE_ID = 'bundleid';
     public static readonly ARG_TIME_TO_LIVE = 'ttl';
     public static readonly ARG_COLLAPSE_KEY = 'collapse_key';
-
-    public static readonly SUBTYPE_CONSUMER = 'consumer';
-    public static readonly SUBTYPE_WORK = 'work';
 
     public readonly config: threema.Config;
     public readonly url: string;
