@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.11][v2.3.11] (2021-03-16)
+
+Changes:
+
+* [feature] Add support for HMS push tokens ([#1044][i1044])
+* [bug] Revert clearing of search when clicking on conversation / contact ([#1042][i1042])
+
+
 ### [v2.3.10][v2.3.10] (2021-03-03)
 
 Changes:
@@ -1022,7 +1030,10 @@ First public release.
 [i1036]: https://github.com/threema-ch/threema-web/issues/1036
 [i1039]: https://github.com/threema-ch/threema-web/issues/1039
 [i1040]: https://github.com/threema-ch/threema-web/issues/1040
+[i1042]: https://github.com/threema-ch/threema-web/issues/1042
+[i1044]: https://github.com/threema-ch/threema-web/issues/1044
 
+[v2.3.11]: https://github.com/threema-ch/threema-web/compare/v2.3.10...v2.3.11
 [v2.3.10]: https://github.com/threema-ch/threema-web/compare/v2.3.9...v2.3.10
 [v2.3.9]: https://github.com/threema-ch/threema-web/compare/v2.3.8...v2.3.9
 [v2.3.8]: https://github.com/threema-ch/threema-web/compare/v2.3.7...v2.3.8

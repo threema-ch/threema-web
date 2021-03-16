@@ -1,6 +1,6 @@
 {
   "name": "threema-web",
-  "version": "2.3.10",
+  "version": "2.3.11",
   "description": "Threema Webclient",
   "scripts": {
     "build": "npm run build:js && npm run build:css",
