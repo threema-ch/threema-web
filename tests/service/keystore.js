@@ -71,6 +71,10 @@ describe('TrustedKeyStoreService', function() {
         roundtrip('apns');
     });
 
+    it('roundtripHms', () => {
+        roundtrip('hms');
+    });
+
     // When no push token is set, then both the token and the token type retrieved should be null.
     it('roundtripNoToken', () => {
         const pubkey = Uint8Array.of(1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8);
@@ -101,7 +105,6 @@ describe('TrustedKeyStoreService', function() {
         $service.clearTrustedKey();
         window.localStorage.setItem(STORAGE_KEY, 'dfc0583350096ad02080f11113824fd65bd916ec295bd43f:33813017f6a7cecc9d6e1be858f9d5217496e2023de8fe0227a616f9d78339800da20bb1b83765ca83289f3f1ecfd9293934a15ac31127e91f186205c310c9bfefeccab9f58155930ab5e19804d4d304c4c61cc54e4f9dd695a5d222ab9af48dab1e2beccf7dbacdf82e144220f50b25b41f009c24296da86bddd83e48cb6719377d99dbb2fda2cc56b2c2c86df2ab27b7053b1c01cec2ec');
         const keyinfo = $service.retrieveTrustedKey('espressodopio');
-    bar = keyinfo;
         expect(keyinfo.pushToken).toEqual('asdfasdfjklo:DFLKJALKDJFKLJDASLKFJLDJF');
         expect(keyinfo.pushTokenType).toEqual('gcm');
         $service.clearTrustedKey();

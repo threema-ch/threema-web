@@ -169,8 +169,13 @@ export class PushSession {
             data.set(PushService.ARG_TOKEN, parts[0]);
             data.set(PushService.ARG_ENDPOINT, parts[1]);
             data.set(PushService.ARG_BUNDLE_ID, parts[2]);
-        } else if (this.service.pushType === threema.PushTokenType.Gcm) {
+        } else if (this.service.pushType === threema.PushTokenType.Fcm) {
             data.set(PushService.ARG_TOKEN, this.service.pushToken);
+        } else if (this.service.pushType === threema.PushTokenType.Hms) {
+            // HMS token format: "<app-id>|<push-token>"
+            const parts = this.service.pushToken.split('|');
+            data.set(PushService.ARG_TOKEN, parts[1]);
+            data.set(PushService.ARG_APP_ID, parts[0]);
         } else {
             throw new Error(`Invalid push type: ${this.service.pushType}`);
         }
@@ -249,6 +254,7 @@ export class PushService {
     public static readonly ARG_SESSION = 'session';
     public static readonly ARG_VERSION = 'version';
     public static readonly ARG_AFFILIATION = 'affiliation';
+    public static readonly ARG_APP_ID = 'appid';
     public static readonly ARG_ENDPOINT = 'endpoint';
     public static readonly ARG_BUNDLE_ID = 'bundleid';
     public static readonly ARG_TIME_TO_LIVE = 'ttl';
@@ -260,7 +266,7 @@ export class PushService {
     public readonly logService: LogService;
     public readonly log: Logger;
     private _pushToken: string = null;
-    private _pushType = threema.PushTokenType.Gcm;
+    private _pushType = threema.PushTokenType.Fcm;
 
     constructor(CONFIG: threema.Config, PROTOCOL_VERSION: number, logService: LogService) {
         this.config = CONFIG;
