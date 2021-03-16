@@ -75,10 +75,6 @@ describe('TrustedKeyStoreService', function() {
         roundtrip('hms');
     });
 
-    it('roundtripHmsWork', () => {
-        roundtrip('hmsWork');
-    });
-
     // When no push token is set, then both the token and the token type retrieved should be null.
     it('roundtripNoToken', () => {
         const pubkey = Uint8Array.of(1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8);
