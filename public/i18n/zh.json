@@ -1,12 +1,12 @@
 {
     "meta": {
-        "DESCRIPTION": "在电脑上使用 Threema Web 聊天，可以完全访问所有聊天记录，联系人和媒体文件。"
+        "DESCRIPTION": "在电脑上使用 Threema Web 聊天，可以完全访问所有聊天记录、联系人和媒体文件。"
     },
     "welcome": {
         "ABORT": "中止",
         "CONTINUE_ANYWAY": "继续",
         "PLEASE_SCAN": "使用 Threema 客户端扫描二维码",
-        "PLEASE_UNLOCK": "正在重连",
+        "PLEASE_UNLOCK": "重新连接",
         "WAITING": "等待连接",
         "RETRY": "重试",
         "PLEASE_RELOAD": "请刷新页面后再尝试操作",

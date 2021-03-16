@@ -104,6 +104,7 @@
         "NOTE": "Not:"
     },
     "messenger": {
+        "VERSION": "Versiyon",
         "VERIFICATION_LEVEL": "Doğrulama seviyesi",
         "VERIFICATION_LEVEL2_EXPLAIN": "Bu kişinin kimliği e-posta ya da SMS kullanılarak doğrulandı.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Bu kişinin kimliğini, kodunu tarayarak doğruladınız.",
@@ -313,6 +314,11 @@
             "COMPOSE_AREA": "Mesaj Alanı",
             "SUBMIT_KEY_ENTER": "Mesaj göndermek için 'Enter' tuşunu, yeni satır eklemek için 'Shift+Enter' kombinasyonunu kullanın.",
             "SUBMIT_KEY_CTRL_ENTER": "Mesaj göndermek için 'Ctrl+Enter'' kombinasyonunu, yeni satır eklemek için 'Enter' tuşunu kullanın."
+        },
+        "ui": {
+            "UI": "Kullanıcı arayüzü",
+            "DEFAULT": "Standart",
+            "MINIMAL": "Sade"
         }
     },
     "deviceUnreachable": {
