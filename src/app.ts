@@ -76,6 +76,7 @@ angular.module('3ema', [
 // Constants to be used by controllers
 .constant('BROWSER_MIN_VERSIONS', {
     FF: 60,
+    FF_IOS: 8,
     CHROME: 65,
     OPERA: 52,
     SAFARI: 11,

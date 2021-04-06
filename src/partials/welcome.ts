@@ -137,6 +137,11 @@ class WelcomeController {
                 this.log.warn('Firefox is too old (' + version + ' < ' + minVersions.FF + ')');
                 this.showBrowserWarning();
             }
+        } else if (this.browser.name === threema.BrowserName.FirefoxIos) {
+            if (version < minVersions.FF_IOS) {
+                this.log.warn('Firefox on iOS is too old (WebKit ' + version + ' < ' + minVersions.FF_IOS + ')');
+                this.showBrowserWarning();
+            }
         } else if (this.browser.name === threema.BrowserName.Opera) {
             if (version < minVersions.OPERA) {
                 this.log.warn('Opera is too old (' + version + ' < ' + minVersions.OPERA + ')');
