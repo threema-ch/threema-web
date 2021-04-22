@@ -140,6 +140,7 @@ export class WebClientService {
     private static SUB_TYPE_CONNECTION_ACK = 'connectionAck';
     private static SUB_TYPE_CONNECTION_DISCONNECT = 'connectionDisconnect';
     private static SUB_TYPE_CONNECTION_INFO = 'connectionInfo';
+    private static SUB_TYPE_ACTIVE_CONVERSATION = 'activeConversation';
     private static ARGUMENT_MODE = 'mode';
     private static ARGUMENT_MODE_NEW = 'new';
     private static ARGUMENT_MODE_MODIFIED = 'modified';
@@ -1974,6 +1975,17 @@ export class WebClientService {
         const subType = WebClientService.SUB_TYPE_KEY_PERSISTED;
         this.sendRequestWireMessage(subType, !this.requiresTemporaryIdBackwardsCompatibility)
             .catch(this.logOnReject(WebClientService.TYPE_REQUEST, subType));
+    }
+
+    /**
+     * Send a conversation opened update.
+     */
+    public sendActiveConversation(conversation: threema.Conversation): void {
+        // noinspection JSIgnoredPromiseFromCall
+        this.sendUpdateWireMessage(WebClientService.SUB_TYPE_ACTIVE_CONVERSATION, false, {
+            [WebClientService.ARGUMENT_RECEIVER_TYPE]: conversation.type,
+            [WebClientService.ARGUMENT_RECEIVER_ID]: conversation.id,
+        }, undefined);
     }
 
     /**

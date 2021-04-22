@@ -359,6 +359,7 @@ declare namespace threema {
         avatar?: ArrayBuffer;
         notifications?: NotificationSettings;
         isStarred?: boolean;
+        isUnread?: boolean;
     }
 
     /**

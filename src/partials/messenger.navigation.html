@@ -87,7 +87,7 @@
             ng-if="ctrl.isVisible(conversation)">
 
             <div class="conversation"
-                  ng-class="{'unread': conversation.unreadCount > 0,
+                  ng-class="{'unread': conversation.unreadCount > 0 || conversation.isUnread,
                             'starred': conversation.isStarred,
                             'active': ctrl.isActive(conversation)}">
 
@@ -111,6 +111,9 @@
                         </span>
                         <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
                             {{ conversation.unreadCount }}
+                        </span>
+                        <span class="badge unread-count" ng-show="conversation.unreadCount === 0 && conversation.isUnread">
+                            &nbsp;&nbsp;&nbsp;
                         </span>
                     </section>
 
