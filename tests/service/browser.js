@@ -35,7 +35,7 @@ describe('BrowserService', function() {
         expect(browser.description()).toEqual('Firefox 59');
     });
 
-    it('firefoxIosMobile', () => {
+    it('firefoxIosMobile8', () => {
         const ua = 'Mozilla/5.0 (iPad; CPU OS 10_0_1 like Mac OS X) AppleWebKit/602.1.50 (KHTML, like Gecko) FxiOS/8.3b5826 Mobile/14A403 Safari/602.1.50';
         const service = testUserAgent(ua);
         const browser = service.getBrowser();
@@ -43,6 +43,16 @@ describe('BrowserService', function() {
         expect(browser.version).toEqual(8);
         expect(browser.mobile).toBe(true);
         expect(browser.description()).toEqual('Firefox (iOS) 8 [Mobile]');
+    });
+
+    it('firefoxIosMobile33', () => {
+        const ua = 'Mozilla/5.0 (iPhone; CPU OS 14_4_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/33.0  Mobile/15E148 Safari/605.1.15';
+        const service = testUserAgent(ua);
+        const browser = service.getBrowser();
+        expect(browser.name).toBe(BrowserName.FirefoxIos);
+        expect(browser.version).toEqual(33);
+        expect(browser.mobile).toBe(true);
+        expect(browser.description()).toEqual('Firefox (iOS) 33 [Mobile]');
     });
 
     it('chrome', () => {

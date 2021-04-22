@@ -697,6 +697,7 @@ declare namespace threema {
 
     interface BrowserMinVersions {
         FF: number;
+        FF_IOS: number;
         CHROME: number;
         OPERA: number;
         SAFARI: number;
