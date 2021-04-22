@@ -112,6 +112,9 @@
                         <span class="badge unread-count" ng-show="conversation.unreadCount > 0">
                             {{ conversation.unreadCount }}
                         </span>
+                        <span class="badge unread-count" ng-show="conversation.unreadCount === 0 && conversation.isUnread">
+                            &nbsp;&nbsp;&nbsp;
+                        </span>
                     </section>
 
                     <section class="message-box">

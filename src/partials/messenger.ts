@@ -524,6 +524,9 @@ class ConversationController {
                     },
                 );
 
+                // Notify app about conversation opening
+                this.webClientService.sendActiveConversation(this.conversation);
+
                 // Update "first unread" divider
                 this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
 
