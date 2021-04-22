@@ -87,7 +87,7 @@
             ng-if="ctrl.isVisible(conversation)">
 
             <div class="conversation"
-                  ng-class="{'unread': conversation.unreadCount > 0,
+                  ng-class="{'unread': conversation.unreadCount > 0 || conversation.isUnread,
                             'starred': conversation.isStarred,
                             'active': ctrl.isActive(conversation)}">
 
