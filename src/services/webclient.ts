@@ -1982,7 +1982,7 @@ export class WebClientService {
      */
     public sendActiveConversation(conversation: threema.Conversation): void {
         // noinspection JSIgnoredPromiseFromCall
-        this.sendUpdateWireMessage(WebClientService.SUB_TYPE_ACTIVE_CONVERSATION, false, {
+        this.sendUpdateWireMessage(WebClientService.SUB_TYPE_ACTIVE_CONVERSATION, true, {
             [WebClientService.ARGUMENT_RECEIVER_TYPE]: conversation.type,
             [WebClientService.ARGUMENT_RECEIVER_ID]: conversation.id,
         }, undefined);
