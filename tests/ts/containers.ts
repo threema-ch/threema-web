@@ -36,6 +36,7 @@ function makeContactConversation(id: string, position?: number): threema.Convers
         messageCount: 5,
         unreadCount: 0,
         isStarred: false,
+        isUnread: false,
     };
 }
 

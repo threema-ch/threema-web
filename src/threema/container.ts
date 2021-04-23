@@ -291,6 +291,7 @@ export class Conversations implements threema.Container.Conversations {
                 delete conversation.position;
             }
             setDefault(conversation, 'isStarred', false);
+            setDefault(conversation, 'isUnread', false);
         }
         this.conversations = data;
     }
@@ -339,6 +340,7 @@ export class Conversations implements threema.Container.Conversations {
 
                 // Explicitly set defaults, to be able to override old values
                 setDefault(conversation, 'isStarred', false);
+                setDefault(conversation, 'isUnread', false);
 
                 // Copy properties from new conversation to old conversation
                 Object.assign(this.conversations[i], conversation);
