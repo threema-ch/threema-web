@@ -10,6 +10,15 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.12][v2.3.12] (2021-04-27)
+
+Changes:
+
+* [feature] Add Japanese translation
+* [feature] Support conversations marked as unread ([#1050][i1050])
+* [bug] Don't show a browser warning for Firefox on iOS ([#1048][i1048])
+
+
 ### [v2.3.11][v2.3.11] (2021-03-16)
 
 Changes:
@@ -1032,7 +1041,10 @@ First public release.
 [i1040]: https://github.com/threema-ch/threema-web/issues/1040
 [i1042]: https://github.com/threema-ch/threema-web/issues/1042
 [i1044]: https://github.com/threema-ch/threema-web/issues/1044
+[i1048]: https://github.com/threema-ch/threema-web/issues/1048
+[i1050]: https://github.com/threema-ch/threema-web/issues/1050
 
+[v2.3.12]: https://github.com/threema-ch/threema-web/compare/v2.3.11...v2.3.12
 [v2.3.11]: https://github.com/threema-ch/threema-web/compare/v2.3.10...v2.3.11
 [v2.3.10]: https://github.com/threema-ch/threema-web/compare/v2.3.9...v2.3.10
 [v2.3.9]: https://github.com/threema-ch/threema-web/compare/v2.3.8...v2.3.9
