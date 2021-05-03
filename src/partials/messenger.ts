@@ -524,8 +524,10 @@ class ConversationController {
                     },
                 );
 
-                // Notify app about conversation opening
-                this.webClientService.sendActiveConversation(this.conversation);
+                // Notify app about conversation opening (if a conversation already exists)
+                if (this.conversation !== null) {
+                    this.webClientService.sendActiveConversation(this.conversation);
+                }
 
                 // Update "first unread" divider
                 this.webClientService.messages.updateFirstUnreadMessage(this.receiver);
@@ -567,7 +569,7 @@ class ConversationController {
                 }
             }
         } catch (error) {
-            this.log.error('Could not set receiver and type');
+            this.log.error('Could not set receiver and type:', error);
             $state.go('messenger.home');
         }
 
