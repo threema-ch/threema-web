@@ -10,6 +10,13 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.13][v2.3.13] (2021-05-04)
+
+Changes:
+
+* [bug] Fix regression that prevented starting new chats ([#1058][i1058])
+
+
 ### [v2.3.12][v2.3.12] (2021-04-27)
 
 Changes:
@@ -1043,7 +1050,9 @@ First public release.
 [i1044]: https://github.com/threema-ch/threema-web/issues/1044
 [i1048]: https://github.com/threema-ch/threema-web/issues/1048
 [i1050]: https://github.com/threema-ch/threema-web/issues/1050
+[i1058]: https://github.com/threema-ch/threema-web/issues/1058
 
+[v2.3.13]: https://github.com/threema-ch/threema-web/compare/v2.3.12...v2.3.13
 [v2.3.12]: https://github.com/threema-ch/threema-web/compare/v2.3.11...v2.3.12
 [v2.3.11]: https://github.com/threema-ch/threema-web/compare/v2.3.10...v2.3.11
 [v2.3.10]: https://github.com/threema-ch/threema-web/compare/v2.3.9...v2.3.10
