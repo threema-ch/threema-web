@@ -596,7 +596,7 @@ const SHORTNAMES = {
     'elf_tone4': '🧝🏾',
     'elf_tone5': '🧝🏿',
     'email': '📧',
-    'embarassed': '😅',
+    'embarrassed': '😅',
     'end': '🔚',
     'england': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
     'enraged': '😡',
