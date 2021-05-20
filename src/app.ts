@@ -98,7 +98,7 @@ angular.module('3ema', [
             suffix: '.json',
         })
         .uniformLanguageTag('java')
-        .registerAvailableLanguageKeys(['bg', 'cs', 'de', 'en', 'eo', 'es', 'fr', 'hu', 'ja', 'ko', 'nl', 'pl', 'ro', 'ru', 'sk', 'tr', 'uk', 'zh'], {
+        .registerAvailableLanguageKeys(['bg', 'cs', 'de', 'en', 'eo', 'es', 'fr', 'hu', 'ja', 'ko', 'nl', 'pl', 'ro', 'ru', 'sk', 'tr', 'uk', 'zh_TW', 'zh'], {
             'bg_*': 'bg',
             'cs_*': 'cs',
             'de_*': 'de',
@@ -116,6 +116,17 @@ angular.module('3ema', [
             'sk_*': 'sk',
             'tr_*': 'tr',
             'uk_*': 'uk',
+
+            // Chinese traditional
+            'zh_HANT': 'zh_TW',
+            'zh_CHT': 'zh_TW',
+            'zh_HK': 'zh_TW',
+            'zh_MO': 'zh_TW',
+            // Chinese simplified
+            'zh_HANS': 'zh_TW',
+            'zh_CHS': 'zh_TW',
+            'zh_SG': 'zh',
+            'zh_CN': 'zh',
             'zh_*': 'zh',
         })
         .determinePreferredLanguage()
