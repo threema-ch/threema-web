@@ -233,7 +233,7 @@
         "file": "File",
         "audio": "Audio",
         "location": "Location",
-        "ballot": "Ballot",
+        "ballot": "Poll",
         "gif": "GIF"
     },
     "validationError": {
