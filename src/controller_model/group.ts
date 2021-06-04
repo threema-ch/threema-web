@@ -112,9 +112,7 @@ export class GroupControllerModel
     }
 
     public isValid(): boolean {
-        return this.members.filter((identity: string) => {
-            return identity !== this.webClientService.me.id;
-        }).length > 0;
+        return this.members.length > 0;
     }
 
     public canChat(): boolean {
