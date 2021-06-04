@@ -206,6 +206,7 @@ app.controller('ChecksController', function($scope, $timeout) {
     this.resultDn = {
         state: 'unknown',
         showLogs: false,
+        logs: [],
     };
     this.resultWs = {
         state: 'unknown',
@@ -244,7 +245,23 @@ app.controller('ChecksController', function($scope, $timeout) {
 
     // The desktop notification API is available
     const desktopNotificationsAvailable = () => {
-        this.resultDn.state = 'Notification' in window ? 'yes' : 'no';
+        if ('Notification' in window) {
+            const permission = Notification.permission;
+            switch (permission) {
+                case 'granted':
+                case 'default':
+                    this.resultDn.state = 'yes';
+                    break;
+                default:
+                    this.resultDn.state = 'no';
+                    break;
+            }
+            console.log(`Notification permission: ${permission}`);
+            this.resultDn.logs.push(`Current permission: ${permission}`);
+            this.resultDn.showLogs = true;
+        } else {
+            this.resultDn.state = 'no';
+        }
     };
 
     // A WebSocket connection can be established to the SaltyRTC server
