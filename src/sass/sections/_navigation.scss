@@ -90,11 +90,9 @@
             // Animation when appearing
             max-height: 50px;
 
-            // sass-lint:disable no-vendor-prefixes
             ::-webkit-search-cancel-button {
                 -webkit-appearance: searchfield-cancel-button;
             }
-            // sass-lint:enable no-vendor-prefixes
         }
     }
 }

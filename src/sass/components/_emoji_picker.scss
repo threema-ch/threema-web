@@ -83,12 +83,10 @@
     }
 
     // Hide emoji that don't match the currently selected skintone
-    // sass-lint:disable force-pseudo-nesting empty-line-between-blocks
     &[data-skintone='0'] .em[data-t]:not([data-t='0']) { display: none; }
     &[data-skintone='1'] .em[data-t]:not([data-t='1']) { display: none; }
     &[data-skintone='2'] .em[data-t]:not([data-t='2']) { display: none; }
     &[data-skintone='3'] .em[data-t]:not([data-t='3']) { display: none; }
     &[data-skintone='4'] .em[data-t]:not([data-t='4']) { display: none; }
     &[data-skintone='5'] .em[data-t]:not([data-t='5']) { display: none; }
-    // sass-lint:enable force-pseudo-nesting empty-line-between-blocks
 }

@@ -7,8 +7,8 @@
     min-width: 1024px;
     height: auto;
     min-height: 100%;
-    -moz-user-select: none; // sass-lint:disable-line no-vendor-prefixes
-    -webkit-user-select: none; // sass-lint:disable-line no-vendor-prefixes
+    -moz-user-select: none;
+    -webkit-user-select: none;
     user-select: none;
     pointer-events: none;
 }

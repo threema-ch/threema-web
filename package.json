@@ -17,9 +17,8 @@
     "test": "echo -e 'NOTE: Use either \"npm run test:unit\" or \"npm run test:ui\"\n' && exit 1",
     "test:unit": "npm run build:unittests && karma start --single-run --log-level=debug --colors",
     "test:ui": "bash tests/ui/run.sh",
-    "lint": "npm run lint:ts && npm run lint:sass",
+    "lint": "npm run lint:ts",
     "lint:ts": "tslint -c tslint.json --project tsconfig.json --exclude \"**/src/config.ts\"",
-    "lint:sass": "sass-lint -c .sass-lint.yml -v -q",
     "clean": "rm -rf dist/generated"
   },
   "keywords": [
@@ -97,7 +96,6 @@
     "karma-chrome-launcher": "~3.1.0",
     "karma-firefox-launcher": "^2.1.0",
     "karma-jasmine": "^3.3.1",
-    "sass-lint": "~1.13.1",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "term-color": "^1.0.1",
     "ts-node": "~8.6.2",
