@@ -63,7 +63,7 @@
     "autolinker": "^3.14.2",
     "babel-loader": "^8.0.6",
     "core-js": "^3.6.4",
-    "croppie": "^2.6.4",
+    "croppie": "^2.6.5",
     "emojibase-regex": "^4.1.1",
     "file-saver": "^2.0.2",
     "messageformat": "^2.3.0",
