@@ -104,6 +104,7 @@
         "NOTE": "Замечания:"
     },
     "messenger": {
+        "VERSION": "Версия",
         "VERIFICATION_LEVEL": "Уровень проверки",
         "VERIFICATION_LEVEL2_EXPLAIN": "Личность этого человека была подтверждена с помощью электронной почты или SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Вы подтвердили личность этого человека, отсканировав его код.",
@@ -126,7 +127,7 @@
         "DECLINE": "Не согласен",
         "DELETE": "Удалить",
         "QUOTE": "Цитата",
-        "MESSAGE_NOTIFICATION_SUBJECT": "{messageCount, plural, one {Threema message from} other {{messageCount} Threema messages from}}",
+        "MESSAGE_NOTIFICATION_SUBJECT": "{messageCount, plural, one {Сообщение Threema от} few {{messageCount} Сообщений Threema от} many {{messageCount} Сообщений Threema от} other {{messageCount} Сообщений Threema от}}",
         "MY_THREEMA_ID": "Мой Threema ID",
         "MY_PUBLIC_NICKNAME": "Ник",
         "MEMBER_OF_GROUPS": "Участник этих групп",
@@ -310,9 +311,14 @@
             "PLAY_SOUND": "Воспроизвести звук"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
+            "COMPOSE_AREA": "Область компоновки",
             "SUBMIT_KEY_ENTER": "Отправка по 'Enter'. Перенос строки с помощи 'Shift+Enter'.",
             "SUBMIT_KEY_CTRL_ENTER": "Отправка по 'Shift+Enter'. Перенос строки с помощи 'Enter'."
+        },
+        "ui": {
+            "UI": "Пользовательский интерфейс",
+            "DEFAULT": "По умолчанию",
+            "MINIMAL": "Минималистический или строгий"
         }
     },
     "deviceUnreachable": {

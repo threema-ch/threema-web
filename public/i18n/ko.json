@@ -104,6 +104,7 @@
         "NOTE": "기록:"
     },
     "messenger": {
+        "VERSION": "버전",
         "VERIFICATION_LEVEL": "검증 레벨",
         "VERIFICATION_LEVEL2_EXPLAIN": "이 사람은 이메일이나 SMS로 검증되었습니다",
         "VERIFICATION_LEVEL3_EXPLAIN": "코드를 스캔함으로써 이 사람을 검증하였습니다.",
@@ -313,6 +314,11 @@
             "COMPOSE_AREA": "작성란",
             "SUBMIT_KEY_ENTER": "메시지를 보내려면 'Enter'을 누르십시오. 'Shift+Enter'를 눌러 새 줄을 추가하십시오.",
             "SUBMIT_KEY_CTRL_ENTER": "메시지를 보내려면 'Ctrl+Enter'를 누르십시오. 'Enter'을 눌러 새 줄을 추가하십시오."
+        },
+        "ui": {
+            "UI": "이용자 인터페이스",
+            "DEFAULT": "디폴트",
+            "MINIMAL": "최소"
         }
     },
     "deviceUnreachable": {
