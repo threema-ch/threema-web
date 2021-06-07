@@ -10,6 +10,15 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.14][v2.3.14] (2021-06-07)
+
+Changes:
+
+* [feature] Add Traditional Chinese translation ([#1063][i1063])
+* [feature] Troubleshooting tool: Check for notification permission ([#1066][i1066])
+* [bug] Allow editing single-member groups ([#1069][i1069])
+
+
 ### [v2.3.13][v2.3.13] (2021-05-04)
 
 Changes:
@@ -1051,7 +1060,11 @@ First public release.
 [i1048]: https://github.com/threema-ch/threema-web/issues/1048
 [i1050]: https://github.com/threema-ch/threema-web/issues/1050
 [i1058]: https://github.com/threema-ch/threema-web/issues/1058
+[i1063]: https://github.com/threema-ch/threema-web/issues/1063
+[i1066]: https://github.com/threema-ch/threema-web/issues/1066
+[i1069]: https://github.com/threema-ch/threema-web/issues/1069
 
+[v2.3.14]: https://github.com/threema-ch/threema-web/compare/v2.3.13...v2.3.14
 [v2.3.13]: https://github.com/threema-ch/threema-web/compare/v2.3.12...v2.3.13
 [v2.3.12]: https://github.com/threema-ch/threema-web/compare/v2.3.11...v2.3.12
 [v2.3.11]: https://github.com/threema-ch/threema-web/compare/v2.3.10...v2.3.11
