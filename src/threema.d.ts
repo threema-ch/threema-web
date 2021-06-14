@@ -220,6 +220,8 @@ declare namespace threema {
 
     /**
      * The base class for a receiver. Only type and id.
+     *
+     * Note: The id alone is not guaranteed to be unique, always compare both type and ID!
      */
     interface BaseReceiver {
         id: string;

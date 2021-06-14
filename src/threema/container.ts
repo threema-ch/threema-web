@@ -833,7 +833,7 @@ class Typing implements threema.Container.Typing {
     private set = new StringHashSet();
 
     private getReceiverUid(receiver: threema.BaseReceiver): string {
-        return receiver.type + '-' + receiver.id;
+        return `${receiver.type}-${receiver.id}`;
     }
 
     public setTyping(receiver: threema.BaseReceiver): void {
@@ -860,12 +860,10 @@ class Drafts implements threema.Container.Drafts {
 
     private quotes = new Map<string, threema.Quote>();
 
-    // Use to implement draft texts!
     private texts = new Map<string, string>();
 
     private getReceiverUid(receiver: threema.Receiver): string {
-        // do not use receiver.type => can be null
-        return receiver.id;
+        return `${receiver.type}-${receiver.id}`;
     }
 
     public setQuote(receiver: threema.Receiver, quote: threema.Quote): void {
