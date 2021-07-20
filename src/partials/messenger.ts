@@ -654,25 +654,31 @@ class ConversationController {
 
             switch (type) {
                 case 'file':
+                    const fileCount = contents.length;
+
+                    // The caption input field is only shown for a single file,
+                    // since it is otherwise not obvious what happens.
+                    const showCaption = fileCount === 1;
+
                     // Determine file type
                     let showSendAsFileCheckbox = false;
-                    let captionSupported = false;
                     for (const msg of contents as threema.FileMessageData[]) {
                         if (!msg.fileType) {
                             msg.fileType = 'application/octet-stream';
                         }
-                        captionSupported = this.mimeService.isImage(msg.fileType);
-                        if (this.mimeService.isImage(msg.fileType)
-                            || this.mimeService.isAudio(msg.fileType, this.webClientService.clientInfo.os)
-                            || this.mimeService.isVideo(msg.fileType)) {
+
+                        // The "send as file" checkbox is shown if one of the files is a media file.
+                        const isImage = this.mimeService.isImage(msg.fileType);
+                        const isAudio = this.mimeService.isAudio(msg.fileType, this.webClientService.clientInfo.os);
+                        const isVideo = this.mimeService.isVideo(msg.fileType);
+                        if (isImage || isAudio || isVideo) {
                             showSendAsFileCheckbox = true;
-                            break;
                         }
                     }
 
                     // Prepare preview
                     let preview: threema.FileMessageData | null = null;
-                    if (contents.length === 1) {
+                    if (fileCount === 1) {
                         const msg = contents[0] as threema.FileMessageData;
                         if (this.mimeService.isImage(msg.fileType)) {
                             preview = msg;
@@ -680,11 +686,16 @@ class ConversationController {
                     }
 
                     // Eager translations
-                    const title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {
-                        senderName: emojify(
-                            (this.$filter('emptyToPlaceholder') as any)(this.receiver.displayName, '-'),
-                        ),
-                    });
+                    let title;
+                    const senderName = emojify((this.$filter('emptyToPlaceholder') as any)(this.receiver.displayName, '-'));
+                    if (fileCount === 1) {
+                        title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {senderName: senderName});
+                    } else {
+                        title = this.$translate.instant('messenger.CONFIRM_FILE_SEND_MULTI', {
+                            fileCount: fileCount,
+                            senderName: senderName,
+                        });
+                    }
                     const placeholder = this.$translate.instant('messenger.CONFIRM_FILE_CAPTION');
                     const confirmSendAsFile = this.$translate.instant('messenger.CONFIRM_SEND_AS_FILE');
 
@@ -700,7 +711,7 @@ class ConversationController {
                                 <md-dialog-content class="md-dialog-content">
                                     <h2 class="md-title">${title}</h2>
                                     <img class="preview" ng-if="ctrl.hasPreview()" ng-src="{{ ctrl.previewDataUrl }}">
-                                    <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="!${showSendAsFileCheckbox} || ctrl.sendAsFile || ${captionSupported}">
+                                    <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="${showCaption}">
                                         <input maxlength="1000" md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
                                     </md-input-container>
                                     <md-input-container md-no-float class="input-send-as-file md-prompt-input-container" ng-show="${showSendAsFileCheckbox}">

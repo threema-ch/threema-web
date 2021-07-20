@@ -153,6 +153,7 @@
         "MSG_HISTORY_MODIFIED": "Geändert",
         "NAVIGATE": "Navigieren",
         "CONFIRM_FILE_SEND": "Senden an «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "{fileCount} Dateien an «{senderName}» senden?",
         "CONFIRM_FILE_CAPTION": "Optionale Beschriftung",
         "CONFIRM_SEND_AS_FILE": "Als Datei senden",
         "CONFIRM_DELETE_TITLE": "Nachricht Löschen",
