@@ -317,7 +317,7 @@
         },
         "ui": {
             "UI": "Interface utilisateur",
-            "DEFAULT": "Default",
+            "DEFAULT": "Paramètres par défaut",
             "MINIMAL": "Minimal"
         }
     },

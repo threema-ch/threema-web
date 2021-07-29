@@ -153,6 +153,7 @@
         "MSG_HISTORY_MODIFIED": "Veranderd",
         "NAVIGATE": "Navigeren",
         "CONFIRM_FILE_SEND": "Versturen naar «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "Send {fileCount} files to «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Optioneel bijschrift",
         "CONFIRM_SEND_AS_FILE": "Versturen als bestand",
         "CONFIRM_DELETE_TITLE": "Bericht verwijderen",
@@ -233,7 +234,7 @@
         "file": "Bestand",
         "audio": "Audio",
         "location": "Locatie",
-        "ballot": "Poll",
+        "ballot": "Peilen",
         "gif": "GIF"
     },
     "validationError": {
@@ -367,13 +368,13 @@
     },
     "connection": {
         "SESSION_CLOSED_TITLE": "Sessie gesloten",
-        "SESSION_STOPPED": "De sessie is gestopt op uw apparaat.",
-        "SESSION_DELETED": "De sessie is verwijderd op uw apparaat.",
-        "WEBCLIENT_DISABLED": "Threema Web is uitgeschakeld op uw apparaat.",
+        "SESSION_STOPPED": "De sessie is gestopt op uw toestel.",
+        "SESSION_DELETED": "De sessie is verwijderd op uw toestel.",
+        "WEBCLIENT_DISABLED": "Threema Web is uitgeschakeld op uw toestel.",
         "SESSION_REPLACED": "De sessie is gestopt omdat u een Threema-websessie in een andere browser hebt gestart.",
-        "OUT_OF_MEMORY": "De sessie moest worden gestopt omdat uw apparaat onvoldoende geheugen had.",
+        "OUT_OF_MEMORY": "De sessie moest worden gestopt omdat uw toestel onvoldoende geheugen had.",
         "SESSION_ERROR": "De sessie is afgebroken wegens een protocolfout.",
-        "PUSH_ERROR_INFO": "Pogingen om uw apparaat te activeren met pushmeldingen zijn mislukt. Dit kan bijvoorbeeld gebeuren als u onlangs bent overgestapt op een nieuw mobiel apparaat.",
+        "PUSH_ERROR_INFO": "Pogingen om uw toestel te activeren met pushmeldingen zijn mislukt. Dit kan bijvoorbeeld gebeuren als u onlangs bent overgestapt op een nieuw mobiel toestel.",
         "PUSH_ERROR_ACTION": "Als deze fout zich blijft voordoen, klik dan op \"Vergeet sessie\" en start een nieuwe Threema-websessie."
     }
 }

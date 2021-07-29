@@ -153,6 +153,7 @@
         "MSG_HISTORY_MODIFIED": "已编辑",
         "NAVIGATE": "导航",
         "CONFIRM_FILE_SEND": "发送给 «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "发送{fileCount}个文件到{senderName}？",
         "CONFIRM_FILE_CAPTION": "可选标题",
         "CONFIRM_SEND_AS_FILE": "作为文件发送",
         "CONFIRM_DELETE_TITLE": "删除消息",
@@ -211,7 +212,7 @@
         "ME": "我",
         "CONTACT_STATE_INACTIVE": "不活跃",
         "CONTACT_STATE_INVALID": "不可用",
-        "CONTACT_STATE_REVOKED": "已注销"
+        "CONTACT_STATE_REVOKED": "已吊销"
     },
     "messageStates": {
         "WE_ACK": "你点了赞",
@@ -233,7 +234,7 @@
         "file": "文件",
         "audio": "声音",
         "location": "位置",
-        "ballot": "选票",
+        "ballot": "投票",
         "gif": "动图"
     },
     "validationError": {
