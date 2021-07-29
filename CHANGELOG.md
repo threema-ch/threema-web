@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.15][v2.3.15] (2021-07-29)
+
+Changes:
+
+* [bug] Prevent drafts from being associated with the wrong conversation ([#1037][i1037])
+* [change] Do not show caption input field when sending multiple files ([#1074][i1074])
+
+
 ### [v2.3.14][v2.3.14] (2021-06-07)
 
 Changes:
@@ -1053,6 +1061,7 @@ First public release.
 [i1034]: https://github.com/threema-ch/threema-web/issues/1034
 [i1035]: https://github.com/threema-ch/threema-web/issues/1035
 [i1036]: https://github.com/threema-ch/threema-web/issues/1036
+[i1037]: https://github.com/threema-ch/threema-web/issues/1037
 [i1039]: https://github.com/threema-ch/threema-web/issues/1039
 [i1040]: https://github.com/threema-ch/threema-web/issues/1040
 [i1042]: https://github.com/threema-ch/threema-web/issues/1042
@@ -1064,6 +1073,7 @@ First public release.
 [i1066]: https://github.com/threema-ch/threema-web/issues/1066
 [i1069]: https://github.com/threema-ch/threema-web/issues/1069
 
+[v2.3.15]: https://github.com/threema-ch/threema-web/compare/v2.3.14...v2.3.15
 [v2.3.14]: https://github.com/threema-ch/threema-web/compare/v2.3.13...v2.3.14
 [v2.3.13]: https://github.com/threema-ch/threema-web/compare/v2.3.12...v2.3.13
 [v2.3.12]: https://github.com/threema-ch/threema-web/compare/v2.3.11...v2.3.12
