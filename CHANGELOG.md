@@ -1066,6 +1066,7 @@ First public release.
 [i1040]: https://github.com/threema-ch/threema-web/issues/1040
 [i1042]: https://github.com/threema-ch/threema-web/issues/1042
 [i1044]: https://github.com/threema-ch/threema-web/issues/1044
+[i1074]: https://github.com/threema-ch/threema-web/issues/1074
 [i1048]: https://github.com/threema-ch/threema-web/issues/1048
 [i1050]: https://github.com/threema-ch/threema-web/issues/1050
 [i1058]: https://github.com/threema-ch/threema-web/issues/1058
