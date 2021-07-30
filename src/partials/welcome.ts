@@ -85,19 +85,25 @@ class WelcomeController {
         'VersionService', 'SettingsService', 'TimeoutService', 'ControllerService',
         'BROWSER_MIN_VERSIONS', 'CONFIG',
     ];
-    constructor($scope: ng.IScope, $state: UiStateService,
-                $window: ng.IWindowService, $mdDialog: ng.material.IDialogService,
-                $translate: ng.translate.ITranslateService,
-                logService: LogService,
-                webClientService: WebClientService, trustedKeyStore: TrustedKeyStoreService,
-                stateService: StateService, pushService: PushService,
-                browserService: BrowserService,
-                versionService: VersionService,
-                settingsService: SettingsService,
-                timeoutService: TimeoutService,
-                controllerService: ControllerService,
-                minVersions: threema.BrowserMinVersions,
-                config: threema.Config) {
+    constructor(
+        $scope: ng.IScope,
+        $state: UiStateService,
+        $window: ng.IWindowService,
+        $mdDialog: ng.material.IDialogService,
+        $translate: ng.translate.ITranslateService,
+        logService: LogService,
+        webClientService: WebClientService,
+        trustedKeyStore: TrustedKeyStoreService,
+        stateService: StateService,
+        pushService: PushService,
+        browserService: BrowserService,
+        versionService: VersionService,
+        settingsService: SettingsService,
+        timeoutService: TimeoutService,
+        controllerService: ControllerService,
+        minVersions: threema.BrowserMinVersions,
+        config: threema.Config,
+    ) {
         controllerService.setControllerName('welcome');
         // Angular services
         this.$scope = $scope;
@@ -114,6 +120,13 @@ class WelcomeController {
         this.settingsService = settingsService;
         this.timeoutService = timeoutService;
         this.config = config;
+
+        // Expose some services globally
+        if (this.$window.app === undefined) {
+            this.$window.app = {};
+        }
+        this.$window.app.settingsService = settingsService;
+        this.$window.app.stateService = stateService;
 
         // Logging
         this.log = logService.getLogger('Welcome-C');
