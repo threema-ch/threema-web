@@ -26,6 +26,7 @@ import {Logger} from 'ts-log';
 
 import {ContactControllerModel} from '../controller_model/contact';
 import {DialogController} from '../controllers/dialog';
+import {VersionDialogController} from '../controllers/footer';
 import {TroubleshootingController} from '../controllers/troubleshooting';
 import {bufferToUrl, hasValue, supportsPassive, u8aToHex} from '../helpers';
 import {emojify} from '../helpers/emoji';
@@ -1015,21 +1016,6 @@ class ConversationController {
 }
 
 class AboutDialogController extends DialogController {
-    public readonly config: threema.Config;
-
-    public static readonly $inject = ['$scope', '$mdDialog', 'ThemeService', 'CONFIG'];
-    constructor(
-        $scope: ng.IScope,
-        $mdDialog: ng.material.IDialogService,
-        themeService: ThemeService,
-        config: threema.Config,
-    ) {
-        super($scope, $mdDialog, themeService);
-        this.config = config;
-    }
-}
-
-class VersionDialogController extends DialogController {
     public readonly config: threema.Config;
 
     public static readonly $inject = ['$scope', '$mdDialog', 'ThemeService', 'CONFIG'];
