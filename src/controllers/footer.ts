@@ -20,7 +20,10 @@ import {ThemeService} from '../services/theme';
 import {DialogController} from './dialog';
 import {TroubleshootingController} from './troubleshooting';
 
-class VersionDialogController extends DialogController {
+/**
+ * Controller for the version info dialog.
+ */
+export class VersionDialogController extends DialogController {
     public readonly version: string;
     public readonly fullVersion: string;
 
