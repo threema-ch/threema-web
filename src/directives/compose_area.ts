@@ -442,9 +442,9 @@ export default [
                     let fileIdx: number | null = null;
                     let textIdx: number | null = null;
                     for (let i = 0; i < items.length; i++) {
-                        if (items[i].type.indexOf('image/') !== -1 || items[i].type === 'application/x-moz-file') {
+                        if (items[i].kind === 'file' && (items[i].type.indexOf('image/') !== -1 || items[i].type === 'application/x-moz-file')) {
                             fileIdx = i;
-                        } else if (items[i].type === 'text/plain') {
+                        } else if (items[i].kind === 'string' && items[i].type === 'text/plain') {
                             textIdx = i;
                         }
                     }
@@ -452,38 +452,40 @@ export default [
                     // Handle pasting of files
                     if (fileIdx !== null) {
                         // Read clipboard data as blob
-                        const blob: Blob = items[fileIdx].getAsFile();
+                        const blob: Blob | null = items[fileIdx].getAsFile();
+                        if (blob !== null) {
+                            // Convert blob to arraybuffer
+                            const reader = new FileReader();
+                            reader.onload = function(progressEvent: ProgressEvent) {
+                                const buffer: ArrayBuffer = this.result as ArrayBuffer;
 
-                        // Convert blob to arraybuffer
-                        const reader = new FileReader();
-                        reader.onload = function(progressEvent: ProgressEvent) {
-                            const buffer: ArrayBuffer = this.result as ArrayBuffer;
+                                // Construct file name
+                                let fileName: string;
+                                if ((blob as any).name) {
+                                    fileName = (blob as any).name;
+                                } else if (blob.type && blob.type.match(/^[^;]*\//) !== null) {
+                                    const fileExt = blob.type.split(';')[0].split('/')[1];
+                                    fileName = 'clipboard.' + fileExt;
+                                } else {
+                                    log.warn('Pasted file has an invalid MIME type: "' + blob.type + '"');
+                                    return;
+                                }
 
-                            // Construct file name
-                            let fileName: string;
-                            if ((blob as any).name) {
-                                fileName = (blob as any).name;
-                            } else if (blob.type && blob.type.match(/^[^;]*\//) !== null) {
-                                const fileExt = blob.type.split(';')[0].split('/')[1];
-                                fileName = 'clipboard.' + fileExt;
-                            } else {
-                                log.warn('Pasted file has an invalid MIME type: "' + blob.type + '"');
-                                return;
-                            }
-
-                            // Send data as file
-                            const fileMessageData: threema.FileMessageData = {
-                                name: fileName,
-                                fileType: blob.type,
-                                size: blob.size,
-                                data: buffer,
+                                // Send data as file
+                                const fileMessageData: threema.FileMessageData = {
+                                    name: fileName,
+                                    fileType: blob.type,
+                                    size: blob.size,
+                                    data: buffer,
+                                };
+                                scope
+                                    .submit('file', [fileMessageData])
+                                    .catch((msg) => log.error('Could not send file:', msg));
                             };
-                            scope
-                                .submit('file', [fileMessageData])
-                                .catch((msg) => log.error('Could not send file:', msg));
-                        };
-                        reader.readAsArrayBuffer(blob);
-
+                            reader.readAsArrayBuffer(blob);
+                        } else {
+                            log.error('Could not get item as a blob');
+                        }
                     // Handle pasting of text
                     } else if (textIdx !== null) {
                         const text = ev.clipboardData.getData('text/plain');
@@ -498,6 +500,8 @@ export default [
                             }
                             updateView();
                         }
+                    } else {
+                        log.warn('Nothing pastable found we currently support.')
                     }
                 }
 
