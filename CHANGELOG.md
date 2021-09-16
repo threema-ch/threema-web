@@ -10,6 +10,25 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.16][v2.3.16] (2021-09-16)
+
+Changes:
+
+* [bug] Fix version info dialog in minimal UI variant ([#1076][i1076])
+* [bug] Correctly handle paste items when pasting images ([#1078][i1078])
+* [bug] Fix copy-paste XSS in debug log visualizing tool ([#1079][i1079])
+* [change] Upgrade many dependencies ([#1083][i1083])
+
+Note: The XSS does not affect regular users. However, if you are self-hosting
+Threema Web and use the troubleshooting log visualizing tool from time to time,
+you should upgrade.
+
+Contributors:
+
+- [@blueC0re]
+- [@rugk][@rugk]
+
+
 ### [v2.3.15][v2.3.15] (2021-07-29)
 
 Changes:
@@ -1073,7 +1092,12 @@ First public release.
 [i1063]: https://github.com/threema-ch/threema-web/issues/1063
 [i1066]: https://github.com/threema-ch/threema-web/issues/1066
 [i1069]: https://github.com/threema-ch/threema-web/issues/1069
+[i1076]: https://github.com/threema-ch/threema-web/issues/1076
+[i1078]: https://github.com/threema-ch/threema-web/issues/1078
+[i1079]: https://github.com/threema-ch/threema-web/issues/1079
+[i1083]: https://github.com/threema-ch/threema-web/issues/1083
 
+[v2.3.16]: https://github.com/threema-ch/threema-web/compare/v2.3.15...v2.3.16
 [v2.3.15]: https://github.com/threema-ch/threema-web/compare/v2.3.14...v2.3.15
 [v2.3.14]: https://github.com/threema-ch/threema-web/compare/v2.3.13...v2.3.14
 [v2.3.13]: https://github.com/threema-ch/threema-web/compare/v2.3.12...v2.3.13
@@ -1150,3 +1174,4 @@ First public release.
 [@das-g]: https://github.com/das-g
 [@samuelT2]: https://github.com/samuelT2
 [@jwanner83]: https://github.com/jwanner83
+[@bluec0re]: https://github.com/bluec0re
