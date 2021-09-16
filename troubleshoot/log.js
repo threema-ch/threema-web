@@ -45,18 +45,18 @@ function formatRecordValue(value) {
     }
 
     // Handle boolean
-    if (value.constructor === Boolean) {
+    if (typeof value === 'boolean') {
         return `<span class="boolean">${escapeHTML(value)}</span>`;
     }
 
     // Handle number
-    if (value.constructor === Number) {
+    if (typeof value === 'number' || typeof value === 'bigint') {
         return `<span class="number">${escapeHTML(value)}</span>`;
     }
 
     // Handle string, converted types (e.g. ArrayBuffer, Blob, ...)
     // and errors (exceptions).
-    if (value.constructor === String) {
+    if (typeof value === 'string') {
         if (value.startsWith('[') && value.endsWith(']')) {
             return `<span class="converted">${escapeHTML(value)}</span>`;
         }
@@ -64,20 +64,6 @@ function formatRecordValue(value) {
             return `<span class="error">${escapeHTML(value)}</span>`;
         }
         return `<span class="string">${escapeHTML(value)}</span>`;
-    }
-
-    // Handle object
-    if (value.constructor === Object) {
-        const entries = Object.entries(value);
-        return `
-            <details>
-                <summary class="type">Object(${entries.length})</summary>
-                <ul>
-                    ${entries.map(([key, value]) => {
-                        return `<li><span class="type">${escapeHTML(key)}:</span> ${formatRecordValue(value)}</li>`;
-                    }).join('\n')}
-                </ul>
-            </details>`;
     }
 
     // Handle array
@@ -93,8 +79,23 @@ function formatRecordValue(value) {
             </details>`;
     }
 
+
+    // Handle object
+    if (typeof value === 'object') {
+        const entries = Object.entries(value);
+        return `
+            <details>
+                <summary class="type">Object(${entries.length})</summary>
+                <ul>
+                    ${entries.map(([key, value]) => {
+                        return `<li><span class="type">${escapeHTML(key)}:</span> ${formatRecordValue(value)}</li>`;
+                    }).join('\n')}
+                </ul>
+            </details>`;
+    }
+
     // Unknown
-    return `[${value.constructor}]`;
+    return `[${escapeHTML(value.constructor)}]`;
 }
 
 /**
