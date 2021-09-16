@@ -104,6 +104,7 @@
         "NOTE": "Poznámka:"
     },
     "messenger": {
+        "VERSION": "Verze",
         "VERIFICATION_LEVEL": "Úroveň ověření",
         "VERIFICATION_LEVEL2_EXPLAIN": "Identita této osoby byla ověřena pomocí e-mailu nebo SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Ověřili jste totožnost této osoby naskenováním QR kódu.",
@@ -152,6 +153,7 @@
         "MSG_HISTORY_MODIFIED": "Změněno",
         "NAVIGATE": "Navigovat",
         "CONFIRM_FILE_SEND": "Odeslat ... «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "Poslat {fileCount} souborů «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Volitelný popis",
         "CONFIRM_SEND_AS_FILE": "Odeslat soubor",
         "CONFIRM_DELETE_TITLE": "Odstranit zprávu",
@@ -232,7 +234,7 @@
         "file": "Soubor",
         "audio": "Zvuk",
         "location": "Poloha",
-        "ballot": "Hlasování",
+        "ballot": "Anketa",
         "gif": "GIF"
     },
     "validationError": {
@@ -313,6 +315,11 @@
             "COMPOSE_AREA": "Zde napište svůj text",
             "SUBMIT_KEY_ENTER": "Stisknutím klávesy 'Enter' odešlete zprávu. Stisknutím 'Shift + Enter' přidáte nový řádek.",
             "SUBMIT_KEY_CTRL_ENTER": "Stisknutím kláves 'Ctrl + Enter' odešlete zprávu. Stisknutím klávesy 'Enter' přidáte nový řádek."
+        },
+        "ui": {
+            "UI": "Uživatelské rozhraní",
+            "DEFAULT": "Výchozí",
+            "MINIMAL": "Minimální"
         }
     },
     "deviceUnreachable": {

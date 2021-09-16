@@ -104,6 +104,7 @@
         "NOTE": "Wskazówka:"
     },
     "messenger": {
+        "VERSION": "Wersja",
         "VERIFICATION_LEVEL": "Poziom weryfikacji",
         "VERIFICATION_LEVEL2_EXPLAIN": "Tożsamość tej osoby została zweryfikowana przy użyciu adresu e-mail lub SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Zweryfikowano tożsamość tej osoby skanując jej kod.",
@@ -152,6 +153,7 @@
         "MSG_HISTORY_MODIFIED": "Zmodyfikowano",
         "NAVIGATE": "Nawiguj",
         "CONFIRM_FILE_SEND": "Wysłać do  «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "Wysłać {fileCount} plików do «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Opcjonalny podpis",
         "CONFIRM_SEND_AS_FILE": "Wyślij jako plik",
         "CONFIRM_DELETE_TITLE": "Usuń wiadomość",
@@ -232,7 +234,7 @@
         "file": "Plik",
         "audio": "Dźwięk",
         "location": "Lokalizacja",
-        "ballot": "Głosowanie",
+        "ballot": "Ankieta",
         "gif": "GIF"
     },
     "validationError": {
@@ -310,9 +312,14 @@
             "PLAY_SOUND": "Odtwórz dźwięk"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "COMPOSE_AREA": "Obszar wprowadzania",
+            "SUBMIT_KEY_ENTER": "'Enter' aby wysłać wiadomość. 'Shift+Enter' aby dodać nowy wiersz.",
+            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' aby wysłać wiadomość. 'Enter' aby dodać nowy wiersz."
+        },
+        "ui": {
+            "UI": "Interfejs użytkownika",
+            "DEFAULT": "Domyślne",
+            "MINIMAL": "Minimalne"
         }
     },
     "deviceUnreachable": {
