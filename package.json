@@ -80,7 +80,7 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
     "webpack-merge": "^4.2.2",
-    "webrtc-adapter": "^7.7.1"
+    "webrtc-adapter": "^8.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.21",
