@@ -1098,8 +1098,7 @@ export class WebClientService {
                 // Determine chunk length
                 this.secureDataChannelChunkLength = Math.min(
                     WebClientService.DATA_CHANNEL_MAX_CHUNK_SIZE, pc.sctp.maxMessageSize);
-                this.arpLog.debug(`Using chunk length: ${this.secureDataChannelChunkLength} for data channel` +
-                    dc.label);
+                this.arpLog.debug(`Using chunk length: ${this.secureDataChannelChunkLength} for data channel ${dc.label}`);
 
                 // Connection established
                 this.onConnectionEstablished(resumeSession).catch((error) => {
