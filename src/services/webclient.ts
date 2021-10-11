@@ -1525,10 +1525,10 @@ export class WebClientService {
         const data: object = {
             [WebClientService.ARGUMENT_USER_AGENT]: navigator.userAgent,
         };
-        if (browser.name) {
+        if (hasValue(browser.name)) {
             data[WebClientService.ARGUMENT_BROWSER_NAME] = browser.name;
         }
-        if (browser.version) {
+        if (hasValue(browser.version)) {
             data[WebClientService.ARGUMENT_BROWSER_VERSION] = browser.version;
         }
         const subType = WebClientService.SUB_TYPE_CLIENT_INFO;
