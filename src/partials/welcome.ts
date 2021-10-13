@@ -27,6 +27,7 @@ import {
 } from '@uirouter/angularjs';
 
 import {DialogController} from '../controllers/dialog';
+import {hasValue} from '../helpers';
 import {BrowserInfo} from '../helpers/browser_info';
 import {scorePassword, Strength} from '../helpers/password_strength';
 import {BrowserService} from '../services/browser';
@@ -43,9 +44,21 @@ import {WebClientService} from '../services/webclient';
 import GlobalConnectionState = threema.GlobalConnectionState;
 import DisconnectReason = threema.DisconnectReason;
 
+// Extend global APIs
+declare global {
+    interface Window {
+        AppDataStorage: {
+            setValue: (key: string, value: unknown) => void;
+            getValue: (key: string) => unknown;
+        }
+    }
+}
+
 class WelcomeController {
     private static BROADCAST_DELAY = 100;
     private static REDIRECT_DELAY = 500;
+
+    private static SESSION_PASSWORD_STORAGE_KEY = 'autoSessionPassword';
 
     // Angular services
     private $scope: ng.IScope;
@@ -235,8 +248,21 @@ class WelcomeController {
     /**
      * Whether or not to use the "auto session password" mode.
      */
-    public get autoSessionPassword(): boolean {
-        return this.config.AUTO_SESSION_PASSWORD;
+    public get autoSessionPasswordEnabled(): boolean {
+        return this.config.AUTO_SESSION_PASSWORD
+            && hasValue(window.AppDataStorage);
+    }
+
+    /**
+     * Return the auto session password (if enabled and set).
+     */
+     public get autoSessionPassword(): string | undefined {
+        if (!this.autoSessionPasswordEnabled) {
+            return undefined;
+        }
+        const sessionPassword = window.AppDataStorage
+            .getValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY);
+        return typeof sessionPassword === 'string' ? sessionPassword : undefined;
     }
 
     /**
@@ -325,6 +351,12 @@ class WelcomeController {
     private unlock(): void {
         this.stateService.reset('new');
         this.log.info('Initialize session by unlocking trusted key...');
+
+        // If a session password is stored, re-use it
+        const sessionPassword = this.autoSessionPassword;
+        if (sessionPassword !== undefined) {
+            this.password = sessionPassword;
+        }
     }
 
     /**

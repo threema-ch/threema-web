@@ -14,8 +14,8 @@
                     data="{{ ctrl.qrCode.data }}"></qrcode>
             <div class="password-entry">
                 <label>
-                    <p translate id="aria-label-password-create" ng-if="!ctrl.autoSessionPassword">welcome.CHOOSE_PASSWORD</p>
-                    <p translate id="aria-label-password-create" ng-if="ctrl.autoSessionPassword">welcome.CHOOSE_PASSWORD_AUTOPW</p>
+                    <p translate id="aria-label-password-create" ng-if="!ctrl.autoSessionPasswordEnabled">welcome.CHOOSE_PASSWORD</p>
+                    <p translate id="aria-label-password-create" ng-if="ctrl.autoSessionPasswordEnabled">welcome.CHOOSE_PASSWORD_AUTOPW</p>
                     <form>
                         <md-input-container md-no-float class="md-block">
                             <input type="password"
@@ -43,10 +43,12 @@
             <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
             <div class="password-entry">
                 <label>
-                    <p translate id="aria-label-password-reconnect">welcome.ENTER_PASSWORD</p>
+                    <p translate id="aria-label-password-reconnect" ng-if="ctrl.autoSessionPassword === undefined">welcome.ENTER_PASSWORD</p>
+                    <p translate id="aria-label-password-reconnect" ng-if="ctrl.autoSessionPassword !== undefined">welcome.CONNECTION_INTERRUPTED</p>
                     <form ng-submit="ctrl.unlockConfirm()">
                         <md-input-container md-no-float class="md-block">
-                            <input type="password"
+                            <input ng-if="ctrl.autoSessionPassword === undefined"
+                                   type="password"
                                    ng-model="ctrl.password"
                                    ng-disabled="ctrl.formLocked"
                                    autofocus
