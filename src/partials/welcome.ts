@@ -105,6 +105,7 @@ class WelcomeController {
         config: threema.Config,
     ) {
         controllerService.setControllerName('welcome');
+
         // Angular services
         this.$scope = $scope;
         this.$state = $state;
@@ -229,6 +230,13 @@ class WelcomeController {
             default:
                 return false;
         }
+    }
+
+    /**
+     * Whether or not to use the "auto session password" mode.
+     */
+    public get autoSessionPassword(): boolean {
+        return this.config.AUTO_SESSION_PASSWORD;
     }
 
     /**

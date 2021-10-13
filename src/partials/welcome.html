@@ -14,7 +14,8 @@
                     data="{{ ctrl.qrCode.data }}"></qrcode>
             <div class="password-entry">
                 <label>
-                    <p translate id="aria-label-password-create">welcome.CHOOSE_PASSWORD</p>
+                    <p translate id="aria-label-password-create" ng-if="!ctrl.autoSessionPassword">welcome.CHOOSE_PASSWORD</p>
+                    <p translate id="aria-label-password-create" ng-if="ctrl.autoSessionPassword">welcome.CHOOSE_PASSWORD_AUTOPW</p>
                     <form>
                         <md-input-container md-no-float class="md-block">
                             <input type="password"

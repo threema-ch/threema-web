@@ -691,6 +691,7 @@ declare namespace threema {
         MSGPACK_LOG_TRACE: boolean;
         TRANSPORT_LOG_LEVEL: LogLevel;
         VISUALIZE_STATE: boolean;
+        AUTO_SESSION_PASSWORD: boolean;
     }
 
     interface InitialConversationData {

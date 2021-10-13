@@ -13,6 +13,7 @@
         "RELOAD": "Reload page",
         "PASSWORD": "Password",
         "CHOOSE_PASSWORD": "If you want to stay logged in, please enter<br>a session password before scanning.",
+        "CHOOSE_PASSWORD_AUTOPW": "If you want to avoid this QR-scan after restarting Threema,<br>please enter a password before scanning.",
         "UNLOCK_FAILED_TEXT": "You entered the wrong password, the session cannot be restored.",
         "ENTER_PASSWORD": "To reconnect to your previous session,<br>please enter the password:",
         "PASSWORD_STRENGTH": "Password strength",
