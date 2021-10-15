@@ -20,14 +20,14 @@
 /// <reference path="../types/broadcastchannel.d.ts" />
 
 import {Logger} from 'ts-log';
-
+import * as nacl from 'tweetnacl';
 import {
     StateProvider as UiStateProvider,
     StateService as UiStateService,
 } from '@uirouter/angularjs';
 
 import {DialogController} from '../controllers/dialog';
-import {hasValue} from '../helpers';
+import {hasValue, u8aToHex} from '../helpers';
 import {BrowserInfo} from '../helpers/browser_info';
 import {scorePassword, Strength} from '../helpers/password_strength';
 import {BrowserService} from '../services/browser';
@@ -318,7 +318,7 @@ class WelcomeController {
 
         // Initialize QR code params
         this.$scope.$watch(() => this.password, () => {
-            const payload = this.webClientService.buildQrCodePayload(this.password.length > 0);
+            const payload = this.webClientService.buildQrCodePayload(this.autoSessionPasswordEnabled || this.password.length > 0);
             this.qrCode = this.buildQrCode(payload);
             this.passwordStrength = scorePassword(this.password);
         });
@@ -665,6 +665,14 @@ class WelcomeController {
         this.webClientService.start().then(
             // If connection buildup is done...
             () => {
+                // If auto session password is enabled, generate a password if the user hasn't entered one
+                if (this.autoSessionPasswordEnabled && this.password.length === 0) {
+                    // Random password with 256 bits of randomness
+                    const autoPassword = u8aToHex(nacl.randomBytes(32));
+                    this.password = autoPassword;
+                    window.AppDataStorage.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, autoPassword);
+                }
+
                 // Pass password to webclient service
                 this.webClientService.setPassword(this.password);
 

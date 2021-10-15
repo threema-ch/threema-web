@@ -21,9 +21,9 @@
 
 import {StateService as UiStateService} from '@uirouter/angularjs';
 import {Logger} from 'ts-log';
-
 import * as msgpack from 'msgpack-lite';
 import * as nacl from 'tweetnacl';
+
 import {
     arraysAreEqual,
     base64ToU8a,
