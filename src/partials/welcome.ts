@@ -598,6 +598,11 @@ class WelcomeController {
             this.clearPassword();
             this.formLocked = false;
 
+            // If auto session password is set, clear password
+            if (this.autoSessionPassword !== undefined) {
+                window.AppDataStorage.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, undefined);
+            }
+
             // Force-stop the webclient and initiate scan
             this.scan({
                 reason: DisconnectReason.SessionDeleted,
@@ -651,6 +656,9 @@ class WelcomeController {
         };
     }
 
+    /**
+     * Clear the local password model variable and reset the password strength indicator.
+     */
     private clearPassword() {
         this.password = '';
         this.passwordStrength = {score: 0, strength: Strength.BAD};
