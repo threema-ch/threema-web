@@ -220,6 +220,20 @@ class WelcomeController {
             this.showLocalStorageException(e);
         }
 
+        // If a trusted key is available and marked as auto session, but the
+        // app data store doesn't contain any corresponding password, clear the
+        // stored session.
+        if (
+            hasTrustedKey
+            && this.trustedKeyStore.isAutoSession()
+            && this.autoSessionPasswordEnabled
+            && this.autoSessionPassword === undefined
+        ) {
+            this.log.debug('Found stale auto session password, clearing');
+            this.trustedKeyStore.clearTrustedKey();
+            hasTrustedKey = false;
+        }
+
         // Determine connection mode
         if (hasTrustedKey) {
             this.mode = 'unlock';
@@ -676,6 +690,7 @@ class WelcomeController {
                 // If auto session password is enabled, generate a password if the user hasn't entered one
                 let isAutoPassword = false;
                 if (this.autoSessionPasswordEnabled && this.password.length === 0) {
+                    this.log.debug('Generating auto session password');
                     // Random password with 256 bits of randomness
                     const autoPassword = u8aToHex(nacl.randomBytes(32));
                     this.password = autoPassword;
