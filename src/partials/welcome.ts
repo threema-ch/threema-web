@@ -47,7 +47,7 @@ import DisconnectReason = threema.DisconnectReason;
 // Extend global APIs
 declare global {
     interface Window {
-        AppDataStorage: {
+        AppDataStore: {
             setValue: (key: string, value: unknown) => void;
             getValue: (key: string) => unknown;
         }
@@ -250,7 +250,7 @@ class WelcomeController {
      */
     public get autoSessionPasswordEnabled(): boolean {
         return this.config.AUTO_SESSION_PASSWORD
-            && hasValue(window.AppDataStorage);
+            && hasValue(window.AppDataStore);
     }
 
     /**
@@ -260,7 +260,7 @@ class WelcomeController {
         if (!this.autoSessionPasswordEnabled) {
             return undefined;
         }
-        const sessionPassword = window.AppDataStorage
+        const sessionPassword = window.AppDataStore
             .getValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY);
         return typeof sessionPassword === 'string' ? sessionPassword : undefined;
     }
@@ -600,7 +600,7 @@ class WelcomeController {
 
             // If auto session password is set, clear password
             if (this.autoSessionPassword !== undefined) {
-                window.AppDataStorage.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, undefined);
+                window.AppDataStore.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, undefined);
             }
 
             // Force-stop the webclient and initiate scan
@@ -678,7 +678,7 @@ class WelcomeController {
                     // Random password with 256 bits of randomness
                     const autoPassword = u8aToHex(nacl.randomBytes(32));
                     this.password = autoPassword;
-                    window.AppDataStorage.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, autoPassword);
+                    window.AppDataStore.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, autoPassword);
                 }
 
                 // Pass password to webclient service
