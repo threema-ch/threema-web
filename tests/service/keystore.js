@@ -137,4 +137,31 @@ describe('TrustedKeyStoreService', function() {
         $service.clearTrustedKey();
     });
 
+    // Mark auto session passwords as such
+    it('autoSession', () => {
+        const pubkey = Uint8Array.of(1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8);
+        const seckey = Uint8Array.of(2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9);
+        const peerkey = Uint8Array.of(3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,8,8,8,8,9,9,9,9,10,10,10,10);
+        const password = 'baristapro';
+
+        // Initially no data
+        $service.clearTrustedKey();
+        expect($service.hasTrustedKey()).toBe(false);
+        expect($service.isAutoSession()).toBe(false);
+
+        // Non-auto session is marked as such
+        $service.storeTrustedKey(pubkey, seckey, peerkey, null, null, password, false);
+        expect($service.hasTrustedKey()).toBe(true);
+        expect($service.isAutoSession()).toBe(false);
+
+        // Auto session is marked as such
+        $service.clearTrustedKey();
+        $service.storeTrustedKey(pubkey, seckey, peerkey, null, null, password, true);
+        expect($service.hasTrustedKey()).toBe(true);
+        expect($service.isAutoSession()).toBe(true);
+
+        // Clean up
+        $service.clearTrustedKey();
+    });
+
 });

@@ -674,15 +674,17 @@ class WelcomeController {
             // If connection buildup is done...
             () => {
                 // If auto session password is enabled, generate a password if the user hasn't entered one
+                let isAutoPassword = false;
                 if (this.autoSessionPasswordEnabled && this.password.length === 0) {
                     // Random password with 256 bits of randomness
                     const autoPassword = u8aToHex(nacl.randomBytes(32));
                     this.password = autoPassword;
                     window.AppDataStore.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, autoPassword);
+                    isAutoPassword = true;
                 }
 
                 // Pass password to webclient service
-                this.webClientService.setPassword(this.password);
+                this.webClientService.setPassword(this.password, isAutoPassword);
 
                 // Clear local password variable
                 this.clearPassword();
