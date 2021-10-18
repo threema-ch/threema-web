@@ -271,12 +271,12 @@ class WelcomeController {
      * Return the auto session password (if enabled and set).
      */
      public get autoSessionPassword(): string | undefined {
-        if (!this.autoSessionPasswordEnabled) {
-            return undefined;
-        }
-        const sessionPassword = window.AppDataStore
-            .getValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY);
-        return typeof sessionPassword === 'string' ? sessionPassword : undefined;
+         if (!this.autoSessionPasswordEnabled) {
+             return undefined;
+         }
+         const sessionPassword = window.AppDataStore
+             .getValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY);
+         return typeof sessionPassword === 'string' ? sessionPassword : undefined;
     }
 
     /**

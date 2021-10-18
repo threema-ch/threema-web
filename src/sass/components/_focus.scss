@@ -1,0 +1,6 @@
+button:focus-visible,
+input[type=button]:focus-visible,
+.md-button:focus-visible {
+    outline: 2px dotted $focus-outline-color;
+    outline-offset: 4px;
+}
