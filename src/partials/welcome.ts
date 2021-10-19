@@ -32,6 +32,7 @@ import {BrowserInfo} from '../helpers/browser_info';
 import {scorePassword, Strength} from '../helpers/password_strength';
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
+import {InMemorySession} from '../helpers/in_memory_session';
 import {TrustedKeyStoreService} from '../services/keystore';
 import {LogService} from '../services/log';
 import {PushService} from '../services/push';
@@ -44,21 +45,9 @@ import {WebClientService} from '../services/webclient';
 import GlobalConnectionState = threema.GlobalConnectionState;
 import DisconnectReason = threema.DisconnectReason;
 
-// Extend global APIs
-declare global {
-    interface Window {
-        AppDataStore: {
-            setValue: (key: string, value: unknown) => void;
-            getValue: (key: string) => unknown;
-        }
-    }
-}
-
 class WelcomeController {
     private static BROADCAST_DELAY = 100;
     private static REDIRECT_DELAY = 500;
-
-    private static SESSION_PASSWORD_STORAGE_KEY = 'autoSessionPassword';
 
     // Angular services
     private $scope: ng.IScope;
@@ -91,6 +80,7 @@ class WelcomeController {
     private pleaseUpdateAppMsg: string = null;
     private browser: BrowserInfo;
     private browserWarningShown: boolean = false;
+    private inMemorySession: InMemorySession = new InMemorySession();
 
     public static $inject = [
         '$scope', '$state', '$window', '$mdDialog', '$translate',
@@ -264,7 +254,7 @@ class WelcomeController {
      */
     public get autoSessionPasswordEnabled(): boolean {
         return this.config.AUTO_SESSION_PASSWORD
-            && hasValue(window.AppDataStore);
+            && this.inMemorySession.storeAvailable();
     }
 
     /**
@@ -274,9 +264,7 @@ class WelcomeController {
          if (!this.autoSessionPasswordEnabled) {
              return undefined;
          }
-         const sessionPassword = window.AppDataStore
-             .getValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY);
-         return typeof sessionPassword === 'string' ? sessionPassword : undefined;
+         return this.inMemorySession.getPassword()
     }
 
     /**
@@ -614,7 +602,7 @@ class WelcomeController {
 
             // If auto session password is set, clear password
             if (this.autoSessionPassword !== undefined) {
-                window.AppDataStore.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, undefined);
+                this.inMemorySession.clearPassword();
             }
 
             // Force-stop the webclient and initiate scan
@@ -694,7 +682,7 @@ class WelcomeController {
                     // Random password with 256 bits of randomness
                     const autoPassword = u8aToHex(nacl.randomBytes(32));
                     this.password = autoPassword;
-                    window.AppDataStore.setValue(WelcomeController.SESSION_PASSWORD_STORAGE_KEY, autoPassword);
+                    this.inMemorySession.setPassword(autoPassword);
                     isAutoPassword = true;
                 }
 
