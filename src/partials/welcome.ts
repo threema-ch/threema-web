@@ -216,8 +216,8 @@ class WelcomeController {
         if (
             hasTrustedKey
             && this.trustedKeyStore.isAutoSession()
-            && this.autoSessionPasswordEnabled
-            && this.autoSessionPassword === undefined
+            && this.inMemorySessionPasswordEnabled
+            && this.inMemorySessionPassword === undefined
         ) {
             this.log.debug('Found stale auto session password, clearing');
             this.trustedKeyStore.clearTrustedKey();
@@ -250,18 +250,18 @@ class WelcomeController {
     }
 
     /**
-     * Whether or not to use the "auto session password" mode.
+     * Whether or not to use the "in memory session password" mode.
      */
-    public get autoSessionPasswordEnabled(): boolean {
-        return this.config.AUTO_SESSION_PASSWORD
+    public get inMemorySessionPasswordEnabled(): boolean {
+        return this.config.IN_MEMORY_SESSION_PASSWORD
             && this.inMemorySession.storeAvailable();
     }
 
     /**
-     * Return the auto session password (if enabled and set).
+     * Return the in-memory session password (if enabled and set).
      */
-     public get autoSessionPassword(): string | undefined {
-         if (!this.autoSessionPasswordEnabled) {
+     public get inMemorySessionPassword(): string | undefined {
+         if (!this.inMemorySessionPasswordEnabled) {
              return undefined;
          }
          return this.inMemorySession.getPassword()
@@ -320,7 +320,7 @@ class WelcomeController {
 
         // Initialize QR code params
         this.$scope.$watch(() => this.password, () => {
-            const payload = this.webClientService.buildQrCodePayload(this.autoSessionPasswordEnabled || this.password.length > 0);
+            const payload = this.webClientService.buildQrCodePayload(this.inMemorySessionPasswordEnabled || this.password.length > 0);
             this.qrCode = this.buildQrCode(payload);
             this.passwordStrength = scorePassword(this.password);
         });
@@ -355,7 +355,7 @@ class WelcomeController {
         this.log.info('Initialize session by unlocking trusted key...');
 
         // If a session password is stored, re-use it
-        const sessionPassword = this.autoSessionPassword;
+        const sessionPassword = this.inMemorySessionPassword;
         if (sessionPassword !== undefined) {
             this.password = sessionPassword;
         }
@@ -670,15 +670,20 @@ class WelcomeController {
         this.webClientService.start().then(
             // If connection buildup is done...
             () => {
-                // If auto session password is enabled, generate a password if the user hasn't entered one
+                // If in-memory session password is enabled, store password
                 let isAutoPassword = false;
-                if (this.autoSessionPasswordEnabled && this.password.length === 0) {
-                    this.log.debug('Generating auto session password');
-                    // Random password with 256 bits of randomness
-                    const autoPassword = u8aToHex(nacl.randomBytes(32));
-                    this.password = autoPassword;
-                    this.inMemorySession.setPassword(autoPassword);
-                    isAutoPassword = true;
+                if (this.inMemorySessionPasswordEnabled) {
+                    // Generate a password if the user hasn't entered one
+                    if (this.password.length === 0) {
+                        this.log.debug('Generating auto session password');
+                        // Random password with 256 bits of randomness
+                        const autoPassword = u8aToHex(nacl.randomBytes(32));
+                        this.password = autoPassword;
+                        isAutoPassword = true;
+                    }
+
+                    // Store password (auto-generated or user-defined)
+                    this.inMemorySession.setPassword(this.password);
                 }
 
                 // Pass password to webclient service
