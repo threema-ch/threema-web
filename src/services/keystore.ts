@@ -20,6 +20,7 @@ import {Logger} from 'ts-log';
 import * as nacl from 'tweetnacl';
 import {hexToU8a, u8aToHex} from '../helpers';
 import {stringToUtf8a, utf8aToString} from '../helpers';
+import {InMemorySession} from '../helpers/in_memory_session';
 import {LogService} from './log';
 
 /**
@@ -49,6 +50,8 @@ export class TrustedKeyStoreService {
     private storage: Storage = null;
 
     public blocked = false;
+
+    private inMemorySession: InMemorySession = new InMemorySession();
 
     public static $inject = ['$window', 'LogService'];
     constructor($window: ng.IWindowService, logService: LogService) {
@@ -214,8 +217,12 @@ export class TrustedKeyStoreService {
      * Delete any stored trusted keys.
      */
     public clearTrustedKey(): void {
+        // Clear trusted key from local storage
         this.log.debug('Clearing trusted key');
         this.storage.removeItem(this.STORAGE_KEY);
         this.storage.removeItem(this.STORAGE_KEY_AUTO_FLAG);
+
+        // If auto session password is set, clear password as well
+        this.inMemorySession.clearPassword();
     }
 }

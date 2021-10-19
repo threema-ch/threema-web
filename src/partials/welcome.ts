@@ -600,11 +600,6 @@ class WelcomeController {
             this.clearPassword();
             this.formLocked = false;
 
-            // If auto session password is set, clear password
-            if (this.autoSessionPassword !== undefined) {
-                this.inMemorySession.clearPassword();
-            }
-
             // Force-stop the webclient and initiate scan
             this.scan({
                 reason: DisconnectReason.SessionDeleted,
