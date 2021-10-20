@@ -14,7 +14,8 @@
                     data="{{ ctrl.qrCode.data }}"></qrcode>
             <div class="password-entry">
                 <label>
-                    <p translate id="aria-label-password-create">welcome.CHOOSE_PASSWORD</p>
+                    <p translate id="aria-label-password-create" ng-if="!ctrl.inMemorySessionPasswordEnabled">welcome.CHOOSE_PASSWORD</p>
+                    <p translate id="aria-label-password-create" ng-if="ctrl.inMemorySessionPasswordEnabled">welcome.CHOOSE_PASSWORD_AUTOPW</p>
                     <form>
                         <md-input-container md-no-float class="md-block">
                             <input type="password"
@@ -42,10 +43,12 @@
             <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
             <div class="password-entry">
                 <label>
-                    <p translate id="aria-label-password-reconnect">welcome.ENTER_PASSWORD</p>
+                    <p translate id="aria-label-password-reconnect" ng-if="ctrl.inMemorySessionPassword === undefined">welcome.ENTER_PASSWORD</p>
+                    <p translate id="aria-label-password-reconnect" ng-if="ctrl.inMemorySessionPassword !== undefined">welcome.CONNECTION_INTERRUPTED</p>
                     <form ng-submit="ctrl.unlockConfirm()">
                         <md-input-container md-no-float class="md-block">
-                            <input type="password"
+                            <input ng-if="ctrl.inMemorySessionPassword === undefined"
+                                   type="password"
                                    ng-model="ctrl.password"
                                    ng-disabled="ctrl.formLocked"
                                    autofocus
@@ -53,7 +56,7 @@
                                    translate-attr="{'placeholder': 'welcome.PASSWORD'}"
                                    autocomplete="current-password">
                         </md-input-container>
-                        <md-button type="submit" class="md-raised md-primary" translate translate-attr-aria-label="welcome.BTN_RECONNECT">
+                        <md-button type="submit" class="md-raised md-primary" autofocus translate translate-attr-aria-label="welcome.BTN_RECONNECT">
                             <span translate aria-hidden="true">welcome.BTN_RECONNECT</span>
                         </md-button>
                     </form>

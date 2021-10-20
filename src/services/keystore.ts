@@ -20,6 +20,7 @@ import {Logger} from 'ts-log';
 import * as nacl from 'tweetnacl';
 import {hexToU8a, u8aToHex} from '../helpers';
 import {stringToUtf8a, utf8aToString} from '../helpers';
+import {InMemorySession} from '../helpers/in_memory_session';
 import {LogService} from './log';
 
 /**
@@ -43,11 +44,14 @@ import {LogService} from './log';
  */
 export class TrustedKeyStoreService {
     private STORAGE_KEY = 'trusted';
+    private STORAGE_KEY_AUTO_FLAG = 'autoSession';
 
     private readonly log: Logger;
     private storage: Storage = null;
 
     public blocked = false;
+
+    private inMemorySession: InMemorySession = new InMemorySession();
 
     public static $inject = ['$window', 'LogService'];
     constructor($window: ng.IWindowService, logService: LogService) {
@@ -90,10 +94,15 @@ export class TrustedKeyStoreService {
      * Store the trusted key (and optionally the push token) in local browser
      * storage. Encrypt it using NaCl with the provided password.
      */
-    public storeTrustedKey(ownPublicKey: Uint8Array, ownSecretKey: Uint8Array,
-                           peerPublicKey: Uint8Array,
-                           pushToken: string | null, pushTokenType: threema.PushTokenType | null,
-                           password: string): void {
+    public storeTrustedKey(
+        ownPublicKey: Uint8Array,
+        ownSecretKey: Uint8Array,
+        peerPublicKey: Uint8Array,
+        pushToken: string | null,
+        pushTokenType: threema.PushTokenType | null,
+        password: string,
+        isAutoSession: boolean,
+    ): void {
         const nonce: Uint8Array = nacl.randomBytes(nacl.secretbox.nonceLength);
 
         // Add prefix to push token string
@@ -122,8 +131,11 @@ export class TrustedKeyStoreService {
         data.set(peerPublicKey, 64);
         data.set(token, 96);
         const encrypted: Uint8Array = nacl.secretbox(data, nonce, this.pwToKey(password));
-        this.log.debug('Storing trusted key');
+        this.log.debug(isAutoSession ? 'Storing trusted key (auto session)' : 'Storing trusted key');
         this.storage.setItem(this.STORAGE_KEY, u8aToHex(nonce) + ':' + u8aToHex(encrypted));
+        if (isAutoSession) {
+            this.storage.setItem(this.STORAGE_KEY_AUTO_FLAG, 'auto');
+        }
     }
 
     /**
@@ -132,6 +144,15 @@ export class TrustedKeyStoreService {
     public hasTrustedKey(): boolean {
         const item: string = this.storage.getItem(this.STORAGE_KEY);
         return item !== null && item.length > 96 && item.indexOf(':') !== -1;
+    }
+
+    /**
+     * Return whether or not a stored trusted key belongs to an auto session.
+     *
+     * If no trusted key is stored at all, this returns false as well.
+     */
+    public isAutoSession(): boolean {
+        return this.storage.getItem(this.STORAGE_KEY_AUTO_FLAG) !== null;
     }
 
     /**
@@ -196,7 +217,12 @@ export class TrustedKeyStoreService {
      * Delete any stored trusted keys.
      */
     public clearTrustedKey(): void {
+        // Clear trusted key from local storage
         this.log.debug('Clearing trusted key');
         this.storage.removeItem(this.STORAGE_KEY);
+        this.storage.removeItem(this.STORAGE_KEY_AUTO_FLAG);
+
+        // If auto session password is set, clear password as well
+        this.inMemorySession.clearPassword();
     }
 }

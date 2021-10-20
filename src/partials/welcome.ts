@@ -20,17 +20,19 @@
 /// <reference path="../types/broadcastchannel.d.ts" />
 
 import {Logger} from 'ts-log';
-
+import * as nacl from 'tweetnacl';
 import {
     StateProvider as UiStateProvider,
     StateService as UiStateService,
 } from '@uirouter/angularjs';
 
 import {DialogController} from '../controllers/dialog';
+import {hasValue, u8aToHex} from '../helpers';
 import {BrowserInfo} from '../helpers/browser_info';
 import {scorePassword, Strength} from '../helpers/password_strength';
 import {BrowserService} from '../services/browser';
 import {ControllerService} from '../services/controller';
+import {InMemorySession} from '../helpers/in_memory_session';
 import {TrustedKeyStoreService} from '../services/keystore';
 import {LogService} from '../services/log';
 import {PushService} from '../services/push';
@@ -78,6 +80,7 @@ class WelcomeController {
     private pleaseUpdateAppMsg: string = null;
     private browser: BrowserInfo;
     private browserWarningShown: boolean = false;
+    private inMemorySession: InMemorySession = new InMemorySession();
 
     public static $inject = [
         '$scope', '$state', '$window', '$mdDialog', '$translate',
@@ -105,6 +108,7 @@ class WelcomeController {
         config: threema.Config,
     ) {
         controllerService.setControllerName('welcome');
+
         // Angular services
         this.$scope = $scope;
         this.$state = $state;
@@ -206,6 +210,20 @@ class WelcomeController {
             this.showLocalStorageException(e);
         }
 
+        // If a trusted key is available and marked as auto session, but the
+        // app data store doesn't contain any corresponding password, clear the
+        // stored session.
+        if (
+            hasTrustedKey
+            && this.trustedKeyStore.isAutoSession()
+            && this.inMemorySessionPasswordEnabled
+            && this.inMemorySessionPassword === undefined
+        ) {
+            this.log.debug('Found stale auto session password, clearing');
+            this.trustedKeyStore.clearTrustedKey();
+            hasTrustedKey = false;
+        }
+
         // Determine connection mode
         if (hasTrustedKey) {
             this.mode = 'unlock';
@@ -229,6 +247,24 @@ class WelcomeController {
             default:
                 return false;
         }
+    }
+
+    /**
+     * Whether or not to use the "in memory session password" mode.
+     */
+    public get inMemorySessionPasswordEnabled(): boolean {
+        return this.config.IN_MEMORY_SESSION_PASSWORD
+            && this.inMemorySession.storeAvailable();
+    }
+
+    /**
+     * Return the in-memory session password (if enabled and set).
+     */
+     public get inMemorySessionPassword(): string | undefined {
+         if (!this.inMemorySessionPasswordEnabled) {
+             return undefined;
+         }
+         return this.inMemorySession.getPassword()
     }
 
     /**
@@ -284,7 +320,7 @@ class WelcomeController {
 
         // Initialize QR code params
         this.$scope.$watch(() => this.password, () => {
-            const payload = this.webClientService.buildQrCodePayload(this.password.length > 0);
+            const payload = this.webClientService.buildQrCodePayload(this.inMemorySessionPasswordEnabled || this.password.length > 0);
             this.qrCode = this.buildQrCode(payload);
             this.passwordStrength = scorePassword(this.password);
         });
@@ -317,6 +353,12 @@ class WelcomeController {
     private unlock(): void {
         this.stateService.reset('new');
         this.log.info('Initialize session by unlocking trusted key...');
+
+        // If a session password is stored, re-use it
+        const sessionPassword = this.inMemorySessionPassword;
+        if (sessionPassword !== undefined) {
+            this.password = sessionPassword;
+        }
     }
 
     /**
@@ -611,6 +653,9 @@ class WelcomeController {
         };
     }
 
+    /**
+     * Clear the local password model variable and reset the password strength indicator.
+     */
     private clearPassword() {
         this.password = '';
         this.passwordStrength = {score: 0, strength: Strength.BAD};
@@ -625,8 +670,24 @@ class WelcomeController {
         this.webClientService.start().then(
             // If connection buildup is done...
             () => {
+                // If in-memory session password is enabled, store password
+                let isAutoPassword = false;
+                if (this.inMemorySessionPasswordEnabled) {
+                    // Generate a password if the user hasn't entered one
+                    if (this.password.length === 0) {
+                        this.log.debug('Generating auto session password');
+                        // Random password with 256 bits of randomness
+                        const autoPassword = u8aToHex(nacl.randomBytes(32));
+                        this.password = autoPassword;
+                        isAutoPassword = true;
+                    }
+
+                    // Store password (auto-generated or user-defined)
+                    this.inMemorySession.setPassword(this.password);
+                }
+
                 // Pass password to webclient service
-                this.webClientService.setPassword(this.password);
+                this.webClientService.setPassword(this.password, isAutoPassword);
 
                 // Clear local password variable
                 this.clearPassword();

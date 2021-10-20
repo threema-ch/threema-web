@@ -80,5 +80,8 @@ export default {
     TRANSPORT_LOG_LEVEL: 'warn',
     // Always show the real connection state using the dot in the logo
     VISUALIZE_STATE: true,
+    // Store session password in-memory (if an appropriate API is available).
+    // Auto-generate a session password if none was entered.
+    IN_MEMORY_SESSION_PASSWORD: false,
 
 } as threema.Config;
