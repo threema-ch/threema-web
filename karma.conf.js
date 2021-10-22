@@ -24,7 +24,9 @@ module.exports = function(config) {
             // App bundles
             'dist/generated/app_noinit.bundle.js',
             'dist/generated/unittest_karma.bundle.js',
-            {pattern: 'dist/generated/[0-9].*.bundle.js', included: false, serve: true},
+            {pattern: 'dist/generated/src_*.bundle.js', included: false, serve: true},
+            {pattern: 'dist/generated/tests_*.bundle.js', included: false, serve: true},
+            {pattern: 'dist/generated/vendors-node_*.bundle.js', included: false, serve: true},
             {pattern: 'dist/generated/*.module.wasm', included: false, serve: true, type: 'wasm'},
 
             // Tests

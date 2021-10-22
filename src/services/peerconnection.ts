@@ -275,7 +275,7 @@ export class PeerConnectionHelper {
         dc.onclose = () => {
             this.log.error(`Signalling data channel closed`);
         };
-        dc.onerror = (event) => {
+        dc.onerror = (event: ErrorEvent) => {
             this.log.warn(`Signalling data channel error (closed=${this.closed}):`, event.error);
         };
         dc.onmessage = (event) => {

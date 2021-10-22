@@ -1,5 +1,5 @@
 const dev = require('./webpack.dev.js');
-const merge = require('webpack-merge');
+const merge = require('webpack-merge').merge;
 
 module.exports = merge(dev, {
   entry: {

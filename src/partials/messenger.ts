@@ -634,7 +634,7 @@ class ConversationController {
      * Submit function for input field. Can contain text or file data.
      * Return whether sending was successful.
      */
-    public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): Promise<any> => {
+    public submit = (type: threema.MessageContentType, contents: threema.MessageData[]): Promise<void> => {
         // Validate whether a connection is available
         return new Promise((resolve, reject) => {
             if (!this.webClientService.readyToSubmit) {
