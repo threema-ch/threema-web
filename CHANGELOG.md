@@ -10,6 +10,17 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.17][v2.3.17] (2021-10-22)
+
+Changes:
+
+* [feature] Support in-memory session password if the backend supports it ([#1087][i1087])
+* [bug] Use `hasValue` for checking browser name and version ([#1085][i1085])
+* [change] Improved visibility of keyboard focus on buttons
+* [change] Mention font license in about dialog ([#1086][i1086])
+* [change] Upgrade many dependencies ([#1088][i1088])
+
+
 ### [v2.3.16][v2.3.16] (2021-09-16)
 
 Changes:
@@ -1096,7 +1107,12 @@ First public release.
 [i1078]: https://github.com/threema-ch/threema-web/issues/1078
 [i1079]: https://github.com/threema-ch/threema-web/issues/1079
 [i1083]: https://github.com/threema-ch/threema-web/issues/1083
+[i1085]: https://github.com/threema-ch/threema-web/issues/1085
+[i1086]: https://github.com/threema-ch/threema-web/issues/1086
+[i1087]: https://github.com/threema-ch/threema-web/issues/1087
+[i1088]: https://github.com/threema-ch/threema-web/issues/1088
 
+[v2.3.17]: https://github.com/threema-ch/threema-web/compare/v2.3.16...v2.3.17
 [v2.3.16]: https://github.com/threema-ch/threema-web/compare/v2.3.15...v2.3.16
 [v2.3.15]: https://github.com/threema-ch/threema-web/compare/v2.3.14...v2.3.15
 [v2.3.14]: https://github.com/threema-ch/threema-web/compare/v2.3.13...v2.3.14
