@@ -88,7 +88,7 @@
     "@types/selenium-webdriver": "^4.0.15",
     "angular-mocks": "^1.8.2",
     "chai": "^4.3.4",
-    "concurrently": "~5.1.0",
+    "concurrently": "^6.3.0",
     "geckodriver": "^2.0.4",
     "jasmine": "^3.9.0",
     "jasmine-core": "^3.9.0",
