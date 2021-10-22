@@ -6,12 +6,11 @@ module.exports = merge(common, {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    contentBase: [
-      path.join(__dirname),
-      path.join(__dirname, 'public'),
-      path.join(__dirname, 'src'),
+    static: [
+      {directory: path.join(__dirname)},
+      {directory: path.join(__dirname, 'public')},
+      {directory: path.join(__dirname, 'src')},
     ],
-    compress: true,
     host: '127.0.0.1',
     port: 9966,
   },
