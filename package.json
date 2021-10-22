@@ -79,7 +79,7 @@
     "typescript": "~3.8.3",
     "webpack": "^4.46.0",
     "webpack-cli": "^4.9.1",
-    "webpack-merge": "^4.2.2",
+    "webpack-merge": "^5.8.0",
     "webrtc-adapter": "^8.1.0"
   },
   "devDependencies": {
