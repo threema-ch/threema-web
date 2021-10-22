@@ -24,7 +24,7 @@ export class StringService {
         const offsetChars = [' ', '\r', '\n', '\t', '.'];
         let lastSeparator = -1;
         chars.forEach ((charString: string) => {
-            const length = Buffer.byteLength(charString, 'utf8');
+            const length = (new TextEncoder().encode(charString)).length;
             if (offset !== null) {
                 if (offsetChars.indexOf(charString) > -1) {
                     lastSeparator = currentChunkSize + 1;

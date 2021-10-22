@@ -54,4 +54,7 @@ module.exports = {
     filename: '[name].bundle.js',
     chunkFilename: '[name].[chunkhash].bundle.js',
   },
+  experiments: {
+    syncWebAssembly: true,
+  },
 };
