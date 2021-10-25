@@ -126,11 +126,17 @@ export class UnboundedFlowControlledDataChannel extends FlowControlledDataChanne
      *
      * @param message The message to be sent.
      */
-    public write(message: Uint8Array) {
+    public write(message: Uint8Array): Promise<void> {
         // Wait until ready, then write
         // Note: This very simple technique allows for ordered message
         //       queueing by using the event loop.
         this.queue = this.queue.then(() => this.writeWhenReady(message));
+        return this.queue;
+    }
+
+    public close(): Promise<void> {
+        this.queue = this.queue.then(() => this.dc.close());
+        return this.queue;
     }
 
     private async writeWhenReady(message: Uint8Array): Promise<void> {

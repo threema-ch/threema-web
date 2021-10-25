@@ -1405,7 +1405,7 @@ export class WebClientService {
             this.secureDataChannel.dc.onbufferedamountlow = null;
             this.secureDataChannel.dc.onerror = null;
             this.secureDataChannel.dc.onclose = null;
-            this.secureDataChannel.dc.close();
+            this.secureDataChannel.close();
         }
 
         // Close SaltyRTC connection
