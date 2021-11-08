@@ -70,6 +70,7 @@ targets=(
     @saltyrtc/task-webrtc/dist/saltyrtc-task-webrtc.es5.js
     @saltyrtc/task-relayed-data/dist/saltyrtc-task-relayed-data.es5.js
     webrtc-adapter/out/adapter.js
+    setimmediate/setImmediate.js
     qrcode-generator/qrcode.js
     qrcode-generator/qrcode_UTF8.js
     angularjs-scroll-glue/src/scrollglue.js

@@ -368,36 +368,41 @@ class WelcomeController {
         // Lock form to prevent further input
         this.formLocked = true;
 
-        const decrypted: threema.TrustedKeyStoreData = this.trustedKeyStore.retrieveTrustedKey(this.password);
-        if (decrypted === null) {
-            this.formLocked = false;
-            return this.showDecryptionFailed();
-        }
+        this.trustedKeyStore.retrieveTrustedKey(this.password).then((decrypted) => {
+            this.$scope.$apply(() => {
+                if (decrypted === null) {
+                    this.formLocked = false;
+                    return this.showDecryptionFailed();
+                }
 
-        // Instantiate new keystore
-        const keyStore = new saltyrtcClient.KeyStore(decrypted.ownSecretKey);
+                // Instantiate new keystore
+                const keyStore = new saltyrtcClient.KeyStore(decrypted.ownSecretKey);
 
-        // Set up the broadcast channel that checks whether we're already connected in another tab
-        this.setupBroadcastChannel(keyStore.publicKeyHex, WelcomeController.BROADCAST_DELAY)
-            .then((result) => {
-                this.$scope.$apply(() => {
-                    switch (result) {
-                        case 'already_open':
-                            this.log.warn('Session already connected in another tab or window');
-                            break;
-                        case 'no_answer':
-                            this.log.debug('No broadcast received indicating that a session is already open');
+                // Set up the broadcast channel that checks whether we're already connected in another tab
+                this.setupBroadcastChannel(keyStore.publicKeyHex, WelcomeController.BROADCAST_DELAY)
+                    .then((result) => {
+                        this.$scope.$apply(() => {
+                            switch (result) {
+                                case 'already_open':
+                                    this.log.warn('Session already connected in another tab or window');
+                                    break;
+                                case 'no_answer':
+                                    this.log.debug('No broadcast received indicating that a session is already open');
+                                    this.reconnect(keyStore, decrypted);
+                                    break;
+                            }
+                        });
+                    })
+                    .catch((error) => {
+                        this.$scope.$apply(() => {
+                            this.log.warn('Unable to set up broadcast channel:', error);
                             this.reconnect(keyStore, decrypted);
-                            break;
-                    }
+                        });
+                    });
                 });
-            })
-            .catch((error) => {
-                this.$scope.$apply(() => {
-                    this.log.warn('Unable to set up broadcast channel:', error);
-                    this.reconnect(keyStore, decrypted);
-                });
-            });
+        }).catch((error) => {
+            this.log.warn('Unable to unlock:', error);
+        });
     }
 
     /**
@@ -669,7 +674,7 @@ class WelcomeController {
     private start() {
         this.webClientService.start().then(
             // If connection buildup is done...
-            () => {
+            async () => {
                 // If in-memory session password is enabled, store password
                 let isAutoPassword = false;
                 if (this.inMemorySessionPasswordEnabled) {
@@ -685,9 +690,7 @@ class WelcomeController {
                     // Store password (auto-generated or user-defined)
                     this.inMemorySession.setPassword(this.password);
                 }
-
-                // Pass password to webclient service
-                this.webClientService.setPassword(this.password, isAutoPassword);
+                const password = this.password;
 
                 // Clear local password variable
                 this.clearPassword();
@@ -700,6 +703,9 @@ class WelcomeController {
                     true,
                     'redirectToHome',
                 );
+
+                // Pass password to webclient service
+                await this.webClientService.setPassword(password, isAutoPassword);
             },
 
             // If an error occurs...

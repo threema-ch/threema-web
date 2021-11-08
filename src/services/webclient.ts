@@ -3440,9 +3440,9 @@ export class WebClientService {
         future.resolve();
     }
 
-    public setPassword(password: string, isAutoSession: boolean) {
+    public async setPassword(password: string, isAutoSession: boolean) {
         // If a password has been set, store trusted key and push token
-        if (this._maybeTrustKeys(password, isAutoSession)) {
+        if (await this._maybeTrustKeys(password, isAutoSession)) {
             // Saved trusted key, send information to client
             this.sendKeyPersisted();
         }
@@ -3620,10 +3620,9 @@ export class WebClientService {
      * If a password has been set, store own private permanent key and public
      * key of the peer in the trusted key store.
      */
-    private _maybeTrustKeys(password: string, isAutoSession: boolean): boolean {
+    private async _maybeTrustKeys(password: string, isAutoSession: boolean): Promise<boolean> {
         if (hasValue(password) && password.length > 0) {
-            this.trustedKeyStore.storeTrustedKey(
-                this.salty.keyStore.publicKeyBytes,
+            await this.trustedKeyStore.storeTrustedKey(
                 this.salty.keyStore.secretKeyBytes,
                 this.salty.peerPermanentKeyBytes,
                 this.pushToken,

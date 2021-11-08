@@ -18,6 +18,9 @@ module.exports = function(config) {
             // Angular mocking
             'node_modules/angular-mocks/angular-mocks.js',
 
+            // Polyfills
+            'node_modules/setimmediate/setImmediate.js',
+
             // SaltyRTC
             'node_modules/@saltyrtc/chunked-dc/dist/chunked-dc.es5.js',
 
