@@ -22,7 +22,7 @@ export class FingerPrintService {
         if (publicKey !== undefined && publicKey.byteLength === 32) {
             const sha256PublicKey = await sha256(publicKey);
             if (sha256PublicKey !== undefined) {
-                return sha256PublicKey.toLowerCase().substr(0, 32);
+                return sha256PublicKey.toLowerCase();
             }
         }
         return 'undefined/failed';
