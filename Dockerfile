@@ -19,7 +19,7 @@ RUN npm run dist -- d
 
 # Then, transfer the build artifacts to a minimal nginx container
 
-FROM nginx:1.15-alpine
+FROM nginx:1.21-alpine
 
 RUN rm /usr/share/nginx/html/*
 COPY --from=builder /opt/threema-web/release/threema-web-* /usr/share/nginx/html/
