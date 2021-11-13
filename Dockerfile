@@ -6,7 +6,7 @@
 
 # First, build Threema Web in a node container
 
-FROM node:10 AS builder
+FROM node:14 AS builder
 ENV NODE_ENV=production
 
 COPY . /opt/threema-web/
