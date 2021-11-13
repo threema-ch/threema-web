@@ -26,13 +26,12 @@ import {LogService} from './log';
 /**
  * This service stores trusted keys in the local browser storage.
  *
- * Data is encrypted as follows:
+ * The data is encrypted with `nacl.secretbox` using a key derived from the
+ * user defined password through scrypt:
  *
  *     plaintext = <ownSecKey> + <peerPubKey>
  *                 [+ <pushtoken-type-prefix> + ':' + <pushtoken>]
  *     encrypted = nacl.secretbox(plaintext, <nonce>, <key>)
- *
- * The data is encrypted using scrypt.
  *
  * Storage format (JSON encoded to string):
  *
