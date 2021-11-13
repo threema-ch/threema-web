@@ -124,9 +124,10 @@ You can also install a pre-push hook to do the linting:
 
 ## Configuration
 
-The configuration of Threema Web can be tweaked in `src/config.ts`:
+The configuration of Threema Web can be tweaked in `src/config.ts` and
+`src/userconfig.js`:
 
-**General**
+**General (Config)**
 
 - `SELF_HOSTED`: Set this to `true` if this instance of Threema Web isn't being
   hosted on `web.threema.ch`.
@@ -135,7 +136,7 @@ The configuration of Threema Web can be tweaked in `src/config.ts`:
   previous protocol version. If set to something different than `null`, a
   message will be shown to the user if reconnecting fails.
 
-**SaltyRTC**
+**SaltyRTC (Userconfig)**
 
 - `SALTYRTC_HOST`: Set this to the hostname of the SaltyRTC server that you
   want to use. If supplied, the substring `{prefix}` will be replaced by the
@@ -146,15 +147,23 @@ The configuration of Threema Web can be tweaked in `src/config.ts`:
   this value to `null` if your server does not provide a public permanent key,
   or if you don't want to verify it.
 
-**ICE**
+**ICE (Userconfig)**
 
 - `ICE_SERVERS`: Configuration object for the WebRTC STUN and ICE servers.
   Each URL may contain the substring `{prefix}`, which will be replaced by a
   random byte represented as a lowercase hexadecimal value.
 
-**Push**
+**Push (Userconfig)**
 
 - `PUSH_URL`: The server URL used to deliver push notifications to the app.
+
+**Fonts (Userconfig)**
+
+Note: If you want to use the Lab Grotesque font in your self-hosted instance
+(with SELF_HOSTED=true), you need to obtain a license for it and update the
+font URL below. Otherwise, Threema Web will fall back to Roboto.
+
+- `FONT_CSS_URL`: URL to the Lab Grotesque font.
 
 
 ## Self Hosting

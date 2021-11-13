@@ -62,6 +62,7 @@
     "angularjs-scroll-glue": "=2.1.0",
     "autolinker": "^3.14.3",
     "babel-loader": "^8.2.3",
+    "copy-webpack-plugin": "^9.1.0",
     "core-js": "^3.18.3",
     "croppie": "^2.6.5",
     "emojibase-regex": "^4.1.1",
