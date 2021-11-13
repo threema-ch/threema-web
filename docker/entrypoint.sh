@@ -18,6 +18,12 @@ fi
 if [ ! -z "${SALTYRTC_SERVER_KEY:-}" ]; then
     echo "window.UserConfig.SALTYRTC_SERVER_KEY = '${SALTYRTC_SERVER_KEY}';" >> userconfig.js
 fi
+if [ ! -z "${PUSH_URL:-}" ]; then
+    echo "window.UserConfig.PUSH_URL = '${PUSH_URL}';" >> userconfig.js
+fi
+if [ ! -z "${FONT_CSS_URL:-}" ]; then
+    echo "window.UserConfig.FONT_CSS_URL = '${FONT_CSS_URL}';" >> userconfig.js
+fi
 
 # Add nginx mime type for wasm
 # See https://trac.nginx.org/nginx/ticket/1606

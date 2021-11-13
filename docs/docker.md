@@ -26,3 +26,7 @@ mechanisms in your web server.
 - `SALTYRTC_PORT`: The SaltyRTC signaling server port (default `443`)
 - `SALTYRTC_SERVER_KEY`: The SaltyRTC signaling server public key
   (default `"b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171"`)
+- `PUSH_URL`: The server URL used to deliver push notifications to the app
+  (default `"https://push-web.threema.ch/push"`)
+- `FONT_CSS_URL`: The Lab Grotesque font URL, to be used if you bought your own
+  font license (default `null`)
