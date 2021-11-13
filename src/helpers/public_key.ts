@@ -15,16 +15,29 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {sha256} from '../helpers/crypto';
+import {u8aToHex} from '../helpers';
 
-export class FingerPrintService {
-    public async generate(publicKey: ArrayBuffer): Promise<string> {
-        if (publicKey !== undefined && publicKey.byteLength === 32) {
-            const sha256PublicKey = await sha256(publicKey);
-            if (sha256PublicKey !== undefined) {
-                return sha256PublicKey.toLowerCase().substr(0, 32);
-            }
+/**
+ * Visualize a 32 bit public key in an 8x8 hex grid.
+ *
+ * Return a string containing newlines.
+ */
+export function publicKeyGrid(publicKey: Uint8Array): string {
+    const hex = u8aToHex(publicKey);
+    let grid = '';
+    for (let i = 0; i < hex.length; i++) {
+        // Prepend a newline if end of row is reached
+        if (i % 8 === 0 && i > 0 && i < 63) {
+            grid += '\n';
         }
-        return 'undefined/failed';
+
+        // Prepend a space if this isn't the first char of a row
+        if (i % 8 > 0) {
+            grid += ' ';
+        }
+
+        // Add hex character
+        grid += hex[i];
     }
+    return grid;
 }

@@ -133,7 +133,6 @@
         "MEMBER_OF_GROUPS": "是这些群组的群员",
         "MEMBER_OF_DISTRIBUTION_LISTS": "是这些列表的成员",
         "GROUP_MEMBERS": "群组成员",
-        "KEY_FINGERPRINT": "指纹",
         "GROUP_NAME": "群组名称",
         "GROUP_CREATOR": "群组创建人",
         "GROUP_ROLE_NORMAL": "成员",

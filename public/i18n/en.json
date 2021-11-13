@@ -135,7 +135,7 @@
         "MEMBER_OF_GROUPS": "Member of these groups",
         "MEMBER_OF_DISTRIBUTION_LISTS": "Member of these Lists",
         "GROUP_MEMBERS": "Group members",
-        "KEY_FINGERPRINT": "Key Fingerprint",
+        "PUBLIC_KEY": "Public Key",
         "GROUP_NAME": "Group name",
         "GROUP_CREATOR": "Group creator",
         "GROUP_ROLE_NORMAL": "Member",

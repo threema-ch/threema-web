@@ -133,7 +133,6 @@
         "MEMBER_OF_GROUPS": "이 그룹의 멤버",
         "MEMBER_OF_DISTRIBUTION_LISTS": "이 목록의 멤버",
         "GROUP_MEMBERS": "그룹 멤버들",
-        "KEY_FINGERPRINT": "지문 인식",
         "GROUP_NAME": "그룹명",
         "GROUP_CREATOR": "그룹 만든 사람",
         "GROUP_ROLE_NORMAL": "멤버",
