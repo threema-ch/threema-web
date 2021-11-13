@@ -524,7 +524,6 @@ declare namespace threema {
     }
 
     interface TrustedKeyStoreData {
-        ownPublicKey: Uint8Array;
         ownSecretKey: Uint8Array;
         peerPublicKey: Uint8Array;
         pushToken: string | null;
