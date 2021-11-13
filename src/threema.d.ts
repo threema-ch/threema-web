@@ -663,20 +663,6 @@ declare namespace threema {
         PREV_PROTOCOL_LAST_VERSION: string | null;
         GIT_BRANCH: string;
 
-        // SaltyRTC
-        SALTYRTC_HOST: string;
-        SALTYRTC_PORT: number;
-        SALTYRTC_SERVER_KEY: string | null;
-
-        // ICE
-        ICE_SERVERS: RTCIceServer[];
-
-        // Push
-        PUSH_URL: string;
-
-        // Fonts
-        FONT_CSS_URL: string;
-
         // Logging/debugging
         LOG_TAG_PADDING: number,
         CONSOLE_LOG_LEVEL: LogLevel;
@@ -691,6 +677,22 @@ declare namespace threema {
         TRANSPORT_LOG_LEVEL: LogLevel;
         VISUALIZE_STATE: boolean;
         IN_MEMORY_SESSION_PASSWORD: boolean;
+    }
+
+    interface UserConfig {
+        // SaltyRTC
+        SALTYRTC_HOST: string;
+        SALTYRTC_PORT: number;
+        SALTYRTC_SERVER_KEY: string | null;
+
+        // ICE
+        ICE_SERVERS: RTCIceServer[];
+
+        // Push
+        PUSH_URL: string;
+
+        // Fonts
+        FONT_CSS_URL: string;
     }
 
     interface InitialConversationData {

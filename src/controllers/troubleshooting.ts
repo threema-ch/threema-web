@@ -192,8 +192,10 @@ export class TroubleshootingController extends DialogController {
 
         // Sanitise usernames and credentials from ICE servers in config
         const config = copyShallow(this.config) as threema.Config;
+        // tslint:disable-next-line: no-string-literal
+        const userConfig = copyShallow(window['UserConfig']) as threema.UserConfig;
         if (sanitize) {
-            config.ICE_SERVERS = config.ICE_SERVERS.map((server: RTCIceServer) => {
+            userConfig.ICE_SERVERS = userConfig.ICE_SERVERS.map((server: RTCIceServer) => {
                 server = copyShallow(server) as RTCIceServer;
                 for (const key of ['username', 'credential', 'credentialType']) {
                     if (server[key] !== undefined) {
@@ -207,6 +209,7 @@ export class TroubleshootingController extends DialogController {
         // Create container for meta data and log records
         const container = {
             config: config,
+            userConfig: userConfig,
             browser: browser.description(),
             log: this.logService.memory.getRecords(),
         };

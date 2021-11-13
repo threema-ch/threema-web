@@ -21,10 +21,13 @@
 export class HeaderController {
     // Config
     private config: threema.Config;
+    private userConfig: threema.UserConfig;
 
     public static $inject = ['CONFIG'];
     constructor(config: threema.Config) {
         this.config = config;
+        // tslint:disable-next-line: no-string-literal
+        this.userConfig = window['UserConfig'];
     }
 
     /**
@@ -33,17 +36,17 @@ export class HeaderController {
     public useThreemaFont(): boolean {
         // In the officially hosted version, the Threema font is loaded from static.threema.ch.
         // In a self-hosted version, a custom font URL needs to be provided.
-        return !this.config.SELF_HOSTED || this.config.FONT_CSS_URL !== null;
+        return !this.config.SELF_HOSTED || this.userConfig.FONT_CSS_URL !== null;
     }
 
     /**
      * Return the URL to the Threema font (Lab Grotesque).
      */
     public fontUrl(): string {
-        if (this.config.FONT_CSS_URL === null) {
+        if (this.userConfig.FONT_CSS_URL === null) {
             return 'https://static.threema.ch/fonts/labgrotesque.css';
         } else {
-            return this.config.FONT_CSS_URL;
+            return this.userConfig.FONT_CSS_URL;
         }
     }
 }

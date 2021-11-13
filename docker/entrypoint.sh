@@ -2,13 +2,22 @@
 set -euo pipefail
 
 # Patch config file
-echo "Patching config file..."
+echo "Patching userconfig file..."
 cd /usr/share/nginx/html/
-if [ ! -z "$SALTYRTC_HOST" ]; then
-    sed -i -E "s/SALTYRTC_HOST:\s*null,/SALTYRTC_HOST:'${SALTYRTC_HOST}',/g" *.bundle.js
+if [[ ! -f userconfig.js ]]; then
+    echo "Error: Userconfig not found"
+    exit 1
 fi
-sed -i -E "s/SALTYRTC_PORT:\s*[^,]*,/SALTYRTC_PORT:${SALTYRTC_PORT},/g" *.bundle.js
-sed -i -E "s/SALTYRTC_SERVER_KEY:\s*\"[^\"]*\",/SALTYRTC_SERVER_KEY:\"${SALTYRTC_SERVER_KEY}\",/g" *.bundle.js
+echo '// Overrides by entrypoint.sh' >> userconfig.js
+if [ ! -z "${SALTYRTC_HOST:-}" ]; then
+    echo "window.UserConfig.SALTYRTC_HOST = '${SALTYRTC_HOST}';" >> userconfig.js
+fi
+if [ ! -z "${SALTYRTC_PORT:-}" ]; then
+    echo "window.UserConfig.SALTYRTC_PORT = ${SALTYRTC_PORT};" >> userconfig.js
+fi
+if [ ! -z "${SALTYRTC_SERVER_KEY:-}" ]; then
+    echo "window.UserConfig.SALTYRTC_SERVER_KEY = '${SALTYRTC_SERVER_KEY}';" >> userconfig.js
+fi
 
 # Add nginx mime type for wasm
 # See https://trac.nginx.org/nginx/ticket/1606

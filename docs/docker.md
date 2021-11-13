@@ -21,7 +21,8 @@ mechanisms in your web server.
 
 ## Config Variables
 
-- `SALTYRTC_HOST`: The SaltyRTC signaling server hostname (default `null`)
+- `SALTYRTC_HOST`: The SaltyRTC signaling server hostname
+  (default `saltyrtc-{prefix}.threema.ch`)
 - `SALTYRTC_PORT`: The SaltyRTC signaling server port (default `443`)
 - `SALTYRTC_SERVER_KEY`: The SaltyRTC signaling server public key
   (default `"b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171"`)

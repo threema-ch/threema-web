@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyPlugin = require("copy-webpack-plugin");
 
 const babelOptions = {
   presets: [
@@ -49,6 +50,17 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.wasm'],
   },
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: 'src/userconfig.js',
+          to: path.resolve(__dirname, 'dist', 'generated'),
+          info: { minimized: true /* Do not minimize / uglify */ },
+        },
+      ],
+    }),
+  ],
   output: {
     path: path.resolve(__dirname, 'dist', 'generated'),
     filename: '[name].bundle.js',

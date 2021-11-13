@@ -10,6 +10,7 @@ const elements = {
     container: document.querySelector('#container'),
     browser: document.querySelector('#browser'),
     config: document.querySelector('#config'),
+    userConfig: document.querySelector('#userconfig'),
     log: document.querySelector('#log'),
 };
 
@@ -125,6 +126,7 @@ function showLog(data) {
     // Display meta data
     elements.browser.textContent = container.browser;
     elements.config.textContent = JSON.stringify(container.config, null, 2);
+    elements.userConfig.textContent = JSON.stringify(container.userConfig, null, 2);
 
     // Display log records
     elements.log.innerHTML = '';

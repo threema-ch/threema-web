@@ -247,8 +247,6 @@ export class PushSession {
 }
 
 export class PushService {
-    public static readonly $inject = ['CONFIG', 'PROTOCOL_VERSION', 'LogService'];
-
     public static readonly ARG_TYPE = 'type';
     public static readonly ARG_TOKEN = 'token';
     public static readonly ARG_SESSION = 'session';
@@ -268,9 +266,12 @@ export class PushService {
     private _pushToken: string = null;
     private _pushType = threema.PushTokenType.Fcm;
 
+    public static readonly $inject = ['CONFIG', 'PROTOCOL_VERSION', 'LogService'];
     constructor(CONFIG: threema.Config, PROTOCOL_VERSION: number, logService: LogService) {
         this.config = CONFIG;
-        this.url = CONFIG.PUSH_URL;
+        // tslint:disable-next-line: no-string-literal
+        const userConfig: threema.UserConfig = window['UserConfig'];
+        this.url = userConfig.PUSH_URL;
         this.version = PROTOCOL_VERSION;
         this.logService = logService;
         this.log = logService.getLogger(`Push-S`, 'color: #fff; background-color: #9900ff');

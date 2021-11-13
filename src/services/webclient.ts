@@ -262,6 +262,7 @@ export class WebClientService {
 
     // Other
     private config: threema.Config;
+    private userConfig: threema.UserConfig;
     private container: threema.Container.Factory;
     private typingInstance: threema.Container.Typing;
     private drafts: threema.Container.Drafts;
@@ -349,6 +350,8 @@ export class WebClientService {
 
         // Configuration object
         this.config = CONFIG;
+        // tslint:disable-next-line: no-string-literal
+        this.userConfig = window['UserConfig'];
 
         // Logging
         this.log = logService.getLogger('WebClient-S', 'color: #fff; background-color: #0066cc');
@@ -441,8 +444,8 @@ export class WebClientService {
         return this.qrCodeService.buildQrCodePayload(
             this.salty.permanentKeyBytes,
             this.salty.authTokenBytes,
-            hexToU8a(this.config.SALTYRTC_SERVER_KEY),
-            this.saltyRtcHost, this.config.SALTYRTC_PORT,
+            hexToU8a(this.userConfig.SALTYRTC_SERVER_KEY),
+            this.saltyRtcHost, this.userConfig.SALTYRTC_PORT,
             persistent);
     }
 
@@ -533,13 +536,13 @@ export class WebClientService {
         }
 
         // Determine SaltyRTC host, replace the inner prefix (if any)
-        this.saltyRtcHost = this.config.SALTYRTC_HOST.replace('{prefix}', keyStore.publicKeyHex.substr(0, 2));
+        this.saltyRtcHost = this.userConfig.SALTYRTC_HOST.replace('{prefix}', keyStore.publicKeyHex.substr(0, 2));
 
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()
-            .connectTo(this.saltyRtcHost, this.config.SALTYRTC_PORT)
+            .connectTo(this.saltyRtcHost, this.userConfig.SALTYRTC_PORT)
             .withLoggingLevel(this.config.SALTYRTC_LOG_LEVEL)
-            .withServerKey(this.config.SALTYRTC_SERVER_KEY)
+            .withServerKey(this.userConfig.SALTYRTC_SERVER_KEY)
             .withKeyStore(keyStore)
             .usingTasks(tasks)
             .withPingInterval(30);
@@ -895,7 +898,7 @@ export class WebClientService {
 
             // Determine ICE servers and replace random prefix (if any)
             const prefix = u8aToHex(nacl.randomBytes(1));
-            const iceServers = this.config.ICE_SERVERS.map((server) => {
+            const iceServers = this.userConfig.ICE_SERVERS.map((server) => {
                 server = copyShallow(server) as RTCIceServer;
                 const urls = Array.isArray(server.urls) ? server.urls : [server.urls];
                 server.urls = urls.map((url) => url.replace('{prefix}', prefix));

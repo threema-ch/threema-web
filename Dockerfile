@@ -25,8 +25,6 @@ RUN rm /usr/share/nginx/html/*
 COPY --from=builder /opt/threema-web/release/threema-web-* /usr/share/nginx/html/
 COPY docker/entrypoint.sh /usr/local/bin/
 
-ENV SALTYRTC_HOST="" \
-    SALTYRTC_PORT=443 \
-    SALTYRTC_SERVER_KEY="b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171"
+EXPOSE 80
 
 CMD ["/bin/sh", "/usr/local/bin/entrypoint.sh"]

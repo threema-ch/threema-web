@@ -1,3 +1,6 @@
+// Load user config
+const UserConfig = window.UserConfig;
+
 /**
  * Create peer connection and bind events to be logged.
  * @param role The role (offerer or answerer).
@@ -8,17 +11,14 @@ function createPeerConnection(role) {
     const uagent = window.navigator.userAgent.toLowerCase();
 
     // Determine ICE servers
-    const iceServers = [
-        'turn:ds-turn-ff.threema.ch:443?transport=udp',
-        'turn:ds-turn-ff.threema.ch:443?transport=tcp',
-        'turns:ds-turn-ff.threema.ch:443',
-    ];
-    console.debug('Using ICE servers: ' + iceServers);
-    const configuration = {iceServers: [{
-        urls: iceServers,
-        username: 'threema-angular-test',
-        credential: 'VaoVnhxKGt2wD20F9bTOgiew6yHQmj4P7y7SE4lrahAjTQC0dpnG32FR4fnrlpKa',
-    }]};
+    const iceConfig = UserConfig.ICE_SERVERS[0];
+    iceConfig.urls = iceConfig.urls.map(url => url.replace('{prefix}', 'ff'));
+    if (iceConfig.username === 'threema-angular') {
+        iceConfig.username = 'threema-angular-test';
+        iceConfig.credential = 'VaoVnhxKGt2wD20F9bTOgiew6yHQmj4P7y7SE4lrahAjTQC0dpnG32FR4fnrlpKa';
+    }
+    console.debug('Using ICE servers: ' + iceConfig.urls);
+    let configuration = {iceServers: [iceConfig]};
 
     // Create peer connection
     const pc = new RTCPeerConnection(configuration);
@@ -66,7 +66,7 @@ function createDataChannel(pc, role, label, options) {
     dc.addEventListener('close', () => {
         console.info(role, label, 'closed');
     });
-    dc.addEventListener('error', () => {
+    dc.addEventListener('error', (error) => {
         console.error(role, label, 'error:', error);
     });
     dc.addEventListener('bufferedamountlow', () => {
@@ -269,7 +269,8 @@ app.controller('ChecksController', function($scope, $timeout) {
         const subprotocol = 'v1.saltyrtc.org';
         const path = 'ffffffffffffffff00000000000000000000000000000000ffffffffffffffff';
         this.resultWs.showLogs = true;
-        const ws = new WebSocket('wss://saltyrtc-ff.threema.ch/' + path, subprotocol);
+        const hostport = `${UserConfig.SALTYRTC_HOST.replace('{prefix}', 'ff')}:${UserConfig.SALTYRTC_PORT}`;
+        const ws = new WebSocket(`wss://${hostport}/${path}`, subprotocol);
         ws.binaryType = 'arraybuffer';
         ws.addEventListener('open', () => {
             $scope.$apply(() => {
@@ -345,7 +346,7 @@ app.controller('ChecksController', function($scope, $timeout) {
                 this.resultWs.logs.push('Connection closed');
             });
         });
-        this.resultWs.logs.push('Connecting');
+        this.resultWs.logs.push(`Connecting to ${hostport}`);
     };
 
     // A peer-to-peer connection can be established and a data channel can be
@@ -436,7 +437,7 @@ app.controller('ChecksController', function($scope, $timeout) {
                     }
                 });
             });
-            dc.addEventListener('error', () => {
+            dc.addEventListener('error', (error) => {
                 $scope.$apply(() => {
                     this.resultDc.logs.push(`${role}: Channel '${dc.label}' error (${error.message})`);
                     reject();
