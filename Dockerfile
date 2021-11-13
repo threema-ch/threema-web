@@ -21,10 +21,12 @@ RUN npm run dist -- d
 
 FROM docker.io/nginx:1.21-alpine
 
+RUN apk add --update bash
+
 RUN rm /usr/share/nginx/html/*
 COPY --from=builder /opt/threema-web/release/threema-web-* /usr/share/nginx/html/
 COPY docker/entrypoint.sh /usr/local/bin/
 
 EXPOSE 80
 
-CMD ["/bin/sh", "/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash", "/usr/local/bin/entrypoint.sh"]

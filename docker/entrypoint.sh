@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -euo pipefail
 
 # Patch config file
@@ -23,6 +23,22 @@ if [ ! -z "${PUSH_URL:-}" ]; then
 fi
 if [ ! -z "${FONT_CSS_URL:-}" ]; then
     echo "window.UserConfig.FONT_CSS_URL = '${FONT_CSS_URL}';" >> userconfig.js
+fi
+if [ ! -z "${ICE_SERVER_URLS:-}" ]; then
+    IFS=',' read -ra urls <<< "${ICE_SERVER_URLS}"
+    echo "window.UserConfig.ICE_SERVERS = [{" >> userconfig.js
+    echo "    urls: [" >> userconfig.js
+    for url in "${urls[@]}"; do
+        echo "        '$url'," >> userconfig.js
+    done
+    echo "    ]," >> userconfig.js
+    if [ ! -z "${ICE_SERVER_USERNAME:-}" ]; then
+        echo "    username: '${ICE_SERVER_USERNAME}'," >> userconfig.js
+    fi
+    if [ ! -z "${ICE_SERVER_CREDENTIAL:-}" ]; then
+        echo "    credential: '${ICE_SERVER_CREDENTIAL}'," >> userconfig.js
+    fi
+    echo "}];" >> userconfig.js
 fi
 
 # Add nginx mime type for wasm

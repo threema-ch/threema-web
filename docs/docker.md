@@ -21,12 +21,16 @@ mechanisms in your web server.
 
 ## Config Variables
 
+All these config variables are optional, and will fall back to the default
+values used by Threema if not set.
+
 - `SALTYRTC_HOST`: The SaltyRTC signaling server hostname
-  (default `saltyrtc-{prefix}.threema.ch`)
-- `SALTYRTC_PORT`: The SaltyRTC signaling server port (default `443`)
+- `SALTYRTC_PORT`: The SaltyRTC signaling server port
 - `SALTYRTC_SERVER_KEY`: The SaltyRTC signaling server public key
-  (default `"b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171"`)
 - `PUSH_URL`: The server URL used to deliver push notifications to the app
-  (default `"https://push-web.threema.ch/push"`)
 - `FONT_CSS_URL`: The Lab Grotesque font URL, to be used if you bought your own
-  font license (default `null`)
+  font license
+- `ICE_SERVER_URLS`: A comma separated list of ICE URLs, prefixed by either
+  `turn:` or `turns:`
+- `ICE_SERVER_USERNAME`: The ICE username
+- `ICE_SERVER_CREDENTIAL`: The ICE password
