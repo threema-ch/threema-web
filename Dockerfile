@@ -6,7 +6,7 @@
 
 # First, build Threema Web in a node container
 
-FROM node:10 AS builder
+FROM docker.io/node:14 AS builder
 ENV NODE_ENV=production
 
 COPY . /opt/threema-web/
@@ -19,7 +19,9 @@ RUN npm run dist -- d
 
 # Then, transfer the build artifacts to a minimal nginx container
 
-FROM nginx:1.15-alpine
+FROM docker.io/nginx:1.21-alpine
+
+RUN apk add --update bash
 
 RUN rm /usr/share/nginx/html/*
 COPY --from=builder /opt/threema-web/release/threema-web-* /usr/share/nginx/html/
@@ -27,4 +29,4 @@ COPY docker/entrypoint.sh /usr/local/bin/
 
 EXPOSE 80
 
-CMD ["/bin/sh", "/usr/local/bin/entrypoint.sh"]
+CMD ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
