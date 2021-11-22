@@ -21,7 +21,7 @@ import {LogService} from './log';
 
 export class TimeoutService {
     // Config
-    private config: threema.Config;
+    private userConfig: threema.UserConfig;
 
     // Angular services
     private $timeout: ng.ITimeoutService;
@@ -32,12 +32,13 @@ export class TimeoutService {
     // List of registered timeouts
     private timeouts: Set<ng.IPromise<any>> = new Set();
 
-    public static $inject = ['CONFIG', '$timeout', 'LogService'];
-    constructor(config: threema.Config, $timeout: ng.ITimeoutService, logService: LogService) {
-        this.config = config;
+    public static $inject = ['$timeout', 'LogService'];
+    constructor($timeout: ng.ITimeoutService, logService: LogService) {
+        // tslint:disable-next-line: no-string-literal
+        this.userConfig = window['UserConfig'];
         this.$timeout = $timeout;
         this.log = logService.getLogger(
-            'Timeout-S', 'color: #fff; background-color: #669900', this.config.TIMER_LOG_LEVEL);
+            'Timeout-S', 'color: #fff; background-color: #669900', this.userConfig.TIMER_LOG_LEVEL);
     }
 
     /**

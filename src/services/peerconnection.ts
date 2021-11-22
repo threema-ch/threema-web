@@ -35,7 +35,7 @@ export class PeerConnectionHelper {
     private readonly $rootScope: ng.IRootScopeService;
 
     // Custom services
-    private readonly config: threema.Config;
+    private readonly userConfig: threema.UserConfig;
     private readonly logService: LogService;
     private readonly timeoutService: TimeoutService;
 
@@ -55,7 +55,7 @@ export class PeerConnectionHelper {
     constructor(
         $q: ng.IQService,
         $rootScope: ng.IRootScopeService,
-        config: threema.Config,
+        userConfig: threema.UserConfig,
         logService: LogService,
         timeoutService: TimeoutService,
         webrtcTask: saltyrtc.tasks.webrtc.WebRTCTask,
@@ -66,7 +66,7 @@ export class PeerConnectionHelper {
         this.log.debug('ICE servers used:', [].concat(...iceServers.map((server) => server.urls)));
         this.$q = $q;
         this.$rootScope = $rootScope;
-        this.config = config;
+        this.userConfig = userConfig;
         this.logService = logService;
 
         this.timeoutService = timeoutService;
@@ -232,7 +232,7 @@ export class PeerConnectionHelper {
         dc.binaryType = 'arraybuffer';
 
         // Wrap as an unbounded, flow-controlled data channel
-        this.sdc = new UnboundedFlowControlledDataChannel(dc, this.logService, this.config.TRANSPORT_LOG_LEVEL);
+        this.sdc = new UnboundedFlowControlledDataChannel(dc, this.logService, this.userConfig.TRANSPORT_LOG_LEVEL);
 
         // Create transport handler
         const self = this;

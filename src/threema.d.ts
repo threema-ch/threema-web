@@ -663,19 +663,8 @@ declare namespace threema {
         PREV_PROTOCOL_LAST_VERSION: string | null;
         GIT_BRANCH: string;
 
-        // Logging/debugging
-        LOG_TAG_PADDING: number,
-        CONSOLE_LOG_LEVEL: LogLevel;
-        REPORT_LOG_LEVEL: LogLevel;
-        REPORT_LOG_LIMIT: number;
-        COMPOSE_AREA_LOG_LEVEL: LogLevel;
-        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
-        TIMER_LOG_LEVEL: LogLevel;
-        ARP_LOG_LEVEL: LogLevel;
-        ARP_LOG_TRACE: boolean;
-        MSGPACK_LOG_TRACE: boolean;
-        TRANSPORT_LOG_LEVEL: LogLevel;
-        VISUALIZE_STATE: boolean;
+        // Store session password in-memory (if an appropriate API is available).
+        // Auto-generate a session password if none was entered.
         IN_MEMORY_SESSION_PASSWORD: boolean;
     }
 
@@ -693,6 +682,20 @@ declare namespace threema {
 
         // Fonts
         FONT_CSS_URL: string;
+
+        // Logging/debugging
+        LOG_TAG_PADDING: number,
+        CONSOLE_LOG_LEVEL: LogLevel;
+        REPORT_LOG_LEVEL: LogLevel;
+        REPORT_LOG_LIMIT: number;
+        COMPOSE_AREA_LOG_LEVEL: LogLevel;
+        SALTYRTC_LOG_LEVEL: saltyrtc.LogLevel;
+        TIMER_LOG_LEVEL: LogLevel;
+        ARP_LOG_LEVEL: LogLevel;
+        ARP_LOG_TRACE: boolean;
+        MSGPACK_LOG_TRACE: boolean;
+        TRANSPORT_LOG_LEVEL: LogLevel;
+        VISUALIZE_STATE: boolean;
     }
 
     interface InitialConversationData {

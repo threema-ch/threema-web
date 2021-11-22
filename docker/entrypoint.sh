@@ -1,6 +1,27 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Patch a UserConfig variable based on an env var.
+#
+# Args: <var> <type>
+#   var: The name of the config variable (e.g. `SALTYRTC_HOST`)
+#   type: One of `string`, `number` or `boolean`
+function patch_var() {
+    var=$1
+    type=$2
+    if [ -n "${!var:-}" ]; then
+        echo " > Patching $var"
+        if [ "$type" = "string" ]; then
+            echo "window.UserConfig.$var = '${!var}';" >> userconfig.js
+        elif [ "$type" = "number" ] || [ "$type" = "boolean" ]; then
+            echo "window.UserConfig.$var = ${!var};" >> userconfig.js
+        else
+            echo "[entrypoint.sh] Error: Invalid type \"$type\""
+            exit 1
+        fi
+    fi
+}
+
 # Patch config file
 echo "Patching userconfig file..."
 cd /usr/share/nginx/html/
@@ -9,37 +30,50 @@ if [[ ! -f userconfig.js ]]; then
     exit 1
 fi
 echo '// Overrides by entrypoint.sh' >> userconfig.js
-if [ ! -z "${SALTYRTC_HOST:-}" ]; then
-    echo "window.UserConfig.SALTYRTC_HOST = '${SALTYRTC_HOST}';" >> userconfig.js
-fi
-if [ ! -z "${SALTYRTC_PORT:-}" ]; then
-    echo "window.UserConfig.SALTYRTC_PORT = ${SALTYRTC_PORT};" >> userconfig.js
-fi
-if [ ! -z "${SALTYRTC_SERVER_KEY:-}" ]; then
-    echo "window.UserConfig.SALTYRTC_SERVER_KEY = '${SALTYRTC_SERVER_KEY}';" >> userconfig.js
-fi
-if [ ! -z "${PUSH_URL:-}" ]; then
-    echo "window.UserConfig.PUSH_URL = '${PUSH_URL}';" >> userconfig.js
-fi
-if [ ! -z "${FONT_CSS_URL:-}" ]; then
-    echo "window.UserConfig.FONT_CSS_URL = '${FONT_CSS_URL}';" >> userconfig.js
-fi
-if [ ! -z "${ICE_SERVER_URLS:-}" ]; then
+
+# SaltyRTC
+patch_var "SALTYRTC_HOST" string
+patch_var "SALTYRTC_PORT" number
+patch_var "SALTYRTC_SERVER_KEY" string
+
+# ICE
+if [ -n "${ICE_SERVER_URLS:-}" ]; then
     IFS=',' read -ra urls <<< "${ICE_SERVER_URLS}"
+    echo " > Patching ICE_SERVERS"
     echo "window.UserConfig.ICE_SERVERS = [{" >> userconfig.js
     echo "    urls: [" >> userconfig.js
     for url in "${urls[@]}"; do
         echo "        '$url'," >> userconfig.js
     done
     echo "    ]," >> userconfig.js
-    if [ ! -z "${ICE_SERVER_USERNAME:-}" ]; then
+    if [ -n "${ICE_SERVER_USERNAME:-}" ]; then
         echo "    username: '${ICE_SERVER_USERNAME}'," >> userconfig.js
     fi
-    if [ ! -z "${ICE_SERVER_CREDENTIAL:-}" ]; then
+    if [ -n "${ICE_SERVER_CREDENTIAL:-}" ]; then
         echo "    credential: '${ICE_SERVER_CREDENTIAL}'," >> userconfig.js
     fi
     echo "}];" >> userconfig.js
 fi
+
+# Push
+patch_var "PUSH_URL" string
+
+# Fonts
+patch_var "FONT_CSS_URL" string
+
+# Logging/debugging
+patch_var "LOG_TAG_PADDING" number
+patch_var "CONSOLE_LOG_LEVEL" string
+patch_var "REPORT_LOG_LEVEL" string
+patch_var "REPORT_LOG_LIMIT" number
+patch_var "COMPOSE_AREA_LOG_LEVEL" string
+patch_var "SALTYRTC_LOG_LEVEL" string
+patch_var "TIMER_LOG_LEVEL" string
+patch_var "ARP_LOG_LEVEL" string
+patch_var "ARP_LOG_TRACE" boolean
+patch_var "MSGPACK_LOG_TRACE" boolean
+patch_var "TRANSPORT_LOG_LEVEL" string
+patch_var "VISUALIZE_STATE" boolean
 
 # Add nginx mime type for wasm
 # See https://trac.nginx.org/nginx/ticket/1606

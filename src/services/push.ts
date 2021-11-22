@@ -201,7 +201,7 @@ export class PushSession {
 
             // Send push
             this.log.debug(`Sending push ${this.tries}/${this.config.triesMax} (ttl=${timeToLive})`);
-            if (this.service.config.ARP_LOG_TRACE) {
+            if (this.service.userConfig.ARP_LOG_TRACE) {
                 this.log.debug('Push data:', `${data}`);
             }
             try {
@@ -259,6 +259,7 @@ export class PushService {
     public static readonly ARG_COLLAPSE_KEY = 'collapse_key';
 
     public readonly config: threema.Config;
+    public readonly userConfig: threema.UserConfig;
     public readonly url: string;
     public readonly version: number = null;
     public readonly logService: LogService;
@@ -270,8 +271,8 @@ export class PushService {
     constructor(CONFIG: threema.Config, PROTOCOL_VERSION: number, logService: LogService) {
         this.config = CONFIG;
         // tslint:disable-next-line: no-string-literal
-        const userConfig: threema.UserConfig = window['UserConfig'];
-        this.url = userConfig.PUSH_URL;
+        this.userConfig = window['UserConfig'];
+        this.url = this.userConfig.PUSH_URL;
         this.version = PROTOCOL_VERSION;
         this.logService = logService;
         this.log = logService.getLogger(`Push-S`, 'color: #fff; background-color: #9900ff');

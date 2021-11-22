@@ -5,11 +5,12 @@ describe('LogService', function() {
     let $service;
 
     // Mock configuration
-    const config = Object.assign({}, window.config);
-    config.LOG_TAG_PADDING = 20;
-    config.CONSOLE_LOG_LEVEL = 'info';
-    config.REPORT_LOG_LEVEL = 'debug';
-    config.REPORT_LOG_LIMIT = 10;
+    const consoleLogLevel = 'info';
+    const reportLogLimit = 10;
+    window.UserConfig.LOG_TAG_PADDING = 20;
+    window.UserConfig.CONSOLE_LOG_LEVEL = consoleLogLevel;
+    window.UserConfig.REPORT_LOG_LEVEL = 'debug';
+    window.UserConfig.REPORT_LOG_LIMIT = reportLogLimit;
 
     // Ignoring page reload request
     beforeAll(() => window.onbeforeunload = () => null);
@@ -28,9 +29,6 @@ describe('LogService', function() {
         }
 
         // Angular magic
-        module(($provide) => {
-            $provide.constant('CONFIG', config);
-        });
         module('3ema.services');
 
         // Inject the service
@@ -64,13 +62,13 @@ describe('LogService', function() {
 
         // Console logger branch
         expect(left.constructor.name).toBe('LevelLogger');
-        expect(left.level).toBe(config.CONSOLE_LOG_LEVEL);
+        expect(left.level).toBe(consoleLogLevel);
         expect(left.logger.constructor.name).toBe('UnveilLogger');
         expect(left.logger.logger.constructor.name).toBe('ConsoleLogger');
 
         // Memory (report) logger branch
         expect(right.constructor.name).toBe('MemoryLogger');
-        expect(right.limit).toBe(config.REPORT_LOG_LIMIT);
+        expect(right.limit).toBe(reportLogLimit);
     });
 
     describe('getLogger', () => {

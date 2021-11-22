@@ -124,46 +124,14 @@ You can also install a pre-push hook to do the linting:
 
 ## Configuration
 
-The configuration of Threema Web can be tweaked in `src/config.ts` and
-`src/userconfig.js`:
+The configuration of Threema Web can be tweaked in [`src/config.ts`](src/config.ts)
+and [`src/userconfig.js`](src/userconfig.js). The config variables are defined
+at build time, and the userconfig variables can be modified at runtime. Please
+refer to those files for documentation on what variables exist and how to
+configure them.
 
-**General (Config)**
-
-- `SELF_HOSTED`: Set this to `true` if this instance of Threema Web isn't being
-  hosted on `web.threema.ch`.
-- `PREV_PROTOCOL_LAST_VERSION`: When the Threema Web protocol version changes,
-  this can be set to the last version of Threema Web that supported  the
-  previous protocol version. If set to something different than `null`, a
-  message will be shown to the user if reconnecting fails.
-
-**SaltyRTC (Userconfig)**
-
-- `SALTYRTC_HOST`: Set this to the hostname of the SaltyRTC server that you
-  want to use. If supplied, the substring `{prefix}` will be replaced by the
-  first byte of the initiator's public key, represented as a lowercase
-  hexadecimal value.
-- `SALTYRTC_PORT`: The port of the SaltyRTC server to be used.
-- `SALTYRTC_SERVER_KEY`: The public permanent key of the SaltyRTC server. Set
-  this value to `null` if your server does not provide a public permanent key,
-  or if you don't want to verify it.
-
-**ICE (Userconfig)**
-
-- `ICE_SERVERS`: Configuration object for the WebRTC STUN and ICE servers.
-  Each URL may contain the substring `{prefix}`, which will be replaced by a
-  random byte represented as a lowercase hexadecimal value.
-
-**Push (Userconfig)**
-
-- `PUSH_URL`: The server URL used to deliver push notifications to the app.
-
-**Fonts (Userconfig)**
-
-Note: If you want to use the Lab Grotesque font in your self-hosted instance
-(with SELF_HOSTED=true), you need to obtain a license for it and update the
-font URL below. Otherwise, Threema Web will fall back to Roboto.
-
-- `FONT_CSS_URL`: URL to the Lab Grotesque font.
+In the Docker image, all userconfig variables can be overridden using env
+variables. See [`docs/docker.md`](docs/docker.md) for more information.
 
 
 ## Self Hosting
