@@ -29,4 +29,8 @@ COPY docker/entrypoint.sh /usr/local/bin/
 
 EXPOSE 80
 
+# Set better defaults for production
+ENV VISUALIZE_STATE=false \
+    CONSOLE_LOG_LEVEL=info
+
 CMD ["/bin/bash", "/usr/local/bin/entrypoint.sh"]
