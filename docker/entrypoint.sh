@@ -5,7 +5,7 @@ set -euo pipefail
 #
 # Args: <var> <type>
 #   var: The name of the config variable (e.g. `SALTYRTC_HOST`)
-#   type: One of `string` or `number`
+#   type: One of `string`, `number` or `boolean`
 function patch_var() {
     var=$1
     type=$2
@@ -13,7 +13,7 @@ function patch_var() {
         echo " > Patching $var"
         if [ "$type" = "string" ]; then
             echo "window.UserConfig.$var = '${!var}';" >> userconfig.js
-        elif [ "$type" = "number" ]; then
+        elif [ "$type" = "number" ] || [ "$type" = "boolean" ]; then
             echo "window.UserConfig.$var = ${!var};" >> userconfig.js
         else
             echo "[entrypoint.sh] Error: Invalid type \"$type\""
@@ -31,12 +31,12 @@ if [[ ! -f userconfig.js ]]; then
 fi
 echo '// Overrides by entrypoint.sh' >> userconfig.js
 
+# SaltyRTC
 patch_var "SALTYRTC_HOST" string
 patch_var "SALTYRTC_PORT" number
 patch_var "SALTYRTC_SERVER_KEY" string
-patch_var "PUSH_URL" string
-patch_var "FONT_CSS_URL" string
 
+# ICE
 if [ -n "${ICE_SERVER_URLS:-}" ]; then
     IFS=',' read -ra urls <<< "${ICE_SERVER_URLS}"
     echo " > Patching ICE_SERVERS"
@@ -54,6 +54,26 @@ if [ -n "${ICE_SERVER_URLS:-}" ]; then
     fi
     echo "}];" >> userconfig.js
 fi
+
+# Push
+patch_var "PUSH_URL" string
+
+# Fonts
+patch_var "FONT_CSS_URL" string
+
+# Logging/debugging
+patch_var "LOG_TAG_PADDING" number
+patch_var "CONSOLE_LOG_LEVEL" string
+patch_var "REPORT_LOG_LEVEL" string
+patch_var "REPORT_LOG_LIMIT" number
+patch_var "COMPOSE_AREA_LOG_LEVEL" string
+patch_var "SALTYRTC_LOG_LEVEL" string
+patch_var "TIMER_LOG_LEVEL" string
+patch_var "ARP_LOG_LEVEL" string
+patch_var "ARP_LOG_TRACE" boolean
+patch_var "MSGPACK_LOG_TRACE" boolean
+patch_var "TRANSPORT_LOG_LEVEL" string
+patch_var "VISUALIZE_STATE" boolean
 
 # Add nginx mime type for wasm
 # See https://trac.nginx.org/nginx/ticket/1606
