@@ -21,16 +21,18 @@ mechanisms in your web server.
 
 ## Config Variables
 
+All userconfig variables (as documented in the README) can be overridden with
+env variables. They are all optional, and will fall back to the default values
+used by Threema if not set.
+
 All these config variables are optional, and will fall back to the default
 values used by Threema if not set.
 
-- `SALTYRTC_HOST`: The SaltyRTC signaling server hostname
-- `SALTYRTC_PORT`: The SaltyRTC signaling server port
-- `SALTYRTC_SERVER_KEY`: The SaltyRTC signaling server public key
-- `PUSH_URL`: The server URL used to deliver push notifications to the app
-- `FONT_CSS_URL`: The Lab Grotesque font URL, to be used if you bought your own
-  font license
-- `ICE_SERVER_URLS`: A comma separated list of ICE URLs, prefixed by either
-  `turn:` or `turns:`
-- `ICE_SERVER_USERNAME`: The ICE username
-- `ICE_SERVER_CREDENTIAL`: The ICE password
+*Note:* While most variables hold "simple" values like strings or integers, there
+are some exceptions:
+
+- `ICE_SERVERS`: This configuration object can be configured with the following three env vars:
+  - `ICE_SERVER_URLS`: A comma separated list of ICE URLs, prefixed by either
+    `turn:` or `turns:`
+  - `ICE_SERVER_USERNAME`: The ICE username
+  - `ICE_SERVER_CREDENTIAL`: The ICE password
