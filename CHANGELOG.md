@@ -10,6 +10,23 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.18][v2.3.18] (2021-11-22)
+
+Changes:
+
+* [change] Upgrade KDF for keystore to scrypt ([#1091][i1091])
+* [cange] Extract user configuration into separate `userconfig.js`
+  ([#1094][i1094], [#1098][i1098])
+* [feature] Dockerfile: Allow overriding all userconfig variables
+  ([#1095][i1095], [#1098][i1098])
+
+Note: If you do any postprocessing / patching of the Threema Web configuration
+before or after building, those processes might need to be updated because a
+lot of the config variables have been moved into the userconfig file. This
+should make it much easier to override the variables (compared to a `sed` based
+process that patches the minified JS bundle).
+
+
 ### [v2.3.17][v2.3.17] (2021-10-22)
 
 Changes:
@@ -1111,7 +1128,12 @@ First public release.
 [i1086]: https://github.com/threema-ch/threema-web/issues/1086
 [i1087]: https://github.com/threema-ch/threema-web/issues/1087
 [i1088]: https://github.com/threema-ch/threema-web/issues/1088
+[i1091]: https://github.com/threema-ch/threema-web/issues/1091
+[i1094]: https://github.com/threema-ch/threema-web/issues/1094
+[i1095]: https://github.com/threema-ch/threema-web/issues/1095
+[i1098]: https://github.com/threema-ch/threema-web/issues/1098
 
+[v2.3.18]: https://github.com/threema-ch/threema-web/compare/v2.3.17...v2.3.18
 [v2.3.17]: https://github.com/threema-ch/threema-web/compare/v2.3.16...v2.3.17
 [v2.3.16]: https://github.com/threema-ch/threema-web/compare/v2.3.15...v2.3.16
 [v2.3.15]: https://github.com/threema-ch/threema-web/compare/v2.3.14...v2.3.15
