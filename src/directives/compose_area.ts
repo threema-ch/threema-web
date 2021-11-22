@@ -42,19 +42,19 @@ export default [
     '$mdDialog',
     '$filter',
     '$rootScope',
-    'CONFIG',
-    function(browserService: BrowserService,
-             logService: LogService,
-             stringService: StringService,
-             timeoutService: TimeoutService,
-             receiverService: ReceiverService,
-             settingsService: SettingsService,
-             $timeout: ng.ITimeoutService,
-             $translate: ng.translate.ITranslateService,
-             $mdDialog: ng.material.IDialogService,
-             $filter: ng.IFilterService,
-             $rootScope: ng.IRootScopeService,
-             CONFIG: threema.Config) {
+    function(
+        browserService: BrowserService,
+        logService: LogService,
+        stringService: StringService,
+        timeoutService: TimeoutService,
+        receiverService: ReceiverService,
+        settingsService: SettingsService,
+        $timeout: ng.ITimeoutService,
+        $translate: ng.translate.ITranslateService,
+        $mdDialog: ng.material.IDialogService,
+        $filter: ng.IFilterService,
+        $rootScope: ng.IRootScopeService
+    ) {
         const log = logService.getLogger('ComposeArea-C');
 
         return {
@@ -95,8 +95,12 @@ export default [
                 const fileTrigger = select('i.file-trigger') as JQuery<HTMLElement>;
                 const fileInput = select('input.file-input') as JQuery<HTMLInputElement>;
 
+                // Config
+                // tslint:disable-next-line: no-string-literal
+                const userConfig: threema.UserConfig = window['UserConfig'];
+
                 // Initialize compose area lib
-                const composeArea = ComposeArea.bind_to(composeDiv[0], CONFIG.COMPOSE_AREA_LOG_LEVEL);
+                const composeArea = ComposeArea.bind_to(composeDiv[0], userConfig.COMPOSE_AREA_LOG_LEVEL);
                 if (scope.onInit) {
                     scope.onInit(composeArea);
                 }

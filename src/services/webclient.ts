@@ -356,11 +356,11 @@ export class WebClientService {
         // Logging
         this.log = logService.getLogger('WebClient-S', 'color: #fff; background-color: #0066cc');
         this.arpLog = logService.getLogger(
-            'AppRemoteProtocol', 'color: #fff; background-color: #0099cc', CONFIG.ARP_LOG_LEVEL);
+            'AppRemoteProtocol', 'color: #fff; background-color: #0099cc', this.userConfig.ARP_LOG_LEVEL);
         this.arpLogV = logService.getLogger(
-            'AppRemoteProtocol', 'color: #fff; background-color: #00ace6', CONFIG.ARP_LOG_TRACE ? 'debug' : 'none');
+            'AppRemoteProtocol', 'color: #fff; background-color: #00ace6', this.userConfig.ARP_LOG_TRACE ? 'debug' : 'none');
         this.msgpackLog = logService.getLogger(
-            'MessagePack', 'color: #fff; background-color: #006699', CONFIG.MSGPACK_LOG_TRACE ? 'debug' : 'none');
+            'MessagePack', 'color: #fff; background-color: #006699', this.userConfig.MSGPACK_LOG_TRACE ? 'debug' : 'none');
 
         // State
         this.stateService = stateService;
@@ -514,12 +514,12 @@ export class WebClientService {
         if (this.browserService.supportsWebrtcTask()) {
             // TODO: Remove legacy v0 after a transitional period
             tasks.push(new saltyrtcTaskWebrtc.WebRTCTaskBuilder()
-                .withLoggingLevel(this.config.SALTYRTC_LOG_LEVEL)
+                .withLoggingLevel(this.userConfig.SALTYRTC_LOG_LEVEL)
                 .withVersion('v1')
                 .withHandover(true)
                 .build());
             tasks.push(new saltyrtcTaskWebrtc.WebRTCTaskBuilder()
-                .withLoggingLevel(this.config.SALTYRTC_LOG_LEVEL)
+                .withLoggingLevel(this.userConfig.SALTYRTC_LOG_LEVEL)
                 .withVersion('v0')
                 .withHandover(true)
                 .withMaxChunkLength(this.browserService.getBrowser().isFirefox(false) ? 16384 : 65536)
@@ -527,7 +527,7 @@ export class WebClientService {
         }
 
         // Create Relayed Data task instance
-        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.config.SALTYRTC_LOG_LEVEL === 'debug');
+        this.relayedDataTask = new saltyrtcTaskRelayedData.RelayedDataTask(this.userConfig.SALTYRTC_LOG_LEVEL === 'debug');
         tasks.push(this.relayedDataTask);
 
         // Create new keystore if necessary
@@ -541,7 +541,7 @@ export class WebClientService {
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()
             .connectTo(this.saltyRtcHost, this.userConfig.SALTYRTC_PORT)
-            .withLoggingLevel(this.config.SALTYRTC_LOG_LEVEL)
+            .withLoggingLevel(this.userConfig.SALTYRTC_LOG_LEVEL)
             .withServerKey(this.userConfig.SALTYRTC_SERVER_KEY)
             .withKeyStore(keyStore)
             .usingTasks(tasks)
@@ -762,7 +762,7 @@ export class WebClientService {
         }
         this.arpLog.debug(`Chunk cache pruned, acknowledged: ${result.acknowledged}, left: ${result.left}, size: ` +
             `${size} -> ${this.previousChunkCache.byteLength}`);
-        if (this.config.ARP_LOG_TRACE) {
+        if (this.userConfig.ARP_LOG_TRACE) {
             this.arpLog.debug(`Chunks that require acknowledgement: ${this.previousChunkCache.chunks.length}`);
         }
 
@@ -908,7 +908,7 @@ export class WebClientService {
             // Create peer connection
             this.pcHelper = new PeerConnectionHelper(
                 this.$q, this.$rootScope,
-                this.config, this.logService, this.timeoutService,
+                this.userConfig, this.logService, this.timeoutService,
                 task as saltyrtc.tasks.webrtc.WebRTCTask, iceServers);
 
             // On state changes in the PeerConnectionHelper class, let state service know about it
@@ -1082,7 +1082,7 @@ export class WebClientService {
 
             // Wrap as unbounded, flow-controlled data channel
             this.secureDataChannel = new UnboundedFlowControlledDataChannel(
-                dc, this.logService, this.config.TRANSPORT_LOG_LEVEL);
+                dc, this.logService, this.userConfig.TRANSPORT_LOG_LEVEL);
 
             // Create crypto context
             // Note: We need to apply encrypt-then-chunk for backwards
@@ -2763,7 +2763,7 @@ export class WebClientService {
             this.arpLog.warn('Invalid messages response, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
         }
-        if (this.config.ARP_LOG_TRACE) {
+        if (this.userConfig.ARP_LOG_TRACE) {
             this.logChatMessages(message.type, message.subType, type, id, 'new', data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
@@ -2960,7 +2960,7 @@ export class WebClientService {
             this.arpLog.warn('Invalid messages update, unknown receiver type (' + type + ')');
             return future.reject('invalidResponse');
         }
-        if (this.config.ARP_LOG_TRACE) {
+        if (this.userConfig.ARP_LOG_TRACE) {
             this.logChatMessages(wireMessage.type, wireMessage.subType, type, id, mode, data);
         }
         const receiver: threema.BaseReceiver = {type: type, id: id};
@@ -2996,7 +2996,7 @@ export class WebClientService {
                     if (!this.messages.update(receiver, message)) {
                         const log = `Received message update for unknown message (id ${message.id})`;
                         this.arpLog.error(log);
-                        if (this.config.ARP_LOG_TRACE) {
+                        if (this.userConfig.ARP_LOG_TRACE) {
                             this.messages.addStatusMessage(receiver, 'Warning: ' + log);
                             notify = true;
                         }
@@ -3993,7 +3993,7 @@ export class WebClientService {
      */
     private send(message: threema.WireMessage, retransmit: boolean): void {
         this.arpLog.debug('Sending', message.type + '/' + message.subType, 'message');
-        if (this.config.ARP_LOG_TRACE) {
+        if (this.userConfig.ARP_LOG_TRACE) {
             // Sanitise outgoing message before logging
             this.arpLogV.debug('Outgoing:', message.type, '/', message.subType, new ConfidentialWireMessage(message));
         }
@@ -4006,7 +4006,7 @@ export class WebClientService {
                 {
                     // Send bytes through WebRTC DataChannel
                     const bytes: Uint8Array = this.msgpackEncode(message);
-                    if (this.config.MSGPACK_LOG_TRACE) {
+                    if (this.userConfig.MSGPACK_LOG_TRACE) {
                         this.msgpackLog.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
                     }
                     const box = this.secureDataChannelCrypto.encrypt(bytes);
@@ -4027,7 +4027,7 @@ export class WebClientService {
 
                     // Send bytes through e2e encrypted WebSocket
                     const bytes: Uint8Array = this.msgpackEncode(message);
-                    if (this.config.MSGPACK_LOG_TRACE) {
+                    if (this.userConfig.MSGPACK_LOG_TRACE) {
                         this.msgpackLog.debug('Outgoing message payload: ' + msgpackVisualizer(bytes));
                     }
 
@@ -4146,7 +4146,7 @@ export class WebClientService {
      */
     private handleIncomingMessageBytes(bytes: Uint8Array): void {
         this.arpLog.debug('New incoming message (' + bytes.byteLength + ' bytes)');
-        if (this.config.MSGPACK_LOG_TRACE) {
+        if (this.userConfig.MSGPACK_LOG_TRACE) {
             this.msgpackLog.debug('Incoming message payload: ' + msgpackVisualizer(bytes));
         }
 
@@ -4172,7 +4172,7 @@ export class WebClientService {
         }
 
         // If desired, log message type / subtype
-        if (this.config.ARP_LOG_TRACE) {
+        if (this.userConfig.ARP_LOG_TRACE) {
             // Sanitise incoming message before logging
             // Note: Deep-copy message to prevent issues with JS debugger
             this.arpLogV.debug(`Incoming: ${message.type}/${message.subType}`,

@@ -22,13 +22,13 @@ import LogLevel = threema.LogLevel;
  * Initialises logging and hands out Logger instances.
  */
 export class LogService {
-    private readonly config: threema.Config;
+    private readonly userConfig: threema.UserConfig;
     public readonly memory: MemoryLogger;
     private readonly root: TeeLogger;
 
-    public static $inject = ['CONFIG'];
-    constructor(config: threema.Config) {
-        this.config = config;
+    constructor() {
+        // tslint:disable-next-line: no-string-literal
+        this.userConfig = window['UserConfig'];
 
         // Initialise root logger
         let logger: Logger;
@@ -37,15 +37,15 @@ export class LogService {
         // Initialise console logging
         logger = new ConsoleLogger();
         logger = new UnveilLogger(logger);
-        if (config.CONSOLE_LOG_LEVEL !== 'debug') {
-            logger = new LevelLogger(logger, config.CONSOLE_LOG_LEVEL);
+        if (this.userConfig.CONSOLE_LOG_LEVEL !== 'debug') {
+            logger = new LevelLogger(logger, this.userConfig.CONSOLE_LOG_LEVEL);
         }
         loggers.push(logger);
 
         // Initialise memory logging
-        logger = this.memory = new MemoryLogger(config.REPORT_LOG_LIMIT);
-        if (config.REPORT_LOG_LEVEL !== 'debug') {
-            logger = new LevelLogger(logger, config.REPORT_LOG_LEVEL);
+        logger = this.memory = new MemoryLogger(this.userConfig.REPORT_LOG_LIMIT);
+        if (this.userConfig.REPORT_LOG_LEVEL !== 'debug') {
+            logger = new LevelLogger(logger, this.userConfig.REPORT_LOG_LEVEL);
         }
         loggers.push(logger);
 
@@ -74,7 +74,7 @@ export class LogService {
         }
 
         // Pad the styled tag
-        styledTag = styledTag.padStart(this.config.LOG_TAG_PADDING + styledTag.length - tag.length);
+        styledTag = styledTag.padStart(this.userConfig.LOG_TAG_PADDING + styledTag.length - tag.length);
 
         // Create logger instance
         let logger: Logger;

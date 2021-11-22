@@ -40,7 +40,7 @@ export class StatusController {
     private readonly log: Logger;
 
     // Config
-    private config: threema.Config;
+    private userConfig: threema.UserConfig;
 
     // State variable
     private state = GlobalConnectionState.Error;
@@ -66,11 +66,9 @@ export class StatusController {
 
     public static $inject = [
         '$scope', '$timeout', '$state',
-        'CONFIG',
         'ControllerService', 'StateService', 'LogService', 'TimeoutService', 'WebClientService',
     ];
     constructor($scope, $timeout: ng.ITimeoutService, $state: UiStateService,
-                config: threema.Config,
                 controllerService: ControllerService, stateService: StateService, logService: LogService,
                 timeoutService: TimeoutService, webClientService: WebClientService) {
 
@@ -78,7 +76,8 @@ export class StatusController {
         this.log = logService.getLogger('Status-C', 'color: #000; background-color: #ffff99');
 
         // Config
-        this.config = config;
+        // tslint:disable-next-line: no-string-literal
+        this.userConfig = window['UserConfig'];
 
         // Angular services
         this.$timeout = $timeout;
@@ -113,7 +112,7 @@ export class StatusController {
             `status-task-${this.webClientService.chosenTask}`,
             `status-${this.state}`,
         ];
-        if (this.config.VISUALIZE_STATE) {
+        if (this.userConfig.VISUALIZE_STATE) {
             classes.push(`visualize-state`);
         }
         return classes.join(' ');
