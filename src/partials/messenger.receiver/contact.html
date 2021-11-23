@@ -26,9 +26,6 @@
 					</span>
 				</dd>
 
-				<dt><span translate>messenger.KEY_FINGERPRINT</span></dt>
-				<dd>{{ ctrl.fingerPrint.value || "Loading..." }}</dd>
-
 				<dt><span translate>messenger.NICKNAME</span></dt>
 				<dd ng-if="ctrl.receiver.publicNickname" ng-bind-html="ctrl.receiver.publicNickname | emojify"></dd>
 				<dd ng-if="!ctrl.receiver.publicNickname">-</dd>
@@ -38,6 +35,10 @@
 
 				<dt><span translate>messenger.LAST_NAME</span></dt>
 				<dd>{{ ctrl.receiver.lastName || "-" }}</dd>
+
+				<dt><span translate>messenger.PUBLIC_KEY</span></dt>
+                <dd><pre><code>{{ ctrl.publicKeyGrid }}</code></pre></dd>
+
 			</dl>
 		</md-card-content>
 	</md-card>

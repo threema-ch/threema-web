@@ -30,10 +30,10 @@ import {VersionDialogController} from '../controllers/footer';
 import {TroubleshootingController} from '../controllers/troubleshooting';
 import {bufferToUrl, hasValue, supportsPassive, u8aToHex} from '../helpers';
 import {emojify} from '../helpers/emoji';
+import {publicKeyGrid} from '../helpers/public_key';
 import {ContactService} from '../services/contact';
 import {ControllerService} from '../services/controller';
 import {ControllerModelService} from '../services/controller_model';
-import {FingerPrintService} from '../services/fingerprint';
 import {TrustedKeyStoreService} from '../services/keystore';
 import {LogService} from '../services/log';
 import {MimeService} from '../services/mime';
@@ -1466,14 +1466,13 @@ class ReceiverDetailController {
     private $state: UiStateService;
 
     // Own services
-    private fingerPrintService: FingerPrintService;
     private contactService: ContactService;
     private webClientService: WebClientService;
 
     public receiver: threema.Receiver;
     public me: threema.MeReceiver;
     public title: string;
-    public fingerPrint = { value: null };  // Object, so that data binding works
+    public publicKeyGrid: string = '';
     private showGroups = false;
     private showDistributionLists = false;
     private inGroups: threema.GroupReceiver[] = [];
@@ -1487,16 +1486,15 @@ class ReceiverDetailController {
 
     public static $inject = [
         '$scope', '$stateParams', '$state', '$mdDialog', '$translate',
-        'LogService', 'WebClientService', 'FingerPrintService', 'ContactService', 'ControllerModelService',
+        'LogService', 'WebClientService', 'ContactService', 'ControllerModelService',
     ];
     constructor($scope: ng.IScope, $stateParams, $state: UiStateService,
                 $mdDialog: ng.material.IDialogService, $translate: ng.translate.ITranslateService,
-                logService: LogService, webClientService: WebClientService, fingerPrintService: FingerPrintService,
+                logService: LogService, webClientService: WebClientService,
                 contactService: ContactService, controllerModelService: ControllerModelService) {
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
-        this.fingerPrintService = fingerPrintService;
         this.contactService = contactService;
         this.webClientService = webClientService;
 
@@ -1523,10 +1521,6 @@ class ReceiverDetailController {
 
             this.isWorkReceiver = contactReceiver.identityType === threema.IdentityType.Work;
 
-            this.fingerPrintService
-                .generate(contactReceiver.publicKey)
-                .then(this.setFingerPrint.bind(this));
-
             webClientService.groups.forEach((groupReceiver: threema.GroupReceiver) => {
                 // check if my identity is a member
                 if (groupReceiver.members.indexOf(contactReceiver.id) !== -1) {
@@ -1551,18 +1545,13 @@ class ReceiverDetailController {
         switch (this.receiver.type) {
             case 'me':
                 const meReceiver = this.receiver as threema.MeReceiver;
-                this.fingerPrintService
-                    .generate(meReceiver.publicKey)
-                    .then(this.setFingerPrint.bind(this));
                 this.controllerModel = controllerModelService.me(meReceiver, ControllerModelMode.VIEW);
+                this.publicKeyGrid = publicKeyGrid(new Uint8Array(meReceiver.publicKey));
                 break;
             case 'contact':
                 const contactReceiver = this.receiver as threema.ContactReceiver;
-                this.fingerPrintService
-                    .generate(contactReceiver.publicKey)
-                    .then(this.setFingerPrint.bind(this));
-                this.controllerModel = controllerModelService
-                    .contact(contactReceiver, ControllerModelMode.VIEW);
+                this.controllerModel = controllerModelService.contact(contactReceiver, ControllerModelMode.VIEW);
+                this.publicKeyGrid = publicKeyGrid(new Uint8Array(contactReceiver.publicKey));
                 break;
             case 'group':
                 this.controllerModel = controllerModelService
@@ -1585,17 +1574,6 @@ class ReceiverDetailController {
             this.$state.go('messenger.home');
         });
 
-    }
-
-    /**
-     * Set the fingerprint value and run $digest.
-     *
-     * This may only be called from outside the $digest loop
-     * (e.g. from a plain promise callback).
-     */
-    private setFingerPrint(fingerPrint: string): void {
-        this.fingerPrint.value = fingerPrint;
-        this.$scope.$digest();
     }
 
     public chat(): void {

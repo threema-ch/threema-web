@@ -20,7 +20,6 @@ import {BrowserService} from './services/browser';
 import {ContactService} from './services/contact';
 import {ControllerService} from './services/controller';
 import {ControllerModelService} from './services/controller_model';
-import {FingerPrintService} from './services/fingerprint';
 import {TrustedKeyStoreService} from './services/keystore';
 import {LogService} from './services/log';
 import {MediaboxService} from './services/mediabox';
@@ -48,7 +47,6 @@ angular.module('3ema.services', [])
 .service('BatteryStatusService', BatteryStatusService)
 .service('ContactService', ContactService)
 .service('ControllerModelService', ControllerModelService)
-.service('FingerPrintService', FingerPrintService)
 .service('MessageService', MessageService)
 .service('NotificationService', NotificationService)
 .service('PushService', PushService)

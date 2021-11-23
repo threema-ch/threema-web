@@ -13,11 +13,12 @@
 							contact="ctrl.receiver">
 					</eee-verification-level></dd>
 
-				<dt><span translate>messenger.KEY_FINGERPRINT</span></dt>
-				<dd>{{ ctrl.fingerPrint.value || "Loading..." }}</dd>
-
 				<dt><span translate>messenger.MY_PUBLIC_NICKNAME</span></dt>
 				<dd>{{ ctrl.controllerModel.nickname || "-" }}</dd>
+
+				<dt><span translate>messenger.PUBLIC_KEY</span></dt>
+                <dd><pre><code>{{ ctrl.publicKeyGrid }}</code></pre></dd>
+
 			</dl>
 		</md-card-content>
 	</md-card>
