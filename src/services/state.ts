@@ -266,7 +266,7 @@ export class StateService {
     /**
      * Reset all states.
      */
-    public reset(connectionBuildupState: threema.ConnectionBuildupState = 'new', shouldResetUnreadCount : boolean = false): void {
+    public reset(connectionBuildupState: threema.ConnectionBuildupState = 'new', shouldResetUnreadCount : boolean = true): void {
         this.log.debug('Reset states');
 
         // Reset state
