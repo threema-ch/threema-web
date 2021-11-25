@@ -1347,10 +1347,8 @@ export class WebClientService {
         this.log.debug('Timer stopped');
 
         // Reset states
-        this.stateService.reset(args.connectionBuildupState);
-
-        // Reset the unread count
-        this.resetUnreadCount();
+        const shouldResetUnreadCount = this.chosenTask !== threema.ChosenTask.RelayedData || close
+        this.stateService.reset(args.connectionBuildupState, shouldResetUnreadCount);
 
         // Clear stored data (trusted key, push token, etc) if deleting the session
         if (remove) {
@@ -4271,13 +4269,6 @@ export class WebClientService {
             .get()
             .reduce((a: number, b: threema.Conversation) => a + b.unreadCount, 0);
         this.stateService.unreadCount = totalUnreadCount;
-    }
-
-    /**
-     * Reset the unread count in the window title
-     */
-    private resetUnreadCount(): void {
-        this.stateService.unreadCount = 0;
     }
 
     /**
