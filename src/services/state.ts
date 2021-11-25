@@ -277,7 +277,6 @@ export class StateService {
         this.connectionBuildupState = connectionBuildupState;
         this.progress = 0;
 
-        // iOS devices are regularly disconnected, but this is normal behavior.
         if (shouldResetUnreadCount) {
           this.unreadCount = 0;
         }

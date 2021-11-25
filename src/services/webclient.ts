@@ -1347,6 +1347,9 @@ export class WebClientService {
         this.log.debug('Timer stopped');
 
         // Reset states
+        // iOS devices are regularly disconnected, but this is normal behavior.
+        // We therefore only reset the unread count if we are not using relayedData or are
+        // closing the connection.
         const shouldResetUnreadCount = this.chosenTask !== threema.ChosenTask.RelayedData || close
         this.stateService.reset(args.connectionBuildupState, shouldResetUnreadCount);
 
