@@ -1,6 +1,4 @@
 /**
- * Copyright © 2016-2021 Threema GmbH (https://threema.ch/).
- *
  * This file is part of Threema Web.
  *
  * Threema Web is free software: you can redistribute it and/or modify it
