@@ -930,24 +930,22 @@ class ConversationController {
             return;
         }
 
+        // Ignore our own outgoing messages (those are alway read)
+        if (message.isOutbox) {
+            return;
+        }
+
+        // Ignore messages that are not unread
+        if (!message.unread) {
+            return;
+        }
+
         // Update lastReadMsg
         if (this.lastReadMsg === null || message.sortKey >= this.lastReadMsg.sortKey) {
             this.lastReadMsg = message;
         }
 
         if (!this.msgReadReportPending) {
-            // Don't send a read message for messages that are already read.
-            // (Note: Ignore own messages since those are always read.)
-            if (!message.isOutbox && !message.unread) {
-                return;
-            }
-
-            // Don't send a read message for conversations that have no unread messages.
-            const conversation = this.webClientService.conversations.find(this.receiver);
-            if (conversation !== null && conversation.unreadCount === 0) {
-                return;
-            }
-
             this.msgReadReportPending = true;
             const receiver = angular.copy(this.receiver);
             receiver.type = this.type;
