@@ -10,6 +10,15 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.19][v2.3.19] (2022-01-10)
+
+Changes:
+
+* [bug] Fix logic error in marking messages as read ([#1104][i1104])
+* [change] Reset unread count only when necessary ([#1100][i1100])
+* [change] Update Ukrainian translation
+
+
 ### [v2.3.18][v2.3.18] (2021-11-23)
 
 Changes:
@@ -1136,7 +1145,10 @@ First public release.
 [i1094]: https://github.com/threema-ch/threema-web/issues/1094
 [i1095]: https://github.com/threema-ch/threema-web/issues/1095
 [i1098]: https://github.com/threema-ch/threema-web/issues/1098
+[i1100]: https://github.com/threema-ch/threema-web/pull/1100
+[i1104]: https://github.com/threema-ch/threema-web/pull/1104
 
+[v2.3.19]: https://github.com/threema-ch/threema-web/compare/v2.3.18...v2.3.19
 [v2.3.18]: https://github.com/threema-ch/threema-web/compare/v2.3.17...v2.3.18
 [v2.3.17]: https://github.com/threema-ch/threema-web/compare/v2.3.16...v2.3.17
 [v2.3.16]: https://github.com/threema-ch/threema-web/compare/v2.3.15...v2.3.16
