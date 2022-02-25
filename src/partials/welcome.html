@@ -6,7 +6,9 @@
                 <p><strong translate>common.NOTE</strong> <span translate>welcome.SAFARI</span></p>
             </div>
 
-            <p class="instructions" translate>welcome.PLEASE_SCAN</p>
+            <p class="instructions" translate-attr="{'title:': 'welcome.PLEASE_SCAN_INSTR'}">
+                <span translate>welcome.PLEASE_SCAN</span> <i class="material-icons">info</i>
+            </p>
             <qrcode version="{{ ctrl.qrCode.version }}"
                     id="connecting-code"
                     error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"
