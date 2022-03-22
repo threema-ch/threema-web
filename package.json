@@ -72,7 +72,7 @@
     "node-sass": "^7.0.1",
     "qrcode-generator": "^1.4.4",
     "scrypt-js": "^3.0.1",
-    "sdp": "~2.12.0",
+    "sdp": "~3.0.0",
     "setimmediate": "^1.0.5",
     "ts-events": "^3.4.1",
     "ts-loader": "^9.2.8",
