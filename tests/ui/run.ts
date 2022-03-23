@@ -23,7 +23,6 @@
 
 import { expect } from 'chai';
 import { Builder, By, Key, until, WebDriver, WebElement } from 'selenium-webdriver';
-import * as TermColor from 'term-color';
 
 // Script arguments
 const browser = process.argv[2];
@@ -31,6 +30,16 @@ const filterQuery = process.argv[3];
 
 // Type aliases
 type Testfunc = (driver: WebDriver) => void;
+
+// Colored outout
+function colorize(style: string) {
+    return (val: string) => {
+        return `${style}${val}\x1B[0m`;
+    }
+}
+const red = colorize('\x1B[31m');
+const green = colorize('\x1B[32m');
+const blue = colorize('\x1B[34m');
 
 // Shared selectors
 const composeArea = By.id('composeDiv');
@@ -252,7 +261,7 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
             try {
                 if (filterQuery === undefined || name.toLowerCase().indexOf(filterQuery.toLowerCase()) !== -1) {
                     i++;
-                    console.info(TermColor.blue(`» ${i}: Running test: ${name}`));
+                    console.info(blue(`» ${i}: Running test: ${name}`));
                     await driver.get(TEST_URL);
                     await testfunc(driver);
                     success++;
@@ -260,7 +269,7 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
                     skipped++;
                 }
             } catch (e) {
-                console.error(TermColor.red(`\nTest failed:`));
+                console.error(red(`\nTest failed:`));
                 console.error(e);
                 failed++;
             }
@@ -268,7 +277,7 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
     } finally {
         await driver.quit();
     }
-    const colorFunc = failed > 0 ? TermColor.red : TermColor.green;
+    const colorFunc = failed > 0 ? red : green;
     console.info(colorFunc(`\nSummary: ${i} tests run, ${success} succeeded, ${failed} failed, ${skipped} skipped`));
     process.exit(failed > 0 ? 1 : 0);
 })();
