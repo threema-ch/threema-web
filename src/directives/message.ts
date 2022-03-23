@@ -19,8 +19,8 @@
 
 import {saveAs} from 'file-saver';
 
+import {firefoxWorkaroundPdfDownload} from '../helpers';
 import * as clipboard from '../helpers/clipboard';
-
 import {BrowserInfo} from '../helpers/browser_info';
 import {getSenderIdentity} from '../helpers/messages';
 import {BrowserService} from '../services/browser';
@@ -150,11 +150,10 @@ export default [
                                         case 'video':
                                         case 'file':
                                         case 'audio':
-                                            const options = {type: blobInfo.mimetype};
                                             saveAs(
                                                 new Blob(
                                                     [blobInfo.buffer],
-                                                    options
+                                                    {type: firefoxWorkaroundPdfDownload(blobInfo.mimetype)},
                                                 ),
                                                 blobInfo.filename
                                             );

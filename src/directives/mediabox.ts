@@ -17,7 +17,7 @@
 
 import {saveAs} from 'file-saver';
 
-import {bufferToUrl} from '../helpers';
+import {bufferToUrl, firefoxWorkaroundPdfDownload} from '../helpers';
 import {LogService} from '../services/log';
 import {MediaboxService} from '../services/mediabox';
 
@@ -56,7 +56,7 @@ export default [
                 this.save = () => {
                     saveAs(
                         new Blob([mediaboxService.data], {
-                            type: mediaboxService.mimetype,
+                            type: firefoxWorkaroundPdfDownload(mediaboxService.mimetype),
                         }),
                         mediaboxService.filename || 'image.jpg'
                     );

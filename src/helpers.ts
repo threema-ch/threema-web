@@ -430,3 +430,18 @@ export function replaceWhitespace(text: string): string {
         .replace(/ /g, '&nbsp;')
         .replace(/\t/, '&nbsp;&nbsp;');
 }
+
+/**
+ * Work around nonstandard Firefox behavior when downloading a PDF by changing
+ * a PDF mimetype to application/octet-stream.
+ *
+ * See https://github.com/threema-ch/threema-web/issues/1118
+ */
+export function firefoxWorkaroundPdfDownload(mimetype: string): string {
+    const uagent = window.navigator.userAgent.toLowerCase();
+    const isFirefox = /mozilla/.test(uagent) && /firefox/.test(uagent); // Ugh
+    if (isFirefox && mimetype === 'application/pdf') {
+        return 'application/octet-stream';
+    }
+    return mimetype;
+}
