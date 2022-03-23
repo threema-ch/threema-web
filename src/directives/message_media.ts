@@ -18,7 +18,7 @@
 import {Transition as UiTransition, TransitionService as UiTransitionService} from '@uirouter/angularjs';
 import {saveAs} from 'file-saver';
 
-import {bufferToUrl, hasValue} from '../helpers';
+import {bufferToUrl, firefoxWorkaroundPdfDownload, hasValue} from '../helpers';
 import {LogService} from '../services/log';
 import {MediaboxService} from '../services/mediabox';
 import {MessageService} from '../services/message';
@@ -268,6 +268,7 @@ export default [
                                                 // Hide thumbnail
                                                 this.showThumbnail = false;
                                             } else {
+                                                options.type = firefoxWorkaroundPdfDownload(options.type);
                                                 saveAs(
                                                     new Blob(
                                                         [blobInfo.buffer],
