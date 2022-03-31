@@ -13,7 +13,7 @@
 set -euo pipefail
 
 SUPPORTED_BRANCH_NAMES=("master")
-SUPPORTED_TAG_PATTERNS=("^v2.[2-9][0-9]*.[0-9][0-9]*$")
+SUPPORTED_TAG_PATTERNS=("^v2.3.1[789]$" "^v2.3.2[0-9]$")
 IMAGE_NAME=threema/threema-web
 
 if [ "${1:-}" = "--dry-run" ]; then
@@ -30,7 +30,7 @@ echo "Create temporary directory..."
 mkdir -p builds
 
 echo -e "\nBuilding branches:"
-for branch in $SUPPORTED_BRANCH_NAMES; do
+for branch in "${SUPPORTED_BRANCH_NAMES[@]}"; do
     echo -e "\n- $branch"
     git clone -b $branch . "builds/$branch"
     cd "builds/$branch"
@@ -41,7 +41,7 @@ for branch in $SUPPORTED_BRANCH_NAMES; do
 done
 
 echo -e "\nBuilding tags:"
-for pattern in $SUPPORTED_TAG_PATTERNS; do
+for pattern in "${SUPPORTED_TAG_PATTERNS[@]}"; do
     for tag in $(git tag | grep $pattern); do
         echo -e "\n- $tag"
         git clone -b $tag . "builds/$tag"
@@ -50,9 +50,9 @@ for pattern in $SUPPORTED_TAG_PATTERNS; do
         minortag=$(echo $tag | sed 's/^\(v[0-9]*\.[0-9]*\)\..*$/\1/')
         majortag=$(echo $tag | sed 's/^\(v[0-9]*\)\..*$/\1/')
         $DOCKER build . --no-cache -t $IMAGE_NAME:$tag -t $IMAGE_NAME:$minortag -t $IMAGE_NAME:$majortag
-        $DOCKER push $IMAGE_NAME:$tag
-        $DOCKER push $IMAGE_NAME:$minortag
-        $DOCKER push $IMAGE_NAME:$majortag
+        $DOCKER push "$IMAGE_NAME:$maintag"
+        $DOCKER push "$IMAGE_NAME:$minortag"
+        $DOCKER push "$IMAGE_NAME:$majortag"
         cd ../..
         rm -rf "builds/$tag"
     done
