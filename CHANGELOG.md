@@ -10,6 +10,13 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.3.20][v2.3.20] (2022-03-31)
+
+Changes:
+
+* [bug] Workaround for Firefox non-standard PDF download behavior ([#1120][i1120])
+* [change] Upgrade many dependencies ([#1110][i1110], [#1119][i1119])
+
 ### [v2.3.19][v2.3.19] (2022-01-10)
 
 Changes:
@@ -1147,7 +1154,11 @@ First public release.
 [i1098]: https://github.com/threema-ch/threema-web/issues/1098
 [i1100]: https://github.com/threema-ch/threema-web/pull/1100
 [i1104]: https://github.com/threema-ch/threema-web/pull/1104
+[i1110]: https://github.com/threema-ch/threema-web/pull/1110
+[i1119]: https://github.com/threema-ch/threema-web/pull/1119
+[i1120]: https://github.com/threema-ch/threema-web/pull/1120
 
+[v2.3.20]: https://github.com/threema-ch/threema-web/compare/v2.3.19...v2.3.20
 [v2.3.19]: https://github.com/threema-ch/threema-web/compare/v2.3.18...v2.3.19
 [v2.3.18]: https://github.com/threema-ch/threema-web/compare/v2.3.17...v2.3.18
 [v2.3.17]: https://github.com/threema-ch/threema-web/compare/v2.3.16...v2.3.17
