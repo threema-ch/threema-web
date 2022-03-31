@@ -1,9 +1,9 @@
 [main]
 host = https://www.transifex.com
 
-[threema-web.threema-web]
-file_filter = public/i18n/<lang>.json
+[o:threema-gmbh-1:p:threema-web:r:threema-web]
+file_filter  = public/i18n/<lang>.json
+source_file  = public/i18n/en.json
+source_lang  = en
+type         = KEYVALUEJSON
 minimum_perc = 90
-source_file = public/i18n/en.json
-source_lang = en
-type = KEYVALUEJSON
