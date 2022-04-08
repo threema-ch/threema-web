@@ -27,6 +27,7 @@ module.exports = function(config) {
             // App bundles
             'dist/generated/app_noinit.bundle.js',
             'dist/generated/userconfig.js',
+            'dist/generated/userconfig.overrides.js',
             'dist/generated/unittest_karma.bundle.js',
             {pattern: 'dist/generated/src_*.bundle.js', included: false, serve: true},
             {pattern: 'dist/generated/tests_*.bundle.js', included: false, serve: true},

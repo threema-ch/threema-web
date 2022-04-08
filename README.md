@@ -124,11 +124,12 @@ You can also install a pre-push hook to do the linting:
 
 ## Configuration
 
-The configuration of Threema Web can be tweaked in [`src/config.ts`](src/config.ts)
-and [`src/userconfig.js`](src/userconfig.js). The config variables are defined
-at build time, and the userconfig variables can be modified at runtime. Please
-refer to those files for documentation on what variables exist and how to
-configure them.
+The configuration of Threema Web can be tweaked in
+[`src/config.ts`](src/config.ts) and [`src/userconfig.js`](src/userconfig.js) /
+[`src/userconfig.overrides.js`](src/userconfig.overrides.js). The config
+variables are defined at build time, and the userconfig variables can be
+modified at runtime. Please refer to those files for documentation on what
+variables exist and how to configure them.
 
 In the Docker image, all userconfig variables can be overridden using env
 variables. See [`docs/docker.md`](docs/docker.md) for more information.
