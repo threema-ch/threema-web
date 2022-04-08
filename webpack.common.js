@@ -58,6 +58,11 @@ module.exports = {
           to: path.resolve(__dirname, 'dist', 'generated'),
           info: { minimized: true /* Do not minimize / uglify */ },
         },
+        {
+          from: 'src/userconfig.overrides.js',
+          to: path.resolve(__dirname, 'dist', 'generated'),
+          info: { minimized: true /* Do not minimize / uglify */ },
+        },
       ],
     }),
   ],
