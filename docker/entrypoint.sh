@@ -75,11 +75,5 @@ patch_var "MSGPACK_LOG_TRACE" boolean
 patch_var "TRANSPORT_LOG_LEVEL" string
 patch_var "VISUALIZE_STATE" boolean
 
-# Add nginx mime type for wasm
-# See https://trac.nginx.org/nginx/ticket/1606
-if ! grep -q application/wasm "/etc/nginx/mime.types"; then
-    sed -i '2aapplication/wasm wasm;' /etc/nginx/mime.types
-fi
-
 echo "Starting Threema Web..."
 exec nginx -g 'daemon off;'
