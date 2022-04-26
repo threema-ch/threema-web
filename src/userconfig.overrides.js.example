@@ -1,0 +1,17 @@
+/**
+ * Threema Web configuration overrides.
+ *
+ * ## Example
+ *
+ *     window.UserConfig.SALTYRTC_HOST = 'example.org';
+ *
+ * ## Docker
+ *
+ * If you use the Docker container, the following notes apply:
+ *
+ * - Mount to `/usr/share/nginx/html/userconfig.overrides.js`
+ * - If you use this file for custom configuration, the environment variables are ignored
+ * - With this file, the container can be set to read only. Environment
+ *   variables write options into files and can therefore not be used on read
+ *   only containers.
+ */
