@@ -6,6 +6,7 @@
         "ABORT": "Abort",
         "CONTINUE_ANYWAY": "Continue anyway",
         "PLEASE_SCAN": "Scan this QR code with your Threema app",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
         "PLEASE_UNLOCK": "Session closed",
         "WAITING": "Waiting for connection",
         "RETRY": "Retry",
