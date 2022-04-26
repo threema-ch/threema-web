@@ -92,7 +92,11 @@ export default [
                     this.showQuote = this.message.quote !== undefined;
                     this.showVoipInfo = this.message.type === 'voipStatus';
 
-                    this.access = messageService.getAccess(this.message, this.receiver);
+                    this.access = messageService.getAccess(
+                        this.message,
+                        this.receiver,
+                        webClientService.appCapabilities,
+                    );
 
                     this.ack = (ack: boolean) => {
                         webClientService.ackMessage(this.receiver, this.message, ack);

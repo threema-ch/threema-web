@@ -2277,19 +2277,20 @@ export class WebClientService {
     /**
      * Set or remove (if message is null) a quoted message model.
      */
-    public setQuote(receiver: threema.Receiver, message: threema.Message): void {
+    public setQuote(receiver: threema.Receiver, message: threema.Message | null): void {
         // Remove current quote
         this.drafts.removeQuote(receiver);
 
         if (message !== null) {
             const quoteText = this.messageService.getQuoteText(message);
+            const hasMessageId = message.id != null && message.id.length > 0;
 
-            if (quoteText !== undefined && quoteText !== null) {
+            if (hasValue(quoteText) || (this.appCapabilities.quotesV2 && hasMessageId)) {
                 const quote = {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
-                    text: quoteText,
+                    text: quoteText ?? this.$translate.instant(`messageTypes.${message.type}`),
                 } as threema.Quote;
-                if (message.id != null && message.id.length > 0) {
+                if (hasMessageId) {
                     quote.messageId = message.id;
                 }
 
@@ -3353,12 +3354,14 @@ export class WebClientService {
                 maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
                 maxMessageBodySize: getOrDefault<number>(data.capabilities.maxMessageBodySize, 3500),
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
+                quotesV2: getOrDefault<boolean>(data.capabilities.quotesV2, false),
                 imageFormat: data.capabilities.imageFormat,
                 mdm: data.capabilities.mdm,
             },
         };
 
         this.arpLog.debug('Client device:', this.clientInfo.device);
+        this.arpLog.debug('Client capabilities:', this.clientInfo.capabilities);
 
         // Store push token
         if (this.clientInfo.pushToken) {

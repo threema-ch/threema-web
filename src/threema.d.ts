@@ -763,6 +763,7 @@ declare namespace threema {
         maxFileSize: number;
         maxMessageBodySize: number;
         distributionLists: boolean;
+        quotesV2: boolean;
         imageFormat: ImageFormat;
         mdm?: MdmRestrictions;
     }
