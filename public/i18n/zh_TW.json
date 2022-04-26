@@ -263,8 +263,6 @@
     "error": {
         "NO_CONNECTION": "連線錯誤，請稍後再試。",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» 無法接收這則訊息。",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 無法接收語音訊息。",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 無法接收檔案。",
         "CONTACT_BLOCKED": "您無法將訊息傳送給被封鎖的聯絡人。",
         "CONTACT_INVALID": "您不能向無效的聯絡人傳送訊息。",
         "ERROR_OCCURRED": "發生錯誤",

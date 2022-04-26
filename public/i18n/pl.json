@@ -263,8 +263,6 @@
     "error": {
         "NO_CONNECTION": "Problem z połączeniem, spróbuj ponownie później.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nie może otrzymać tej wiadomości",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nie może otrzymywać wiadomości głosowych.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nie może otrzymywać plików.",
         "CONTACT_BLOCKED": "Nie możesz wysyłać wiadomości do zablokowanego kontaktu.",
         "CONTACT_INVALID": "Nie możesz wysyłać wiadomości do nieprawidłowego kontaktu",
         "ERROR_OCCURRED": "Wystąpił błąd.",

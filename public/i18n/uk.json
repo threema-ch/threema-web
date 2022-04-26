@@ -263,8 +263,6 @@
     "error": {
         "NO_CONNECTION": "Помилка з'єднання. Повторіть спробу пізніше.",
         "MESSAGE_NOT_SUPPORTED": "\"{receiverName}\" не може отримати це повідомлення.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "\"{receiverName}\" не може отримувати голосові повідомлення.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "\"{receiverName}\" не може отримувати файли.",
         "CONTACT_BLOCKED": "Ви не можете надсилати повідомлення заблокованому контакту.",
         "CONTACT_INVALID": "Ви не можете надсилати повідомлення недійсному контакту.",
         "ERROR_OCCURRED": "Сталася помилка.",

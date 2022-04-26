@@ -259,8 +259,6 @@
     "error": {
         "NO_CONNECTION": "接続エラーが発生しました、後でもう一度お試しください。",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}»はこのメッセージを受信できません。",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}»は音声メッセージを受信できません。",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}»はファイルを受信できません。",
         "CONTACT_BLOCKED": "あなたがブロックされた連絡先には、メッセージを送信できません。",
         "CONTACT_INVALID": "無効な連絡先にあなたはメッセージを送信できません。",
         "ERROR_OCCURRED": "エラーが発生しました。",

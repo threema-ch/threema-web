@@ -258,8 +258,6 @@
     "error": {
         "NO_CONNECTION": "Csatlakozási hiba, kérünk próbáld újra.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nem tudja fogadni ezt az üzenetet.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nem tud hangüzenetet fogadni.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nem tud fájlokat fogadni.",
         "CONTACT_BLOCKED": "You cannot send messages to a blocked contact.",
         "CONTACT_INVALID": "Nem tudsz üzenetet küldeni egy érvénytelen személynek",
         "ERROR_OCCURRED": "Hiba történt.",

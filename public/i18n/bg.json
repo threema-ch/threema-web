@@ -258,8 +258,6 @@
     "error": {
         "NO_CONNECTION": "Грешка при връзката, моля, опитайте отново по-късно.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» не може да получи това съобщение.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» не може да получава гласови съобщения.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» не може да получава файлове.",
         "CONTACT_BLOCKED": "Не можете да изпращате съобщения до блокиран контакт.",
         "CONTACT_INVALID": "Не можете да изпращате съобщения до невалиден контакт.",
         "ERROR_OCCURRED": "Възникна грешка.",

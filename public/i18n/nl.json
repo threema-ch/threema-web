@@ -263,8 +263,6 @@
     "error": {
         "NO_CONNECTION": "Verbindingsfout, probeer het later a.u.b. nog eens.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» kan dit bericht niet ontvangen.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kan geen spraakberichten ontvangen.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kan geen bestanden ontvangen.",
         "CONTACT_BLOCKED": "U kunt geen berichten versturen naar een geblokkeerde contactpersoon.",
         "CONTACT_INVALID": "Je kunt geen berichten sturen naar een ongeldig contact.",
         "ERROR_OCCURRED": "Een fout is opgetreden.",

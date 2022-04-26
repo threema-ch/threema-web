@@ -258,8 +258,6 @@
     "error": {
         "NO_CONNECTION": "Chyba pripojenia, prosím, skúste to neskôr.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nemôže prijať túto správu.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemôže prijať hlasovú správu.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemôže prijať súbor.",
         "CONTACT_BLOCKED": "Nemôžete poslať správu zablokovanému kontaktu.",
         "CONTACT_INVALID": "Nemôžete poslať správu neplatnému kontaktu.",
         "ERROR_OCCURRED": "Došlo k chybe.",
