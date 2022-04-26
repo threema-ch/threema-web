@@ -6,15 +6,18 @@
         "ABORT": "Prerušiť",
         "CONTINUE_ANYWAY": "Napriek tomu pokračovať",
         "PLEASE_SCAN": "Oskenujte tento QR kód s Vašou Threema app v mobile",
-        "PLEASE_UNLOCK": "Obnova relácie",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
+        "PLEASE_UNLOCK": "Relácia uzatvorená",
         "WAITING": "Čakám na spojenie",
         "RETRY": "Skúsiť znova",
         "PLEASE_RELOAD": "Prosím obnovte stránku a skúste znova.",
         "RELOAD": "Obnoviť stránku",
         "PASSWORD": "Heslo",
         "CHOOSE_PASSWORD": "Pokiaľ chcete zostať trvalo prihlásený, zadajte prosím <br> heslo pred naskenovaním QR kódu.",
+        "CHOOSE_PASSWORD_AUTOPW": "Ak sa chcete vyhnúť QR skenovaniu po reštarte aplikácie <br>Threema, pred skenovaním prosím zadajte heslo.",
         "UNLOCK_FAILED_TEXT": "Zadali ste zlé heslo, relácia nemôže byť obnovená.",
         "ENTER_PASSWORD": "Pre znovu pripojenie Vašej predchádzajúcej relácie, <br>prosím zadajte heslo:",
+        "CONNECTION_INTERRUPTED": "Pripojeníe k vášmu telefónu bolo prerušené alebo uzatvorené.",
         "PASSWORD_STRENGTH": "Sila hesla",
         "UNLOCK_FAILED_TITLE": "Odomknutie zlyhalo",
         "ALTERNATIVELY": "Alebo,",
@@ -104,6 +107,7 @@
         "NOTE": "Poznámka:"
     },
     "messenger": {
+        "VERSION": "Verzia",
         "VERIFICATION_LEVEL": "Úroveň overenia",
         "VERIFICATION_LEVEL2_EXPLAIN": "Identita tejto osoby bola overená pomocou e-mailu alebo SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Overili ste identitu tejto osoby naskenovaním QR kódu.",
@@ -132,6 +136,7 @@
         "MEMBER_OF_GROUPS": "Členovia týchto skupín",
         "MEMBER_OF_DISTRIBUTION_LISTS": "Člen týchto zoznamov",
         "GROUP_MEMBERS": "Členovia skupiny",
+        "PUBLIC_KEY": "Public Key",
         "GROUP_NAME": "Názov skupiny",
         "GROUP_CREATOR": "Tvorca skupiny",
         "GROUP_ROLE_NORMAL": "Člen",
@@ -151,6 +156,7 @@
         "MSG_HISTORY_MODIFIED": "Upravené",
         "NAVIGATE": "Navigovať",
         "CONFIRM_FILE_SEND": "Poslať «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "Odoslať {fileCount} súbor(y) užívateľovi «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Voliteľný popis",
         "CONFIRM_SEND_AS_FILE": "Odoslať súbor",
         "CONFIRM_DELETE_TITLE": "Odstrániť správu",
@@ -231,7 +237,7 @@
         "file": "Súbor",
         "audio": "Zvuk",
         "location": "Poloha",
-        "ballot": "Hlasovanie",
+        "ballot": "Anketa",
         "gif": "GIF"
     },
     "validationError": {
@@ -307,9 +313,14 @@
             "PLAY_SOUND": "Prehrať zvuk"
         },
         "composearea": {
-            "COMPOSE_AREA": "Compose area",
-            "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
-            "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+            "COMPOSE_AREA": "Tu napíšte svoj text",
+            "SUBMIT_KEY_ENTER": "Stlačením klávesy 'Enter' odošlete správu. Stlačením 'Shift + Enter' pridáte nový riadok.",
+            "SUBMIT_KEY_CTRL_ENTER": "Stlačením klávesy 'Ctrl + Enter' odošlete správu. Stlačením klávesy 'Enter' pridáte nový riadok."
+        },
+        "ui": {
+            "UI": "Užívateľské rozhranie",
+            "DEFAULT": "Predvolené",
+            "MINIMAL": "Minimálne"
         }
     },
     "deviceUnreachable": {

@@ -6,15 +6,18 @@
         "ABORT": "Прекъсване",
         "CONTINUE_ANYWAY": "Продължете все пак",
         "PLEASE_SCAN": "Сканирайте този QR код с приложението си Threema",
-        "PLEASE_UNLOCK": "Сесия за повторно свързване",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
+        "PLEASE_UNLOCK": "Session closed",
         "WAITING": "Изчаква се връзка",
         "RETRY": "Опитай отново",
         "PLEASE_RELOAD": "Моля, презаредете страницата, за да опитате отново.",
         "RELOAD": "Презаредете страницата",
         "PASSWORD": "Парола",
         "CHOOSE_PASSWORD": "Ако искате да останете влезли, моля, въведете <br> парола за сесия преди сканиране.",
+        "CHOOSE_PASSWORD_AUTOPW": "If you want to avoid this QR-scan after restarting<br>Threema, please enter a password before scanning.",
         "UNLOCK_FAILED_TEXT": "Въведохте грешна парола, сесията не може да бъде възстановена.",
         "ENTER_PASSWORD": "За да се свържете отново с предишната си сесия, <br> моля, въведете паролата:",
+        "CONNECTION_INTERRUPTED": "The connection to your phone was interrupted or closed.",
         "PASSWORD_STRENGTH": "Сила на паролата",
         "UNLOCK_FAILED_TITLE": "Отключването не бе успешно",
         "ALTERNATIVELY": "Алтернативно,",
@@ -104,6 +107,7 @@
         "NOTE": "Бележка:"
     },
     "messenger": {
+        "VERSION": "Version",
         "VERIFICATION_LEVEL": "Ниво на проверка",
         "VERIFICATION_LEVEL2_EXPLAIN": "Самоличността на това лице е потвърдена чрез електронна поща или SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Проверили сте самоличността на това лице, като сте сканирали кода му.",
@@ -132,6 +136,7 @@
         "MEMBER_OF_GROUPS": "Член на тези групи",
         "MEMBER_OF_DISTRIBUTION_LISTS": "Член на тези Списъци",
         "GROUP_MEMBERS": "Членове на групата",
+        "PUBLIC_KEY": "Public Key",
         "GROUP_NAME": "Име на групата",
         "GROUP_CREATOR": "Създател на група",
         "GROUP_ROLE_NORMAL": "Член",
@@ -151,6 +156,7 @@
         "MSG_HISTORY_MODIFIED": "Модифицирано",
         "NAVIGATE": "Навигирай",
         "CONFIRM_FILE_SEND": "Да се изпрати ли на «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "Send {fileCount} files to «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Надпис по избор",
         "CONFIRM_SEND_AS_FILE": "Изпращане като съобщение във файл",
         "CONFIRM_DELETE_TITLE": "Изтриване на съобщение",
@@ -310,6 +316,11 @@
             "COMPOSE_AREA": "Област за съставяне",
             "SUBMIT_KEY_ENTER": "'Enter', за да изпратите съобщение. 'Shift+Enter', за да добавите нов ред.",
             "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter', за да изпратите съобщение. 'Enter', за да добавите нов ред."
+        },
+        "ui": {
+            "UI": "User interface",
+            "DEFAULT": "Default",
+            "MINIMAL": "Minimal"
         }
     },
     "deviceUnreachable": {

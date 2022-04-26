@@ -6,6 +6,7 @@
         "ABORT": "中止",
         "CONTINUE_ANYWAY": "仍然繼續",
         "PLEASE_SCAN": "使用 Threema 應用程式掃描QR碼",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
         "PLEASE_UNLOCK": "工作階段已關閉",
         "WAITING": "正在等待連線",
         "RETRY": "重試",

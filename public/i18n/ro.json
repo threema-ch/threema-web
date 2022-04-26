@@ -1,20 +1,23 @@
 {
     "meta": {
-        "DESCRIPTION": "Converseaza de pe desktop cu Threema Web si ai access total la toate conversatiile, contacte si fisiere media"
+        "DESCRIPTION": "Converseaza de pe desktop cu Threema Web si ai access total la toate conversatiile, contacte si fisiere media."
     },
     "welcome": {
         "ABORT": "Renunta",
         "CONTINUE_ANYWAY": "Continua oricum",
         "PLEASE_SCAN": "Scaneaza acest QR code cu aplicatia Threema",
-        "PLEASE_UNLOCK": "Reconectare sesiune",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
+        "PLEASE_UNLOCK": "Sesiune terminata",
         "WAITING": "Astept conexiunea",
         "RETRY": "Reincearca",
         "PLEASE_RELOAD": "Va rugam reincarcati pagina pentru a reincerca",
         "RELOAD": "Reincarcati pagina",
         "PASSWORD": "Parola",
         "CHOOSE_PASSWORD": "Daca doriti sa stati conectat mai mult, va rugam introduceti <br>o parola inainte de a scana",
+        "CHOOSE_PASSWORD_AUTOPW": "Dacă doriti sa evitati această scanare QR dupa repornirea Threema,<br> va rugam sa introduceti o parola inainte de a scana.",
         "UNLOCK_FAILED_TEXT": "Ati introdus o parola gresita, sesiunea nu poate fi restaurata",
         "ENTER_PASSWORD": "Pentru a va reconecta la sesiunea anterioara, <br> va rugam introduceti parola:",
+        "CONNECTION_INTERRUPTED": "Conexiunea la telefonul tau a fost intrerupta sau inchisa",
         "PASSWORD_STRENGTH": "Complexitatea parolei",
         "UNLOCK_FAILED_TITLE": "Deblocare nereusita",
         "ALTERNATIVELY": "Ca alternativa",
@@ -104,6 +107,7 @@
         "NOTE": "Notita:"
     },
     "messenger": {
+        "VERSION": "Versiune",
         "VERIFICATION_LEVEL": "Nivelul de verificare",
         "VERIFICATION_LEVEL2_EXPLAIN": "Identitatea persoanei a fost verificata folosing adresa de e-mail si SMS",
         "VERIFICATION_LEVEL3_EXPLAIN": "Ati certificat identitatea persoanei scanandu-le codul.",
@@ -132,6 +136,7 @@
         "MEMBER_OF_GROUPS": "Membru a acestor grupuri",
         "MEMBER_OF_DISTRIBUTION_LISTS": "Membru a aceste liste",
         "GROUP_MEMBERS": "Membri grupului",
+        "PUBLIC_KEY": "Cheie publica",
         "GROUP_NAME": "Numele grupului",
         "GROUP_CREATOR": "Creatorului grupului",
         "GROUP_ROLE_NORMAL": "Membru",
@@ -151,6 +156,7 @@
         "MSG_HISTORY_MODIFIED": "Modificat",
         "NAVIGATE": "Navigare",
         "CONFIRM_FILE_SEND": "Trimite la «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "Trimite {fileCount} fisiere la «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Subtitrare optionala",
         "CONFIRM_SEND_AS_FILE": "Trimite fisierul ca mesaj",
         "CONFIRM_DELETE_TITLE": "Sterge mesaj",
@@ -231,7 +237,7 @@
         "file": "Fisier",
         "audio": "Audio",
         "location": "Locatie",
-        "ballot": "Vot",
+        "ballot": "Sondaj",
         "gif": "GIF"
     },
     "validationError": {
@@ -310,6 +316,11 @@
             "COMPOSE_AREA": "Zona compunere",
             "SUBMIT_KEY_ENTER": "'Enter' pentru a trimite un mesaj. 'Shift+Enter' pentru a adauga o noua linie",
             "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' pentru a trimite un mesaj. 'Enter' pentru a adauga o noua linie"
+        },
+        "ui": {
+            "UI": "Interfata utilizator",
+            "DEFAULT": "Implicit",
+            "MINIMAL": "Minim"
         }
     },
     "deviceUnreachable": {

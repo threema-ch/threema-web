@@ -6,6 +6,7 @@
         "ABORT": "中止",
         "CONTINUE_ANYWAY": "仍然继续",
         "PLEASE_SCAN": "使用 Threema 客户端扫描二维码",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
         "PLEASE_UNLOCK": "会话已关闭",
         "WAITING": "等待连接",
         "RETRY": "重试",

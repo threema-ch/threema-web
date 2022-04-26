@@ -6,15 +6,18 @@
         "ABORT": "Cancelar",
         "CONTINUE_ANYWAY": "Continuar de todos modos",
         "PLEASE_SCAN": "Escanea este código QR con tu aplicación Threema",
-        "PLEASE_UNLOCK": "Reconectando sesión",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
+        "PLEASE_UNLOCK": "Session closed",
         "WAITING": "Esperando la conexión",
         "RETRY": "Reintentar",
         "PLEASE_RELOAD": "Por favor, vuelve a cargar la página para volver a intentarlo.",
         "RELOAD": "Recargar página",
         "PASSWORD": "Contraseña",
         "CHOOSE_PASSWORD": "Si deseas mantenerte conectado, por favor, introduce<br>una contraseña de sesión antes de escanear.",
+        "CHOOSE_PASSWORD_AUTOPW": "If you want to avoid this QR-scan after restarting<br>Threema, please enter a password before scanning.",
         "UNLOCK_FAILED_TEXT": "Has introducido una contraseña incorrecta, la sesión no se puede restaurar.",
         "ENTER_PASSWORD": "Para volver a conectarte a la sesión anterior, <br>por favor, introduce la contraseña:",
+        "CONNECTION_INTERRUPTED": "The connection to your phone was interrupted or closed.",
         "PASSWORD_STRENGTH": "Seguridad de contraseña",
         "UNLOCK_FAILED_TITLE": "Desbloqueo fallido",
         "ALTERNATIVELY": "Alternativamente,",
@@ -104,6 +107,7 @@
         "NOTE": "Nota: "
     },
     "messenger": {
+        "VERSION": "Version",
         "VERIFICATION_LEVEL": "Nivel de verificacion",
         "VERIFICATION_LEVEL2_EXPLAIN": "La identidad de esta persona ha sido verificada mediante e-mail o SMS.",
         "VERIFICATION_LEVEL3_EXPLAIN": "Has verificado la identidad de esta persona al escanear su código.",
@@ -132,6 +136,7 @@
         "MEMBER_OF_GROUPS": "Miembro de estos grupos",
         "MEMBER_OF_DISTRIBUTION_LISTS": "Miembro de estas listas",
         "GROUP_MEMBERS": "Miembros del grupo",
+        "PUBLIC_KEY": "Public Key",
         "GROUP_NAME": "Nombre del grupo",
         "GROUP_CREATOR": "Creador de grupo",
         "GROUP_ROLE_NORMAL": "Miembro",
@@ -151,6 +156,7 @@
         "MSG_HISTORY_MODIFIED": "Modificado",
         "NAVIGATE": "Navegar",
         "CONFIRM_FILE_SEND": "Enviado a «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "Send {fileCount} files to «{senderName}»?",
         "CONFIRM_FILE_CAPTION": "Título opcional",
         "CONFIRM_SEND_AS_FILE": "Enviar como un archivo",
         "CONFIRM_DELETE_TITLE": "Eliminar mensaje",
@@ -310,6 +316,11 @@
             "COMPOSE_AREA": "Compose area",
             "SUBMIT_KEY_ENTER": "'Enter' to send a message. 'Shift+Enter' to add a new line.",
             "SUBMIT_KEY_CTRL_ENTER": "'Ctrl+Enter' to send a message. 'Enter' to add a new line."
+        },
+        "ui": {
+            "UI": "User interface",
+            "DEFAULT": "Default",
+            "MINIMAL": "Minimal"
         }
     },
     "deviceUnreachable": {
