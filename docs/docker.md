@@ -21,12 +21,11 @@ mechanisms in your web server.
 
 ## Config Variables
 
+### Env Vars
+
 All userconfig variables (as documented in the README) can be overridden with
 env variables. They are all optional, and will fall back to the default values
 used by Threema if not set.
-
-All these config variables are optional, and will fall back to the default
-values used by Threema if not set.
 
 *Note:* While most variables hold "simple" values like strings or integers, there
 are some exceptions:
@@ -36,3 +35,10 @@ are some exceptions:
     `turn:` or `turns:`
   - `ICE_SERVER_USERNAME`: The ICE username
   - `ICE_SERVER_CREDENTIAL`: The ICE password
+
+### Userconfig Overrides
+
+Alternatively, mount a JS file to
+`/usr/share/nginx/html/userconfig.overrides.js`. This file may override config
+variables, see `src/userconfig.overrides.js.example`. If you use a userconfig
+override file, env variables will be ignored.
