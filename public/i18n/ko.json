@@ -259,8 +259,6 @@
     "error": {
         "NO_CONNECTION": "연결 오류, 나중에 다시 시도하십시오.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» 이/가 메세지를 수신할 수 없습니다.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}»  이/가 음성 메세지를 수신할 수 없습니다.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 이/가 파일을 수신할 수 없습니다.",
         "CONTACT_BLOCKED": "차단한 연락처로 메세지를 보낼 수 없습니다.",
         "CONTACT_INVALID": "잘못된 연락처로 메시지를 보낼 수 없습니다.",
         "ERROR_OCCURRED": "오류 발생.",

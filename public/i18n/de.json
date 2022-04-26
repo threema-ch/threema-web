@@ -264,8 +264,6 @@
     "error": {
         "NO_CONNECTION": "Verbindungsfehler, bitte versuchen Sie es später nochmals.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» kann diese Nachricht noch nicht erhalten.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Sprachnachrichten erhalten.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» kann noch keine Dateien erhalten.",
         "CONTACT_BLOCKED": "Sie können keine Nachrichten an blockierte Kontakte senden.",
         "CONTACT_INVALID": "Sie können keine Nachrichten an einen ungültigen Kontakt senden.",
         "ERROR_OCCURRED": "Es ist ein Fehler aufgetreten.",

@@ -259,8 +259,6 @@
     "error": {
         "NO_CONNECTION": "Bağlantı hatası, lütfen daha sonra tekrar deneyiniz.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» bu mesajı alamaz.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» sesli mesajlarını alamaz.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» dosyaları alamaz.",
         "CONTACT_BLOCKED": "Engellenmiş kişiye mesaj gönderemezsiniz.",
         "CONTACT_INVALID": "Geçersiz bir kişiye mesaj gönderemezsiniz.",
         "ERROR_OCCURRED": "Bir hata meydana geldi.",

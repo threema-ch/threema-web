@@ -258,8 +258,6 @@
     "error": {
         "NO_CONNECTION": "Eroare conexiune, va rugam reincercati mai tarziu",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nu a putu primi acest mesaj",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nu poate primi acest mesajul voce",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nu poate primi fisiere",
         "CONTACT_BLOCKED": "Nu poti trimite mesaje catre un contact blocat",
         "CONTACT_INVALID": "Nu poti trimite mesaje catre un contact invalid",
         "ERROR_OCCURRED": "A aparut o eroare",

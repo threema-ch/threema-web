@@ -263,8 +263,6 @@
     "error": {
         "NO_CONNECTION": "Chyba připojení, zkuste to znovu později.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» nemůže tuto zprávu přijmout.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemůže tuto hlasovou zprávu přijmout.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» nemůže přijmout soubory.",
         "CONTACT_BLOCKED": "Nelze odesílat zprávy blokovanému kontaktu.",
         "CONTACT_INVALID": "Nelze odeslat zprávu neplatnému kontaktu.",
         "ERROR_OCCURRED": "Došlo k chybě.",

@@ -263,8 +263,6 @@
     "error": {
         "NO_CONNECTION": "连接错误，请稍后再试。",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» 无法接收到此消息。",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 无法接收音频消息",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» 不支持接收文件。",
         "CONTACT_BLOCKED": "不能向拉黑的联系人发送消息",
         "CONTACT_INVALID": "无法联系该用户",
         "ERROR_OCCURRED": "发生错误",

@@ -259,8 +259,6 @@
     "error": {
         "NO_CONNECTION": "Ошибка подключения, повторите попытку позже.",
         "MESSAGE_NOT_SUPPORTED": "«{receiverName}» не может получить это сообщение.",
-        "AUDIO_MESSAGES_NOT_SUPPORTED": "«{receiverName}» не может получать голосовые сообщения.",
-        "FILE_MESSAGES_NOT_SUPPORTED": "«{receiverName}» не может получать файлы",
         "CONTACT_BLOCKED": "Вы не можете отправлять сообщения заблокированному контакту.",
         "CONTACT_INVALID": "Вы не можете отправлять сообщения неверному контакту.",
         "ERROR_OCCURRED": "Произошла ошибка.",
