@@ -17,7 +17,7 @@ describe('MessageService', function() {
 
     describe ('getAccess', () => {
         let test = (m, r) => {
-            return expect(messageService.getAccess(m, r));
+            return expect(messageService.getAccess(m, r, {quotesV2: false}));
         };
         it('invalid arguments', () => {
             test().toEqual(jasmine.objectContaining({

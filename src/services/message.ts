@@ -15,6 +15,7 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {hasValue} from '../helpers';
 import {isContactReceiver} from '../typeguards';
 import {ReceiverService} from './receiver';
 import {TimeoutService} from './timeout';
@@ -42,19 +43,28 @@ export class MessageService {
     private timeoutDelaySeconds = 30;
 
     public static $inject = ['ReceiverService', 'TimeoutService'];
-    constructor(receiverService: ReceiverService, timeoutService: TimeoutService) {
+    constructor(
+        receiverService: ReceiverService,
+        timeoutService: TimeoutService,
+    ) {
         this.receiverService = receiverService;
         this.timeoutService = timeoutService;
     }
 
-    public getAccess(message: threema.Message, receiver: threema.Receiver): MessageAccess {
+    public getAccess(
+        message: threema.Message,
+        receiver: threema.Receiver,
+        capabilities: threema.AppCapabilities,
+    ): MessageAccess {
         const access = new MessageAccess();
 
         if (message !== undefined) {
-            access.quote = (message.type === 'text')
-                        || (message.type === 'location')
-                        || (message.caption !== undefined && message.caption !== null && message.caption.length > 0);
-            access.copy = access.quote;
+            const allowQuoteV1 = (message.type === 'text')
+                || (message.type === 'location' && message.location?.description !== null && message.location!!.description.length > 0)
+                || (hasValue(message.caption) && message.caption.length > 0)
+            const allowQuoteV2 = capabilities.quotesV2;
+            access.quote = allowQuoteV1 || allowQuoteV2;
+            access.copy = allowQuoteV1;
 
             if (receiver !== undefined && message.temporaryId === undefined) {
                 if (message.isOutbox === false
