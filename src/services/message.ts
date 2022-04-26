@@ -63,7 +63,7 @@ export class MessageService {
                 || (message.type === 'location' && message.location?.description !== null && message.location!!.description.length > 0)
                 || (hasValue(message.caption) && message.caption.length > 0)
             const allowQuoteV2 = capabilities.quotesV2;
-            access.quote = allowQuoteV1 || allowQuoteV2;
+            access.quote = receiver.type !== 'distributionList' && (allowQuoteV1 || allowQuoteV2);
             access.copy = allowQuoteV1;
 
             if (receiver !== undefined && message.temporaryId === undefined) {
