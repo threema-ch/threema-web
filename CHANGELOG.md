@@ -10,12 +10,25 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.4.0][v2.4.0] (2022-04-28)
+
+Changes:
+
+* [feature] Allow quoting all message types, if the app supports it
+  ([#1125][i1125])
+* [feature] Add dedicated userconfig override file, ignore env vars if present
+  ([#1121][i1121], [#1128][i1128])
+* [change] Add scan instructions on welcome page ([#1126][i1126])
+* [change] Upgrade many dependencies ([#1129][i1129])
+
+
 ### [v2.3.20][v2.3.20] (2022-03-31)
 
 Changes:
 
 * [bug] Workaround for Firefox non-standard PDF download behavior ([#1120][i1120])
 * [change] Upgrade many dependencies ([#1110][i1110], [#1119][i1119])
+
 
 ### [v2.3.19][v2.3.19] (2022-01-10)
 
@@ -1157,7 +1170,13 @@ First public release.
 [i1110]: https://github.com/threema-ch/threema-web/pull/1110
 [i1119]: https://github.com/threema-ch/threema-web/pull/1119
 [i1120]: https://github.com/threema-ch/threema-web/pull/1120
+[i1121]: https://github.com/threema-ch/threema-web/pull/1121
+[i1125]: https://github.com/threema-ch/threema-web/pull/1125
+[i1126]: https://github.com/threema-ch/threema-web/pull/1126
+[i1128]: https://github.com/threema-ch/threema-web/pull/1128
+[i1129]: https://github.com/threema-ch/threema-web/pull/1129
 
+[v2.4.0]: https://github.com/threema-ch/threema-web/compare/v2.3.20...v2.4.0
 [v2.3.20]: https://github.com/threema-ch/threema-web/compare/v2.3.19...v2.3.20
 [v2.3.19]: https://github.com/threema-ch/threema-web/compare/v2.3.18...v2.3.19
 [v2.3.18]: https://github.com/threema-ch/threema-web/compare/v2.3.17...v2.3.18
