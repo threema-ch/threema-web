@@ -30,7 +30,7 @@ Whitepaper](https://threema.ch/press-files/2_documentation/cryptography_whitepap
 
 If you find a bug in Threema Web, feel free to [open an
 issue](https://github.com/threema-ch/threema-web/issues/new) on GitHub. Please
-make sure that your bug report hasn't already been filed by using the search
+make sure that your bug report hasn’t already been filed by using the search
 function.
 
 Note that Threema Web is in maintenance mode while we are working on a new
@@ -46,7 +46,7 @@ We may occasionally deploy experimental branches on
 [https://web-beta.threema.ch](https://web-beta.threema.ch) which you are
 encouraged to test. If you encounter problems, please
 [open an issue](https://github.com/threema-ch/threema-web/issues/new) and
-include the experiment's version number (e.g. `1.2.3-experiment-beta4`).
+include the experiment’s version number (e.g. `1.2.3-experiment-beta4`).
 
 
 ## Translating
@@ -159,10 +159,13 @@ signed using the following PGP key:
 
 The public key can be found [on Keybase](https://keybase.io/threema).
 
-If you discover a security issue in the Threema Web, please follow responsible
-disclosure and report it directly to Threema instead of opening an issue on
-Github. You can find the security e-mail as well as the PGP public key at
-https://threema.ch/en/contact.
+If you discover a security issue in Threema, please adhere to the coordinated
+vulnerability disclosure model. To be eligible for a bug bounty, please [file a
+report on GObugfree](https://app.gobugfree.com/programs/threema) (where all the
+details, including the bounty levels, are listed). If you’re not interested in
+the bug bounty program, you can contact us via Threema or by email; for contact
+details, see [threema.ch/contact](https://threema.ch/en/contact) (section
+“Security”).
 
 
 ## License
