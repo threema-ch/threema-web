@@ -50,7 +50,7 @@ export default [
                     } else {
                         // Search for contacts, do not show selected contacts
                         const lowercaseQuery = query.toLowerCase();
-                        const hideInactiveContacts = !webClientService.appConfig.showInactiveIDs;
+                        const hideInactiveAndRevokedContacts = !webClientService.appConfig.showInactiveIDs;
                         const result = this.allContacts
                             .filter((contactReceiver: threema.ContactReceiver) => {
                                 // Ignore already selected contacts
@@ -64,7 +64,10 @@ export default [
                                 }
 
                                 // Potentially ignore inactive contacts
-                                if (hideInactiveContacts && contactReceiver.state === 'INACTIVE') {
+                                if (hideInactiveAndRevokedContacts && contactReceiver.state === 'INACTIVE') {
+                                    return false;
+                                }
+                                if (hideInactiveAndRevokedContacts && contactReceiver.state === 'INVALID') {
                                     return false;
                                 }
 

@@ -390,7 +390,8 @@
         opacity: .5;
     }
 
-    .hide-inactive .contact.inactive {
+    .hide-inactive .contact.inactive,
+    .hide-inactive .contact.invalid {
         display: none;
     }
 }
