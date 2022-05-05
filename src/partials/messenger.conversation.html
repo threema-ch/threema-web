@@ -14,6 +14,7 @@
         </div>
         <div class="header-details" role="heading" aria-level="1" ng-click="ctrl.showReceiver()">
             <div class="conversation-header-details-name"
+                 ng-class="{'text-strike': ctrl.receiver.state === 'INVALID'}"
                  ng-bind-html="ctrl.receiver.displayName | escapeHtml | emojify"></div>
             <div class="conversation-header-details-detail" ng-if="ctrl.type === 'contact'">
             <eee-verification-level ng-if="ctrl.type === 'contact'"

@@ -11,7 +11,7 @@
 				<dd>
 					<span class="complex-values">
 						<span>{{ ctrl.receiver.id }}</span>
-                        <span ng-if="ctrl.receiver.state == 'INVALID'">({{ 'messenger.CONTACT_STATE_INVALID' | translate }}/{{ 'messenger.CONTACT_STATE_REVOKED' | translate }})</span>
+                        <span ng-if="ctrl.receiver.state == 'INVALID'">({{ 'messenger.CONTACT_STATE_REVOKED' | translate }})</span>
                         <span ng-if="ctrl.receiver.state == 'INACTIVE'">({{ 'messenger.CONTACT_STATE_INACTIVE' | translate }})</span>
 						<span class="indicator-icon" ng-if="ctrl.showBlocked()"
 							  translate-attr="{'aria-label': 'messenger.THREEMA_BLOCKED_RECEIVER'}">
