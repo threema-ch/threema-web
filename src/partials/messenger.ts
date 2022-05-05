@@ -1154,9 +1154,9 @@ class NavigationController {
     }
 
     /**
-     * Return true if the app wants to hide inactive contacts.
+     * Return true if the app wants to hide inactive and revoked contacts.
      */
-    public hideInactiveContacts(): boolean {
+    public hideInactiveAndRevokedContacts(): boolean {
         return !this.webClientService.appConfig.showInactiveIDs;
     }
 

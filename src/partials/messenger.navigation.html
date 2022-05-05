@@ -137,11 +137,11 @@
 <!-- Contacts -->
 <div id="navigation-contacts" class="tab-content" ng-if="ctrl.activeTab == 'contacts'" in-view-container>
     <p class="empty" ng-if="ctrl.contacts().length === 0" translate>messenger.NO_CONTACTS_FOUND</p>
-    <ul ng-class="{'hide-inactive': ctrl.hideInactiveContacts()}">
+    <ul ng-class="{'hide-inactive': ctrl.hideInactiveAndRevokedContacts()}">
         <li ng-repeat="contact in ctrl.contacts() | filter:ctrl.searchContact"
             ui-sref="messenger.home.conversation({ type: 'contact', id: contact.id, initParams: null })"
             class="contact"
-            ng-class="{'inactive': contact.state == 'INACTIVE'}">
+            ng-class="{'inactive': contact.state === 'INACTIVE', 'invalid': contact.state === 'INVALID'}">
 
             <section class="avatar-box">
                 <eee-avatar eee-receiver="contact"
