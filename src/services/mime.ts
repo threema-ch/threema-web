@@ -22,7 +22,7 @@ export class MimeService {
 
     private $translate: ng.translate.ITranslateService;
 
-    private imageMimeTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg'];
+    private imageMimeTypes: string[] = ['image/png', 'image/jpg', 'image/jpeg', 'image/gif'];
     private audioMimeTypesAndroid: string[] = ['audio/ogg'];
     private audioMimeTypesIos: string[] = ['audio/m4a', 'audio/x-m4a', 'audio/mp4'];
     private videoMimeTypes: string[] = ['video/mp4', 'video/mpg', 'video/mpeg'];
