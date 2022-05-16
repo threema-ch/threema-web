@@ -10,7 +10,7 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
-### [v2.4.0][v2.4.0] (2022-04-28)
+### [v2.4.0][v2.4.0] Lütispitz (2022-04-28)
 
 Changes:
 
