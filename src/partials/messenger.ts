@@ -107,6 +107,7 @@ export class DeviceUnreachableController extends DialogController {
     private readonly log: Logger;
     public retrying: boolean = false;
     public progress: number = 0;
+    public highPriorityPushes: boolean;
 
     public static readonly $inject = [
         '$rootScope', '$window', '$mdDialog', '$translate',
@@ -129,6 +130,8 @@ export class DeviceUnreachableController extends DialogController {
         this.stateService = stateService;
         this.webClientService = webClientService;
         this.log = logService.getLogger('DeviceUnreachableDialog-C');
+
+        this.highPriorityPushes = !this.webClientService.hasAppleNonVoipPushToken();
 
         this.log.info(`Showing "device unreachable" dialog (canRetry=${this.canRetry})`);
     }

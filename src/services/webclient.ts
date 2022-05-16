@@ -1231,8 +1231,11 @@ export class WebClientService {
     public showDeviceUnreachableDialog(): void {
         // Show device unreachable dialog (if we were already
         // connected and if not already visible).
-        if (this.pushService.isAvailable() && this.$state.includes('messenger')
-            && this.deviceUnreachableDialog === null) {
+        if (
+            this.pushService.isAvailable()
+            && this.$state.includes('messenger')
+            && this.deviceUnreachableDialog === null
+        ) {
             this.deviceUnreachableDialog = this.$mdDialog.show({
                 controller: DeviceUnreachableController,
                 controllerAs: 'ctrl',

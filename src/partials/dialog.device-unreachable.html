@@ -12,7 +12,7 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <h3 translate>deviceUnreachable.UNABLE_TO_CONNECT</h3>
-                <ul class="material-icons-list">
+                <ul class="material-icons-list" ng-if="ctrl.highPriorityPushes">
                     <li class="help">
                         <span translate>troubleshooting.PHONE_ONLINE</span>
                     </li>
@@ -27,6 +27,17 @@
                     </li>
                     <li class="info">
                         <span translate>troubleshooting.PUSH_FAQ</span>
+                    </li>
+                </ul>
+                <ul class="material-icons-list" ng-if="!ctrl.highPriorityPushes">
+                    <li class="help">
+                        <span translate>troubleshooting.APP_STARTED_AND_VISIBLE</span>
+                    </li>
+                    <li class="help">
+                        <span translate>troubleshooting.PHONE_ONLINE</span>
+                    </li>
+                    <li class="help">
+                        <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
                     </li>
                 </ul>
             </div>

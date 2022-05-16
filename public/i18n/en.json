@@ -12,6 +12,7 @@
         "RETRY": "Retry",
         "PLEASE_RELOAD": "Please reload the page to try again.",
         "RELOAD": "Reload page",
+        "RESTART_SESSION": "Restart session",
         "PASSWORD": "Password",
         "CHOOSE_PASSWORD": "If you want to stay logged in, please enter<br>a session password before scanning.",
         "CHOOSE_PASSWORD_AUTOPW": "If you want to avoid this QR-scan after restarting<br>Threema, please enter a password before scanning.",
@@ -63,6 +64,7 @@
     "troubleshooting": {
         "SLOW_CONNECT": "Connecting seems to take longer than usual …",
         "APP_STARTED": "Is the Threema app started?",
+        "APP_STARTED_AND_VISIBLE": "Is the Threema app started and visible?",
         "SESSION_DELETED": "Did you delete this session on your phone?",
         "PHONE_ONLINE": "Is your phone connected to the internet?",
         "UNLOCK_OR_CHARGE": "It may help to unlock your device or connect it to a charger.",
@@ -325,7 +327,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Device Unreachable",
-        "UNABLE_TO_CONNECT": "Unable to connect to your device …",
+        "UNABLE_TO_CONNECT": "Unable to reconnect to your device …",
         "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
     },
     "version": {
