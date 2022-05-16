@@ -302,6 +302,11 @@ export class StatusController {
                 },
             );
         }, startTimeout);
+
+        // If a non-VoIP push token is used, show "device unreachable" dialog immediately
+        if (this.webClientService.hasAppleNonVoipPushToken()) {
+            this.webClientService.showDeviceUnreachableDialog();
+        }
     }
 
     public showMessenger(): boolean {

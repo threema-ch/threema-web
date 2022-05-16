@@ -4363,4 +4363,13 @@ export class WebClientService {
                 `date=${message.date}`);
         }
     }
+
+    /**
+     * Return true if the push token is an APNs non-VoIP push token.
+     */
+    public hasAppleNonVoipPushToken(): boolean {
+        return this.pushTokenType === threema.PushTokenType.Apns
+            && this.pushToken !== null
+            && !this.pushToken.endsWith('.voip');
+    }
 }
