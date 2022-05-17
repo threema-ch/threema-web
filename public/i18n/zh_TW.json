@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "無法取用裝置",
-        "UNABLE_TO_CONNECT": "無法連結至您的裝置...",
-        "DISMISS_WARNING": "請重新啟動瀏覽器以重新建立連線"
+        "UNABLE_TO_CONNECT": "無法連結至您的裝置..."
     },
     "version": {
         "NEW_VERSION": "有可用的新版本",

@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "无法访问设备",
-        "UNABLE_TO_CONNECT": "无法连接到您的设备",
-        "DISMISS_WARNING": "请刷新浏览器重建连接"
+        "UNABLE_TO_CONNECT": "无法连接到您的设备"
     },
     "version": {
         "NEW_VERSION": "有可用的新版本",

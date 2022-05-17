@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Appareil inaccessible",
-        "UNABLE_TO_CONNECT": "Impossible de se connecter à votre appareil",
-        "DISMISS_WARNING": "Pour réétablir la connexion, veuillez recharger la fenêtre de votre navigateur."
+        "UNABLE_TO_CONNECT": "Impossible de se connecter à votre appareil"
     },
     "version": {
         "NEW_VERSION": "Novelle version disponible",

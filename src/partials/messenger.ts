@@ -187,13 +187,9 @@ export class DeviceUnreachableController extends DialogController {
         this.$window.location.reload();
     }
 
-    public closeWithWarning(): void {
+    public close(): void {
         this.log.info('Dialog dismissed by user');
         this.cancel();
-        this.$mdDialog.show(this.$mdDialog.alert()
-            .title(this.$translate.instant('common.WARNING'))
-            .textContent(this.$translate.instant('deviceUnreachable.DISMISS_WARNING'))
-            .ok(this.$translate.instant('common.OK')));
     }
 }
 

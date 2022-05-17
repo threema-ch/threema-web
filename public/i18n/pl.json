@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Urządzenie nieosiągalne",
-        "UNABLE_TO_CONNECT": "Nie można połączyć się z twoim urządzeniem ...",
-        "DISMISS_WARNING": "Aby ponowić połączenie, odśwież okno przeglądarki."
+        "UNABLE_TO_CONNECT": "Nie można połączyć się z twoim urządzeniem ..."
     },
     "version": {
         "NEW_VERSION": "Dostępna nowa wersja",

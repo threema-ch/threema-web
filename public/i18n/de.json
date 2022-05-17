@@ -327,8 +327,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Gerät nicht erreichbar",
-        "UNABLE_TO_CONNECT": "Verbindung zum Gerät fehlgeschlagen …",
-        "DISMISS_WARNING": "Um die Verbindung wiederherzustellen, laden Sie diese Seite bitte neu."
+        "UNABLE_TO_CONNECT": "Verbindung zum Gerät fehlgeschlagen …"
     },
     "version": {
         "NEW_VERSION": "Neue Version verfügbar",

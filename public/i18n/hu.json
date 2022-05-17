@@ -314,8 +314,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Az eszköz nem érhető el",
-        "UNABLE_TO_CONNECT": "Eszközhöz való kapcsolódás sikertelen ...",
-        "DISMISS_WARNING": "A kapcsolat helyreállításához frissítsd a jelenlegi oldalat."
+        "UNABLE_TO_CONNECT": "Eszközhöz való kapcsolódás sikertelen ..."
     },
     "version": {
         "NEW_VERSION": "Új verzió elérhető",

@@ -314,8 +314,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Device Unreachable",
-        "UNABLE_TO_CONNECT": "Unable to connect to your device …",
-        "DISMISS_WARNING": "To re-establish the connection, please reload your browser window."
+        "UNABLE_TO_CONNECT": "Unable to connect to your device …"
     },
     "version": {
         "NEW_VERSION": "New Version Available",
