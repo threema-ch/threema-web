@@ -34,6 +34,7 @@
         "CONNECTING": "Connecting",
         "WAITING_FOR_PUSH": "Waiting for<br>app wakeup …",
         "CONNECTING_TO_APP": "Connection to app is<br>being established …",
+        "WAITING_FOR_APP": "Waiting for Threema app<br>to be started on your phone …",
         "LOADING_INITIAL_DATA": "Loading initial data …",
         "MANUAL_START": "Please start your session",
         "MANUAL_START_TEXT1": "Push service is not available. Are Google Play Services installed on your mobile device?",
@@ -63,6 +64,7 @@
     },
     "troubleshooting": {
         "SLOW_CONNECT": "Connecting seems to take longer than usual …",
+        "PLEASE_START_APP": "Please start the Threema app",
         "APP_STARTED": "Is the Threema app started?",
         "APP_STARTED_AND_VISIBLE": "Is the Threema app started and visible?",
         "SESSION_DELETED": "Did you delete this session on your phone?",

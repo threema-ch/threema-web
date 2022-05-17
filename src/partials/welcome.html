@@ -79,9 +79,12 @@
                 <div class="info" aria-live="polite" ng-aria-disable>
                     <p class="percentage">{{ ctrl.progress }}%</p>
                     <p ng-if="ctrl.state === 'push'" translate>welcome.WAITING_FOR_PUSH</p>
-                    <p ng-if="ctrl.state === 'peer_handshake'" translate>welcome.CONNECTING_TO_APP</p>
+                    <p ng-if="ctrl.state === 'peer_handshake' && ctrl.highPriorityPushes" translate>welcome.CONNECTING_TO_APP</p>
+                    <p ng-if="ctrl.state === 'peer_handshake' && !ctrl.highPriorityPushes" translate>welcome.WAITING_FOR_APP</p>
                     <p ng-if="ctrl.state === 'loading' || ctrl.state === 'done'" translate>welcome.LOADING_INITIAL_DATA</p>
-                    <div class="troubleshoot" ng-if="ctrl.slowConnect">
+
+                    <!-- Troubleshooting: High-priority pushes (FCM & APNs VoIP) -->
+                    <div class="troubleshoot" ng-if="ctrl.slowConnect && ctrl.highPriorityPushes">
                         <h3 translate>troubleshooting.SLOW_CONNECT</h3>
                         <ul class="material-icons-list">
                             <li class="help">
@@ -113,7 +116,32 @@
                            <span translate id="aria-label-forget">welcome.FORGET_SESSION_BTN</span>
                         </md-button>
                         <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
-                            <i class="material-icons">refresh</i> <span translate id="aria-label-reload">welcome.RELOAD</span>
+                            <i class="material-icons">refresh</i> <span translate id="aria-label-reload">welcome.RESTART_SESSION</span>
+                        </md-button>
+                    </div>
+
+                    <!-- Troubleshooting: Non high-priority pushes (APNs Non-VoIP) -->
+                    <div class="troubleshoot" ng-if="ctrl.slowConnect && !ctrl.highPriorityPushes">
+                        <h3 translate>troubleshooting.SLOW_CONNECT</h3>
+                        <ul class="material-icons-list">
+                            <li ng-if="ctrl.state === 'push'" class="help">
+                                <span translate>troubleshooting.APP_STARTED_AND_VISIBLE</span>
+                            </li>
+                            <li class="help">
+                                <span translate>troubleshooting.PHONE_ONLINE</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'" class="help">
+                                <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'" class="help">
+                                <span translate>troubleshooting.SESSION_DELETED</span>
+                            </li>
+                        </ul>
+                        <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.deleteSession()" ng-if="ctrl.state === 'push'" aria-labelledby="aria-label-forget">
+                           <span translate id="aria-label-forget">welcome.FORGET_SESSION_BTN</span>
+                        </md-button>
+                        <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
+                            <i class="material-icons">refresh</i> <span translate id="aria-label-reload">welcome.RESTART_SESSION</span>
                         </md-button>
                     </div>
                 </div>
@@ -149,7 +177,7 @@
             </p>
             <br>
             <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
-                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+                <i class="material-icons">refresh</i> <span translate>welcome.RESTART_SESSION</span>
             </md-button>
         </div>
 
@@ -160,7 +188,7 @@
             </p>
             <br>
             <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
-                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+                <i class="material-icons">refresh</i> <span translate>welcome.RESTART_SESSION</span>
             </md-button>
         </div>
 
