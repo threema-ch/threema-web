@@ -112,6 +112,9 @@ export class StatusController {
             `status-task-${this.webClientService.chosenTask}`,
             `status-${this.state}`,
         ];
+        if (this.webClientService.hasAppleNonVoipPushToken()) {
+            classes.push(`apns-non-voip`);
+        }
         if (this.userConfig.VISUALIZE_STATE) {
             classes.push(`visualize-state`);
         }
@@ -328,8 +331,8 @@ export class StatusController {
                 break;
             case GlobalConnectionState.Warning:
                 const isRelayedData = this.webClientService.chosenTask === threema.ChosenTask.RelayedData;
-                if (isRelayedData) {
-                    // iOS devices are regularly disconnected, but this is normal behavior.
+                if (isRelayedData && !this.webClientService.hasAppleNonVoipPushToken()) {
+                    // iOS devices with VoIP pushes are regularly disconnected, but this is normal behavior.
                     return 'favicon-32x32.png';
                 } else {
                     return 'favicon-32x32-warning.png';

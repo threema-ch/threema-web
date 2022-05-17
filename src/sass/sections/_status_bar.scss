@@ -86,7 +86,7 @@ body {
 
 // Use green warning-color for the status bar when using
 // the relayed data task (because connection loss on iOS is expected).
-.status-task-relayed-data {
+.status-task-relayed-data:not(.apns-non-voip) {
     &.status-warning #status-bar {
         background-color: $status-ok;
     }
