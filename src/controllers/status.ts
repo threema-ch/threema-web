@@ -141,7 +141,7 @@ export class StatusController {
                     this.scheduleStatusBar();
                 }
                 this.webClientService.clearIsTypingFlags();
-                if (isRelayedData) {
+                if (isRelayedData && oldValue !== 'error') {
                     this.reconnectIos();
                 }
                 break;
@@ -149,7 +149,7 @@ export class StatusController {
                 if (isWebrtc) {
                     this.reconnectAndroid();
                 }
-                if (this.stateService.attempt === 0 && isRelayedData) {
+                if (isRelayedData && this.stateService.attempt === 0) {
                     this.reconnectIos();
                 }
                 break;
