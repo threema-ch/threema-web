@@ -71,6 +71,7 @@
         "PHONE_ONLINE": "Is your phone connected to the internet?",
         "UNLOCK_OR_CHARGE": "It may help to unlock your device or connect it to a charger.",
         "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
+        "PUSH_FAQ_IOS_FOREGROUND": "For more information about Threema Web on iOS, see <a href=\"{faqUrl}\">this FAQ entry</a>.",
         "WEBCLIENT_ENABLED": "Is Threema Desktop/Web enabled in the Threema app?",
         "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
         "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?",
