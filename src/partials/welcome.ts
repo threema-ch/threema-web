@@ -81,7 +81,6 @@ class WelcomeController {
     private browser: BrowserInfo;
     private browserWarningShown: boolean = false;
     private inMemorySession: InMemorySession = new InMemorySession();
-    public highPriorityPushes: boolean;
 
     public static $inject = [
         '$scope', '$state', '$window', '$mdDialog', '$translate',
@@ -198,9 +197,6 @@ class WelcomeController {
                 });
             }
         }
-
-        // Determine push type
-        this.highPriorityPushes = !this.webClientService.hasAppleNonVoipPushToken();
 
         // Clear cache
         this.webClientService.clearCache();
@@ -729,6 +725,10 @@ class WelcomeController {
      */
     public reload() {
         this.$window.location.reload();
+    }
+
+    public hasAppleNonVoipPushToken() {
+        return this.webClientService.hasAppleNonVoipPushToken();
     }
 }
 
