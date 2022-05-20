@@ -112,6 +112,9 @@ export class StatusController {
             `status-task-${this.webClientService.chosenTask}`,
             `status-${this.state}`,
         ];
+        if (this.webClientService.hasAppleNonVoipPushToken()) {
+            classes.push(`apns-non-voip`);
+        }
         if (this.userConfig.VISUALIZE_STATE) {
             classes.push(`visualize-state`);
         }
@@ -141,7 +144,7 @@ export class StatusController {
                     this.scheduleStatusBar();
                 }
                 this.webClientService.clearIsTypingFlags();
-                if (isRelayedData) {
+                if (isRelayedData && oldValue !== 'error') {
                     this.reconnectIos();
                 }
                 break;
@@ -149,7 +152,7 @@ export class StatusController {
                 if (isWebrtc) {
                     this.reconnectAndroid();
                 }
-                if (this.stateService.attempt === 0 && isRelayedData) {
+                if (isRelayedData && this.stateService.attempt === 0) {
                     this.reconnectIos();
                 }
                 break;
@@ -302,6 +305,11 @@ export class StatusController {
                 },
             );
         }, startTimeout);
+
+        // If a non-VoIP push token is used, show "device unreachable" dialog immediately
+        if (this.webClientService.hasAppleNonVoipPushToken()) {
+            this.webClientService.showDeviceUnreachableDialog();
+        }
     }
 
     public showMessenger(): boolean {
@@ -323,8 +331,8 @@ export class StatusController {
                 break;
             case GlobalConnectionState.Warning:
                 const isRelayedData = this.webClientService.chosenTask === threema.ChosenTask.RelayedData;
-                if (isRelayedData) {
-                    // iOS devices are regularly disconnected, but this is normal behavior.
+                if (isRelayedData && !this.webClientService.hasAppleNonVoipPushToken()) {
+                    // iOS devices with VoIP pushes are regularly disconnected, but this is normal behavior.
                     return 'favicon-32x32.png';
                 } else {
                     return 'favicon-32x32-warning.png';

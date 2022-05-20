@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Apparaat onbereikbaar",
-        "UNABLE_TO_CONNECT": "Kan geen verbinding maken met uw apparaat ...",
-        "DISMISS_WARNING": "Laad a.u.b. uw browservenster opnieuw om de verbinding te herstellen."
+        "UNABLE_TO_CONNECT": "Kan geen verbinding maken met uw apparaat ..."
     },
     "version": {
         "NEW_VERSION": "Nieuwe versie beschikbaar",

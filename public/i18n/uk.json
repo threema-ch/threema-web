@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Пристрій недоступний",
-        "UNABLE_TO_CONNECT": "Не вдається підключитися до пристрою…",
-        "DISMISS_WARNING": "Щоб відновити з'єднання, перезавантажте сторінку."
+        "UNABLE_TO_CONNECT": "Не вдається підключитися до пристрою…"
     },
     "version": {
         "NEW_VERSION": "Доступна нова версія",

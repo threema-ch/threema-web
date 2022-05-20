@@ -12,6 +12,7 @@
         "RETRY": "Erneut versuchen",
         "PLEASE_RELOAD": "Bitte laden Sie die Seite neu.",
         "RELOAD": "Seite neu laden",
+        "RESTART_SESSION": "Sitzung neu starten",
         "PASSWORD": "Passwort",
         "CHOOSE_PASSWORD": "Falls Sie die Sitzung speichern möchten,<br>legen Sie vor dem Scannen ein Passwort fest.",
         "CHOOSE_PASSWORD_AUTOPW": "Wenn Sie diesen QR-Scan nach einem Neustart von<br>Threema vermeiden möchten, legen Sie<br>vor dem Scannen ein Passwort fest.",
@@ -63,6 +64,7 @@
     "troubleshooting": {
         "SLOW_CONNECT": "Verbindungsaufbau scheint länger zu dauern<br>als normal …",
         "APP_STARTED": "Ist die Threema-App gestartet?",
+        "APP_STARTED_AND_VISIBLE": "Ist die Threema-App gestartet und im Vordergrund?",
         "SESSION_DELETED": "Wurde diese Sitzung in der Threema-App gelöscht?",
         "PHONE_ONLINE": "Ist Ihr Mobilgerät mit dem Internet verbunden?",
         "UNLOCK_OR_CHARGE": "Es kann hilfreich sein, das Gerät zu entsperren oder an ein Ladegerät anzuschliessen.",
@@ -325,8 +327,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Gerät nicht erreichbar",
-        "UNABLE_TO_CONNECT": "Verbindung zum Gerät fehlgeschlagen …",
-        "DISMISS_WARNING": "Um die Verbindung wiederherzustellen, laden Sie diese Seite bitte neu."
+        "UNABLE_TO_CONNECT": "Verbindung zum Gerät fehlgeschlagen …"
     },
     "version": {
         "NEW_VERSION": "Neue Version verfügbar",

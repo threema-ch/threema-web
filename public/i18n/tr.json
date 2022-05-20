@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Cihaza Erişilemiyor",
-        "UNABLE_TO_CONNECT": "Cihazınıza bağlanılamıyor...",
-        "DISMISS_WARNING": "Bağlantıyı yeniden kurmak için lütfen sekmeyi yenileyin."
+        "UNABLE_TO_CONNECT": "Cihazınıza bağlanılamıyor..."
     },
     "version": {
         "NEW_VERSION": "Yeni sürüm mevcut",

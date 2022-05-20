@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Dispozitiv negasit",
-        "UNABLE_TO_CONNECT": "Nu se poate conecta la echipamentul dumneavoastra ...",
-        "DISMISS_WARNING": "Reincarcati fereastra din browser pentru a restabili conexiunea"
+        "UNABLE_TO_CONNECT": "Nu se poate conecta la echipamentul dumneavoastra ..."
     },
     "version": {
         "NEW_VERSION": "O noua versiune disponibila",

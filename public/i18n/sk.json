@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "Zariadenie nedostupné",
-        "UNABLE_TO_CONNECT": "Nie je možné pripojiť sa k Vašemu zariadeniu.",
-        "DISMISS_WARNING": "Pre obnovenie pripojenia, prosím obnovte stránku"
+        "UNABLE_TO_CONNECT": "Nie je možné pripojiť sa k Vašemu zariadeniu."
     },
     "version": {
         "NEW_VERSION": "Je k dispozícii nová verzia",

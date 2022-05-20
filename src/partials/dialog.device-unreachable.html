@@ -4,15 +4,15 @@
             <div class="md-toolbar-tools">
                 <h2 translate>deviceUnreachable.DEVICE_UNREACHABLE</h2>
                 <span flex></span>
-                <md-button class="button-small" ng-click="ctrl.closeWithWarning()">
+                <md-button class="button-small" ng-click="ctrl.close()">
                     <i class="material-icons">close</i>
                 </md-button>
             </div>
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <h3 translate>deviceUnreachable.UNABLE_TO_CONNECT</h3>
-                <ul class="material-icons-list">
+                <h3 translate style="margin-bottom: 12px;">deviceUnreachable.UNABLE_TO_CONNECT</h3>
+                <ul class="material-icons-list" ng-if="ctrl.highPriorityPushes">
                     <li class="help">
                         <span translate>troubleshooting.PHONE_ONLINE</span>
                     </li>
@@ -29,12 +29,26 @@
                         <span translate>troubleshooting.PUSH_FAQ</span>
                     </li>
                 </ul>
+                <ul class="material-icons-list" ng-if="!ctrl.highPriorityPushes">
+                    <li class="help">
+                        <span translate>troubleshooting.APP_STARTED_AND_VISIBLE</span>
+                    </li>
+                    <li class="help">
+                        <span translate>troubleshooting.PHONE_ONLINE</span>
+                    </li>
+                    <li class="help">
+                        <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
+                    </li>
+                    <li class="info">
+                        <span translate translate-values="{'faqUrl': 'https://threema.ch/en/faq/web_ios_foreground'}">troubleshooting.PUSH_FAQ_IOS_FOREGROUND</span>
+                    </li>
+                </ul>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
             <span flex></span>
             <md-button role="button" class="md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
-                <span translate id="aria-label-reload">welcome.RELOAD</span>
+                <span translate id="aria-label-reload">welcome.RESTART_SESSION</span>
             </md-button>
             <md-button ng-if="ctrl.canRetry" role="button" class="md-primary reload-btn circular-progress-button" ng-click="ctrl.retry()" ng-disabled="ctrl.retrying" aria-labelledby="aria-label-retry">
                 <md-progress-circular ng-if="ctrl.retrying" md-mode="determinate" md-diameter="20" value="{{ctrl.progress}}"></md-progress-circular>

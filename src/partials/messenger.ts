@@ -107,6 +107,7 @@ export class DeviceUnreachableController extends DialogController {
     private readonly log: Logger;
     public retrying: boolean = false;
     public progress: number = 0;
+    public highPriorityPushes: boolean;
 
     public static readonly $inject = [
         '$rootScope', '$window', '$mdDialog', '$translate',
@@ -129,6 +130,8 @@ export class DeviceUnreachableController extends DialogController {
         this.stateService = stateService;
         this.webClientService = webClientService;
         this.log = logService.getLogger('DeviceUnreachableDialog-C');
+
+        this.highPriorityPushes = !this.webClientService.hasAppleNonVoipPushToken();
 
         this.log.info(`Showing "device unreachable" dialog (canRetry=${this.canRetry})`);
     }
@@ -184,13 +187,9 @@ export class DeviceUnreachableController extends DialogController {
         this.$window.location.reload();
     }
 
-    public closeWithWarning(): void {
+    public close(): void {
         this.log.info('Dialog dismissed by user');
         this.cancel();
-        this.$mdDialog.show(this.$mdDialog.alert()
-            .title(this.$translate.instant('common.WARNING'))
-            .textContent(this.$translate.instant('deviceUnreachable.DISMISS_WARNING'))
-            .ok(this.$translate.instant('common.OK')));
     }
 }
 

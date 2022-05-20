@@ -248,7 +248,7 @@ export class WebClientService {
 
     // Push
     private pushToken: string = null;
-    private pushTokenType: threema.PushTokenType = null;
+    public pushTokenType: threema.PushTokenType = null;
     private pushSession: PushSession | null = null;
     private readonly pushSessionConfig: PushSessionConfig;
     private readonly pushSessionExpectedPeriodMaxMs: number;
@@ -1231,8 +1231,11 @@ export class WebClientService {
     public showDeviceUnreachableDialog(): void {
         // Show device unreachable dialog (if we were already
         // connected and if not already visible).
-        if (this.pushService.isAvailable() && this.$state.includes('messenger')
-            && this.deviceUnreachableDialog === null) {
+        if (
+            this.pushService.isAvailable()
+            && this.$state.includes('messenger')
+            && this.deviceUnreachableDialog === null
+        ) {
             this.deviceUnreachableDialog = this.$mdDialog.show({
                 controller: DeviceUnreachableController,
                 controllerAs: 'ctrl',
@@ -4362,5 +4365,14 @@ export class WebClientService {
                 `state=${message.state !== undefined ? message.state : '?'}, is-status=${message.isStatus}, ` +
                 `date=${message.date}`);
         }
+    }
+
+    /**
+     * Return true if the push token is an APNs non-VoIP push token.
+     */
+    public hasAppleNonVoipPushToken(): boolean {
+        return this.pushTokenType === threema.PushTokenType.Apns
+            && this.pushToken !== null
+            && !this.pushToken.endsWith('.voip');
     }
 }

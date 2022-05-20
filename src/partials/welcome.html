@@ -72,18 +72,25 @@
         </div>
 
         <div ng-if="ctrl.showLoadingIndicator">
-            <h2 class="instructions" translate>welcome.CONNECTING</h2>
+            <h2 class="instructions" translate ng-if="ctrl.state !== 'push' || !ctrl.hasAppleNonVoipPushToken()">welcome.CONNECTING</h2>
+            <h2 class="instructions" translate ng-if="ctrl.state === 'push' && ctrl.hasAppleNonVoipPushToken()">welcome.PLEASE_START_APP</h2>
             <div class="loading">
                 <md-progress-circular md-mode="determinate" value="{{ ctrl.progress }}" md-diameter="250" ng-aria-disable>
                 </md-progress-circular>
                 <div class="info" aria-live="polite" ng-aria-disable>
                     <p class="percentage">{{ ctrl.progress }}%</p>
-                    <p ng-if="ctrl.state === 'push'" translate>welcome.WAITING_FOR_PUSH</p>
+                    <p ng-if="ctrl.state === 'push' && !ctrl.hasAppleNonVoipPushToken()" translate>welcome.WAITING_FOR_PUSH</p>
+                    <p ng-if="ctrl.state === 'push' && ctrl.hasAppleNonVoipPushToken()" translate>welcome.WAITING_FOR_APP</p>
                     <p ng-if="ctrl.state === 'peer_handshake'" translate>welcome.CONNECTING_TO_APP</p>
                     <p ng-if="ctrl.state === 'loading' || ctrl.state === 'done'" translate>welcome.LOADING_INITIAL_DATA</p>
-                    <div class="troubleshoot" ng-if="ctrl.slowConnect">
+
+                    <!-- Troubleshooting: High-priority pushes (FCM & APNs VoIP) -->
+                    <div class="troubleshoot" ng-if="ctrl.slowConnect && !ctrl.hasAppleNonVoipPushToken()">
                         <h3 translate>troubleshooting.SLOW_CONNECT</h3>
                         <ul class="material-icons-list">
+                            <li ng-if="ctrl.state === 'push' && ctrl.isApnsPushToken()" class="help">
+                                <span translate>troubleshooting.IOS_48</span>
+                            </li>
                             <li class="help">
                                 <span translate>troubleshooting.PHONE_ONLINE</span>
                             </li>
@@ -113,7 +120,35 @@
                            <span translate id="aria-label-forget">welcome.FORGET_SESSION_BTN</span>
                         </md-button>
                         <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
-                            <i class="material-icons">refresh</i> <span translate id="aria-label-reload">welcome.RELOAD</span>
+                            <i class="material-icons">refresh</i> <span translate id="aria-label-reload">welcome.RESTART_SESSION</span>
+                        </md-button>
+                    </div>
+
+                    <!-- Troubleshooting: Non high-priority pushes (APNs Non-VoIP) -->
+                    <div class="troubleshoot" ng-if="ctrl.slowConnect && ctrl.hasAppleNonVoipPushToken()">
+                        <h3 translate>troubleshooting.SLOW_CONNECT</h3>
+                        <ul class="material-icons-list">
+                            <li ng-if="ctrl.state === 'push'" class="help">
+                                <span translate>troubleshooting.APP_STARTED_AND_VISIBLE</span>
+                            </li>
+                            <li class="help">
+                                <span translate>troubleshooting.PHONE_ONLINE</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'" class="help">
+                                <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'" class="help">
+                                <span translate>troubleshooting.SESSION_DELETED</span>
+                            </li>
+                            <li ng-if="ctrl.state === 'push'" class="info">
+                                <span translate translate-values="{'faqUrl': 'https://threema.ch/faq/web_ios_foreground'}">troubleshooting.PUSH_FAQ_IOS_FOREGROUND</span>
+                            </li>
+                        </ul>
+                        <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.deleteSession()" ng-if="ctrl.state === 'push'" aria-labelledby="aria-label-forget">
+                           <span translate id="aria-label-forget">welcome.FORGET_SESSION_BTN</span>
+                        </md-button>
+                        <md-button role="button" class="md-raised md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
+                            <i class="material-icons">refresh</i> <span translate id="aria-label-reload">welcome.RESTART_SESSION</span>
                         </md-button>
                     </div>
                 </div>
@@ -149,7 +184,7 @@
             </p>
             <br>
             <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
-                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+                <i class="material-icons">refresh</i> <span translate>welcome.RESTART_SESSION</span>
             </md-button>
         </div>
 
@@ -160,7 +195,7 @@
             </p>
             <br>
             <md-button class="md-raised md-primary" ng-click="ctrl.reload()">
-                <i class="material-icons">refresh</i> <span translate>welcome.RELOAD</span>
+                <i class="material-icons">refresh</i> <span translate>welcome.RESTART_SESSION</span>
             </md-button>
         </div>
 

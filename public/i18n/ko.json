@@ -325,8 +325,7 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "연결할 수 없는 기기",
-        "UNABLE_TO_CONNECT": "기기에 연결할 수 없음 …",
-        "DISMISS_WARNING": "연결을 다시 설정하려면 브라우저 창을 다시 로드하십시오."
+        "UNABLE_TO_CONNECT": "기기에 연결할 수 없음 …"
     },
     "version": {
         "NEW_VERSION": "사용 가능한 새 버전",
