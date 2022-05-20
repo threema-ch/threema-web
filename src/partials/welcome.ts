@@ -727,6 +727,10 @@ class WelcomeController {
         this.$window.location.reload();
     }
 
+    public isApnsPushToken() {
+        return this.webClientService.pushTokenType === threema.PushTokenType.Apns;
+    }
+
     public hasAppleNonVoipPushToken() {
         return this.webClientService.hasAppleNonVoipPushToken();
     }

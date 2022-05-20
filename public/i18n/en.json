@@ -75,6 +75,7 @@
         "WEBCLIENT_ENABLED": "Is Desktop/Web enabled in the Threema app?",
         "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
         "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?",
+        "IOS_48": "Is Threema version 4.8 or higher installed on your mobile? Then please click \"Forget Session\" and initiate a new session.",
         "PLEASE_UPDATE_APP": "Please make sure that you're using the <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">latest version</a> of the Threema app!",
         "USE_ARCHIVE_VERSION": "Alternatively you can switch back to the <a href=\"{archiveUrl}\">previous version</a> of Threema Web.",
         "TROUBLESHOOTING": "Troubleshooting",

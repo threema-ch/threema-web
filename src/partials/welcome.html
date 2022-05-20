@@ -88,6 +88,9 @@
                     <div class="troubleshoot" ng-if="ctrl.slowConnect && !ctrl.hasAppleNonVoipPushToken()">
                         <h3 translate>troubleshooting.SLOW_CONNECT</h3>
                         <ul class="material-icons-list">
+                            <li ng-if="ctrl.state === 'push' && ctrl.isApnsPushToken()" class="help">
+                                <span translate>troubleshooting.IOS_48</span>
+                            </li>
                             <li class="help">
                                 <span translate>troubleshooting.PHONE_ONLINE</span>
                             </li>

@@ -248,7 +248,7 @@ export class WebClientService {
 
     // Push
     private pushToken: string = null;
-    private pushTokenType: threema.PushTokenType = null;
+    public pushTokenType: threema.PushTokenType = null;
     private pushSession: PushSession | null = null;
     private readonly pushSessionConfig: PushSessionConfig;
     private readonly pushSessionExpectedPeriodMaxMs: number;
