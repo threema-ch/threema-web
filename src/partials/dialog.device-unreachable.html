@@ -50,7 +50,7 @@
             <md-button role="button" class="md-primary reload-btn" ng-click="ctrl.reload()" aria-labelledby="aria-label-reload">
                 <span translate id="aria-label-reload">welcome.RESTART_SESSION</span>
             </md-button>
-            <md-button ng-if="ctrl.canRetry" role="button" class="md-primary reload-btn circular-progress-button" ng-click="ctrl.retry()" ng-disabled="ctrl.retrying" aria-labelledby="aria-label-retry">
+            <md-button ng-if="ctrl.canRetry" autofocus role="button" class="md-primary reload-btn circular-progress-button" ng-click="ctrl.retry()" ng-disabled="ctrl.retrying" aria-labelledby="aria-label-retry">
                 <md-progress-circular ng-if="ctrl.retrying" md-mode="determinate" md-diameter="20" value="{{ctrl.progress}}"></md-progress-circular>
                 <i ng-if="!ctrl.retrying" class="material-icons">refresh</i>
                 <span translate id="aria-label-retry">welcome.RETRY</span>
