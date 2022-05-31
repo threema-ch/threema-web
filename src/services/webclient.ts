@@ -1242,8 +1242,8 @@ export class WebClientService {
                 templateUrl: 'partials/dialog.device-unreachable.html',
                 parent: angular.element(document.body),
                 escapeToClose: false,
-            })
-                .finally(() => this.deviceUnreachableDialog = null);
+                onRemoving: () => { this.deviceUnreachableDialog = null; },
+            });
         }
     }
 
