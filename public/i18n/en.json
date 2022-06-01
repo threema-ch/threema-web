@@ -88,7 +88,8 @@
         "COPY_LOG_CLIPBOARD": "Copy log to clipboard",
         "REPORT_VIA_THREEMA": "Send log to support",
         "REPORT_VIA_THREEMA_FAILED": "Sending log report to support failed.",
-        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to support."
+        "REPORT_VIA_THREEMA_SUCCESS": "A log report has been sent to support.",
+        "PLEASE_OPEN_AND_UNLOCK": "Please <strong>unlock</strong> your iOS device, and <strong>open</strong> the Threema app to stay connected to the desktop app / the web client. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">Learn more…</a>"
     },
     "common": {
         "YES": "Yes",

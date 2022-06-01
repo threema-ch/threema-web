@@ -10,9 +10,9 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
-            <div class="md-dialog-content">
+            <div class="md-dialog-content" ng-if="ctrl.highPriorityPushes">
                 <h3 translate style="margin-bottom: 12px;">deviceUnreachable.UNABLE_TO_CONNECT</h3>
-                <ul class="material-icons-list" ng-if="ctrl.highPriorityPushes">
+                <ul class="material-icons-list">
                     <li class="help">
                         <span translate>troubleshooting.PHONE_ONLINE</span>
                     </li>
@@ -29,20 +29,9 @@
                         <span translate>troubleshooting.PUSH_FAQ</span>
                     </li>
                 </ul>
-                <ul class="material-icons-list" ng-if="!ctrl.highPriorityPushes">
-                    <li class="help">
-                        <span translate>troubleshooting.APP_STARTED_AND_VISIBLE</span>
-                    </li>
-                    <li class="help">
-                        <span translate>troubleshooting.PHONE_ONLINE</span>
-                    </li>
-                    <li class="help">
-                        <span translate>troubleshooting.WEBCLIENT_ENABLED</span>
-                    </li>
-                    <li class="info">
-                        <span translate translate-values="{'faqUrl': 'https://threema.ch/en/faq/web_ios_foreground'}">troubleshooting.PUSH_FAQ_IOS_FOREGROUND</span>
-                    </li>
-                </ul>
+            </div>
+            <div class="md-dialog-content" ng-if="!ctrl.highPriorityPushes">
+                <p translate translate-values="{'faqUrl': 'https://threema.ch/faq/web_ios_foreground'}">troubleshooting.PLEASE_OPEN_AND_UNLOCK</p>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
