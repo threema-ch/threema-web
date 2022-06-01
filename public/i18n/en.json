@@ -23,7 +23,7 @@
         "PASSWORD_STRENGTH": "Password strength",
         "UNLOCK_FAILED_TITLE": "Unlocking failed",
         "ALTERNATIVELY": "Alternatively,",
-        "UNLOCK_FAILED_FORGOTTEN": "If you can't remember your password, simply choose \"forget this session\", and set a new password.",
+        "UNLOCK_FAILED_FORGOTTEN": "If you can't remember your password, simply choose “forget this session”, and set a new password.",
         "FORGET_SESSION": "forget this session",
         "FORGET_SESSION_BTN": "forget session",
         "BTN_RECONNECT": "Reconnect",
@@ -40,9 +40,9 @@
         "MANUAL_START": "Please start your session",
         "MANUAL_START_TEXT1": "Push service is not available. Are Google Play Services installed on your mobile device?",
         "MANUAL_START_TEXT2": "You can use Threema Desktop/Web without Google Play Services, but you need to start the session manually:",
-        "MANUAL_START_STEP1": "Open the Threema app, tap on the menu button in the top right and choose \"Desktop/Web\"",
+        "MANUAL_START_STEP1": "Open the Threema app, tap on the menu button in the top right and choose “Desktop/Web”",
         "MANUAL_START_STEP2": "Tap on the session related to this browser",
-        "MANUAL_START_STEP3": "Select \"Start session\" to start the session",
+        "MANUAL_START_STEP3": "Select “Start session” to start the session",
         "MORE_ABOUT_WEB": "About",
         "LOCAL_STORAGE_MISSING_DETAILS": "Access to LocalStorage not possible. This can occur if your browser is configured to reject cookies, or if you installed a browser add-on that blocks access to LocalStorage. Please allow local storage in your browser settings or disable any add-ons you might have installed.",
         "LOCAL_STORAGE_EXCEPTION_DETAILS": "Critical error when accessing LocalStorage: {errorMsg}.<br>Try restarting your browser.",
@@ -66,16 +66,16 @@
     "troubleshooting": {
         "SLOW_CONNECT": "Connecting seems to take longer than usual …",
         "APP_STARTED": "Is the Threema app started?",
-        "APP_STARTED_AND_VISIBLE": "Is the Threema app started and visible?",
-        "SESSION_DELETED": "Did you delete this session on your phone?",
-        "PHONE_ONLINE": "Is your phone connected to the internet?",
+        "APP_STARTED_AND_VISIBLE": "Is the Threema app running in the foreground?",
+        "SESSION_DELETED": "Did you delete this session on your mobile device?",
+        "PHONE_ONLINE": "Is your mobile device connected to the internet?",
         "UNLOCK_OR_CHARGE": "It may help to unlock your device or connect it to a charger.",
         "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" rel=\"noopener noreferrer\"  href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
-        "PUSH_FAQ_IOS_FOREGROUND": "For more information about using Desktop/Web together with iOS, see <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">this FAQ entry</a>.",
+        "PUSH_FAQ_IOS_FOREGROUND": "For more information about using Desktop/Web with iOS, see <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">this FAQ article</a>.",
         "WEBCLIENT_ENABLED": "Is Desktop/Web enabled in the Threema app?",
         "PLUGIN": "Is a privacy plugin installed in your browser which blocks WebRTC communication?",
         "ADBLOCKER": "Do you use an ad blocker which also blocks WebRTC communication?",
-        "IOS_48": "Is Threema version 4.8 or higher installed on your mobile? Then please click \"Forget Session\" and initiate a new session.",
+        "IOS_48": "Is Threema version 4.8 or higher installed on your mobile device? Then please click “Forget Session” and initiate a new session.",
         "PLEASE_UPDATE_APP": "Please make sure that you're using the <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">latest version</a> of the Threema app!",
         "USE_ARCHIVE_VERSION": "Alternatively you can switch back to the <a href=\"{archiveUrl}\">previous version</a> of Threema Web.",
         "TROUBLESHOOTING": "Troubleshooting",
@@ -335,7 +335,7 @@
     },
     "version": {
         "NEW_VERSION": "New Version Available",
-        "NEW_VERSION_BODY": "A new version of Threema Web ({version}) is available. Check out the {changelog} for more information. Click \"OK\" to activate the update."
+        "NEW_VERSION_BODY": "A new version of Threema Web ({version}) is available. Check out the {changelog} for more information. Click “OK” to activate the update."
     },
     "voip": {
         "CALL_MISSED": "Missed call",
@@ -381,6 +381,6 @@
         "OUT_OF_MEMORY": "The session had to be stopped because your device ran out of memory.",
         "SESSION_ERROR": "The session was stopped due to a protocol error.",
         "PUSH_ERROR_INFO": "Attempts to wake up your device using push notifications have failed. This can happen, for example, if you have switched to a new mobile device recently.",
-        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new session."
+        "PUSH_ERROR_ACTION": "Should this error persist, please click “Forget Session” and initiate a new session."
     }
 }
