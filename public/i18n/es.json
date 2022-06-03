@@ -66,16 +66,16 @@
     "troubleshooting": {
         "SLOW_CONNECT": "La conexión parece tardar más de lo habitual ...",
         "APP_STARTED": "¿Se inició la aplicación Threema?",
-        "APP_STARTED_AND_VISIBLE": "Is the Threema app started and visible?",
+        "APP_STARTED_AND_VISIBLE": "Is the Threema app running in the foreground?",
         "SESSION_DELETED": "¿Has eliminado esta sesión en tu teléfono?",
         "PHONE_ONLINE": "¿Tú teléfono está conectado a Internet?",
         "UNLOCK_OR_CHARGE": "Puede ayudar desbloquear su dispositivo o conectarlo a un cargador.",
         "PUSH_FAQ": "Your device may be affected by Push Notification issues. See the FAQ articles for <a target=\"_blank\" rel=\"noopener noreferrer\"  href=\"https://threema.ch/faq/push_andr\">Android</a> and <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> for troubleshooting.",
-        "PUSH_FAQ_IOS_FOREGROUND": "For more information about using Desktop/Web together with iOS, see <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">this FAQ entry</a>.",
+        "PUSH_FAQ_IOS_FOREGROUND": "For more information about using Desktop/Web with iOS, see <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">this FAQ article</a>.",
         "WEBCLIENT_ENABLED": "Is Desktop/Web enabled in the Threema app?",
         "PLUGIN": "¿Hay un complemento de privacidad instalado en tu navegador que bloquea la comunicación de WebRTC?",
         "ADBLOCKER": "¿Utilizas un bloqueador de anuncios que también bloquea la comunicación de WebRTC?",
-        "IOS_48": "Is Threema version 4.8 or higher installed on your mobile? Then please click \"Forget Session\" and initiate a new session.",
+        "IOS_48": "Is Threema version 4.8 or higher installed on your mobile device? Then please click “Forget Session” and initiate a new session.",
         "PLEASE_UPDATE_APP": "¡Asegúrate de estar usando la <a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">última versión</a> de la aplicación Threema!",
         "USE_ARCHIVE_VERSION": "Como alternativa, puedes volver a la <a href=\"{archiveUrl}\">versión anterior</a> de Threema Web.",
         "TROUBLESHOOTING": "Solución de problemas",
@@ -381,6 +381,6 @@
         "OUT_OF_MEMORY": "Se ha cerrado la sesión ya que tu dispositivo se quedó sin memoria.",
         "SESSION_ERROR": "Se ha cerrado esta sesión debido a un error de protocolo.",
         "PUSH_ERROR_INFO": "Intentos de activar tu dispositivo por push notifications han fallado. Esto ocurre, por ejemplo, si ha cambiado recién a un dispositivo móvil nuevo.",
-        "PUSH_ERROR_ACTION": "Should this error persist, please click \"Forget Session\" and initiate a new session."
+        "PUSH_ERROR_ACTION": "Should this error persist, please click “Forget Session” and initiate a new session."
     }
 }
