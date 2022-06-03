@@ -10,6 +10,18 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.4.1][v2.4.1] (2022-06-03)
+
+Changes:
+
+* [bug] Show revoked contacts with strike-through text ([#1131][i1131])
+* [bug] Hide both inactive and revoked contacts ([#1132][i1132])
+* [feature] Allow sending GIFs with rendering type 0 ([#1133][i1133])
+* [change] Device unreachable dialog: Autofocus retry button ([#1136][i1136])
+* [change] Improve "device unreachable" dialog and help text for iOS devices
+  ([#1134][i1134], [#1137][i1137])
+
+
 ### [v2.4.0][v2.4.0] Lütispitz (2022-04-28)
 
 Changes:
@@ -1175,7 +1187,14 @@ First public release.
 [i1126]: https://github.com/threema-ch/threema-web/pull/1126
 [i1128]: https://github.com/threema-ch/threema-web/pull/1128
 [i1129]: https://github.com/threema-ch/threema-web/pull/1129
+[i1131]: https://github.com/threema-ch/threema-web/pull/1131
+[i1132]: https://github.com/threema-ch/threema-web/pull/1132
+[i1133]: https://github.com/threema-ch/threema-web/pull/1133
+[i1134]: https://github.com/threema-ch/threema-web/pull/1134
+[i1136]: https://github.com/threema-ch/threema-web/pull/1136
+[i1137]: https://github.com/threema-ch/threema-web/pull/1137
 
+[v2.4.1]: https://github.com/threema-ch/threema-web/compare/v2.4.0...v2.4.1
 [v2.4.0]: https://github.com/threema-ch/threema-web/compare/v2.3.20...v2.4.0
 [v2.3.20]: https://github.com/threema-ch/threema-web/compare/v2.3.19...v2.3.20
 [v2.3.19]: https://github.com/threema-ch/threema-web/compare/v2.3.18...v2.3.19
