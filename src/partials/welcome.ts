@@ -572,6 +572,7 @@ class WelcomeController {
             parent: angular.element(document.body),
             clickOutsideToClose: true,
             fullscreen: true,
+            onRemoving: () => { this.clearPassword(); },
         });
     }
 
