@@ -10,6 +10,13 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.4.2][v2.4.2] (2022-06-14)
+
+Changes:
+
+* [feature] Clear the password field in case of incorrect password entry ([#1139][i1139])
+
+
 ### [v2.4.1][v2.4.1] (2022-06-03)
 
 Changes:
@@ -1193,7 +1200,9 @@ First public release.
 [i1134]: https://github.com/threema-ch/threema-web/pull/1134
 [i1136]: https://github.com/threema-ch/threema-web/pull/1136
 [i1137]: https://github.com/threema-ch/threema-web/pull/1137
+[i1139]: https://github.com/threema-ch/threema-web/pull/1139
 
+[v2.4.2]: https://github.com/threema-ch/threema-web/compare/v2.4.1...v2.4.2
 [v2.4.1]: https://github.com/threema-ch/threema-web/compare/v2.4.0...v2.4.1
 [v2.4.0]: https://github.com/threema-ch/threema-web/compare/v2.3.20...v2.4.0
 [v2.3.20]: https://github.com/threema-ch/threema-web/compare/v2.3.19...v2.3.20
