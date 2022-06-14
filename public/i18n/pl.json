@@ -66,12 +66,12 @@
     "troubleshooting": {
         "SLOW_CONNECT": "Łączenie wydaje się trwać dłużej niż zazwyczaj ...",
         "APP_STARTED": "Czy aplikacja Threema jest uruchomiona?",
-        "APP_STARTED_AND_VISIBLE": "Czy aplikacja Threema jest uruchomiona i widoczna?",
-        "SESSION_DELETED": "Czy usunąłeś tę sesję na twoim telefonie?",
-        "PHONE_ONLINE": "Czy twój telefon jest podłączony do internetu?",
+        "APP_STARTED_AND_VISIBLE": "Czy aplikacja Threema działa na pierwszym planie?",
+        "SESSION_DELETED": "Czy usunąłeś tę sesję na twoim urządzeniu mobilnym?",
+        "PHONE_ONLINE": "Czy twoje urządzenie mobilne jest podłączone do internetu?",
         "UNLOCK_OR_CHARGE": "Odblokowanie urządzenia lub podłączenie do ładowarki może pomóc.",
         "PUSH_FAQ": "Twoje urządzenie może mieć problemy z powiadomieniami Push. Zobacz artykuły FAQ dla <a target=\"_blank\" rel=\"noopener noreferrer\"  href=\"https://threema.ch/faq/push_andr\">Androida</a> i <a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a> aby rozwiązać problemy.",
-        "PUSH_FAQ_IOS_FOREGROUND": "Po więcej informacji na temat użycia Desktop/Web z iOS, zobacz <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">ten wpis FAQ</a>.",
+        "PUSH_FAQ_IOS_FOREGROUND": "Po więcej informacji na temat użycia Desktop/Web z iOS, zobacz <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">ten artykuł FAQ</a>.",
         "WEBCLIENT_ENABLED": "Czy opcja Desktop/Web jest włączona w aplikacji Threema?",
         "PLUGIN": "Czy masz zainstalowaną w przeglądarce wtyczkę prywatności, która również blokuje komunikację WebRTC?",
         "ADBLOCKER": "Czy używasz blokady reklam, która również blokuje komunikację WebRTC?",
@@ -88,7 +88,8 @@
         "COPY_LOG_CLIPBOARD": "Skopiuj log do schowka",
         "REPORT_VIA_THREEMA": "Wyślij log do *SUPPORT",
         "REPORT_VIA_THREEMA_FAILED": "Wysyłanie raportu do *SUPPORT nieudane.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Raport został wysłany do *SUPPORT."
+        "REPORT_VIA_THREEMA_SUCCESS": "Raport został wysłany do *SUPPORT.",
+        "PLEASE_OPEN_AND_UNLOCK": "<strong>Odblokuj</strong> twoje urządzenie iOS i <strong>otwórz</strong> aplikację Threema aby utrzymać połączenie do aplikacji pulpitu / klienta przeglądarkowego. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">Dowiedz się więcej...</a>"
     },
     "common": {
         "YES": "Tak",
