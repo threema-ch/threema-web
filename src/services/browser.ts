@@ -124,6 +124,12 @@ export class BrowserService {
             if (browser.opera) {
                 this.browser = new BrowserInfo(uagent, BrowserName.Opera, version);
             }
+
+            // Detection failed
+            if (this.browser === undefined) {
+                this.log.warn(`Browser could not be recognized. User agent: ${uagent}`);
+                this.browser = new BrowserInfo(uagent, null, null);
+            }
         }
 
         return this.browser;
