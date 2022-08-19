@@ -17,6 +17,13 @@ window.UserConfig = {
     // `null` if your server does not provide a public permanent key, or if you
     // don't want to verify it.
     SALTYRTC_SERVER_KEY: 'b1337fc8402f7db8ea639e05ed05d65463e24809792f91eca29e88101b4a2171',
+    // If you want the app to use a different SaltyRTC server address than the web
+    // application (e.g. because of application VPNs, or when provisioning the app
+    // using an OPPF file), set the variables below. This host/port will be included
+    // in the QR code, and used by the app to connect.
+    // If unset, `SALTYRTC_HOST`/`SALTYRTC_PORT` will be used.
+    SALTYRTC_QR_HOST: null,
+    SALTYRTC_QR_PORT: null,
 
     /**
      * ICE

@@ -218,6 +218,7 @@ export class WebClientService {
 
     // Session connection
     private saltyRtcHost: string = null;
+    private saltyRtcQrHost: string = null;
     public salty: saltyrtc.SaltyRTC = null;
     private connectionInfoFuture: Future<ConnectionInfo> = null;
     private relayedDataTask: saltyrtc.tasks.relayed_data.RelayedDataTask = null;
@@ -445,7 +446,8 @@ export class WebClientService {
             this.salty.permanentKeyBytes,
             this.salty.authTokenBytes,
             hexToU8a(this.userConfig.SALTYRTC_SERVER_KEY),
-            this.saltyRtcHost, this.userConfig.SALTYRTC_PORT,
+            this.saltyRtcQrHost,
+            hasValue(this.userConfig.SALTYRTC_QR_PORT) ? this.userConfig.SALTYRTC_QR_PORT : this.userConfig.SALTYRTC_PORT,
             persistent);
     }
 
@@ -537,6 +539,10 @@ export class WebClientService {
 
         // Determine SaltyRTC host, replace the inner prefix (if any)
         this.saltyRtcHost = this.userConfig.SALTYRTC_HOST.replace('{prefix}', keyStore.publicKeyHex.substr(0, 2));
+        this.saltyRtcQrHost = this.saltyRtcHost;
+        if (hasValue(this.userConfig.SALTYRTC_QR_HOST)) {
+            this.saltyRtcQrHost = this.userConfig.SALTYRTC_QR_HOST.replace('{prefix}', keyStore.publicKeyHex.substr(0, 2));
+        }
 
         // Create SaltyRTC client
         let builder = new saltyrtcClient.SaltyRTCBuilder()

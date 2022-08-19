@@ -35,6 +35,8 @@ else
     patch_var "SALTYRTC_HOST" string
     patch_var "SALTYRTC_PORT" number
     patch_var "SALTYRTC_SERVER_KEY" string
+    patch_var "SALTYRTC_QR_HOST" string
+    patch_var "SALTYRTC_QR_PORT" number
 
     # ICE
     if [ -n "${ICE_SERVER_URLS:-}" ]; then
