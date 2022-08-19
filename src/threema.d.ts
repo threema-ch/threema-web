@@ -673,6 +673,8 @@ declare namespace threema {
         SALTYRTC_HOST: string;
         SALTYRTC_PORT: number;
         SALTYRTC_SERVER_KEY: string | null;
+        SALTYRTC_QR_HOST: string | null;
+        SALTYRTC_QR_PORT: number | null;
 
         // ICE
         ICE_SERVERS: RTCIceServer[];
