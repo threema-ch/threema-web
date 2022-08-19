@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.4.3][v2.4.3] (2022-08-19)
+
+Changes:
+
+* [bug] When browser detection fails, don't return undefined ([#1145][i1145])
+* [feature] Allow overriding SaltyRTC credentials in QR code ([#1146][i1146])
+
+
 ### [v2.4.2][v2.4.2] (2022-06-14)
 
 Changes:
@@ -1201,7 +1209,10 @@ First public release.
 [i1136]: https://github.com/threema-ch/threema-web/pull/1136
 [i1137]: https://github.com/threema-ch/threema-web/pull/1137
 [i1139]: https://github.com/threema-ch/threema-web/pull/1139
+[i1145]: https://github.com/threema-ch/threema-web/pull/1145
+[i1146]: https://github.com/threema-ch/threema-web/pull/1146
 
+[v2.4.3]: https://github.com/threema-ch/threema-web/compare/v2.4.2...v2.4.3
 [v2.4.2]: https://github.com/threema-ch/threema-web/compare/v2.4.1...v2.4.2
 [v2.4.1]: https://github.com/threema-ch/threema-web/compare/v2.4.0...v2.4.1
 [v2.4.0]: https://github.com/threema-ch/threema-web/compare/v2.3.20...v2.4.0
