@@ -197,7 +197,7 @@
         "DRAFT": "Szkic",
         "PRIVATE": "Prywatny",
         "PRIVATE_CHAT": "Czat prywatny",
-        "PRIVATE_CHAT_DESCRIPTION": "Czaty prywatne nie są wsperane w aplikacji Threema Desktop/Web",
+        "PRIVATE_CHAT_DESCRIPTION": "Czaty prywatne nie są wsperane w Threema Desktop/Web",
         "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "Podziel wiadomość",
         "MESSAGE_TOO_LONG_SPLIT_BODY": "Nie można wysłać więcej niż {max} znaków w wiadomości, czy chcesz podzielić ją na {count} oddzielnych wiadomośći?",
         "BALLOT_MESSAGES_NOT_SUPPORTED": "Ankiety nie są jeszcze wspierane w Threema Desktop/Web.",
