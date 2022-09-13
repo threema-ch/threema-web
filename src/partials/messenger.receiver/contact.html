@@ -27,7 +27,7 @@
 				</dd>
 
 				<dt><span translate>messenger.NICKNAME</span></dt>
-				<dd ng-if="ctrl.receiver.publicNickname" ng-bind-html="ctrl.receiver.publicNickname | emojify"></dd>
+				<dd ng-if="ctrl.receiver.publicNickname" ng-bind-html="ctrl.receiver.publicNickname | escapeHtml | emojify"></dd>
 				<dd ng-if="!ctrl.receiver.publicNickname">-</dd>
 
 				<dt><span translate>messenger.FIRST_NAME</span></dt>
