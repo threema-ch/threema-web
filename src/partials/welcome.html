@@ -59,7 +59,12 @@
                                    translate-attr="{'placeholder': 'welcome.PASSWORD'}"
                                    autocomplete="current-password">
                         </md-input-container>
-                        <md-button type="submit" class="md-raised md-primary" autofocus translate translate-attr-aria-label="welcome.BTN_RECONNECT">
+                        <md-button
+                            type="submit"
+                            class="md-raised md-primary"
+                            autofocus
+                            ng-disabled="ctrl.formLocked"
+                            translate translate-attr-aria-label="welcome.BTN_RECONNECT">
                             <span translate aria-hidden="true">welcome.BTN_RECONNECT</span>
                         </md-button>
                     </form>
