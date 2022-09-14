@@ -10,6 +10,19 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.4.4][v2.4.4] (2022-09-14)
+
+This release contains an XSS security fix. Note that the vulnerability was not
+exploitable in practice on the official server instances thanks to the strict
+CSP rules. If you host your own version of Threema Web without strict CSP
+rules, please make sure to update quickly.
+
+Changes:
+
+* [security] Fix XSS of nickname in contact details ([#1151][i1151])
+* [bug] Lock reconnect button to prevent multiple pushes ([#1150][i1150])
+
+
 ### [v2.4.3][v2.4.3] (2022-08-19)
 
 Changes:
@@ -1211,7 +1224,10 @@ First public release.
 [i1139]: https://github.com/threema-ch/threema-web/pull/1139
 [i1145]: https://github.com/threema-ch/threema-web/pull/1145
 [i1146]: https://github.com/threema-ch/threema-web/pull/1146
+[i1150]: https://github.com/threema-ch/threema-web/pull/1150
+[i1151]: https://github.com/threema-ch/threema-web/pull/1151
 
+[v2.4.4]: https://github.com/threema-ch/threema-web/compare/v2.4.3...v2.4.4
 [v2.4.3]: https://github.com/threema-ch/threema-web/compare/v2.4.2...v2.4.3
 [v2.4.2]: https://github.com/threema-ch/threema-web/compare/v2.4.1...v2.4.2
 [v2.4.1]: https://github.com/threema-ch/threema-web/compare/v2.4.0...v2.4.1
