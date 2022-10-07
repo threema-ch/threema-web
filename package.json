@@ -41,7 +41,7 @@
     "@saltyrtc/task-relayed-data": "^0.4.0",
     "@saltyrtc/task-webrtc": "^0.15.0",
     "@threema/compose-area": "^0.4.6",
-    "@threema/threema-markup": "^1.0.0",
+    "@threema/threema-markup": "^1.1.0",
     "@types/angular": "^1.8.4",
     "@types/angular-material": "^1.1.73",
     "@types/angular-sanitize": "^1.8.1",
