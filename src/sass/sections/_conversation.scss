@@ -358,6 +358,18 @@
                 }
             }
 
+            .message-group-reactions {
+                margin-right: 5px;
+
+                .reaction-ack {
+                    color: $theme-green;
+                }
+
+                .reaction-dec {
+                    color: $status-warning;
+                }
+            }
+
             md-icon {
                 width: 1em;
                 min-width: 1em;
