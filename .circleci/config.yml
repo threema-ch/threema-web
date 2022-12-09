@@ -1,54 +1,58 @@
-version: 2
+version: 2.1
+
+orbs:
+  browser-tools: circleci/browser-tools@1.4.0
 
 references:
   test-steps: &test-steps
     - checkout
     - restore_cache:
         keys:
-          - v3-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+          - v4-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+    - browser-tools/install-browser-tools
     - run: npm install
     - run: npm run build
     - run: npm run ${BUILDTARGET}
     - run: npm run ${TESTTARGET}
     - save_cache:
-        key: v3-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
+        key: v4-dependencies-{{ .Environment.CIRCLE_JOB }}-{{ arch }}-{{ checksum "package.json" }}
         paths:
           - node_modules
 
 jobs:
   unittest:
     docker:
-      - image: circleci/node:14-browsers
+      - image: cimg/node:18.12-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:unittests
       TESTTARGET: test:unit
   uitest-firefox:
     docker:
-      - image: circleci/node:14-browsers
+      - image: cimg/node:18.12-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui firefox
   uitest-chrome:
     docker:
-      - image: circleci/node:14-browsers
+      - image: cimg/node:18.12-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui chrome
   lint:
     docker:
-      - image: circleci/node:14-browsers
+      - image: cimg/node:18.12
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v3-dependencies-lint-node14-{{ arch }}-{{ checksum "package.json" }}
+            - v4-dependencies-lint-node14-{{ arch }}-{{ checksum "package.json" }}
       - run: npm install
       - run: npm run lint
       - save_cache:
-          key: v3-dependencies-lint-node14-{{ arch }}-{{ checksum "package.json" }}
+          key: v4-dependencies-lint-node14-{{ arch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
   docker-build:
