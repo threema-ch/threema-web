@@ -55,6 +55,7 @@ export class MessageService {
         message: threema.Message,
         receiver: threema.Receiver,
         capabilities: threema.AppCapabilities,
+        ownIdentity: string,
     ): MessageAccess {
         const access = new MessageAccess();
 
@@ -73,8 +74,8 @@ export class MessageService {
                     (isGroupReceiver(receiver) && capabilities.groupReactions);
                 const allowReactionsForType = message.type !== 'voipStatus';
                 if (isIncomingMessage && allowReactionsForReceiver && allowReactionsForType) {
-                    access.ack = message.state !== 'user-ack';
-                    access.dec = message.state !== 'user-dec';
+                    access.ack = message.state !== 'user-ack' && !(message.reactions?.ack ?? []).includes(ownIdentity);
+                    access.dec = message.state !== 'user-dec' && !(message.reactions?.dec ?? []).includes(ownIdentity);
                 }
 
                 switch (message.type) {

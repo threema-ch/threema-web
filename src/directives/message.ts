@@ -97,6 +97,7 @@ export default [
                         this.message,
                         this.receiver,
                         webClientService.appCapabilities,
+                        webClientService.me.id,
                     );
 
                     this.ack = (ack: boolean) => {
