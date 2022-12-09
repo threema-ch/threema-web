@@ -89,6 +89,7 @@ export default [
                     this.showText = this.message.type === 'text' || this.message.caption;
                     this.showMedia = this.message.type !== 'text';
                     this.showState = messageService.showStatusIcon(this.message as threema.Message, this.receiver);
+                    this.showGroupReactions = this.isGroup && webClientService.appCapabilities.groupReactions;
                     this.showQuote = this.message.quote !== undefined;
                     this.showVoipInfo = this.message.type === 'voipStatus';
 
@@ -96,6 +97,7 @@ export default [
                         this.message,
                         this.receiver,
                         webClientService.appCapabilities,
+                        webClientService.me.id,
                     );
 
                     this.ack = (ack: boolean) => {

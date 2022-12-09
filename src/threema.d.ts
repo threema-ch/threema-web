@@ -129,6 +129,7 @@ declare namespace threema {
         // only for temporary Messages
         temporaryId?: string;
         errorMessage?: string;
+        reactions?: MessageReactions;
     }
 
     interface FileInfo {
@@ -180,6 +181,13 @@ declare namespace threema {
         buffer: ArrayBuffer;
         mimetype: string;
         filename: string;
+    }
+
+    interface MessageReactions {
+        // Identities that 👍 this message
+        ack: string[];
+        // Identities that 👎 this message
+        dec: string[];
     }
 
     /**
@@ -767,6 +775,7 @@ declare namespace threema {
         distributionLists: boolean;
         quotesV2: boolean;
         imageFormat: ImageFormat;
+        groupReactions: boolean;
         mdm?: MdmRestrictions;
     }
 

@@ -16,7 +16,7 @@
  */
 
 import {hasValue} from '../helpers';
-import {isContactReceiver} from '../typeguards';
+import {isContactReceiver, isGroupReceiver} from '../typeguards';
 import {ReceiverService} from './receiver';
 import {TimeoutService} from './timeout';
 
@@ -55,6 +55,7 @@ export class MessageService {
         message: threema.Message,
         receiver: threema.Receiver,
         capabilities: threema.AppCapabilities,
+        ownIdentity: string,
     ): MessageAccess {
         const access = new MessageAccess();
 
@@ -67,11 +68,14 @@ export class MessageService {
             access.copy = allowQuoteV1;
 
             if (receiver !== undefined && message.temporaryId === undefined) {
-                if (message.isOutbox === false
-                    && isContactReceiver(receiver)
-                    && message.type !== 'voipStatus') {
-                    access.ack = message.state !== 'user-ack';
-                    access.dec = message.state !== 'user-dec';
+                const isIncomingMessage = message.isOutbox === false;
+                const allowReactionsForReceiver =
+                    isContactReceiver(receiver) ||
+                    (isGroupReceiver(receiver) && capabilities.groupReactions);
+                const allowReactionsForType = message.type !== 'voipStatus';
+                if (isIncomingMessage && allowReactionsForReceiver && allowReactionsForType) {
+                    access.ack = message.state !== 'user-ack' && !(message.reactions?.ack ?? []).includes(ownIdentity);
+                    access.dec = message.state !== 'user-dec' && !(message.reactions?.dec ?? []).includes(ownIdentity);
                 }
 
                 switch (message.type) {

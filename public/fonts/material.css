@@ -1,7 +1,6 @@
 @font-face {
     font-family: 'Material Icons';
-    src: url('MaterialIcons-Regular.woff2?v=1') format('woff2'),
-         url('MaterialIcons-Regular.woff?v=1') format('woff');
+    src: url('MaterialIcons-Regular.woff2?v=2') format('woff2');
     font-style: normal;
     font-weight: 400;
 }

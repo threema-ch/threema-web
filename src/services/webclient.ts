@@ -3365,6 +3365,7 @@ export class WebClientService {
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
                 quotesV2: getOrDefault<boolean>(data.capabilities.quotesV2, false),
                 imageFormat: data.capabilities.imageFormat,
+                groupReactions: getOrDefault<boolean>(data.capabilities.groupReactions, false),
                 mdm: data.capabilities.mdm,
             },
         };

@@ -16,8 +16,12 @@ describe('MessageService', function() {
     });
 
     describe ('getAccess', () => {
-        let test = (m, r) => {
-            return expect(messageService.getAccess(m, r, {quotesV2: false}));
+        let test = (message, receiver, additionalCapabilities) => {
+            return expect(messageService.getAccess(
+                message,
+                receiver,
+                {quotesV2: false, ...additionalCapabilities},
+            ));
         };
         it('invalid arguments', () => {
             test().toEqual(jasmine.objectContaining({
@@ -31,21 +35,25 @@ describe('MessageService', function() {
         })
 
         const testCases = [
-            ['contact', {id: 'ECHOECHO', type: 'contact'}, true],
-            ['gateway contact', {id: '*THREEMA', type: 'contact'}, true],
-            ['group', {id: 1, type: 'group'}, false],
-            ['distributionList', {id: 1, type: 'distributionList'}, false],
+            // type, receiver, additionalCapabilities, canAckDec
+            ['contact', {id: 'ECHOECHO', type: 'contact'}, {}, true],
+            ['gateway contact', {id: '*THREEMA', type: 'contact'}, {}, true],
+            ['group', {id: 1, type: 'group'}, {}, false],
+            ['group', {id: 1, type: 'group'}, {groupReactions: false}, false],
+            ['group', {id: 1, type: 'group'}, {groupReactions: true}, true],
+            ['distributionList', {id: 1, type: 'distributionList'}, {}, false],
         ];
 
         testCases.forEach((testData) => {
             const type = testData[0];
             const receiver = testData[1];
-            const canAckDec = testData[2];
+            const additionalCapabilities = testData[2];
+            const canAckDec = testData[3];
             const isDistributionList = receiver.type === 'distributionList';
 
-            describe(type, () => {
+            describe(`${type} ${JSON.stringify(additionalCapabilities)}`, () => {
                 it('text messages  ', () => {
-                    test({isOutbox: false, type: 'text'}, receiver)
+                    test({isOutbox: false, type: 'text'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -55,7 +63,7 @@ describe('MessageService', function() {
                             download: false,
                         }));
 
-                    test({isOutbox: true, type: 'text'}, receiver)
+                    test({isOutbox: true, type: 'text'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -65,7 +73,7 @@ describe('MessageService', function() {
                             download: false,
                         }));
 
-                    test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver)
+                    test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -76,7 +84,7 @@ describe('MessageService', function() {
                         }));
 
 
-                    test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver)
+                    test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -88,7 +96,7 @@ describe('MessageService', function() {
                 });
 
                 it('location messages  ', () => {
-                    test({isOutbox: false, type: 'text'}, receiver)
+                    test({isOutbox: false, type: 'text'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -98,7 +106,7 @@ describe('MessageService', function() {
                             download: false,
                         }));
 
-                    test({isOutbox: true, type: 'text'}, receiver)
+                    test({isOutbox: true, type: 'text'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -108,7 +116,7 @@ describe('MessageService', function() {
                             download: false,
                         }));
 
-                    test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver)
+                    test({isOutbox: false, type: 'text', state: 'user-ack'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -119,7 +127,7 @@ describe('MessageService', function() {
                         }));
 
 
-                    test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver)
+                    test({isOutbox: false, type: 'text', state: 'user-dec'}, receiver, additionalCapabilities)
                         .toEqual(jasmine.objectContaining({
                             quote: !isDistributionList,
                             copy: true,
@@ -132,7 +140,7 @@ describe('MessageService', function() {
 
                 ['image', 'video', 'audio', 'file'].forEach((type) => {
                     it('inbox ' + type, () => {
-                        test({isOutbox: false, type: type}, receiver)
+                        test({isOutbox: false, type: type}, receiver, additionalCapabilities)
                             .toEqual(jasmine.objectContaining({
                                 quote: false,
                                 copy: false,
@@ -144,7 +152,7 @@ describe('MessageService', function() {
                     });
 
                     it('inbox (caption) ' + type, () => {
-                        test({isOutbox: false, type: type, caption: 'test'}, receiver)
+                        test({isOutbox: false, type: type, caption: 'test'}, receiver, additionalCapabilities)
                             .toEqual(jasmine.objectContaining({
                                 quote: !isDistributionList,
                                 copy: true,
@@ -156,7 +164,7 @@ describe('MessageService', function() {
                     });
 
                     it('outbox ' + type, () => {
-                        test({isOutbox: false, type: type}, receiver)
+                        test({isOutbox: false, type: type}, receiver, additionalCapabilities)
                             .toEqual(jasmine.objectContaining({
                                 quote: false,
                                 copy: false,
@@ -169,7 +177,7 @@ describe('MessageService', function() {
 
 
                     it('outbox (caption) ' + type, () => {
-                        test({isOutbox: false, type: type, caption: 'test'}, receiver)
+                        test({isOutbox: false, type: type, caption: 'test'}, receiver, additionalCapabilities)
                             .toEqual(jasmine.objectContaining({
                                 quote: !isDistributionList,
                                 copy: true,
