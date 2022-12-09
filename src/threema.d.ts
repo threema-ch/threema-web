@@ -767,6 +767,7 @@ declare namespace threema {
         distributionLists: boolean;
         quotesV2: boolean;
         imageFormat: ImageFormat;
+        groupReactions: boolean;
         mdm?: MdmRestrictions;
     }
 
