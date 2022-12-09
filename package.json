@@ -100,7 +100,7 @@
     "karma-firefox-launcher": "^2.1.2",
     "karma-jasmine": "^4.0.2",
     "selenium-webdriver": "^4.4.0",
-    "ts-node": "~10.7.0",
+    "ts-node": "~10.9.1",
     "tslint": "^6.1.3",
     "webpack-dev-server": "^4.10.0"
   }
