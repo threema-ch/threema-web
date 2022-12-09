@@ -3296,9 +3296,16 @@ export class WebClientService {
         }
 
         // Update public nickname
-        if (data.publicNickname !== undefined) {
-            this.me.publicNickname = data.publicNickname;
-            this.me.displayName = this.me.publicNickname || this.me.id;
+        if (hasValue(data.publicNickname)) {
+            if (data.publicNickname === this.me.id) {
+                // Unset nickname
+                this.me.publicNickname = undefined;
+                this.me.displayName = this.$translate.instant('messenger.ME');
+            } else {
+                // Update nickname
+                this.me.publicNickname = data.publicNickname;
+                this.me.displayName = data.publicNickname;
+            }
         }
 
         // Update avatar
@@ -3310,8 +3317,7 @@ export class WebClientService {
             }
 
             // Request new low-res avatar
-            // noinspection JSIgnoredPromiseFromCall
-            this.requestAvatar(this.me, false);
+            void this.requestAvatar(this.me, false);
         }
     }
 
@@ -3430,11 +3436,12 @@ export class WebClientService {
 
         // Create 'me' receiver with profile + dummy data
         // TODO: Send both high-res and low-res avatars
+        const hasPublicNickname = hasValue(data.publicNickname) && data.publicNickname !== data.identity;
         this.receivers.setMe({
             type: 'me',
             id: data.identity,
             publicNickname: data.publicNickname,
-            displayName: data.publicNickname || data.identity,
+            displayName: hasPublicNickname ? data.publicNickname : this.$translate.instant('messenger.ME'),
             publicKey: data.publicKey,
             avatar: {
                 high: data.avatar,
