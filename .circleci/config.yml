@@ -18,28 +18,28 @@ references:
 jobs:
   unittest:
     docker:
-      - image: circleci/node:14-browsers
+      - image: circleci/node:16-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:unittests
       TESTTARGET: test:unit
   uitest-firefox:
     docker:
-      - image: circleci/node:14-browsers
+      - image: circleci/node:16-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui firefox
   uitest-chrome:
     docker:
-      - image: circleci/node:14-browsers
+      - image: circleci/node:16-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui chrome
   lint:
     docker:
-      - image: circleci/node:14-browsers
+      - image: circleci/node:16-browsers
     steps:
       - checkout
       - restore_cache:
