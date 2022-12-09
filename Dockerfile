@@ -19,7 +19,7 @@ RUN npm run dist -- d
 
 # Then, transfer the build artifacts to a minimal nginx container
 
-FROM docker.io/nginx:1.21-alpine
+FROM docker.io/nginx:1.23-alpine
 
 RUN apk add --update bash
 
