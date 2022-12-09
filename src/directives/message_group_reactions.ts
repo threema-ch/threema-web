@@ -39,9 +39,8 @@ export default [
                         up: message.reactions?.ack?.length ?? 0,
                         down: message.reactions?.dec?.length ?? 0,
                     }
-                    // TODO: Material icon support for thumb_up_off_alt
-                    this.iconUp = (message.reactions?.ack ?? []).includes(webClientService.me.id) ? 'thumb_up' : 'thumb_up';
-                    this.iconDown = (message.reactions?.dec ?? []).includes(webClientService.me.id) ? 'thumb_down' : 'thumb_down';
+                    this.iconUp = (message.reactions?.ack ?? []).includes(webClientService.me.id) ? 'thumb_up' : 'thumb_up_off_alt';
+                    this.iconDown = (message.reactions?.dec ?? []).includes(webClientService.me.id) ? 'thumb_down' : 'thumb_down_off_alt';
                 }
             }],
             template: `
