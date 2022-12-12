@@ -10,6 +10,16 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.5.0][v2.5.0] (2022-12-12)
+
+Changes:
+
+* [feature] Add support for group reactions ([#1161][i1161])
+* [change] Own display name: Use localized "Me" if no nickname is set ([#1162][i1162])
+* [change] Upgrade many dependencies
+* [change] Switch to NodeJS 18 ([#1160][i1160])
+
+
 ### [v2.4.4][v2.4.4] (2022-09-14)
 
 This release contains an XSS security fix. Note that the vulnerability was not
@@ -1226,7 +1236,11 @@ First public release.
 [i1146]: https://github.com/threema-ch/threema-web/pull/1146
 [i1150]: https://github.com/threema-ch/threema-web/pull/1150
 [i1151]: https://github.com/threema-ch/threema-web/pull/1151
+[i1160]: https://github.com/threema-ch/threema-web/pull/1160
+[i1161]: https://github.com/threema-ch/threema-web/pull/1161
+[i1162]: https://github.com/threema-ch/threema-web/pull/1162
 
+[v2.5.0]: https://github.com/threema-ch/threema-web/compare/v2.4.4...v2.5.0
 [v2.4.4]: https://github.com/threema-ch/threema-web/compare/v2.4.3...v2.4.4
 [v2.4.3]: https://github.com/threema-ch/threema-web/compare/v2.4.2...v2.4.3
 [v2.4.2]: https://github.com/threema-ch/threema-web/compare/v2.4.1...v2.4.2
