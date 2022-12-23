@@ -359,14 +359,16 @@
             }
 
             .message-group-reactions {
-                margin-right: 5px;
-
                 .reaction-ack {
                     color: $theme-green;
                 }
 
                 .reaction-dec {
                     color: $status-warning;
+                }
+
+                .reaction-margin {
+                    margin-right: 5px;
                 }
             }
 

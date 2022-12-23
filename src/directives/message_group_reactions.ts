@@ -55,6 +55,7 @@ export default [
                     if (downvoters.length > 0) {
                         this.reactions.down.names = idsToNames(downvoters, true);
                     }
+                    this.hasReaction = this.reactions.up.count > 0 || this.reactions.down.count > 0;
                 }
             }],
             template: `
@@ -66,6 +67,7 @@ export default [
                     <i class="material-icons md-14">{{ctrl.reactions.down.icon}}</i>
                     {{ctrl.reactions.down.count}}
                 </span>
+                <span class="reaction-margin" ng-if="ctrl.hasReaction"></span>
             `,
         };
     },
