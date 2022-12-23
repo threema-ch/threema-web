@@ -316,7 +316,7 @@ angular.module('3ema.filters', [])
  * Convert ID-Array to (Display-)Name-String, separated by ','. Invokes the displayName filter.
  */
 .filter('idsToNames', ['WebClientService', '$filter', function(webClientService: WebClientService, $filter) {
-    return(ids: string[]) => {
+    return (ids: string[], sort: boolean = false) => {
         const names: string[] = [];
         for (const id of ids) {
             const contactReceiver = webClientService.contacts.get(id);
@@ -326,7 +326,7 @@ angular.module('3ema.filters', [])
                 names.push('Unknown');
             }
         }
-        return names.join(', ');
+        return sort ? names.sort().join(', ') : names.join(', ');
     };
 }])
 
