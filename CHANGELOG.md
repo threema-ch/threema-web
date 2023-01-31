@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.5.1][v2.5.1] (2023-01-31)
+
+Changes:
+
+* [feature] Show group reaction names on hover ([#1164][i1164])
+* [change] Upgrade dependencies
+
+
 ### [v2.5.0][v2.5.0] (2022-12-12)
 
 Changes:
@@ -1239,7 +1247,9 @@ First public release.
 [i1160]: https://github.com/threema-ch/threema-web/pull/1160
 [i1161]: https://github.com/threema-ch/threema-web/pull/1161
 [i1162]: https://github.com/threema-ch/threema-web/pull/1162
+[i1164]: https://github.com/threema-ch/threema-web/pull/1164
 
+[v2.5.1]: https://github.com/threema-ch/threema-web/compare/v2.5.0...v2.5.1
 [v2.5.0]: https://github.com/threema-ch/threema-web/compare/v2.4.4...v2.5.0
 [v2.4.4]: https://github.com/threema-ch/threema-web/compare/v2.4.3...v2.4.4
 [v2.4.3]: https://github.com/threema-ch/threema-web/compare/v2.4.2...v2.4.3
