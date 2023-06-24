@@ -176,6 +176,11 @@ export class PushSession {
             const parts = this.service.pushToken.split('|');
             data.set(PushService.ARG_TOKEN, parts[1]);
             data.set(PushService.ARG_APP_ID, parts[0]);
+        } else if (this.service.pushType === threema.PushTokenType.ThreemaGateway) {
+            // Threema Gateway token format: "<threema-id>;<public-key>"
+            const parts = this.service.pushToken.split(';');
+            data.set('identity', parts[0]);
+            data.set('public_key', parts[1]);
         } else {
             throw new Error(`Invalid push type: ${this.service.pushType}`);
         }
