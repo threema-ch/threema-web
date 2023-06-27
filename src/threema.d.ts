@@ -523,12 +523,14 @@ declare namespace threema {
         Fcm = 'gcm',
         Apns = 'apns',
         Hms = 'hms',
+        ThreemaGateway = 'threema-gateway',
     }
 
     const enum PushTokenPrefix {
         Fcm = 'g',
         Apns = 'a',
         Hms = 'h',
+        ThreemaGateway = '3',
     }
 
     interface TrustedKeyStoreData {
@@ -751,7 +753,7 @@ declare namespace threema {
         isWork: boolean;
 
         // The FCM / HMS / APNS push token
-        // (Note: HMS tokens are prefixed with "hms;")
+        // (Note: HMS tokens are prefixed with "hms;", Threema Gateway tokens are prefixed with "threema-gateway;")
         pushToken?: string;
 
         // The device configuration

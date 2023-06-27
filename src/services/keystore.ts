@@ -190,6 +190,9 @@ export class TrustedKeyStoreService {
             case threema.PushTokenType.Hms:
                 prefix = threema.PushTokenPrefix.Hms;
                 break;
+            case threema.PushTokenType.ThreemaGateway:
+                prefix = threema.PushTokenPrefix.ThreemaGateway;
+                break;
             default:
                 throw new Error(`Invalid push token type: ${type}`)
         }
@@ -212,6 +215,9 @@ export class TrustedKeyStoreService {
                     break;
                 case threema.PushTokenPrefix.Hms:
                     type = threema.PushTokenType.Hms;
+                    break;
+                case threema.PushTokenPrefix.ThreemaGateway:
+                    type = threema.PushTokenType.ThreemaGateway;
                     break;
                 default:
                     this.log.error('Invalid push token type:', encodedString[0]);

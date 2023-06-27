@@ -3384,12 +3384,16 @@ export class WebClientService {
             this.pushToken = this.clientInfo.pushToken;
             switch (this.clientInfo.os) {
                 case threema.OperatingSystem.Android:
-                    // Note: HMS push tokens are prefixed with "hms;" to differentiate them
+                    // Note: HMS and Threema Gatway push tokens are prefixed to differentiate them
                     // from FCM tokens. This prefix needs to be stripped.
-                    const hmsPrefix = 'hms;';
+                    const hmsPrefix = `${threema.PushTokenType.Hms};`;
+                    const threemaGatewayPrefix = `${threema.PushTokenType.ThreemaGateway};`;
                     if (this.pushToken.startsWith(hmsPrefix)) {
                         this.pushToken = this.pushToken.substring(hmsPrefix.length);
                         this.pushTokenType = threema.PushTokenType.Hms;
+                    } else if (this.pushToken.startsWith(threemaGatewayPrefix)) {
+                        this.pushToken = this.pushToken.substring(threemaGatewayPrefix.length);
+                        this.pushTokenType = threema.PushTokenType.ThreemaGateway;
                     } else {
                         this.pushTokenType = threema.PushTokenType.Fcm;
                     }
