@@ -92,7 +92,7 @@
     "angular-mocks": "^1.8.3",
     "chai": "^4.3.6",
     "concurrently": "^7.3.0",
-    "geckodriver": "^3.0.2",
+    "geckodriver": "^4.0.5",
     "jasmine": "^3.99.0",
     "jasmine-core": "^3.99.1",
     "karma": "^6.4.0",
