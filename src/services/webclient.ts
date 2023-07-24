@@ -1841,12 +1841,11 @@ export class WebClientService {
                     if (task.version === 'v0' && fileData.size > WebClientService.MAX_FILE_SIZE_WEBRTC_TASK_V0) {
                         throw this.$translate.instant('error.FILE_TOO_LARGE_WEB');
                     }
-                } else {
-                    if (fileData.size > this.clientInfo.capabilities.maxFileSize) {
-                        throw this.$translate.instant('error.FILE_TOO_LARGE', {
-                            maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
-                        });
-                    }
+                }
+                if (fileData.size > this.clientInfo.capabilities.maxFileSize) {
+                    throw this.$translate.instant('error.FILE_TOO_LARGE', {
+                        maxmb: Math.floor(this.clientInfo.capabilities.maxFileSize / 1024 / 1024),
+                    });
                 }
 
                 // Determine reflected type
