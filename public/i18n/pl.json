@@ -274,7 +274,7 @@
         "CONTACT_BLOCKED": "Nie możesz wysyłać wiadomości do zablokowanego kontaktu.",
         "CONTACT_INVALID": "Nie możesz wysyłać wiadomości do nieprawidłowego kontaktu",
         "ERROR_OCCURRED": "Wystąpił błąd.",
-        "FILE_TOO_LARGE": "Pliki większe niż {maxmb} MiB nie mogą być wysłyane",
+        "FILE_TOO_LARGE": "Pliki większe niż {maxmb} MiB nie mogą być wysyłane",
         "FILE_TOO_LARGE_WEB": "Obecnie pliki większe niż 15 MiB nie mogą zostać wysłane przez Threema Desktop/Web",
         "FILE_TOO_LARGE_GENERIC": "Plik jest zbyt duży aby został wysłany",
         "NOTIFICATION_PERMISSION_DENIED": "Musisz ręcznie udzielić uprawnienia powiadomień dla Threema Web aby otrzymywać powiadomienia pulpitu.",
