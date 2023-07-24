@@ -10,6 +10,15 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.5.2][v2.5.2] (2023-07-24)
+
+Changes:
+
+* [feature] Add support for Threema Gatway push service ([#1175][i1175])
+* [bug] Fix file size limit check ([#1179][i1179])
+* [change] Upgrade many dependencies
+
+
 ### [v2.5.1][v2.5.1] (2023-01-31)
 
 Changes:
@@ -1248,7 +1257,10 @@ First public release.
 [i1161]: https://github.com/threema-ch/threema-web/pull/1161
 [i1162]: https://github.com/threema-ch/threema-web/pull/1162
 [i1164]: https://github.com/threema-ch/threema-web/pull/1164
+[i1175]: https://github.com/threema-ch/threema-web/pull/1175
+[i1179]: https://github.com/threema-ch/threema-web/pull/1179
 
+[v2.5.2]: https://github.com/threema-ch/threema-web/compare/v2.5.1...v2.5.2
 [v2.5.1]: https://github.com/threema-ch/threema-web/compare/v2.5.0...v2.5.1
 [v2.5.0]: https://github.com/threema-ch/threema-web/compare/v2.4.4...v2.5.0
 [v2.4.4]: https://github.com/threema-ch/threema-web/compare/v2.4.3...v2.4.4
