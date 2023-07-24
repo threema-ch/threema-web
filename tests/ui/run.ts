@@ -255,7 +255,14 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
     }
     try {
         // Initial pageload to ensure bundles are generated
-        await driver.get(TEST_URL);
+        try {
+            await driver.get(TEST_URL);
+        } catch (error) {
+            // In CI, this fails sometimes because the server is too slow to
+            // start and the call runs into a timeout. Try it again...
+            console.info('(Initial request failed, trying again...)');
+            await driver.get(TEST_URL);
+        }
 
         for (const [name, testfunc] of TESTS) {
             try {
