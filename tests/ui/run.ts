@@ -46,6 +46,14 @@ const composeArea = By.id('composeDiv');
 const emojiKeyboard = By.css('.emoji-keyboard');
 const emojiTrigger = By.css('.emoji-trigger');
 
+
+/**
+ * Awaitable timeout function.
+ */
+export function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
  * Helper function to extract text.
  */
@@ -255,13 +263,16 @@ const TEST_URL = 'http://localhost:7777/tests/ui/compose_area.html';
     }
     try {
         // Initial pageload to ensure bundles are generated
-        try {
-            await driver.get(TEST_URL);
-        } catch (error) {
-            // In CI, this fails sometimes because the server is too slow to
-            // start and the call runs into a timeout. Try it again...
-            console.info('(Initial request failed, trying again...)');
-            await driver.get(TEST_URL);
+        for (let j = 1; j <= 5; j++) {
+            try {
+                await driver.get(TEST_URL);
+                break;
+            } catch (error) {
+                // In CI, this fails sometimes because the server is too slow to
+                // start and the call runs into a timeout. Try it again...
+                console.info(`(Initial request failed (attempt ${j}), trying again in 5s...)`);
+                await sleep(5000);
+            }
         }
 
         for (const [name, testfunc] of TESTS) {
