@@ -4,11 +4,12 @@
 [![License](https://img.shields.io/badge/License-AGPLv3-blue.svg)](https://github.com/threema-ch/threema-web/blob/master/LICENSE.txt)
 [![Docker Image](https://img.shields.io/badge/docker%20image-threema%2Fthreema--web-yellow.svg)](https://hub.docker.com/r/threema/threema-web)
 
-> :warning: **Note:** Threema Web is in maintenance mode while we are working on a new
-> solution that should resolve some of the long-standing issues we were having
-> with Threema Web. We will still do regular maintenance and fix critical bugs,
-> but for now there will be no major new features or non-critical bugfixes.
-> See https://github.com/threema-ch/threema-web/pull/996 for more details.
+> :warning: **Note:** Threema Web is in maintenance mode while we are working
+> on [Threema for Desktop 2.0](https://three.ma/md), which should resolve some
+> of the long-standing issues we were having with Threema Web. We will still do
+> regular maintenance and fix critical bugs, but for now there will be no major
+> new features or non-critical bugfixes. See
+> https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 Threema Web is a web client for Threema, a privacy-focussed end-to-end
 encrypted mobile messenger hosted and developed in Switzerland. With Threema
