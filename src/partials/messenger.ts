@@ -946,7 +946,7 @@ class ConversationController {
 
         if (!this.msgReadReportPending) {
             this.msgReadReportPending = true;
-            const receiver = angular.copy(this.receiver);
+            const receiver = structuredClone(this.receiver);
             receiver.type = this.type;
             this.timeoutService.register(() => {
                 this.webClientService.requestRead(receiver, this.lastReadMsg);
