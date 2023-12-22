@@ -49,6 +49,9 @@ First, adjust the configuration in `src/config.ts`:
 - If you host your own SaltyRTC server, adjust the `SALTYRTC_*` variables
 - If you host your own STUN / TURN server, adjust the `ICE_SERVERS` variable
 
+Make sure that you have the appropriate NodeJS version installed (see the
+`.nvmrc` file in the repository root).
+
 Then, build the release version of Threema Web:
 
     npm install --production
