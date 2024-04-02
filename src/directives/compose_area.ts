@@ -346,12 +346,13 @@ export default [
 
                     // If the compose area contains only a single <br>, make it fully empty.
                     // See also: https://stackoverflow.com/q/14638887/284318
-                    const text = composeArea.get_text(true);
-                    if (text === '\n') {
+                    const html = composeDiv[0].innerHTML.trim();
+                    if (html === '<br>') {
                         composeDiv[0].innerText = '';
                     }
 
                     // Update typing information
+                    const text = composeArea.get_text(true);
                     if (text.trim().length === 0) {
                         stopTyping();
                         scope.onTyping('');
