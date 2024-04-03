@@ -222,7 +222,8 @@
         "ME": "Me",
         "CONTACT_STATE_INACTIVE": "Inactive",
         "CONTACT_STATE_INVALID": "Invalid",
-        "CONTACT_STATE_REVOKED": "Revoked"
+        "CONTACT_STATE_REVOKED": "Revoked",
+        "MESSAGE_EDITED": "Edited"
     },
     "messageStates": {
         "WE_ACK": "You sent thumbs-up",

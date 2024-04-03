@@ -120,6 +120,7 @@ declare namespace threema {
         statusType?: 'text' | 'firstUnreadMessage';
         unread?: boolean;
         state?: MessageState;
+        lastEditedAt?: number;
         quote?: Quote;
         file?: FileInfo;
         video?: VideoInfo;

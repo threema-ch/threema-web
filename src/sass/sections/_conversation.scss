@@ -345,6 +345,11 @@
             color: #808080;
             font-size: .8em;
 
+            .message-edited-hint {
+                font-style: italic;
+                margin-right: 0.5em;
+            }
+
             .message-state {
                 margin-left: 5px;
 

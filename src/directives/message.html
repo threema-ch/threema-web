@@ -45,6 +45,7 @@
         </eee-message-text>
 
         <div class="message-info">
+            <span ng-if="ctrl.isEdited" class="message-edited-hint" translate>messenger.MESSAGE_EDITED</span>
             <span eee-message-group-reactions ng-if="ctrl.showGroupReactions" class="message-group-reactions" eee-message="ctrl.message"></span>
             <span eee-message-meta eee-message="ctrl.message"></span>
             <span eee-message-date class="message-date" eee-message="ctrl.message"></span>
