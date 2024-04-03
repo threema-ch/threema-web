@@ -10,6 +10,17 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.5.4][v2.5.4] (2024-03-04)
+
+Changes:
+
+* [feature] Add Italian translations
+* [bug] Fix compose area scroll bug ([#1200][i1200])
+* [bug] Fix occasionally missing placeholder text in compose area ([#1202][i1202])
+* [bug] Disallow quoting of call status messages ([#1194][i1194])
+* [change] Upgrade many dependencies
+
+
 ### [v2.5.3][v2.5.3] (2023-12-19)
 
 Changes:
@@ -1267,7 +1278,11 @@ First public release.
 [i1164]: https://github.com/threema-ch/threema-web/pull/1164
 [i1175]: https://github.com/threema-ch/threema-web/pull/1175
 [i1179]: https://github.com/threema-ch/threema-web/pull/1179
+[i1194]: https://github.com/threema-ch/threema-web/pull/1194
+[i1200]: https://github.com/threema-ch/threema-web/issues/1200
+[i1202]: https://github.com/threema-ch/threema-web/issues/1202
 
+[v2.5.4]: https://github.com/threema-ch/threema-web/compare/v2.5.3...v2.5.4
 [v2.5.3]: https://github.com/threema-ch/threema-web/compare/v2.5.2...v2.5.3
 [v2.5.2]: https://github.com/threema-ch/threema-web/compare/v2.5.1...v2.5.2
 [v2.5.1]: https://github.com/threema-ch/threema-web/compare/v2.5.0...v2.5.1
