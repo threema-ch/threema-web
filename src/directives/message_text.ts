@@ -74,6 +74,16 @@ export default [
                         }
                     },
                 );
+                scope.$watch(
+                    () => scope.ctrl.message,
+                    (newMessage, oldMessage) => {
+                        // Register for message object changes. This happens when editing messages.
+                        if (newMessage !== oldMessage) {
+                            scope.ctrl.updateText();
+                        }
+                    },
+                    false, /* Only compare reference */
+                );
 
             },
             controllerAs: 'ctrl',

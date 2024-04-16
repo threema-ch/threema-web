@@ -19,7 +19,7 @@
 
 import {saveAs} from 'file-saver';
 
-import {firefoxWorkaroundPdfDownload} from '../helpers';
+import {firefoxWorkaroundPdfDownload, hasValue} from '../helpers';
 import * as clipboard from '../helpers/clipboard';
 import {BrowserInfo} from '../helpers/browser_info';
 import {getSenderIdentity} from '../helpers/messages';
@@ -82,6 +82,7 @@ export default [
                     this.isGroup = this.type as threema.ReceiverType === 'group';
                     this.isContact = this.type as threema.ReceiverType === 'contact';
                     this.isBusinessReceiver = receiverService.isBusinessContact(this.receiver);
+                    this.isEdited = hasValue(this.message.lastEditedAt);
 
                     this.showName = !this.message.isOutbox && this.isGroup;
                     // show avatar only if a name is shown
