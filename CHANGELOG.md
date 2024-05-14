@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.5.5][v2.5.5] (2024-05-14)
+
+Changes:
+
+* [change] Upgrade many dependencies
+* [bug] Fix latest message change detection
+
+
 ### [v2.5.4][v2.5.4] (2024-03-04)
 
 Changes:
@@ -1282,6 +1290,7 @@ First public release.
 [i1200]: https://github.com/threema-ch/threema-web/issues/1200
 [i1202]: https://github.com/threema-ch/threema-web/issues/1202
 
+[v2.5.5]: https://github.com/threema-ch/threema-web/compare/v2.5.4...v2.5.5
 [v2.5.4]: https://github.com/threema-ch/threema-web/compare/v2.5.3...v2.5.4
 [v2.5.3]: https://github.com/threema-ch/threema-web/compare/v2.5.2...v2.5.3
 [v2.5.2]: https://github.com/threema-ch/threema-web/compare/v2.5.1...v2.5.2
