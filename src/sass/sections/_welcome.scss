@@ -1,6 +1,15 @@
 #welcome {
-    padding: 16px 32px;
+    flex: 1 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     line-height: 1.4em;
+
+    .welcome {
+        padding: 16px 32px;
+    }
 
     .state {
         margin-top: 1em;
@@ -193,5 +202,54 @@
 
     md-input-container.md-input-focused .password-strength-indicator .unreached {
         background-color: darken($background-grey, 7%);
+    }
+
+    .desktop-beta-button {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+
+        overflow: hidden;
+
+        margin-top: 24px;
+        height: 64px;
+        color: white;
+        background-color: $theme-primary;
+
+        box-shadow: 0 2px 5px 0 rgba($theme-primary, 0.25);
+
+        transition: all .15s ease-out;
+
+        .badge {
+            position: absolute;
+            top: 4px;
+            left: -22px;
+            
+            padding: 2px 24px;
+            color: $theme-primary;
+            background-color: white;
+
+            transform: rotate(-45deg);
+        }
+
+        md-icon {
+            margin: 0;
+            color: white;
+
+            transition: all .15s ease-out;
+        }
+
+        &:hover {
+            background-color: $theme-b300;
+
+            box-shadow: 0 3px 15px 0 rgba($theme-primary, 0.35);
+
+            md-icon {
+                transform: translateX(4px);
+            }
+        }
     }
 }

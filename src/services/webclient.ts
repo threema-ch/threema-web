@@ -3378,6 +3378,13 @@ export class WebClientService {
         this.arpLog.debug('Client device:', this.clientInfo.device);
         this.arpLog.debug('Client capabilities:', this.clientInfo.capabilities);
 
+        // Store `clientInfo.os` to `localStorage`
+        try {
+            localStorage.setItem("lastConnectedClientOS", this.clientInfo.os);
+        } catch (error) {
+            this.log.error(`Could not write to localSotrage: ${error}`);
+        }
+
         // Store push token
         if (this.clientInfo.pushToken) {
             this.pushToken = this.clientInfo.pushToken;
