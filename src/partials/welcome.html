@@ -1,20 +1,53 @@
 <div id="welcome">
-    <div class="center-block text-center welcome">
+    <div 
+        ng-if="!ctrl.showLoadingIndicator && ctrl.lastConnectedClientOS === 'ios'" 
+        class="desktop-beta-banner" 
+        ng-class="{work: ctrl.lastConnectedAppFlavor === 'work'}"
+    >
+        <div class="prose">
+            <p translate>
+                welcome.DESKTOP_BETA_HINT_INTRO_TEXT1
+            </p>
+            <p translate>
+                welcome.DESKTOP_BETA_HINT_INTRO_TEXT2
+            </p>
+        </div>
+
+        <a class="button" href="https://threema.ch/download-md">
+            <span class="badge" translate>common.BETA</span>
+            <div class="content">
+                <img ng-if="ctrl.lastConnectedAppFlavor === 'consumer'" class="app-icon" src="img/app-icon-consumer-live.svg">
+                <img ng-if="ctrl.lastConnectedAppFlavor === 'work'" class="app-icon" src="img/app-icon-work-live.svg">
+                <span class="label" translate>welcome.DESKTOP_BETA_HINT</span>
+            </div>
+            <md-icon class="icon" class="material-icons md-24">arrow_downward</md-icon>
+        </a>
+    </div>
+
+    <div class="welcome">
         <div ng-if="(ctrl.state === 'connecting' || ctrl.state === 'waiting') && ctrl.mode === 'scan'" class="scan">
             <div class="ios-only-warning" ng-if="ctrl.browser.safari">
                 <img src="img/safari.svg" alt="Safari">
                 <p><strong translate>common.NOTE</strong> <span translate>welcome.SAFARI</span></p>
             </div>
 
-            <p class="instructions">
-                <span translate>welcome.PLEASE_SCAN</span><br>
-                <em translate style="font-size: .8em">welcome.PLEASE_SCAN_INSTRUCTIONS</em>
-            </p>
-            <qrcode version="{{ ctrl.qrCode.version }}"
-                    id="connecting-code"
-                    error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"
-                    size="{{ ctrl.qrCode.size }}" margin="{{ ctrl.qrCode.margin }}"
-                    data="{{ ctrl.qrCode.data }}"></qrcode>
+            <qrcode 
+                version="{{ ctrl.qrCode.version }}"
+                id="connecting-code"
+                error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"
+                size="{{ ctrl.qrCode.size }}" 
+                margin="{{ ctrl.qrCode.margin }}"
+                data="{{ ctrl.qrCode.data }}"
+            ></qrcode>
+
+            <div class="instructions">
+                <p class="title" translate>welcome.PLEASE_SCAN</p>
+                <div class="text">
+                    <p translate>welcome.PLEASE_SCAN_INSTRUCTIONS_ANDROID</p>
+                    <p translate>welcome.PLEASE_SCAN_INSTRUCTIONS_IOS</p>
+                </div>
+            </div>
+
             <div class="password-entry">
                 <label>
                     <p translate id="aria-label-password-create" ng-if="!ctrl.inMemorySessionPasswordEnabled">welcome.CHOOSE_PASSWORD</p>
@@ -43,7 +76,7 @@
         </div>
 
         <div ng-if="(ctrl.state === 'new' || ctrl.state === 'connecting') && ctrl.mode === 'unlock'" class="unlock">
-            <h2 class="instructions" translate>welcome.PLEASE_UNLOCK</h2>
+            <h2 class="instructions centered" translate>welcome.PLEASE_UNLOCK</h2>
             <div class="password-entry">
                 <label>
                     <p translate id="aria-label-password-reconnect" ng-if="ctrl.inMemorySessionPassword === undefined">welcome.ENTER_PASSWORD</p>
@@ -77,8 +110,8 @@
         </div>
 
         <div ng-if="ctrl.showLoadingIndicator">
-            <h2 class="instructions" translate ng-if="ctrl.state !== 'push' || !ctrl.hasAppleNonVoipPushToken()">welcome.CONNECTING</h2>
-            <h2 class="instructions" translate ng-if="ctrl.state === 'push' && ctrl.hasAppleNonVoipPushToken()">welcome.PLEASE_START_APP</h2>
+            <h2 class="instructions centered" translate ng-if="ctrl.state !== 'push' || !ctrl.hasAppleNonVoipPushToken()">welcome.CONNECTING</h2>
+            <h2 class="instructions centered" translate ng-if="ctrl.state === 'push' && ctrl.hasAppleNonVoipPushToken()">welcome.PLEASE_START_APP</h2>
             <div class="loading">
                 <md-progress-circular md-mode="determinate" value="{{ ctrl.progress }}" md-diameter="250" ng-aria-disable>
                 </md-progress-circular>

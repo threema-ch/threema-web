@@ -5,8 +5,12 @@
     "welcome": {
         "ABORT": "Abbrechen",
         "CONTINUE_ANYWAY": "Trotzdem fortfahren",
+        "DESKTOP_BETA_HINT": "Nutzen Sie die neue Desktop-App",
+        "DESKTOP_BETA_HINT_INTRO_TEXT1": "Nutzen Sie bereits die neue Threema Desktop-App?",
+        "DESKTOP_BETA_HINT_INTRO_TEXT2": "Laden Sie die App gleich herunter.",
         "PLEASE_SCAN": "Scannen Sie den QR-Code mit Ihrer Threema-App",
-        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Einstellungen > Desktop/Web",
+        "PLEASE_SCAN_INSTRUCTIONS_ANDROID": "Android: Menu > Desktop/Web",
+        "PLEASE_SCAN_INSTRUCTIONS_IOS": "iOS: iOS: Einstellungen > Desktop/Web",
         "PLEASE_UNLOCK": "Sitzung geschlossen",
         "PLEASE_START_APP": "Bitte starten Sie die Threema-App",
         "WAITING": "Auf Verbindung warten",
@@ -111,7 +115,8 @@
         "SAVE": "Speichern",
         "DONE": "Fertig",
         "MODIFY": "Ändern",
-        "NOTE": "Hinweis:"
+        "NOTE": "Hinweis:",
+        "BETA": "Beta"
     },
     "messenger": {
         "VERSION": "Version",
