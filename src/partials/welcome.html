@@ -31,7 +31,15 @@
                 <p><strong translate>common.NOTE</strong> <span translate>welcome.SAFARI</span></p>
             </div>
 
+            <div class="instructions centered">
+                <p class="title" translate>welcome.PLEASE_SCAN</p>
+                <div class="text">
+                    <p translate>welcome.PLEASE_SCAN_INSTRUCTIONS</p>
+                </div>
+            </div>
+
             <qrcode 
+                ng-class="{ small: !ctrl.showLoadingIndicator && ctrl.lastConnectedClientOS === 'ios' }"
                 version="{{ ctrl.qrCode.version }}"
                 id="connecting-code"
                 error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"
@@ -39,14 +47,6 @@
                 margin="{{ ctrl.qrCode.margin }}"
                 data="{{ ctrl.qrCode.data }}"
             ></qrcode>
-
-            <div class="instructions">
-                <p class="title" translate>welcome.PLEASE_SCAN</p>
-                <div class="text">
-                    <p translate>welcome.PLEASE_SCAN_INSTRUCTIONS_ANDROID</p>
-                    <p translate>welcome.PLEASE_SCAN_INSTRUCTIONS_IOS</p>
-                </div>
-            </div>
 
             <div class="password-entry">
                 <label>
