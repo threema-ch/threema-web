@@ -5,6 +5,9 @@
     "welcome": {
         "ABORT": "Abort",
         "CONTINUE_ANYWAY": "Continue anyway",
+        "DESKTOP_BETA_HINT": "Use the new desktop app now",
+        "DESKTOP_BETA_HINT_INTRO_TEXT1": "Do you already use the new Threema desktop app?",
+        "DESKTOP_BETA_HINT_INTRO_TEXT2": "Download the app now.",
         "PLEASE_SCAN": "Scan this QR code with your Threema app",
         "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
         "PLEASE_UNLOCK": "Session closed",
@@ -111,7 +114,8 @@
         "SAVE": "Save",
         "DONE": "Done",
         "MODIFY": "Modify",
-        "NOTE": "Note:"
+        "NOTE": "Note:",
+        "BETA": "Beta"
     },
     "messenger": {
         "VERSION": "Version",

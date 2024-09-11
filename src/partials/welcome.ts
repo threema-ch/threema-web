@@ -268,6 +268,42 @@ class WelcomeController {
     }
 
     /**
+     * Return the OS name of the last connected device, if known.
+     */
+    public get lastConnectedClientOS(): threema.OperatingSystem | undefined {
+        try {
+            const lastConnectedClientOS = localStorage.getItem('lastConnectedClientOS');
+            if (lastConnectedClientOS === 'ios') {
+                return threema.OperatingSystem.Ios
+            } else if (lastConnectedClientOS === 'android') {
+                return threema.OperatingSystem.Android
+            } else {
+                return undefined;
+            }
+        } catch (error) {
+            this.log.error(`Could not read from localStorage: ${error}`);
+        }
+    }
+
+    /**
+     * Return the app flavor of the last connected device, if known.
+     */
+    public get lastConnectedAppFlavor(): 'consumer' | 'work' | undefined {
+        try {
+            const lastConnectedAppFlavor = localStorage.getItem('lastConnectedAppFlavor');
+            if (lastConnectedAppFlavor === 'consumer') {
+                return 'consumer'
+            } else if (lastConnectedAppFlavor === 'work') {
+                return 'work'
+            } else {
+                return undefined;
+            }
+        } catch (error) {
+            this.log.error(`Could not read from localStorage: ${error}`);
+        }
+    }
+
+    /**
      * Getter for connection buildup state.
      *
      * Only to be used by the template.

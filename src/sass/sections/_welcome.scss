@@ -1,12 +1,34 @@
 #welcome {
-    padding: 16px 32px;
+    flex: 1 0 auto;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
     line-height: 1.4em;
+
+    .welcome {
+        flex: 1 1 auto;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+
+        padding: 16px 32px;
+    }
 
     .state {
         margin-top: 1em;
 
         &.error {
             color: $status-error;
+        }
+    }
+
+    .instructions {
+        &.centered {
+            text-align: center;
         }
     }
 
@@ -19,11 +41,6 @@
         font-size: .9em;
     }
 
-    &,
-    input {
-        text-align: center;
-    }
-
     md-input-container {
         margin-right: 32px;
         margin-left: 32px;
@@ -34,6 +51,11 @@
     }
 
     .scan {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: start;
+
         .ios-only-warning {
             display: flex;
             flex-direction: horizontal;
@@ -42,7 +64,6 @@
             padding: 8px;
 
             p {
-                text-align: left;
                 line-height: 1.4em;
                 letter-spacing: -.2px;
                 font-size: .8em;
@@ -56,15 +77,30 @@
 
         .password-entry {
             margin-top: 16px;
+            text-align: center;
+
+            input {
+                text-align: center;
+            }
         }
 
         .instructions {
             margin-bottom: 16px;
+
+            .title {
+                padding-bottom: 4px;
+                text-wrap: pretty;
+            }
+
+            .text {
+                color: rgba(0, 0, 0, 0.65);
+                font-size: 13px;
+                line-height: 21px;
+            }
         }
 
         md-input-container {
-            margin-top: 12px;
-            margin-bottom: 0;
+            margin: 12px 0 16px 0;
 
             input {
                 border-bottom-width: 0;
@@ -72,6 +108,13 @@
         }
 
         qrcode {
+            margin: 0px;
+            text-align: center;
+
+            &.small {
+                margin: 0px 58px;
+            }
+
             canvas {
                 max-width: 100%;
             }
@@ -79,11 +122,16 @@
     }
 
     .unlock {
+        text-align: center;
         padding-top: 16px;
 
         .password-entry {
             margin-top: 32px;
             margin-bottom: 48px;
+
+            input {
+                text-align: center;
+            }
         }
 
         md-input-container {
@@ -99,6 +147,8 @@
     }
 
     .manual-start {
+        text-align: center;
+
         .illustration {
             margin-top: 24px;
             margin-bottom: 24px;
@@ -138,6 +188,8 @@
         }
 
         .info {
+            text-align: center;
+
             .percentage {
                 margin-bottom: 8px;
                 vertical-align: center;
@@ -155,7 +207,6 @@
             }
 
             ul {
-                text-align: left;
                 font-size: .9em;
 
                 li {
@@ -193,5 +244,126 @@
 
     md-input-container.md-input-focused .password-strength-indicator .unreached {
         background-color: darken($background-grey, 7%);
+    }
+
+    .desktop-beta-banner {
+        padding: 22px 28px;
+        background-color: $theme-b100;
+
+        .prose {
+            margin-bottom: 12px;
+
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 18px;
+        }
+
+        .button {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 14px;
+
+            padding: 12px 24px 12px 48px;
+            overflow: hidden;
+
+            color: white;
+            background-color: $theme-primary;
+            border-radius: 5px;
+
+            box-shadow: 0 2px 5px 0 rgba($theme-primary, 0.25);
+
+            transition: all .15s ease-out;
+
+            .badge {
+                position: absolute;
+                top: -16px;
+                left: -40px;
+
+                padding: 32px 32px 6px 32px;
+                color: white;
+                background-color: $theme-b300;
+                font-weight: 900;
+                text-transform: uppercase;
+
+                transform: rotate(-50deg);
+            }
+
+            .content {
+                flex: 1 0 auto;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                gap: 14px;
+
+                .app-icon {
+                    width: 34px;
+                    border-radius: 5px;
+                }
+            }
+
+            md-icon {
+                flex: 0 0 auto;
+
+                margin: 0;
+                color: white;
+            }
+
+            &:hover {
+                background-color: $theme-b200;
+
+                box-shadow: 0 3px 15px 0 rgba($theme-primary, 0.35);
+
+                transform: translateY(-1px);
+
+                md-icon {
+                    animation-duration: .375s;
+                    animation-name: jump;
+                    animation-iteration-count: 1;
+                    animation-timing-function: cubic-bezier(0.00, 0.10, 0.10, 1.0);
+                }
+            }
+        }
+
+        &.work {
+            background-color: $work-b100;
+
+            .button {
+                background-color: $work-primary;
+
+                box-shadow: 0 2px 5px 0 rgba($work-primary, 0.25);
+
+                .badge {
+                    background-color: $work-b300;
+                }
+
+                &:hover {
+                    background-color: $work-b200;
+
+                    box-shadow: 0 3px 15px 0 rgba($work-primary, 0.35);
+                }
+            }
+        }
+    }
+
+    @keyframes jump {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-8px) scaleY(0.95) scaleX(1.05);
+        }
+
+        75% {
+            transform: translateY(4px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
     }
 }
