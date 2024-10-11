@@ -5,6 +5,9 @@
     "welcome": {
         "ABORT": "Прервать",
         "CONTINUE_ANYWAY": "Продолжить",
+        "DESKTOP_BETA_HINT": "Используйте новое приложение для ПК прямо сейчас",
+        "DESKTOP_BETA_HINT_INTRO_TEXT1": "Вы уже пользуетесь новым приложением Threema для ПК?",
+        "DESKTOP_BETA_HINT_INTRO_TEXT2": "Скачайте приложение прямо сейчас.",
         "PLEASE_SCAN": "Отсканируйте QR-код с помощью приложения Threema",
         "PLEASE_SCAN_INSTRUCTIONS": "Android: Меню > Desktop/Web | iOS: Настройки > Desktop/Web",
         "PLEASE_UNLOCK": "Сеанс закрыт",
@@ -54,7 +57,7 @@
     },
     "connecting": {
         "CONNECTION_PROBLEMS": "Проблемы с соединением",
-        "GENERIC": "Попытка переподключения…",
+        "GENERIC": "Попытка соединения…",
         "RECOVERING_CONNECTION": "Попытка восстановления соединения…",
         "WAITING_FOR_APP": "Ожидание пробуждения приложения…",
         "WAITING_FOR_APP_MANUAL": "Сервис push-уведомлений недоступен. Начните сеанс вручную.",
@@ -86,9 +89,9 @@
         "REMOVE_SENSITIVE_DATA": "Удалить конфиденциальные данные (контакты, содержание сообщения и т.д.)",
         "DESCRIBE_PROBLEM": "Опишите проблему здесь.",
         "COPY_LOG_CLIPBOARD": "Скопировать журнал в буфер обмена",
-        "REPORT_VIA_THREEMA": "Отправить журнал в ПОДДЕРЖКУ",
-        "REPORT_VIA_THREEMA_FAILED": "Невозможно отправить журнал в ПОДДЕРЖКУ.",
-        "REPORT_VIA_THREEMA_SUCCESS": "Журнал был отправлен в ПОДДЕРЖКУ.",
+        "REPORT_VIA_THREEMA": "Отправить журнал в поддержку",
+        "REPORT_VIA_THREEMA_FAILED": "Невозможно отправить журнал в поддержку.",
+        "REPORT_VIA_THREEMA_SUCCESS": "Журнал был отправлен в поддержку.",
         "PLEASE_OPEN_AND_UNLOCK": "<strong>Разблокируйте</strong> ваше устройство iOS, затем <strong>откройте</strong> приложение Threema, чтобы оставаться подключённым к приложению для ПК / веб-клиенту. <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">Узнать больше…</a>"
     },
     "common": {
@@ -111,7 +114,8 @@
         "SAVE": "Сохранить",
         "DONE": "Выполнено",
         "MODIFY": "Изменить",
-        "NOTE": "Замечания:"
+        "NOTE": "Замечания:",
+        "BETA": "Бета"
     },
     "messenger": {
         "VERSION": "Версия",
@@ -222,7 +226,8 @@
         "ME": "Я",
         "CONTACT_STATE_INACTIVE": "Неактивный",
         "CONTACT_STATE_INVALID": "Недейтвительный",
-        "CONTACT_STATE_REVOKED": "Анулированный"
+        "CONTACT_STATE_REVOKED": "Анулированный",
+        "MESSAGE_EDITED": "Изменено"
     },
     "messageStates": {
         "WE_ACK": "Вы согласны",
@@ -250,14 +255,14 @@
     "validationError": {
         "modifyReceiver": {
             "unknown": "Произошла неизвестная ошибка",
-            "badRequest": "Неверный запрос (ошибка протокола?)",
+            "badRequest": "Неправильный запрос (ошибка протокола?)",
             "timeout": "Истекло время запроса",
             "internalError": "Возникла внутренняя ошибка",
-            "invalidAvatar": "Неверный аватар",
-            "invalidIdentity": "Неверный Threema ID",
-            "invalidContact": "Неверный ID контакта",
-            "invalidGroup": "Неверный ID группы",
-            "invalidDistributionList": "Неверный ID списка рассылки",
+            "invalidAvatar": "Неправильный аватар",
+            "invalidIdentity": "Неправильный Threema ID",
+            "invalidContact": "Неправильный ID контакта",
+            "invalidGroup": "Неправильный ID группы",
+            "invalidDistributionList": "Неправильный ID списка рассылки",
             "notAllowed": "Изменение не допускается",
             "notAllowedLinked": "Контакт не может быть изменён: он связан с системным контактом",
             "notAllowedBusiness": "Аватар не может быть изменён: это контакт Threema Gateway",
@@ -275,7 +280,7 @@
         "CONTACT_INVALID": "Вы не можете отправлять сообщения неверному контакту.",
         "ERROR_OCCURRED": "Произошла ошибка.",
         "FILE_TOO_LARGE": "Файлы размером более {maxmb} МиБ не могут быть отправлены",
-        "FILE_TOO_LARGE_WEB": "В настоящее время файлы размером более 15 МБ не могут быть отправлены через Threema Desktop/Web",
+        "FILE_TOO_LARGE_WEB": "В настоящее время файлы размером более 15 МиБ не могут быть отправлены через Threema Desktop/Web",
         "FILE_TOO_LARGE_GENERIC": "Файл слишком велик для отправки",
         "NOTIFICATION_PERMISSION_DENIED": "Вы должны предоставить разрешение на уведомления для Threema Web вручную, чтобы получать уведомления на рабочем столе.",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "Узнать ещё",
@@ -306,7 +311,7 @@
         "OPEN_SOURCE": "Threema Web — это продукт с полностью открытым исходным кодом.",
         "SOURCE_CODE": "Исходный код и условия лицензирования можно найти на GitHub:",
         "EMOJI_ART": "Изображения emoji предоставлены <a target=\"_blank\" href=\"https://twemoji.twitter.com/\">Twitter</a>",
-        "NOTIFICATION_SOUNDS": "Звуковые файлы &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> — Лицензированы по лицензии Soundsnap",
+        "NOTIFICATION_SOUNDS": "Звуковые файлы &copy; 2012 <a target=\"_blank\" href=\"https://www.soundsnap.com/licence\">soundsnap.com</a> — лицензированы по лицензии Soundsnap",
         "LICENSE_TEXT": "Лицензии на используемые компоненты с открытым исходным кодом можно найти <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">в исходном коде</a>.",
         "CHANGELOG": "Список изменений",
         "CHANGELOG_TEXT": "Список изменений Threema Web можно найти <a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{url}\">на GitHub</a>."
@@ -339,15 +344,15 @@
         "NEW_VERSION_BODY": "Доступна новая версия ({version}) Threema Web. Ознакомьтесь с {changelog} для получения дополнительной информации. Нажмите \"ОК\", чтобы активировать обновление."
     },
     "voip": {
-        "CALL_MISSED": "Пропущенный вызов",
-        "CALL_MISSED_BUSY": "Пропущенный вызов (занято)",
-        "CALL_FINISHED_IN": "Входящий вызов",
-        "CALL_FINISHED_OUT": "Исходящий вызов",
-        "CALL_REJECTED": "Вызов отклонён",
-        "CALL_REJECTED_BUSY": "Адресат вызова занят",
-        "CALL_REJECTED_UNAVAILABLE": "Адресат вызова недоступен",
-        "CALL_REJECTED_DISABLED": "Вызовы Threema запрещены получателем",
-        "CALL_ABORTED": "Вызов прерван"
+        "CALL_MISSED": "Пропущенный звонок",
+        "CALL_MISSED_BUSY": "Пропущенный звонок (занято)",
+        "CALL_FINISHED_IN": "Входящий звонок",
+        "CALL_FINISHED_OUT": "Исходящий звонок",
+        "CALL_REJECTED": "Звонок отклонён",
+        "CALL_REJECTED_BUSY": "Получатель звонка занят",
+        "CALL_REJECTED_UNAVAILABLE": "Получатель звонка недоступен",
+        "CALL_REJECTED_DISABLED": "Звонки Threema запрещены получателем",
+        "CALL_ABORTED": "Звонок прерван"
     },
     "battery": {
         "CHARGING": "Зарядка: {percent}%",

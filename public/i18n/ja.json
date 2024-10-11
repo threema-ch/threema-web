@@ -5,23 +5,28 @@
     "welcome": {
         "ABORT": "Threema Webについて",
         "CONTINUE_ANYWAY": "とにかく続ける",
+        "DESKTOP_BETA_HINT": "Use the new desktop app now",
+        "DESKTOP_BETA_HINT_INTRO_TEXT1": "Do you already use the new Threema desktop app?",
+        "DESKTOP_BETA_HINT_INTRO_TEXT2": "Download the app now.",
         "PLEASE_SCAN": "この QR コードを Threema アプリでスキャンしてください",
-        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
-        "PLEASE_UNLOCK": "Session closed",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: メニュー > Desktop/Web ｜ iOS: 設定 > Desktop/Web",
+        "PLEASE_UNLOCK": "セッションが終了しました",
+        "PLEASE_START_APP": "Threemaアプリを開いてください",
         "WAITING": "接続を待機中",
         "RETRY": "再試行",
         "PLEASE_RELOAD": "お手数ですが、ページを再読み込みしてお試しください。",
         "RELOAD": "ページを再読み込み",
+        "RESTART_SESSION": "セッションを再開",
         "PASSWORD": "パスワード",
         "CHOOSE_PASSWORD": "あなたがログインを維持したい場合はスキャン前に、<br>セッションパスワードを設定してください。",
-        "CHOOSE_PASSWORD_AUTOPW": "If you want to avoid this QR-scan after restarting<br>Threema, please enter a password before scanning.",
+        "CHOOSE_PASSWORD_AUTOPW": "再起動後のQRスキャンを避けたい場合<br>QRコードをスキャンする前にパスワードを入力してください。",
         "UNLOCK_FAILED_TEXT": "あなたは間違ったパスワードを入力したため、セッションの復元ができません。",
         "ENTER_PASSWORD": "セッションに再接続するには、<br>以下にパスワードを入力してください。",
-        "CONNECTION_INTERRUPTED": "The connection to your phone was interrupted or closed.",
+        "CONNECTION_INTERRUPTED": "お使いの端末との接続が中断または切断されました。",
         "PASSWORD_STRENGTH": "パスワードの強度",
         "UNLOCK_FAILED_TITLE": "ロック解除の失敗",
         "ALTERNATIVELY": "または、",
-        "UNLOCK_FAILED_FORGOTTEN": "あなたがパスワードを覚えていない場合は、「このセッションを忘れる」を選択して、新しいパスワードを設定してください。",
+        "UNLOCK_FAILED_FORGOTTEN": "パスワードを覚えていない場合は、「このセッションを忘れる」を選択して、新しいパスワードを設定してください。",
         "FORGET_SESSION": "このセッションを忘れる",
         "FORGET_SESSION_BTN": "セッションを忘れる",
         "BTN_RECONNECT": "再接続",
@@ -33,11 +38,12 @@
         "CONNECTING": "接続中",
         "WAITING_FOR_PUSH": "アプリの起動を<br>待機中 …",
         "CONNECTING_TO_APP": "アプリとの接続を<br>確立中 …",
+        "WAITING_FOR_APP": "お使いの端末でThreemaが起動するのを待っています...",
         "LOADING_INITIAL_DATA": "初期データを読み込み中 …",
         "MANUAL_START": "セッションを開始してください",
-        "MANUAL_START_TEXT1": "Push service is not available.",
-        "MANUAL_START_TEXT2": "You can use Threema Desktop/Web without push service, but you need to start the session manually:",
-        "MANUAL_START_STEP1": "Threemaアプリを開き、左のナビゲーションドロワーにある「Threema Web」をタップします。",
+        "MANUAL_START_TEXT1": "プッシュサービスはご利用いただけません。",
+        "MANUAL_START_TEXT2": " Threema Desktop/Webはプッシュサービスを使用せずに利用できますが、セッションを手動で開始する必要があります。",
+        "MANUAL_START_STEP1": "Threemaアプリを開き、右上のメニューボタンをタップし、\"Desktop/Web \"を選択します。",
         "MANUAL_START_STEP2": "このブラウザに関連するセッションをタップする",
         "MANUAL_START_STEP3": "「セッションの開始」を選択して、セッションを開始する",
         "MORE_ABOUT_WEB": "アプリについて",
@@ -54,7 +60,7 @@
         "GENERIC": "再接続を試行中…",
         "RECOVERING_CONNECTION": "再接続中...",
         "WAITING_FOR_APP": "アプリの起動を待機中…",
-        "WAITING_FOR_APP_MANUAL": "Push service not available. Please start the session manually.",
+        "WAITING_FOR_APP_MANUAL": "プッシュサービスが利用できません。手動でセッションを開始してください。",
         "CONNECTING_TO_SERVER": "サーバーに接続中…",
         "CONNECTING_TO_APP": "アプリとの接続を確立中…",
         "CONNECTION_CLOSED": "サーバーへの接続が終了しました。",
@@ -63,13 +69,16 @@
     "troubleshooting": {
         "SLOW_CONNECT": "接続に通常より時間がかかっています …",
         "APP_STARTED": "Threema アプリは起動していますか？",
-        "SESSION_DELETED": "あなたはこのセッションをスマートフォンで削除しましたか？",
-        "PHONE_ONLINE": "端末はインターネットに接続されていますか？",
+        "APP_STARTED_AND_VISIBLE": "Threema アプリは前面で実行されていますか？",
+        "SESSION_DELETED": "あなたのモバイル端末でこのセッションを削除しましたか？",
+        "PHONE_ONLINE": "あなたのモバイル端末はインターネットに接続されていますか？",
         "UNLOCK_OR_CHARGE": "端末のロックを解除したり、充電器に接続したりすることで解決する場合があります。",
-        "PUSH_FAQ": "お使いの端末でプッシュ通知の問題が発生している可能性があります。トラブルシューティングについては、<a target=\"_blank\" href=\"https://threema.ch/faq/push_andr\">Android</a>および<a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a>のFAQ記事をご参照ください。",
-        "WEBCLIENT_ENABLED": "ThreemaアプリでThreema Webが使えるようになりましたか？",
+        "PUSH_FAQ": "お使いの端末でプッシュ通知の問題が発生している可能性があります。トラブルシューティングについては<a target=\"_blank\" rel=\"noopener noreferrer\"  href=\"https://threema.ch/faq/push_andr\">Android</a>および<a target=\"_blank\" href=\"https://threema.ch/faq/push_ios\">iOS</a>のFAQ記事をご参照ください。",
+        "PUSH_FAQ_IOS_FOREGROUND": "iOSでDesktop/Webを使用する方法については、以下のFAQをご覧ください。<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">このFAQ記事</a>.",
+        "WEBCLIENT_ENABLED": "ThreemaアプリでDesktop/Webは使えますか？",
         "PLUGIN": "WebRTC の通信をブロックするプライバシー保護用のプラグインなどがブラウザにインストールされていませんか？",
         "ADBLOCKER": "WebRTC の通信をブロックする広告ブロッカーなどを使用していませんか？",
+        "IOS_48": "お使いのモバイル端末にThreemaのバージョン4.8以上がインストールされていますか？その場合は、「このセッションを忘れる」を選択して、新しいセッションを開始してください。",
         "PLEASE_UPDATE_APP": "<a href=\"https://threema.ch/en/whats-new\" target=\"_blank\">最新バージョン</a>の Threema アプリを使用していることをご確認ください！",
         "USE_ARCHIVE_VERSION": "または、<a href=\"{archiveUrl}\">古いバージョン</a>の Threema Web に戻すこともできます。",
         "TROUBLESHOOTING": "トラブルシューティング",
@@ -82,7 +91,8 @@
         "COPY_LOG_CLIPBOARD": "ログをクリップボードにコピー",
         "REPORT_VIA_THREEMA": "サポートにログを送信",
         "REPORT_VIA_THREEMA_FAILED": "サポートへのログレポートの送信に失敗しました。",
-        "REPORT_VIA_THREEMA_SUCCESS": "ログレポートがサポートに送信されました。"
+        "REPORT_VIA_THREEMA_SUCCESS": "ログレポートがサポートに送信されました。",
+        "PLEASE_OPEN_AND_UNLOCK": "お願い<strong>ロックを解除してください。</strong>お使いのiOS端末のロックを解除してください。<strong>開く</strong>デスクトップアプリ/ウェブクライアントとの接続を維持するには、Threemaアプリを開く必要があります。<a target=\"_blank\" rel=\"noopener noreferrer\" href=\"{faqUrl}\">さらに詳しく..."
     },
     "common": {
         "YES": "はい",
@@ -104,7 +114,8 @@
         "SAVE": "保存",
         "DONE": "完了",
         "MODIFY": "修正",
-        "NOTE": "注意:"
+        "NOTE": "注意:",
+        "BETA": "Beta"
     },
     "messenger": {
         "VERSION": "バージョン",
@@ -136,7 +147,7 @@
         "MEMBER_OF_GROUPS": "グループのメンバー",
         "MEMBER_OF_DISTRIBUTION_LISTS": "リストのメンバー",
         "GROUP_MEMBERS": "グループのメンバー",
-        "PUBLIC_KEY": "Public Key",
+        "PUBLIC_KEY": "公開鍵",
         "GROUP_NAME": "グループの名前",
         "GROUP_CREATOR": "グループ作成者",
         "GROUP_ROLE_NORMAL": "メンバー",
@@ -145,7 +156,7 @@
         "DOWNLOAD": "ダウンロード",
         "DOWNLOADING": "ダウンロード中 …",
         "COPY": "コピー",
-        "COPIED": "テキストをクリップボードにコピーしました",
+        "COPIED": "テキストをクリップボードにコピーしました！",
         "COPY_ERROR": "エラー: テキストをクリップボードにコピーできませんでした",
         "MSG_HISTORY": "メッセージの履歴",
         "MSG_HISTORY_CREATED": "作成日時",
@@ -156,7 +167,7 @@
         "MSG_HISTORY_MODIFIED": "変更日時",
         "NAVIGATE": "ナビゲート",
         "CONFIRM_FILE_SEND": "«{senderName}» に送信しますか？",
-        "CONFIRM_FILE_SEND_MULTI": "Send {fileCount} files to «{senderName}»?",
+        "CONFIRM_FILE_SEND_MULTI": "{fileCount}個のファイルを «{senderName}»に送信しますか？",
         "CONFIRM_FILE_CAPTION": "任意のキャプション",
         "CONFIRM_SEND_AS_FILE": "メッセージでファイルを送信",
         "CONFIRM_DELETE_TITLE": "メッセージを削除",
@@ -190,10 +201,10 @@
         "DRAFT": "下書き",
         "PRIVATE": "プライベート",
         "PRIVATE_CHAT": "プライベートトーク",
-        "PRIVATE_CHAT_DESCRIPTION": "プライベートトークはThreema Webで使用できません",
+        "PRIVATE_CHAT_DESCRIPTION": "Threema Desktop/Webではプライベートチャットは対応していません。",
         "MESSAGE_TOO_LONG_SPLIT_SUBJECT": "メッセージの分割",
         "MESSAGE_TOO_LONG_SPLIT_BODY": "1つのメッセージに送れる文字数は{max}未満です、あなたは{count}個のメッセージに分けることを希望しますか？",
-        "BALLOT_MESSAGES_NOT_SUPPORTED": "Threema Webでは、まだ投票には対応していません。",
+        "BALLOT_MESSAGES_NOT_SUPPORTED": "Threema Desktop/Webでは、まだ投票機能には対応していません。",
         "UNKNOWN_MESSAGE_TYPE": "不明なメッセージ形式",
         "NICKNAME": "ニックネーム",
         "THREEMA_WORK_CONTACT": "Threema Work ユーザー",
@@ -215,7 +226,8 @@
         "ME": "私",
         "CONTACT_STATE_INACTIVE": "非アクティブ",
         "CONTACT_STATE_INVALID": "無効",
-        "CONTACT_STATE_REVOKED": "取り消し"
+        "CONTACT_STATE_REVOKED": "取り消し",
+        "MESSAGE_EDITED": "編集済"
     },
     "messageStates": {
         "WE_ACK": "あなたが「いいね」をしました",
@@ -237,7 +249,7 @@
         "file": "ファイル",
         "audio": "音声",
         "location": "位置",
-        "ballot": "票",
+        "ballot": "投票",
         "gif": "GIF"
     },
     "validationError": {
@@ -268,7 +280,7 @@
         "CONTACT_INVALID": "無効な連絡先にあなたはメッセージを送信できません。",
         "ERROR_OCCURRED": "エラーが発生しました。",
         "FILE_TOO_LARGE": "{maxmb} MiBより大きいファイルは送信できません。",
-        "FILE_TOO_LARGE_WEB": "現在、15MiB以上のファイルは、Threema Webでは送信できません。",
+        "FILE_TOO_LARGE_WEB": "現在、15 MiBを超えるファイルはThreema Desktop/Webを通じて送信できません。",
         "FILE_TOO_LARGE_GENERIC": "ファイルのサイズが大きすぎて送信できません",
         "NOTIFICATION_PERMISSION_DENIED": "あなたがデスクトップ通知を受け取るためには、Threema Webの通知権限を手動で付与する必要があります。",
         "NOTIFICATION_PERMISSION_DENIED_LEARN_MORE": "さらに詳しく",
@@ -325,11 +337,11 @@
     },
     "deviceUnreachable": {
         "DEVICE_UNREACHABLE": "端末が接続不可です",
-        "UNABLE_TO_CONNECT": "お使いの端末に接続できません ..."
+        "UNABLE_TO_CONNECT": "お使いの端末に再接続できません..."
     },
     "version": {
         "NEW_VERSION": "新しいバージョンが利用可能",
-        "NEW_VERSION_BODY": "Threema Webの新しいバージョン({バージョン})が公開されました。詳細は{更新履歴}をご確認ください。「OK」をクリックすると、アップデートが有効になります。"
+        "NEW_VERSION_BODY": "新しいバージョンのThreema Web ({version}) が利用可能です。詳細については {changelog} をご覧ください。「OK」を選択してアップデートを有効にしてください。"
     },
     "voip": {
         "CALL_MISSED": "不在着信",
@@ -370,11 +382,11 @@
         "SESSION_CLOSED_TITLE": "セッションが閉じられました",
         "SESSION_STOPPED": "お使いの端末でセッションが停止しました。",
         "SESSION_DELETED": "セッションが端末から削除されました。",
-        "WEBCLIENT_DISABLED": "お使いの端末では、Threema Webが無効になっています。",
+        "WEBCLIENT_DISABLED": "Threema Desktop/Webはお使いの端末で無効になりました。",
         "SESSION_REPLACED": "別のブラウザウィンドウであなたがThreema Webセッションを開始したため、このセッションは停止しました。",
         "OUT_OF_MEMORY": "端末のメモリが不足したため、セッションを停止する必要がありました。",
         "SESSION_ERROR": "プロトコルエラーにより、セッションが停止しました。",
         "PUSH_ERROR_INFO": "プッシュ通知を使って端末を起動しようとしましたが、失敗しました。これは、あなたが最近新しいモバイル端末に変更した場合などに起こります。",
-        "PUSH_ERROR_ACTION": "このエラーが続く場合は、「セッションを忘れる」をクリックして、新たにThreema Webセッションを開始してください。"
+        "PUSH_ERROR_ACTION": "このエラーが続く場合は、「セッションを忘れる」をクリックして、新たにセッションを開始してください。"
     }
 }
