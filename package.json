@@ -91,7 +91,7 @@
     "@types/selenium-webdriver": "^4.1.2",
     "angular-mocks": "^1.8.3",
     "chai": "^4.3.6",
-    "concurrently": "^8.2.0",
+    "concurrently": "^9.0.1",
     "geckodriver": "^4.0.5",
     "jasmine": "^3.99.0",
     "jasmine-core": "^3.99.1",
