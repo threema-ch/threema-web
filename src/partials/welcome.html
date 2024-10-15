@@ -13,7 +13,7 @@
             </p>
         </div>
 
-        <a class="button" href="https://threema.ch/download-md">
+        <a class="button" ng-href="{{ctrl.lastConnectedAppFlavor === 'work' ? 'https://threema.ch/work/download-mdw' : 'https://threema.ch/download-md'}}" target="_blank">
             <span class="badge" translate>common.BETA</span>
             <div class="content">
                 <img ng-if="ctrl.lastConnectedAppFlavor === 'consumer'" class="app-icon" src="img/app-icon-consumer-live.svg">
