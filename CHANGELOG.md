@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.5.7][v2.5.7] (2024-10-25)
+
+Changes:
+
+* [fix] Fix beta link in work flavor ([#1220][i1220])
+* [fix] Open external links in new tab ([#1220][i1220])
+
+
 ### [v2.5.6][v2.5.6] (2024-10-11)
 
 Changes:
@@ -1298,7 +1306,9 @@ First public release.
 [i1194]: https://github.com/threema-ch/threema-web/pull/1194
 [i1200]: https://github.com/threema-ch/threema-web/issues/1200
 [i1202]: https://github.com/threema-ch/threema-web/issues/1202
+[i1220]: https://github.com/threema-ch/threema-web/pull/1220
 
+[v2.5.7]: https://github.com/threema-ch/threema-web/compare/v2.5.6...v2.5.7
 [v2.5.6]: https://github.com/threema-ch/threema-web/compare/v2.5.5...v2.5.6
 [v2.5.5]: https://github.com/threema-ch/threema-web/compare/v2.5.4...v2.5.5
 [v2.5.4]: https://github.com/threema-ch/threema-web/compare/v2.5.3...v2.5.4
