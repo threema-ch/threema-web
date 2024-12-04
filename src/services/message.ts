@@ -61,14 +61,19 @@ export class MessageService {
             access.copy = allowQuoteV1;
 
             if (receiver !== undefined && message.temporaryId === undefined) {
-                const isIncomingMessage = message.isOutbox === false;
-                const allowReactionsForReceiver =
-                    isContactReceiver(receiver) ||
-                    (isGroupReceiver(receiver) && capabilities.groupReactions);
-                const allowReactionsForType = message.type !== 'voipStatus';
-                if (isIncomingMessage && allowReactionsForReceiver && allowReactionsForType) {
-                    access.ack = message.state !== 'user-ack' && !(message.reactions?.ack ?? []).includes(ownIdentity);
-                    access.dec = message.state !== 'user-dec' && !(message.reactions?.dec ?? []).includes(ownIdentity);
+                if (capabilities.emojiReactions) {
+                    access.ack = true;
+                    access.dec = true;
+                } else {
+                    const isIncomingMessage = message.isOutbox === false;
+                    const allowReactionsForReceiver =
+                        isContactReceiver(receiver) ||
+                        (isGroupReceiver(receiver) && capabilities.groupReactions);
+                    const allowReactionsForType = message.type !== 'voipStatus';
+                    if (isIncomingMessage && allowReactionsForReceiver && allowReactionsForType) {
+                        access.ack = message.state !== 'user-ack' && !(message.reactions?.ack ?? []).includes(ownIdentity);
+                        access.dec = message.state !== 'user-dec' && !(message.reactions?.dec ?? []).includes(ownIdentity);
+                    }
                 }
 
                 switch (message.type) {
