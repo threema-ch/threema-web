@@ -3371,6 +3371,7 @@ export class WebClientService {
                 quotesV2: getOrDefault<boolean>(data.capabilities.quotesV2, false),
                 imageFormat: data.capabilities.imageFormat,
                 groupReactions: getOrDefault<boolean>(data.capabilities.groupReactions, false),
+                emojiReactions: getOrDefault<boolean>(data.capabilities.emojiReactions, false),
                 mdm: data.capabilities.mdm,
             },
         };
