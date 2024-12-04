@@ -18,7 +18,6 @@
 import {hasValue} from '../helpers';
 import {isContactReceiver, isGroupReceiver} from '../typeguards';
 import {ReceiverService} from './receiver';
-import {TimeoutService} from './timeout';
 
 export class MessageAccess {
     public quote = false;
@@ -37,18 +36,12 @@ export class MessageService {
 
     // Own services
     private receiverService: ReceiverService;
-    private timeoutService: TimeoutService;
 
-    // Other
-    private timeoutDelaySeconds = 30;
-
-    public static $inject = ['ReceiverService', 'TimeoutService'];
+    public static $inject = ['ReceiverService'];
     constructor(
         receiverService: ReceiverService,
-        timeoutService: TimeoutService,
     ) {
         this.receiverService = receiverService;
-        this.timeoutService = timeoutService;
     }
 
     public getAccess(
