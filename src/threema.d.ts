@@ -131,6 +131,7 @@ declare namespace threema {
         temporaryId?: string;
         errorMessage?: string;
         reactions?: MessageReactions;
+        emojiReactions?: EmojiReactions;
     }
 
     interface FileInfo {
@@ -190,6 +191,23 @@ declare namespace threema {
         // Identities that 👎 this message
         dec: string[];
     }
+
+    interface MessageReactionBucket {
+        /** Emoji code sequence as a string. */
+        readonly emoji: string;
+
+        /**
+         * List of identities that reacted with the emoji, sorted by least
+         * recent reaction first.
+         */
+        readonly identities: readonly string[];
+    }
+
+    /**
+     * List of emoji reaction buckets, sorted by most recent reaction buckets
+     * first.
+     */
+    type EmojiReactions = readonly MessageReactionBucket[];
 
     /**
      * All possible receiver types.
@@ -779,6 +797,7 @@ declare namespace threema {
         quotesV2: boolean;
         imageFormat: ImageFormat;
         groupReactions: boolean;
+        emojiReactions: boolean;
         mdm?: MdmRestrictions;
     }
 

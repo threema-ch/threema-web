@@ -1937,10 +1937,7 @@ export class WebClientService {
      */
     public ackMessage(receiver, message: threema.Message, acknowledged: boolean = true): void {
         // Ignore empty text messages
-        // TODO check into a util class
-        if (message === null
-            || message === undefined
-            || message.isOutbox) {
+        if (message === null || message === undefined) {
             return;
         }
 
@@ -3371,6 +3368,7 @@ export class WebClientService {
                 quotesV2: getOrDefault<boolean>(data.capabilities.quotesV2, false),
                 imageFormat: data.capabilities.imageFormat,
                 groupReactions: getOrDefault<boolean>(data.capabilities.groupReactions, false),
+                emojiReactions: getOrDefault<boolean>(data.capabilities.emojiReactions, false),
                 mdm: data.capabilities.mdm,
             },
         };
