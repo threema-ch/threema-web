@@ -35,21 +35,7 @@ export default [
             controller: ['WebClientService', '$filter', function(webClientService: WebClientService, $filter: ng.IFilterService) {
                 const idsToNames: (ids: readonly string[], sort: boolean) => string = $filter('idsToNames');
                 this.$onInit = function() {
-                    // const message = (this.message as threema.Message);
-                    const message = {
-                        emojiReactions: [{
-                            emoji: '❤️',
-                            identities: ['08U8NWEZ', '0Y69E4HF'],
-                        },
-                        {
-                            emoji: '🎄',
-                            identities: ['0Y69E4HF', '08U8NWEZ'],
-                        },
-                        {
-                            emoji: '✨',
-                            identities: ['0Y69E4HF'],
-                        }],
-                    } as unknown as threema.Message;
+                    const message = (this.message as threema.Message);
                     this.reactions = (message.emojiReactions ?? []).map(({emoji, identities}) => {
                         return {
                             emoji,
