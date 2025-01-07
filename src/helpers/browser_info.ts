@@ -81,6 +81,7 @@ export class BrowserInfo {
     public supportsWebrtcTask(): boolean {
         switch (this.name) {
             case threema.BrowserName.Safari:
+                return !this.mobile;
             case threema.BrowserName.FirefoxIos:
             case threema.BrowserName.ChromeIos:
                 return false;
