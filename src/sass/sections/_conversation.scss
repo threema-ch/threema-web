@@ -339,11 +339,11 @@
         .message-info {
             display: flex;
             flex-direction: row;
-            align-items: flex-end;
+            align-items: end;
             margin-top: 4px;
-            height: 16px;
             color: #808080;
             font-size: .8em;
+            gap: 6px;
 
             .message-edited-hint {
                 font-style: italic;
@@ -375,6 +375,67 @@
                 .reaction-margin {
                     margin-right: 5px;
                 }
+            }
+
+            .message-emoji-reactions {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: start;
+                gap: 4px;
+                flex-wrap: wrap;
+
+                .bucket {
+                    cursor: default;
+
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: center;
+
+                    padding: 3px 9px;
+                    background-color: #e0e0e0;
+                    border: #ffffff solid 1px;
+                    border-radius: 15px;
+
+                    &.active {
+                        background-color: #bdbdbd;
+                    }
+
+                    .emoji,
+                    .count {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .emoji {
+                        width: 18px;
+                        height: 18px;
+                        font-size: 14px;
+                        line-height: 18px;
+
+                        padding-bottom: 1px;
+
+                        img.em {
+                            margin: 0;
+                        }
+                    }
+
+                    .count {
+                        font-weight: bold;
+                        padding-left: 1px;
+                    }
+
+                    &:has(> .count) {
+                        padding: 3px 6px 3px 4px;
+                    }
+                }
+            }
+
+            .message-date {
+                text-align: end;
             }
 
             md-icon {

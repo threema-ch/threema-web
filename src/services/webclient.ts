@@ -634,12 +634,13 @@ export class WebClientService {
         this.$translate.onReady().then(() => {
             // tslint:disable:max-line-length
             const confirm = this.$mdDialog.alert()
-                .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_ANDROID'))
-                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_ANDROID_DETAILS', {
+                .title(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED'))
+                .htmlContent(this.$translate.instant('welcome.BROWSER_NOT_SUPPORTED_DETAILS', {
                     firefoxLink: '<a href="https://www.mozilla.org/firefox/" target="_blank" rel="noopener noreferrer">Firefox</a>',
                     chromeLink: '<a href="https://www.google.com/chrome/browser/desktop/" target="_blank" rel="noopener noreferrer">Chrome</a>',
                     operaLink: '<a href="https://www.opera.com/" target="_blank" rel="noopener noreferrer">Opera</a>',
                     edgeLink: '<a href="https://www.microsoft.com/edge" target="_blank" rel="noopener noreferrer">Edge</a>',
+                    safariLink: '<a href="https://www.apple.com/safari/" target="_blank" rel="noopener noreferrer">Safari</a>',
                 }))
                 .ok(this.$translate.instant('welcome.ABORT'));
             // tslint:enable:max-line-length
@@ -1937,10 +1938,7 @@ export class WebClientService {
      */
     public ackMessage(receiver, message: threema.Message, acknowledged: boolean = true): void {
         // Ignore empty text messages
-        // TODO check into a util class
-        if (message === null
-            || message === undefined
-            || message.isOutbox) {
+        if (message === null || message === undefined) {
             return;
         }
 
@@ -3371,6 +3369,7 @@ export class WebClientService {
                 quotesV2: getOrDefault<boolean>(data.capabilities.quotesV2, false),
                 imageFormat: data.capabilities.imageFormat,
                 groupReactions: getOrDefault<boolean>(data.capabilities.groupReactions, false),
+                emojiReactions: getOrDefault<boolean>(data.capabilities.emojiReactions, false),
                 mdm: data.capabilities.mdm,
             },
         };
