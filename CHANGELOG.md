@@ -9,6 +9,13 @@ the full log, please refer to the git commit history.
 > but for now there will be no major new features or non-critical bugfixes.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
+### [v2.6.0][v2.6.0] (2025-01-08)
+
+Changes:
+
+* [feature] Add support for displaying emoji reactions (only available when
+  supported by the mobile device) ([#1222][i1222])
+* [change] Allow Safari when connecting an Android device
 
 ### [v2.5.7][v2.5.7] (2024-10-25)
 
@@ -1307,7 +1314,9 @@ First public release.
 [i1200]: https://github.com/threema-ch/threema-web/issues/1200
 [i1202]: https://github.com/threema-ch/threema-web/issues/1202
 [i1220]: https://github.com/threema-ch/threema-web/pull/1220
+[i1222]: https://github.com/threema-ch/threema-web/pull/1222
 
+[v2.6.0]: https://github.com/threema-ch/threema-web/compare/v2.5.7...v2.6.0
 [v2.5.7]: https://github.com/threema-ch/threema-web/compare/v2.5.6...v2.5.7
 [v2.5.6]: https://github.com/threema-ch/threema-web/compare/v2.5.5...v2.5.6
 [v2.5.5]: https://github.com/threema-ch/threema-web/compare/v2.5.4...v2.5.5
