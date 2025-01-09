@@ -19,6 +19,13 @@
 
 import {WebClientService} from '../services/webclient';
 
+export function hasAckDecReactions(message: threema.Message): boolean {
+    if (message.reactions === undefined) {
+        return false;
+    }
+    return message.reactions.ack.length > 0 || message.reactions.dec.length > 0;
+}
+
 /*
  * Create the appropriate icon for the state of the specified message.
  */

@@ -17,8 +17,11 @@
 
 // tslint:disable:max-line-length
 
-import {emojify} from '../helpers/emoji';
 import {WebClientService} from '../services/webclient';
+
+export function hasEmojiReactions(message: threema.Message): boolean {
+    return message.emojiReactions !== undefined && message.emojiReactions.length > 0;
+}
 
 /*
  * Create the appropriate icon for the state of the specified message.

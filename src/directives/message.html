@@ -48,7 +48,7 @@
             <span ng-if="ctrl.isEdited" class="message-edited-hint" translate>messenger.MESSAGE_EDITED</span>
             <span eee-message-group-reactions ng-if="ctrl.showGroupReactions" class="message-group-reactions" eee-message="ctrl.message"></span>
             <div eee-message-emoji-reactions ng-if="ctrl.showEmojiReactions" class="message-emoji-reactions" eee-message="ctrl.message"></div>
-            <span eee-message-meta eee-message="ctrl.message"></span>
+            <span eee-message-meta ng-if="ctrl.hasMetaInfo" eee-message="ctrl.message"></span>
             <span eee-message-date class="message-date" eee-message="ctrl.message"></span>
             <span eee-message-state ng-if="ctrl.showState" class="message-state" eee-message="ctrl.message"></span>
         </div>

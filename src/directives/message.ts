@@ -28,6 +28,9 @@ import {LogService} from '../services/log';
 import {MessageService} from '../services/message';
 import {ReceiverService} from '../services/receiver';
 import {WebClientService} from '../services/webclient';
+import {hasAckDecReactions} from './message_group_reactions';
+import {hasMetaInfo} from './message_meta';
+import {hasEmojiReactions} from './message_emoji_reactions';
 
 export default [
     'BrowserService',
@@ -92,8 +95,9 @@ export default [
                     this.showState = messageService.showStatusIcon(this.message as threema.Message, this.receiver);
                     this.showGroupReactions =
                         !webClientService.appCapabilities.emojiReactions && this.isGroup
-                        && webClientService.appCapabilities.groupReactions;
-                    this.showEmojiReactions = webClientService.appCapabilities.emojiReactions;
+                        && webClientService.appCapabilities.groupReactions && hasAckDecReactions(this.message);
+                    this.showEmojiReactions = webClientService.appCapabilities.emojiReactions && hasEmojiReactions(this.message);
+                    this.hasMetaInfo = hasMetaInfo(this.message);
                     this.showQuote = this.message.quote !== undefined;
                     this.showVoipInfo = this.message.type === 'voipStatus';
 
