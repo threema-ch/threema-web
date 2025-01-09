@@ -15,6 +15,25 @@
  * along with Threema Web. If not, see <http://www.gnu.org/licenses/>.
  */
 
+function isGif(message: threema.Message): boolean {
+    return message.file !== undefined && message.file.type === 'image/gif';
+}
+
+function getDuration(message: threema.Message): number | undefined {
+    if (message.audio !== undefined) {
+        return message.audio.duration;
+    } else if (message.video !== undefined) {
+        return message.video.duration;
+    } else if (message.voip !== undefined && message.voip.duration) {
+        return message.voip.duration;
+    }
+    return undefined;
+}
+
+export function hasMetaInfo(message: threema.Message): boolean {
+    return isGif(message) || getDuration(message) !== undefined;
+}
+
 export default [
     function() {
         return {
@@ -27,25 +46,17 @@ export default [
             controllerAs: 'ctrl',
             controller: [function() {
                 this.$onInit = function() {
-                    const msg = this.message as threema.Message;
+                    const message = this.message as threema.Message;
 
-                    this.type = msg.type;
-                    this.isGif = msg.file !== undefined && msg.file.type === 'image/gif';
+                    this.isGif = isGif(message);
 
                     // For audio, video or voip call, retrieve the duration
-                    this.duration = null;
-                    if (msg.audio !== undefined) {
-                        this.duration = msg.audio.duration;
-                    } else if (msg.video !== undefined) {
-                        this.duration = msg.video.duration;
-                    } else if (msg.voip !== undefined && msg.voip.duration) {
-                        this.duration = msg.voip.duration;
-                    }
+                    this.duration = getDuration(message)
                 };
             }],
             template: `
                 <span ng-if="ctrl.isGif" class="message-meta-item">GIF</span>
-                <span ng-if="ctrl.duration !== null" class="message-meta-item message-duration">
+                <span ng-if="ctrl.duration !== undefined" class="message-meta-item message-duration">
                     <md-icon class="material-icons">av_timer</md-icon>
                     {{ctrl.duration | duration}}
                 </span>
