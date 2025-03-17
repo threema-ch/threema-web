@@ -9,6 +9,16 @@ the full log, please refer to the git commit history.
 > but for now there will be no major new features or non-critical bugfixes.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
+
+### Unreleased
+
+Changes:
+
+* [change] Switch to NodeJS 20 ([#1230][i1230])
+* [change] Dockerfile: Hide nginx version ([#1230][i1230])
+* [change] Upgrade dependencies ([#1230][i1230])
+
+
 ### [v2.6.1][v2.6.1] (2025-01-09)
 
 Changes:

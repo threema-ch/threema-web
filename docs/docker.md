@@ -15,7 +15,7 @@ Now you can open `http://localhost:8080/` in your browser to use Threema Web.
 
 **IMPORTANT:** Note that this Dockerfile does not contain TLS termination. Make
 sure to serve Threema Web only via https, behind a reverse proxy like Nginx. We
-also recommend to enable HSTS, HPKP, CSP and other available security
+also recommend to enable HSTS, CSP and other available security
 mechanisms in your web server.
 
 
