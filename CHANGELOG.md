@@ -10,7 +10,7 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
-### Unreleased
+### [v2.6.2][v2.6.2] (2025-03-17)
 
 Changes:
 
@@ -25,6 +25,7 @@ Changes:
 
 * [bug] Fix message info gap ([#1226][i1226])
 
+
 ### [v2.6.0][v2.6.0] (2025-01-08)
 
 Changes:
@@ -32,6 +33,7 @@ Changes:
 * [feature] Add support for displaying emoji reactions (only available when
   supported by the mobile device) ([#1222][i1222])
 * [change] Allow Safari when connecting an Android device
+
 
 ### [v2.5.7][v2.5.7] (2024-10-25)
 
@@ -1333,6 +1335,8 @@ First public release.
 [i1222]: https://github.com/threema-ch/threema-web/pull/1222
 [i1226]: https://github.com/threema-ch/threema-web/pull/1226
 
+[v2.6.2]: https://github.com/threema-ch/threema-web/compare/v2.6.1...v2.6.2
+[v2.6.1]: https://github.com/threema-ch/threema-web/compare/v2.6.0...v2.6.1
 [v2.6.0]: https://github.com/threema-ch/threema-web/compare/v2.5.7...v2.6.0
 [v2.5.7]: https://github.com/threema-ch/threema-web/compare/v2.5.6...v2.5.7
 [v2.5.6]: https://github.com/threema-ch/threema-web/compare/v2.5.5...v2.5.6
