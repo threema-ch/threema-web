@@ -15,6 +15,7 @@ the full log, please refer to the git commit history.
 Changes:
 
 * [change] Switch to NodeJS 20 ([#1230][i1230])
+* [change] Dockerfile: Hide nginx version ([#1230][i1230])
 
 
 ### [v2.6.1][v2.6.1] (2025-01-09)

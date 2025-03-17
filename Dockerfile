@@ -27,6 +27,9 @@ RUN rm /usr/share/nginx/html/*
 COPY --from=builder /opt/threema-web/release/threema-web-* /usr/share/nginx/html/
 COPY docker/entrypoint.sh /usr/local/bin/
 
+# Hide nginx version
+RUN echo "server_tokens off;" > /etc/nginx/conf.d/hide_nginx_version.conf
+
 EXPOSE 80
 
 # Set better defaults for production
