@@ -6,7 +6,7 @@
 
 # First, build Threema Web in a node container
 
-FROM docker.io/node:18 AS builder
+FROM docker.io/node:20 AS builder
 ENV NODE_ENV=production
 
 COPY . /opt/threema-web/
