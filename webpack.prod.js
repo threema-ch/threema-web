@@ -5,7 +5,7 @@ const webpack = require('webpack');
 const banner = `
 Threema Web.
 
-Copyright © 2016-2023 Threema GmbH (https://threema.ch/).
+Copyright © 2016-2025 Threema GmbH (https://threema.ch/).
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
