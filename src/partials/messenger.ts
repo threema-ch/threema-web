@@ -57,20 +57,23 @@ import ControllerModelMode = threema.ControllerModelMode;
 class SendFileController extends DialogController {
     public caption: string;
     public sendAsFile: boolean = false;
+    public title: string;
     private preview: threema.FileMessageData | null = null;
     public previewDataUrl: string | null = null;
 
-    public static $inject = ['$scope', '$mdDialog', 'LogService', 'ThemeService', 'preview'];
+    public static $inject = ['$scope', '$mdDialog', 'LogService', 'ThemeService', 'preview', 'title'];
     constructor(
         $scope: ng.IScope,
         $mdDialog: ng.material.IDialogService,
         logService: LogService,
         themeService: ThemeService,
         preview: threema.FileMessageData,
+        title: string,
     ) {
         super($scope, $mdDialog, themeService);
         const log = logService.getLogger('SendFile-C');
         this.preview = preview;
+        this.title = title;
         if (preview !== null) {
             this.previewDataUrl = bufferToUrl(this.preview.data, this.preview.fileType, log);
         }
@@ -687,7 +690,10 @@ class ConversationController {
 
                     // Eager translations
                     let title;
-                    const senderName = emojify((this.$filter('emptyToPlaceholder') as any)(this.receiver.displayName, '-'));
+                    // Escape HTML before emojifying to prevent HTML injection
+                    const displayName = (this.$filter('emptyToPlaceholder') as any)(this.receiver.displayName, '-');
+                    const escapedDisplayName = (this.$filter('escapeHtml') as any)(displayName);
+                    const senderName = emojify(escapedDisplayName);
                     if (fileCount === 1) {
                         title = this.$translate.instant('messenger.CONFIRM_FILE_SEND', {senderName: senderName});
                     } else {
@@ -702,14 +708,14 @@ class ConversationController {
                     // Show confirmation dialog
                     this.$mdDialog.show({
                         clickOutsideToClose: false,
-                        locals: { preview: preview },
+                        locals: { preview: preview, title: title },
                         controller: 'SendFileController',
                         controllerAs: 'ctrl',
                         // tslint:disable:max-line-length
                         template: `
                             <md-dialog class="send-file-dialog">
                                 <md-dialog-content class="md-dialog-content">
-                                    <h2 class="md-title">${title}</h2>
+                                    <h2 class="md-title" ng-bind-html="ctrl.title"></h2>
                                     <img class="preview" ng-if="ctrl.hasPreview()" ng-src="{{ ctrl.previewDataUrl }}">
                                     <md-input-container md-no-float class="input-caption md-prompt-input-container" ng-show="${showCaption}">
                                         <input maxlength="1000" md-autofocus ng-keypress="ctrl.keypress($event)" ng-model="ctrl.caption" placeholder="${placeholder}" aria-label="${placeholder}">
