@@ -1,0 +1,28 @@
+{
+  "name": "Threema Web Devcontainer",
+  // Build Dockerfile
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  // Configure container runtime options
+  "runArgs": [
+    // Resource limits for development
+    "--memory=8g",
+    "--cpus=6",
+    "--memory-swap=8g",
+    // Basic security: Limited capabilities
+    "--cap-drop=ALL",
+    "--cap-add=CHOWN",
+    "--cap-add=SETGID",
+    "--cap-add=SETUID"
+  ],
+  // Run as non-root user
+  "remoteUser": "node",
+  // Automatically update container user UID/GID to match host user
+  "updateRemoteUserUID": true,
+  // Set working directory (devcontainer mounts workspace here)
+  "workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=cached",
+  "workspaceFolder": "/code",
+  // Forward ports
+  "forwardPorts": [9966]
+}
