@@ -5,6 +5,9 @@
     "welcome": {
         "ABORT": "中止",
         "CONTINUE_ANYWAY": "仍然繼續",
+        "DESKTOP_BETA_HINT": "立即使用新的桌面版應用程式",
+        "DESKTOP_BETA_HINT_INTRO_TEXT1": "您是否已經使用新的 Threema 桌面應用程式？",
+        "DESKTOP_BETA_HINT_INTRO_TEXT2": "立即下載應用程式。",
         "PLEASE_SCAN": "使用 Threema 手機應用程式掃描QR碼",
         "PLEASE_SCAN_INSTRUCTIONS": "Android: 選單 > Desktop/Web | iOS: 設定 > Desktop/Web",
         "PLEASE_UNLOCK": "工作階段已關閉",
@@ -111,7 +114,8 @@
         "SAVE": "儲存",
         "DONE": "完成",
         "MODIFY": "編輯",
-        "NOTE": "注意："
+        "NOTE": "注意：",
+        "BETA": "測試版"
     },
     "messenger": {
         "VERSION": "版本",
@@ -222,7 +226,8 @@
         "ME": "我",
         "CONTACT_STATE_INACTIVE": "非活躍",
         "CONTACT_STATE_INVALID": "無效",
-        "CONTACT_STATE_REVOKED": "已撤銷"
+        "CONTACT_STATE_REVOKED": "已撤銷",
+        "MESSAGE_EDITED": "已編輯"
     },
     "messageStates": {
         "WE_ACK": "您對這則訊息按讚",
