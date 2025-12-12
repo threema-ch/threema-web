@@ -47,3 +47,7 @@ Threema Web:
   - Improper SVG sanitization
   - <https://github.com/advisories/GHSA-j58c-ww9w-pwp5>
   - ✅ Threema Web not affected, we don't use `image` tags in SVG and don't render external SVG files
+- **CVE-2025-2336**
+  - Improper SVG sanitization
+  - <https://github.com/advisories/GHSA-4p4w-6hg8-63wx>
+  - ✅ Threema Web not affected, we don't use `image` tags in SVG and don't render external SVG files
