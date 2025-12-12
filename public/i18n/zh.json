@@ -5,6 +5,9 @@
     "welcome": {
         "ABORT": "中止",
         "CONTINUE_ANYWAY": "仍然继续",
+        "DESKTOP_BETA_HINT": "立即使用新的桌面版应用程序",
+        "DESKTOP_BETA_HINT_INTRO_TEXT1": "您是否已经使用新的 Threema 桌面应用程序？",
+        "DESKTOP_BETA_HINT_INTRO_TEXT2": "立即下载应用程序。",
         "PLEASE_SCAN": "使用 Threema 客户端扫描二维码",
         "PLEASE_SCAN_INSTRUCTIONS": "Android: 菜单 > Desktop/Web | iOS: 设置 > Desktop/Web",
         "PLEASE_UNLOCK": "会话已关闭",
@@ -111,7 +114,8 @@
         "SAVE": "保存",
         "DONE": "完成",
         "MODIFY": "编辑",
-        "NOTE": "注意："
+        "NOTE": "注意：",
+        "BETA": "测试版"
     },
     "messenger": {
         "VERSION": "版本",
@@ -222,7 +226,8 @@
         "ME": "我",
         "CONTACT_STATE_INACTIVE": "不活跃",
         "CONTACT_STATE_INVALID": "不可用",
-        "CONTACT_STATE_REVOKED": "已吊销"
+        "CONTACT_STATE_REVOKED": "已吊销",
+        "MESSAGE_EDITED": "已编辑"
     },
     "messageStates": {
         "WE_ACK": "你点了赞",
