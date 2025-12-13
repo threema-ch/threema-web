@@ -10,6 +10,14 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.6.3][v2.6.3] (2025-12-13)
+
+Changes:
+
+* [feature] Add Finnish translation ([#1246][i1246])
+* [fix] Sanitize dialog title in SendFileDialog ([#1244][i1244])
+* [change] Upgrade dependencies ([#1245][i1245])
+
 ### [v2.6.2][v2.6.2] (2025-03-17)
 
 Changes:
@@ -1334,7 +1342,11 @@ First public release.
 [i1220]: https://github.com/threema-ch/threema-web/pull/1220
 [i1222]: https://github.com/threema-ch/threema-web/pull/1222
 [i1226]: https://github.com/threema-ch/threema-web/pull/1226
+[i1244]: https://github.com/threema-ch/threema-web/pull/1244
+[i1245]: https://github.com/threema-ch/threema-web/pull/1245
+[i1246]: https://github.com/threema-ch/threema-web/pull/1246
 
+[v2.6.3]: https://github.com/threema-ch/threema-web/compare/v2.6.2...v2.6.3
 [v2.6.2]: https://github.com/threema-ch/threema-web/compare/v2.6.1...v2.6.2
 [v2.6.1]: https://github.com/threema-ch/threema-web/compare/v2.6.0...v2.6.1
 [v2.6.0]: https://github.com/threema-ch/threema-web/compare/v2.5.7...v2.6.0
