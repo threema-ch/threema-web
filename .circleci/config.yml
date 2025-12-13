@@ -22,28 +22,28 @@ references:
 jobs:
   unittest:
     docker:
-      - image: cimg/node:20.19-browsers
+      - image: cimg/node:24.12-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:unittests
       TESTTARGET: test:unit
   uitest-firefox:
     docker:
-      - image: cimg/node:20.19-browsers
+      - image: cimg/node:24.12-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui firefox
   uitest-chrome:
     docker:
-      - image: cimg/node:20.19-browsers
+      - image: cimg/node:24.12-browsers
     steps: *test-steps
     environment:
       BUILDTARGET: build:uitests
       TESTTARGET: test:ui chrome
   lint:
     docker:
-      - image: cimg/node:20.19
+      - image: cimg/node:24.12
     steps:
       - checkout
       - restore_cache:
