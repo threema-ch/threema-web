@@ -1,3 +1,5 @@
+@use "sass:color";
+
 #welcome {
     flex: 1 0 auto;
 
@@ -243,7 +245,7 @@
     }
 
     md-input-container.md-input-focused .password-strength-indicator .unreached {
-        background-color: darken($background-grey, 7%);
+        background-color: color.adjust($background-grey, $lightness: -7%);
     }
 
     .desktop-beta-banner {

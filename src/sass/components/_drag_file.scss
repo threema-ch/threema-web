@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .drag-container {
 
     &.is-dragover {
@@ -20,7 +22,7 @@
                 flex-grow: 1;
                 align-items: center;
                 justify-content: center;
-                margin: $main-padding / 2;
+                margin: math.div($main-padding, 2);
                 border: 4px dotted #ffffff;
 
                 > span {

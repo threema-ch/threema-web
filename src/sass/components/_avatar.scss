@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .avatar {
     position: relative;
 
@@ -48,8 +50,8 @@
 
         > :first-child {
             position: relative;
-            top: calc(50% - #{$circle-diameter / 2});
-            left: calc(50% - #{$circle-diameter / 2});
+            top: calc(50% - #{math.div($circle-diameter, 2)});
+            left: calc(50% - #{math.div($circle-diameter, 2)});
         }
     }
 

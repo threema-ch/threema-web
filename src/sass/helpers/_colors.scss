@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Main theme colors
 $theme-b100: #e1f4e7;
 $theme-b200: #16ba52;
@@ -25,7 +27,7 @@ $status-starred: #ffc107;
 $focus-outline-color: #c62828;
 
 $border-grey: #dddddd;
-$background-grey: lighten($border-grey, 7%);
+$background-grey: color.adjust($border-grey, $lightness: 7%);
 $material-grey: rgba(0, 0, 0, .54);
 $material-grey-dark: rgba(0, 0, 0, .87);
 
