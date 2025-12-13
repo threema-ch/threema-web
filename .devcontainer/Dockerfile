@@ -1,4 +1,4 @@
-FROM node:20-alpine3.22
+FROM node:24-alpine3.22
 
 # Security labels
 LABEL org.opencontainers.image.title="Threema Web Devcontainer"
