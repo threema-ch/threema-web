@@ -1,3 +1,5 @@
+@use "sass:math";
+
 eee-message-voip-status {
     > p {
         display: flex;
@@ -5,7 +7,7 @@ eee-message-voip-status {
         align-items: center;
 
         md-icon {
-            margin-right: $main-padding / 2;
+            margin-right: math.div($main-padding, 2);
         }
     }
 }

@@ -1,3 +1,5 @@
+@use "sass:math";
+
 .avatar-area {
     &.overview {
         $avatar-area-size: 250px;
@@ -20,7 +22,7 @@
             .loading-element {
                 display: none;
                 position: absolute;
-                margin-top: $avatar-area-size / 3;
+                margin-top: math.div($avatar-area-size, 3);
                 width: 100%;
 
                 &.active {

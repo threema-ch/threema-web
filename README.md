@@ -66,11 +66,11 @@ is documented [here](https://threema-ch.github.io/app-remote-protocol/).
 
 Threema Web is written using [TypeScript](https://www.typescriptlang.org/) and
 [AngularJS 1](https://www.angularjs.org/). Dependencies are managed with
-[npm](https://www.npmjs.com/). You currently need Node.js 20 to build Threema
+[npm](https://www.npmjs.com/). You currently need Node.js 24 to build Threema
 Web. (Note that Node.js is only a build dependency, the result is plain old
 client-side JavaScript.)
 
-If your default NodeJS version is not 20, use nvm to install it:
+If your default NodeJS version is not 24, use nvm to install it:
 
     nvm install
     nvm use

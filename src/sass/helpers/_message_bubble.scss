@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $message-bubble-color-in: #f7f7f7;
 $message-bubble-color-out: #dff0d8;
 $bubble-triangle-size: $main-padding;
@@ -9,7 +11,7 @@ $bubble-triangle-size: $main-padding;
 @mixin message-bubble-triangle {
     position: absolute;
     top: $bubble-triangle-size;
-    left: $bubble-triangle-size / 2;
+    left: math.div($bubble-triangle-size, 2);
     transform: rotate(-45deg);
     border-radius: 1px;
     width: $bubble-triangle-size;
