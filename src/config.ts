@@ -10,7 +10,7 @@ export default {
     VERSION: '[[VERSION]]',
 
     // Set this to `true` if this instance of Threema Web isn't being hosted on
-    // `web.threema.ch`.
+    // `web.threema.com`.
     SELF_HOSTED: false,
 
     // General
