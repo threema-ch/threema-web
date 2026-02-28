@@ -1,5 +1,5 @@
 /**
- * Copyright © 2016-2025 Threema GmbH (https://threema.ch/).
+ * Copyright © Threema GmbH (https://threema.com/).
  *
  * This file is part of Threema Web.
  *
