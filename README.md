@@ -15,16 +15,16 @@ Threema Web is a web client for Threema, a privacy-focussed end-to-end
 encrypted mobile messenger hosted and developed in Switzerland. With Threema
 Web, you can use Threema on your Desktop without compromising security.
 
-[https://web.threema.ch/](https://web.threema.ch/)
+[https://web.threema.com/](https://web.threema.com/)
 
-![Screenshot](https://threema.ch/images/webclient_header.png)
+![Screenshot](https://threema.com/images/webclient_header.png)
 
 Threema Web establishes a connection between Desktop and mobile device using
 [WebRTC](https://webrtc.org/) (Android) or encrypted WebSockets (iOS).
 Signaling and data is end-to-end encrypted with [SaltyRTC](https://saltyrtc.org/).
 
 For more information, see the [Threema Cryptography
-Whitepaper](https://threema.ch/press-files/2_documentation/cryptography_whitepaper.pdf).
+Whitepaper](https://threema.com/press-files/2_documentation/cryptography_whitepaper.pdf).
 
 
 ## Bug Reports and Feature Requests
@@ -44,7 +44,7 @@ https://github.com/threema-ch/threema-web/pull/996 for details.
 ## Beta Testing
 
 We may occasionally deploy experimental branches on
-[https://web-beta.threema.ch](https://web-beta.threema.ch) which you are
+[https://web-beta.threema.com](https://web-beta.threema.com) which you are
 encouraged to test. If you encounter problems, please
 [open an issue](https://github.com/threema-ch/threema-web/issues/new) and
 include the experiment’s version number (e.g. `1.2.3-experiment-beta4`).
@@ -165,7 +165,7 @@ vulnerability disclosure model. To be eligible for a bug bounty, please [file a
 report on GObugfree](https://app.gobugfree.com/programs/threema) (where all the
 details, including the bounty levels, are listed). If you’re not interested in
 the bug bounty program, you can contact us via Threema or by email; for contact
-details, see [threema.ch/contact](https://threema.ch/en/contact) (section
+details, see [threema.com/contact](https://threema.com/en/contact) (section
 “Security”).
 
 
@@ -175,7 +175,7 @@ Threema Web license:
 
     Threema Web.
 
-    Copyright © 2016-2025 Threema GmbH (https://threema.ch/).
+    Copyright © Threema GmbH (https://threema.com/).
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as

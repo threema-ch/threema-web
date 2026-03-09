@@ -1,7 +1,7 @@
 <div id="welcome">
-    <div 
-        ng-if="!ctrl.showLoadingIndicator && ctrl.lastConnectedClientOS === 'ios'" 
-        class="desktop-beta-banner" 
+    <div
+        ng-if="!ctrl.showLoadingIndicator && ctrl.lastConnectedClientOS === 'ios'"
+        class="desktop-beta-banner"
         ng-class="{work: ctrl.lastConnectedAppFlavor === 'work'}"
     >
         <div class="prose">
@@ -13,7 +13,7 @@
             </p>
         </div>
 
-        <a class="button" ng-href="{{ctrl.lastConnectedAppFlavor === 'work' ? 'https://threema.ch/work/download-mdw' : 'https://threema.ch/download-md'}}" target="_blank">
+        <a class="button" ng-href="{{ctrl.lastConnectedAppFlavor === 'work' ? 'https://threema.com/work/download-mdw' : 'https://threema.com/download-md'}}" target="_blank">
             <span class="badge" translate>common.BETA</span>
             <div class="content">
                 <img ng-if="ctrl.lastConnectedAppFlavor === 'consumer'" class="app-icon" src="img/app-icon-consumer-live.svg">
@@ -38,12 +38,12 @@
                 </div>
             </div>
 
-            <qrcode 
+            <qrcode
                 ng-class="{ small: !ctrl.showLoadingIndicator && ctrl.lastConnectedClientOS === 'ios' }"
                 version="{{ ctrl.qrCode.version }}"
                 id="connecting-code"
                 error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"
-                size="{{ ctrl.qrCode.size }}" 
+                size="{{ ctrl.qrCode.size }}"
                 margin="{{ ctrl.qrCode.margin }}"
                 data="{{ ctrl.qrCode.data }}"
             ></qrcode>

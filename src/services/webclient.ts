@@ -646,7 +646,7 @@ export class WebClientService {
             // tslint:enable:max-line-length
             this.$mdDialog.show(confirm).then(() => {
                 // Redirect to Threema website
-                window.location.replace('https://threema.ch/threema-web');
+                window.location.replace('https://threema.com/threema-web');
             });
         });
     }

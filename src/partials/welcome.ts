@@ -193,7 +193,7 @@ class WelcomeController {
             this.pleaseUpdateAppMsg = this.$translate.instant('troubleshooting.PLEASE_UPDATE_APP');
             if (!this.config.SELF_HOSTED) {
                 this.pleaseUpdateAppMsg += ' ' + this.$translate.instant('troubleshooting.USE_ARCHIVE_VERSION', {
-                    archiveUrl: `https://web.threema.ch/archive/${this.config.PREV_PROTOCOL_LAST_VERSION}/`,
+                    archiveUrl: `https://web.threema.com/archive/${this.config.PREV_PROTOCOL_LAST_VERSION}/`,
                 });
             }
         }
@@ -564,7 +564,7 @@ class WelcomeController {
                 // do nothing
             }, () => {
                 // Redirect to Threema website
-                window.location.replace('https://threema.ch/threema-web');
+                window.location.replace('https://threema.com/threema-web');
             });
         });
     }
