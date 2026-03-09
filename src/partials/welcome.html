@@ -1,9 +1,5 @@
 <div id="welcome">
-    <div
-        ng-if="!ctrl.showLoadingIndicator && ctrl.lastConnectedClientOS === 'ios'"
-        class="desktop-beta-banner"
-        ng-class="{work: ctrl.lastConnectedAppFlavor === 'work'}"
-    >
+    <div ng-if="!ctrl.showLoadingIndicator" class="desktop-beta-banner">
         <div class="prose">
             <p translate>
                 welcome.DESKTOP_BETA_HINT_INTRO_TEXT1
@@ -13,14 +9,13 @@
             </p>
         </div>
 
-        <a class="button" ng-href="{{ctrl.lastConnectedAppFlavor === 'work' ? 'https://threema.com/work/download-mdw' : 'https://threema.com/download-md'}}" target="_blank">
+        <a class="button" ng-href="https://threema.com/en/threema-desktop-landingpage" target="_blank">
             <span class="badge" translate>common.BETA</span>
             <div class="content">
-                <img ng-if="ctrl.lastConnectedAppFlavor === 'consumer'" class="app-icon" src="img/app-icon-consumer-live.svg">
-                <img ng-if="ctrl.lastConnectedAppFlavor === 'work'" class="app-icon" src="img/app-icon-work-live.svg">
+                <img class="app-icon" src="img/app-icon-generic.svg">
                 <span class="label" translate>welcome.DESKTOP_BETA_HINT</span>
             </div>
-            <md-icon class="icon" class="material-icons md-24">arrow_downward</md-icon>
+            <md-icon class="icon" class="material-icons md-24">arrow_forward</md-icon>
         </a>
     </div>
 
@@ -39,7 +34,7 @@
             </div>
 
             <qrcode
-                ng-class="{ small: !ctrl.showLoadingIndicator && ctrl.lastConnectedClientOS === 'ios' }"
+                ng-class="{ small: !ctrl.showLoadingIndicator }"
                 version="{{ ctrl.qrCode.version }}"
                 id="connecting-code"
                 error-correction-level="{{ ctrl.qrCode.errorCorrectionLevel }}"

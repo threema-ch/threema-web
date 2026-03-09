@@ -250,7 +250,7 @@
 
     .desktop-beta-banner {
         padding: 22px 28px;
-        background-color: $theme-b100;
+        background-color: rgb(230, 230, 230);
 
         .prose {
             margin-bottom: 12px;
@@ -271,10 +271,10 @@
             overflow: hidden;
 
             color: white;
-            background-color: $theme-primary;
-            border-radius: 5px;
+            background-color: black;
+            border-radius: 10px;
 
-            box-shadow: 0 2px 5px 0 rgba($theme-primary, 0.25);
+            box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.25);
 
             transition: all .15s ease-out;
 
@@ -285,7 +285,7 @@
 
                 padding: 32px 32px 6px 32px;
                 color: white;
-                background-color: $theme-b300;
+                background-color: rgb(68, 68, 66);
                 font-weight: 900;
                 text-transform: uppercase;
 
@@ -315,9 +315,9 @@
             }
 
             &:hover {
-                background-color: $theme-b200;
+                background-color: rgb(30, 30, 30);
 
-                box-shadow: 0 3px 15px 0 rgba($theme-primary, 0.35);
+                box-shadow: 0 3px 15px 0 rgba(0, 0, 0, 0.35);
 
                 transform: translateY(-1px);
 
@@ -329,43 +329,23 @@
                 }
             }
         }
-
-        &.work {
-            background-color: $work-b100;
-
-            .button {
-                background-color: $work-primary;
-
-                box-shadow: 0 2px 5px 0 rgba($work-primary, 0.25);
-
-                .badge {
-                    background-color: $work-b300;
-                }
-
-                &:hover {
-                    background-color: $work-b200;
-
-                    box-shadow: 0 3px 15px 0 rgba($work-primary, 0.35);
-                }
-            }
-        }
     }
 
     @keyframes jump {
         0% {
-            transform: translateY(0px);
+            transform: translateX(0px);
         }
 
         50% {
-            transform: translateY(-8px) scaleY(0.95) scaleX(1.05);
+            transform: translateX(-8px) scaleY(0.95) scaleX(1.05);
         }
 
         75% {
-            transform: translateY(4px);
+            transform: translateX(4px);
         }
 
         100% {
-            transform: translateY(0px);
+            transform: translateX(0px);
         }
     }
 }
