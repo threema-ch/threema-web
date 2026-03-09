@@ -10,6 +10,16 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.6.4][v2.6.4] (2026-03-09)
+
+Changes:
+
+* [change] Update beta app hint banner ([#1258][i1258])
+* [change] Update URL to reflect .ch -> .com change ([#1251][i1251])
+* [change] Upgrade dependencies ([#1259][i1259])
+* [change] Bump NodeJS from 20 to 24 ([#1247][i1247])
+
+
 ### [v2.6.3][v2.6.3] (2025-12-13)
 
 Changes:
@@ -17,6 +27,7 @@ Changes:
 * [feature] Add Finnish translation ([#1246][i1246])
 * [fix] Sanitize dialog title in SendFileDialog ([#1244][i1244])
 * [change] Upgrade dependencies ([#1245][i1245])
+
 
 ### [v2.6.2][v2.6.2] (2025-03-17)
 
@@ -1345,7 +1356,12 @@ First public release.
 [i1244]: https://github.com/threema-ch/threema-web/pull/1244
 [i1245]: https://github.com/threema-ch/threema-web/pull/1245
 [i1246]: https://github.com/threema-ch/threema-web/pull/1246
+[i1247]: https://github.com/threema-ch/threema-web/pull/1247
+[i1251]: https://github.com/threema-ch/threema-web/pull/1251
+[i1258]: https://github.com/threema-ch/threema-web/pull/1258
+[i1259]: https://github.com/threema-ch/threema-web/pull/1259
 
+[v2.6.4]: https://github.com/threema-ch/threema-web/compare/v2.6.3...v2.6.4
 [v2.6.3]: https://github.com/threema-ch/threema-web/compare/v2.6.2...v2.6.3
 [v2.6.2]: https://github.com/threema-ch/threema-web/compare/v2.6.1...v2.6.2
 [v2.6.1]: https://github.com/threema-ch/threema-web/compare/v2.6.0...v2.6.1
