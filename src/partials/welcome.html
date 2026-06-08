@@ -79,6 +79,7 @@
                     <form ng-submit="ctrl.unlockConfirm()">
                         <md-input-container md-no-float class="md-block">
                             <input ng-if="ctrl.inMemorySessionPassword === undefined"
+                                   id="session-restore-password"
                                    type="password"
                                    ng-model="ctrl.password"
                                    ng-disabled="ctrl.formLocked"
