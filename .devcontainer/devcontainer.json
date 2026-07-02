@@ -84,9 +84,7 @@
         "vscode": {
             "settings": {
                 // General
-                "editor.defaultFormatter": "esbenp.prettier-vscode",
                 "files.insertFinalNewline": true,
-                "editor.formatOnSave": true,
                 // Extensions
                 "rewrap.wrappingColumn": 110,
                 // JSON
@@ -97,7 +95,6 @@
             "extensions": [
                 // General
                 "dnut.rewrap-revived",
-                "esbenp.prettier-vscode",
                 // JS/TS
                 "dbaeumer.vscode-eslint", // Linting
                 "vitest.explorer", // Testing
