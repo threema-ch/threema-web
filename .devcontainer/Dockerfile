@@ -1,25 +1,35 @@
-FROM node:24-alpine3.22
+FROM docker.io/node:24-trixie-slim
 
-# Security labels
-LABEL org.opencontainers.image.title="Threema Web Devcontainer"
-LABEL security.non-root="true"
+# Install development dependencies
+RUN apt-get update \
+ && DEBIAN_FRONTEND=noninteractive apt-get -y install --no-install-recommends \
+    build-essential pkg-config musl-tools ca-certificates \
+    neovim less git curl wget unzip ripgrep locales file procps net-tools \
+    bubblewrap socat \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install development tools
-RUN apk add --update \
-    bash \
-    curl \
-    gcompat \
-    git \
-    neovim \
-    openssl-dev \
-    openssh-client \
-    pkgconfig \
-    ripgrep
+# Locale setup
+RUN echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen \
+ && locale-gen en_US.UTF-8 \
+ && update-locale LANG=en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LC_ALL=en_US.UTF-8
 
-# Create workspace directory with default ownership
+# Create directories with user ownership
 # Note: VS Code Dev Containers will automatically adjust UID/GID via updateRemoteUserUID
 RUN mkdir -p /code && chown node:node /code
 
 # Switch to non-root user
 USER node
+
+# Create persistent config directory with default ownership
+RUN mkdir -p ~/.config-persistent/
+
+# Create Claude Code directories with default ownership
+RUN mkdir -p ~/.config/claude/
+
+# Create OpenCode directories with default ownership
+RUN mkdir -p ~/.config/opencode/ \
+ && mkdir -p ~/.local/share/opencode/
+
 ENTRYPOINT ["/bin/bash"]
