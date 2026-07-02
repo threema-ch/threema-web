@@ -17,22 +17,19 @@
 
 import {StateService as UiStateService} from '@uirouter/angularjs';
 
-import {UriService} from '../services/uri';
 import {WebClientService} from '../services/webclient';
 
 export default [
     '$timeout',
     '$state',
-    'UriService',
     'WebClientService',
     function(
         $timeout: ng.ITimeoutService,
         $state: UiStateService,
-        uriService: UriService,
         webClientService: WebClientService,
     ) {
 
-        const validateThreemaId = (id: string): boolean => {
+        const validateThreemaId = (id: string | null): boolean => {
             return id !== undefined && id !== null && /^([a-zA-Z0-9\*][a-zA-Z0-9]{7})$/.test(id);
         };
         const viewReceiver = (receiver: threema.Receiver) => {
@@ -43,16 +40,17 @@ export default [
                 $state.go('messenger.home.detail', receiver);
             };
         };
-        const addAction = (params) => {
+        const addAction = (params: URLSearchParams) => {
             return function(e: Event) {
-                if (!validateThreemaId(params.id)) {
+                const id = params.get('id');
+                if (!validateThreemaId(id)) {
                     return false;
                 }
 
                 e.preventDefault();
 
                 // Verify the receiver already exists
-                const contactReceiver = webClientService.contacts.get(params.id);
+                const contactReceiver = webClientService.contacts.get(id);
                 if (contactReceiver) {
                     return viewReceiver(contactReceiver)(e);
                 }
@@ -60,21 +58,22 @@ export default [
                 $state.go('messenger.home.create', {
                     type: 'contact',
                     initParams: {
-                        identity: params.id,
+                        identity: id,
                     },
                 });
             };
         };
 
-        const composeAction = (params) => {
+        const composeAction = (params: URLSearchParams) => {
             return function(e: Event) {
-                if (!validateThreemaId(params.id)) {
+                const id = params.get('id');
+                if (!validateThreemaId(id)) {
                     return false;
                 }
-                const text = params.text || '';
+                const text = params.get('text') || '';
                 $state.go('messenger.home.conversation', {
                     type: 'contact',
-                    id: params.id,
+                    id: id,
                     initParams: {
                         text: text,
                     },
@@ -111,8 +110,8 @@ export default [
                                             const matches = (/\bthreema:\/\/([a-z]+)\?([^\s]+)\b/gi).exec(link);
                                             if (matches !== null) {
                                                 const handler = getThreemaActionHandler(matches[1]);
-                                                const params = uriService.parseQueryParams(matches[2]);
-                                                if (handler !== null && params !== null) {
+                                                const params = new URLSearchParams(matches[2]);
+                                                if (handler !== null) {
                                                     node.addEventListener('click', handler(params));
                                                 }
                                             }
@@ -120,7 +119,7 @@ export default [
                                             // tslint:disable-next-line:max-line-length
                                             const matches = (/\bhttps:\/\/threema\.id\/([a-zA-Z0-9\*][a-zA-Z0-9]{7})\b/gi).exec(link);
                                             if (matches !== null) {
-                                                node.addEventListener('click',  addAction({id: matches[1]}));
+                                                node.addEventListener('click',  addAction(new URLSearchParams({id: matches[1]})));
                                             }
                                         }
                                     }
