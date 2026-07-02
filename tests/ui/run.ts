@@ -140,6 +140,9 @@ async function insertEmoji(driver: WebDriver) {
 
     // Validate text
     const html = await driver.findElement(composeArea).getAttribute('innerHTML');
+    if (html == null) {
+        expect.fail("Could not get compose area innerHTML");
+    }
     expect(/>hi<img/.test(html)).to.be.true;
 }
 
