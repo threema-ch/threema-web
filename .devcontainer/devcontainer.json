@@ -1,28 +1,110 @@
 {
-  "name": "Threema Web Devcontainer",
-  // Build Dockerfile
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  // Configure container runtime options
-  "runArgs": [
-    // Resource limits for development
-    "--memory=8g",
-    "--cpus=6",
-    "--memory-swap=8g",
-    // Basic security: Limited capabilities
-    "--cap-drop=ALL",
-    "--cap-add=CHOWN",
-    "--cap-add=SETGID",
-    "--cap-add=SETUID"
-  ],
-  // Run as non-root user
-  "remoteUser": "node",
-  // Automatically update container user UID/GID to match host user
-  "updateRemoteUserUID": true,
-  // Set working directory (devcontainer mounts workspace here)
-  "workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=cached",
-  "workspaceFolder": "/code",
-  // Forward ports
-  "forwardPorts": [9966]
+    "name": "Threema Web Devcontainer",
+    "$schema": "https://raw.githubusercontent.com/devcontainers/spec/refs/heads/main/schemas/devContainer.schema.json",
+
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+
+    // Container runtime options
+    "runArgs": [
+        // Basic security: Limited capabilities
+        "--cap-drop=ALL",
+        "--cap-add=CHOWN",
+        "--cap-add=SETGID"
+    ],
+
+    // Run as non-root user
+    "remoteUser": "node",
+
+    // Automatically update container user UID/GID to match host user
+    "updateRemoteUserUID": true,
+
+    // Set working directory (devcontainer mounts workspace here)
+    "workspaceMount": "source=${localWorkspaceFolder},target=/code,type=bind,consistency=cached",
+    "workspaceFolder": "/code",
+
+    // Commands run after creating devcontainer
+    "initializeCommand": {
+        "create-claude-files": "mkdir -p ${HOME}/.config/claude/commands && for f in settings.json .credentials.json .claude.json; do [ -f ${HOME}/.config/claude/$f ] || echo '{}' > ${HOME}/.config/claude/$f; done && touch ${HOME}/.config/claude/CLAUDE.md",
+        "create-opencode-config-dir": "mkdir -p ${HOME}/.config/opencode",
+        "create-opencode-auth-file": "mkdir -p ${HOME}/.local/share/opencode && touch ${HOME}/.local/share/opencode/auth.json"
+    },
+
+    // Mounts
+    "mounts": [
+        // Persistent config (project-specific named volume for bash history etc.)
+        "source=devcontainer--${localWorkspaceFolderBasename}--config-persistent,target=/home/node/.config-persistent,type=volume",
+        // Claude Code state (project-specific named volume for sessions, todos, statsig, etc.)
+        "source=devcontainer--${localWorkspaceFolderBasename}--claude-data,target=/home/node/.config/claude,type=volume",
+        // Claude Code config and auth (shared across projects, bind-mounted on top of volume)
+        "source=${localEnv:HOME}/.config/claude/settings.json,target=/home/node/.config/claude/settings.json,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.config/claude/CLAUDE.md,target=/home/node/.config/claude/CLAUDE.md,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.config/claude/commands,target=/home/node/.config/claude/commands,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.config/claude/.credentials.json,target=/home/node/.config/claude/.credentials.json,type=bind,consistency=cached",
+        "source=${localEnv:HOME}/.config/claude/.claude.json,target=/home/node/.config/claude/.claude.json,type=bind,consistency=cached",
+        // OpenCode config (shared across projects)
+        "source=${localEnv:HOME}/.config/opencode,target=/home/node/.config/opencode,type=bind,consistency=cached",
+        // OpenCode data storage (project-specific named volume for sessions, messages, etc.)
+        "source=devcontainer--${localWorkspaceFolderBasename}--opencode-data,target=/home/node/.local/share/opencode,type=volume",
+        // OpenCode credentials (shared from host, overlays on top of the volume)
+        "source=${localEnv:HOME}/.local/share/opencode/auth.json,target=/home/node/.local/share/opencode/auth.json,type=bind,consistency=cached"
+    ],
+
+    // Container environment variables
+    "containerEnv": {
+        // Bash history
+        "HISTFILE": "/home/node/.config-persistent/.bash_history",
+        // Claude Code
+        "CLAUDE_CONFIG_DIR": "/home/node/.config/claude/"
+    },
+
+    // Features to install
+    "features": {
+        "./features/claude-code": {
+            "version": "latest"
+        },
+        "./features/opencode": {
+            "version": "latest",
+            "binaryType": "glibc"
+        }
+    },
+
+    // Forward ports
+    "forwardPorts": [9966],
+
+    // After creating container
+    "postCreateCommand": "echo 'export PATH=\"$PATH:/home/node/.local/bin\"' >> /home/node/.bashrc",
+
+    // After first start
+    "postStartCommand": "",
+
+    // Customizations
+    "customizations": {
+        "vscode": {
+            "settings": {
+                // General
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "files.insertFinalNewline": true,
+                "editor.formatOnSave": true,
+                // Extensions
+                "rewrap.wrappingColumn": 110,
+                // JSON
+                "[jsonc]": {
+                    "json.format.keepLines": true
+                }
+            },
+            "extensions": [
+                // General
+                "dnut.rewrap-revived",
+                "esbenp.prettier-vscode",
+                // JS/TS
+                "dbaeumer.vscode-eslint", // Linting
+                "vitest.explorer", // Testing
+                "meganrogge.template-string-converter", // Automatically convert strings to templates
+                "yoavbls.pretty-ts-errors", // Better TS type errors
+                "nick-lvov-dev.typescript-explicit-types" // Generate explicit types from inferred types
+            ]
+        }
+    }
 }

@@ -1,0 +1,17 @@
+{
+    "id": "claude-code",
+    "version": "1.0.0",
+    "name": "Claude Code",
+    "description": "Installs Claude Code CLI agent tool",
+    "documentationURL": "https://code.claude.com/docs/en/setup",
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version of Claude Code to install (e.g., '1.0.58', 'stable' or 'latest')"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}

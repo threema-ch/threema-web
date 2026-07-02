@@ -1,0 +1,32 @@
+{
+    "id": "opencode",
+    "version": "1.0.0",
+    "name": "OpenCode",
+    "description": "Installs OpenCode CLI agent tool",
+    "documentationURL": "https://github.com/sst/opencode",
+    "options": {
+        "version": {
+            "type": "string",
+            "default": "latest",
+            "description": "Version of OpenCode to install (e.g., '1.0.115' or 'latest')"
+        },
+        "architecture": {
+            "type": "string",
+            "enum": ["auto", "x64", "arm64"],
+            "default": "auto",
+            "description": "Target architecture (auto will detect automatically)"
+        },
+        "binaryType": {
+            "type": "string",
+            "enum": [
+                "glibc",
+                "musl"
+            ],
+            "default": "glibc",
+            "description": "Binary type (musl for Alpine/static linking, glibc for standard Linux)"
+        }
+    },
+    "installsAfter": [
+        "ghcr.io/devcontainers/features/common-utils"
+    ]
+}
