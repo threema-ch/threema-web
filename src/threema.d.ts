@@ -528,7 +528,7 @@ declare namespace threema {
     interface Quote {
         identity: string;
         text: string;
-        messageId?: string;
+        messageId: string;
     }
 
     interface PushSessionConfig {
@@ -794,7 +794,6 @@ declare namespace threema {
         maxFileSize: number;
         maxMessageBodySize: number;
         distributionLists: boolean;
-        quotesV2: boolean;
         imageFormat: ImageFormat;
         groupReactions: boolean;
         emojiReactions: boolean;

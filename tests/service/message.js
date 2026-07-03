@@ -20,7 +20,7 @@ describe('MessageService', function() {
             return expect(messageService.getAccess(
                 message,
                 receiver,
-                {quotesV2: false, ...additionalCapabilities},
+                {...additionalCapabilities},
             ));
         };
         it('invalid arguments', () => {
@@ -142,7 +142,7 @@ describe('MessageService', function() {
                     it('inbox ' + type, () => {
                         test({isOutbox: false, type: type}, receiver, additionalCapabilities)
                             .toEqual(jasmine.objectContaining({
-                                quote: false,
+                                quote: !isDistributionList,
                                 copy: false,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,
@@ -166,7 +166,7 @@ describe('MessageService', function() {
                     it('outbox ' + type, () => {
                         test({isOutbox: false, type: type}, receiver, additionalCapabilities)
                             .toEqual(jasmine.objectContaining({
-                                quote: false,
+                                quote: !isDistributionList,
                                 copy: false,
                                 ack: true && canAckDec,
                                 dec: true && canAckDec,

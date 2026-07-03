@@ -53,12 +53,14 @@ export class MessageService {
         const access = new MessageAccess();
 
         if (message !== undefined) {
-            const allowQuoteV1 = (message.type === 'text')
+            // Any message can be quoted (by reference), except for messages in
+            // distribution lists and VoIP status messages.
+            access.quote = receiver.type !== 'distributionList' && message.type !== 'voipStatus';
+
+            // A message can be copied to the clipboard if it contains quotable text.
+            access.copy = (message.type === 'text')
                 || (message.type === 'location' && message.location?.description !== null && message.location!!.description.length > 0)
-                || (hasValue(message.caption) && message.caption.length > 0)
-            const allowQuoteV2 = capabilities.quotesV2;
-            access.quote = receiver.type !== 'distributionList' && message.type !== 'voipStatus' && (allowQuoteV1 || allowQuoteV2);
-            access.copy = allowQuoteV1;
+                || (hasValue(message.caption) && message.caption.length > 0);
 
             if (receiver !== undefined && message.temporaryId === undefined) {
                 if (capabilities.emojiReactions) {

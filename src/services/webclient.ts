@@ -54,7 +54,6 @@ import {PushService, PushSession} from './push';
 import {QrCodeService} from './qrcode';
 import {ReceiverService} from './receiver';
 import {StateService} from './state';
-import {StringService} from './string';
 import {ThemeService} from './theme';
 import {TimeoutService} from './timeout';
 import {TitleService} from './title';
@@ -196,7 +195,6 @@ export class WebClientService {
     private pushService: PushService;
     private qrCodeService: QrCodeService;
     private receiverService: ReceiverService;
-    private stringService: StringService;
     private themeService: ThemeService;
     private timeoutService: TimeoutService;
     private titleService: TitleService; // Don't remove, needs to be initialized to handle events
@@ -292,7 +290,7 @@ export class WebClientService {
         '$rootScope', '$q', '$state', '$window', '$translate', '$filter', '$timeout', '$mdDialog',
         'LogService', 'Container', 'TrustedKeyStore',
         'StateService', 'NotificationService', 'MessageService', 'PushService', 'BrowserService',
-        'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService', 'StringService',
+        'TitleService', 'QrCodeService', 'MimeService', 'ReceiverService',
         'VersionService', 'BatteryStatusService', 'ThemeService', 'TimeoutService',
         'CONFIG',
     ];
@@ -316,7 +314,6 @@ export class WebClientService {
                 qrCodeService: QrCodeService,
                 mimeService: MimeService,
                 receiverService: ReceiverService,
-                stringService: StringService,
                 versionService: VersionService,
                 batteryStatusService: BatteryStatusService,
                 themeService: ThemeService,
@@ -343,7 +340,6 @@ export class WebClientService {
         this.pushService = pushService;
         this.qrCodeService = qrCodeService;
         this.receiverService = receiverService;
-        this.stringService = stringService;
         this.themeService = themeService;
         this.timeoutService = timeoutService;
         this.titleService = titleService;
@@ -1804,31 +1800,10 @@ export class WebClientService {
                     throw this.$translate.instant('error.ERROR_OCCURRED');
                 }
 
-                // Note: Not validating message length again here in the general case,
-                // since that would require us to re-encode the text a second time
-                // (because the compose area already checks the length). However, if a
-                // quote is present, then the message may still be too long. In that case,
-                // shorten the quote.
-                if (data.quote !== undefined && data.quote !== null) {
-                    // Do a rough estimation of the quote v1 overhead.
-                    const quoteOverhead = 12 /* first line prefix */
-                                        + (data.quote.text.match(/\n/g) || []).length * 2 /* prefix */
-                                        + 16 /* safety margin */;
-
-                    // Get combined text + quote length
-                    const textByteLength = (new TextEncoder().encode(textData.text)).length;
-                    const quoteByteLength = (new TextEncoder().encode(data.quote.text)).length;
-                    const totalByteLength = textByteLength + quoteByteLength + quoteOverhead;
-
-                    // If too long, shorten the quote.
-                    const maxLength = this.getMaxTextLength();
-                    if (totalByteLength > maxLength) {
-                        const newLength = Math.max(3, maxLength - textByteLength - quoteOverhead - 3 /* byte length of ellipsis */);
-                        const chunks = this.stringService.byteChunk(data.quote.text, newLength)
-                        this.log.warn(`Quote too long, reducing length from ${quoteByteLength} to ≤${newLength} bytes`);
-                        data.quote.text = chunks[0] + '…';
-                    }
-                }
+                // Note: The message length is not validated again here. That's not
+                // necessary since the compose area already checks the length, and
+                // quotes are sent as a reference (by message ID) rather than being
+                // embedded into the message body.
 
                 break;
             case 'file':
@@ -2288,17 +2263,17 @@ export class WebClientService {
         this.drafts.removeQuote(receiver);
 
         if (message !== null) {
-            const quoteText = this.messageService.getQuoteText(message);
+            // A quote (v2) references the original message by its ID, so a
+            // message ID is required in order to quote it.
             const hasMessageId = message.id != null && message.id.length > 0;
 
-            if (hasValue(quoteText) || (this.appCapabilities.quotesV2 && hasMessageId)) {
-                const quote = {
+            if (hasMessageId) {
+                const quoteText = this.messageService.getQuoteText(message);
+                const quote: threema.Quote = {
                     identity: message.isOutbox ? this.me.id : message.partnerId,
                     text: quoteText ?? this.$translate.instant(`messageTypes.${message.type}`),
-                } as threema.Quote;
-                if (hasMessageId) {
-                    quote.messageId = message.id;
-                }
+                    messageId: message.id,
+                };
 
                 this.drafts.setQuote(receiver, quote);
                 this.$rootScope.$broadcast('onQuoted', {
@@ -3366,7 +3341,6 @@ export class WebClientService {
                 maxFileSize: getOrDefault<number>(data.capabilities.maxFileSize, 50 * 1024 * 1024),
                 maxMessageBodySize: getOrDefault<number>(data.capabilities.maxMessageBodySize, 3500),
                 distributionLists: getOrDefault<boolean>(data.capabilities.distributionLists, true),
-                quotesV2: getOrDefault<boolean>(data.capabilities.quotesV2, false),
                 imageFormat: data.capabilities.imageFormat,
                 groupReactions: getOrDefault<boolean>(data.capabilities.groupReactions, false),
                 emojiReactions: getOrDefault<boolean>(data.capabilities.emojiReactions, false),
