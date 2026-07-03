@@ -5,6 +5,9 @@
     "welcome": {
         "ABORT": "Anuluj",
         "CONTINUE_ANYWAY": "Kontynuuj mimo to",
+        "DESKTOP_BETA_HINT": "Korzystaj z nowej aplikacji desktop teraz",
+        "DESKTOP_BETA_HINT_INTRO_TEXT1": "Czy korzystasz już z nowej aplikacji Threema desktop?",
+        "DESKTOP_BETA_HINT_INTRO_TEXT2": "Pobierz aplikację teraz.",
         "PLEASE_SCAN": "Zeskanuj kod QR twoją aplikacją Threema",
         "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Ustawienia > Desktop/Web",
         "PLEASE_UNLOCK": "Sesja zamknięta",
@@ -38,8 +41,8 @@
         "WAITING_FOR_APP": "Oczekiwanie na uruchomienie Threemy<br>na twoim telefonie ...",
         "LOADING_INITIAL_DATA": "Ładowanie danych ...",
         "MANUAL_START": "Rozpocznij sesję",
-        "MANUAL_START_TEXT1": "Push service is not available.",
-        "MANUAL_START_TEXT2": "You can use Threema Desktop/Web without push service, but you need to start the session manually:",
+        "MANUAL_START_TEXT1": "Usługa push nie jest dostępna.",
+        "MANUAL_START_TEXT2": "Możesz korzystać z Threema Desktop/Web bez usługi push, ale sesja musi zostać uruchomiona ręcznie:",
         "MANUAL_START_STEP1": "Otwórz aplikację Threema, dotknij przycisku menu w prawym górnym rogu i wybierz \"Desktop/Web\"",
         "MANUAL_START_STEP2": "Kliknij na sesji powiązanej z tą przeglądarką",
         "MANUAL_START_STEP3": "Wybierz \"Rozpocznij sesję\" aby rozpocząć sesję",
@@ -57,7 +60,7 @@
         "GENERIC": "Próba ponownego połączenia...",
         "RECOVERING_CONNECTION": "Próba przywrócenia połączenia...",
         "WAITING_FOR_APP": "Oczekiwanie na wybudzenie aplikacji...",
-        "WAITING_FOR_APP_MANUAL": "Push service not available. Please start the session manually.",
+        "WAITING_FOR_APP_MANUAL": "Usługa push nie jest dostępna. Proszę uruchomić sesję ręcznie.",
         "CONNECTING_TO_SERVER": "Łączenie z serwerem...",
         "CONNECTING_TO_APP": "Nawiązywanie połączenia z aplikacją...",
         "CONNECTION_CLOSED": "Połączenie z serwerem zostało zakończone.",
@@ -111,7 +114,8 @@
         "SAVE": "Zapisz",
         "DONE": "Ukończono",
         "MODIFY": "Modyfikuj",
-        "NOTE": "Wskazówka:"
+        "NOTE": "Wskazówka:",
+        "BETA": "Beta"
     },
     "messenger": {
         "VERSION": "Wersja",
@@ -222,7 +226,8 @@
         "ME": "Ja",
         "CONTACT_STATE_INACTIVE": "Nieaktywny",
         "CONTACT_STATE_INVALID": "Nieprawidłowy",
-        "CONTACT_STATE_REVOKED": "Wycofany"
+        "CONTACT_STATE_REVOKED": "Wycofany",
+        "MESSAGE_EDITED": "Edytowano"
     },
     "messageStates": {
         "WE_ACK": "Wysłałeś kciuk w górę",
