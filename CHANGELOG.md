@@ -10,6 +10,20 @@ the full log, please refer to the git commit history.
 > See https://github.com/threema-ch/threema-web/pull/996 for more details.
 
 
+### [v2.6.5][v2.6.5] (2026-07-03)
+
+Changes:
+
+* [change] Upgrade dependencies ([#1276][i1276])
+* [change] Add `id` to session restore password form for password managers ([#1273][i1273])
+* [change] Use language-independent desktop landing page URL ([#1260][i1260])
+* [change] Replace `UriService` with `URLSearchParams` ([#1277][i1277])
+
+Contributors:
+
+- [@FineFindus]
+
+
 ### [v2.6.4][v2.6.4] (2026-03-09)
 
 Changes:
@@ -1360,7 +1374,12 @@ First public release.
 [i1251]: https://github.com/threema-ch/threema-web/pull/1251
 [i1258]: https://github.com/threema-ch/threema-web/pull/1258
 [i1259]: https://github.com/threema-ch/threema-web/pull/1259
+[i1260]: https://github.com/threema-ch/threema-web/pull/1260
+[i1273]: https://github.com/threema-ch/threema-web/pull/1273
+[i1276]: https://github.com/threema-ch/threema-web/pull/1276
+[i1277]: https://github.com/threema-ch/threema-web/pull/1277
 
+[v2.6.5]: https://github.com/threema-ch/threema-web/compare/v2.6.4...v2.6.5
 [v2.6.4]: https://github.com/threema-ch/threema-web/compare/v2.6.3...v2.6.4
 [v2.6.3]: https://github.com/threema-ch/threema-web/compare/v2.6.2...v2.6.3
 [v2.6.2]: https://github.com/threema-ch/threema-web/compare/v2.6.1...v2.6.2
@@ -1461,3 +1480,4 @@ First public release.
 [@samuelT2]: https://github.com/samuelT2
 [@jwanner83]: https://github.com/jwanner83
 [@bluec0re]: https://github.com/bluec0re
+[@FineFindus]: https://github.com/FineFindus
