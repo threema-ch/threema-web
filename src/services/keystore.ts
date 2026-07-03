@@ -283,8 +283,9 @@ export class TrustedKeyStoreService {
             this.log.error(`Invalid storage data`, error);
             return null;
         }
-        if (typeof raw !== 'object') {
+        if (typeof raw !== 'object' || raw === null) {
             this.log.error('Invalid storage data: Not an object', raw);
+            return null;
         }
         if (
             typeof raw.nonce !== 'string' ||
@@ -295,6 +296,7 @@ export class TrustedKeyStoreService {
             typeof raw.encrypted !== 'string'
         ) {
             this.log.error(`Invalid storage data: One or more key is missing or invalid in ${Object.keys(raw)}`);
+            return null;
         }
         let d: {nonce: Uint8Array, salt: Uint8Array, N: number, r: number, p: number, encrypted: Uint8Array};
         try {
@@ -319,6 +321,7 @@ export class TrustedKeyStoreService {
             d.encrypted.byteLength === 0
         ) {
             this.log.error(`Invalid storage data: One or more value is invalid in ${Object.keys(raw)}`);
+            return null;
         }
 
         // Derive key
