@@ -202,16 +202,21 @@
         flex-direction: row;
         align-items: flex-start;
 
+        // Note: Use opacity instead of visibility to hide the menu, so that
+        //       it remains focusable and accessible to screen readers.
         md-menu {
             &:not(.md-open) {
                 position: relative;
-                visibility: hidden;
+                opacity: 0;
+                pointer-events: none;
             }
         }
 
-        &:hover {
+        &:hover,
+        &:focus-within {
             md-menu {
-                visibility: visible;
+                opacity: 1;
+                pointer-events: auto;
             }
         }
 
