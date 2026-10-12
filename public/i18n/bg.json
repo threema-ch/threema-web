@@ -6,7 +6,7 @@
         "ABORT": "Прекъсване",
         "CONTINUE_ANYWAY": "Продължете все пак",
         "PLEASE_SCAN": "Сканирайте този QR код с приложението си Threema",
-        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Desktop/Web | iOS: Settings > Desktop/Web",
+        "PLEASE_SCAN_INSTRUCTIONS": "Android: Menu > Settings > Desktop/Web | iOS: Settings > Desktop/Web",
         "PLEASE_UNLOCK": "Session closed",
         "WAITING": "Изчаква се връзка",
         "RETRY": "Опитай отново",
