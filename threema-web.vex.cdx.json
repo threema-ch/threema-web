@@ -3,9 +3,9 @@
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
   "serialNumber": "urn:uuid:a900c92f-1157-4af1-bdc0-bfa34afbd9cb",
-  "version": 1,
+  "version": 2,
   "metadata": {
-    "timestamp": "2026-10-25T00:00:00Z",
+    "timestamp": "2026-10-25T19:26:22Z",
     "component": {
       "type": "application",
       "bom-ref": "threema-web",
@@ -284,6 +284,32 @@
         "detail": "All user-provided content is HTML-escaped (escapeHtml) before it is passed to ng-bind-html / $sanitize, so attacker-controlled SVG markup never reaches the sanitizer as live markup. In addition, SVG support in $sanitize is not enabled ($sanitizeProvider.enableSvg() is never called), so SVG elements are stripped regardless. Only static, bundled SVG assets (emoji, icons) are rendered, never external or user-provided SVG.",
         "firstIssued": "2025-12-12T09:03:36Z",
         "lastUpdated": "2026-07-03T07:30:09Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2026-11998",
+      "id": "CVE-2026-11998",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-11998"
+      },
+      "references": [
+        {
+          "id": "GHSA-7x27-g8rg-x87w",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-7x27-g8rg-x87w"
+          }
+        }
+      ],
+      "description": "SCE resource URL policy bypass via partial RegExp matches",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "requires_configuration",
+        "detail": "Only exploitable if RegExp matchers are configured via $sceDelegateProvider.trustedResourceUrlList() / bannedResourceUrlList(). Threema Web does not configure these lists, so the default ['self'] policy applies, which is matched by origin comparison and not via RegExp.",
+        "firstIssued": "2026-10-25T19:26:22Z",
+        "lastUpdated": "2026-10-25T19:26:22Z"
       },
       "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
     }
