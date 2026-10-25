@@ -88,6 +88,10 @@
                 // Extensions
                 "rewrap.wrappingColumn": 110,
                 // JSON
+                "[json]": {
+                    "editor.defaultFormatter": "esbenp.prettier-vscode",
+                    "editor.formatOnSave": true
+                },
                 "[jsonc]": {
                     "json.format.keepLines": true
                 }
@@ -95,6 +99,7 @@
             "extensions": [
                 // General
                 "dnut.rewrap-revived",
+                "esbenp.prettier-vscode", // Formatting
                 // JS/TS
                 "dbaeumer.vscode-eslint", // Linting
                 "vitest.explorer", // Testing

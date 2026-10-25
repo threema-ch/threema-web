@@ -55,6 +55,14 @@ jobs:
           key: v4-dependencies-lint-node14-{{ arch }}-{{ checksum "package.json" }}
           paths:
             - node_modules
+  vex:
+    docker:
+      - image: cyclonedx/cyclonedx-cli:0.33.1@sha256:252c2e26f468c25fea1e63ecde1bc3198ad6e9dbb57f5ed3236bddcb2281b3a7
+    steps:
+      - checkout
+      - run: >
+          cyclonedx validate --input-file threema-web.vex.cdx.json
+          --input-format json --input-version v1_6 --fail-on-errors
   docker-build:
     docker:
       - image: docker:stable
@@ -109,6 +117,7 @@ workflows:
       - uitest-firefox
       - uitest-chrome
       - lint
+      - vex
       - docker-build:
           filters:
             branches:

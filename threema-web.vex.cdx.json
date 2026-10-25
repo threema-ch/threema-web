@@ -1,0 +1,317 @@
+{
+  "$schema": "https://cyclonedx.org/schema/bom-1.6.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:a900c92f-1157-4af1-bdc0-bfa34afbd9cb",
+  "version": 2,
+  "metadata": {
+    "timestamp": "2026-10-25T19:26:22Z",
+    "component": {
+      "type": "application",
+      "bom-ref": "threema-web",
+      "name": "threema-web",
+      "purl": "pkg:github/threema-ch/threema-web"
+    },
+    "supplier": {
+      "name": "Threema AG",
+      "url": ["https://threema.com"]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:npm/angular@1.8.3",
+      "name": "angular",
+      "version": "1.8.3",
+      "purl": "pkg:npm/angular@1.8.3"
+    }
+  ],
+  "vulnerabilities": [
+    {
+      "bom-ref": "CVE-2022-25844",
+      "id": "CVE-2022-25844",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-25844"
+      },
+      "references": [
+        {
+          "id": "GHSA-m2h2-264f-f486",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-m2h2-264f-f486"
+          }
+        }
+      ],
+      "description": "Denial of Service via $locale.NUMBER_FORMATS / posPre",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "code_not_reachable",
+        "detail": "Threema Web does not make use of $locale.NUMBER_FORMATS or posPre.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2022-25869",
+      "id": "CVE-2022-25869",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-25869"
+      },
+      "references": [
+        {
+          "id": "GHSA-prc3-vjfx-vhm9",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-prc3-vjfx-vhm9"
+          }
+        }
+      ],
+      "description": "Cross Site Scripting via insecure page caching in Internet Explorer",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "requires_environment",
+        "detail": "Only exploitable through insecure page caching in Internet Explorer. Threema Web does not support Internet Explorer.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2023-26116",
+      "id": "CVE-2023-26116",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-26116"
+      },
+      "references": [
+        {
+          "id": "GHSA-2vrf-hf26-jrp5",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-2vrf-hf26-jrp5"
+          }
+        }
+      ],
+      "description": "Denial of Service via angular.copy()",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "code_not_reachable",
+        "detail": "Threema Web does not make use of angular.copy().",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2023-26117",
+      "id": "CVE-2023-26117",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-26117"
+      },
+      "references": [
+        {
+          "id": "GHSA-2qqx-w9hr-q5gx",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-2qqx-w9hr-q5gx"
+          }
+        }
+      ],
+      "description": "Denial of Service via the $resource service",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "code_not_present",
+        "detail": "$resource is part of the separate angular-resource module (ngResource), which is not a dependency of Threema Web.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2023-26118",
+      "id": "CVE-2023-26118",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-26118"
+      },
+      "references": [
+        {
+          "id": "GHSA-qwqh-hm9m-p5hr",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-qwqh-hm9m-p5hr"
+          }
+        }
+      ],
+      "description": "Denial of Service via <input type=\"url\">",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "code_not_reachable",
+        "detail": "Threema Web does not make use of <input type=\"url\">.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2024-21490",
+      "id": "CVE-2024-21490",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-21490"
+      },
+      "references": [
+        {
+          "id": "GHSA-4w4v-5hc9-xrr2",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-4w4v-5hc9-xrr2"
+          }
+        }
+      ],
+      "description": "Regular expression backtracking (ReDoS) via ng-srcset",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "code_not_reachable",
+        "detail": "Threema Web does not make use of ng-srcset.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2024-8372",
+      "id": "CVE-2024-8372",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-8372"
+      },
+      "references": [
+        {
+          "id": "GHSA-m9gf-397r-hwpg",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-m9gf-397r-hwpg"
+          }
+        }
+      ],
+      "description": "Image source restriction bypass via srcset",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "code_not_reachable",
+        "detail": "Threema Web does not make use of imgSrcSanitization or srcset attributes.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2024-8373",
+      "id": "CVE-2024-8373",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-8373"
+      },
+      "references": [
+        {
+          "id": "GHSA-mqm9-c95h-x2p6",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-mqm9-c95h-x2p6"
+          }
+        }
+      ],
+      "description": "Image source restriction bypass via <source> srcset",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "code_not_reachable",
+        "detail": "Threema Web does not make use of imgSrcSanitization or srcset attributes.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2025-12-02T22:17:20Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2025-0716",
+      "id": "CVE-2025-0716",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-0716"
+      },
+      "references": [
+        {
+          "id": "GHSA-j58c-ww9w-pwp5",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-j58c-ww9w-pwp5"
+          }
+        }
+      ],
+      "description": "Improper SVG sanitization",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "protected_by_mitigating_control",
+        "detail": "All user-provided content is HTML-escaped (escapeHtml) before it is passed to ng-bind-html / $sanitize, so attacker-controlled SVG markup never reaches the sanitizer as live markup. In addition, SVG support in $sanitize is not enabled ($sanitizeProvider.enableSvg() is never called), so SVG elements are stripped regardless. Only static, bundled SVG assets (emoji, icons) are rendered, never external or user-provided SVG.",
+        "firstIssued": "2025-12-02T22:17:20Z",
+        "lastUpdated": "2026-07-03T07:30:09Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2025-2336",
+      "id": "CVE-2025-2336",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-2336"
+      },
+      "references": [
+        {
+          "id": "GHSA-4p4w-6hg8-63wx",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-4p4w-6hg8-63wx"
+          }
+        }
+      ],
+      "description": "Improper SVG sanitization",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "protected_by_mitigating_control",
+        "detail": "All user-provided content is HTML-escaped (escapeHtml) before it is passed to ng-bind-html / $sanitize, so attacker-controlled SVG markup never reaches the sanitizer as live markup. In addition, SVG support in $sanitize is not enabled ($sanitizeProvider.enableSvg() is never called), so SVG elements are stripped regardless. Only static, bundled SVG assets (emoji, icons) are rendered, never external or user-provided SVG.",
+        "firstIssued": "2025-12-12T09:03:36Z",
+        "lastUpdated": "2026-07-03T07:30:09Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    },
+    {
+      "bom-ref": "CVE-2026-11998",
+      "id": "CVE-2026-11998",
+      "source": {
+        "name": "NVD",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-11998"
+      },
+      "references": [
+        {
+          "id": "GHSA-7x27-g8rg-x87w",
+          "source": {
+            "name": "GitHub",
+            "url": "https://github.com/advisories/GHSA-7x27-g8rg-x87w"
+          }
+        }
+      ],
+      "description": "SCE resource URL policy bypass via partial RegExp matches",
+      "analysis": {
+        "state": "not_affected",
+        "justification": "requires_configuration",
+        "detail": "Only exploitable if RegExp matchers are configured via $sceDelegateProvider.trustedResourceUrlList() / bannedResourceUrlList(). Threema Web does not configure these lists, so the default ['self'] policy applies, which is matched by origin comparison and not via RegExp.",
+        "firstIssued": "2026-10-25T19:26:22Z",
+        "lastUpdated": "2026-10-25T19:26:22Z"
+      },
+      "affects": [{ "ref": "pkg:npm/angular@1.8.3" }]
+    }
+  ]
+}

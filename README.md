@@ -169,6 +169,20 @@ details, see [threema.com/contact](https://threema.com/en/contact) (section
 “Security”).
 
 
+### Vulnerabilities in Dependencies
+
+Some dependencies (most notably AngularJS) have published vulnerabilities that
+do not affect Threema Web. Our assessment of these vulnerabilities is published
+as a [CycloneDX VEX](https://cyclonedx.org/capabilities/vex/) file in
+[threema-web.vex.cdx.json](threema-web.vex.cdx.json). Note that `npm audit`
+does not support VEX, so it will still report these vulnerabilities.
+
+To validate the VEX file using the [CycloneDX
+CLI](https://github.com/CycloneDX/cyclonedx-cli):
+
+    cyclonedx validate --input-file threema-web.vex.cdx.json --input-version v1_6 --fail-on-errors
+
+
 ## License
 
 Threema Web license:
